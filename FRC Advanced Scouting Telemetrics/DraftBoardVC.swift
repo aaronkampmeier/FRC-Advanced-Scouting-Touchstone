@@ -15,13 +15,18 @@ class DraftBoardVC: UIViewController, UITableViewDelegate, UITableViewDataSource
     var teamsArray = [Team]()
     
     override func viewDidLoad() {
-        teamsArray = dataManager.getTeams()
+        do {
+            teamsArray = try dataManager.getDraftBoard()
+        } catch {
+            NSLog("Unable to retrieve the saved draft board: \(error)")
+        }
         teamListTableView.delegate = self
         teamListTableView.dataSource = self
         
         teamListTableView.registerClass(UITableViewCell.self, forCellReuseIdentifier: "Cell")
         
         teamListTableView.setEditing(true, animated: true)
+        
     }
     
     func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -40,6 +45,10 @@ class DraftBoardVC: UIViewController, UITableViewDelegate, UITableViewDataSource
         return true
     }
     
+    func tableView(tableView: UITableView, editingStyleForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCellEditingStyle {
+        return .None
+    }
+    
     func tableView(tableView: UITableView, canEditRowAtIndexPath indexPath: NSIndexPath) -> Bool {
         return true
     }
@@ -49,5 +58,11 @@ class DraftBoardVC: UIViewController, UITableViewDelegate, UITableViewDataSource
         let movedTeam = teamsArray[sourceIndexPath.row]
         teamsArray.removeAtIndex(sourceIndexPath.row)
         teamsArray.insert(movedTeam, atIndex: destinationIndexPath.row)
+        
+        do {
+            try dataManager.moveTeam(sourceIndexPath.row, toIndex: destinationIndexPath.row)
+        } catch {
+            NSLog("Unable to save team move: \(error)")
+        }
     }
 }

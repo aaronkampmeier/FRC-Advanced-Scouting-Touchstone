@@ -119,7 +119,7 @@ class PitScoutingController: UIViewController, UIImagePickerControllerDelegate, 
                 
             }
         } else {
-            presentOkAlert("No Camera", message: "The device you are using does not have image taking capabilities")
+            presentOkAlert("No Camera", message: "The device you are using does not have image taking abilities")
         }
     }
     
