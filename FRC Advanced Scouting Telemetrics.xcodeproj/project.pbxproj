@@ -1,0 +1,524 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 46;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		1F78E7831C3B469300221927 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F78E7821C3B469300221927 /* AppDelegate.swift */; };
+		1F78E7851C3B469300221927 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F78E7841C3B469300221927 /* ViewController.swift */; };
+		1F78E7881C3B469300221927 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 1F78E7861C3B469300221927 /* Main.storyboard */; };
+		1F78E78B1C3B469300221927 /* FRC_Advanced_Scouting_Telemetrics.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 1F78E7891C3B469300221927 /* FRC_Advanced_Scouting_Telemetrics.xcdatamodeld */; };
+		1F78E78D1C3B469300221927 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 1F78E78C1C3B469300221927 /* Assets.xcassets */; };
+		1F78E7901C3B469300221927 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 1F78E78E1C3B469300221927 /* LaunchScreen.storyboard */; };
+		1F78E79B1C3B469300221927 /* FRC_Advanced_Scouting_TelemetricsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F78E79A1C3B469300221927 /* FRC_Advanced_Scouting_TelemetricsTests.swift */; };
+		1F78E7A61C3B469300221927 /* FRC_Advanced_Scouting_TelemetricsUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F78E7A51C3B469300221927 /* FRC_Advanced_Scouting_TelemetricsUITests.swift */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		1F78E7971C3B469300221927 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 1F78E7771C3B469300221927 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 1F78E77E1C3B469300221927;
+			remoteInfo = "FRC Advanced Scouting Telemetrics";
+		};
+		1F78E7A21C3B469300221927 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 1F78E7771C3B469300221927 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 1F78E77E1C3B469300221927;
+			remoteInfo = "FRC Advanced Scouting Telemetrics";
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXFileReference section */
+		1F78E77F1C3B469300221927 /* FRC Advanced Scouting Telemetrics.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "FRC Advanced Scouting Telemetrics.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		1F78E7821C3B469300221927 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
+		1F78E7841C3B469300221927 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
+		1F78E7871C3B469300221927 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
+		1F78E78A1C3B469300221927 /* FRC_Advanced_Scouting_Telemetrics.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = FRC_Advanced_Scouting_Telemetrics.xcdatamodel; sourceTree = "<group>"; };
+		1F78E78C1C3B469300221927 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		1F78E78F1C3B469300221927 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
+		1F78E7911C3B469300221927 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		1F78E7961C3B469300221927 /* FRC Advanced Scouting TelemetricsTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "FRC Advanced Scouting TelemetricsTests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
+		1F78E79A1C3B469300221927 /* FRC_Advanced_Scouting_TelemetricsTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FRC_Advanced_Scouting_TelemetricsTests.swift; sourceTree = "<group>"; };
+		1F78E79C1C3B469300221927 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		1F78E7A11C3B469300221927 /* FRC Advanced Scouting TelemetricsUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "FRC Advanced Scouting TelemetricsUITests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
+		1F78E7A51C3B469300221927 /* FRC_Advanced_Scouting_TelemetricsUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FRC_Advanced_Scouting_TelemetricsUITests.swift; sourceTree = "<group>"; };
+		1F78E7A71C3B469300221927 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		1F78E77C1C3B469300221927 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		1F78E7931C3B469300221927 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		1F78E79E1C3B469300221927 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		1F78E7761C3B469300221927 = {
+			isa = PBXGroup;
+			children = (
+				1F78E7811C3B469300221927 /* FRC Advanced Scouting Telemetrics */,
+				1F78E7991C3B469300221927 /* FRC Advanced Scouting TelemetricsTests */,
+				1F78E7A41C3B469300221927 /* FRC Advanced Scouting TelemetricsUITests */,
+				1F78E7801C3B469300221927 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		1F78E7801C3B469300221927 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				1F78E77F1C3B469300221927 /* FRC Advanced Scouting Telemetrics.app */,
+				1F78E7961C3B469300221927 /* FRC Advanced Scouting TelemetricsTests.xctest */,
+				1F78E7A11C3B469300221927 /* FRC Advanced Scouting TelemetricsUITests.xctest */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		1F78E7811C3B469300221927 /* FRC Advanced Scouting Telemetrics */ = {
+			isa = PBXGroup;
+			children = (
+				1F78E7821C3B469300221927 /* AppDelegate.swift */,
+				1F78E7841C3B469300221927 /* ViewController.swift */,
+				1F78E7861C3B469300221927 /* Main.storyboard */,
+				1F78E78C1C3B469300221927 /* Assets.xcassets */,
+				1F78E78E1C3B469300221927 /* LaunchScreen.storyboard */,
+				1F78E7911C3B469300221927 /* Info.plist */,
+				1F78E7891C3B469300221927 /* FRC_Advanced_Scouting_Telemetrics.xcdatamodeld */,
+			);
+			path = "FRC Advanced Scouting Telemetrics";
+			sourceTree = "<group>";
+		};
+		1F78E7991C3B469300221927 /* FRC Advanced Scouting TelemetricsTests */ = {
+			isa = PBXGroup;
+			children = (
+				1F78E79A1C3B469300221927 /* FRC_Advanced_Scouting_TelemetricsTests.swift */,
+				1F78E79C1C3B469300221927 /* Info.plist */,
+			);
+			path = "FRC Advanced Scouting TelemetricsTests";
+			sourceTree = "<group>";
+		};
+		1F78E7A41C3B469300221927 /* FRC Advanced Scouting TelemetricsUITests */ = {
+			isa = PBXGroup;
+			children = (
+				1F78E7A51C3B469300221927 /* FRC_Advanced_Scouting_TelemetricsUITests.swift */,
+				1F78E7A71C3B469300221927 /* Info.plist */,
+			);
+			path = "FRC Advanced Scouting TelemetricsUITests";
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		1F78E77E1C3B469300221927 /* FRC Advanced Scouting Telemetrics */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 1F78E7AA1C3B469300221927 /* Build configuration list for PBXNativeTarget "FRC Advanced Scouting Telemetrics" */;
+			buildPhases = (
+				1F78E77B1C3B469300221927 /* Sources */,
+				1F78E77C1C3B469300221927 /* Frameworks */,
+				1F78E77D1C3B469300221927 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = "FRC Advanced Scouting Telemetrics";
+			productName = "FRC Advanced Scouting Telemetrics";
+			productReference = 1F78E77F1C3B469300221927 /* FRC Advanced Scouting Telemetrics.app */;
+			productType = "com.apple.product-type.application";
+		};
+		1F78E7951C3B469300221927 /* FRC Advanced Scouting TelemetricsTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 1F78E7AD1C3B469300221927 /* Build configuration list for PBXNativeTarget "FRC Advanced Scouting TelemetricsTests" */;
+			buildPhases = (
+				1F78E7921C3B469300221927 /* Sources */,
+				1F78E7931C3B469300221927 /* Frameworks */,
+				1F78E7941C3B469300221927 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				1F78E7981C3B469300221927 /* PBXTargetDependency */,
+			);
+			name = "FRC Advanced Scouting TelemetricsTests";
+			productName = "FRC Advanced Scouting TelemetricsTests";
+			productReference = 1F78E7961C3B469300221927 /* FRC Advanced Scouting TelemetricsTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
+		1F78E7A01C3B469300221927 /* FRC Advanced Scouting TelemetricsUITests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 1F78E7B01C3B469300221927 /* Build configuration list for PBXNativeTarget "FRC Advanced Scouting TelemetricsUITests" */;
+			buildPhases = (
+				1F78E79D1C3B469300221927 /* Sources */,
+				1F78E79E1C3B469300221927 /* Frameworks */,
+				1F78E79F1C3B469300221927 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				1F78E7A31C3B469300221927 /* PBXTargetDependency */,
+			);
+			name = "FRC Advanced Scouting TelemetricsUITests";
+			productName = "FRC Advanced Scouting TelemetricsUITests";
+			productReference = 1F78E7A11C3B469300221927 /* FRC Advanced Scouting TelemetricsUITests.xctest */;
+			productType = "com.apple.product-type.bundle.ui-testing";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		1F78E7771C3B469300221927 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastSwiftUpdateCheck = 0720;
+				LastUpgradeCheck = 0720;
+				ORGANIZATIONNAME = "Kampfire Technologies";
+				TargetAttributes = {
+					1F78E77E1C3B469300221927 = {
+						CreatedOnToolsVersion = 7.2;
+					};
+					1F78E7951C3B469300221927 = {
+						CreatedOnToolsVersion = 7.2;
+						TestTargetID = 1F78E77E1C3B469300221927;
+					};
+					1F78E7A01C3B469300221927 = {
+						CreatedOnToolsVersion = 7.2;
+						TestTargetID = 1F78E77E1C3B469300221927;
+					};
+				};
+			};
+			buildConfigurationList = 1F78E77A1C3B469300221927 /* Build configuration list for PBXProject "FRC Advanced Scouting Telemetrics" */;
+			compatibilityVersion = "Xcode 3.2";
+			developmentRegion = English;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = 1F78E7761C3B469300221927;
+			productRefGroup = 1F78E7801C3B469300221927 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				1F78E77E1C3B469300221927 /* FRC Advanced Scouting Telemetrics */,
+				1F78E7951C3B469300221927 /* FRC Advanced Scouting TelemetricsTests */,
+				1F78E7A01C3B469300221927 /* FRC Advanced Scouting TelemetricsUITests */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		1F78E77D1C3B469300221927 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				1F78E7901C3B469300221927 /* LaunchScreen.storyboard in Resources */,
+				1F78E78D1C3B469300221927 /* Assets.xcassets in Resources */,
+				1F78E7881C3B469300221927 /* Main.storyboard in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		1F78E7941C3B469300221927 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		1F78E79F1C3B469300221927 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		1F78E77B1C3B469300221927 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				1F78E7851C3B469300221927 /* ViewController.swift in Sources */,
+				1F78E78B1C3B469300221927 /* FRC_Advanced_Scouting_Telemetrics.xcdatamodeld in Sources */,
+				1F78E7831C3B469300221927 /* AppDelegate.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		1F78E7921C3B469300221927 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				1F78E79B1C3B469300221927 /* FRC_Advanced_Scouting_TelemetricsTests.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		1F78E79D1C3B469300221927 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				1F78E7A61C3B469300221927 /* FRC_Advanced_Scouting_TelemetricsUITests.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		1F78E7981C3B469300221927 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 1F78E77E1C3B469300221927 /* FRC Advanced Scouting Telemetrics */;
+			targetProxy = 1F78E7971C3B469300221927 /* PBXContainerItemProxy */;
+		};
+		1F78E7A31C3B469300221927 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 1F78E77E1C3B469300221927 /* FRC Advanced Scouting Telemetrics */;
+			targetProxy = 1F78E7A21C3B469300221927 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin PBXVariantGroup section */
+		1F78E7861C3B469300221927 /* Main.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				1F78E7871C3B469300221927 /* Base */,
+			);
+			name = Main.storyboard;
+			sourceTree = "<group>";
+		};
+		1F78E78E1C3B469300221927 /* LaunchScreen.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				1F78E78F1C3B469300221927 /* Base */,
+			);
+			name = LaunchScreen.storyboard;
+			sourceTree = "<group>";
+		};
+/* End PBXVariantGroup section */
+
+/* Begin XCBuildConfiguration section */
+		1F78E7A81C3B469300221927 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 9.2;
+				MTL_ENABLE_DEBUG_INFO = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = iphoneos;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				TARGETED_DEVICE_FAMILY = 2;
+			};
+			name = Debug;
+		};
+		1F78E7A91C3B469300221927 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 9.2;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = 2;
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		1F78E7AB1C3B469300221927 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				INFOPLIST_FILE = "FRC Advanced Scouting Telemetrics/Info.plist";
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.kampmeier.FRC-Advanced-Scouting-Telemetrics";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Debug;
+		};
+		1F78E7AC1C3B469300221927 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				INFOPLIST_FILE = "FRC Advanced Scouting Telemetrics/Info.plist";
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.kampmeier.FRC-Advanced-Scouting-Telemetrics";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Release;
+		};
+		1F78E7AE1C3B469300221927 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				INFOPLIST_FILE = "FRC Advanced Scouting TelemetricsTests/Info.plist";
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.kampmeier.FRC-Advanced-Scouting-TelemetricsTests";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/FRC Advanced Scouting Telemetrics.app/FRC Advanced Scouting Telemetrics";
+			};
+			name = Debug;
+		};
+		1F78E7AF1C3B469300221927 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				INFOPLIST_FILE = "FRC Advanced Scouting TelemetricsTests/Info.plist";
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.kampmeier.FRC-Advanced-Scouting-TelemetricsTests";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/FRC Advanced Scouting Telemetrics.app/FRC Advanced Scouting Telemetrics";
+			};
+			name = Release;
+		};
+		1F78E7B11C3B469300221927 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				INFOPLIST_FILE = "FRC Advanced Scouting TelemetricsUITests/Info.plist";
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.kampmeier.FRC-Advanced-Scouting-TelemetricsUITests";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				TEST_TARGET_NAME = "FRC Advanced Scouting Telemetrics";
+				USES_XCTRUNNER = YES;
+			};
+			name = Debug;
+		};
+		1F78E7B21C3B469300221927 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				INFOPLIST_FILE = "FRC Advanced Scouting TelemetricsUITests/Info.plist";
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.kampmeier.FRC-Advanced-Scouting-TelemetricsUITests";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				TEST_TARGET_NAME = "FRC Advanced Scouting Telemetrics";
+				USES_XCTRUNNER = YES;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		1F78E77A1C3B469300221927 /* Build configuration list for PBXProject "FRC Advanced Scouting Telemetrics" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				1F78E7A81C3B469300221927 /* Debug */,
+				1F78E7A91C3B469300221927 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		1F78E7AA1C3B469300221927 /* Build configuration list for PBXNativeTarget "FRC Advanced Scouting Telemetrics" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				1F78E7AB1C3B469300221927 /* Debug */,
+				1F78E7AC1C3B469300221927 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+		};
+		1F78E7AD1C3B469300221927 /* Build configuration list for PBXNativeTarget "FRC Advanced Scouting TelemetricsTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				1F78E7AE1C3B469300221927 /* Debug */,
+				1F78E7AF1C3B469300221927 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+		};
+		1F78E7B01C3B469300221927 /* Build configuration list for PBXNativeTarget "FRC Advanced Scouting TelemetricsUITests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				1F78E7B11C3B469300221927 /* Debug */,
+				1F78E7B21C3B469300221927 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+		};
+/* End XCConfigurationList section */
+
+/* Begin XCVersionGroup section */
+		1F78E7891C3B469300221927 /* FRC_Advanced_Scouting_Telemetrics.xcdatamodeld */ = {
+			isa = XCVersionGroup;
+			children = (
+				1F78E78A1C3B469300221927 /* FRC_Advanced_Scouting_Telemetrics.xcdatamodel */,
+			);
+			currentVersion = 1F78E78A1C3B469300221927 /* FRC_Advanced_Scouting_Telemetrics.xcdatamodel */;
+			path = FRC_Advanced_Scouting_Telemetrics.xcdatamodeld;
+			sourceTree = "<group>";
+			versionGroupType = wrapper.xcdatamodel;
+		};
+/* End XCVersionGroup section */
+	};
+	rootObject = 1F78E7771C3B469300221927 /* Project object */;
+}
