@@ -15,6 +15,8 @@
 		1F78E7901C3B469300221927 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 1F78E78E1C3B469300221927 /* LaunchScreen.storyboard */; };
 		1F78E79B1C3B469300221927 /* FRC_Advanced_Scouting_TelemetricsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F78E79A1C3B469300221927 /* FRC_Advanced_Scouting_TelemetricsTests.swift */; };
 		1F78E7A61C3B469300221927 /* FRC_Advanced_Scouting_TelemetricsUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F78E7A51C3B469300221927 /* FRC_Advanced_Scouting_TelemetricsUITests.swift */; };
+		1FF1F1731C3CC74A0051EE54 /* TeamListController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FF1F1721C3CC74A0051EE54 /* TeamListController.swift */; };
+		1FF1F1771C3DDC130051EE54 /* TeamListSplitController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FF1F1761C3DDC130051EE54 /* TeamListSplitController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -49,6 +51,8 @@
 		1F78E7A11C3B469300221927 /* FRC Advanced Scouting TelemetricsUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "FRC Advanced Scouting TelemetricsUITests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
 		1F78E7A51C3B469300221927 /* FRC_Advanced_Scouting_TelemetricsUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FRC_Advanced_Scouting_TelemetricsUITests.swift; sourceTree = "<group>"; };
 		1F78E7A71C3B469300221927 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		1FF1F1721C3CC74A0051EE54 /* TeamListController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TeamListController.swift; sourceTree = "<group>"; };
+		1FF1F1761C3DDC130051EE54 /* TeamListSplitController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TeamListSplitController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -101,7 +105,9 @@
 			children = (
 				1F78E7821C3B469300221927 /* AppDelegate.swift */,
 				1F78E7841C3B469300221927 /* ViewController.swift */,
+				1FF1F1721C3CC74A0051EE54 /* TeamListController.swift */,
 				1F78E7861C3B469300221927 /* Main.storyboard */,
+				1FF1F1761C3DDC130051EE54 /* TeamListSplitController.swift */,
 				1F78E78C1C3B469300221927 /* Assets.xcassets */,
 				1F78E78E1C3B469300221927 /* LaunchScreen.storyboard */,
 				1F78E7911C3B469300221927 /* Info.plist */,
@@ -259,8 +265,10 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				1FF1F1771C3DDC130051EE54 /* TeamListSplitController.swift in Sources */,
 				1F78E7851C3B469300221927 /* ViewController.swift in Sources */,
 				1F78E78B1C3B469300221927 /* FRC_Advanced_Scouting_Telemetrics.xcdatamodeld in Sources */,
+				1FF1F1731C3CC74A0051EE54 /* TeamListController.swift in Sources */,
 				1F78E7831C3B469300221927 /* AppDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -488,6 +496,7 @@
 				1F78E7AC1C3B469300221927 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		1F78E7AD1C3B469300221927 /* Build configuration list for PBXNativeTarget "FRC Advanced Scouting TelemetricsTests" */ = {
 			isa = XCConfigurationList;
@@ -496,6 +505,7 @@
 				1F78E7AF1C3B469300221927 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		1F78E7B01C3B469300221927 /* Build configuration list for PBXNativeTarget "FRC Advanced Scouting TelemetricsUITests" */ = {
 			isa = XCConfigurationList;
@@ -504,6 +514,7 @@
 				1F78E7B21C3B469300221927 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 
