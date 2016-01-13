@@ -17,6 +17,8 @@
 		1F78E7A61C3B469300221927 /* FRC_Advanced_Scouting_TelemetricsUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F78E7A51C3B469300221927 /* FRC_Advanced_Scouting_TelemetricsUITests.swift */; };
 		1FF1F1731C3CC74A0051EE54 /* TeamListController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FF1F1721C3CC74A0051EE54 /* TeamListController.swift */; };
 		1FF1F1791C4604370051EE54 /* TeamDataManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FF1F1781C4604370051EE54 /* TeamDataManager.swift */; };
+		1FF1F17C1C4707B10051EE54 /* Team+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FF1F17A1C4707B10051EE54 /* Team+CoreDataProperties.swift */; };
+		1FF1F17D1C4707B10051EE54 /* Team.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FF1F17B1C4707B10051EE54 /* Team.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -53,6 +55,8 @@
 		1F78E7A71C3B469300221927 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		1FF1F1721C3CC74A0051EE54 /* TeamListController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TeamListController.swift; sourceTree = "<group>"; };
 		1FF1F1781C4604370051EE54 /* TeamDataManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TeamDataManager.swift; sourceTree = "<group>"; };
+		1FF1F17A1C4707B10051EE54 /* Team+CoreDataProperties.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Team+CoreDataProperties.swift"; sourceTree = "<group>"; };
+		1FF1F17B1C4707B10051EE54 /* Team.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Team.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -104,6 +108,8 @@
 			isa = PBXGroup;
 			children = (
 				1F78E7821C3B469300221927 /* AppDelegate.swift */,
+				1FF1F17A1C4707B10051EE54 /* Team+CoreDataProperties.swift */,
+				1FF1F17B1C4707B10051EE54 /* Team.swift */,
 				1F78E7841C3B469300221927 /* ViewController.swift */,
 				1FF1F1721C3CC74A0051EE54 /* TeamListController.swift */,
 				1FF1F1781C4604370051EE54 /* TeamDataManager.swift */,
@@ -265,7 +271,9 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				1FF1F17C1C4707B10051EE54 /* Team+CoreDataProperties.swift in Sources */,
 				1F78E7851C3B469300221927 /* ViewController.swift in Sources */,
+				1FF1F17D1C4707B10051EE54 /* Team.swift in Sources */,
 				1F78E78B1C3B469300221927 /* FRC_Advanced_Scouting_Telemetrics.xcdatamodeld in Sources */,
 				1FF1F1731C3CC74A0051EE54 /* TeamListController.swift in Sources */,
 				1FF1F1791C4604370051EE54 /* TeamDataManager.swift in Sources */,

@@ -12,7 +12,7 @@ import CoreData
 
 class TeamDataManager {
     
-    func saveTeamNumber(number: String) -> NSManagedObject {
+    func saveTeamNumber(number: String) -> Team {
         //Get the AppDelegate and get the managed context
         let appDelegate = UIApplication.sharedApplication().delegate as! AppDelegate
         
@@ -21,10 +21,10 @@ class TeamDataManager {
         //Get the entity for a Team and then create a new one
         let entity = NSEntityDescription.entityForName("Team", inManagedObjectContext: managedContext)
         
-        let team = NSManagedObject(entity: entity!, insertIntoManagedObjectContext: managedContext)
+        let team = NSManagedObject(entity: entity!, insertIntoManagedObjectContext: managedContext) as! Team
         
         //Set the value we want
-        team.setValue(number, forKey: "teamNumber")
+        team.teamNumber = number
         
         //Try to save
         do {
@@ -33,5 +33,25 @@ class TeamDataManager {
             print("Could not save: \(error), \(error.userInfo)")
         }
         return team
+    }
+    
+    func getTeams() -> [Team] {
+        var teams: [Team] = [Team]()
+        
+        let appDelegate = UIApplication.sharedApplication().delegate as! AppDelegate
+        
+        let managedContext = appDelegate.managedObjectContext
+        
+        let fetchRequest = NSFetchRequest(entityName: "Team")
+        
+        do {
+            let results = try managedContext.executeFetchRequest(fetchRequest)
+            
+            teams = results as! [Team]
+        } catch let error as NSError {
+            print("Could not fetch \(error), \(error.userInfo)")
+        }
+        
+        return teams
     }
 }

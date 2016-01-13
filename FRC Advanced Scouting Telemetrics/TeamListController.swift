@@ -9,11 +9,15 @@
 import UIKit
 import CoreData
 
-class TeamListController: UIViewController, UITableViewDataSource {
+class TeamListController: UIViewController, UITableViewDataSource, UITableViewDelegate {
     @IBOutlet weak var teamList: UITableView!
+    @IBOutlet weak var teamNumberLabel: UILabel!
+    @IBOutlet weak var driverExpLabel: UILabel!
+    @IBOutlet weak var weightLabel: UILabel!
+    
     let teamManager = TeamDataManager()
     
-    var teams = [NSManagedObject]()
+    var teams = [Team]()
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -25,22 +29,7 @@ class TeamListController: UIViewController, UITableViewDataSource {
     override func viewWillAppear(animated: Bool) {
         super.viewWillAppear(animated)
         
-        teams.append(teamManager.saveTeamNumber("2312"))
-        teams.append(teamManager.saveTeamNumber("4256"))
-        
-        let appDelegate = UIApplication.sharedApplication().delegate as! AppDelegate
-        
-        let managedContext = appDelegate.managedObjectContext
-        
-        let fetchRequest = NSFetchRequest(entityName: "Team")
-        
-        do {
-            let results = try managedContext.executeFetchRequest(fetchRequest)
-            
-            teams = results as! [NSManagedObject]
-        } catch let error as NSError {
-            print("Could not fetch \(error), \(error.userInfo)")
-        }
+        teams = teamManager.getTeams()
     }
     
     func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -54,6 +43,16 @@ class TeamListController: UIViewController, UITableViewDataSource {
         cell!.textLabel?.text = "Team \(teams[indexPath.row].valueForKey("teamNumber") as! String)"
         
         return cell!
+    }
+    
+    func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
+        let teamSelected = teams[indexPath.row]
+        
+        teamNumberLabel.text = teamSelected.teamNumber
+        
+        weightLabel.text = "\(teamSelected.robotWeight)"
+        
+        driverExpLabel.text = "\(teamSelected.driverExp)"
     }
     
     @IBAction func addTeam(sender: UIButton) {
