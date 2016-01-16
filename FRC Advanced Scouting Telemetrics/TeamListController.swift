@@ -7,7 +7,6 @@
 //
 
 import UIKit
-import CoreData
 
 class TeamListController: UIViewController, UITableViewDataSource, UITableViewDelegate {
     @IBOutlet weak var teamList: UITableView!
@@ -27,6 +26,10 @@ class TeamListController: UIViewController, UITableViewDataSource, UITableViewDe
     
     override func viewWillAppear(animated: Bool) {
         super.viewWillAppear(animated)
+        
+        teamManager.saveTeamNumber("3354")
+        teamManager.saveTeamNumber("23")
+        teamManager.saveTeamNumber("254")
         
         teams = teamManager.getTeams()
     }
@@ -49,7 +52,7 @@ class TeamListController: UIViewController, UITableViewDataSource, UITableViewDe
         
         teamNumberLabel.text = teamSelected.teamNumber
         
-        weightLabel.text = "Weight: \(teamSelected.robotWeight)"
+        weightLabel.text = "Weight: \(teamSelected.robotWeight) lbs"
         
         driverExpLabel.text = "Driver Exp: \(teamSelected.driverExp) yrs"
     }
