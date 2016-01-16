@@ -21,7 +21,6 @@ class TeamListController: UIViewController, UITableViewDataSource, UITableViewDe
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        teamList.dataSource = self
         teamList.registerClass(UITableViewCell.self,
             forCellReuseIdentifier: "Cell")
     }
@@ -50,13 +49,9 @@ class TeamListController: UIViewController, UITableViewDataSource, UITableViewDe
         
         teamNumberLabel.text = teamSelected.teamNumber
         
-        weightLabel.text = "\(teamSelected.robotWeight)"
+        weightLabel.text = "Weight: \(teamSelected.robotWeight)"
         
-        driverExpLabel.text = "\(teamSelected.driverExp)"
-    }
-    
-    @IBAction func addTeam(sender: UIButton) {
-        teams.append(teamManager.saveTeamNumber("132"))
+        driverExpLabel.text = "Driver Exp: \(teamSelected.driverExp) yrs"
     }
     
 }
