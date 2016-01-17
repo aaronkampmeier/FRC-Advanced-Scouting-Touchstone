@@ -10,7 +10,7 @@
         <!--FRC Advanced Scouting Touchstone-->
         <scene sceneID="tne-QT-ifu">
             <objects>
-                <viewController id="BYZ-38-t0r" customClass="ViewController" customModule="FRC_Advanced_Scouting_Telemetrics" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController id="BYZ-38-t0r" customClass="ViewController" customModule="FRC_Advanced_Scouting_Touchstone" customModuleProvider="target" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="6qV-n6-uWp"/>
                         <viewControllerLayoutGuide type="bottom" id="gRQ-KZ-6Vm"/>
@@ -183,7 +183,7 @@
         <!--Pit Scouting Controller-->
         <scene sceneID="HZ5-Cm-qrg">
             <objects>
-                <viewController id="Aeh-gy-7kO" customClass="PitScoutingController" customModule="FRC_Advanced_Scouting_Telemetrics" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController id="Aeh-gy-7kO" customClass="PitScoutingController" customModule="FRC_Advanced_Scouting_Touchstone" customModuleProvider="target" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="Vmr-Md-0WU"/>
                         <viewControllerLayoutGuide type="bottom" id="raw-Rd-szX"/>
@@ -358,7 +358,7 @@
         <!--Team List-->
         <scene sceneID="ujb-tL-StL">
             <objects>
-                <viewController id="Bvx-zi-C8Q" customClass="TeamListController" customModule="FRC_Advanced_Scouting_Telemetrics" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController id="Bvx-zi-C8Q" customClass="TeamListController" customModule="FRC_Advanced_Scouting_Touchstone" customModuleProvider="target" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="X0o-BF-09T"/>
                         <viewControllerLayoutGuide type="bottom" id="4SR-Jl-g6t"/>
@@ -703,7 +703,7 @@
         <!--Admin Console-->
         <scene sceneID="Yzd-UE-rvJ">
             <objects>
-                <viewController id="R8L-nd-eva" customClass="AdminConsoleController" customModule="FRC_Advanced_Scouting_Telemetrics" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController id="R8L-nd-eva" customClass="AdminConsoleController" customModule="FRC_Advanced_Scouting_Touchstone" customModuleProvider="target" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="jBL-De-nJE"/>
                         <viewControllerLayoutGuide type="bottom" id="SMf-oH-XKy"/>
