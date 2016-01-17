@@ -35,7 +35,7 @@ class TeamDataManager {
         return team
     }
     
-    func getTeams() -> [Team] {
+    func getTeams(predicate: NSPredicate) -> [Team] {
         var teams: [Team] = [Team]()
         
         let appDelegate = UIApplication.sharedApplication().delegate as! AppDelegate
@@ -43,6 +43,8 @@ class TeamDataManager {
         let managedContext = appDelegate.managedObjectContext
         
         let fetchRequest = NSFetchRequest(entityName: "Team")
+        
+        fetchRequest.predicate = predicate
         
         do {
             let results = try managedContext.executeFetchRequest(fetchRequest)
@@ -53,5 +55,13 @@ class TeamDataManager {
         }
         
         return teams
+    }
+    
+    func getTeams(numberForSorting: String) -> [Team] {
+        return getTeams(NSPredicate(format: "%K like %@", argumentArray: ["teamNumber", "\(numberForSorting)"]))
+    }
+    
+    func getTeams() -> [Team] {
+        return getTeams(NSPredicate(value: true))
     }
 }

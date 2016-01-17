@@ -16,8 +16,22 @@ class PitScoutingController: UIViewController {
     let dataManager = TeamDataManager()
     
     @IBAction func addTeamPressed(sender: UIButton) {
-        //let driverXp = driverXpField.
-        //dataManager.saveTeamNumber(<#T##number: String##String#>)
+        
+        let driverXp = driverXpField.text
+        let weight = weightField.text
+        let teamNumber = teamNumberField.text
+        
+        let returnedTeams = dataManager.getTeams(teamNumber!)
+        
+        for team in returnedTeams {
+            
+            team.driverExp = Double(driverXp!)!
+            team.robotWeight = Double(weight!)!
+        }
+        
+        if returnedTeams.count == 0 {
+            //Present Alert
+        }
     }
     
 }

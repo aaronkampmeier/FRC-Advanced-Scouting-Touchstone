@@ -27,10 +27,6 @@ class TeamListController: UIViewController, UITableViewDataSource, UITableViewDe
     override func viewWillAppear(animated: Bool) {
         super.viewWillAppear(animated)
         
-        teamManager.saveTeamNumber("3354")
-        teamManager.saveTeamNumber("23")
-        teamManager.saveTeamNumber("254")
-        
         teams = teamManager.getTeams()
     }
     
