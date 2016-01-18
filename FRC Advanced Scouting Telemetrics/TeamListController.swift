@@ -20,6 +20,10 @@ class TeamListController: UIViewController, UITableViewDataSource, UITableViewDe
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        //Add responder for notification about a new team
+        NSNotificationCenter.defaultCenter().addObserverForName("New Team", object: nil, queue: nil, usingBlock: addTeamFromNotification)
+        
         teamList.registerClass(UITableViewCell.self,
             forCellReuseIdentifier: "Cell")
     }
@@ -28,6 +32,12 @@ class TeamListController: UIViewController, UITableViewDataSource, UITableViewDe
         super.viewWillAppear(animated)
         
         teams = teamManager.getTeams()
+        
+    }
+    
+    func addTeamFromNotification(notification:NSNotification) {
+        teams = teamManager.getTeams()
+        teamList.reloadData()
     }
     
     func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -53,4 +63,18 @@ class TeamListController: UIViewController, UITableViewDataSource, UITableViewDe
         driverExpLabel.text = "Driver Exp: \(teamSelected.driverExp) yrs"
     }
     
+    
+    //Two functions to allow deletion of Teams from the Table View
+    func tableView(tableView: UITableView, canEditRowAtIndexPath indexPath: NSIndexPath) -> Bool {
+        return true
+    }
+    
+    func tableView(tableView: UITableView, commitEditingStyle editingStyle: UITableViewCellEditingStyle, forRowAtIndexPath indexPath: NSIndexPath) {
+        if editingStyle == UITableViewCellEditingStyle.Delete {
+            //Remove the team and reload the table
+            teamManager.deleteTeam(teams[indexPath.row])
+            teams.removeAtIndex(indexPath.row)
+            teamList.reloadData()
+        }
+    }
 }

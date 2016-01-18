@@ -35,7 +35,30 @@ class TeamDataManager {
         return team
     }
     
-    func getTeams(predicate: NSPredicate) -> [Team] {
+    func deleteTeam(teamForDeletion: Team) {
+        //Retrieve the Managed Context
+        let managedContext = (UIApplication.sharedApplication().delegate as! AppDelegate).managedObjectContext
+        
+        managedContext.deleteObject(teamForDeletion)
+        
+        do {
+            try managedContext.save()
+        } catch let error as NSError {
+            print("Could not save: \(error), \(error.userInfo)")
+        }
+    }
+    
+    func save() {
+        let managedContext = (UIApplication.sharedApplication().delegate as! AppDelegate).managedObjectContext
+        
+        do {
+            try managedContext.save()
+        } catch let error as NSError {
+            print("Could not save: \(error), \(error.userInfo)")
+        }
+    }
+    
+    func getTeams(Predicate predicate: NSPredicate?) -> [Team] {
         var teams: [Team] = [Team]()
         
         let appDelegate = UIApplication.sharedApplication().delegate as! AppDelegate
@@ -58,10 +81,10 @@ class TeamDataManager {
     }
     
     func getTeams(numberForSorting: String) -> [Team] {
-        return getTeams(NSPredicate(format: "%K like %@", argumentArray: ["teamNumber", "\(numberForSorting)"]))
+        return getTeams(Predicate: NSPredicate(format: "%K like %@", argumentArray: ["teamNumber", "\(numberForSorting)"]))
     }
     
     func getTeams() -> [Team] {
-        return getTeams(NSPredicate(value: true))
+        return getTeams(Predicate: nil)
     }
 }
