@@ -57,13 +57,12 @@ class PitScoutingController: UIViewController {
             dataManager.save()
             
             //Present Confirmation Alert
-            let alert = UIAlertController(title: "Team Updated", message: "Weight: \(weight) lbs. \n \(driverXp) yrs. \n added to Team \(teamNumber)", preferredStyle: .Alert)
+            let alert = UIAlertController(title: "Team Updated", message: "Weight: \(weight!) lbs. \n Driver XP: \(driverXp!) yrs. \n Added to Team \(teamNumber!)", preferredStyle: .Alert)
             
-            alert.addAction(UIAlertAction(title: "Ok", style: .Default, handler: nil))
+            alert.addAction(UIAlertAction(title: "Ok", style: .Default, handler: dismissAlert))
             
             presentViewController(alert, animated: true, completion: nil)
             
-            dismissViewControllerAnimated(true, completion: nil)
         } else {
             //Alert that the team does not exist
             let alert = UIAlertController(title: "Team Doesn't Exist", message: "The team you entered does not exist in the local databse", preferredStyle: .Alert)
@@ -72,5 +71,9 @@ class PitScoutingController: UIViewController {
             
             presentViewController(alert, animated: true, completion: nil)
         }
+    }
+    
+    func dismissAlert(alertAction: UIAlertAction) {
+        dismissViewControllerAnimated(true, completion: nil)
     }
 }
