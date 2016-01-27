@@ -9,13 +9,16 @@
 import Foundation
 import UIKit
 
-class PitScoutingController: UIViewController {
+class PitScoutingController: UIViewController, UIImagePickerControllerDelegate, UINavigationControllerDelegate {
+    @IBOutlet weak var frontImage: UIImageView!
+    @IBOutlet weak var sideImage: UIImageView!
     @IBOutlet weak var updateTeamButton: UIButton!
     @IBOutlet weak var driverXpField: UITextField!
     @IBOutlet weak var validTeamSymbol: UIImageView!
     @IBOutlet weak var weightField: UITextField!
     @IBOutlet weak var teamNumberField: UITextField!
     let dataManager = TeamDataManager()
+    let imageController = UIImagePickerController()
     
     var acceptableTeam = false
     
@@ -75,5 +78,18 @@ class PitScoutingController: UIViewController {
     
     func dismissAlert(alertAction: UIAlertAction) {
         dismissViewControllerAnimated(true, completion: nil)
+    }
+    
+    @IBAction func frontPhotoPressed(sender: UIButton) {
+        if UIImagePickerController.isSourceTypeAvailable(.Camera) {
+            imageController.delegate = self
+            imageController.sourceType = .Camera
+            presentViewController(imageController, animated: true, completion: nil)
+        }
+    }
+    
+    func imagePickerController(picker: UIImagePickerController, didFinishPickingImage image: UIImage, editingInfo: [String : AnyObject]?) {
+        dismissViewControllerAnimated(true, completion: nil)
+        frontImage.image = image
     }
 }
