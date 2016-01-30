@@ -9,6 +9,8 @@
 import UIKit
 
 class TeamListController: UIViewController, UITableViewDataSource, UITableViewDelegate, UISearchBarDelegate {
+    @IBOutlet weak var sideImageView: UIImageView!
+    @IBOutlet weak var frontImageView: UIImageView!
     @IBOutlet weak var searchBar: UISearchBar!
     @IBOutlet weak var teamTable: UITableView!
     @IBOutlet weak var segmentControl: UISegmentedControl!
@@ -91,9 +93,21 @@ class TeamListController: UIViewController, UITableViewDataSource, UITableViewDe
         
         teamNumberLabel.text = teamSelected.teamNumber
         
-        weightLabel.text = "Weight: \(teamSelected.robotWeight) lbs"
+        weightLabel.text = "Weight: \(teamSelected.robotWeight!) lbs"
         
-        driverExpLabel.text = "Driver Exp: \(teamSelected.driverExp) yrs"
+        driverExpLabel.text = "Driver Exp: \(teamSelected.driverExp!) yrs"
+        
+        //Populate the images, if there are images
+        if let image = teamSelected.frontImage {
+            frontImageView.image = UIImage(data: image)
+        } else {
+            frontImageView.image = nil
+        }
+        if let image = teamSelected.sideImage {
+            sideImageView.image = UIImage(data: image)
+        } else {
+            sideImageView.image = nil
+        }
     }
     
     

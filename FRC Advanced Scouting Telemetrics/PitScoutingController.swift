@@ -10,6 +10,7 @@ import Foundation
 import UIKit
 
 class PitScoutingController: UIViewController, UIImagePickerControllerDelegate, UINavigationControllerDelegate {
+    //IBOutlets
     @IBOutlet weak var frontImage: UIImageView!
     @IBOutlet weak var sideImage: UIImageView!
     @IBOutlet weak var updateTeamButton: UIButton!
@@ -17,10 +18,15 @@ class PitScoutingController: UIViewController, UIImagePickerControllerDelegate, 
     @IBOutlet weak var validTeamSymbol: UIImageView!
     @IBOutlet weak var weightField: UITextField!
     @IBOutlet weak var teamNumberField: UITextField!
+    
     let dataManager = TeamDataManager()
     let imageController = UIImagePickerController()
     
-    var acceptableTeam = false
+    var observer: NSObjectProtocol? = nil
+    
+    let notificationCenter = NSNotificationCenter.defaultCenter()
+    
+    private var acceptableTeam = false
     
     
     override func viewDidLoad() {
@@ -55,6 +61,8 @@ class PitScoutingController: UIViewController, UIImagePickerControllerDelegate, 
                 
                 team.driverExp = Double(driverXp!)!
                 team.robotWeight = Double(weight!)!
+                team.frontImage = UIImageJPEGRepresentation(frontImage.image!, 1)
+                team.sideImage = UIImageJPEGRepresentation(sideImage.image!, 1)
             }
             
             dataManager.save()
@@ -81,15 +89,52 @@ class PitScoutingController: UIViewController, UIImagePickerControllerDelegate, 
     }
     
     @IBAction func frontPhotoPressed(sender: UIButton) {
-        if UIImagePickerController.isSourceTypeAvailable(.Camera) {
-            imageController.delegate = self
-            imageController.sourceType = .Camera
-            presentViewController(imageController, animated: true, completion: nil)
-        }
+        getPhoto("front")
+    }
+    
+    @IBAction func sidePhotoPressed(sender: UIButton) {
+        getPhoto("side")
     }
     
     func imagePickerController(picker: UIImagePickerController, didFinishPickingImage image: UIImage, editingInfo: [String : AnyObject]?) {
+        //Dismiss the Cam view
         dismissViewControllerAnimated(true, completion: nil)
-        frontImage.image = image
+        
+        //Create and post notification of image selected with userInfo of the image
+        let notification = NSNotification(name: "newImage", object: self, userInfo: ["image":image])
+        
+        notificationCenter.postNotification(notification)
+    }
+    
+    func getPhoto(frontOrSide: String) {
+        //Check to make sure there is a camera
+        if UIImagePickerController.isSourceTypeAvailable(.Camera) {
+            //Set up the camera view and present it
+            imageController.delegate = self
+            imageController.sourceType = .Camera
+            presentViewController(imageController, animated: true, completion: nil)
+            
+            //Add observer for the new image notification
+            observer = notificationCenter.addObserverForName("newImage", object: self, queue: nil, usingBlock: {(notification: NSNotification) in self.setPhoto(frontOrSide, image: ((notification.userInfo!) as! [String: UIImage])["image"]!)})
+        } else {
+            let alert = UIAlertController(title: "No Camera", message: "The device you are using does not have image taking capabilities", preferredStyle: .Alert)
+            alert.addAction(UIAlertAction(title: "OK", style: .Default, handler: nil))
+            presentViewController(alert, animated: true, completion: nil)
+        }
+    }
+    
+    func setPhoto(frontOrSide: String, image: UIImage) {
+        
+        switch frontOrSide {
+        case "front":
+            frontImage.image = image
+        case "side":
+            sideImage.image = image
+        default:
+            NSLog("Neither Front Nor Side was for the photo")
+        }
+        
+        //Remove the observer so we don't get repeated commands
+        notificationCenter.removeObserver(observer!, name: "newImage", object: self)
     }
 }
