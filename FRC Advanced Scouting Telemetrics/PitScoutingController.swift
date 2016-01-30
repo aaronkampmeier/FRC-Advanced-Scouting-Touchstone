@@ -8,6 +8,7 @@
 
 import Foundation
 import UIKit
+import AVFoundation
 
 class PitScoutingController: UIViewController, UIImagePickerControllerDelegate, UINavigationControllerDelegate {
     //IBOutlets
@@ -68,19 +69,10 @@ class PitScoutingController: UIViewController, UIImagePickerControllerDelegate, 
             dataManager.save()
             
             //Present Confirmation Alert
-            let alert = UIAlertController(title: "Team Updated", message: "Weight: \(weight!) lbs. \n Driver XP: \(driverXp!) yrs. \n Added to Team \(teamNumber!)", preferredStyle: .Alert)
-            
-            alert.addAction(UIAlertAction(title: "Ok", style: .Default, handler: dismissAlert))
-            
-            presentViewController(alert, animated: true, completion: nil)
-            
+            presentOkAlert("Team Updated", message: "Weight: \(weight!) lbs. \n Driver XP: \(driverXp!) yrs. \n Added to Team \(teamNumber!)")
         } else {
             //Alert that the team does not exist
-            let alert = UIAlertController(title: "Team Doesn't Exist", message: "The team you entered does not exist in the local databse", preferredStyle: .Alert)
-            
-            alert.addAction(UIAlertAction(title: "Ok", style: .Default, handler: nil))
-            
-            presentViewController(alert, animated: true, completion: nil)
+            presentOkAlert("Team Doesn't Exist", message: "The team you entered does not exist in the local databse")
         }
     }
     
@@ -109,17 +101,25 @@ class PitScoutingController: UIViewController, UIImagePickerControllerDelegate, 
     func getPhoto(frontOrSide: String) {
         //Check to make sure there is a camera
         if UIImagePickerController.isSourceTypeAvailable(.Camera) {
-            //Set up the camera view and present it
-            imageController.delegate = self
-            imageController.sourceType = .Camera
-            presentViewController(imageController, animated: true, completion: nil)
-            
-            //Add observer for the new image notification
-            observer = notificationCenter.addObserverForName("newImage", object: self, queue: nil, usingBlock: {(notification: NSNotification) in self.setPhoto(frontOrSide, image: ((notification.userInfo!) as! [String: UIImage])["image"]!)})
+            //Ask fro permission
+            let authStatus = AVCaptureDevice.authorizationStatusForMediaType(AVMediaTypeVideo)
+            if  authStatus != .Authorized && authStatus == .NotDetermined {
+                AVCaptureDevice.requestAccessForMediaType(AVMediaTypeVideo, completionHandler: nil)
+            } else if authStatus == .Denied {
+                presentOkAlert("You Have Denied Acces to the Camera", message: "Go to Settings> Privacy> Camera> FAST and turn it on")
+            } else if authStatus == .Authorized {
+                //Set up the camera view and present it
+                imageController.delegate = self
+                imageController.sourceType = .Camera
+                presentViewController(imageController, animated: true, completion: nil)
+                
+                //Add observer for the new image notification
+                observer = notificationCenter.addObserverForName("newImage", object: self, queue: nil, usingBlock: {(notification: NSNotification) in self.setPhoto(frontOrSide, image: ((notification.userInfo!) as! [String: UIImage])["image"]!)})
+            } else {
+                
+            }
         } else {
-            let alert = UIAlertController(title: "No Camera", message: "The device you are using does not have image taking capabilities", preferredStyle: .Alert)
-            alert.addAction(UIAlertAction(title: "OK", style: .Default, handler: nil))
-            presentViewController(alert, animated: true, completion: nil)
+            presentOkAlert("No Camera", message: "The device you are using does not have image taking capabilities")
         }
     }
     
@@ -136,5 +136,12 @@ class PitScoutingController: UIViewController, UIImagePickerControllerDelegate, 
         
         //Remove the observer so we don't get repeated commands
         notificationCenter.removeObserver(observer!, name: "newImage", object: self)
+    }
+    
+    //Function for presenting a simple alert
+    func presentOkAlert(title: String, message: String) {
+        let alert = UIAlertController(title: title, message: message, preferredStyle: .Alert)
+        alert.addAction(UIAlertAction(title: "OK", style: .Default, handler: nil))
+        presentViewController(alert, animated: true, completion: nil)
     }
 }

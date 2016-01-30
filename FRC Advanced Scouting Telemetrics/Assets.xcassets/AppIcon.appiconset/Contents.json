@@ -1,8 +1,9 @@
 {
   "images" : [
     {
-      "idiom" : "ipad",
       "size" : "29x29",
+      "idiom" : "ipad",
+      "filename" : "FAST-Test-29.png",
       "scale" : "1x"
     },
     {

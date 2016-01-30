@@ -30,17 +30,6 @@
                                     <segue destination="Aeh-gy-7kO" kind="show" id="IQo-49-XYG"/>
                                 </connections>
                             </button>
-                            <button opaque="NO" contentMode="scaleToFill" ambiguous="YES" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ZTD-iY-yee">
-                                <rect key="frame" x="234" y="580" width="300" height="110"/>
-                                <color key="backgroundColor" red="0.0" green="0.0" blue="1" alpha="1" colorSpace="calibratedRGB"/>
-                                <state key="normal" title="Draft Board">
-                                    <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                                </state>
-                                <connections>
-                                    <action selector="draftBoardPressed:" destination="BYZ-38-t0r" eventType="touchUpInside" id="ytI-yc-Mee"/>
-                                    <segue destination="ods-G1-77H" kind="show" id="pcb-7L-pNi"/>
-                                </connections>
-                            </button>
                             <button opaque="NO" contentMode="scaleToFill" ambiguous="YES" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="xui-X9-e74">
                                 <rect key="frame" x="234" y="100" width="300" height="110"/>
                                 <color key="backgroundColor" red="1" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
@@ -90,6 +79,17 @@
                                 <state key="normal" title="Admin Console"/>
                                 <connections>
                                     <segue destination="R8L-nd-eva" kind="show" id="sKN-6t-DQu"/>
+                                </connections>
+                            </button>
+                            <button opaque="NO" contentMode="scaleToFill" ambiguous="YES" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ZTD-iY-yee">
+                                <rect key="frame" x="234" y="580" width="300" height="110"/>
+                                <color key="backgroundColor" red="0.0" green="0.0" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                                <state key="normal" title="Draft Board">
+                                    <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                </state>
+                                <connections>
+                                    <action selector="draftBoardPressed:" destination="BYZ-38-t0r" eventType="touchUpInside" id="ytI-yc-Mee"/>
+                                    <segue destination="ods-G1-77H" kind="show" id="pcb-7L-pNi"/>
                                 </connections>
                             </button>
                         </subviews>
@@ -638,35 +638,6 @@
                                             <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="klt-mL-01h">
                                                 <rect key="frame" x="0.0" y="0.0" width="240" height="128"/>
                                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                                                <prototypes>
-                                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" id="Nrh-OD-Jme">
-                                                        <autoresizingMask key="autoresizingMask"/>
-                                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="Nrh-OD-Jme" id="36t-Pu-lKS">
-                                                            <autoresizingMask key="autoresizingMask"/>
-                                                            <subviews>
-                                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Test Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="qT2-d1-kRj">
-                                                                    <rect key="frame" x="-42" y="-21" width="42" height="21"/>
-                                                                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                                                    <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
-                                                                    <nil key="highlightedColor"/>
-                                                                    <variation key="heightClass=regular-widthClass=regular" fixedFrame="YES">
-                                                                        <rect key="frame" x="8" y="11" width="79" height="21"/>
-                                                                    </variation>
-                                                                </label>
-                                                            </subviews>
-                                                            <variation key="default">
-                                                                <mask key="subviews">
-                                                                    <exclude reference="qT2-d1-kRj"/>
-                                                                </mask>
-                                                            </variation>
-                                                            <variation key="heightClass=regular-widthClass=regular">
-                                                                <mask key="subviews">
-                                                                    <include reference="qT2-d1-kRj"/>
-                                                                </mask>
-                                                            </variation>
-                                                        </tableViewCellContentView>
-                                                    </tableViewCell>
-                                                </prototypes>
                                             </tableView>
                                         </subviews>
                                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
@@ -709,6 +680,19 @@
                                     </view>
                                     <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="vKR-ni-fgr">
                                         <rect key="frame" x="0.0" y="0.0" width="240" height="128"/>
+                                        <constraints>
+                                            <constraint firstAttribute="height" relation="lessThanOrEqual" constant="200" id="odG-mY-d0y"/>
+                                        </constraints>
+                                        <variation key="default">
+                                            <mask key="constraints">
+                                                <exclude reference="odG-mY-d0y"/>
+                                            </mask>
+                                        </variation>
+                                        <variation key="heightClass=regular-widthClass=regular">
+                                            <mask key="constraints">
+                                                <include reference="odG-mY-d0y"/>
+                                            </mask>
+                                        </variation>
                                     </imageView>
                                     <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="Cvf-eN-heO">
                                         <rect key="frame" x="0.0" y="0.0" width="240" height="128"/>
@@ -1087,7 +1071,7 @@
         <!--Draft Board-->
         <scene sceneID="kJh-Zw-4oF">
             <objects>
-                <viewController id="ods-G1-77H" sceneMemberID="viewController">
+                <viewController id="ods-G1-77H" customClass="DraftBoardVC" customModule="FRC_Advanced_Scouting_Touchstone" customModuleProvider="target" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="f0o-on-6uW"/>
                         <viewControllerLayoutGuide type="bottom" id="UWa-Ds-vRn"/>
@@ -1099,31 +1083,45 @@
                             <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="zrJ-Op-8PU">
                                 <rect key="frame" x="0.0" y="0.0" width="240" height="128"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                                <variation key="heightClass=regular-widthClass=regular" fixedFrame="YES">
-                                    <rect key="frame" x="188" y="218" width="403" height="291"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="600" id="Uk6-Cc-ZmW"/>
+                                    <constraint firstAttribute="width" constant="600" id="dAb-ue-5Yn"/>
+                                </constraints>
+                                <variation key="default">
+                                    <mask key="constraints">
+                                        <exclude reference="Uk6-Cc-ZmW"/>
+                                        <exclude reference="dAb-ue-5Yn"/>
+                                    </mask>
+                                </variation>
+                                <variation key="heightClass=regular-widthClass=regular">
+                                    <mask key="constraints">
+                                        <include reference="Uk6-Cc-ZmW"/>
+                                        <include reference="dAb-ue-5Yn"/>
+                                    </mask>
                                 </variation>
                             </tableView>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Draggable Team List; Work on better use of space, maybe integrate with Team List" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="hAU-Nb-7eQ">
-                                <rect key="frame" x="-42" y="-21" width="42" height="21"/>
-                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
-                                <nil key="highlightedColor"/>
-                                <variation key="heightClass=regular-widthClass=regular" fixedFrame="YES">
-                                    <rect key="frame" x="84" y="636" width="630" height="21"/>
-                                </variation>
-                            </label>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <constraints>
+                            <constraint firstItem="zrJ-Op-8PU" firstAttribute="centerY" secondItem="kur-kf-xfh" secondAttribute="centerY" id="eiX-Q2-ehx"/>
+                            <constraint firstItem="zrJ-Op-8PU" firstAttribute="centerX" secondItem="kur-kf-xfh" secondAttribute="centerX" id="zIZ-bs-5aH"/>
+                        </constraints>
                         <variation key="default">
                             <mask key="subviews">
                                 <exclude reference="zrJ-Op-8PU"/>
-                                <exclude reference="hAU-Nb-7eQ"/>
+                            </mask>
+                            <mask key="constraints">
+                                <exclude reference="eiX-Q2-ehx"/>
+                                <exclude reference="zIZ-bs-5aH"/>
                             </mask>
                         </variation>
                         <variation key="heightClass=regular-widthClass=regular">
                             <mask key="subviews">
                                 <include reference="zrJ-Op-8PU"/>
-                                <include reference="hAU-Nb-7eQ"/>
+                            </mask>
+                            <mask key="constraints">
+                                <include reference="eiX-Q2-ehx"/>
+                                <include reference="zIZ-bs-5aH"/>
                             </mask>
                         </variation>
                     </view>
