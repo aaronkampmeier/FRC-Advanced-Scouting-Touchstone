@@ -752,26 +752,26 @@
                                         <exclude reference="Cvf-eN-heO"/>
                                     </mask>
                                     <mask key="constraints">
-                                        <exclude reference="bk5-FF-aKs"/>
-                                        <exclude reference="hjc-b0-Jew"/>
+                                        <exclude reference="ZGl-3g-Uxj"/>
+                                        <exclude reference="iIR-Hr-gYx"/>
                                         <exclude reference="EGV-uU-Aip"/>
                                         <exclude reference="aHS-mR-Ro2"/>
-                                        <exclude reference="5ay-jt-co3"/>
-                                        <exclude reference="RJV-dO-zsn"/>
-                                        <exclude reference="Sgf-Zz-pci"/>
-                                        <exclude reference="aTs-Mo-Ocv"/>
                                         <exclude reference="9aY-FE-ZMk"/>
                                         <exclude reference="vVd-Ta-vzQ"/>
-                                        <exclude reference="0vP-nw-FRS"/>
                                         <exclude reference="KYn-10-Szn"/>
                                         <exclude reference="RI6-uo-E5q"/>
                                         <exclude reference="zc5-3J-A0t"/>
-                                        <exclude reference="ZGl-3g-Uxj"/>
-                                        <exclude reference="iIR-Hr-gYx"/>
                                         <exclude reference="20B-Q5-OlR"/>
                                         <exclude reference="3fS-6f-wSk"/>
                                         <exclude reference="SXp-HB-TAz"/>
                                         <exclude reference="e7J-Gi-6eS"/>
+                                        <exclude reference="5ay-jt-co3"/>
+                                        <exclude reference="RJV-dO-zsn"/>
+                                        <exclude reference="Sgf-Zz-pci"/>
+                                        <exclude reference="aTs-Mo-Ocv"/>
+                                        <exclude reference="0vP-nw-FRS"/>
+                                        <exclude reference="bk5-FF-aKs"/>
+                                        <exclude reference="hjc-b0-Jew"/>
                                     </mask>
                                 </variation>
                                 <variation key="heightClass=regular-widthClass=regular">
@@ -785,26 +785,26 @@
                                         <include reference="Cvf-eN-heO"/>
                                     </mask>
                                     <mask key="constraints">
-                                        <include reference="bk5-FF-aKs"/>
-                                        <include reference="hjc-b0-Jew"/>
+                                        <include reference="ZGl-3g-Uxj"/>
+                                        <include reference="iIR-Hr-gYx"/>
                                         <include reference="EGV-uU-Aip"/>
                                         <include reference="aHS-mR-Ro2"/>
-                                        <include reference="5ay-jt-co3"/>
-                                        <include reference="RJV-dO-zsn"/>
-                                        <include reference="Sgf-Zz-pci"/>
-                                        <include reference="aTs-Mo-Ocv"/>
                                         <include reference="9aY-FE-ZMk"/>
                                         <include reference="vVd-Ta-vzQ"/>
-                                        <include reference="0vP-nw-FRS"/>
                                         <include reference="KYn-10-Szn"/>
                                         <include reference="RI6-uo-E5q"/>
                                         <include reference="zc5-3J-A0t"/>
-                                        <include reference="ZGl-3g-Uxj"/>
-                                        <include reference="iIR-Hr-gYx"/>
                                         <include reference="20B-Q5-OlR"/>
                                         <include reference="3fS-6f-wSk"/>
                                         <include reference="SXp-HB-TAz"/>
                                         <include reference="e7J-Gi-6eS"/>
+                                        <include reference="5ay-jt-co3"/>
+                                        <include reference="RJV-dO-zsn"/>
+                                        <include reference="Sgf-Zz-pci"/>
+                                        <include reference="aTs-Mo-Ocv"/>
+                                        <include reference="0vP-nw-FRS"/>
+                                        <include reference="bk5-FF-aKs"/>
+                                        <include reference="hjc-b0-Jew"/>
                                     </mask>
                                 </variation>
                             </view>
@@ -1126,6 +1126,9 @@
                         </variation>
                     </view>
                     <navigationItem key="navigationItem" title="Draft Board" id="GQN-zr-kBy"/>
+                    <connections>
+                        <outlet property="teamListTableView" destination="zrJ-Op-8PU" id="SCS-MC-eb8"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="etg-Fy-g1A" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>

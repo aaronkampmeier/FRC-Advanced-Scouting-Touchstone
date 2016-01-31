@@ -81,11 +81,11 @@ class PitScoutingController: UIViewController, UIImagePickerControllerDelegate, 
     }
     
     @IBAction func frontPhotoPressed(sender: UIButton) {
-        getPhoto("front")
+        getPhoto(.front)
     }
     
     @IBAction func sidePhotoPressed(sender: UIButton) {
-        getPhoto("side")
+        getPhoto(.side)
     }
     
     func imagePickerController(picker: UIImagePickerController, didFinishPickingImage image: UIImage, editingInfo: [String : AnyObject]?) {
@@ -98,7 +98,7 @@ class PitScoutingController: UIViewController, UIImagePickerControllerDelegate, 
         notificationCenter.postNotification(notification)
     }
     
-    func getPhoto(frontOrSide: String) {
+    func getPhoto(frontOrSide: imagePOV) {
         //Check to make sure there is a camera
         if UIImagePickerController.isSourceTypeAvailable(.Camera) {
             //Ask fro permission
@@ -123,19 +123,21 @@ class PitScoutingController: UIViewController, UIImagePickerControllerDelegate, 
         }
     }
     
-    func setPhoto(frontOrSide: String, image: UIImage) {
+    func setPhoto(frontOrSide: imagePOV, image: UIImage) {
         
         switch frontOrSide {
-        case "front":
+        case .front:
             frontImage.image = image
-        case "side":
+        case .side:
             sideImage.image = image
-        default:
-            NSLog("Neither Front Nor Side was for the photo")
         }
         
         //Remove the observer so we don't get repeated commands
         notificationCenter.removeObserver(observer!, name: "newImage", object: self)
+    }
+    
+    enum imagePOV {
+        case front, side
     }
     
     //Function for presenting a simple alert
