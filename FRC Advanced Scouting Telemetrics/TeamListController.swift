@@ -18,8 +18,11 @@ class TeamListController: UIViewController, UITableViewDataSource, UITableViewDe
     @IBOutlet weak var teamNumberLabel: UILabel!
     @IBOutlet weak var driverExpLabel: UILabel!
     @IBOutlet weak var weightLabel: UILabel!
+    @IBOutlet weak var editTeamsButton: UIBarButtonItem!
+    @IBOutlet weak var teamListToolbar: UIToolbar!
     
     let teamManager = TeamDataManager()
+    var adjustsForToolbarInsets: UIEdgeInsets? = nil
     
     var teams = [Team]()
     var searchResultTeams = [Team]()
@@ -40,17 +43,26 @@ class TeamListController: UIViewController, UITableViewDataSource, UITableViewDe
         
         //Hide the search bar's cancel button
         searchBar.showsCancelButton = false
-    }
-    
-    override func viewWillAppear(animated: Bool) {
-        super.viewWillAppear(animated)
         
-        teams = teamManager.getTeams()
+        do {
+            teams = try teamManager.getDraftBoard()
+        } catch {
+            NSLog("Unable to get the teams: \(error)")
+        }
         
+        //Allow the teams to be selected even during editing
+        teamList.allowsSelectionDuringEditing = true
+        
+        //Prevent the bottom table view cells from being covered by the toolbar
+        adjustsForToolbarInsets = UIEdgeInsets(top: 0, left: 0, bottom: CGRectGetHeight(teamListToolbar.frame), right: 0)
     }
     
     func addTeamFromNotification(notification:NSNotification) {
-        teams = teamManager.getTeams()
+        do {
+            teams = try teamManager.getDraftBoard()
+        } catch {
+            NSLog("Unable to get the teams: \(error)")
+        }
         teamList.reloadData()
     }
     
@@ -62,6 +74,7 @@ class TeamListController: UIViewController, UITableViewDataSource, UITableViewDe
         }
     }
     
+    /*<---- CELL FOR ROW AT INDEX PATH---->*/
     func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
         var teamDataArray = [Team]()
         
@@ -74,7 +87,19 @@ class TeamListController: UIViewController, UITableViewDataSource, UITableViewDe
         
         let cell = teamList.dequeueReusableCellWithIdentifier("Cell")
         
-        cell!.textLabel?.text = "Team \(teamDataArray[indexPath.row].valueForKey("teamNumber") as! String)"
+        let team = teamDataArray[indexPath.row]
+        
+        if editing {
+            cell!.textLabel?.text = "\(team.teamNumber!)"
+        } else {
+            cell!.textLabel?.text = "Team \(team.teamNumber!)"
+        }
+        
+        if let image = team.frontImage {
+            cell!.imageView?.image = UIImage(data: image)
+        } else {
+            cell!.imageView?.image = UIImage(named: "FRC-Logo")
+        }
         
         return cell!
     }
@@ -122,6 +147,28 @@ class TeamListController: UIViewController, UITableViewDataSource, UITableViewDe
             teamManager.deleteTeam(teams[indexPath.row])
             teams.removeAtIndex(indexPath.row)
             teamList.reloadData()
+        }
+    }
+    
+    //Team List TableView Functions for editing:
+    func tableView(tableView: UITableView, canMoveRowAtIndexPath indexPath: NSIndexPath) -> Bool {
+        return true
+    }
+    
+    func tableView(tableView: UITableView, editActionsForRowAtIndexPath indexPath: NSIndexPath) -> [UITableViewRowAction]? {
+        return .None
+    }
+    
+    func tableView(tableView: UITableView, moveRowAtIndexPath sourceIndexPath: NSIndexPath, toIndexPath destinationIndexPath: NSIndexPath) {
+        //Move the team in the array and in Core Data
+        let movedTeam = teams[sourceIndexPath.row]
+        teams.removeAtIndex(sourceIndexPath.row)
+        teams.insert(movedTeam, atIndex: destinationIndexPath.row)
+        
+        do {
+            try teamManager.moveTeam(sourceIndexPath.row, toIndex: destinationIndexPath.row)
+        } catch {
+            NSLog("Unable to save team move: \(error)")
         }
     }
     //
@@ -174,6 +221,65 @@ class TeamListController: UIViewController, UITableViewDataSource, UITableViewDe
         teamList.reloadData()
     }
     //
+    
+    //Function for setting the editing of the teams
+    @IBAction func editTeamsPressed(sender: UIBarButtonItem) {
+        teamList.beginUpdates()
+        //When the edit button is pressed...
+        if self.editing {
+            //Stop editing
+            self.setEditing(false, animated: true)
+            //Change the label back
+            editTeamsButton.title = "Edit Teams"
+            //Hide the teamList's toolbar
+            teamListToolbar.hidden = true
+            
+            //Undo the scrolling insets
+            teamList.contentInset = UIEdgeInsetsZero
+            teamList.scrollIndicatorInsets = UIEdgeInsetsZero
+            
+            for indexPath in teamList.indexPathsForVisibleRows! {
+                let cell = teamList.cellForRowAtIndexPath(indexPath)
+                
+                var teamsArray = [Team]()
+                if isSearching {
+                    teamsArray = searchResultTeams
+                } else {
+                    teamsArray = teams
+                }
+                
+                cell!.textLabel?.text = "Team \(teamsArray[indexPath.row].teamNumber!)"
+            }
+        } else {
+            self.setEditing(true, animated: true)
+            editTeamsButton.title = "Finish Editing"
+            teamListToolbar.hidden = false
+            
+            //Fix the scrolling so the toolbar doesn't hide any cells
+            teamList.contentInset = adjustsForToolbarInsets!
+            teamList.scrollIndicatorInsets = adjustsForToolbarInsets!
+            
+            for indexPath in teamList.indexPathsForVisibleRows! {
+                let cell = teamList.cellForRowAtIndexPath(indexPath)
+                
+                var teamsArray = [Team]()
+                if isSearching {
+                    teamsArray = searchResultTeams
+                } else {
+                    teamsArray = teams
+                }
+                
+                cell!.textLabel?.text = "\(teamsArray[indexPath.row].teamNumber!)"
+            }
+        }
+        teamList.endUpdates()
+    }
+    
+    override func setEditing(editing: Bool, animated: Bool) {
+        super.setEditing(editing, animated: animated)
+        
+        teamList.setEditing(editing, animated: animated)
+    }
     
     //Functionality for the Segemtned Control
     @IBAction func segmentChanged(sender: UISegmentedControl) {

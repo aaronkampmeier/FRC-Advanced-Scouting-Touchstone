@@ -515,7 +515,7 @@
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="TLW-7j-Kek">
                                 <rect key="frame" x="0.0" y="0.0" width="240" height="128"/>
                                 <subviews>
-                                    <searchBar contentMode="redraw" placeholder="Search" showsCancelButton="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Q4j-7s-hxJ">
+                                    <searchBar contentMode="redraw" placeholder="Search" translatesAutoresizingMaskIntoConstraints="NO" id="Q4j-7s-hxJ">
                                         <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
                                         <textInputTraits key="textInputTraits" spellCheckingType="no" keyboardType="numberPad" returnKeyType="search"/>
                                         <scopeButtonTitles>
@@ -534,6 +534,16 @@
                                             <outlet property="delegate" destination="Bvx-zi-C8Q" id="ODh-Ec-E9n"/>
                                         </connections>
                                     </tableView>
+                                    <toolbar hidden="YES" opaque="NO" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="j8L-mg-RaZ">
+                                        <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
+                                        <items>
+                                            <barButtonItem title="Add Team" id="1BH-S2-8Jz">
+                                                <connections>
+                                                    <segue destination="zE8-3v-BU5" kind="presentation" id="311-75-qQP"/>
+                                                </connections>
+                                            </barButtonItem>
+                                        </items>
+                                    </toolbar>
                                 </subviews>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <constraints>
@@ -543,8 +553,13 @@
                                     <constraint firstItem="Q4j-7s-hxJ" firstAttribute="top" secondItem="TLW-7j-Kek" secondAttribute="top" constant="692" id="I0d-iw-5q0">
                                         <variation key="heightClass=regular-widthClass=regular" constant="0.0"/>
                                     </constraint>
+                                    <constraint firstAttribute="trailing" secondItem="j8L-mg-RaZ" secondAttribute="trailing" id="NvO-Hs-8Ni"/>
+                                    <constraint firstItem="j8L-mg-RaZ" firstAttribute="leading" secondItem="TLW-7j-Kek" secondAttribute="leading" id="QCT-rO-6tf"/>
                                     <constraint firstAttribute="width" constant="250" id="S4A-ll-mbK"/>
                                     <constraint firstItem="Q4j-7s-hxJ" firstAttribute="leading" secondItem="TLW-7j-Kek" secondAttribute="leading" id="X67-Ev-YBY"/>
+                                    <constraint firstAttribute="bottom" secondItem="j8L-mg-RaZ" secondAttribute="bottom" constant="346" id="ZoR-n9-gbX">
+                                        <variation key="heightClass=regular-widthClass=regular" constant="0.0"/>
+                                    </constraint>
                                     <constraint firstItem="H30-bW-5wQ" firstAttribute="leading" secondItem="TLW-7j-Kek" secondAttribute="leading" id="cX8-Tj-Ng5"/>
                                     <constraint firstAttribute="trailing" secondItem="H30-bW-5wQ" secondAttribute="trailing" id="dNa-hd-4G2"/>
                                     <constraint firstAttribute="bottom" secondItem="H30-bW-5wQ" secondAttribute="bottom" constant="195" id="kE9-3T-Vm4">
@@ -556,6 +571,7 @@
                                     <mask key="subviews">
                                         <exclude reference="Q4j-7s-hxJ"/>
                                         <exclude reference="H30-bW-5wQ"/>
+                                        <exclude reference="j8L-mg-RaZ"/>
                                     </mask>
                                     <mask key="constraints">
                                         <exclude reference="S4A-ll-mbK"/>
@@ -566,12 +582,16 @@
                                         <exclude reference="cX8-Tj-Ng5"/>
                                         <exclude reference="dNa-hd-4G2"/>
                                         <exclude reference="kE9-3T-Vm4"/>
+                                        <exclude reference="NvO-Hs-8Ni"/>
+                                        <exclude reference="QCT-rO-6tf"/>
+                                        <exclude reference="ZoR-n9-gbX"/>
                                     </mask>
                                 </variation>
                                 <variation key="heightClass=regular-widthClass=regular">
                                     <mask key="subviews">
                                         <include reference="Q4j-7s-hxJ"/>
                                         <include reference="H30-bW-5wQ"/>
+                                        <include reference="j8L-mg-RaZ"/>
                                     </mask>
                                     <mask key="constraints">
                                         <include reference="S4A-ll-mbK"/>
@@ -582,6 +602,9 @@
                                         <include reference="cX8-Tj-Ng5"/>
                                         <include reference="dNa-hd-4G2"/>
                                         <include reference="kE9-3T-Vm4"/>
+                                        <include reference="NvO-Hs-8Ni"/>
+                                        <include reference="QCT-rO-6tf"/>
+                                        <include reference="ZoR-n9-gbX"/>
                                     </mask>
                                 </variation>
                             </view>
@@ -821,7 +844,7 @@
                             <constraint firstItem="TLW-7j-Kek" firstAttribute="top" secondItem="X0o-BF-09T" secondAttribute="bottom" constant="8" id="9yJ-Io-97U">
                                 <variation key="heightClass=regular-widthClass=regular" constant="0.0"/>
                             </constraint>
-                            <constraint firstItem="TLW-7j-Kek" firstAttribute="leading" secondItem="8zU-af-IZq" secondAttribute="leadingMargin" constant="-14" id="MW9-gR-8p1"/>
+                            <constraint firstItem="TLW-7j-Kek" firstAttribute="leading" secondItem="8zU-af-IZq" secondAttribute="leadingMargin" constant="-20" id="MW9-gR-8p1"/>
                             <constraint firstItem="hGu-O5-r6b" firstAttribute="top" secondItem="X0o-BF-09T" secondAttribute="bottom" constant="118" id="cy6-13-Why">
                                 <variation key="heightClass=regular-widthClass=regular" constant="0.0"/>
                             </constraint>
@@ -838,14 +861,14 @@
                                 <exclude reference="hGu-O5-r6b"/>
                             </mask>
                             <mask key="constraints">
-                                <exclude reference="gIB-dZ-nEH"/>
-                                <exclude reference="xJd-LQ-CGa"/>
                                 <exclude reference="9yJ-Io-97U"/>
                                 <exclude reference="MW9-gR-8p1"/>
                                 <exclude reference="4Er-kN-WIN"/>
                                 <exclude reference="4R5-Tq-elA"/>
                                 <exclude reference="4f7-Eh-9aB"/>
                                 <exclude reference="cy6-13-Why"/>
+                                <exclude reference="gIB-dZ-nEH"/>
+                                <exclude reference="xJd-LQ-CGa"/>
                             </mask>
                         </variation>
                         <variation key="heightClass=regular-widthClass=regular">
@@ -854,31 +877,33 @@
                                 <include reference="hGu-O5-r6b"/>
                             </mask>
                             <mask key="constraints">
-                                <include reference="gIB-dZ-nEH"/>
-                                <include reference="xJd-LQ-CGa"/>
                                 <include reference="9yJ-Io-97U"/>
                                 <include reference="MW9-gR-8p1"/>
                                 <include reference="4Er-kN-WIN"/>
                                 <include reference="4R5-Tq-elA"/>
                                 <exclude reference="4f7-Eh-9aB"/>
                                 <include reference="cy6-13-Why"/>
+                                <include reference="gIB-dZ-nEH"/>
+                                <include reference="xJd-LQ-CGa"/>
                             </mask>
                         </variation>
                     </view>
                     <navigationItem key="navigationItem" title="Team List" id="FlS-tB-LvY">
-                        <barButtonItem key="rightBarButtonItem" title="Add Team" id="kQ7-ZT-Kz2">
+                        <barButtonItem key="rightBarButtonItem" title="Edit Teams" id="kQ7-ZT-Kz2">
                             <connections>
-                                <segue destination="zE8-3v-BU5" kind="presentation" id="10o-es-AwI"/>
+                                <action selector="editTeamsPressed:" destination="Bvx-zi-C8Q" id="3yn-yt-RJg"/>
                             </connections>
                         </barButtonItem>
                     </navigationItem>
                     <connections>
                         <outlet property="driverExpLabel" destination="VSB-bG-rza" id="IyN-JV-mWv"/>
+                        <outlet property="editTeamsButton" destination="kQ7-ZT-Kz2" id="BjY-UR-Uq2"/>
                         <outlet property="frontImageView" destination="vKR-ni-fgr" id="obp-l3-mFd"/>
                         <outlet property="searchBar" destination="Q4j-7s-hxJ" id="bPu-rI-D2y"/>
                         <outlet property="segmentControl" destination="kNI-5P-rhL" id="q5c-sN-Njh"/>
                         <outlet property="sideImageView" destination="Cvf-eN-heO" id="ifk-nq-LWY"/>
                         <outlet property="teamList" destination="H30-bW-5wQ" id="EeP-rx-OhX"/>
+                        <outlet property="teamListToolbar" destination="j8L-mg-RaZ" id="sca-5R-tNz"/>
                         <outlet property="teamNumberLabel" destination="pFI-uY-fAw" id="VXo-Jw-eOZ"/>
                         <outlet property="teamTable" destination="klt-mL-01h" id="IMw-Ds-tHn"/>
                         <outlet property="weightLabel" destination="skS-FU-TSM" id="Dat-Qa-NIs"/>
