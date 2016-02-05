@@ -14,4 +14,7 @@ class Team: NSManagedObject {
 
 // Insert code here to add functionality to your managed object subclass
 
+    func addStat(statType: StatType, value: Double) {
+        TeamDataManager().addStatToTeam(self, statType: statType, statValue: value)
+    }
 }

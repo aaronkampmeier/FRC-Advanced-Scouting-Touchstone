@@ -20,6 +20,7 @@ class TeamListController: UIViewController, UITableViewDataSource, UITableViewDe
     @IBOutlet weak var weightLabel: UILabel!
     @IBOutlet weak var editTeamsButton: UIBarButtonItem!
     @IBOutlet weak var teamListToolbar: UIToolbar!
+    @IBOutlet weak var statsButton: UIBarButtonItem!
     
     let teamManager = TeamDataManager()
     var adjustsForToolbarInsets: UIEdgeInsets? = nil
@@ -27,6 +28,7 @@ class TeamListController: UIViewController, UITableViewDataSource, UITableViewDe
     var teams = [Team]()
     var searchResultTeams = [Team]()
     var isSearching = false
+    var teamSelected: Team?
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -55,6 +57,9 @@ class TeamListController: UIViewController, UITableViewDataSource, UITableViewDe
         
         //Prevent the bottom table view cells from being covered by the toolbar
         adjustsForToolbarInsets = UIEdgeInsets(top: 0, left: 0, bottom: CGRectGetHeight(teamListToolbar.frame), right: 0)
+        
+        //Set the stats button to not selectable since there is no team selected
+        statsButton.enabled = false
     }
     
     func addTeamFromNotification(notification:NSNotification) {
@@ -85,6 +90,22 @@ class TeamListController: UIViewController, UITableViewDataSource, UITableViewDe
             teamDataArray = teams
         }
         
+        //Testing with new rankedCell
+        /*
+        let cell = teamList.dequeueReusableCellWithIdentifier("rankedCell")
+        
+        let team = teamDataArray[indexPath.row]
+        
+        let rankLabel: UILabel = cell?.contentView.viewWithTag(10) as! UILabel
+        let imageView: UIImageView = cell?.contentView.viewWithTag(2) as! UIImageView
+        let teamLabel: UILabel = cell?.contentView.viewWithTag(3) as! UILabel
+        
+        rankLabel.text = "1."
+        imageView.image = UIImage(named: "FRC-Logo")
+        teamLabel.text = "Team \(team.teamNumber)"
+        */
+        
+        
         let cell = teamList.dequeueReusableCellWithIdentifier("Cell")
         
         let team = teamDataArray[indexPath.row]
@@ -101,6 +122,7 @@ class TeamListController: UIViewController, UITableViewDataSource, UITableViewDe
             cell!.imageView?.image = UIImage(named: "FRC-Logo")
         }
         
+        
         return cell!
     }
     
@@ -114,25 +136,28 @@ class TeamListController: UIViewController, UITableViewDataSource, UITableViewDe
             teamDataArray = teams
         }
         
-        let teamSelected = teamDataArray[indexPath.row]
+        teamSelected = teamDataArray[indexPath.row]
         
-        teamNumberLabel.text = teamSelected.teamNumber
+        teamNumberLabel.text = teamSelected!.teamNumber
         
-        weightLabel.text = "Weight: \(teamSelected.robotWeight!) lbs"
+        weightLabel.text = "Weight: \(teamSelected!.robotWeight!) lbs"
         
-        driverExpLabel.text = "Driver Exp: \(teamSelected.driverExp!) yrs"
+        driverExpLabel.text = "Driver Exp: \(teamSelected!.driverExp!) yrs"
         
         //Populate the images, if there are images
-        if let image = teamSelected.frontImage {
+        if let image = teamSelected!.frontImage {
             frontImageView.image = UIImage(data: image)
         } else {
             frontImageView.image = nil
         }
-        if let image = teamSelected.sideImage {
+        if let image = teamSelected!.sideImage {
             sideImageView.image = UIImage(data: image)
         } else {
             sideImageView.image = nil
         }
+        
+        //Set the stats button to be selectable
+        statsButton.enabled = true
     }
     
     
@@ -180,6 +205,9 @@ class TeamListController: UIViewController, UITableViewDataSource, UITableViewDe
         
         //Show the cancel button
         searchBar.showsCancelButton = true
+        
+        //Give beginning data
+        searchResultTeams = teams
     }
     
     func searchBarTextDidEndEditing(searchBar: UISearchBar) {
@@ -253,6 +281,7 @@ class TeamListController: UIViewController, UITableViewDataSource, UITableViewDe
         } else {
             self.setEditing(true, animated: true)
             editTeamsButton.title = "Finish Editing"
+            
             teamListToolbar.hidden = false
             
             //Fix the scrolling so the toolbar doesn't hide any cells
@@ -279,6 +308,16 @@ class TeamListController: UIViewController, UITableViewDataSource, UITableViewDe
         super.setEditing(editing, animated: animated)
         
         teamList.setEditing(editing, animated: animated)
+    }
+    
+    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
+        super.prepareForSegue(segue, sender: sender)
+        
+        if segue.identifier == "statsSegue" {
+            let destinationVC = segue.destinationViewController as! StatsVC
+            
+            destinationVC.team = teamSelected!
+        }
     }
     
     //Functionality for the Segemtned Control

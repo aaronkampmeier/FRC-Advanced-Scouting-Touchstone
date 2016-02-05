@@ -7,7 +7,6 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		1F0296681C5D52A6008CA8C2 /* DraftBoardVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F0296671C5D52A6008CA8C2 /* DraftBoardVC.swift */; };
 		1F0A82531C5C6BF70043748C /* Team+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F0A82521C5C6BF70043748C /* Team+CoreDataProperties.swift */; };
 		1F18A1261C5F0B0900572A8A /* DraftBoard+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F18A1241C5F0B0900572A8A /* DraftBoard+CoreDataProperties.swift */; };
 		1F18A1271C5F0B0900572A8A /* DraftBoard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F18A1251C5F0B0900572A8A /* DraftBoard.swift */; };
@@ -22,6 +21,14 @@
 		1F78E7901C3B469300221927 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 1F78E78E1C3B469300221927 /* LaunchScreen.storyboard */; };
 		1F78E79B1C3B469300221927 /* FRC_Advanced_Scouting_TelemetricsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F78E79A1C3B469300221927 /* FRC_Advanced_Scouting_TelemetricsTests.swift */; };
 		1F78E7A61C3B469300221927 /* FRC_Advanced_Scouting_TelemetricsUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F78E7A51C3B469300221927 /* FRC_Advanced_Scouting_TelemetricsUITests.swift */; };
+		1FCA7AD31C62BD2D004294D1 /* Stat+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FCA7ACD1C62BD2D004294D1 /* Stat+CoreDataProperties.swift */; };
+		1FCA7AD41C62BD2D004294D1 /* Stat.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FCA7ACE1C62BD2D004294D1 /* Stat.swift */; };
+		1FCA7AD51C62BD2D004294D1 /* StatType+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FCA7ACF1C62BD2D004294D1 /* StatType+CoreDataProperties.swift */; };
+		1FCA7AD61C62BD2D004294D1 /* StatType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FCA7AD01C62BD2D004294D1 /* StatType.swift */; };
+		1FCA7AD71C62BD2D004294D1 /* StatsBoard+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FCA7AD11C62BD2D004294D1 /* StatsBoard+CoreDataProperties.swift */; };
+		1FCA7AD81C62BD2D004294D1 /* StatsBoard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FCA7AD21C62BD2D004294D1 /* StatsBoard.swift */; };
+		1FCA7ADA1C630BAE004294D1 /* StatsVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FCA7AD91C630BAE004294D1 /* StatsVC.swift */; };
+		1FCA7ADD1C64152E004294D1 /* AddStatVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FCA7ADC1C64152E004294D1 /* AddStatVC.swift */; };
 		1FF1F1731C3CC74A0051EE54 /* TeamListController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FF1F1721C3CC74A0051EE54 /* TeamListController.swift */; };
 		1FF1F1791C4604370051EE54 /* TeamDataManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FF1F1781C4604370051EE54 /* TeamDataManager.swift */; };
 		1FF1F17D1C4707B10051EE54 /* Team.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FF1F17B1C4707B10051EE54 /* Team.swift */; };
@@ -46,7 +53,6 @@
 
 /* Begin PBXFileReference section */
 		1F0296661C5C6E42008CA8C2 /* FRC_Advanced_Scouting_Telemetrics CD 2.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "FRC_Advanced_Scouting_Telemetrics CD 2.xcdatamodel"; sourceTree = "<group>"; };
-		1F0296671C5D52A6008CA8C2 /* DraftBoardVC.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DraftBoardVC.swift; sourceTree = "<group>"; };
 		1F0296691C5D5439008CA8C2 /* FRC_Advanced_Scouting_Telemetrics CD 3.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "FRC_Advanced_Scouting_Telemetrics CD 3.xcdatamodel"; sourceTree = "<group>"; };
 		1F0A82521C5C6BF70043748C /* Team+CoreDataProperties.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Team+CoreDataProperties.swift"; sourceTree = "<group>"; };
 		1F18A1241C5F0B0900572A8A /* DraftBoard+CoreDataProperties.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "DraftBoard+CoreDataProperties.swift"; sourceTree = "<group>"; };
@@ -68,6 +74,15 @@
 		1F78E7A11C3B469300221927 /* FRC Advanced Scouting Touchstone.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "FRC Advanced Scouting Touchstone.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
 		1F78E7A51C3B469300221927 /* FRC_Advanced_Scouting_TelemetricsUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FRC_Advanced_Scouting_TelemetricsUITests.swift; sourceTree = "<group>"; };
 		1F78E7A71C3B469300221927 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		1FCA7ACC1C61AB38004294D1 /* FRC_Advanced_Scouting_Telemetrics CD 4.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "FRC_Advanced_Scouting_Telemetrics CD 4.xcdatamodel"; sourceTree = "<group>"; };
+		1FCA7ACD1C62BD2D004294D1 /* Stat+CoreDataProperties.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Stat+CoreDataProperties.swift"; sourceTree = "<group>"; };
+		1FCA7ACE1C62BD2D004294D1 /* Stat.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Stat.swift; sourceTree = "<group>"; };
+		1FCA7ACF1C62BD2D004294D1 /* StatType+CoreDataProperties.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "StatType+CoreDataProperties.swift"; sourceTree = "<group>"; };
+		1FCA7AD01C62BD2D004294D1 /* StatType.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StatType.swift; sourceTree = "<group>"; };
+		1FCA7AD11C62BD2D004294D1 /* StatsBoard+CoreDataProperties.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "StatsBoard+CoreDataProperties.swift"; sourceTree = "<group>"; };
+		1FCA7AD21C62BD2D004294D1 /* StatsBoard.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StatsBoard.swift; sourceTree = "<group>"; };
+		1FCA7AD91C630BAE004294D1 /* StatsVC.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StatsVC.swift; sourceTree = "<group>"; };
+		1FCA7ADC1C64152E004294D1 /* AddStatVC.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AddStatVC.swift; sourceTree = "<group>"; };
 		1FF1F1721C3CC74A0051EE54 /* TeamListController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TeamListController.swift; sourceTree = "<group>"; };
 		1FF1F1781C4604370051EE54 /* TeamDataManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TeamDataManager.swift; sourceTree = "<group>"; };
 		1FF1F17B1C4707B10051EE54 /* Team.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Team.swift; sourceTree = "<group>"; };
@@ -98,6 +113,20 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		1F21DF101C645D1F00C55D0E /* View Controllers */ = {
+			isa = PBXGroup;
+			children = (
+				1F78E7841C3B469300221927 /* ViewController.swift */,
+				1FF1F1721C3CC74A0051EE54 /* TeamListController.swift */,
+				1FCA7AD91C630BAE004294D1 /* StatsVC.swift */,
+				1FCA7ADC1C64152E004294D1 /* AddStatVC.swift */,
+				1F4FEDAD1C4C5DEA00F4016D /* AddTeamVC.swift */,
+				1F4FEDAB1C4B686000F4016D /* AdminConsoleController.swift */,
+				1F4FEDA91C4AD95C00F4016D /* PitScoutingController.swift */,
+			);
+			name = "View Controllers";
+			sourceTree = "<group>";
+		};
 		1F78E7761C3B469300221927 = {
 			isa = PBXGroup;
 			children = (
@@ -121,19 +150,11 @@
 		1F78E7811C3B469300221927 /* FRC Advanced Scouting Telemetrics */ = {
 			isa = PBXGroup;
 			children = (
+				1FCA7ADB1C6408B2004294D1 /* Core Data */,
 				1F78E7821C3B469300221927 /* AppDelegate.swift */,
-				1F0A82521C5C6BF70043748C /* Team+CoreDataProperties.swift */,
-				1FF1F17B1C4707B10051EE54 /* Team.swift */,
-				1F18A1241C5F0B0900572A8A /* DraftBoard+CoreDataProperties.swift */,
-				1F18A1251C5F0B0900572A8A /* DraftBoard.swift */,
-				1F78E7841C3B469300221927 /* ViewController.swift */,
-				1FF1F1721C3CC74A0051EE54 /* TeamListController.swift */,
-				1F4FEDAD1C4C5DEA00F4016D /* AddTeamVC.swift */,
+				1F21DF101C645D1F00C55D0E /* View Controllers */,
 				1FF1F1781C4604370051EE54 /* TeamDataManager.swift */,
 				1F78E7861C3B469300221927 /* Main.storyboard */,
-				1F4FEDAB1C4B686000F4016D /* AdminConsoleController.swift */,
-				1F4FEDA91C4AD95C00F4016D /* PitScoutingController.swift */,
-				1F0296671C5D52A6008CA8C2 /* DraftBoardVC.swift */,
 				1F78E78C1C3B469300221927 /* Assets.xcassets */,
 				1F78E78E1C3B469300221927 /* LaunchScreen.storyboard */,
 				1F78E7911C3B469300221927 /* Info.plist */,
@@ -158,6 +179,23 @@
 				1F78E7A71C3B469300221927 /* Info.plist */,
 			);
 			path = "FRC Advanced Scouting TelemetricsUITests";
+			sourceTree = "<group>";
+		};
+		1FCA7ADB1C6408B2004294D1 /* Core Data */ = {
+			isa = PBXGroup;
+			children = (
+				1FCA7ACD1C62BD2D004294D1 /* Stat+CoreDataProperties.swift */,
+				1FCA7ACE1C62BD2D004294D1 /* Stat.swift */,
+				1FCA7ACF1C62BD2D004294D1 /* StatType+CoreDataProperties.swift */,
+				1FCA7AD01C62BD2D004294D1 /* StatType.swift */,
+				1FCA7AD11C62BD2D004294D1 /* StatsBoard+CoreDataProperties.swift */,
+				1FCA7AD21C62BD2D004294D1 /* StatsBoard.swift */,
+				1F0A82521C5C6BF70043748C /* Team+CoreDataProperties.swift */,
+				1FF1F17B1C4707B10051EE54 /* Team.swift */,
+				1F18A1241C5F0B0900572A8A /* DraftBoard+CoreDataProperties.swift */,
+				1F18A1251C5F0B0900572A8A /* DraftBoard.swift */,
+			);
+			name = "Core Data";
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -294,17 +332,24 @@
 			files = (
 				1F78E7851C3B469300221927 /* ViewController.swift in Sources */,
 				1FF1F17D1C4707B10051EE54 /* Team.swift in Sources */,
+				1FCA7AD71C62BD2D004294D1 /* StatsBoard+CoreDataProperties.swift in Sources */,
 				1F78E78B1C3B469300221927 /* FRC_Advanced_Scouting_Telemetrics.xcdatamodeld in Sources */,
-				1F0296681C5D52A6008CA8C2 /* DraftBoardVC.swift in Sources */,
+				1FCA7AD41C62BD2D004294D1 /* Stat.swift in Sources */,
 				1F18A1271C5F0B0900572A8A /* DraftBoard.swift in Sources */,
 				1FF1F1731C3CC74A0051EE54 /* TeamListController.swift in Sources */,
 				1FF1F1791C4604370051EE54 /* TeamDataManager.swift in Sources */,
+				1FCA7AD61C62BD2D004294D1 /* StatType.swift in Sources */,
 				1F78E7831C3B469300221927 /* AppDelegate.swift in Sources */,
 				1F4FEDAE1C4C5DEA00F4016D /* AddTeamVC.swift in Sources */,
+				1FCA7ADD1C64152E004294D1 /* AddStatVC.swift in Sources */,
+				1FCA7AD81C62BD2D004294D1 /* StatsBoard.swift in Sources */,
 				1F4FEDAA1C4AD95C00F4016D /* PitScoutingController.swift in Sources */,
 				1F0A82531C5C6BF70043748C /* Team+CoreDataProperties.swift in Sources */,
 				1F18A1261C5F0B0900572A8A /* DraftBoard+CoreDataProperties.swift in Sources */,
+				1FCA7ADA1C630BAE004294D1 /* StatsVC.swift in Sources */,
 				1F4FEDAC1C4B686000F4016D /* AdminConsoleController.swift in Sources */,
+				1FCA7AD31C62BD2D004294D1 /* Stat+CoreDataProperties.swift in Sources */,
+				1FCA7AD51C62BD2D004294D1 /* StatType+CoreDataProperties.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -563,11 +608,12 @@
 		1F78E7891C3B469300221927 /* FRC_Advanced_Scouting_Telemetrics.xcdatamodeld */ = {
 			isa = XCVersionGroup;
 			children = (
+				1FCA7ACC1C61AB38004294D1 /* FRC_Advanced_Scouting_Telemetrics CD 4.xcdatamodel */,
 				1F0296691C5D5439008CA8C2 /* FRC_Advanced_Scouting_Telemetrics CD 3.xcdatamodel */,
 				1F0296661C5C6E42008CA8C2 /* FRC_Advanced_Scouting_Telemetrics CD 2.xcdatamodel */,
 				1F78E78A1C3B469300221927 /* FRC_Advanced_Scouting_Telemetrics.xcdatamodel */,
 			);
-			currentVersion = 1F0296691C5D5439008CA8C2 /* FRC_Advanced_Scouting_Telemetrics CD 3.xcdatamodel */;
+			currentVersion = 1FCA7ACC1C61AB38004294D1 /* FRC_Advanced_Scouting_Telemetrics CD 4.xcdatamodel */;
 			path = FRC_Advanced_Scouting_Telemetrics.xcdatamodeld;
 			sourceTree = "<group>";
 			versionGroupType = wrapper.xcdatamodel;

@@ -1,8 +1,8 @@
 //
-//  Team+CoreDataProperties.swift
+//  StatType+CoreDataProperties.swift
 //  FRC Advanced Scouting Touchstone
 //
-//  Created by Aaron Kampmeier on 1/29/16.
+//  Created by Aaron Kampmeier on 2/3/16.
 //  Copyright © 2016 Kampfire Technologies. All rights reserved.
 //
 //  Choose "Create NSManagedObject Subclass…" from the Core Data editor menu
@@ -12,13 +12,10 @@
 import Foundation
 import CoreData
 
-extension Team {
+extension StatType {
 
-    @NSManaged var driverExp: NSNumber?
-    @NSManaged var robotWeight: NSNumber?
-    @NSManaged var teamNumber: String?
-    @NSManaged var frontImage: NSData?
-    @NSManaged var sideImage: NSData?
+    @NSManaged var name: String?
+    @NSManaged var statsBoard: NSManagedObject?
     @NSManaged var stats: NSSet?
 
 }
