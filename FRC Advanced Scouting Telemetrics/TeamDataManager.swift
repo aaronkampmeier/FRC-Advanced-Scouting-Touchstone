@@ -25,11 +25,9 @@ class TeamDataManager {
         
         //Add it to the root draft board
         do {
-            let rootDraftBoard = try getRootDraftBoard()
-            let draftBoardTeams = rootDraftBoard.teams!.mutableCopy() as! NSMutableOrderedSet
-            draftBoardTeams.addObject(team)
-            rootDraftBoard.teams = draftBoardTeams.copy() as? NSOrderedSet
             
+            let rootDraftBoard = try getRootDraftBoard()
+            team.draftBoard = rootDraftBoard
         } catch {
             NSLog("Could not save team to draft board")
         }

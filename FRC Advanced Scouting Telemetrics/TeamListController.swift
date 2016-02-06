@@ -252,6 +252,11 @@ class TeamListController: UIViewController, UITableViewDataSource, UITableViewDe
     
     //Function for setting the editing of the teams
     @IBAction func editTeamsPressed(sender: UIBarButtonItem) {
+        //Turn off searching if necessary
+        if isSearching {
+            searchBarCancelButtonClicked(searchBar)
+        }
+        
         teamList.beginUpdates()
         //When the edit button is pressed...
         if self.editing {

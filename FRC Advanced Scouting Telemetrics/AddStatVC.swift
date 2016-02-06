@@ -33,13 +33,12 @@ class AddStatVC: UIViewController, UIPickerViewDelegate, UIPickerViewDataSource 
     }
     
     func pickerView(pickerView: UIPickerView, numberOfRowsInComponent component: Int) -> Int {
-        if let types = statTypes {
-            return types.count
+        if statTypes!.count > 0 {
+            selectedType = statTypes![0]
+            return statTypes!.count
         } else {
             //Present an alert that
-            let alert = UIAlertController(title: "No Stat Types", message: "There are currently no statistic types. Go to the Admin Console to add some.", preferredStyle: .Alert)
-            alert.addAction(UIAlertAction(title: "OK", style: .Default, handler: alertActionHandler))
-            presentViewController(alert, animated: true, completion: nil)
+            presentOkAlert("No Stat Types", descritpion: "There are currently no statistic types. Go to the Admin Console to add some.", okActionHandler: alertActionHandler)
             return 0
         }
     }
@@ -66,13 +65,22 @@ class AddStatVC: UIViewController, UIPickerViewDelegate, UIPickerViewDataSource 
                     dismissViewControllerAnimated(true, completion: nil)
                 } else {
                     NSLog("Unable to save new stat")
+                    presentOkAlert("Unable to Save", descritpion: "The new stat could not save because the value is not a number. Try removing anything that is not a base-10 number.", okActionHandler: nil)
                 }
             } else {
                 NSLog("Unable to save new stat")
+                presentOkAlert("Unable to Save", descritpion: "The new stat could not save because there is no selected type.", okActionHandler: nil)
             }
         } else {
             NSLog("Unable to save new stat")
+            presentOkAlert("Unable to Save", descritpion: "The new stat could not save because the current team was unable to be retrieved.", okActionHandler: nil)
         }
+    }
+    
+    func presentOkAlert(title: String, descritpion: String, okActionHandler: ((UIAlertAction)->Void)?) {
+        let alert = UIAlertController(title: title, message: description, preferredStyle: .Alert)
+        alert.addAction(UIAlertAction(title: "OK", style: .Default, handler: okActionHandler))
+        presentViewController(alert, animated: true, completion: nil)
     }
     
     @IBAction func savePressed(sender: UIBarButtonItem) {
