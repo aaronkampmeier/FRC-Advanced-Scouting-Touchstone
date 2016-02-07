@@ -10,6 +10,9 @@
 		1F0A82531C5C6BF70043748C /* Team+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F0A82521C5C6BF70043748C /* Team+CoreDataProperties.swift */; };
 		1F18A1261C5F0B0900572A8A /* DraftBoard+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F18A1241C5F0B0900572A8A /* DraftBoard+CoreDataProperties.swift */; };
 		1F18A1271C5F0B0900572A8A /* DraftBoard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F18A1251C5F0B0900572A8A /* DraftBoard.swift */; };
+		1F21DF121C66942200C55D0E /* SortVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F21DF111C66942200C55D0E /* SortVC.swift */; };
+		1F21DF141C66965100C55D0E /* StatTypePickerData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F21DF131C66965100C55D0E /* StatTypePickerData.swift */; };
+		1F21DF161C66A57F00C55D0E /* Popovers.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 1F21DF151C66A57F00C55D0E /* Popovers.storyboard */; };
 		1F4FEDAA1C4AD95C00F4016D /* PitScoutingController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F4FEDA91C4AD95C00F4016D /* PitScoutingController.swift */; };
 		1F4FEDAC1C4B686000F4016D /* AdminConsoleController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F4FEDAB1C4B686000F4016D /* AdminConsoleController.swift */; };
 		1F4FEDAE1C4C5DEA00F4016D /* AddTeamVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F4FEDAD1C4C5DEA00F4016D /* AddTeamVC.swift */; };
@@ -57,6 +60,9 @@
 		1F0A82521C5C6BF70043748C /* Team+CoreDataProperties.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Team+CoreDataProperties.swift"; sourceTree = "<group>"; };
 		1F18A1241C5F0B0900572A8A /* DraftBoard+CoreDataProperties.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "DraftBoard+CoreDataProperties.swift"; sourceTree = "<group>"; };
 		1F18A1251C5F0B0900572A8A /* DraftBoard.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DraftBoard.swift; sourceTree = "<group>"; };
+		1F21DF111C66942200C55D0E /* SortVC.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SortVC.swift; sourceTree = "<group>"; };
+		1F21DF131C66965100C55D0E /* StatTypePickerData.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StatTypePickerData.swift; sourceTree = "<group>"; };
+		1F21DF151C66A57F00C55D0E /* Popovers.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = Popovers.storyboard; sourceTree = "<group>"; };
 		1F4FEDA91C4AD95C00F4016D /* PitScoutingController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PitScoutingController.swift; sourceTree = "<group>"; };
 		1F4FEDAB1C4B686000F4016D /* AdminConsoleController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AdminConsoleController.swift; sourceTree = "<group>"; };
 		1F4FEDAD1C4C5DEA00F4016D /* AddTeamVC.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AddTeamVC.swift; sourceTree = "<group>"; };
@@ -119,6 +125,7 @@
 				1F78E7841C3B469300221927 /* ViewController.swift */,
 				1FF1F1721C3CC74A0051EE54 /* TeamListController.swift */,
 				1FCA7AD91C630BAE004294D1 /* StatsVC.swift */,
+				1F21DF111C66942200C55D0E /* SortVC.swift */,
 				1FCA7ADC1C64152E004294D1 /* AddStatVC.swift */,
 				1F4FEDAD1C4C5DEA00F4016D /* AddTeamVC.swift */,
 				1F4FEDAB1C4B686000F4016D /* AdminConsoleController.swift */,
@@ -150,11 +157,13 @@
 		1F78E7811C3B469300221927 /* FRC Advanced Scouting Telemetrics */ = {
 			isa = PBXGroup;
 			children = (
+				1F21DF131C66965100C55D0E /* StatTypePickerData.swift */,
 				1FCA7ADB1C6408B2004294D1 /* Core Data */,
 				1F78E7821C3B469300221927 /* AppDelegate.swift */,
 				1F21DF101C645D1F00C55D0E /* View Controllers */,
 				1FF1F1781C4604370051EE54 /* TeamDataManager.swift */,
 				1F78E7861C3B469300221927 /* Main.storyboard */,
+				1F21DF151C66A57F00C55D0E /* Popovers.storyboard */,
 				1F78E78C1C3B469300221927 /* Assets.xcassets */,
 				1F78E78E1C3B469300221927 /* LaunchScreen.storyboard */,
 				1F78E7911C3B469300221927 /* Info.plist */,
@@ -303,6 +312,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				1F21DF161C66A57F00C55D0E /* Popovers.storyboard in Resources */,
 				1F78E7901C3B469300221927 /* LaunchScreen.storyboard in Resources */,
 				1F78E78D1C3B469300221927 /* Assets.xcassets in Resources */,
 				1F78E7881C3B469300221927 /* Main.storyboard in Resources */,
@@ -337,6 +347,7 @@
 				1FCA7AD41C62BD2D004294D1 /* Stat.swift in Sources */,
 				1F18A1271C5F0B0900572A8A /* DraftBoard.swift in Sources */,
 				1FF1F1731C3CC74A0051EE54 /* TeamListController.swift in Sources */,
+				1F21DF141C66965100C55D0E /* StatTypePickerData.swift in Sources */,
 				1FF1F1791C4604370051EE54 /* TeamDataManager.swift in Sources */,
 				1FCA7AD61C62BD2D004294D1 /* StatType.swift in Sources */,
 				1F78E7831C3B469300221927 /* AppDelegate.swift in Sources */,
@@ -346,6 +357,7 @@
 				1F4FEDAA1C4AD95C00F4016D /* PitScoutingController.swift in Sources */,
 				1F0A82531C5C6BF70043748C /* Team+CoreDataProperties.swift in Sources */,
 				1F18A1261C5F0B0900572A8A /* DraftBoard+CoreDataProperties.swift in Sources */,
+				1F21DF121C66942200C55D0E /* SortVC.swift in Sources */,
 				1FCA7ADA1C630BAE004294D1 /* StatsVC.swift in Sources */,
 				1F4FEDAC1C4B686000F4016D /* AdminConsoleController.swift in Sources */,
 				1FCA7AD31C62BD2D004294D1 /* Stat+CoreDataProperties.swift in Sources */,

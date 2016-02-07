@@ -769,6 +769,12 @@
                                                     <segue destination="zE8-3v-BU5" kind="presentation" id="311-75-qQP"/>
                                                 </connections>
                                             </barButtonItem>
+                                            <barButtonItem style="plain" systemItem="flexibleSpace" id="YY3-Ux-ATz"/>
+                                            <barButtonItem title="Sort" id="J3E-Bn-Lhg">
+                                                <connections>
+                                                    <action selector="sortPressed:" destination="Bvx-zi-C8Q" id="6tM-ra-CQ5"/>
+                                                </connections>
+                                            </barButtonItem>
                                         </items>
                                     </toolbar>
                                 </subviews>

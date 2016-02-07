@@ -8,7 +8,7 @@
 
 import UIKit
 
-class TeamListController: UIViewController, UITableViewDataSource, UITableViewDelegate, UISearchBarDelegate {
+class TeamListController: UIViewController, UITableViewDataSource, UITableViewDelegate, UISearchBarDelegate, UIPopoverPresentationControllerDelegate {
     @IBOutlet weak var sideImageView: UIImageView!
     @IBOutlet weak var frontImageView: UIImageView!
     @IBOutlet weak var searchBar: UISearchBar!
@@ -27,14 +27,18 @@ class TeamListController: UIViewController, UITableViewDataSource, UITableViewDe
     
     var teams = [Team]()
     var searchResultTeams = [Team]()
+    var sortedTeams = [Team]()
     var isSearching = false
-    var teamSelected: Team?
+    var isSorted = false
+    var selectedTeam: Team?
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
         //Add responder for notification about a new team
         NSNotificationCenter.defaultCenter().addObserverForName("New Team", object: nil, queue: nil, usingBlock: addTeamFromNotification)
+        //Add an observer to resort the team list
+        NSNotificationCenter.defaultCenter().addObserverForName("New Sort Type", object: nil, queue: nil, usingBlock: sortList)
         
         teamList.registerClass(UITableViewCell.self,
             forCellReuseIdentifier: "Cell")
@@ -74,6 +78,8 @@ class TeamListController: UIViewController, UITableViewDataSource, UITableViewDe
     func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         if isSearching {
             return searchResultTeams.count
+        } else if isSorted {
+            return sortedTeams.count
         } else {
             return teams.count
         }
@@ -86,6 +92,8 @@ class TeamListController: UIViewController, UITableViewDataSource, UITableViewDe
         //If there are search results, then display those
         if isSearching {
             teamDataArray = searchResultTeams
+        } else if isSorted {
+            teamDataArray = sortedTeams
         } else {
             teamDataArray = teams
         }
@@ -132,25 +140,27 @@ class TeamListController: UIViewController, UITableViewDataSource, UITableViewDe
         var teamDataArray = [Team]()
         if isSearching {
             teamDataArray = searchResultTeams
+        } else if isSorted {
+            teamDataArray = sortedTeams
         } else {
             teamDataArray = teams
         }
         
-        teamSelected = teamDataArray[indexPath.row]
+        selectedTeam = teamDataArray[indexPath.row]
         
-        teamNumberLabel.text = teamSelected!.teamNumber
+        teamNumberLabel.text = selectedTeam!.teamNumber
         
-        weightLabel.text = "Weight: \(teamSelected!.robotWeight!) lbs"
+        weightLabel.text = "Weight: \(selectedTeam!.robotWeight!) lbs"
         
-        driverExpLabel.text = "Driver Exp: \(teamSelected!.driverExp!) yrs"
+        driverExpLabel.text = "Driver Exp: \(selectedTeam!.driverExp!) yrs"
         
         //Populate the images, if there are images
-        if let image = teamSelected!.frontImage {
+        if let image = selectedTeam!.frontImage {
             frontImageView.image = UIImage(data: image)
         } else {
             frontImageView.image = nil
         }
-        if let image = teamSelected!.sideImage {
+        if let image = selectedTeam!.sideImage {
             sideImageView.image = UIImage(data: image)
         } else {
             sideImageView.image = nil
@@ -321,11 +331,100 @@ class TeamListController: UIViewController, UITableViewDataSource, UITableViewDe
         if segue.identifier == "statsSegue" {
             let destinationVC = segue.destinationViewController as! StatsVC
             
-            destinationVC.team = teamSelected!
+            destinationVC.team = selectedTeam!
         }
     }
     
-    //Functionality for the Segemtned Control
+    @IBAction func sortPressed(sender: UIBarButtonItem) {
+        let storyboard = UIStoryboard(name: "Popovers", bundle: nil)
+        let sortVC = storyboard.instantiateViewControllerWithIdentifier("SortVC") as! SortVC
+        
+        sortVC.modalPresentationStyle = .Popover
+        sortVC.preferredContentSize = CGSizeMake(300, 300)
+        
+        let popoverVC = sortVC.popoverPresentationController
+        
+        popoverVC?.permittedArrowDirections = .Up
+        popoverVC?.delegate = self
+        popoverVC?.barButtonItem = sender
+        presentViewController(sortVC, animated: true, completion: nil)
+    }
+    
+    
+    //<---FUNCTIONALITY FOR SORTING THE TEAM LIST--->
+    //TEMPORARY (Actually maybe not anymore)
+    var sortType: StatType?
+    var isAscending: Bool?
+    var isDefault: Bool?
+    
+    func sortList(notification: NSNotification) {
+        //Retrieve the statType used for sorting and the direction for sorting from the notification's UserInfo
+        sortType = notification.userInfo!["SortType"] as? StatType
+        isAscending = notification.userInfo!["Ascending"] as? Bool
+        isDefault = notification.userInfo!["DraftBoardDefault"] as? Bool
+        
+        //Filter all the teams to only include ones with stats of the specific type used for soting
+        sortedTeams = teams.filter(initialSorting)
+        
+        //Sort the teams
+        sortedTeams.sortInPlace(compareTeamsSats)
+        
+        //Compensate for ascending or descending
+        if let a = isAscending {
+            if !a {
+                sortedTeams = sortedTeams.reverse()
+            }
+        }
+        
+        //Sets if the user is sorting the list
+        if let d = isDefault {
+            if d {
+                isSorted = false
+            } else {
+                isSorted = true
+            }
+        } else {
+            isSorted = true
+        }
+        
+        teamList.reloadData()
+    }
+    
+    func initialSorting(team: Team) -> Bool {
+        if ((team.stats?.allObjects as! [Stat]).filter() {
+            if $0.statType == sortType {
+                return true
+            } else {
+                return false
+            }
+        }).count > 0 {
+            return true
+        } else {
+            return false
+        }
+    }
+    
+    func compareTeamsSats(firstTeam: Team, secondTeam: Team) -> Bool {
+        //Get the values for comparison from the stats in both team
+        let firstValue = (firstTeam.stats?.allObjects as! [Stat]).filter() {
+            if $0.statType == sortType {
+                return true
+            } else {
+                return false
+            }
+        }[0].value as! Double
+        let secondValue = (secondTeam.stats?.allObjects as! [Stat]).filter() {
+            if $0.statType == sortType {
+                return true
+            } else {
+                return false
+            }
+        }[0].value as! Double
+        
+        return firstValue > secondValue
+    }
+    
+    //Functionality for the Segemented Control
     @IBAction func segmentChanged(sender: UISegmentedControl) {
         
     }

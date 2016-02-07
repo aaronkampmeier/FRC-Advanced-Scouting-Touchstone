@@ -9,7 +9,7 @@
 import Foundation
 import UIKit
 
-class AddStatVC: UIViewController, UIPickerViewDelegate, UIPickerViewDataSource {
+class AddStatVC: UIViewController, UIPickerViewDelegate {
     @IBOutlet weak var valueTextField: UITextField!
     @IBOutlet weak var statTypePicker: UIPickerView!
     let dataManager = TeamDataManager()
@@ -19,22 +19,21 @@ class AddStatVC: UIViewController, UIPickerViewDelegate, UIPickerViewDataSource 
     
     override func viewDidLoad() {
         statTypePicker.delegate = self
-        statTypePicker.dataSource = self
+        statTypePicker.dataSource = StatTypePickerData()
         
         do {
             statTypes = try dataManager.getStatTypes()
+            if statTypes?.count > 0 {
+                selectedType = statTypes![0]
+            }
         } catch {
             NSLog("Could not get stat types: \(error)")
         }
     }
     
-    func numberOfComponentsInPickerView(pickerView: UIPickerView) -> Int {
-        return 1
-    }
-    
     func pickerView(pickerView: UIPickerView, numberOfRowsInComponent component: Int) -> Int {
+        NSLog("Entering picker view numOfRows")
         if statTypes!.count > 0 {
-            selectedType = statTypes![0]
             return statTypes!.count
         } else {
             //Present an alert that
@@ -45,6 +44,10 @@ class AddStatVC: UIViewController, UIPickerViewDelegate, UIPickerViewDataSource 
     
     func alertActionHandler(alert: UIAlertAction) {
         dismissViewControllerAnimated(true, completion: nil)
+    }
+    
+    func numberOfComponentsInPickerView(pickerView: UIPickerView) -> Int {
+        return 1
     }
     
     func pickerView(pickerView: UIPickerView, titleForRow row: Int, forComponent component: Int) -> String? {
@@ -60,9 +63,19 @@ class AddStatVC: UIViewController, UIPickerViewDelegate, UIPickerViewDataSource 
         if let team = self.team {
             if let type = selectedType {
                 if let value = Double(sender.text!) {
-                    dataManager.addStatToTeam(team, statType: type, statValue: value)
-                    NSNotificationCenter.defaultCenter().postNotificationName("New Stat", object: self)
-                    dismissViewControllerAnimated(true, completion: nil)
+                    if (dataManager.getStatsForTeam(team).filter() {
+                        if $0.statType == type {
+                            return true
+                        } else {
+                            return false
+                        }
+                    }).count > 0 {
+                        presentOkAlert("Already a Stat", descritpion: "A statistic with that type already exists for this team.", okActionHandler: nil)
+                    } else {
+                        dataManager.addStatToTeam(team, statType: type, statValue: value)
+                        NSNotificationCenter.defaultCenter().postNotificationName("New Stat", object: self)
+                        dismissViewControllerAnimated(true, completion: nil)
+                    }
                 } else {
                     NSLog("Unable to save new stat")
                     presentOkAlert("Unable to Save", descritpion: "The new stat could not save because the value is not a number. Try removing anything that is not a base-10 number.", okActionHandler: nil)
