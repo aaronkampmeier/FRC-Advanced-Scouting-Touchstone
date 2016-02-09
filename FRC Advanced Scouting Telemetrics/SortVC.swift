@@ -17,6 +17,7 @@ class SortVC: UIViewController, UIPickerViewDelegate {
     var selectedType: StatType?
     let dataManager = TeamDataManager()
     var successful = false
+    var currentSortType: StatType?
     
     var isAscending = true
     
@@ -35,6 +36,22 @@ class SortVC: UIViewController, UIPickerViewDelegate {
         }
     }
     
+    override func viewWillAppear(animated: Bool) {
+        super.viewWillAppear(animated)
+        
+        //Get the index of the current stat type for sorting
+        let row: Int?
+        if let type = currentSortType {
+            row = (statTypes?.indexOf(type))! + 1
+        } else {
+            row = 0
+        }
+        
+        //Set that index in the picker view
+        sortTypePicker.selectRow(row!, inComponent: 0, animated: false)
+        self.pickerView(sortTypePicker, didSelectRow: row!, inComponent: 0)
+    }
+    
     func pickerView(pickerView: UIPickerView, numberOfRowsInComponent component: Int) -> Int {
         NSLog("Entering picker view numOfRows")
         if statTypes!.count > 0 {
@@ -42,7 +59,7 @@ class SortVC: UIViewController, UIPickerViewDelegate {
             selectedType = nil
             return statTypes!.count + 1
         } else {
-            //Present an alert that
+            //Present an alert
             presentOkAlert("No Stat Types", descritpion: "There are currently no statistic types. Go to the Admin Console to add some.", okActionHandler: alertActionHandler)
             return 0
         }
@@ -94,7 +111,7 @@ class SortVC: UIViewController, UIPickerViewDelegate {
         
         if successful && selectedType != nil {
             //Sort the team list
-            NSNotificationCenter.defaultCenter().postNotificationName("New Sort Type", object: self, userInfo: ["SortType":selectedType!, "Ascending":isAscending])
+            NSNotificationCenter.defaultCenter().postNotificationName("New Sort Type", object: self, userInfo: ["SortType":selectedType!, "Ascending":isAscending, "DraftBoardDefault":false])
         } else if successful && selectedType == nil {
             //If the default is slected then send the noftication to undo the sorting
             NSNotificationCenter.defaultCenter().postNotificationName("New Sort Type", object: self, userInfo: ["DraftBoardDefault":true])

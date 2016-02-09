@@ -28,7 +28,7 @@
                                 <rect key="frame" x="20" y="51" width="560" height="216"/>
                             </pickerView>
                             <segmentedControl opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="0" translatesAutoresizingMaskIntoConstraints="NO" id="4f4-cM-hsO">
-                                <rect key="frame" x="214" y="277" width="173" height="29"/>
+                                <rect key="frame" x="214" y="557" width="173" height="29"/>
                                 <segments>
                                     <segment title="Ascending"/>
                                     <segment title="Descending"/>
@@ -43,7 +43,7 @@
                             <constraint firstAttribute="leadingMargin" secondItem="nLZ-mx-5Cw" secondAttribute="leading" id="CTx-xJ-kIn"/>
                             <constraint firstItem="aar-ka-ba1" firstAttribute="top" secondItem="Kf0-09-1Rp" secondAttribute="bottom" id="MVw-tv-cKk"/>
                             <constraint firstItem="aar-ka-ba1" firstAttribute="centerX" secondItem="19h-jy-AzJ" secondAttribute="centerX" id="Oei-J7-F2Q"/>
-                            <constraint firstItem="4f4-cM-hsO" firstAttribute="top" secondItem="nLZ-mx-5Cw" secondAttribute="bottom" constant="10" id="nl9-C4-XDw"/>
+                            <constraint firstItem="nHC-df-FFw" firstAttribute="top" secondItem="4f4-cM-hsO" secondAttribute="bottom" constant="15" id="Vsv-C4-ri0"/>
                             <constraint firstItem="nLZ-mx-5Cw" firstAttribute="centerX" secondItem="19h-jy-AzJ" secondAttribute="centerX" id="osc-cq-1qn"/>
                             <constraint firstItem="4f4-cM-hsO" firstAttribute="centerX" secondItem="19h-jy-AzJ" secondAttribute="centerX" id="rR2-6V-mSH"/>
                             <constraint firstItem="nLZ-mx-5Cw" firstAttribute="top" secondItem="aar-ka-ba1" secondAttribute="bottom" constant="10" id="zE1-lc-WOt"/>

@@ -40,8 +40,12 @@ class TeamListController: UIViewController, UITableViewDataSource, UITableViewDe
         //Add an observer to resort the team list
         NSNotificationCenter.defaultCenter().addObserverForName("New Sort Type", object: nil, queue: nil, usingBlock: sortList)
         
+        //Create reusable cell
         teamList.registerClass(UITableViewCell.self,
             forCellReuseIdentifier: "Cell")
+        
+        //Create reusable header view
+        teamList.registerClass(UITableViewHeaderFooterView.self, forHeaderFooterViewReuseIdentifier: "Header")
         
         //Set the labels' default text
         weightLabel.text = ""
@@ -64,6 +68,9 @@ class TeamListController: UIViewController, UITableViewDataSource, UITableViewDe
         
         //Set the stats button to not selectable since there is no team selected
         statsButton.enabled = false
+        
+        //Set that the current team list is displaying the default order
+        isDefault = true
     }
     
     func addTeamFromNotification(notification:NSNotification) {
@@ -170,6 +177,23 @@ class TeamListController: UIViewController, UITableViewDataSource, UITableViewDe
         statsButton.enabled = true
     }
     
+    func tableView(tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
+        let header = teamList.dequeueReusableHeaderFooterViewWithIdentifier("Header")
+        
+        if isSorted {
+            if let name = sortTypeName {
+                header?.textLabel?.text = "Sorted Teams by: \(name)"
+            } else {
+                header?.textLabel?.text = "Sorted Teams"
+            }
+        } else if isDefault! {
+            header?.textLabel?.text = "All Teams"
+        } else {
+            
+        }
+        
+        return header
+    }
     
     //Two functions to allow deletion of Teams from the Table View
     func tableView(tableView: UITableView, canEditRowAtIndexPath indexPath: NSIndexPath) -> Bool {
@@ -217,7 +241,11 @@ class TeamListController: UIViewController, UITableViewDataSource, UITableViewDe
         searchBar.showsCancelButton = true
         
         //Give beginning data
-        searchResultTeams = teams
+        if isDefault! {
+            searchResultTeams = teams
+        } else if isSorted {
+            searchResultTeams = sortedTeams
+        }
     }
     
     func searchBarTextDidEndEditing(searchBar: UISearchBar) {
@@ -238,9 +266,17 @@ class TeamListController: UIViewController, UITableViewDataSource, UITableViewDe
         }
         
         //Take each team and check if it meets the required criteria, then add it to the search results array
-        for team in teams {
-            if predicate.evaluateWithObject(team) {
-                searchResultTeams.append(team)
+        if isDefault! {
+            for team in teams {
+                if predicate.evaluateWithObject(team) {
+                    searchResultTeams.append(team)
+                }
+            }
+        } else if isSorted {
+            for team in sortedTeams {
+                if predicate.evaluateWithObject(team) {
+                    searchResultTeams.append(team)
+                }
             }
         }
         
@@ -281,18 +317,7 @@ class TeamListController: UIViewController, UITableViewDataSource, UITableViewDe
             teamList.contentInset = UIEdgeInsetsZero
             teamList.scrollIndicatorInsets = UIEdgeInsetsZero
             
-            for indexPath in teamList.indexPathsForVisibleRows! {
-                let cell = teamList.cellForRowAtIndexPath(indexPath)
-                
-                var teamsArray = [Team]()
-                if isSearching {
-                    teamsArray = searchResultTeams
-                } else {
-                    teamsArray = teams
-                }
-                
-                cell!.textLabel?.text = "Team \(teamsArray[indexPath.row].teamNumber!)"
-            }
+            teamList.reloadRowsAtIndexPaths(teamList.indexPathsForVisibleRows!, withRowAnimation: .None)
         } else {
             self.setEditing(true, animated: true)
             editTeamsButton.title = "Finish Editing"
@@ -303,18 +328,7 @@ class TeamListController: UIViewController, UITableViewDataSource, UITableViewDe
             teamList.contentInset = adjustsForToolbarInsets!
             teamList.scrollIndicatorInsets = adjustsForToolbarInsets!
             
-            for indexPath in teamList.indexPathsForVisibleRows! {
-                let cell = teamList.cellForRowAtIndexPath(indexPath)
-                
-                var teamsArray = [Team]()
-                if isSearching {
-                    teamsArray = searchResultTeams
-                } else {
-                    teamsArray = teams
-                }
-                
-                cell!.textLabel?.text = "\(teamsArray[indexPath.row].teamNumber!)"
-            }
+            teamList.reloadRowsAtIndexPaths(teamList.indexPathsForVisibleRows!, withRowAnimation: .None)
         }
         teamList.endUpdates()
     }
@@ -342,6 +356,9 @@ class TeamListController: UIViewController, UITableViewDataSource, UITableViewDe
         sortVC.modalPresentationStyle = .Popover
         sortVC.preferredContentSize = CGSizeMake(300, 300)
         
+        //Tell the sort view controller the current sortType
+        sortVC.currentSortType = sortType
+        
         let popoverVC = sortVC.popoverPresentationController
         
         popoverVC?.permittedArrowDirections = .Up
@@ -356,10 +373,12 @@ class TeamListController: UIViewController, UITableViewDataSource, UITableViewDe
     var sortType: StatType?
     var isAscending: Bool?
     var isDefault: Bool?
+    var sortTypeName: String?
     
     func sortList(notification: NSNotification) {
         //Retrieve the statType used for sorting and the direction for sorting from the notification's UserInfo
         sortType = notification.userInfo!["SortType"] as? StatType
+        sortTypeName = sortType?.name
         isAscending = notification.userInfo!["Ascending"] as? Bool
         isDefault = notification.userInfo!["DraftBoardDefault"] as? Bool
         
@@ -380,6 +399,7 @@ class TeamListController: UIViewController, UITableViewDataSource, UITableViewDe
         if let d = isDefault {
             if d {
                 isSorted = false
+                sortType = nil
             } else {
                 isSorted = true
             }
