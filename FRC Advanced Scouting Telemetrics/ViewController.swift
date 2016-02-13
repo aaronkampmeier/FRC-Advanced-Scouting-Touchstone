@@ -12,7 +12,6 @@ class ViewController: UIViewController {
     @IBOutlet weak var teamListButton: UIButton!
     @IBOutlet weak var pitScoutingButton: UIButton!
     @IBOutlet weak var standsScoutingButton: UIButton!
-    @IBOutlet weak var draftBoardButton: UIButton!
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -28,10 +27,6 @@ class ViewController: UIViewController {
         
         standsScoutingButton.layer.cornerRadius = 10
         standsScoutingButton.clipsToBounds = true
-        
-        draftBoardButton.layer.cornerRadius = 10
-        draftBoardButton.clipsToBounds = true
-        
     }
 
     override func didReceiveMemoryWarning() {

@@ -8,11 +8,10 @@
 
 import UIKit
 
-class TeamListController: UIViewController, UITableViewDataSource, UITableViewDelegate, UISearchBarDelegate, UIPopoverPresentationControllerDelegate {
+class TeamListController: UIViewController, UITableViewDataSource, UITableViewDelegate, UISearchBarDelegate, UIPopoverPresentationControllerDelegate, UICollectionViewDataSource, UICollectionViewDelegate {
     @IBOutlet weak var sideImageView: UIImageView!
     @IBOutlet weak var frontImageView: UIImageView!
     @IBOutlet weak var searchBar: UISearchBar!
-    @IBOutlet weak var teamTable: UITableView!
     @IBOutlet weak var segmentControl: UISegmentedControl!
     @IBOutlet weak var teamList: UITableView!
     @IBOutlet weak var teamNumberLabel: UILabel!
@@ -21,6 +20,7 @@ class TeamListController: UIViewController, UITableViewDataSource, UITableViewDe
     @IBOutlet weak var editTeamsButton: UIBarButtonItem!
     @IBOutlet weak var teamListToolbar: UIToolbar!
     @IBOutlet weak var statsButton: UIBarButtonItem!
+    @IBOutlet weak var collectionView: UICollectionView!
     
     let teamManager = TeamDataManager()
     var adjustsForToolbarInsets: UIEdgeInsets? = nil
@@ -30,7 +30,11 @@ class TeamListController: UIViewController, UITableViewDataSource, UITableViewDe
     var sortedTeams = [Team]()
     var isSearching = false
     var isSorted = false
-    var selectedTeam: Team?
+    var selectedTeam: Team? {
+        didSet {
+            collectionView.reloadData()
+        }
+    }
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -65,12 +69,22 @@ class TeamListController: UIViewController, UITableViewDataSource, UITableViewDe
         
         //Prevent the bottom table view cells from being covered by the toolbar
         adjustsForToolbarInsets = UIEdgeInsets(top: 0, left: 0, bottom: CGRectGetHeight(teamListToolbar.frame), right: 0)
+        teamList.contentInset = adjustsForToolbarInsets!
+        teamList.scrollIndicatorInsets = adjustsForToolbarInsets!
         
         //Set the stats button to not selectable since there is no team selected
         statsButton.enabled = false
         
         //Set that the current team list is displaying the default order
         isDefault = true
+        
+        //Set collection view's data source and delegate
+        collectionView.dataSource = self
+        collectionView.delegate = self
+        
+        //Register cell for Collection View
+        collectionView.registerClass(UICollectionViewCell.self, forCellWithReuseIdentifier: "teamCell")
+        collectionView.registerClass(UICollectionViewCell.self, forCellWithReuseIdentifier: "matchCell")
     }
     
     func addTeamFromNotification(notification:NSNotification) {
@@ -182,6 +196,7 @@ class TeamListController: UIViewController, UITableViewDataSource, UITableViewDe
         
         if isSorted {
             if let name = sortTypeName {
+                
                 header?.textLabel?.text = "Sorted Teams by: \(name)"
             } else {
                 header?.textLabel?.text = "Sorted Teams"
@@ -311,18 +326,18 @@ class TeamListController: UIViewController, UITableViewDataSource, UITableViewDe
             //Change the label back
             editTeamsButton.title = "Edit Teams"
             //Hide the teamList's toolbar
-            teamListToolbar.hidden = true
+            //teamListToolbar.hidden = true
             
             //Undo the scrolling insets
-            teamList.contentInset = UIEdgeInsetsZero
-            teamList.scrollIndicatorInsets = UIEdgeInsetsZero
+//            teamList.contentInset = UIEdgeInsetsZero
+//            teamList.scrollIndicatorInsets = UIEdgeInsetsZero
             
             teamList.reloadRowsAtIndexPaths(teamList.indexPathsForVisibleRows!, withRowAnimation: .None)
         } else {
             self.setEditing(true, animated: true)
             editTeamsButton.title = "Finish Editing"
             
-            teamListToolbar.hidden = false
+            //teamListToolbar.hidden = false
             
             //Fix the scrolling so the toolbar doesn't hide any cells
             teamList.contentInset = adjustsForToolbarInsets!
@@ -447,5 +462,25 @@ class TeamListController: UIViewController, UITableViewDataSource, UITableViewDe
     //Functionality for the Segemented Control
     @IBAction func segmentChanged(sender: UISegmentedControl) {
         
+    }
+    
+    //---FUNCTIONS FOR GAME STATS AND SHOT CHART---
+    func collectionView(collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+        if let team = selectedTeam {
+            let matchesCount = teamManager.getMatchesForTeam(team).count
+            return matchesCount * 6 + matchesCount
+        }
+        
+        return 0
+    }
+    
+    func collectionView(collectionView: UICollectionView, cellForItemAtIndexPath indexPath: NSIndexPath) -> UICollectionViewCell {
+        let cell = collectionView.dequeueReusableCellWithReuseIdentifier("teamTrialCell", forIndexPath: indexPath)
+        if indexPath.item % 6 == 0 {
+            let label = cell.viewWithTag(7) as! UILabel
+            label.text = "TEXT IS HERE"
+        }
+        
+        return cell
     }
 }

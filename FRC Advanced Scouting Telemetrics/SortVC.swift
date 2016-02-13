@@ -53,10 +53,8 @@ class SortVC: UIViewController, UIPickerViewDelegate {
     }
     
     func pickerView(pickerView: UIPickerView, numberOfRowsInComponent component: Int) -> Int {
-        NSLog("Entering picker view numOfRows")
         if statTypes!.count > 0 {
             successful = true
-            selectedType = nil
             return statTypes!.count + 1
         } else {
             //Present an alert

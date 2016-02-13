@@ -21,5 +21,6 @@ extension Team {
     @NSManaged var sideImage: NSData?
     @NSManaged var stats: NSSet?
     @NSManaged var draftBoard: NSManagedObject?
+    @NSManaged var matches: NSSet?
 
 }
