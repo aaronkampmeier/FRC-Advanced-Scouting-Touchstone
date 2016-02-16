@@ -52,21 +52,33 @@ class AdminConfigureDetailMatchVC: UIViewController {
         let teamsAndPlaces = dataManager.getTeamsForMatch(match)
         
         for teamAndPlace in teamsAndPlaces {
-            switch teamAndPlace {
-            case .Blue1(let team):
-                blue1Field.text = team?.teamNumber
-            case  .Blue2(let team):
-                blue2Field.text = team?.teamNumber
-            case .Blue3(let team):
-                blue3Field.text = team?.teamNumber
-            case .Red1(let team):
-                red1Field.text = team?.teamNumber
-            case .Red2(let team):
-                red2Field.text = team?.teamNumber
-            case .Red3(let team):
-                red3Field.text = team?.teamNumber
-            }
-        }
+			switch Int(teamAndPlace.allianceColor!) {
+			case 0:
+				switch Int(teamAndPlace.allianceTeam!) {
+				case 1:
+					blue1Field.text = (teamAndPlace.regionalPerformance?.valueForKey("team") as! Team).teamNumber
+				case 2:
+					blue2Field.text = (teamAndPlace.regionalPerformance?.valueForKey("team") as! Team).teamNumber
+				case 3:
+					blue3Field.text = (teamAndPlace.regionalPerformance?.valueForKey("team") as! Team).teamNumber
+				default:
+					break
+				}
+			case 1:
+				switch Int(teamAndPlace.allianceTeam!) {
+				case 1:
+					red1Field.text = (teamAndPlace.regionalPerformance?.valueForKey("team") as! Team).teamNumber
+				case 2:
+					red2Field.text = (teamAndPlace.regionalPerformance?.valueForKey("team") as! Team).teamNumber
+				case 3:
+					red3Field.text = (teamAndPlace.regionalPerformance?.valueForKey("team") as! Team).teamNumber
+				default:
+					break
+				}
+			default:
+				break
+			}
+		}
     }
     
     @IBAction func textFieldValueChanged(sender: UITextField) {
@@ -150,29 +162,35 @@ class AdminConfigureDetailMatchVC: UIViewController {
                     return nil
                 }
             }
-            
-            
-            var teamsAndPlaces: [TeamDataManager.TeamPlaceInMatch] = []
-            
-            //Then add the teams to a team place array, if there are any
-            if let team = blue1Team {
-                teamsAndPlaces.append(.Blue1(team))
-            }
-            if let team = blue2Team {
-                teamsAndPlaces.append(.Blue2(team))
-            }
-            if let team = blue3Team {
-                teamsAndPlaces.append(.Blue3(team))
-            }
-            if let team = red1Team {
-                teamsAndPlaces.append(.Red1(team))
-            }
-            if let team = red2Team {
-                teamsAndPlaces.append(.Red2(team))
-            }
-            if let team = red3Team {
-                teamsAndPlaces.append(.Red3(team))
-            }
+			
+			var teamsAndPlaces: [TeamDataManager.RegionalTeamPlaceInMatch] = []
+			
+			let teamsArray: [Team?] = [blue1Team, blue2Team, blue3Team, red1Team, red2Team, red3Team]
+			
+			//Add all the teams to the regional
+			let regionalTeams: [TeamRegionalPerformance?] = teamsArray.map({
+				if let team = $0 {
+					let regionalPerformance = dataManager.addTeamToRegional(team, regional: (selectedMatch?.regional)!)
+					switch team {
+					case let val where val == blue1Team:
+						teamsAndPlaces.append(.Blue1(regionalPerformance))
+					case let val where val == blue2Team:
+						teamsAndPlaces.append(.Blue2(regionalPerformance))
+					case let val where val == blue3Team:
+						teamsAndPlaces.append(.Blue3(regionalPerformance))
+					case let val where val == red1Team:
+						teamsAndPlaces.append(.Red1(regionalPerformance))
+					case let val where val == red2Team:
+						teamsAndPlaces.append(.Red2(regionalPerformance))
+					case let val where val == red3Team:
+						teamsAndPlaces.append(.Red3(regionalPerformance))
+					default:
+						break
+					}
+					return regionalPerformance
+				}
+				return nil
+			})
             
             //Then update the match
             dataManager.addTeamsToMatch(teamsAndPlaces, match: selectedMatch!)

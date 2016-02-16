@@ -1,8 +1,8 @@
 //
-//  TeamShotChartZones+CoreDataProperties.swift
+//  Defense+CoreDataProperties.swift
 //  FRC Advanced Scouting Touchstone
 //
-//  Created by Aaron Kampmeier on 2/9/16.
+//  Created by Aaron Kampmeier on 2/15/16.
 //  Copyright © 2016 Kampfire Technologies. All rights reserved.
 //
 //  Choose "Create NSManagedObject Subclass…" from the Core Data editor menu
@@ -12,11 +12,10 @@
 import Foundation
 import CoreData
 
-extension TeamShotChartZones {
+extension Defense {
 
-    @NSManaged var succesfulShots: NSNumber?
-    @NSManaged var missedShots: NSNumber?
-    @NSManaged var zoneNumber: NSNumber?
-    @NSManaged var shotChart: TeamShotChart?
+    @NSManaged var defenseName: String?
+    @NSManaged var category: String?
+    @NSManaged var matches: NSSet?
 
 }

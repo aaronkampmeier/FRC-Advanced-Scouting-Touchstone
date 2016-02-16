@@ -1,8 +1,8 @@
 //
-//  MatchBoard+CoreDataProperties.swift
+//  DefenseCrossTime+CoreDataProperties.swift
 //  FRC Advanced Scouting Touchstone
 //
-//  Created by Aaron Kampmeier on 2/9/16.
+//  Created by Aaron Kampmeier on 2/15/16.
 //  Copyright © 2016 Kampfire Technologies. All rights reserved.
 //
 //  Choose "Create NSManagedObject Subclass…" from the Core Data editor menu
@@ -12,8 +12,10 @@
 import Foundation
 import CoreData
 
-extension MatchBoard {
+extension DefenseCrossTime {
 
-    @NSManaged var matches: NSOrderedSet?
+    @NSManaged var time: NSDate?
+    @NSManaged var teamMatchPerformance: NSManagedObject?
+    @NSManaged var defense: Defense?
 
 }

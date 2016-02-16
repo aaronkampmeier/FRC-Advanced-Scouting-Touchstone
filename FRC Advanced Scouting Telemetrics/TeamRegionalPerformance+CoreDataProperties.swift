@@ -1,5 +1,5 @@
 //
-//  DraftBoard+CoreDataProperties.swift
+//  TeamRegionalPerformance+CoreDataProperties.swift
 //  FRC Advanced Scouting Touchstone
 //
 //  Created by Aaron Kampmeier on 2/15/16.
@@ -12,8 +12,10 @@
 import Foundation
 import CoreData
 
-extension DraftBoard {
+extension TeamRegionalPerformance {
 
-    @NSManaged var teams: NSOrderedSet?
+    @NSManaged var team: Team?
+    @NSManaged var matchPerformances: NSSet?
+    @NSManaged var regional: Regional?
 
 }

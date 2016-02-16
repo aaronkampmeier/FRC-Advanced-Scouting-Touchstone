@@ -1,4 +1,4 @@
-//
+    //
 //  TeamDataManager.swift
 //  FRC Advanced Scouting Telemetrics
 //
@@ -18,7 +18,7 @@ class TeamDataManager {
         //Get the entity for a Team and then create a new one
         let entity = NSEntityDescription.entityForName("Team", inManagedObjectContext: TeamDataManager.managedContext)
         
-        let team = NSManagedObject(entity: entity!, insertIntoManagedObjectContext: TeamDataManager.managedContext) as! Team
+        let team = Team(entity: entity!, insertIntoManagedObjectContext: TeamDataManager.managedContext)
         
         //Set the value we want
         team.teamNumber = number
@@ -119,6 +119,10 @@ class TeamDataManager {
     func getTeams() -> [Team] {
         return getTeams(Predicate: nil)
     }
+	
+	func getTeams(inRegional regional: Regional) -> [TeamRegionalPerformance]{
+		return regional.teamRegionalPerformances?.allObjects as! [TeamRegionalPerformance]
+	}
     
     func getDraftBoard() throws -> [Team]{
         do {
@@ -213,7 +217,7 @@ class TeamDataManager {
                 return results[0] as! StatsBoard
             } else if results.isEmpty {
                 NSLog("Creating new stats board")
-                //Create a new draft board and return it
+                //Create a new stats board and return it
                 let newStatsBoard = StatsBoard(entity: NSEntityDescription.entityForName("StatsBoard", inManagedObjectContext: TeamDataManager.managedContext)!, insertIntoManagedObjectContext: TeamDataManager.managedContext)
                 save()
                 return newStatsBoard
@@ -224,55 +228,77 @@ class TeamDataManager {
         throw DataManagingError.UnableToFetch
     }
     
-    //FUNCTIONS FOR MATCHES
-    func getRootMatchBoard() throws -> MatchBoard {
-        //Create a fetch request for the draft board
-        let fetchRequest = NSFetchRequest(entityName: "MatchBoard")
-        
-        do {
-            let results = try TeamDataManager.managedContext.executeFetchRequest(fetchRequest)
-            
-            if results.count > 1 {
-                NSLog("Somehow multiple match boards were created. Select the one for deletion")
-                throw DataManagingError.DuplicateMatchBoards
-            } else if results.count == 1 {
-                NSLog("One Match Board")
-                return results[0] as! MatchBoard
-            } else if results.count == 0 {
-                NSLog("Creating new match board")
-                //Create a new draft board and return it
-                let newMatchBoard = MatchBoard(entity: NSEntityDescription.entityForName("MatchBoard", inManagedObjectContext: TeamDataManager.managedContext)!, insertIntoManagedObjectContext: TeamDataManager.managedContext)
-                save()
-                return newMatchBoard
-            }
-        } catch let error as NSError {
-            NSLog("Could not fetch \(error), \(error.userInfo)")
+    //FUNCTIONS FOR REGIONALS
+    func addRegional(regionalNumber num: Int, withName name: String) -> Regional {
+        //Check to make sure that the regional doesn't exist
+        let previousRegionals = getAllRegionals().filter({$0.regionalNumber == num})
+        guard previousRegionals.isEmpty else {
+            return previousRegionals[0]
         }
-        throw DataManagingError.UnableToFetch
+        
+        let newRegional = Regional(entity: NSEntityDescription.entityForName("Regional", inManagedObjectContext: TeamDataManager.managedContext)!, insertIntoManagedObjectContext: TeamDataManager.managedContext)
+        
+        newRegional.name = name
+        newRegional.regionalNumber = num
+        save()
+        return newRegional
     }
     
-    func createNewMatch(matchNumber: Int) throws {
-        //First, check to make sure it doesn't already exist
+    func getAllRegionals() -> [Regional] {
+        let fetchRequest = NSFetchRequest(entityName: "Regional")
+        
+        var regionals = [Regional]()
         do {
-            guard (try getRootMatchBoard().matches?.array as! [Match]).filter({return $0.matchNumber == matchNumber}).isEmpty else {
-                throw DataManagingError.MatchAlreadyExists
-            }
+            let results = try TeamDataManager.managedContext.executeFetchRequest(fetchRequest) as? [Regional]
+			if let x = results {
+				regionals = x
+			}
         } catch {
-            throw DataManagingError.MatchAlreadyExists
+            regionals = []
         }
         
+        return regionals
+    }
+	
+	func getRegional(withNumber num: Int) -> Regional? {
+		let fetchRequest = NSFetchRequest(entityName: "Regional")
+		
+		fetchRequest.predicate = NSPredicate(format: "%k like %@", argumentArray: ["regionalNumber", "\(num)"])
+		
+		do {
+			let results = try TeamDataManager.managedContext.executeFetchRequest(fetchRequest)
+			return results[0] as? Regional
+		} catch {
+			return nil
+		}
+	}
+    
+    func addTeamToRegional(team: Team, regional: Regional) -> TeamRegionalPerformance {
+        let previousPerformances = (team.regionalPerformances?.allObjects as! [TeamRegionalPerformance]).filter({$0.regional == regional})
+        guard previousPerformances.isEmpty else {
+            return previousPerformances[0]
+        }
+        
+        let newRegionalPerformance = TeamRegionalPerformance(entity: NSEntityDescription.entityForName("TeamRegionalPerformance", inManagedObjectContext: TeamDataManager.managedContext)!, insertIntoManagedObjectContext: TeamDataManager.managedContext)
+        
+        newRegionalPerformance.regional = regional
+        newRegionalPerformance.team = team
+        save()
+        return newRegionalPerformance
+    }
+    
+    //FUNCTIONS FOR MATCHES
+    func createNewMatch(matchNumber: Int, inRegional regional: Regional) throws {
+        //First, check to make sure it doesn't already exist
+        guard (regional.matches?.allObjects as! [Match]).filter({return $0.matchNumber == matchNumber}).isEmpty else {
+            throw DataManagingError.MatchAlreadyExists
+        }
         
         let newMatch = Match(entity: NSEntityDescription.entityForName("Match", inManagedObjectContext: TeamDataManager.managedContext)!, insertIntoManagedObjectContext: TeamDataManager.managedContext)
         
         newMatch.matchNumber = matchNumber
         
-        do {
-            newMatch.matchBoard = try getRootMatchBoard()
-        } catch let error as DataManagingError {
-            NSLog("\(error.errorDescription)")
-        } catch {
-            
-        }
+        newMatch.regional = regional
         
         save()
     }
@@ -282,34 +308,43 @@ class TeamDataManager {
         save()
     }
     
-    func addTeamsToMatch(teamsAndPlaces: [TeamPlaceInMatch], match: Match) {
-        let participatingTeamsSet = match.participatingTeams?.mutableCopy() as! NSMutableSet
+    func addTeamsToMatch(teamsAndPlaces: [RegionalTeamPlaceInMatch], match: Match) {
+        let participatingTeamsSet = match.teamPerformances!.mutableCopy() as! NSMutableSet
+        //
+        participatingTeamsSet.removeAllObjects()
+        //
         for teamAndPlace in teamsAndPlaces {
+            //Create a new Match Performance
+            let newMatchPerformance = TeamMatchPerformance(entity: NSEntityDescription.entityForName("TeamMatchPerformance", inManagedObjectContext: TeamDataManager.managedContext)!, insertIntoManagedObjectContext: TeamDataManager.managedContext)
+            
+            newMatchPerformance.regionalPerformance = teamAndPlace.teamRegionalPerformance
             switch teamAndPlace {
-            case .Blue1(let team):
-                match.b1 = team
-                participatingTeamsSet.addObject(team!)
-            case .Blue2(let team):
-                match.b2 = team
-                participatingTeamsSet.addObject(team!)
-            case .Blue3(let team):
-                match.b3 = team
-                participatingTeamsSet.addObject(team!)
-            case .Red1(let team):
-                match.r1 = team
-                participatingTeamsSet.addObject(team!)
-            case .Red2(let team):
-                match.r2 = team
-                participatingTeamsSet.addObject(team!)
-            case .Red3(let team):
-                match.r3 = team
-                participatingTeamsSet.addObject(team!)
+            case .Blue1(let regionalTeam):
+                newMatchPerformance.allianceColor = 0
+                newMatchPerformance.allianceTeam = 1
+            case .Blue2(let regionalTeam):
+                newMatchPerformance.allianceColor = 0
+                newMatchPerformance.allianceTeam = 2
+            case .Blue3(let regionalTeam):
+                newMatchPerformance.allianceColor = 0
+                newMatchPerformance.allianceTeam = 3
+            case .Red1(let regionalTeam):
+                newMatchPerformance.allianceColor = 1
+                newMatchPerformance.allianceTeam = 1
+            case .Red2(let regionalTeam):
+                newMatchPerformance.allianceColor = 1
+                newMatchPerformance.allianceTeam = 2
+            case .Red3(let regionalTeam):
+                newMatchPerformance.allianceColor = 1
+                newMatchPerformance.allianceTeam = 3
             }
+            participatingTeamsSet.addObject(newMatchPerformance)
         }
-        match.participatingTeams = participatingTeamsSet.copy() as? NSSet
+        match.teamPerformances = participatingTeamsSet.copy() as? NSSet
         save()
     }
     
+    /* DEPRECATED
     func addTeamToMatch(team: Team, match: Match, place: TeamPlaceInMatch) {
         let participatingTeamsSet = match.participatingTeams?.mutableCopy() as! NSMutableSet
         participatingTeamsSet.addObject(team)
@@ -333,28 +368,29 @@ class TeamDataManager {
         save()
     }
     
-    func getTeamsForMatch(match: Match) -> [TeamPlaceInMatch] {
+    func getTeamsForMatchDeprecated(match: Match) -> [TeamPlaceInMatch] {
         return [TeamPlaceInMatch.Blue1(match.b1), TeamPlaceInMatch.Blue2(match.b2), TeamPlaceInMatch.Blue3(match.b3), TeamPlaceInMatch.Red1(match.r1), TeamPlaceInMatch.Red2(match.r2), TeamPlaceInMatch.Red3(match.r3)]
     }
+    */
     
+    func getTeamsForMatch(match: Match) -> [TeamMatchPerformance] {
+        let teamPerformances = match.teamPerformances?.allObjects as! [TeamMatchPerformance]
+        return teamPerformances
+    }
+	
     func getTimeOfMatch(match: Match) -> NSDate {
         return match.time!
     }
     
-    func getMatches() -> [Match]{
-        var matchBoard: MatchBoard?
-        do {
-            matchBoard = try getRootMatchBoard()
-        } catch {
-            NSLog("Unable to get match board")
-        }
-        
-        return matchBoard!.matches?.array as! [Match]
+	func getMatches(forRegional regional: Regional) -> [Match]{
+        return regional.matches?.allObjects as! [Match]
     }
     
+    /* Deprecated
     func getMatchesForTeam(team: Team) -> [Match]{
         return team.matches?.allObjects as! [Match]
     }
+	*/
     
     enum TeamPlaceInMatch {
         case Blue1(Team?)
@@ -363,6 +399,32 @@ class TeamDataManager {
         case Red1(Team?)
         case Red2(Team?)
         case Red3(Team?)
+    }
+    
+    enum RegionalTeamPlaceInMatch {
+        case Blue1(TeamRegionalPerformance?)
+        case Blue2(TeamRegionalPerformance?)
+        case Blue3(TeamRegionalPerformance?)
+        case Red1(TeamRegionalPerformance?)
+        case Red2(TeamRegionalPerformance?)
+        case Red3(TeamRegionalPerformance?)
+        
+        var teamRegionalPerformance: TeamRegionalPerformance {
+            switch self {
+            case .Blue1(let x):
+                return x!
+            case .Blue2(let x):
+                return x!
+            case .Blue3(let x):
+                return x!
+            case .Red1(let x):
+                return x!
+            case .Red2(let x):
+                return x!
+            case .Red3(let x):
+                return x!
+            }
+        }
     }
     
     enum DataManagingError: ErrorType {

@@ -1,5 +1,5 @@
 //
-//  DraftBoard+CoreDataProperties.swift
+//  TimeMarker+CoreDataProperties.swift
 //  FRC Advanced Scouting Touchstone
 //
 //  Created by Aaron Kampmeier on 2/15/16.
@@ -12,8 +12,10 @@
 import Foundation
 import CoreData
 
-extension DraftBoard {
+extension TimeMarker {
 
-    @NSManaged var teams: NSOrderedSet?
+    @NSManaged var time: NSDate?
+    @NSManaged var event: NSNumber?
+    @NSManaged var teamMatchPerformance: NSManagedObject?
 
 }

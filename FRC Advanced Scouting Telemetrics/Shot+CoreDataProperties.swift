@@ -1,5 +1,5 @@
 //
-//  DraftBoard+CoreDataProperties.swift
+//  Shot+CoreDataProperties.swift
 //  FRC Advanced Scouting Touchstone
 //
 //  Created by Aaron Kampmeier on 2/15/16.
@@ -12,8 +12,12 @@
 import Foundation
 import CoreData
 
-extension DraftBoard {
+extension Shot {
 
-    @NSManaged var teams: NSOrderedSet?
+    @NSManaged var blocked: NSNumber?
+    @NSManaged var xLocation: NSNumber?
+    @NSManaged var yLocation: NSNumber?
+    @NSManaged var shootingTeam: NSManagedObject?
+    @NSManaged var blockingTeam: NSManagedObject?
 
 }

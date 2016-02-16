@@ -2,7 +2,7 @@
 //  DraftBoard.swift
 //  FRC Advanced Scouting Touchstone
 //
-//  Created by Aaron Kampmeier on 1/31/16.
+//  Created by Aaron Kampmeier on 2/15/16.
 //  Copyright © 2016 Kampfire Technologies. All rights reserved.
 //
 

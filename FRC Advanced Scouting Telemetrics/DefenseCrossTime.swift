@@ -1,5 +1,5 @@
 //
-//  StatType.swift
+//  DefenseCrossTime.swift
 //  FRC Advanced Scouting Touchstone
 //
 //  Created by Aaron Kampmeier on 2/15/16.
@@ -10,7 +10,7 @@ import Foundation
 import CoreData
 
 
-class StatType: NSManagedObject {
+class DefenseCrossTime: NSManagedObject {
 
 // Insert code here to add functionality to your managed object subclass
 

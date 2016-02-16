@@ -2,7 +2,7 @@
 //  StatType+CoreDataProperties.swift
 //  FRC Advanced Scouting Touchstone
 //
-//  Created by Aaron Kampmeier on 2/3/16.
+//  Created by Aaron Kampmeier on 2/15/16.
 //  Copyright © 2016 Kampfire Technologies. All rights reserved.
 //
 //  Choose "Create NSManagedObject Subclass…" from the Core Data editor menu
@@ -15,7 +15,7 @@ import CoreData
 extension StatType {
 
     @NSManaged var name: String?
-    @NSManaged var statsBoard: NSManagedObject?
     @NSManaged var stats: NSSet?
+    @NSManaged var statsBoard: StatsBoard?
 
 }

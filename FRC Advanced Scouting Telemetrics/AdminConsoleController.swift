@@ -21,7 +21,7 @@ class AdminConsoleController: UIViewController, UITableViewDataSource, UITableVi
     }
     
     func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return 2
+        return 3
     }
     
     func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
@@ -32,8 +32,11 @@ class AdminConsoleController: UIViewController, UITableViewDataSource, UITableVi
         } else if indexPath.row == 1 {
             cell?.textLabel?.text = "Statistics"
             cell?.detailTextLabel!.text = "Add and Remove Statistic Types"
-        }
-        
+		} else if indexPath.row == 2 {
+			cell?.textLabel?.text = "Regionals"
+			cell?.detailTextLabel!.text = "Add, Edit, and Configure Regionals"
+		}
+		
         return cell!
     }
     
@@ -76,6 +79,8 @@ class AdminConsoleController: UIViewController, UITableViewDataSource, UITableVi
                 configureVC.configureSetting = .Matches
             case 1:
                 configureVC.configureSetting = .Statistics
+			case 2:
+				configureVC.configureSetting = .Regionals
             default:
                 configureVC.configureSetting = .Unknown
             }

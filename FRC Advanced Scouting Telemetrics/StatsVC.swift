@@ -36,7 +36,7 @@ class StatsVC: UIViewController {
             var statsString = ""
             
             for stat in stats {
-                let statType = (stat.statType as! StatType).name
+                let statType = (stat.statType!).name
                 
                 statsString.appendContentsOf("\(statType!): \(stat.value!) \n")
                 statsLabel.numberOfLines += 1

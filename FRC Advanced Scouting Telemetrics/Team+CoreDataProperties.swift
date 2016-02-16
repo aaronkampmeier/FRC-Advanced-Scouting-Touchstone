@@ -2,7 +2,7 @@
 //  Team+CoreDataProperties.swift
 //  FRC Advanced Scouting Touchstone
 //
-//  Created by Aaron Kampmeier on 1/29/16.
+//  Created by Aaron Kampmeier on 2/15/16.
 //  Copyright © 2016 Kampfire Technologies. All rights reserved.
 //
 //  Choose "Create NSManagedObject Subclass…" from the Core Data editor menu
@@ -15,12 +15,12 @@ import CoreData
 extension Team {
 
     @NSManaged var driverExp: NSNumber?
-    @NSManaged var robotWeight: NSNumber?
-    @NSManaged var teamNumber: String?
     @NSManaged var frontImage: NSData?
+    @NSManaged var robotWeight: NSNumber?
     @NSManaged var sideImage: NSData?
+    @NSManaged var teamNumber: String?
+    @NSManaged var draftBoard: DraftBoard?
     @NSManaged var stats: NSSet?
-    @NSManaged var draftBoard: NSManagedObject?
-    @NSManaged var matches: NSSet?
+    @NSManaged var regionalPerformances: NSSet?
 
 }

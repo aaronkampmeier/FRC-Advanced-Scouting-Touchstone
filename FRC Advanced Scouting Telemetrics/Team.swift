@@ -1,8 +1,8 @@
 //
 //  Team.swift
-//  FRC Advanced Scouting Telemetrics
+//  FRC Advanced Scouting Touchstone
 //
-//  Created by Aaron Kampmeier on 1/13/16.
+//  Created by Aaron Kampmeier on 2/15/16.
 //  Copyright © 2016 Kampfire Technologies. All rights reserved.
 //
 
@@ -14,7 +14,4 @@ class Team: NSManagedObject {
 
 // Insert code here to add functionality to your managed object subclass
 
-    func addStat(statType: StatType, value: Double) {
-        TeamDataManager().addStatToTeam(self, statType: statType, statValue: value)
-    }
 }
