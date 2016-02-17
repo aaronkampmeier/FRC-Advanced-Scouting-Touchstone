@@ -33,11 +33,15 @@ class AdminConfigureDetailVC: UIViewController {
     func presentStatDetailView() {
         performSegueWithIdentifier("configureStatDetailSegue", sender: nil)
     }
+	
+	func presentRegionalDetailView() {
+		performSegueWithIdentifier("configureRegionalDetailSegue", sender: nil)
+	}
     
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
         super.prepareForSegue(segue, sender: sender)
         
-        if segue.identifier == "configureMatchDetailSegue" || segue.identifier == "configureStatDetailSegue" {
+        if segue.identifier == "configureMatchDetailSegue" || segue.identifier == "configureStatDetailSegue" || segue.identifier == "configureRegionalDetailSegue" {
             detailViewController = segue.destinationViewController
         }
     }

@@ -286,9 +286,14 @@ class TeamDataManager {
         save()
         return newRegionalPerformance
     }
+	
+	func delete(Regional regional: Regional) {
+		TeamDataManager.managedContext.deleteObject(regional)
+		save()
+	}
     
     //FUNCTIONS FOR MATCHES
-    func createNewMatch(matchNumber: Int, inRegional regional: Regional) throws {
+    func createNewMatch(matchNumber: Int, inRegional regional: Regional) throws -> Match {
         //First, check to make sure it doesn't already exist
         guard (regional.matches?.allObjects as! [Match]).filter({return $0.matchNumber == matchNumber}).isEmpty else {
             throw DataManagingError.MatchAlreadyExists
@@ -301,6 +306,7 @@ class TeamDataManager {
         newMatch.regional = regional
         
         save()
+		return newMatch
     }
     
     func deleteMatch(match: Match) {

@@ -26,7 +26,20 @@ class AdminConfigureVC: UIViewController, UITableViewDelegate, UITableViewDataSo
             (detailViewController as! AdminConfigureDetailMatchVC).didSelectMatch(newValue!)
         }
     }
-	var regionals = [Regional]()
+	var selectedRegional: Regional? {
+		willSet {
+		matchTitleLabel.text = "Regional \(newValue!.regionalNumber!)"
+		(detailViewController as! AdminConfigureDetailRegionalViewController).didSelectRegional(newValue!)
+		if let regional = selectedRegional {
+			tableView.reloadRowsAtIndexPaths([NSIndexPath.init(forRow: regionals.indexOf(regional)!, inSection: 0)], withRowAnimation: .Fade)
+		}
+		}
+	}
+	var regionals = [Regional]() {
+		willSet {
+		regionalsAndMatches = newValue.map({matchesForRegional($0)})
+		}
+	}
 	var regionalsAndMatches: [[Match]] = [[Match]()]
 	
     override func viewDidLoad() {
@@ -50,6 +63,8 @@ class AdminConfigureVC: UIViewController, UITableViewDelegate, UITableViewDataSo
             containerViewController!.presentMatchDetailView()
         case .Statistics:
             containerViewController!.presentStatDetailView()
+		case .Regionals:
+			containerViewController!.presentRegionalDetailView()
         default:
             break
         }
@@ -83,7 +98,16 @@ class AdminConfigureVC: UIViewController, UITableViewDelegate, UITableViewDataSo
 	}
 	
 	func numberOfSectionsInTableView(tableView: UITableView) -> Int {
-		return (regionals.count)
+		switch configureSetting! {
+		case .Matches:
+			return (regionals.count)
+		case .Statistics:
+			fallthrough
+		case .Regionals:
+			return 1
+		default:
+			return 0
+		}
 	}
     
     func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -92,6 +116,8 @@ class AdminConfigureVC: UIViewController, UITableViewDelegate, UITableViewDataSo
             return regionalsAndMatches[section].count + 1
         case .Statistics:
             return 0
+		case .Regionals:
+			return regionals.count + 1
         default:
             return 0
         }
@@ -102,14 +128,22 @@ class AdminConfigureVC: UIViewController, UITableViewDelegate, UITableViewDataSo
         switch configureSetting! {
         case .Matches:
             if regionalsAndMatches[indexPath.section].count != indexPath.row {
-            let cell = tableView.dequeueReusableCellWithIdentifier("cell")
-            cell?.textLabel?.text = "Match \(regionalsAndMatches[indexPath.section][indexPath.row].matchNumber!)"
-            return cell!
+				let cell = tableView.dequeueReusableCellWithIdentifier("cell")
+				cell?.textLabel?.text = "Match \(regionalsAndMatches[indexPath.section][indexPath.row].matchNumber!)"
+				return cell!
             } else {
                 return tableView.dequeueReusableCellWithIdentifier("plusCell")!
             }
         case .Statistics:
             return UITableViewCell()
+		case .Regionals:
+			if regionals.count != indexPath.row {
+				let cell = tableView.dequeueReusableCellWithIdentifier("cell")
+				cell?.textLabel?.text = "\(regionals[indexPath.row].regionalNumber!). \(regionals[indexPath.row].name!)"
+				return cell!
+			} else {
+				return tableView.dequeueReusableCellWithIdentifier("plusCell")!
+			}
         default:
             return UITableViewCell()
         }
@@ -128,7 +162,8 @@ class AdminConfigureVC: UIViewController, UITableViewDelegate, UITableViewDataSo
                     if let previousMatch = regionalsAndMatches[indexPath.section].last {
                         previousNumber = Int((previousMatch.matchNumber?.intValue)!)
                     }
-                    try dataManager.createNewMatch(previousNumber + 1, inRegional: regionals[indexPath.section])
+                    let newMatch = try dataManager.createNewMatch(previousNumber + 1, inRegional: regionals[indexPath.section])
+					regionalsAndMatches[indexPath.section].append(newMatch)
                     //Insert new match's cell into table view
                     tableView.insertRowsAtIndexPaths([NSIndexPath.init(forRow: previousNumber, inSection: indexPath.section)], withRowAnimation: .Middle)
                 } catch {
@@ -148,33 +183,106 @@ class AdminConfigureVC: UIViewController, UITableViewDelegate, UITableViewDataSo
             }
         case .Statistics:
             fallthrough
+		case .Regionals:
+			if regionals.count != indexPath.row {
+				selectedRegional = regionals[indexPath.row]
+			} else {
+				tableView.beginUpdates()
+				
+				var previousNumber = 0
+				if let previousRegional = regionals.last {
+					previousNumber = Int((previousRegional.regionalNumber?.intValue)!)
+				}
+				let newRegional = dataManager.addRegional(regionalNumber: previousNumber + 1, withName: "(NO NAME YET)")
+				regionals.append(newRegional)
+				
+				//Insert the new cell in the table view
+				tableView.insertRowsAtIndexPaths([NSIndexPath.init(forRow: previousNumber, inSection: 0)], withRowAnimation: .Middle)
+				tableView.deselectRowAtIndexPath(indexPath, animated: true)
+				tableView.endUpdates()
+			}
         default:
             break
         }
     }
+	
+	func tableView(tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
+		switch configureSetting! {
+		case .Matches:
+			return regionals[section].name!
+		default:
+			return nil
+		}
+	}
     
     func tableView(tableView: UITableView, canEditRowAtIndexPath indexPath: NSIndexPath) -> Bool {
-        if indexPath.row == regionalsAndMatches[indexPath.section].count - 1 {
-            return true
-        } else {
-            return false
-        }
-    }
-    
+		switch configureSetting! {
+		case .Matches:
+			if indexPath.row == regionalsAndMatches[indexPath.section].count - 1 {
+				return true
+			} else {
+				return false
+			}
+		case .Statistics:
+			fallthrough
+		case .Regionals:
+			if regionals.count - 1 == indexPath.row {
+				return true
+			} else {
+				return false
+			}
+		default:
+			return false
+		}
+	}
+	
     func tableView(tableView: UITableView, editingStyleForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCellEditingStyle {
-        if indexPath.row == regionalsAndMatches[indexPath.section].count - 1 {
-            return .Delete
-        } else {
-            return .None
-        }
+		switch configureSetting! {
+		case .Matches:
+			if indexPath.row == regionalsAndMatches[indexPath.section].count - 1 {
+				return .Delete
+			} else {
+				return .None
+			}
+		case .Regionals:
+			if regionals.count - 1 == indexPath.row {
+				return .Delete
+			} else {
+				return .None
+			}
+		default:
+			return .None
+		}
     }
-    
+	
     func tableView(tableView: UITableView, commitEditingStyle editingStyle: UITableViewCellEditingStyle, forRowAtIndexPath indexPath: NSIndexPath) {
         if editingStyle == .Delete {
-            dataManager.deleteMatch(regionalsAndMatches[indexPath.section][indexPath.row])
-            tableView.beginUpdates()
-            tableView.deleteRowsAtIndexPaths([indexPath], withRowAnimation: .Top)
-            tableView.endUpdates()
+			switch configureSetting! {
+			case .Matches:
+				dataManager.deleteMatch(regionalsAndMatches[indexPath.section][indexPath.row])
+				regionalsAndMatches[indexPath.section].removeAtIndex(indexPath.row)
+				tableView.beginUpdates()
+				tableView.deleteRowsAtIndexPaths([indexPath], withRowAnimation: .Top)
+				tableView.endUpdates()
+			case .Regionals:
+				//Warn the user of what they are doing
+				let alert = UIAlertController(title: "Confidence Level?", message: "Are you sure you want to delete this regional? It will cause all associated matches and team data for those matches to be deleted as well.", preferredStyle: .Alert)
+				let deleteAction: UIAlertAction = UIAlertAction(title: "Yes, Delete", style: .Destructive) {
+					(alert: UIAlertAction) in
+					self.dataManager.delete(Regional: self.regionals[indexPath.row])
+					self.regionals.removeAtIndex(indexPath.row)
+					tableView.beginUpdates()
+					tableView.deleteRowsAtIndexPaths([indexPath], withRowAnimation: .Middle)
+					tableView.endUpdates()
+				}
+				let cancelAction = UIAlertAction(title: "No, Cancel", style: .Default, handler: nil)
+				
+				alert.addAction(deleteAction)
+				alert.addAction(cancelAction)
+				presentViewController(alert, animated: true, completion: nil)
+			default:
+				break
+			}
         }
     }
     

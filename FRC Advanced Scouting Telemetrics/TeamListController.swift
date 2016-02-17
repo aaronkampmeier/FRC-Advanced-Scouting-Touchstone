@@ -25,7 +25,16 @@ class TeamListController: UIViewController, UITableViewDataSource, UITableViewDe
     let teamManager = TeamDataManager()
     var adjustsForToolbarInsets: UIEdgeInsets? = nil
     
-    var teams = [Team]()
+	var teams: [Team] {
+		get {
+			do {
+				return try teamManager.getDraftBoard()
+			} catch {
+				NSLog("Unable to get the teams: \(error)")
+				return [Team]()
+			}
+		}
+	}
     var searchResultTeams = [Team]()
     var sortedTeams = [Team]()
 	var isSearching = false {
@@ -109,12 +118,6 @@ class TeamListController: UIViewController, UITableViewDataSource, UITableViewDe
         
         //Hide the search bar's cancel button
         searchBar.showsCancelButton = false
-        
-        do {
-            teams = try teamManager.getDraftBoard()
-        } catch {
-            NSLog("Unable to get the teams: \(error)")
-        }
 		
 		currentRegionalTeams = teams
         
@@ -142,12 +145,10 @@ class TeamListController: UIViewController, UITableViewDataSource, UITableViewDe
     }
     
     func addTeamFromNotification(notification:NSNotification) {
-        do {
-            teams = try teamManager.getDraftBoard()
-        } catch {
-            NSLog("Unable to get the teams: \(error)")
-        }
-        teamList.reloadData()
+		isSearching = false
+		isSorted = false
+        selectedRegional = nil
+		currentRegionalTeams = teams
     }
     
     func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -279,7 +280,7 @@ class TeamListController: UIViewController, UITableViewDataSource, UITableViewDe
         if editingStyle == UITableViewCellEditingStyle.Delete {
             //Remove the team and reload the table
             teamManager.deleteTeam(teams[indexPath.row])
-            teams.removeAtIndex(indexPath.row)
+            currentRegionalTeams.removeAtIndex(indexPath.row)
             teamList.reloadData()
         }
     }
@@ -300,8 +301,8 @@ class TeamListController: UIViewController, UITableViewDataSource, UITableViewDe
     func tableView(tableView: UITableView, moveRowAtIndexPath sourceIndexPath: NSIndexPath, toIndexPath destinationIndexPath: NSIndexPath) {
         //Move the team in the array and in Core Data
         let movedTeam = teams[sourceIndexPath.row]
-        teams.removeAtIndex(sourceIndexPath.row)
-        teams.insert(movedTeam, atIndex: destinationIndexPath.row)
+        currentRegionalTeams.removeAtIndex(sourceIndexPath.row)
+        currentRegionalTeams.insert(movedTeam, atIndex: destinationIndexPath.row)
         
         do {
             try teamManager.moveTeam(sourceIndexPath.row, toIndex: destinationIndexPath.row)
@@ -367,7 +368,7 @@ class TeamListController: UIViewController, UITableViewDataSource, UITableViewDe
         }
 		*/
 		
-		currentTeamsToDisplay = currentRegionalTeams
+		currentTeamsToDisplay = searchResultTeams
         teamList.reloadData()
     }
     

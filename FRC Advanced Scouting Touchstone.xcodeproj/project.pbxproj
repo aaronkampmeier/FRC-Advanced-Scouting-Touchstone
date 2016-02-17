@@ -55,6 +55,7 @@
 		1F78E7901C3B469300221927 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 1F78E78E1C3B469300221927 /* LaunchScreen.storyboard */; };
 		1F78E79B1C3B469300221927 /* FRC_Advanced_Scouting_TelemetricsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F78E79A1C3B469300221927 /* FRC_Advanced_Scouting_TelemetricsTests.swift */; };
 		1F78E7A61C3B469300221927 /* FRC_Advanced_Scouting_TelemetricsUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F78E7A51C3B469300221927 /* FRC_Advanced_Scouting_TelemetricsUITests.swift */; };
+		1FB99DB31C741840004BC2C1 /* AdminConfigureDetailRegionalViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FB99DB21C741840004BC2C1 /* AdminConfigureDetailRegionalViewController.swift */; };
 		1FCA7ADA1C630BAE004294D1 /* StatsVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FCA7AD91C630BAE004294D1 /* StatsVC.swift */; };
 		1FCA7ADD1C64152E004294D1 /* AddStatVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FCA7ADC1C64152E004294D1 /* AddStatVC.swift */; };
 		1FF1F1731C3CC74A0051EE54 /* TeamListController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FF1F1721C3CC74A0051EE54 /* TeamListController.swift */; };
@@ -87,6 +88,7 @@
 		1F21DF111C66942200C55D0E /* SortVC.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SortVC.swift; sourceTree = "<group>"; };
 		1F21DF131C66965100C55D0E /* StatTypePickerData.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StatTypePickerData.swift; sourceTree = "<group>"; };
 		1F21DF151C66A57F00C55D0E /* Popovers.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = Popovers.storyboard; sourceTree = "<group>"; };
+		1F2422421C73DF08008A5AFC /* FRC_Advanced_Scouting_Telemetrics CD 7.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "FRC_Advanced_Scouting_Telemetrics CD 7.xcdatamodel"; sourceTree = "<group>"; };
 		1F45340D1C6FC3EA004EDDB9 /* GameStatsCollectionViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GameStatsCollectionViewCell.swift; sourceTree = "<group>"; };
 		1F45340F1C6FF916004EDDB9 /* StandsScoutingViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StandsScoutingViewController.swift; sourceTree = "<group>"; };
 		1F4534111C6FFA77004EDDB9 /* StandsScoutingDetailViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StandsScoutingDetailViewController.swift; sourceTree = "<group>"; };
@@ -140,6 +142,7 @@
 		1F78E7A51C3B469300221927 /* FRC_Advanced_Scouting_TelemetricsUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FRC_Advanced_Scouting_TelemetricsUITests.swift; sourceTree = "<group>"; };
 		1F78E7A71C3B469300221927 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		1F9A53861C6AB0F000B0AAE3 /* FRC_Advanced_Scouting_Telemetrics CD 5.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "FRC_Advanced_Scouting_Telemetrics CD 5.xcdatamodel"; sourceTree = "<group>"; };
+		1FB99DB21C741840004BC2C1 /* AdminConfigureDetailRegionalViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AdminConfigureDetailRegionalViewController.swift; sourceTree = "<group>"; };
 		1FCA7ACC1C61AB38004294D1 /* FRC_Advanced_Scouting_Telemetrics CD 4.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "FRC_Advanced_Scouting_Telemetrics CD 4.xcdatamodel"; sourceTree = "<group>"; };
 		1FCA7AD91C630BAE004294D1 /* StatsVC.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StatsVC.swift; sourceTree = "<group>"; };
 		1FCA7ADC1C64152E004294D1 /* AddStatVC.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AddStatVC.swift; sourceTree = "<group>"; };
@@ -180,6 +183,7 @@
 			children = (
 				1F4534551C7276DE004EDDB9 /* RegionalPickerViewController.swift */,
 				1FF32A271C6E990C00CD028C /* AdminConfigureDetailMatchVC.swift */,
+				1FB99DB21C741840004BC2C1 /* AdminConfigureDetailRegionalViewController.swift */,
 				1FF32A221C6E7AAC00CD028C /* AdminConfigureDetailVC.swift */,
 				1F78E7841C3B469300221927 /* ViewController.swift */,
 				1FF1F1721C3CC74A0051EE54 /* TeamListController.swift */,
@@ -432,6 +436,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				1F45343F1C7242B9004EDDB9 /* DraftBoard.swift in Sources */,
+				1FB99DB31C741840004BC2C1 /* AdminConfigureDetailRegionalViewController.swift in Sources */,
 				1F78E7851C3B469300221927 /* ViewController.swift in Sources */,
 				1F4534121C6FFA77004EDDB9 /* StandsScoutingDetailViewController.swift in Sources */,
 				1F4534481C7242B9004EDDB9 /* Stat+CoreDataProperties.swift in Sources */,
@@ -738,6 +743,7 @@
 		1F78E7891C3B469300221927 /* FRC_Advanced_Scouting_Telemetrics.xcdatamodeld */ = {
 			isa = XCVersionGroup;
 			children = (
+				1F2422421C73DF08008A5AFC /* FRC_Advanced_Scouting_Telemetrics CD 7.xcdatamodel */,
 				1F4534541C7242FB004EDDB9 /* FRC_Advanced_Scouting_Telemetrics CD 6.xcdatamodel */,
 				1F9A53861C6AB0F000B0AAE3 /* FRC_Advanced_Scouting_Telemetrics CD 5.xcdatamodel */,
 				1FCA7ACC1C61AB38004294D1 /* FRC_Advanced_Scouting_Telemetrics CD 4.xcdatamodel */,
@@ -745,7 +751,7 @@
 				1F0296661C5C6E42008CA8C2 /* FRC_Advanced_Scouting_Telemetrics CD 2.xcdatamodel */,
 				1F78E78A1C3B469300221927 /* FRC_Advanced_Scouting_Telemetrics.xcdatamodel */,
 			);
-			currentVersion = 1F9A53861C6AB0F000B0AAE3 /* FRC_Advanced_Scouting_Telemetrics CD 5.xcdatamodel */;
+			currentVersion = 1F4534541C7242FB004EDDB9 /* FRC_Advanced_Scouting_Telemetrics CD 6.xcdatamodel */;
 			path = FRC_Advanced_Scouting_Telemetrics.xcdatamodeld;
 			sourceTree = "<group>";
 			versionGroupType = wrapper.xcdatamodel;

@@ -65,7 +65,11 @@ class RegionalPickerViewController: UIViewController, UIPickerViewDelegate, UIPi
 	}
 	
 	func pickerView(pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {
-		chosenRegional = regionals![row-1]
+		if row == 0 {
+			chosenRegional = nil
+		} else {
+			chosenRegional = regionals![row-1]
+		}
 	}
 
     /*
