@@ -274,11 +274,13 @@ class TeamDataManager {
 	}
     
     func addTeamToRegional(team: Team, regional: Regional) -> TeamRegionalPerformance {
+		//Check if there is already a regional performance for it
         let previousPerformances = (team.regionalPerformances?.allObjects as! [TeamRegionalPerformance]).filter({$0.regional == regional})
         guard previousPerformances.isEmpty else {
             return previousPerformances[0]
         }
-        
+		
+		//If there isn't, then create one
         let newRegionalPerformance = TeamRegionalPerformance(entity: NSEntityDescription.entityForName("TeamRegionalPerformance", inManagedObjectContext: TeamDataManager.managedContext)!, insertIntoManagedObjectContext: TeamDataManager.managedContext)
         
         newRegionalPerformance.regional = regional
@@ -349,7 +351,140 @@ class TeamDataManager {
         match.teamPerformances = participatingTeamsSet.copy() as? NSSet
         save()
     }
-    
+	
+	
+	//Newer and preferred method for setting teams in a match
+	func setTeamsInMatch(teamsAndPlaces: [TeamAndMatchPlace], inMatch match: Match) {
+		//let participatingTeamPerformances = NSMutableSet()
+		
+		for teamAndPlace in teamsAndPlaces {
+			let team = teamAndPlace.team
+			
+			//Check if there is a previous match performance for this place
+			var alreadyExists: Bool = false
+			var preExistentTeamPerformance: TeamMatchPerformance?
+			for teamPerformance in match.teamPerformances!.allObjects as! [TeamMatchPerformance] {
+				if teamPerformance.allianceColor == teamAndPlace.allianceColorAndTeam["Color"] && teamPerformance.allianceTeam == teamAndPlace.allianceColorAndTeam["Team"] {
+					alreadyExists = true
+					preExistentTeamPerformance = teamPerformance
+				}
+			}
+			
+			if let team = team {
+				if !alreadyExists {
+					//This is a new team for that place
+					//If its match performance doesn't already exist, then add it.
+					let matchPerformance = createNewMatchPerformance(withTeam: team, inMatch: match)
+					
+					//Set the alliance color and team
+					matchPerformance.allianceColor = teamAndPlace.allianceColorAndTeam["Color"]
+					matchPerformance.allianceTeam = teamAndPlace.allianceColorAndTeam["Team"]
+					
+					//Add it to the participating teams
+					//participatingTeamPerformances.addObject(matchPerformance)
+				} else {
+					//Check to see if the pre-existent match performance is the same team as the new team
+					if preExistentTeamPerformance?.regionalPerformance?.valueForKey("Team") as! Team == team {
+						//The team is the same, we're done
+					} else {
+						//The team is different, delete the old one and make a new one
+						delete(preExistentTeamPerformance!)
+						
+						let matchPerformance = createNewMatchPerformance(withTeam: team, inMatch: match)
+						
+						//Set the alliance color and team
+						matchPerformance.allianceColor = teamAndPlace.allianceColorAndTeam["Color"]
+						matchPerformance.allianceTeam = teamAndPlace.allianceColorAndTeam["Team"]
+						
+						//Add it to the participating teams
+						//participatingTeamPerformances.addObject(matchPerformance)
+					}
+				}
+			} else {
+				//There isn't a team for that color and place, delete whatever was previously there
+				if let performance = preExistentTeamPerformance {
+					delete(performance)
+				}
+			}
+		}
+		
+		//Set the new participating team match performances in the match
+		//match.teamPerformances = participatingTeamPerformances.copy() as? NSSet
+		save()
+	}
+	
+	func delete(matchPerformance: TeamMatchPerformance) {
+		//Get the regional performance before deletion
+		let regionalPerformance = matchPerformance.regionalPerformance as! TeamRegionalPerformance
+		
+		//Delete the match performance
+		TeamDataManager.managedContext.deleteObject(matchPerformance)
+		
+		//Check if it is the last match performance in the regional performance
+		if regionalPerformance.matchPerformances?.count == 0 {
+			//It was the last match performance, delete the regional performance now, too
+			TeamDataManager.managedContext.deleteObject(regionalPerformance)
+		}
+		
+		save()
+	}
+	
+	func createNewMatchPerformance(withTeam team: Team, inMatch match: Match) -> TeamMatchPerformance {
+		//Get the regional performance for the team
+		let regionalPerformance = addTeamToRegional(team, regional: match.regional!)
+		
+		//Create the new match performance
+		let newMatchPerformance = TeamMatchPerformance(entity: NSEntityDescription.entityForName("TeamMatchPerformance", inManagedObjectContext: TeamDataManager.managedContext)!, insertIntoManagedObjectContext: TeamDataManager.managedContext)
+		
+		newMatchPerformance.regionalPerformance = regionalPerformance
+		newMatchPerformance.match = match
+		
+		return newMatchPerformance
+	}
+	
+	enum TeamAndMatchPlace {
+		case Blue1(Team?)
+		case Blue2(Team?)
+		case Blue3(Team?)
+		case Red1(Team?)
+		case Red2(Team?)
+		case Red3(Team?)
+		
+		var team: Team? {
+			switch self {
+			case .Blue1(let x):
+				return x
+			case .Blue2(let x):
+				return x
+			case .Blue3(let x):
+				return x
+			case .Red1(let x):
+				return x
+			case .Red2(let x):
+				return x
+			case .Red3(let x):
+				return x
+			}
+		}
+		
+		var allianceColorAndTeam: [String:Int] {
+			switch self {
+			case .Blue1(_):
+				return ["Color":0, "Team":1]
+			case .Blue2(_):
+				return ["Color":0, "Team":2]
+			case .Blue3(_):
+				return ["Color":0, "Team":3]
+			case .Red1(_):
+				return ["Color":1, "Team":1]
+			case .Red2(_):
+				return ["Color":1, "Team":2]
+			case .Red3(_):
+				return ["Color":1, "Team":3]
+			}
+		}
+	}
+	
     /* DEPRECATED
     func addTeamToMatch(team: Team, match: Match, place: TeamPlaceInMatch) {
         let participatingTeamsSet = match.participatingTeams?.mutableCopy() as! NSMutableSet
@@ -397,6 +532,29 @@ class TeamDataManager {
         return team.matches?.allObjects as! [Match]
     }
 	*/
+	
+	//FUNCTIONS FOR SHOTS
+	func createShot(atPoint location: CGPoint) -> Shot {
+		let newShot = Shot(entity: NSEntityDescription.entityForName("Shot", inManagedObjectContext: TeamDataManager.managedContext)!, insertIntoManagedObjectContext: TeamDataManager.managedContext)
+		
+		//Set the location
+		newShot.xLocation = location.x
+		newShot.yLocation = location.y
+		
+		return newShot
+	}
+	
+	func remove(shot: Shot) {
+		TeamDataManager.managedContext.deleteObject(shot)
+	}
+	
+	//FUNCTIONS FOR AUTONOMOUS CYCLES
+	func createAutonomousCycle(inMatchPerformance matchPerformance: TeamMatchPerformance) -> AutonomousCycle {
+		let newCycle = AutonomousCycle(entity: NSEntityDescription.entityForName("AutonomousCycle", inManagedObjectContext: TeamDataManager.managedContext)!, insertIntoManagedObjectContext: TeamDataManager.managedContext)
+		newCycle.matchPerformance = matchPerformance
+		
+		return newCycle
+	}
     
     enum TeamPlaceInMatch {
         case Blue1(Team?)

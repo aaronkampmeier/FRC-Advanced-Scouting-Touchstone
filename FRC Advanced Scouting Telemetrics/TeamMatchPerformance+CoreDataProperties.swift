@@ -20,8 +20,8 @@ extension TeamMatchPerformance {
     @NSManaged var match: Match?
     @NSManaged var autonomousCycles: NSSet?
     @NSManaged var timeMarkers: NSOrderedSet?
-    @NSManaged var defenseBlocks: Shot?
-    @NSManaged var offenseShots: Shot?
+    @NSManaged var defenseBlocks: NSSet?
+    @NSManaged var offenseShots: NSSet?
     @NSManaged var defenseCrossTimes: NSSet?
 
 }

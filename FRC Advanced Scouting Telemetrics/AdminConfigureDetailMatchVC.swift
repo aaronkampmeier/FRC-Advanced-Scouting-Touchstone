@@ -45,7 +45,15 @@ class AdminConfigureDetailMatchVC: UIViewController {
     func didSelectMatch(match: Match) {
         viewWillChange()
         view.hidden = false
-        
+		
+		//Set up the view
+		blue1Field.text = nil
+		blue2Field.text = nil
+		blue3Field.text = nil
+		red1Field.text = nil
+		red2Field.text = nil
+		red3Field.text = nil
+		
         //Set the current match
         selectedMatch = match
         
@@ -163,48 +171,53 @@ class AdminConfigureDetailMatchVC: UIViewController {
                 }
             }
 			
-			var teamsAndPlaces: [TeamDataManager.RegionalTeamPlaceInMatch] = []
+			//Create an array of all the Teams and Match Places
+			let teamsAndPlaces: [TeamDataManager.TeamAndMatchPlace] = [TeamDataManager.TeamAndMatchPlace.Blue1(blue1Team), TeamDataManager.TeamAndMatchPlace.Blue2(blue2Team), TeamDataManager.TeamAndMatchPlace.Blue3(blue3Team), TeamDataManager.TeamAndMatchPlace.Red1(red1Team), TeamDataManager.TeamAndMatchPlace.Red2(red2Team), TeamDataManager.TeamAndMatchPlace.Red3(red3Team)]
 			
-			let teamsArray: [Team?] = [blue1Team, blue2Team, blue3Team, red1Team, red2Team, red3Team]
+			//Set the teams in the match
+			dataManager.setTeamsInMatch(teamsAndPlaces, inMatch: selectedMatch!)
 			
-			//Add all the teams to the regional
-			let regionalTeams: [TeamRegionalPerformance?] = teamsArray.map({
-				if let team = $0 {
-					let regionalPerformance = dataManager.addTeamToRegional(team, regional: (selectedMatch?.regional)!)
-					switch team {
-					case let val where val == blue1Team:
-						teamsAndPlaces.append(.Blue1(regionalPerformance))
-					case let val where val == blue2Team:
-						teamsAndPlaces.append(.Blue2(regionalPerformance))
-					case let val where val == blue3Team:
-						teamsAndPlaces.append(.Blue3(regionalPerformance))
-					case let val where val == red1Team:
-						teamsAndPlaces.append(.Red1(regionalPerformance))
-					case let val where val == red2Team:
-						teamsAndPlaces.append(.Red2(regionalPerformance))
-					case let val where val == red3Team:
-						teamsAndPlaces.append(.Red3(regionalPerformance))
-					default:
-						break
-					}
-					return regionalPerformance
-				}
-				return nil
-			})
-            
-            //Then update the match
-            dataManager.addTeamsToMatch(teamsAndPlaces, match: selectedMatch!)
-            
-            //Next, do some cleanup of the view
-            //Remove all the right images on the text fields
-            blue1Field.rightView = nil
-            blue2Field.rightView = nil
-            blue3Field.rightView = nil
-            red1Field.rightView = nil
-            red2Field.rightView = nil
-            red3Field.rightView = nil
-        }
-    }
+			
+//			var teamsAndPlaces: [TeamDataManager.RegionalTeamPlaceInMatch] = []
+//			
+//			let teamsArray: [Team?] = [blue1Team, blue2Team, blue3Team, red1Team, red2Team, red3Team]
+//			
+//			//Add all the teams to the regional
+//			for team in teamsArray {
+//				if let team = team {
+//					let regionalPerformance = dataManager.addTeamToRegional(team, regional: (selectedMatch?.regional)!)
+//					switch team {
+//					case let val where val == blue1Team:
+//						teamsAndPlaces.append(.Blue1(regionalPerformance))
+//					case let val where val == blue2Team:
+//						teamsAndPlaces.append(.Blue2(regionalPerformance))
+//					case let val where val == blue3Team:
+//						teamsAndPlaces.append(.Blue3(regionalPerformance))
+//					case let val where val == red1Team:
+//						teamsAndPlaces.append(.Red1(regionalPerformance))
+//					case let val where val == red2Team:
+//						teamsAndPlaces.append(.Red2(regionalPerformance))
+//					case let val where val == red3Team:
+//						teamsAndPlaces.append(.Red3(regionalPerformance))
+//					default:
+//						break
+//				}
+//			}
+//				
+//				//Then update the match
+//				dataManager.addTeamsToMatch(teamsAndPlaces, match: selectedMatch!)
+		
+			//Next, do some cleanup of the view
+			//Remove all the right images on the text fields
+			blue1Field.rightView = nil
+			blue2Field.rightView = nil
+			blue3Field.rightView = nil
+			red1Field.rightView = nil
+			red2Field.rightView = nil
+			red3Field.rightView = nil
+		}
+	}
+}
 
     /*
     // MARK: - Navigation
@@ -215,5 +228,3 @@ class AdminConfigureDetailMatchVC: UIViewController {
         // Pass the selected object to the new view controller.
     }
     */
-
-}

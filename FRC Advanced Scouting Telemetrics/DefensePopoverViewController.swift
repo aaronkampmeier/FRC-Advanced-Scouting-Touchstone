@@ -1,26 +1,27 @@
 //
-//  StandsScoutingDetailViewController.swift
+//  DefensePopoverViewController.swift
 //  FRC Advanced Scouting Touchstone
 //
-//  Created by Aaron Kampmeier on 2/13/16.
+//  Created by Aaron Kampmeier on 2/20/16.
 //  Copyright © 2016 Kampfire Technologies. All rights reserved.
 //
 
 import UIKit
 
-class StandsScoutingDetailViewController: UIViewController {
+class DefensePopoverViewController: UIViewController {
+	var defenseVC: DefenseViewController?
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        
+
         // Do any additional setup after loading the view.
     }
-    
-    override func viewDidAppear(animated: Bool) {
-        super.viewDidAppear(animated)
-        
-        performSegueWithIdentifier("autonomous", sender: nil)
-    }
+	
+	override func viewWillDisappear(animated: Bool) {
+		super.viewWillDisappear(animated)
+		
+		defenseVC!.popoverWillGoAway()
+	}
 
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()

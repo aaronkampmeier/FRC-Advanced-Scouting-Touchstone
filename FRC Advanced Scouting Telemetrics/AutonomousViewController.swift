@@ -8,9 +8,14 @@
 
 import UIKit
 
-class AutonomousViewController: UIViewController, UITableViewDelegate, UITableViewDataSource, UIPickerViewDelegate, UIPickerViewDataSource {
+class AutonomousViewController: UIViewController, StandsScoutingDetailProtocol, UITableViewDelegate, UITableViewDataSource, UIPickerViewDelegate, UIPickerViewDataSource {
     @IBOutlet weak var optionsList: UITableView!
-    
+	
+	var standsScoutingVC: StandsScoutingViewController?
+	let dataManager = TeamDataManager()
+	
+	var autonomousCycles: [AutonomousCycle] = [AutonomousCycle]()
+	var defenseReachedButton: UIButton?
     var rowStage = 0
 
     override func viewDidLoad() {
@@ -22,11 +27,29 @@ class AutonomousViewController: UIViewController, UITableViewDelegate, UITableVi
         optionsList.delegate = self
         optionsList.allowsSelection = false
     }
+	
+	override func viewWillAppear(animated: Bool) {
+		super.viewWillAppear(animated)
+		
+		standsScoutingVC = (parentViewController as! StandsScoutingViewController)
+		if standsScoutingVC?.matchPerformance?.autonomousCycles?.count == 0 {
+			let cycle = dataManager.createAutonomousCycle(inMatchPerformance: standsScoutingVC!.matchPerformance!)
+			autonomousCycles.append(cycle)
+		} else {
+			autonomousCycles = standsScoutingVC?.matchPerformance?.autonomousCycles?.allObjects as! [AutonomousCycle]
+		}
+	}
 
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
     }
+	
+	override func viewWillDisappear(animated: Bool) {
+		super.viewWillDisappear(animated)
+		
+		dataManager.save()
+	}
     
     func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         switch rowStage {
@@ -58,6 +81,7 @@ class AutonomousViewController: UIViewController, UITableViewDelegate, UITableVi
             return cell!
         } else if indexPath.row == 2 {
             let cell = tableView.dequeueReusableCellWithIdentifier("defenseReachedCell")
+			defenseReachedButton = cell?.viewWithTag(14) as? UIButton
             return cell!
         } else if indexPath.row == 3 {
             let cell = tableView.dequeueReusableCellWithIdentifier("mainCell")
@@ -86,18 +110,21 @@ class AutonomousViewController: UIViewController, UITableViewDelegate, UITableVi
     }
     
     func returnSwitchFlipped(sender: UISwitch) {
-        
+        autonomousCycles.first?.returned = sender.on
     }
     
     func shotSwitchFlipped(sender: UISwitch) {
-        
+        autonomousCycles.first?.shot = sender.on
     }
     
     func crossedSwitchFlipped(sender: UISwitch) {
-        
+        autonomousCycles.first?.crossedDefense = sender.on
     }
     
     func didMoveSwitchFlipped(sender: UISwitch) {
+		//Update core data
+		autonomousCycles.first!.moved = sender.on
+		
         optionsList.beginUpdates()
         if sender.on {
             rowStage = 1
@@ -116,6 +143,9 @@ class AutonomousViewController: UIViewController, UITableViewDelegate, UITableVi
     }
     
     func didReachDefenseSwitchFlipped(sender: UISwitch) {
+		//Update core data
+		autonomousCycles.first?.reachedDefense = sender.on
+		
         optionsList.beginUpdates()
         if sender.on {
             rowStage = 2
@@ -152,7 +182,10 @@ class AutonomousViewController: UIViewController, UITableViewDelegate, UITableVi
     
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
         if segue.identifier == "popover" {
-            (segue.destinationViewController as! PopoverPickerViewController).autonomousViewController = self
+			let destinationVC = segue.destinationViewController as! PopoverPickerViewController
+            destinationVC.autonomousViewController = self
+			
+			destinationVC.popoverPresentationController?.sourceRect = (defenseReachedButton?.frame)!
         }
     }
 

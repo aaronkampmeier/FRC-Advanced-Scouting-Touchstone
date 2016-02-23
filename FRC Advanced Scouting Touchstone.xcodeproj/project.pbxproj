@@ -7,12 +7,14 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		1F12CF141C78FD370014200C /* DefenseViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F12CF131C78FD370014200C /* DefenseViewController.swift */; };
+		1F12CF161C796F540014200C /* DefensePopoverViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F12CF151C796F530014200C /* DefensePopoverViewController.swift */; };
+		1F12CF181C7A6CD70014200C /* Stopwatch.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F12CF171C7A6CD70014200C /* Stopwatch.swift */; };
 		1F21DF121C66942200C55D0E /* SortVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F21DF111C66942200C55D0E /* SortVC.swift */; };
 		1F21DF141C66965100C55D0E /* StatTypePickerData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F21DF131C66965100C55D0E /* StatTypePickerData.swift */; };
 		1F21DF161C66A57F00C55D0E /* Popovers.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 1F21DF151C66A57F00C55D0E /* Popovers.storyboard */; };
 		1F45340E1C6FC3EA004EDDB9 /* GameStatsCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F45340D1C6FC3EA004EDDB9 /* GameStatsCollectionViewCell.swift */; };
 		1F4534101C6FF916004EDDB9 /* StandsScoutingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F45340F1C6FF916004EDDB9 /* StandsScoutingViewController.swift */; };
-		1F4534121C6FFA77004EDDB9 /* StandsScoutingDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F4534111C6FFA77004EDDB9 /* StandsScoutingDetailViewController.swift */; };
 		1F4534151C6FFC38004EDDB9 /* AutonomousViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F4534141C6FFC38004EDDB9 /* AutonomousViewController.swift */; };
 		1F4534171C7002EB004EDDB9 /* PopoverPickerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F4534161C7002EB004EDDB9 /* PopoverPickerViewController.swift */; };
 		1F4534361C7242B9004EDDB9 /* Defense+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F4534181C7242B9004EDDB9 /* Defense+CoreDataProperties.swift */; };
@@ -56,6 +58,7 @@
 		1F78E79B1C3B469300221927 /* FRC_Advanced_Scouting_TelemetricsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F78E79A1C3B469300221927 /* FRC_Advanced_Scouting_TelemetricsTests.swift */; };
 		1F78E7A61C3B469300221927 /* FRC_Advanced_Scouting_TelemetricsUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F78E7A51C3B469300221927 /* FRC_Advanced_Scouting_TelemetricsUITests.swift */; };
 		1FB99DB31C741840004BC2C1 /* AdminConfigureDetailRegionalViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FB99DB21C741840004BC2C1 /* AdminConfigureDetailRegionalViewController.swift */; };
+		1FB99DB51C75272F004BC2C1 /* ArrayExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FB99DB41C75272F004BC2C1 /* ArrayExtension.swift */; };
 		1FCA7ADA1C630BAE004294D1 /* StatsVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FCA7AD91C630BAE004294D1 /* StatsVC.swift */; };
 		1FCA7ADD1C64152E004294D1 /* AddStatVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FCA7ADC1C64152E004294D1 /* AddStatVC.swift */; };
 		1FF1F1731C3CC74A0051EE54 /* TeamListController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FF1F1721C3CC74A0051EE54 /* TeamListController.swift */; };
@@ -85,13 +88,15 @@
 /* Begin PBXFileReference section */
 		1F0296661C5C6E42008CA8C2 /* FRC_Advanced_Scouting_Telemetrics CD 2.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "FRC_Advanced_Scouting_Telemetrics CD 2.xcdatamodel"; sourceTree = "<group>"; };
 		1F0296691C5D5439008CA8C2 /* FRC_Advanced_Scouting_Telemetrics CD 3.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "FRC_Advanced_Scouting_Telemetrics CD 3.xcdatamodel"; sourceTree = "<group>"; };
+		1F12CF131C78FD370014200C /* DefenseViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DefenseViewController.swift; sourceTree = "<group>"; };
+		1F12CF151C796F530014200C /* DefensePopoverViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DefensePopoverViewController.swift; sourceTree = "<group>"; };
+		1F12CF171C7A6CD70014200C /* Stopwatch.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Stopwatch.swift; sourceTree = "<group>"; };
 		1F21DF111C66942200C55D0E /* SortVC.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SortVC.swift; sourceTree = "<group>"; };
 		1F21DF131C66965100C55D0E /* StatTypePickerData.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StatTypePickerData.swift; sourceTree = "<group>"; };
 		1F21DF151C66A57F00C55D0E /* Popovers.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = Popovers.storyboard; sourceTree = "<group>"; };
 		1F2422421C73DF08008A5AFC /* FRC_Advanced_Scouting_Telemetrics CD 7.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "FRC_Advanced_Scouting_Telemetrics CD 7.xcdatamodel"; sourceTree = "<group>"; };
 		1F45340D1C6FC3EA004EDDB9 /* GameStatsCollectionViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GameStatsCollectionViewCell.swift; sourceTree = "<group>"; };
 		1F45340F1C6FF916004EDDB9 /* StandsScoutingViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StandsScoutingViewController.swift; sourceTree = "<group>"; };
-		1F4534111C6FFA77004EDDB9 /* StandsScoutingDetailViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StandsScoutingDetailViewController.swift; sourceTree = "<group>"; };
 		1F4534141C6FFC38004EDDB9 /* AutonomousViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AutonomousViewController.swift; sourceTree = "<group>"; };
 		1F4534161C7002EB004EDDB9 /* PopoverPickerViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PopoverPickerViewController.swift; sourceTree = "<group>"; };
 		1F4534181C7242B9004EDDB9 /* Defense+CoreDataProperties.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Defense+CoreDataProperties.swift"; sourceTree = "<group>"; };
@@ -143,6 +148,7 @@
 		1F78E7A71C3B469300221927 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		1F9A53861C6AB0F000B0AAE3 /* FRC_Advanced_Scouting_Telemetrics CD 5.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "FRC_Advanced_Scouting_Telemetrics CD 5.xcdatamodel"; sourceTree = "<group>"; };
 		1FB99DB21C741840004BC2C1 /* AdminConfigureDetailRegionalViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AdminConfigureDetailRegionalViewController.swift; sourceTree = "<group>"; };
+		1FB99DB41C75272F004BC2C1 /* ArrayExtension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ArrayExtension.swift; sourceTree = "<group>"; };
 		1FCA7ACC1C61AB38004294D1 /* FRC_Advanced_Scouting_Telemetrics CD 4.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "FRC_Advanced_Scouting_Telemetrics CD 4.xcdatamodel"; sourceTree = "<group>"; };
 		1FCA7AD91C630BAE004294D1 /* StatsVC.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StatsVC.swift; sourceTree = "<group>"; };
 		1FCA7ADC1C64152E004294D1 /* AddStatVC.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AddStatVC.swift; sourceTree = "<group>"; };
@@ -203,8 +209,10 @@
 		1F4534131C6FFC13004EDDB9 /* Stands Scouting */ = {
 			isa = PBXGroup;
 			children = (
+				1F12CF171C7A6CD70014200C /* Stopwatch.swift */,
 				1F45340F1C6FF916004EDDB9 /* StandsScoutingViewController.swift */,
-				1F4534111C6FFA77004EDDB9 /* StandsScoutingDetailViewController.swift */,
+				1F12CF131C78FD370014200C /* DefenseViewController.swift */,
+				1F12CF151C796F530014200C /* DefensePopoverViewController.swift */,
 				1F4534141C6FFC38004EDDB9 /* AutonomousViewController.swift */,
 				1F4534161C7002EB004EDDB9 /* PopoverPickerViewController.swift */,
 			);
@@ -234,6 +242,7 @@
 		1F78E7811C3B469300221927 /* FRC Advanced Scouting Telemetrics */ = {
 			isa = PBXGroup;
 			children = (
+				1FB99DB41C75272F004BC2C1 /* ArrayExtension.swift */,
 				1F21DF131C66965100C55D0E /* StatTypePickerData.swift */,
 				1FCA7ADB1C6408B2004294D1 /* Core Data */,
 				1F78E7821C3B469300221927 /* AppDelegate.swift */,
@@ -438,7 +447,6 @@
 				1F45343F1C7242B9004EDDB9 /* DraftBoard.swift in Sources */,
 				1FB99DB31C741840004BC2C1 /* AdminConfigureDetailRegionalViewController.swift in Sources */,
 				1F78E7851C3B469300221927 /* ViewController.swift in Sources */,
-				1F4534121C6FFA77004EDDB9 /* StandsScoutingDetailViewController.swift in Sources */,
 				1F4534481C7242B9004EDDB9 /* Stat+CoreDataProperties.swift in Sources */,
 				1F78E78B1C3B469300221927 /* FRC_Advanced_Scouting_Telemetrics.xcdatamodeld in Sources */,
 				1FF32A281C6E990C00CD028C /* AdminConfigureDetailMatchVC.swift in Sources */,
@@ -446,6 +454,7 @@
 				1FF1F1731C3CC74A0051EE54 /* TeamListController.swift in Sources */,
 				1F4534411C7242B9004EDDB9 /* StatType.swift in Sources */,
 				1FF32A211C6D194B00CD028C /* AdminConfigureVC.swift in Sources */,
+				1F12CF141C78FD370014200C /* DefenseViewController.swift in Sources */,
 				1F21DF141C66965100C55D0E /* StatTypePickerData.swift in Sources */,
 				1F4534511C7242B9004EDDB9 /* TeamMatchPerformance.swift in Sources */,
 				1F4534421C7242B9004EDDB9 /* Shot+CoreDataProperties.swift in Sources */,
@@ -453,6 +462,7 @@
 				1F45343C1C7242B9004EDDB9 /* Match+CoreDataProperties.swift in Sources */,
 				1FF1F1791C4604370051EE54 /* TeamDataManager.swift in Sources */,
 				1F45343E1C7242B9004EDDB9 /* DraftBoard+CoreDataProperties.swift in Sources */,
+				1FB99DB51C75272F004BC2C1 /* ArrayExtension.swift in Sources */,
 				1F4534441C7242B9004EDDB9 /* AutonomousCycle+CoreDataProperties.swift in Sources */,
 				1FF32A231C6E7AAC00CD028C /* AdminConfigureDetailVC.swift in Sources */,
 				1F45340E1C6FC3EA004EDDB9 /* GameStatsCollectionViewCell.swift in Sources */,
@@ -467,6 +477,7 @@
 				1FCA7ADD1C64152E004294D1 /* AddStatVC.swift in Sources */,
 				1F4534501C7242B9004EDDB9 /* TeamMatchPerformance+CoreDataProperties.swift in Sources */,
 				1F45344D1C7242B9004EDDB9 /* StatsBoard.swift in Sources */,
+				1F12CF161C796F540014200C /* DefensePopoverViewController.swift in Sources */,
 				1F4534381C7242B9004EDDB9 /* TimeMarker+CoreDataProperties.swift in Sources */,
 				1F4FEDAA1C4AD95C00F4016D /* PitScoutingController.swift in Sources */,
 				1F4534171C7002EB004EDDB9 /* PopoverPickerViewController.swift in Sources */,
@@ -483,6 +494,7 @@
 				1F45344C1C7242B9004EDDB9 /* StatsBoard+CoreDataProperties.swift in Sources */,
 				1F45344F1C7242B9004EDDB9 /* Team.swift in Sources */,
 				1F4FEDAC1C4B686000F4016D /* AdminConsoleController.swift in Sources */,
+				1F12CF181C7A6CD70014200C /* Stopwatch.swift in Sources */,
 				1F4534151C6FFC38004EDDB9 /* AutonomousViewController.swift in Sources */,
 				1F45343D1C7242B9004EDDB9 /* Match.swift in Sources */,
 			);
@@ -751,7 +763,7 @@
 				1F0296661C5C6E42008CA8C2 /* FRC_Advanced_Scouting_Telemetrics CD 2.xcdatamodel */,
 				1F78E78A1C3B469300221927 /* FRC_Advanced_Scouting_Telemetrics.xcdatamodel */,
 			);
-			currentVersion = 1F4534541C7242FB004EDDB9 /* FRC_Advanced_Scouting_Telemetrics CD 6.xcdatamodel */;
+			currentVersion = 1F2422421C73DF08008A5AFC /* FRC_Advanced_Scouting_Telemetrics CD 7.xcdatamodel */;
 			path = FRC_Advanced_Scouting_Telemetrics.xcdatamodeld;
 			sourceTree = "<group>";
 			versionGroupType = wrapper.xcdatamodel;

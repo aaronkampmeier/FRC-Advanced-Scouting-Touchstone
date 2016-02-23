@@ -94,7 +94,12 @@ class AdminConfigureVC: UIViewController, UITableViewDelegate, UITableViewDataSo
     }
 	
 	func matchesForRegional(regional: Regional) -> [Match] {
-		return dataManager.getMatches(forRegional: regional)
+		return dataManager.getMatches(forRegional: regional).sort({
+			let match1 = $0 as Match
+			let match2 = $1 as Match
+			
+			return match1.matchNumber?.intValue < match2.matchNumber?.intValue
+		})
 	}
 	
 	func numberOfSectionsInTableView(tableView: UITableView) -> Int {

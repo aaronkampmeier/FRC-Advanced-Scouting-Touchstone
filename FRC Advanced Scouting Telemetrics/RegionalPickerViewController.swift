@@ -36,8 +36,12 @@ class RegionalPickerViewController: UIViewController, UIPickerViewDelegate, UIPi
 	override func viewDidAppear(animated: Bool) {
 		super.viewDidAppear(animated)
 		
+		currentRegional = teamListController?.selectedRegional
+		
 		if let current = currentRegional {
-			regionalPicker.selectRow((regionals?.indexOf(current))!, inComponent: 0, animated: true)
+			let index = (regionals?.indexOf(current))! + 1
+			regionalPicker.selectRow(index, inComponent: 0, animated: true)
+			pickerView(regionalPicker, didSelectRow: index, inComponent: 0)
 		}
 	}
 	
