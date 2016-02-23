@@ -2052,7 +2052,7 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <tableView clipsSubviews="YES" tag="7" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="b0g-SS-9pN">
-                                <rect key="frame" x="-4" y="10" width="154" height="280"/>
+                                <rect key="frame" x="-4" y="15" width="154" height="270"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <prototypes>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="basic" textLabel="eot-aP-J3w" style="IBUITableViewCellStyleDefault" id="pwb-Ra-ySL">
@@ -2075,7 +2075,7 @@
                                 </prototypes>
                             </tableView>
                             <tableView clipsSubviews="YES" tag="2" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="ESR-Ac-Uzx">
-                                <rect key="frame" x="150" y="50" width="154" height="240"/>
+                                <rect key="frame" x="150" y="50" width="154" height="235"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <prototypes>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="basic" textLabel="Hxd-qx-zP4" style="IBUITableViewCellStyleDefault" id="a18-bR-Th4">
@@ -2109,7 +2109,7 @@
                             <constraint firstItem="rfk-qb-Tgv" firstAttribute="top" secondItem="cUU-Bq-c9n" secondAttribute="bottom" id="4n3-Sn-f7Q"/>
                             <constraint firstAttribute="trailingMargin" secondItem="ESR-Ac-Uzx" secondAttribute="trailing" constant="-20" id="Dta-TD-BzL"/>
                             <constraint firstItem="b0g-SS-9pN" firstAttribute="leading" secondItem="noa-bZ-zoB" secondAttribute="leadingMargin" constant="-20" id="EUH-9k-Ox6"/>
-                            <constraint firstItem="b0g-SS-9pN" firstAttribute="top" secondItem="cUU-Bq-c9n" secondAttribute="bottom" constant="-10" id="Hck-px-Zxk"/>
+                            <constraint firstItem="b0g-SS-9pN" firstAttribute="top" secondItem="cUU-Bq-c9n" secondAttribute="bottom" constant="-5" id="Hck-px-Zxk"/>
                             <constraint firstItem="b0g-SS-9pN" firstAttribute="centerY" secondItem="noa-bZ-zoB" secondAttribute="centerY" id="LXS-v7-Sye"/>
                             <constraint firstItem="ESR-Ac-Uzx" firstAttribute="width" secondItem="b0g-SS-9pN" secondAttribute="width" id="Li8-N2-3Yx"/>
                             <constraint firstItem="b0g-SS-9pN" firstAttribute="trailing" secondItem="ESR-Ac-Uzx" secondAttribute="leading" id="VVD-Mh-DfZ"/>

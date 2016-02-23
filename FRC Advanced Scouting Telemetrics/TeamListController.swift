@@ -81,9 +81,15 @@ class TeamListController: UIViewController, UITableViewDataSource, UITableViewDe
 		didSet {
 		if let regional = selectedRegional {
 			currentRegionalTeams = (regional.teamRegionalPerformances?.allObjects as! [TeamRegionalPerformance]).map({$0.team!})
+			regionalSelectionButton.setTitle(regional.name, forState: .Normal)
+			//Set to nil, because the selected team might not be in the new regional
+			selectedTeam = nil
 		} else {
 			currentRegionalTeams = teams
-			standsScoutingButton.enabled = false
+			regionalSelectionButton.setTitle("All Teams", forState: .Normal)
+			//Set the same team as before
+			let team = selectedTeam
+			selectedTeam = team
 		}
 		}
 	}
@@ -158,7 +164,6 @@ class TeamListController: UIViewController, UITableViewDataSource, UITableViewDe
 		isSearching = false
 		isSorted = false
         selectedRegional = nil
-		currentRegionalTeams = teams
     }
     
     func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -260,7 +265,16 @@ class TeamListController: UIViewController, UITableViewDataSource, UITableViewDe
     
     func tableView(tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
         let header = teamList.dequeueReusableHeaderFooterViewWithIdentifier("Header")
-        
+		
+		if let regional = selectedRegional {
+			header?.textLabel?.text = "Regional: \(regional.name!)"
+		} else {
+			header?.textLabel?.text = "All Teams"
+		}
+		
+		return header
+		
+		//Deprecated
         if isSorted {
             if let name = sortTypeName {
                 
@@ -553,7 +567,7 @@ class TeamListController: UIViewController, UITableViewDataSource, UITableViewDe
         
     }
     
-    //---FUNCTIONS FOR GAME STATS AND SHOT CHART---
+    //---FUNCTIONS FOR GAME STATS---
     func collectionView(collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
 		if let performance = teamRegionalPerformance {
 			return (performance.matchPerformances?.count)! * 6 + (performance.matchPerformances?.count)!
@@ -564,7 +578,7 @@ class TeamListController: UIViewController, UITableViewDataSource, UITableViewDe
     
     func collectionView(collectionView: UICollectionView, cellForItemAtIndexPath indexPath: NSIndexPath) -> UICollectionViewCell {
         //Get the matches for selected team
-		let matches: [Match] = (teamRegionalPerformance?.matchPerformances!.allObjects as! [TeamMatchPerformance]).map({$0.match!})
+		let matches: [Match] = (teamRegionalPerformance?.matchPerformances!.allObjects as! [TeamMatchPerformance]).map({$0.match!}).sort({$0.matchNumber?.intValue < $1.matchNumber?.intValue})
 		
         let cell = collectionView.dequeueReusableCellWithReuseIdentifier("teamTrialCell", forIndexPath: indexPath) as! GameStatsCollectionViewCell
         if indexPath.item % 7 == 0 {
@@ -576,11 +590,11 @@ class TeamListController: UIViewController, UITableViewDataSource, UITableViewDe
             //Make sure the background color is white
             cell.contentView.backgroundColor = nil
             label.textColor = UIColor(white: 0, alpha: 1)
-        } else if indexPath.item % 8 == 0 || indexPath.item == 1 {
+        } else if indexPath.item % 7 == 1 || indexPath.item == 1 {
             cell.contentView.backgroundColor = UIColor(red: 0, green: 0, blue: 1, alpha: 1)
 			cell.label.text = (((matches[indexPath.item/7 as Int].teamPerformances?.allObjects as! [TeamMatchPerformance]).filter({$0.allianceColor! == 0 && $0.allianceTeam! == 1}).first)?.regionalPerformance?.valueForKey("team") as? Team)?.teamNumber
             cell.label.textColor = UIColor(white: 1, alpha: 1)
-        } else if indexPath.item % 9 == 0 || indexPath.item == 2 {
+        } else if indexPath.item % 7 == 2 || indexPath.item == 2 {
             cell.contentView.backgroundColor = UIColor(red: 0, green: 0, blue: 1, alpha: 1)
 			
 			let filteredTeams = (matches[indexPath.item/7 as Int].teamPerformances?.allObjects as! [TeamMatchPerformance]).filter({$0.allianceColor! == 0 && $0.allianceTeam! == 2})
@@ -596,20 +610,20 @@ class TeamListController: UIViewController, UITableViewDataSource, UITableViewDe
 			
 			//cell.label.text = (((matches[indexPath.item/7 as Int].teamPerformances?.allObjects as! [TeamMatchPerformance]).filter({$0.allianceColor! == 0 && $0.allianceTeam! == 2})[0]).regionalPerformance?.valueForKey("team") as! Team).teamNumber
             cell.label.textColor = UIColor(white: 1, alpha: 1)
-        } else if indexPath.item % 10 == 0 || indexPath.item == 3 {
+        } else if indexPath.item % 7 == 3 || indexPath.item == 3 {
             cell.contentView.backgroundColor = UIColor(red: 0, green: 0, blue: 1, alpha: 1)
             cell.label.text = (((matches[indexPath.item/7 as Int].teamPerformances?.allObjects as! [TeamMatchPerformance]).filter({$0.allianceColor! == 0 && $0.allianceTeam! == 3}).first)?.regionalPerformance?.valueForKey("team") as? Team)?.teamNumber
             cell.label.textColor = UIColor(white: 1, alpha: 1)
-        } else if indexPath.item % 11 == 0 || indexPath.item == 4 {
+        } else if indexPath.item % 7 == 4 || indexPath.item == 4 {
             cell.contentView.backgroundColor = UIColor(red: 1, green: 0, blue: 0, alpha: 1)
 			
             cell.label.text = (((matches[indexPath.item/7 as Int].teamPerformances?.allObjects as! [TeamMatchPerformance]).filter({$0.allianceColor! == 1 && $0.allianceTeam! == 1}).first)?.regionalPerformance?.valueForKey("team") as? Team)?.teamNumber
             cell.label.textColor = UIColor(white: 1, alpha: 1)
-        } else if indexPath.item % 12 == 0 || indexPath.item == 5 {
+        } else if indexPath.item % 7 == 5 || indexPath.item == 5 {
             cell.contentView.backgroundColor = UIColor(red: 1, green: 0, blue: 0, alpha: 1)
 			cell.label.text = (((matches[indexPath.item/7 as Int].teamPerformances?.allObjects as! [TeamMatchPerformance]).filter({$0.allianceColor! == 1 && $0.allianceTeam! == 2})[safe: 0])?.regionalPerformance?.valueForKey("team") as? Team)?.teamNumber
             cell.label.textColor = UIColor(white: 1, alpha: 1)
-        } else if indexPath.item % 13 == 0 || indexPath.item == 6 {
+        } else if indexPath.item % 7 == 6 || indexPath.item == 6 {
             cell.contentView.backgroundColor = UIColor(red: 1, green: 0, blue: 0, alpha: 1)
             cell.label.text = (((matches[indexPath.item/7 as Int].teamPerformances?.allObjects as! [TeamMatchPerformance]).filter({$0.allianceColor! == 1 && $0.allianceTeam! == 3}).first)?.regionalPerformance?.valueForKey("team") as? Team)?.teamNumber
             cell.label.textColor = UIColor(white: 1, alpha: 1)
@@ -623,12 +637,6 @@ class TeamListController: UIViewController, UITableViewDataSource, UITableViewDe
 	
 	func didChooseRegional(regional: Regional?) {
 		selectedRegional = regional
-		
-		if let regional = regional {
-			regionalSelectionButton.setTitle(regional.name, forState: .Normal)
-		} else {
-			regionalSelectionButton.setTitle("All Teams", forState: .Normal)
-		}
 	}
 }
 
