@@ -11,13 +11,14 @@
             buildForRunning = "YES"
             buildForProfiling = "YES"
             buildForArchiving = "YES"
-            buildForAnalyzing = "YES">
+            buildForAnalyzing = "YES"
+            hideIssues = "NO">
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "1F78E77E1C3B469300221927"
-               BuildableName = "FRC Advanced Scouting Telemetrics.app"
-               BlueprintName = "FRC Advanced Scouting Telemetrics"
-               ReferencedContainer = "container:FRC Advanced Scouting Telemetrics.xcodeproj">
+               BuildableName = "FRC Advanced Scouting Touchstone.app"
+               BlueprintName = "FRC Advanced Scouting Touchstone"
+               ReferencedContainer = "container:FRC Advanced Scouting Touchstone.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
       </BuildActionEntries>
@@ -33,9 +34,9 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "1F78E7951C3B469300221927"
-               BuildableName = "FRC Advanced Scouting TelemetricsTests.xctest"
-               BlueprintName = "FRC Advanced Scouting TelemetricsTests"
-               ReferencedContainer = "container:FRC Advanced Scouting Telemetrics.xcodeproj">
+               BuildableName = "FRC Advanced Scouting Touchstone.xctest"
+               BlueprintName = "FRC Advanced Scouting TouchstoneTests"
+               ReferencedContainer = "container:FRC Advanced Scouting Touchstone.xcodeproj">
             </BuildableReference>
          </TestableReference>
          <TestableReference
@@ -43,9 +44,9 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "1F78E7A01C3B469300221927"
-               BuildableName = "FRC Advanced Scouting TelemetricsUITests.xctest"
-               BlueprintName = "FRC Advanced Scouting TelemetricsUITests"
-               ReferencedContainer = "container:FRC Advanced Scouting Telemetrics.xcodeproj">
+               BuildableName = "FRC Advanced Scouting Touchstone.xctest"
+               BlueprintName = "FRC Advanced Scouting TouchstoneUITests"
+               ReferencedContainer = "container:FRC Advanced Scouting Touchstone.xcodeproj">
             </BuildableReference>
          </TestableReference>
       </Testables>
@@ -53,9 +54,9 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "1F78E77E1C3B469300221927"
-            BuildableName = "FRC Advanced Scouting Telemetrics.app"
-            BlueprintName = "FRC Advanced Scouting Telemetrics"
-            ReferencedContainer = "container:FRC Advanced Scouting Telemetrics.xcodeproj">
+            BuildableName = "FRC Advanced Scouting Touchstone.app"
+            BlueprintName = "FRC Advanced Scouting Touchstone"
+            ReferencedContainer = "container:FRC Advanced Scouting Touchstone.xcodeproj">
          </BuildableReference>
       </MacroExpansion>
       <AdditionalOptions>
@@ -76,9 +77,9 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "1F78E77E1C3B469300221927"
-            BuildableName = "FRC Advanced Scouting Telemetrics.app"
-            BlueprintName = "FRC Advanced Scouting Telemetrics"
-            ReferencedContainer = "container:FRC Advanced Scouting Telemetrics.xcodeproj">
+            BuildableName = "FRC Advanced Scouting Touchstone.app"
+            BlueprintName = "FRC Advanced Scouting Touchstone"
+            ReferencedContainer = "container:FRC Advanced Scouting Touchstone.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
       <AdditionalOptions>
@@ -95,9 +96,9 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "1F78E77E1C3B469300221927"
-            BuildableName = "FRC Advanced Scouting Telemetrics.app"
-            BlueprintName = "FRC Advanced Scouting Telemetrics"
-            ReferencedContainer = "container:FRC Advanced Scouting Telemetrics.xcodeproj">
+            BuildableName = "FRC Advanced Scouting Touchstone.app"
+            BlueprintName = "FRC Advanced Scouting Touchstone"
+            ReferencedContainer = "container:FRC Advanced Scouting Touchstone.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
    </ProfileAction>

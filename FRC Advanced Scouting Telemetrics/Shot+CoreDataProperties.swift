@@ -1,0 +1,23 @@
+//
+//  Shot+CoreDataProperties.swift
+//  FRC Advanced Scouting Touchstone
+//
+//  Created by Aaron Kampmeier on 2/15/16.
+//  Copyright © 2016 Kampfire Technologies. All rights reserved.
+//
+//  Choose "Create NSManagedObject Subclass…" from the Core Data editor menu
+//  to delete and recreate this implementation file for your updated model.
+//
+
+import Foundation
+import CoreData
+
+extension Shot {
+
+    @NSManaged var blocked: NSNumber?
+    @NSManaged var xLocation: NSNumber?
+    @NSManaged var yLocation: NSNumber?
+    @NSManaged var shootingTeam: NSManagedObject?
+    @NSManaged var blockingTeam: NSManagedObject?
+
+}
