@@ -95,7 +95,7 @@ class StandsScoutingViewController: UIViewController {
 		
 		//Ask for the match to use
 		let askAction = UIAlertController(title: "Select Match", message: "Select the match for team \(teamPerformance!.team!.teamNumber!) in the regional \(teamPerformance!.regional!.name!) for stands scouting.", preferredStyle: .Alert)
-		for match in (teamPerformance?.matchPerformances?.allObjects as! [TeamMatchPerformance]) {
+		for match in (teamPerformance?.matchPerformances?.allObjects as! [TeamMatchPerformance]).sort({Int($0.match.matchNumber) < Int($1.match.matchNumber)}) {
 			askAction.addAction(UIAlertAction(title: "Match \(match.match!.matchNumber!)", style: .Default, handler: {_ in self.matchPerformance = match; /*Initially go to autonomous*/ let initialChild = self.childViewControllers.first; self.cycleFromViewController(initialChild!, toViewController: self.autonomousVC!)}))
 		}
 		presentViewController(askAction, animated: true, completion: nil)
