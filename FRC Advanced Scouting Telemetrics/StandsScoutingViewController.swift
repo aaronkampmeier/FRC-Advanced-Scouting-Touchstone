@@ -112,7 +112,23 @@ class StandsScoutingViewController: UIViewController {
     }
 	
 	@IBAction func closePressed(sender: UIButton) {
+		if 150 - stopwatch.elapsedTime > 5 {
+			let alert = UIAlertController(title: "Hold On, You're Not Finished", message: "It doesn't look like you've completed a full 2 minute 30 second match. Are you sure you want to close with this partial data?", preferredStyle: .Alert)
+			alert.addAction(UIAlertAction(title: "No, don't close", style: .Cancel, handler: nil))
+			alert.addAction(UIAlertAction(title: "Yes, close and save final data", style: .Default, handler: {_ in self.close(andSave: true)}))
+			alert.addAction(UIAlertAction(title: "Yes, close but don't save final data", style: .Destructive, handler: {_ in self.close(andSave: false)}))
+			presentViewController(alert, animated: true, completion: nil)
+		} else {
+			close(andSave: true)
+		}
+	}
+	
+	func close(andSave shouldSave: Bool) {
+		if shouldSave {
+			dataManager.save()
+		}
 		
+		dismissViewControllerAnimated(true, completion: nil)
 	}
     
 	@IBAction func selectedNewPart(sender: UISegmentedControl) {
@@ -153,6 +169,13 @@ class StandsScoutingViewController: UIViewController {
 	func updateTimeLabel(timer: NSTimer) {
 		if stopwatch.isRunning {
 			timerLabel.text = stopwatch.elapsedTimeAsString
+			
+			if stopwatch.elapsedTime > 160 {
+				isRunning = false
+				let alert = UIAlertController(title: "Too Long", message: "The match should have ended at 2 minutes 30 seconds; the timer has already passed that and automatically stopped. All data will be saved unless timer is started again.", preferredStyle: .Alert)
+				alert.addAction(UIAlertAction(title: "OK", style: .Default, handler: nil))
+				presentViewController(alert, animated: true, completion: nil)
+			}
 		} else {
 			timer.invalidate()
 		}

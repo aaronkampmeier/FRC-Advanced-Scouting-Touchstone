@@ -10,12 +10,13 @@ import Foundation
 
 class Stopwatch {
 	private var startTime: NSDate?
+	private var furthestTime: NSTimeInterval = 0
 	
 	var elapsedTime: NSTimeInterval {
 		if let start = startTime {
 			return -start.timeIntervalSinceNow
 		} else {
-			return 0
+			return furthestTime
 		}
 	}
 	
@@ -32,6 +33,7 @@ class Stopwatch {
 	}
 	
 	func stop() {
+		furthestTime = elapsedTime
 		startTime = nil
 	}
 }
