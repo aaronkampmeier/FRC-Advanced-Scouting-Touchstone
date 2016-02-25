@@ -89,7 +89,7 @@
     <entity name="TimeMarker" representedClassName=".TimeMarker" syncable="YES">
         <attribute name="event" attributeType="Integer 64" minValueString="0" syncable="YES"/>
         <attribute name="time" attributeType="Double" defaultValueString="0.0" syncable="YES"/>
-        <relationship name="teamMatchPerformance" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="TeamMatchPerformance" inverseName="timeMarkers" inverseEntity="TeamMatchPerformance" syncable="YES"/>
+        <relationship name="teamMatchPerformance" maxCount="1" deletionRule="Nullify" destinationEntity="TeamMatchPerformance" inverseName="timeMarkers" inverseEntity="TeamMatchPerformance" syncable="YES"/>
     </entity>
     <elements>
         <element name="AutonomousCycle" positionX="187" positionY="117" width="128" height="150"/>
@@ -105,6 +105,6 @@
         <element name="Team" positionX="-81" positionY="-72" width="128" height="165"/>
         <element name="TeamMatchPerformance" positionX="-99" positionY="267" width="128" height="180"/>
         <element name="TeamRegionalPerformance" positionX="-92" positionY="144" width="128" height="90"/>
-        <element name="TimeMarker" positionX="180" positionY="521" width="126" height="90"/>
+        <element name="TimeMarker" positionX="180" positionY="521" width="126" height="88"/>
     </elements>
 </model>

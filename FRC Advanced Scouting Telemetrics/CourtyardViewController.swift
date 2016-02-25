@@ -9,18 +9,19 @@
 import UIKit
 import AVFoundation
 
-class DefenseViewController: UIViewController, UITableViewDataSource, UITableViewDelegate, UIPopoverPresentationControllerDelegate {
-	@IBOutlet weak var defenseCourtyardImage: UIImageView!
+class CourtyardViewController: UIViewController, UITableViewDataSource, UITableViewDelegate, UIPopoverPresentationControllerDelegate {
+	@IBOutlet weak var courtyardImage: UIImageView!
 	
 	let dataManager = TeamDataManager()
 	
 	let tapGesture = UITapGestureRecognizer()
 	let invisibleView = UIView()
-	var selectedShot: DefenseShot?
+	var selectedShot: CourtyardShot?
 	
 	var standsScoutingVC: StandsScoutingViewController?
+	var defenseOrOffense: DefenseOrOffense?
 	
-	struct DefenseShot {
+	struct CourtyardShot {
 		let shot: Shot?
 		var point: CGPoint {
 			get {
@@ -46,30 +47,43 @@ class DefenseViewController: UIViewController, UITableViewDataSource, UITableVie
 		}
 	}
 	
+	enum DefenseOrOffense {
+		case Defense
+		case Offense
+	}
+	
     override func viewDidLoad() {
         super.viewDidLoad()
 
         // Do any additional setup after loading the view.
+		//Set the image
 		
 		
 		tapGesture.addTarget(self, action: "tappedOnImage:")
-		defenseCourtyardImage.addGestureRecognizer(tapGesture)
+		courtyardImage.addGestureRecognizer(tapGesture)
 		//view.addSubview(invisibleView)
 		
 		standsScoutingVC = parentViewController as? StandsScoutingViewController
+		
+		switch defenseOrOffense! {
+		case .Defense:
+			courtyardImage.image = UIImage(named: "DefenseRender")
+		case .Offense:
+			courtyardImage.image = UIImage(named: "OffenseRender")
+		}
     }
 	
 	override func viewWillAppear(animated: Bool) {
 		super.viewWillAppear(animated)
 		
-		let rect = AVMakeRectWithAspectRatioInsideRect(defenseCourtyardImage.image!.size, defenseCourtyardImage.bounds)
+		let rect = AVMakeRectWithAspectRatioInsideRect(courtyardImage.image!.size, courtyardImage.bounds)
 		invisibleView.frame = rect
 	}
 	
 	override func viewWillTransitionToSize(size: CGSize, withTransitionCoordinator coordinator: UIViewControllerTransitionCoordinator) {
 		super.viewWillTransitionToSize(size, withTransitionCoordinator: coordinator)
 		
-		let rect = AVMakeRectWithAspectRatioInsideRect(defenseCourtyardImage.image!.size, defenseCourtyardImage.bounds)
+		let rect = AVMakeRectWithAspectRatioInsideRect(courtyardImage.image!.size, courtyardImage.bounds)
 		invisibleView.frame = rect
 	}
 
@@ -81,14 +95,19 @@ class DefenseViewController: UIViewController, UITableViewDataSource, UITableVie
 	var finishedEditingShot: Bool = false
 	
 	func tappedOnImage(sender: UITapGestureRecognizer) {
-		let location = sender.locationInView(defenseCourtyardImage)
+		let location = sender.locationInView(courtyardImage)
 		//Create a new shot
-		selectedShot = DefenseShot(shot: dataManager.createShot(atPoint: location))
-		selectedShot?.shot?.blockingTeam = standsScoutingVC?.matchPerformance
+		selectedShot = CourtyardShot(shot: dataManager.createShot(atPoint: location))
+		switch defenseOrOffense! {
+		case .Defense:
+			selectedShot?.shot?.blockingTeam = standsScoutingVC?.matchPerformance
+		case .Offense:
+			selectedShot?.shot?.shootingTeam = standsScoutingVC?.matchPerformance
+		}
 		
-		defenseCourtyardImage.addSubview((selectedShot?.pointView)!)
+		courtyardImage.addSubview((selectedShot?.pointView)!)
 		
-		let popoverVC = storyboard?.instantiateViewControllerWithIdentifier("standsDefensePopover") as? DefensePopoverViewController
+		let popoverVC = storyboard?.instantiateViewControllerWithIdentifier("standsCourtyardPopover")
 		//Set up the tables
 		let teamTable = popoverVC!.view.viewWithTag(7) as! UITableView
 		let blockedTable = popoverVC?.view.viewWithTag(2) as! UITableView
@@ -97,8 +116,6 @@ class DefenseViewController: UIViewController, UITableViewDataSource, UITableVie
 		blockedTable.dataSource = self
 		blockedTable.delegate = self
 		teamsOfOppositeColor = (standsScoutingVC?.matchPerformance?.match?.teamPerformances?.allObjects as! [TeamMatchPerformance]).filter({$0.allianceColor != standsScoutingVC?.matchPerformance?.allianceColor})
-		
-		popoverVC?.defenseVC = self
 		
 		popoverVC?.modalPresentationStyle = .Popover
 		let popover = popoverVC?.popoverPresentationController
@@ -121,7 +138,7 @@ class DefenseViewController: UIViewController, UITableViewDataSource, UITableVie
 		}
 		
 		finishedEditingShot = false
-		let alert = UIAlertController(title: "Select Team and Blocked status", message: "Please select a shooting team and if the shot was blocked or not, or else the shot will be removed.", preferredStyle: .Alert)
+		let alert = UIAlertController(title: "Select Team and Blocked status", message: "Please select an opposing team and if the shot was blocked or not, or else the shot will be removed.", preferredStyle: .Alert)
 		alert.addAction(UIAlertAction(title: "Remove shot", style: .Destructive, handler: {_ in self.dismissViewControllerAnimated(true, completion: {_ in self.popoverPresentationControllerDidDismissPopover(popoverPresentationController)})}))
 		alert.addAction(UIAlertAction(title: "OK", style: .Default, handler: nil))
 		popoverPresentationController.presentedViewController.presentViewController(alert, animated: true, completion: nil)
@@ -133,12 +150,25 @@ class DefenseViewController: UIViewController, UITableViewDataSource, UITableVie
 		if finishedEditingShot {
 			dataManager.save()
 			
-			//Update the dot (rect) on the screen
-			if selectedShot!.shot?.blocked == true {
-				selectedShot?.pointView.backgroundColor = UIColor.greenColor()
-			} else {
-				selectedShot?.pointView.backgroundColor = UIColor.redColor()
+			//Update the dot (rect) on the screen and save a time marker
+			var markerType: TeamDataManager.TimeMarkerEvent
+			switch defenseOrOffense! {
+			case .Defense:
+				if selectedShot!.shot?.blocked == true {
+					selectedShot?.pointView.backgroundColor = UIColor.greenColor()
+				} else {
+					selectedShot?.pointView.backgroundColor = UIColor.redColor()
+				}
+				markerType = TeamDataManager.TimeMarkerEvent.DefenseAttemptedBlock
+			case .Offense:
+				if selectedShot!.shot?.blocked == true {
+					selectedShot?.pointView.backgroundColor = UIColor.redColor()
+				} else {
+					selectedShot?.pointView.backgroundColor = UIColor.greenColor()
+				}
+				markerType = TeamDataManager.TimeMarkerEvent.OffenseAttemptedShot
 			}
+			dataManager.addTimeMarker(withEvent: markerType, atTime: (standsScoutingVC?.stopwatch.elapsedTime)!, inMatchPerformance: (standsScoutingVC?.matchPerformance)!)
 		} else {
 			dataManager.remove(selectedShot!.shot!)
 			selectedShot?.pointView.removeFromSuperview()
@@ -193,10 +223,15 @@ class DefenseViewController: UIViewController, UITableViewDataSource, UITableVie
 	func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
 		switch tableView.tag {
 		case 7:
-			let participatingTeams = standsScoutingVC?.matchPerformance?.match?.teamPerformances?.allObjects as! [TeamMatchPerformance]
-			let team = participatingTeams.filter({$0.allianceColor != standsScoutingVC!.matchPerformance!.allianceColor && $0.allianceTeam == indexPath.row + 1}).first
+			//Get the team at the selected index path
+			let team = teamsOfOppositeColor![indexPath.row]
 			
-			selectedShot?.shot?.shootingTeam = team
+			switch defenseOrOffense! {
+			case .Defense:
+				selectedShot?.shot?.shootingTeam = team
+			case .Offense:
+				selectedShot?.shot?.blockingTeam = team
+			}
 		case 2:
 			if indexPath.row == 0 {
 				selectedShot?.shot?.blocked = true
@@ -206,13 +241,6 @@ class DefenseViewController: UIViewController, UITableViewDataSource, UITableVie
 		default:
 			break
 		}
-	}
-	
-	func popoverWillGoAway() {
-		//Save
-		//dataManager.save()
-		
-		
 	}
 
     /*

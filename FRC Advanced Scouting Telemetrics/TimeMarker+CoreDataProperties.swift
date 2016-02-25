@@ -14,7 +14,7 @@ import CoreData
 
 extension TimeMarker {
 
-    @NSManaged var time: NSDate?
+    @NSManaged var time: NSNumber?
     @NSManaged var event: NSNumber?
     @NSManaged var teamMatchPerformance: NSManagedObject?
 

@@ -8,7 +8,7 @@
 
 import UIKit
 
-class AdminConfigureDetailMatchVC: UIViewController {
+class AdminConfigureDetailMatchVC: UIViewController, UITableViewDelegate, UITableViewDataSource {
     @IBOutlet weak var dateField: UITextField!
     @IBOutlet weak var blue1Field: UITextField!
     @IBOutlet weak var blue2Field: UITextField!
@@ -16,7 +16,12 @@ class AdminConfigureDetailMatchVC: UIViewController {
     @IBOutlet weak var red1Field: UITextField!
     @IBOutlet weak var red2Field: UITextField!
     @IBOutlet weak var red3Field: UITextField!
-    
+	
+	@IBOutlet weak var catADefensesTable: UITableView!
+	@IBOutlet weak var catBDefensesTable: UITableView!
+	@IBOutlet weak var catCDefensesTable: UITableView!
+	@IBOutlet weak var catDDefensesTable: UITableView!
+	
     let datePicker = UIDatePicker()
     let dataManager = TeamDataManager()
     var selectedMatch: Match?
@@ -29,6 +34,16 @@ class AdminConfigureDetailMatchVC: UIViewController {
         
         // Do any additional setup after loading the view.
         dateField.inputView = datePicker
+		
+		//Set the data sources and delegates
+		catADefensesTable.dataSource = self
+		catADefensesTable.delegate = self
+		catBDefensesTable.dataSource = self
+		catBDefensesTable.delegate = self
+		catCDefensesTable.dataSource = self
+		catCDefensesTable.delegate = self
+		catDDefensesTable.dataSource = self
+		catDDefensesTable.delegate = self
     }
     
     override func viewWillDisappear(animated: Bool) {
@@ -87,6 +102,9 @@ class AdminConfigureDetailMatchVC: UIViewController {
 				break
 			}
 		}
+		
+		//Select the appropriate rows in the table views
+		//--TODO--
     }
     
     @IBAction func textFieldValueChanged(sender: UITextField) {
@@ -112,10 +130,6 @@ class AdminConfigureDetailMatchVC: UIViewController {
             incorrectImageView.frame = CGRect(x: 0, y: 0, width: 25, height: 25)
             sender.rightView = incorrectImageView
         }
-    }
-    
-    @IBAction func textFieldEditingDidEnd(sender: UITextField) {
-        
     }
     
     func viewWillChange() {
@@ -177,35 +191,8 @@ class AdminConfigureDetailMatchVC: UIViewController {
 			//Set the teams in the match
 			dataManager.setTeamsInMatch(teamsAndPlaces, inMatch: selectedMatch!)
 			
-			
-//			var teamsAndPlaces: [TeamDataManager.RegionalTeamPlaceInMatch] = []
-//			
-//			let teamsArray: [Team?] = [blue1Team, blue2Team, blue3Team, red1Team, red2Team, red3Team]
-//			
-//			//Add all the teams to the regional
-//			for team in teamsArray {
-//				if let team = team {
-//					let regionalPerformance = dataManager.addTeamToRegional(team, regional: (selectedMatch?.regional)!)
-//					switch team {
-//					case let val where val == blue1Team:
-//						teamsAndPlaces.append(.Blue1(regionalPerformance))
-//					case let val where val == blue2Team:
-//						teamsAndPlaces.append(.Blue2(regionalPerformance))
-//					case let val where val == blue3Team:
-//						teamsAndPlaces.append(.Blue3(regionalPerformance))
-//					case let val where val == red1Team:
-//						teamsAndPlaces.append(.Red1(regionalPerformance))
-//					case let val where val == red2Team:
-//						teamsAndPlaces.append(.Red2(regionalPerformance))
-//					case let val where val == red3Team:
-//						teamsAndPlaces.append(.Red3(regionalPerformance))
-//					default:
-//						break
-//				}
-//			}
-//				
-//				//Then update the match
-//				dataManager.addTeamsToMatch(teamsAndPlaces, match: selectedMatch!)
+			//Now set the defense for the match
+			dataManager.setDefenses(inMatch: selectedMatch!, defenseA: defenseA!, defenseB: defenseB!, defenseC: defenseC!, defenseD: defenseD!)
 		
 			//Next, do some cleanup of the view
 			//Remove all the right images on the text fields
@@ -215,6 +202,83 @@ class AdminConfigureDetailMatchVC: UIViewController {
 			red1Field.rightView = nil
 			red2Field.rightView = nil
 			red3Field.rightView = nil
+			//Deselect all the table view rows
+			catADefensesTable.deselectRowAtIndexPath(catADefensesTable.indexPathForSelectedRow!, animated: false)
+			catBDefensesTable.deselectRowAtIndexPath(catBDefensesTable.indexPathForSelectedRow!, animated: false)
+			catCDefensesTable.deselectRowAtIndexPath(catCDefensesTable.indexPathForSelectedRow!, animated: false)
+			catDDefensesTable.deselectRowAtIndexPath(catDDefensesTable.indexPathForSelectedRow!, animated: false)
+		}
+	}
+	
+	//DEFENSE TABLE METHODS
+	func numberOfSectionsInTableView(tableView: UITableView) -> Int {
+		return 1
+	}
+	
+	func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+		return 2
+	}
+	
+	func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
+		let cell = catADefensesTable.dequeueReusableCellWithIdentifier("cell")
+		
+		//Set the defense names
+		var defenseNames = ["",""]
+		switch tableView {
+		case catADefensesTable:
+			defenseNames[0] = "Portcullis"
+			defenseNames[1] = "Cheval de Frise"
+		case catBDefensesTable:
+			defenseNames[0] = "Moat"
+			defenseNames[1] = "Ramparts"
+		case catCDefensesTable:
+			defenseNames[0] = "Drawbridge"
+			defenseNames[1] = "Sally Port"
+		case catDDefensesTable:
+			defenseNames[0] = "Rock Wall"
+			defenseNames[1] = "Rough Terrain"
+		default:
+			break
+		}
+		
+		//Set the text label
+		cell?.textLabel?.text = defenseNames[indexPath.row]
+		return cell!
+	}
+	
+	var defenseA: TeamDataManager.CategoryADefense?
+	var defenseB: TeamDataManager.CategoryBDefense?
+	var defenseC: TeamDataManager.CategoryCDefense?
+	var defenseD: TeamDataManager.CategoryDDefense?
+	
+	func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
+		switch tableView {
+		case catADefensesTable:
+			if indexPath.row == 0 {
+				defenseA = .Portcullis
+			} else {
+				defenseA = .ChevalDeFrise
+			}
+		case catBDefensesTable:
+			if indexPath.row == 0 {
+				defenseB = .Moat
+			} else {
+				defenseB = .Ramparts
+			}
+		case catCDefensesTable:
+			if indexPath.row == 0 {
+				defenseC = .Drawbridge
+			} else {
+				defenseC = .SallyPort
+			}
+		case catDDefensesTable:
+			if indexPath.row == 0 {
+				defenseD = .RockWall
+			} else {
+				defenseD = .RoughTerrain
+			}
+		default:
+			break
 		}
 	}
 }

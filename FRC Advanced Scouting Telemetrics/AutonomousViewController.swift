@@ -167,18 +167,26 @@ class AutonomousViewController: UIViewController, StandsScoutingDetailProtocol, 
         }
         optionsList.endUpdates()
     }
-    
+	
     func pickerView(pickerView: UIPickerView, numberOfRowsInComponent component: Int) -> Int {
-        return 0
+        return (standsScoutingVC?.defenses?.count)!
     }
     
     func pickerView(pickerView: UIPickerView, titleForRow row: Int, forComponent component: Int) -> String? {
-        return ""
+        return standsScoutingVC?.defenses![row].defenseName
     }
     
     func numberOfComponentsInPickerView(pickerView: UIPickerView) -> Int {
         return 1
     }
+	
+	func pickerView(pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {
+		//Update core data
+		autonomousCycles.first?.defenseReached = standsScoutingVC?.defenses![row]
+		
+		//Update the button
+		defenseReachedButton?.setTitle(standsScoutingVC?.defenses![row].defenseName, forState: .Normal)
+	}
     
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
         if segue.identifier == "popover" {

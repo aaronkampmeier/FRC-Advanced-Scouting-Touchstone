@@ -315,48 +315,9 @@ class TeamDataManager {
         TeamDataManager.managedContext.deleteObject(match)
         save()
     }
-    
-    func addTeamsToMatch(teamsAndPlaces: [RegionalTeamPlaceInMatch], match: Match) {
-        let participatingTeamsSet = match.teamPerformances!.mutableCopy() as! NSMutableSet
-        //
-        participatingTeamsSet.removeAllObjects()
-        //
-        for teamAndPlace in teamsAndPlaces {
-            //Create a new Match Performance
-            let newMatchPerformance = TeamMatchPerformance(entity: NSEntityDescription.entityForName("TeamMatchPerformance", inManagedObjectContext: TeamDataManager.managedContext)!, insertIntoManagedObjectContext: TeamDataManager.managedContext)
-            
-            newMatchPerformance.regionalPerformance = teamAndPlace.teamRegionalPerformance
-            switch teamAndPlace {
-            case .Blue1(let regionalTeam):
-                newMatchPerformance.allianceColor = 0
-                newMatchPerformance.allianceTeam = 1
-            case .Blue2(let regionalTeam):
-                newMatchPerformance.allianceColor = 0
-                newMatchPerformance.allianceTeam = 2
-            case .Blue3(let regionalTeam):
-                newMatchPerformance.allianceColor = 0
-                newMatchPerformance.allianceTeam = 3
-            case .Red1(let regionalTeam):
-                newMatchPerformance.allianceColor = 1
-                newMatchPerformance.allianceTeam = 1
-            case .Red2(let regionalTeam):
-                newMatchPerformance.allianceColor = 1
-                newMatchPerformance.allianceTeam = 2
-            case .Red3(let regionalTeam):
-                newMatchPerformance.allianceColor = 1
-                newMatchPerformance.allianceTeam = 3
-            }
-            participatingTeamsSet.addObject(newMatchPerformance)
-        }
-        match.teamPerformances = participatingTeamsSet.copy() as? NSSet
-        save()
-    }
-	
 	
 	//Newer and preferred method for setting teams in a match
 	func setTeamsInMatch(teamsAndPlaces: [TeamAndMatchPlace], inMatch match: Match) {
-		//let participatingTeamPerformances = NSMutableSet()
-		
 		for teamAndPlace in teamsAndPlaces {
 			let team = teamAndPlace.team
 			
@@ -407,9 +368,6 @@ class TeamDataManager {
 				}
 			}
 		}
-		
-		//Set the new participating team match performances in the match
-		//match.teamPerformances = participatingTeamPerformances.copy() as? NSSet
 		save()
 	}
 	
@@ -485,34 +443,76 @@ class TeamDataManager {
 		}
 	}
 	
-    /* DEPRECATED
-    func addTeamToMatch(team: Team, match: Match, place: TeamPlaceInMatch) {
-        let participatingTeamsSet = match.participatingTeams?.mutableCopy() as! NSMutableSet
-        participatingTeamsSet.addObject(team)
-        match.participatingTeams = participatingTeamsSet.copy() as? NSSet
-        
-        switch place {
-        case .Blue1:
-            match.b1 = team
-        case .Red1:
-            match.r1 = team
-        case .Blue2:
-            match.b2 = team
-        case .Red2:
-            match.r2 = team
-        case .Blue3:
-            match.b3 = team
-        case .Red3:
-            match.r3 = team
-        }
-        
-        save()
-    }
-    
-    func getTeamsForMatchDeprecated(match: Match) -> [TeamPlaceInMatch] {
-        return [TeamPlaceInMatch.Blue1(match.b1), TeamPlaceInMatch.Blue2(match.b2), TeamPlaceInMatch.Blue3(match.b3), TeamPlaceInMatch.Red1(match.r1), TeamPlaceInMatch.Red2(match.r2), TeamPlaceInMatch.Red3(match.r3)]
-    }
-    */
+	func setDefenses(inMatch match: Match, defenseA: CategoryADefense, defenseB: CategoryBDefense, defenseC: CategoryCDefense, defenseD: CategoryDDefense) {
+		//Get the defense objects
+		let a = getDefense(withName: defenseA.string)
+		let b = getDefense(withName: defenseB.string)
+		let c = getDefense(withName: defenseC.string)
+		let d = getDefense(withName: defenseD.string)
+		
+		//Make a set with these defenses
+		let defensesSet = NSSet(array: [a!, b!, c!, d!])
+		
+		match.defenses = defensesSet
+		
+		save()
+	}
+	
+	enum CategoryADefense {
+		case Portcullis
+		case ChevalDeFrise
+		
+		var string: String {
+			switch self {
+			case .Portcullis:
+				return "Portcullis"
+			case .ChevalDeFrise:
+				return "Cheval de Frise"
+			}
+		}
+	}
+	
+	enum CategoryBDefense {
+		case Moat
+		case Ramparts
+		
+		var string: String {
+			switch self {
+			case .Moat:
+				return "Moat"
+			case .Ramparts:
+				return "Ramparts"
+			}
+		}
+	}
+	
+	enum CategoryCDefense {
+		case Drawbridge
+		case SallyPort
+		
+		var string: String {
+			switch self {
+			case .Drawbridge:
+				return "Drawbridge"
+			case .SallyPort:
+				return "Sally Port"
+			}
+		}
+	}
+	
+	enum CategoryDDefense {
+		case RockWall
+		case RoughTerrain
+		
+		var string: String {
+			switch self {
+			case .RockWall:
+				return "Rock Wall"
+			case .RoughTerrain:
+				return "Rough Terrain"
+			}
+		}
+	}
     
     func getTeamsForMatch(match: Match) -> [TeamMatchPerformance] {
         let teamPerformances = match.teamPerformances?.allObjects as! [TeamMatchPerformance]
@@ -533,7 +533,7 @@ class TeamDataManager {
     }
 	*/
 	
-	//FUNCTIONS FOR SHOTS
+	//METHODS FOR SHOTS
 	func createShot(atPoint location: CGPoint) -> Shot {
 		let newShot = Shot(entity: NSEntityDescription.entityForName("Shot", inManagedObjectContext: TeamDataManager.managedContext)!, insertIntoManagedObjectContext: TeamDataManager.managedContext)
 		
@@ -548,48 +548,87 @@ class TeamDataManager {
 		TeamDataManager.managedContext.deleteObject(shot)
 	}
 	
-	//FUNCTIONS FOR AUTONOMOUS CYCLES
+	//METHODS FOR AUTONOMOUS CYCLES
 	func createAutonomousCycle(inMatchPerformance matchPerformance: TeamMatchPerformance) -> AutonomousCycle {
 		let newCycle = AutonomousCycle(entity: NSEntityDescription.entityForName("AutonomousCycle", inManagedObjectContext: TeamDataManager.managedContext)!, insertIntoManagedObjectContext: TeamDataManager.managedContext)
 		newCycle.matchPerformance = matchPerformance
 		
 		return newCycle
 	}
-    
-    enum TeamPlaceInMatch {
-        case Blue1(Team?)
-        case Blue2(Team?)
-        case Blue3(Team?)
-        case Red1(Team?)
-        case Red2(Team?)
-        case Red3(Team?)
-    }
-    
-    enum RegionalTeamPlaceInMatch {
-        case Blue1(TeamRegionalPerformance?)
-        case Blue2(TeamRegionalPerformance?)
-        case Blue3(TeamRegionalPerformance?)
-        case Red1(TeamRegionalPerformance?)
-        case Red2(TeamRegionalPerformance?)
-        case Red3(TeamRegionalPerformance?)
-        
-        var teamRegionalPerformance: TeamRegionalPerformance {
-            switch self {
-            case .Blue1(let x):
-                return x!
-            case .Blue2(let x):
-                return x!
-            case .Blue3(let x):
-                return x!
-            case .Red1(let x):
-                return x!
-            case .Red2(let x):
-                return x!
-            case .Red3(let x):
-                return x!
-            }
-        }
-    }
+	
+	//METHODS FOR DEFENSES
+	func createDefense(withName name: String, inCategory category: Character) -> Defense {
+		//Format the strings first
+		let categoryString = String(category)
+		categoryString.uppercaseString
+		
+		//First check if this defense already exists
+		let currentDefenses = getDefenses(inCategory: category)
+		for defense in currentDefenses {
+			if defense.defenseName == name {
+				return defense
+			}
+		}
+		
+		let newDefense = Defense(entity: NSEntityDescription.entityForName("Defense", inManagedObjectContext: TeamDataManager.managedContext)!, insertIntoManagedObjectContext: TeamDataManager.managedContext)
+		
+		newDefense.defenseName = name
+		newDefense.category = categoryString
+		
+		return newDefense
+	}
+	
+	func getAllDefenses() -> [Defense] {
+		return getDefenses(withPredicate: nil)
+	}
+	
+	func getDefenses(inCategory category: Character) -> [Defense] {
+		let predicate = NSPredicate(format: "%K like %@", "category", String(category))
+		
+		return getDefenses(withPredicate: predicate)
+	}
+	
+	func getDefense(withName name: String) -> Defense? {
+		let predicate = NSPredicate(format: "%K like %@", "defenseName", name)
+		
+		let defenses = getDefenses(withPredicate: predicate)
+		
+		return defenses.first
+	}
+	
+	func getDefenses(withPredicate predicate: NSPredicate?) -> [Defense] {
+		let fetchRequest = NSFetchRequest(entityName: "Defense")
+		fetchRequest.predicate = predicate
+		var results = [Defense]()
+		do {
+			results = try TeamDataManager.managedContext.executeFetchRequest(fetchRequest) as! [Defense]
+		} catch {
+			NSLog("Unable to retrieve defenses")
+		}
+		
+		return results
+	}
+	
+	//METHODS FOR TIME MARKERS
+	func addTimeMarker(withEvent event: TimeMarkerEvent, atTime time: NSTimeInterval, inMatchPerformance matchPerformance: TeamMatchPerformance) {
+		let newMarker = TimeMarker(entity: NSEntityDescription.entityForName("TimeMarker", inManagedObjectContext: TeamDataManager.managedContext)!, insertIntoManagedObjectContext: TeamDataManager.managedContext)
+		
+		newMarker.event = event.rawValue
+		newMarker.time = time
+		newMarker.teamMatchPerformance = matchPerformance
+		
+		save()
+	}
+	
+	enum TimeMarkerEvent: Int {
+		case BallPickedUp
+		case DefenseAttemptedBlock
+		case OffenseAttemptedShot
+		case MovedToOffenseCourtyard
+		case MovedToDefenseCourtyard
+		case StartedCrossingDefense
+		case FinishedCrossingDefense
+	}
     
     enum DataManagingError: ErrorType {
         case DuplicateTeams

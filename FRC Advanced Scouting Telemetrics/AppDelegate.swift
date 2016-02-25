@@ -17,6 +17,71 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     func application(application: UIApplication, didFinishLaunchingWithOptions launchOptions: [NSObject: AnyObject]?) -> Bool {
         // Override point for customization after application launch.
+		let dataManager = TeamDataManager()
+		//Set up and manage all the defenses. They should always be constant: Two defenses for 4 categories and a low bar.
+		//Set up category A
+		let catADefenses = dataManager.getDefenses(inCategory: "A")
+		if catADefenses.filter({$0.defenseName == "Portcullis"}).isEmpty {
+			//There is no portcullis defense, make one
+			NSLog("Making Portcullis Defense")
+			dataManager.createDefense(withName: "Portcullis", inCategory: "A")
+		}
+		if catADefenses.filter({$0.defenseName == "Cheval de Frise"}).isEmpty {
+			//There is no Cheval de Frise, make one
+			NSLog("Making Cheval De Frise Defense")
+			dataManager.createDefense(withName: "Cheval de Frise", inCategory: "A")
+		}
+		
+		//Set up category B
+		let catBDefenses = dataManager.getDefenses(inCategory: "B")
+		if catBDefenses.filter({$0.defenseName == "Moat"}).isEmpty {
+			//There is no Moat defense, make one
+			NSLog("Making Moat Defense")
+			dataManager.createDefense(withName: "Moat", inCategory: "B")
+		}
+		if catBDefenses.filter({$0.defenseName == "Ramparts"}).isEmpty {
+			//There is no Ramparts, make one
+			NSLog("Making Ramparts Defense")
+			dataManager.createDefense(withName: "Ramparts", inCategory: "B")
+		}
+		
+		//Set up category C
+		let catCDefenses = dataManager.getDefenses(inCategory: "C")
+		if catCDefenses.filter({$0.defenseName == "Drawbridge"}).isEmpty {
+			//There is no Drawbridge defense, make one
+			NSLog("Making Drawbridge Defense")
+			dataManager.createDefense(withName: "Drawbridge", inCategory: "C")
+		}
+		if catCDefenses.filter({$0.defenseName == "Sally Port"}).isEmpty {
+			//There is no Sally Port, make one
+			NSLog("Making Sally Port Defense")
+			dataManager.createDefense(withName: "Sally Port", inCategory: "C")
+		}
+		
+		//Set up category D
+		let catDDefenses = dataManager.getDefenses(inCategory: "D")
+		if catDDefenses.filter({$0.defenseName == "Rock Wall"}).isEmpty {
+			//There is no Rock Wall defense, make one
+			NSLog("Making Rock Wall Defense")
+			dataManager.createDefense(withName: "Rock Wall", inCategory: "D")
+		}
+		if catDDefenses.filter({$0.defenseName == "Rough Terrain"}).isEmpty {
+			//There is no Rough Terrain, make one
+			NSLog("Making Rough Terrain Defense")
+			dataManager.createDefense(withName: "Rough Terrain", inCategory: "D")
+		}
+		
+		//Set up category E (an imaginary one to hold the low bar)
+		let catEDefenses = dataManager.getDefenses(inCategory: "E")
+		if catEDefenses.filter({$0.defenseName == "Low Bar"}).isEmpty {
+			//There is no Low Bar, make one
+			NSLog("Making Low Bar Defense")
+			dataManager.createDefense(withName: "Low Bar", inCategory: "E")
+		}
+		
+		//Save all the defenses
+		dataManager.save()
+		
         return true
     }
 
