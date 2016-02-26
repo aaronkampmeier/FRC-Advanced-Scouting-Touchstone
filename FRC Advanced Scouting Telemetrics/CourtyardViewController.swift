@@ -23,27 +23,23 @@ class CourtyardViewController: UIViewController, UITableViewDataSource, UITableV
 	
 	struct CourtyardShot {
 		let shot: Shot?
-		var point: CGPoint {
+		var storedCoordinate: CGPoint {
 			get {
-				return pointView.frame.origin
+				return CGPoint(x: (shot?.xLocation?.doubleValue)!, y: (shot?.yLocation?.doubleValue)!)
 			}
 			
 			set {
 				shot?.xLocation = newValue.x
 				shot?.yLocation = newValue.y
-				pointView.frame.origin = newValue
 			}
 		}
-		var pointView: UIView = UIView()
+		
+		var pointView: UIView!
 		
 		init(shot: Shot) {
 			self.shot = shot
 			
-			point = CGPoint(x: (shot.xLocation?.doubleValue)!, y: (shot.yLocation?.doubleValue)!)
-			
-			pointView = UIView(frame: CGRect(origin: point, size: CGSize(width: 6, height: 6)).offsetBy(dx: -3, dy: -3))
-			pointView.layer.cornerRadius = 3
-			pointView.backgroundColor = UIColor.blueColor()
+			storedCoordinate = CGPoint(x: (shot.xLocation?.doubleValue)!, y: (shot.yLocation?.doubleValue)!)
 		}
 	}
 	
@@ -56,15 +52,14 @@ class CourtyardViewController: UIViewController, UITableViewDataSource, UITableV
         super.viewDidLoad()
 
         // Do any additional setup after loading the view.
-		//Set the image
-		
-		
+		//Add the invisible layer and add the tap gesture recognizer
+		courtyardImage.addSubview(invisibleView)
 		tapGesture.addTarget(self, action: "tappedOnImage:")
-		courtyardImage.addGestureRecognizer(tapGesture)
-		//view.addSubview(invisibleView)
+		invisibleView.addGestureRecognizer(tapGesture)
 		
 		standsScoutingVC = parentViewController as? StandsScoutingViewController
 		
+		//Set the image
 		switch defenseOrOffense! {
 		case .Defense:
 			courtyardImage.image = UIImage(named: "DefenseRender")
@@ -75,16 +70,93 @@ class CourtyardViewController: UIViewController, UITableViewDataSource, UITableV
 	
 	override func viewWillAppear(animated: Bool) {
 		super.viewWillAppear(animated)
+	}
+	
+	override func viewDidAppear(animated: Bool) {
+		super.viewDidAppear(animated)
 		
-		let rect = AVMakeRectWithAspectRatioInsideRect(courtyardImage.image!.size, courtyardImage.bounds)
-		invisibleView.frame = rect
+		//Get the CGRect of the actual image and set the invisible view's frame to be that rect
+		reloadInvisibleView()
 	}
 	
 	override func viewWillTransitionToSize(size: CGSize, withTransitionCoordinator coordinator: UIViewControllerTransitionCoordinator) {
 		super.viewWillTransitionToSize(size, withTransitionCoordinator: coordinator)
 		
+		coordinator.animateAlongsideTransition(nil){_ in self.reloadInvisibleView()}
+	}
+	
+	func reloadInvisibleView() {
+		//Get the previous size
+		let previousSize = invisibleView.bounds
+		
+		//Reload the invisible view's rect
 		let rect = AVMakeRectWithAspectRatioInsideRect(courtyardImage.image!.size, courtyardImage.bounds)
 		invisibleView.frame = rect
+		
+		//Reload the points
+		reloadPointLocations(previousSize)
+	}
+	
+	func translatePointCoordinateToStoredCordinate(point: CGPoint) -> CGPoint {
+		var storedX, storedY: Double
+		var storedWidth, storedHeight: Double
+		
+		switch defenseOrOffense! {
+		case .Defense:
+			storedWidth = 471
+			storedHeight = 728
+		case .Offense:
+			storedWidth = 454
+			storedHeight = 698
+		}
+		
+		//Calculate x
+		let xPointRatio = (point.x)/(invisibleView.bounds.width)
+		storedX = Double(xPointRatio * CGFloat(storedWidth))
+		
+		//Calculate y
+		let yPointRatio = point.y/invisibleView.bounds.height
+		storedY = Double(yPointRatio * CGFloat(storedHeight))
+		
+		return CGPoint(x: storedX, y: storedY)
+	}
+	
+	func translateStoredCoordinateToPoint(storedCoordinate: CGPoint) -> CGPoint {
+		var pointX, pointY: CGFloat
+		var storedWidth, storedHeight: Double
+		
+		switch defenseOrOffense! {
+		case .Defense:
+			storedWidth = 471
+			storedHeight = 728
+		case .Offense:
+			storedWidth = 454
+			storedHeight = 698
+		}
+		
+		//Calculate x
+		let xRatio = storedCoordinate.x/CGFloat(storedWidth)
+		pointX = xRatio * invisibleView.bounds.width
+		
+		let yRatio = storedCoordinate.y/CGFloat(storedHeight)
+		pointY = yRatio * invisibleView.bounds.height
+		
+		return CGPoint(x: pointX, y: pointY)
+	}
+	
+	func reloadPointLocations(previousSize: CGRect) {
+		let previousWidth = previousSize.width
+		let previousHeight = previousSize.height
+		
+		for pointView in invisibleView.subviews {
+			let xRatio = pointView.frame.origin.x/previousWidth
+			let newX = xRatio * invisibleView.frame.width
+			
+			let yRatio = pointView.frame.origin.y/previousHeight
+			let newY = yRatio * invisibleView.frame.height
+			
+			pointView.frame.origin = CGPoint(x: newX, y: newY)
+		}
 	}
 
     override func didReceiveMemoryWarning() {
@@ -95,9 +167,9 @@ class CourtyardViewController: UIViewController, UITableViewDataSource, UITableV
 	var finishedEditingShot: Bool = false
 	
 	func tappedOnImage(sender: UITapGestureRecognizer) {
-		let location = sender.locationInView(courtyardImage)
+		let location = sender.locationInView(invisibleView)
 		//Create a new shot
-		selectedShot = CourtyardShot(shot: dataManager.createShot(atPoint: location))
+		selectedShot = CourtyardShot(shot: dataManager.createShot(atPoint: translatePointCoordinateToStoredCordinate(location)))
 		switch defenseOrOffense! {
 		case .Defense:
 			selectedShot?.shot?.blockingTeam = standsScoutingVC?.matchPerformance
@@ -105,7 +177,16 @@ class CourtyardViewController: UIViewController, UITableViewDataSource, UITableV
 			selectedShot?.shot?.shootingTeam = standsScoutingVC?.matchPerformance
 		}
 		
-		courtyardImage.addSubview((selectedShot?.pointView)!)
+		//Make a view for the shot
+		let point = translateStoredCoordinateToPoint((selectedShot?.storedCoordinate)!)
+		let pointView = UIView(frame: CGRect(origin: point, size: CGSize(width: 6, height: 6)).offsetBy(dx: -3, dy: -3))
+		pointView.layer.cornerRadius = 3
+		pointView.backgroundColor = UIColor.blueColor()
+		//Add the point to the view
+		invisibleView.addSubview(pointView)
+		
+		//Save it in the struct
+		selectedShot?.pointView = pointView
 		
 		let popoverVC = storyboard?.instantiateViewControllerWithIdentifier("standsCourtyardPopover")
 		//Set up the tables
@@ -122,7 +203,7 @@ class CourtyardViewController: UIViewController, UITableViewDataSource, UITableV
 		popoverVC?.preferredContentSize = CGSizeMake(300, 200)
 		popover?.delegate = self
 		popover?.sourceView = self.view
-		popover?.sourceRect = (selectedShot?.pointView.frame)!
+		popover?.sourceRect = (pointView.frame)
 		presentViewController(popoverVC!, animated: true, completion: {})
 	}
 	

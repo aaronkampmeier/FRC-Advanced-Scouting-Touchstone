@@ -8,7 +8,7 @@
 
 import UIKit
 
-class TeamListController: UIViewController, UITableViewDataSource, UITableViewDelegate, UISearchBarDelegate, UIPopoverPresentationControllerDelegate, UICollectionViewDataSource, UICollectionViewDelegate {
+class TeamListController: UIViewController, UITableViewDataSource, UITableViewDelegate, UISearchBarDelegate, UIPopoverPresentationControllerDelegate {
 	@IBOutlet weak var regionalSelectionButton: UIButton!
     @IBOutlet weak var sideImageView: UIImageView!
     @IBOutlet weak var frontImageView: UIImageView!
@@ -21,11 +21,13 @@ class TeamListController: UIViewController, UITableViewDataSource, UITableViewDe
     @IBOutlet weak var editTeamsButton: UIBarButtonItem!
     @IBOutlet weak var teamListToolbar: UIToolbar!
     @IBOutlet weak var statsButton: UIBarButtonItem!
-    @IBOutlet weak var collectionView: UICollectionView!
 	@IBOutlet weak var standsScoutingButton: UIBarButtonItem!
     
     let teamManager = TeamDataManager()
     var adjustsForToolbarInsets: UIEdgeInsets? = nil
+	var currentChildVC: UIViewController?
+	var gameStatsController: GameStatsController?
+	var shotChartController: ShotChartViewController?
     
 	var teams: [Team] {
 		get {
@@ -67,14 +69,23 @@ class TeamListController: UIViewController, UITableViewDataSource, UITableViewDe
 	
     var selectedTeam: Team? {
         didSet {
-            collectionView.reloadData()
-			
+		//Reload the team's detail view
+		gameStatsController?.selectedNewThing(teamRegionalPerformance)
+		
+		if teamRegionalPerformance != nil {
+			segmentControl.selectedSegmentIndex = 0
+			segmentChanged(segmentControl)
+		} else {
+			segmentControl.selectedSegmentIndex = -1
+			segmentChanged(segmentControl)
+		}
+		
 			if let _ = selectedRegional {
 				standsScoutingButton.enabled = true
 			} else {
 				standsScoutingButton.enabled = false
 			}
-        }
+		}
     }
 	
 	var selectedRegional: Regional? {
@@ -84,12 +95,16 @@ class TeamListController: UIViewController, UITableViewDataSource, UITableViewDe
 			regionalSelectionButton.setTitle(regional.name, forState: .Normal)
 			//Set to nil, because the selected team might not be in the new regional
 			selectedTeam = nil
+			
+			segmentControl.enabled = true
 		} else {
 			currentRegionalTeams = teams
 			regionalSelectionButton.setTitle("All Teams", forState: .Normal)
 			//Set the same team as before
 			let team = selectedTeam
 			selectedTeam = team
+			
+			segmentControl.enabled = false
 		}
 		}
 	}
@@ -150,15 +165,27 @@ class TeamListController: UIViewController, UITableViewDataSource, UITableViewDe
         
         //Set that the current team list is displaying the default order
         isDefault = true
-        
-        //Set collection view's data source and delegate
-        collectionView.dataSource = self
-        collectionView.delegate = self
-        
-        //Register cell for Collection View
-        collectionView.registerClass(UICollectionViewCell.self, forCellWithReuseIdentifier: "teamCell")
-        collectionView.registerClass(UICollectionViewCell.self, forCellWithReuseIdentifier: "matchCell")
+		
+		//Get the two child view controllers
+		gameStatsController = storyboard?.instantiateViewControllerWithIdentifier("gameStatsCollection") as! GameStatsController
+		shotChartController = storyboard?.instantiateViewControllerWithIdentifier("shotChart") as! ShotChartViewController
     }
+	
+	override func viewWillAppear(animated: Bool) {
+		super.viewWillAppear(animated)
+		
+		//Move initially to the game stats
+		cycleFromViewController(childViewControllers.first!, toViewController: gameStatsController!)
+	}
+	
+	func cycleFromViewController(oldVC: UIViewController, toViewController newVC: UIViewController) {
+		oldVC.willMoveToParentViewController(nil)
+		addChildViewController(newVC)
+		
+		newVC.view.frame = oldVC.view.frame
+		
+		transitionFromViewController(oldVC, toViewController: newVC, duration: 0, options: .TransitionNone, animations: {}, completion: {_ in oldVC.removeFromParentViewController(); newVC.didMoveToParentViewController(self); self.currentChildVC = newVC})
+	}
     
     func addTeamFromNotification(notification:NSNotification) {
 		isSearching = false
@@ -564,75 +591,32 @@ class TeamListController: UIViewController, UITableViewDataSource, UITableViewDe
     
     //Functionality for the Segemented Control
     @IBAction func segmentChanged(sender: UISegmentedControl) {
-        
-    }
-    
-    //---FUNCTIONS FOR GAME STATS---
-    func collectionView(collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-		if let performance = teamRegionalPerformance {
-			return (performance.matchPerformances?.count)! * 6 + (performance.matchPerformances?.count)!
+		switch sender.selectedSegmentIndex {
+		case 0, -1:
+			//Check to see if the current view controller is the same as the game stats controller. If it is different, than switch to it.
+			if currentChildVC != gameStatsController {
+				cycleFromViewController(currentChildVC!, toViewController: gameStatsController!)
+			}
+		case 1:
+			if selectedRegional == nil {
+				//Haha, nope. You aren't in a regional
+				sender.selectedSegmentIndex = 0
+			} else {
+				//Check to see if the current view controller is the same as the shot chart controller. If it is different, than switch to it.
+				if currentChildVC != shotChartController {
+					cycleFromViewController(currentChildVC!, toViewController: shotChartController!)
+				}
+				
+				//Present Alet asking for the match the user would like to view
+				let alert = UIAlertController(title: "Select Match", message: "Select a match to see its shots.", preferredStyle: .Alert)
+				for matchPerformance in teamRegionalPerformance?.matchPerformances?.allObjects as! [TeamMatchPerformance] {
+					alert.addAction(UIAlertAction(title: String(matchPerformance.match!.matchNumber!), style: .Default, handler: {_ in self.shotChartController!.selectedMatchPerformance(matchPerformance)}))
+				}
+				presentViewController(alert, animated: true, completion: nil)
+			}
+		default:
+			break
 		}
-		
-        return 0
-    }
-    
-    func collectionView(collectionView: UICollectionView, cellForItemAtIndexPath indexPath: NSIndexPath) -> UICollectionViewCell {
-        //Get the matches for selected team
-		let matches: [Match] = (teamRegionalPerformance?.matchPerformances!.allObjects as! [TeamMatchPerformance]).map({$0.match!}).sort({$0.matchNumber?.intValue < $1.matchNumber?.intValue})
-		
-        let cell = collectionView.dequeueReusableCellWithReuseIdentifier("teamTrialCell", forIndexPath: indexPath) as! GameStatsCollectionViewCell
-        if indexPath.item % 7 == 0 {
-            let matchNumber = matches[indexPath.item/7].matchNumber
-            //Set the matches label
-            let label = cell.label
-            label.text = "\(matchNumber!)"
-            
-            //Make sure the background color is white
-            cell.contentView.backgroundColor = nil
-            label.textColor = UIColor(white: 0, alpha: 1)
-        } else if indexPath.item % 7 == 1 || indexPath.item == 1 {
-            cell.contentView.backgroundColor = UIColor(red: 0, green: 0, blue: 1, alpha: 1)
-			cell.label.text = (((matches[indexPath.item/7 as Int].teamPerformances?.allObjects as! [TeamMatchPerformance]).filter({$0.allianceColor! == 0 && $0.allianceTeam! == 1}).first)?.regionalPerformance?.valueForKey("team") as? Team)?.teamNumber
-            cell.label.textColor = UIColor(white: 1, alpha: 1)
-        } else if indexPath.item % 7 == 2 || indexPath.item == 2 {
-            cell.contentView.backgroundColor = UIColor(red: 0, green: 0, blue: 1, alpha: 1)
-			
-			let filteredTeams = (matches[indexPath.item/7 as Int].teamPerformances?.allObjects as! [TeamMatchPerformance]).filter({$0.allianceColor! == 0 && $0.allianceTeam! == 2})
-			
-			let matchPerformance = filteredTeams.first
-			cell.label.text = (matchPerformance?.regionalPerformance?.valueForKey("team") as? Team)?.teamNumber
-			
-//			if filteredTeams.count > 0 {
-//				cell.label.text = (filteredTeams[0].regionalPerformance?.valueForKey("team") as! Team).teamNumber
-//			} else {
-//				cell.label.text = nil
-//			}
-			
-			//cell.label.text = (((matches[indexPath.item/7 as Int].teamPerformances?.allObjects as! [TeamMatchPerformance]).filter({$0.allianceColor! == 0 && $0.allianceTeam! == 2})[0]).regionalPerformance?.valueForKey("team") as! Team).teamNumber
-            cell.label.textColor = UIColor(white: 1, alpha: 1)
-        } else if indexPath.item % 7 == 3 || indexPath.item == 3 {
-            cell.contentView.backgroundColor = UIColor(red: 0, green: 0, blue: 1, alpha: 1)
-            cell.label.text = (((matches[indexPath.item/7 as Int].teamPerformances?.allObjects as! [TeamMatchPerformance]).filter({$0.allianceColor! == 0 && $0.allianceTeam! == 3}).first)?.regionalPerformance?.valueForKey("team") as? Team)?.teamNumber
-            cell.label.textColor = UIColor(white: 1, alpha: 1)
-        } else if indexPath.item % 7 == 4 || indexPath.item == 4 {
-            cell.contentView.backgroundColor = UIColor(red: 1, green: 0, blue: 0, alpha: 1)
-			
-            cell.label.text = (((matches[indexPath.item/7 as Int].teamPerformances?.allObjects as! [TeamMatchPerformance]).filter({$0.allianceColor! == 1 && $0.allianceTeam! == 1}).first)?.regionalPerformance?.valueForKey("team") as? Team)?.teamNumber
-            cell.label.textColor = UIColor(white: 1, alpha: 1)
-        } else if indexPath.item % 7 == 5 || indexPath.item == 5 {
-            cell.contentView.backgroundColor = UIColor(red: 1, green: 0, blue: 0, alpha: 1)
-			cell.label.text = (((matches[indexPath.item/7 as Int].teamPerformances?.allObjects as! [TeamMatchPerformance]).filter({$0.allianceColor! == 1 && $0.allianceTeam! == 2})[safe: 0])?.regionalPerformance?.valueForKey("team") as? Team)?.teamNumber
-            cell.label.textColor = UIColor(white: 1, alpha: 1)
-        } else if indexPath.item % 7 == 6 || indexPath.item == 6 {
-            cell.contentView.backgroundColor = UIColor(red: 1, green: 0, blue: 0, alpha: 1)
-            cell.label.text = (((matches[indexPath.item/7 as Int].teamPerformances?.allObjects as! [TeamMatchPerformance]).filter({$0.allianceColor! == 1 && $0.allianceTeam! == 3}).first)?.regionalPerformance?.valueForKey("team") as? Team)?.teamNumber
-            cell.label.textColor = UIColor(white: 1, alpha: 1)
-        } else {
-            cell.label.text = nil
-            cell.contentView.backgroundColor = nil
-        }
-        
-        return cell
     }
 	
 	func didChooseRegional(regional: Regional?) {
