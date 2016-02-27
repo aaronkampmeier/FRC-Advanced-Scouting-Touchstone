@@ -175,7 +175,9 @@ class TeamListController: UIViewController, UITableViewDataSource, UITableViewDe
 		super.viewWillAppear(animated)
 		
 		//Move initially to the game stats
-		cycleFromViewController(childViewControllers.first!, toViewController: gameStatsController!)
+		if currentChildVC != gameStatsController {
+			cycleFromViewController(childViewControllers.first!, toViewController: gameStatsController!)
+		}
 	}
 	
 	func cycleFromViewController(oldVC: UIViewController, toViewController newVC: UIViewController) {

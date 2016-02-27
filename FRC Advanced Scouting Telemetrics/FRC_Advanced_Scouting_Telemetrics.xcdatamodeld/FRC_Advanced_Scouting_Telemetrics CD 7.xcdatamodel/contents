@@ -15,7 +15,7 @@
         <relationship name="matches" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Match" inverseName="defenses" inverseEntity="Match" syncable="YES"/>
     </entity>
     <entity name="DefenseCrossTime" representedClassName=".DefenseCrossTime" syncable="YES">
-        <attribute name="time" attributeType="Date" syncable="YES"/>
+        <attribute name="time" attributeType="Double" minValueString="0" defaultValueString="0.0" syncable="YES"/>
         <relationship name="defense" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Defense" syncable="YES"/>
         <relationship name="teamMatchPerformance" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="TeamMatchPerformance" inverseName="defenseCrossTimes" inverseEntity="TeamMatchPerformance" syncable="YES"/>
     </entity>
@@ -66,6 +66,7 @@
         <attribute name="robotWeight" optional="YES" attributeType="Double" defaultValueString="0.0" syncable="YES"/>
         <attribute name="sideImage" optional="YES" attributeType="Binary" syncable="YES"/>
         <attribute name="teamNumber" attributeType="String" syncable="YES"/>
+        <relationship name="defensesAbleToCross" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Defense" syncable="YES"/>
         <relationship name="draftBoard" maxCount="1" deletionRule="Nullify" destinationEntity="DraftBoard" inverseName="teams" inverseEntity="DraftBoard" syncable="YES"/>
         <relationship name="regionalPerformances" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="TeamRegionalPerformance" inverseName="team" inverseEntity="TeamRegionalPerformance" syncable="YES"/>
         <relationship name="stats" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="Stat" inverseName="team" inverseEntity="Stat" syncable="YES"/>
@@ -94,7 +95,7 @@
     <elements>
         <element name="AutonomousCycle" positionX="187" positionY="117" width="128" height="150"/>
         <element name="Defense" positionX="124" positionY="-54" width="128" height="88"/>
-        <element name="DefenseCrossTime" positionX="187" positionY="405" width="128" height="88"/>
+        <element name="DefenseCrossTime" positionX="187" positionY="405" width="128" height="90"/>
         <element name="DraftBoard" positionX="-351" positionY="-27" width="128" height="60"/>
         <element name="Match" positionX="-108" positionY="502" width="128" height="149"/>
         <element name="Regional" positionX="-281" positionY="162" width="128" height="105"/>
@@ -102,7 +103,7 @@
         <element name="Stat" positionX="-630" positionY="272" width="128" height="88"/>
         <element name="StatsBoard" positionX="-639" positionY="54" width="128" height="75"/>
         <element name="StatType" positionX="-522" positionY="161" width="128" height="73"/>
-        <element name="Team" positionX="-81" positionY="-72" width="128" height="165"/>
+        <element name="Team" positionX="-81" positionY="-72" width="128" height="180"/>
         <element name="TeamMatchPerformance" positionX="-99" positionY="267" width="128" height="180"/>
         <element name="TeamRegionalPerformance" positionX="-92" positionY="144" width="128" height="90"/>
         <element name="TimeMarker" positionX="180" positionY="521" width="126" height="88"/>

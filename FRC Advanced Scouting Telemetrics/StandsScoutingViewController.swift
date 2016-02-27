@@ -61,6 +61,7 @@ class StandsScoutingViewController: UIViewController {
 	var autonomousVC: AutonomousViewController?
 	var defenseVC: CourtyardViewController?
 	var offenseVC: CourtyardViewController?
+	var neutralVC: NeutralViewController?
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -72,6 +73,7 @@ class StandsScoutingViewController: UIViewController {
 		autonomousVC = storyboard?.instantiateViewControllerWithIdentifier("standsAutonomous") as? AutonomousViewController
 		defenseVC = storyboard?.instantiateViewControllerWithIdentifier("standsCourtyard") as? CourtyardViewController
 		offenseVC = storyboard?.instantiateViewControllerWithIdentifier("standsCourtyard") as? CourtyardViewController
+		neutralVC = storyboard?.instantiateViewControllerWithIdentifier("standsNeutral") as? NeutralViewController
 		
 		//Set the type for each courtyard view controller
 		defenseVC?.defenseOrOffense = .Defense
@@ -95,7 +97,7 @@ class StandsScoutingViewController: UIViewController {
 		
 		//Ask for the match to use
 		let askAction = UIAlertController(title: "Select Match", message: "Select the match for team \(teamPerformance!.team!.teamNumber!) in the regional \(teamPerformance!.regional!.name!) for stands scouting.", preferredStyle: .Alert)
-		for match in (teamPerformance?.matchPerformances?.allObjects as! [TeamMatchPerformance]).sort({Int($0.match.matchNumber) < Int($1.match.matchNumber)}) {
+		for match in (teamPerformance?.matchPerformances?.allObjects as! [TeamMatchPerformance]).sort({Int($0.match!.matchNumber!) < Int($1.match!.matchNumber!)}) {
 			askAction.addAction(UIAlertAction(title: "Match \(match.match!.matchNumber!)", style: .Default, handler: {_ in self.matchPerformance = match; /*Initially go to autonomous*/ let initialChild = self.childViewControllers.first; self.cycleFromViewController(initialChild!, toViewController: self.autonomousVC!)}))
 		}
 		presentViewController(askAction, animated: true, completion: nil)
@@ -139,7 +141,7 @@ class StandsScoutingViewController: UIViewController {
 			cycleFromViewController(currentVC!, toViewController: offenseVC!)
 			dataManager.addTimeMarker(withEvent: TeamDataManager.TimeMarkerEvent.MovedToOffenseCourtyard, atTime: stopwatch.elapsedTime, inMatchPerformance: matchPerformance!)
 		case 2:
-			break
+			cycleFromViewController(currentVC!, toViewController: neutralVC!)
 		case 3:
 			cycleFromViewController(currentVC!, toViewController: defenseVC!)
 			dataManager.addTimeMarker(withEvent: TeamDataManager.TimeMarkerEvent.MovedToDefenseCourtyard, atTime: stopwatch.elapsedTime, inMatchPerformance: matchPerformance!)

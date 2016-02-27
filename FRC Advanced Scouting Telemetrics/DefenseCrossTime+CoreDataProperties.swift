@@ -14,7 +14,7 @@ import CoreData
 
 extension DefenseCrossTime {
 
-    @NSManaged var time: NSDate?
+    @NSManaged var time: NSNumber?
     @NSManaged var teamMatchPerformance: NSManagedObject?
     @NSManaged var defense: Defense?
 

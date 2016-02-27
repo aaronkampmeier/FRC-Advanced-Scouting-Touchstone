@@ -64,6 +64,7 @@
 		1FCA7ADD1C64152E004294D1 /* AddStatVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FCA7ADC1C64152E004294D1 /* AddStatVC.swift */; };
 		1FE2C1291C80136800CECBF1 /* ShotChartViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FE2C1281C80136800CECBF1 /* ShotChartViewController.swift */; };
 		1FE2C12B1C80DFBD00CECBF1 /* NeutralViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FE2C12A1C80DFBD00CECBF1 /* NeutralViewController.swift */; };
+		1FE2C12D1C81875A00CECBF1 /* ImageScalingFunctions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FE2C12C1C81875A00CECBF1 /* ImageScalingFunctions.swift */; };
 		1FF1F1731C3CC74A0051EE54 /* TeamListController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FF1F1721C3CC74A0051EE54 /* TeamListController.swift */; };
 		1FF1F1791C4604370051EE54 /* TeamDataManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FF1F1781C4604370051EE54 /* TeamDataManager.swift */; };
 		1FF32A211C6D194B00CD028C /* AdminConfigureVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FF32A201C6D194B00CD028C /* AdminConfigureVC.swift */; };
@@ -158,6 +159,7 @@
 		1FCA7ADC1C64152E004294D1 /* AddStatVC.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AddStatVC.swift; sourceTree = "<group>"; };
 		1FE2C1281C80136800CECBF1 /* ShotChartViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ShotChartViewController.swift; sourceTree = "<group>"; };
 		1FE2C12A1C80DFBD00CECBF1 /* NeutralViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NeutralViewController.swift; sourceTree = "<group>"; };
+		1FE2C12C1C81875A00CECBF1 /* ImageScalingFunctions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ImageScalingFunctions.swift; sourceTree = "<group>"; };
 		1FF1F1721C3CC74A0051EE54 /* TeamListController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TeamListController.swift; sourceTree = "<group>"; };
 		1FF1F1781C4604370051EE54 /* TeamDataManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TeamDataManager.swift; sourceTree = "<group>"; };
 		1FF32A201C6D194B00CD028C /* AdminConfigureVC.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AdminConfigureVC.swift; sourceTree = "<group>"; };
@@ -258,6 +260,7 @@
 		1F78E7811C3B469300221927 /* FRC Advanced Scouting Telemetrics */ = {
 			isa = PBXGroup;
 			children = (
+				1FE2C12C1C81875A00CECBF1 /* ImageScalingFunctions.swift */,
 				1F51D1C51C7FFBC000B4D6C5 /* GameStatsLayout.swift */,
 				1FB99DB41C75272F004BC2C1 /* ArrayExtension.swift */,
 				1F21DF131C66965100C55D0E /* StatTypePickerData.swift */,
@@ -516,6 +519,7 @@
 				1F4FEDAC1C4B686000F4016D /* AdminConsoleController.swift in Sources */,
 				1F12CF181C7A6CD70014200C /* Stopwatch.swift in Sources */,
 				1F4534151C6FFC38004EDDB9 /* AutonomousViewController.swift in Sources */,
+				1FE2C12D1C81875A00CECBF1 /* ImageScalingFunctions.swift in Sources */,
 				1F45343D1C7242B9004EDDB9 /* Match.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

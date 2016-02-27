@@ -578,6 +578,10 @@ class TeamDataManager {
 		return newDefense
 	}
 	
+	func getLowBar() -> Defense {
+		return getDefense(withName: "Low Bar")!
+	}
+	
 	func getAllDefenses() -> [Defense] {
 		return getDefenses(withPredicate: nil)
 	}
@@ -616,6 +620,17 @@ class TeamDataManager {
 		newMarker.event = event.rawValue
 		newMarker.time = time
 		newMarker.teamMatchPerformance = matchPerformance
+		
+		save()
+	}
+	
+	//METHODS FOR DEFENSE CROSS TIMING
+	func addDefenseCrossTime(forMatchPerformance matchPerformance: TeamMatchPerformance, inDefense defense: Defense, withTime time: NSTimeInterval) {
+		let newCrossTime = DefenseCrossTime(entity: NSEntityDescription.entityForName("DefenseCrossTime", inManagedObjectContext: TeamDataManager.managedContext)!, insertIntoManagedObjectContext: TeamDataManager.managedContext)
+		
+		newCrossTime.time = time
+		newCrossTime.teamMatchPerformance = matchPerformance
+		newCrossTime.defense = defense
 		
 		save()
 	}

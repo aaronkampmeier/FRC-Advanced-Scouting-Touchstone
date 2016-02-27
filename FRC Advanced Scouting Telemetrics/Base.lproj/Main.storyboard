@@ -2274,7 +2274,7 @@
         <!--Neutral View Controller-->
         <scene sceneID="LXT-Ua-rmu">
             <objects>
-                <viewController id="BFm-Rq-KIG" customClass="NeutralViewController" customModule="FRC_Advanced_Scouting_Touchstone" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="standsNeutral" id="BFm-Rq-KIG" customClass="NeutralViewController" customModule="FRC_Advanced_Scouting_Touchstone" customModuleProvider="target" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="I2C-V1-Fhv"/>
                         <viewControllerLayoutGuide type="bottom" id="qif-Lp-OkM"/>
@@ -2283,20 +2283,85 @@
                         <rect key="frame" x="0.0" y="0.0" width="500" height="500"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="Defenses" translatesAutoresizingMaskIntoConstraints="NO" id="c0Z-Xz-o9N">
-                                <rect key="frame" x="20" y="20" width="460" height="480"/>
-                            </imageView>
+                            <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" distribution="fillEqually" translatesAutoresizingMaskIntoConstraints="NO" id="q9H-Gz-nYh">
+                                <rect key="frame" x="150" y="20" width="200" height="480"/>
+                                <subviews>
+                                    <button opaque="NO" contentMode="scaleAspectFit" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="hUd-Dh-F2W">
+                                        <rect key="frame" x="0.0" y="0.0" width="200" height="96"/>
+                                        <state key="normal" image="Low Bar"/>
+                                        <connections>
+                                            <action selector="startedHoldingDownDefense:" destination="BFm-Rq-KIG" eventType="touchDown" id="Yce-NS-ZVJ"/>
+                                            <action selector="stoppedHoldingDefense:" destination="BFm-Rq-KIG" eventType="touchUpOutside" id="CTB-Hf-dRp"/>
+                                            <action selector="stoppedHoldingDefense:" destination="BFm-Rq-KIG" eventType="touchUpInside" id="Cxg-Xv-opP"/>
+                                        </connections>
+                                    </button>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="1FK-9P-UAZ">
+                                        <rect key="frame" x="0.0" y="96" width="200" height="96"/>
+                                        <state key="normal" title="Defense 4"/>
+                                        <connections>
+                                            <action selector="startedHoldingDownDefense:" destination="BFm-Rq-KIG" eventType="touchDown" id="mpf-ps-wZK"/>
+                                            <action selector="stoppedHoldingDefense:" destination="BFm-Rq-KIG" eventType="touchUpOutside" id="HfB-rc-Dun"/>
+                                            <action selector="stoppedHoldingDefense:" destination="BFm-Rq-KIG" eventType="touchUpInside" id="L7U-dx-B5H"/>
+                                        </connections>
+                                    </button>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="1aL-7I-SoH">
+                                        <rect key="frame" x="0.0" y="192" width="200" height="96"/>
+                                        <state key="normal" title="Defense 3"/>
+                                        <connections>
+                                            <action selector="startedHoldingDownDefense:" destination="BFm-Rq-KIG" eventType="touchDown" id="Np7-kw-V4i"/>
+                                            <action selector="stoppedHoldingDefense:" destination="BFm-Rq-KIG" eventType="touchUpOutside" id="czv-7s-wA5"/>
+                                            <action selector="stoppedHoldingDefense:" destination="BFm-Rq-KIG" eventType="touchUpInside" id="vJh-yR-seu"/>
+                                        </connections>
+                                    </button>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="vvA-nd-e4v">
+                                        <rect key="frame" x="0.0" y="288" width="200" height="96"/>
+                                        <state key="normal" title="Defense 2"/>
+                                        <connections>
+                                            <action selector="startedHoldingDownDefense:" destination="BFm-Rq-KIG" eventType="touchDown" id="tF5-VO-KIe"/>
+                                            <action selector="stoppedHoldingDefense:" destination="BFm-Rq-KIG" eventType="touchUpInside" id="0Bb-OM-yTr"/>
+                                            <action selector="stoppedHoldingDefense:" destination="BFm-Rq-KIG" eventType="touchUpOutside" id="b0d-ss-y6b"/>
+                                        </connections>
+                                    </button>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="tJV-Nj-MXp">
+                                        <rect key="frame" x="0.0" y="384" width="200" height="96"/>
+                                        <state key="normal" title="Defense 1"/>
+                                        <connections>
+                                            <action selector="startedHoldingDownDefense:" destination="BFm-Rq-KIG" eventType="touchDown" id="u3d-Db-iR2"/>
+                                            <action selector="stoppedHoldingDefense:" destination="BFm-Rq-KIG" eventType="touchUpOutside" id="3FG-uh-boT"/>
+                                            <action selector="stoppedHoldingDefense:" destination="BFm-Rq-KIG" eventType="touchUpInside" id="auU-RU-uwh"/>
+                                        </connections>
+                                    </button>
+                                </subviews>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="200" id="cD4-Xl-Fc1"/>
+                                </constraints>
+                            </stackView>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Hold Down on Defense" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ofO-Yx-g5v">
+                                <rect key="frame" x="20" y="20" width="176" height="21"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
-                            <constraint firstAttribute="trailingMargin" secondItem="c0Z-Xz-o9N" secondAttribute="trailing" id="asc-F4-wMI"/>
-                            <constraint firstItem="c0Z-Xz-o9N" firstAttribute="leading" secondItem="4Jl-KI-Eb8" secondAttribute="leadingMargin" id="gr8-dg-nLL"/>
-                            <constraint firstItem="c0Z-Xz-o9N" firstAttribute="top" secondItem="I2C-V1-Fhv" secondAttribute="bottom" id="oBB-pb-75E"/>
-                            <constraint firstItem="qif-Lp-OkM" firstAttribute="top" secondItem="c0Z-Xz-o9N" secondAttribute="bottom" id="sUj-au-As0"/>
+                            <constraint firstItem="q9H-Gz-nYh" firstAttribute="centerX" secondItem="4Jl-KI-Eb8" secondAttribute="centerX" id="El3-dl-LJb"/>
+                            <constraint firstAttribute="leadingMargin" secondItem="ofO-Yx-g5v" secondAttribute="leading" id="GcH-4j-g05"/>
+                            <constraint firstItem="q9H-Gz-nYh" firstAttribute="top" secondItem="I2C-V1-Fhv" secondAttribute="bottom" id="JTP-V1-GOn"/>
+                            <constraint firstItem="qif-Lp-OkM" firstAttribute="top" secondItem="q9H-Gz-nYh" secondAttribute="bottom" id="O37-RW-eFq"/>
+                            <constraint firstItem="ofO-Yx-g5v" firstAttribute="top" secondItem="I2C-V1-Fhv" secondAttribute="bottom" id="VHj-48-uuB"/>
                         </constraints>
                     </view>
                     <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
                     <size key="freeformSize" width="500" height="500"/>
+                    <connections>
+                        <outlet property="defense1Button" destination="tJV-Nj-MXp" id="0Pi-oU-ueY"/>
+                        <outlet property="defense2Button" destination="vvA-nd-e4v" id="aZx-qO-z81"/>
+                        <outlet property="defense3Button" destination="1aL-7I-SoH" id="jAQ-H8-jft"/>
+                        <outlet property="defense4Button" destination="1FK-9P-UAZ" id="Mmg-2s-wbw"/>
+                        <outlet property="elapsedTimeLabel" destination="ofO-Yx-g5v" id="0Pn-99-5hA"/>
+                        <outlet property="lowBarButton" destination="hUd-Dh-F2W" id="4Lm-UC-zoy"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="VBh-VE-alW" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
@@ -2376,7 +2441,7 @@
     <resources>
         <image name="Ball" width="384" height="378"/>
         <image name="DefenseRender" width="471" height="728"/>
-        <image name="Defenses" width="236" height="673"/>
+        <image name="Low Bar" width="350" height="162"/>
         <image name="OffenseRender" width="454" height="698"/>
         <image name="Plus Filled-50" width="50" height="50"/>
         <image name="Settings-50" width="50" height="50"/>
