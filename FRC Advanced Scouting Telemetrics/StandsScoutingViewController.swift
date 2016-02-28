@@ -17,6 +17,9 @@ class StandsScoutingViewController: UIViewController {
 	@IBOutlet weak var matchAndRegionalLabel: UILabel!
 	@IBOutlet weak var segmentedControl: UISegmentedControl!
 	@IBOutlet weak var closeButton: UIButton!
+	@IBOutlet weak var finalTowerView: UIView!
+	@IBOutlet weak var challengedTowerSwitch: UISwitch!
+	@IBOutlet weak var scaledTowerSwitch: UISwitch!
 	
 	var teamPerformance: TeamRegionalPerformance?
 	var matchPerformance: TeamMatchPerformance? {
@@ -42,6 +45,12 @@ class StandsScoutingViewController: UIViewController {
 			//Set appropriate state for elements in the view
 			ballButton.enabled = true
 			closeButton.hidden = true
+			
+			//Let the user now select new segments
+			segmentedControl.enabled = true
+			
+			//Go to autonomous
+			cycleFromViewController(currentVC!, toViewController: initialChild!)
 		} else {
 			stopwatch.stop()
 			
@@ -52,12 +61,21 @@ class StandsScoutingViewController: UIViewController {
 			//Set appropriate state for elements in the view
 			ballButton.enabled = false
 			closeButton.hidden = false
+			
+			//Turn off ability to select new segments
+			segmentedControl.enabled = false
+			
+			//Go back to the initial screen
+			cycleFromViewController(currentVC!, toViewController: initialChild!)
+			segmentedControl.selectedSegmentIndex = 0
+			selectedNewPart(segmentedControl)
 		}
 		}
 	}
 	
 	var currentDetailViewController: StandsScoutingDetailProtocol?
 	var currentVC: UIViewController?
+	var initialChild: UIViewController?
 	var autonomousVC: AutonomousViewController?
 	var defenseVC: CourtyardViewController?
 	var offenseVC: CourtyardViewController?
@@ -98,13 +116,16 @@ class StandsScoutingViewController: UIViewController {
 		//Ask for the match to use
 		let askAction = UIAlertController(title: "Select Match", message: "Select the match for team \(teamPerformance!.team!.teamNumber!) in the regional \(teamPerformance!.regional!.name!) for stands scouting.", preferredStyle: .Alert)
 		for match in (teamPerformance?.matchPerformances?.allObjects as! [TeamMatchPerformance]).sort({Int($0.match!.matchNumber!) < Int($1.match!.matchNumber!)}) {
-			askAction.addAction(UIAlertAction(title: "Match \(match.match!.matchNumber!)", style: .Default, handler: {_ in self.matchPerformance = match; /*Initially go to autonomous*/ let initialChild = self.childViewControllers.first; self.cycleFromViewController(initialChild!, toViewController: self.autonomousVC!)}))
+			askAction.addAction(UIAlertAction(title: "Match \(match.match!.matchNumber!)", style: .Default, handler: {_ in self.matchPerformance = match}))
 		}
 		presentViewController(askAction, animated: true, completion: nil)
 	}
 	
 	override func viewDidAppear(animated: Bool) {
 		super.viewDidAppear(animated)
+		
+		initialChild = childViewControllers.first
+		currentVC = initialChild
 		
 	}
 
@@ -177,6 +198,9 @@ class StandsScoutingViewController: UIViewController {
 				let alert = UIAlertController(title: "Too Long", message: "The match should have ended at 2 minutes 30 seconds; the timer has already passed that and automatically stopped. All data will be saved unless timer is started again.", preferredStyle: .Alert)
 				alert.addAction(UIAlertAction(title: "OK", style: .Default, handler: nil))
 				presentViewController(alert, animated: true, completion: nil)
+			} else if stopwatch.elapsedTime > 135 {
+				//Show the final tower settings
+				finalTowerView.hidden = false
 			}
 		} else {
 			timer.invalidate()
@@ -185,6 +209,15 @@ class StandsScoutingViewController: UIViewController {
 
 	@IBAction func gotBallPressed(sender: UIButton) {
 		dataManager.addTimeMarker(withEvent: TeamDataManager.TimeMarkerEvent.BallPickedUp, atTime: stopwatch.elapsedTime, inMatchPerformance: matchPerformance!)
+	}
+	
+	//FINAL TOWER VIEW
+	@IBAction func challengedTowerSwitched(sender: UISwitch) {
+		matchPerformance?.didChallengeTower = sender.on
+	}
+	
+	@IBAction func scaledTowerSwitched(sender: UISwitch) {
+		matchPerformance?.didScaleTower = sender.on
 	}
 	
     /*

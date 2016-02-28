@@ -578,6 +578,64 @@ class TeamDataManager {
 		return newDefense
 	}
 	
+	func setDidBreachDefense(defense: Defense, inMatchPerformance matchPerformance: TeamMatchPerformance) {
+		//Check if the defense is already labeled as breached
+		//Get the alliance color
+		let allianceColor = matchPerformance.allianceColor?.integerValue
+		var allianceBreachedDefenses: [Defense]
+		if allianceColor == 0 {
+			allianceBreachedDefenses = matchPerformance.match?.blueDefensesBreached?.allObjects as! [Defense]
+		} else {
+			allianceBreachedDefenses = matchPerformance.match?.redDefensesBreached?.allObjects as! [Defense]
+		}
+		
+		for breachedDefense in allianceBreachedDefenses {
+			if breachedDefense == defense {
+				//The breached defense is already saved, return
+				return
+			}
+		}
+		
+		//Add the defense to the set
+		allianceBreachedDefenses.append(defense)
+		
+		if allianceColor == 0 {
+			matchPerformance.match?.blueDefensesBreached = NSSet(array: allianceBreachedDefenses)
+		} else {
+			matchPerformance.match?.redDefensesBreached = NSSet(array: allianceBreachedDefenses)
+		}
+		
+		save()
+	}
+	
+	func setDidNotBreachDefense(defense: Defense, inMatchPerformance matchPerformance: TeamMatchPerformance) {
+		//Check to see if it is actually there
+		let allianceColor = matchPerformance.allianceColor?.integerValue
+		var allianceBreachedDefenses: [Defense]
+		if allianceColor == 0 {
+			allianceBreachedDefenses = matchPerformance.match?.blueDefensesBreached?.allObjects as! [Defense]
+		} else {
+			allianceBreachedDefenses = matchPerformance.match?.redDefensesBreached?.allObjects as! [Defense]
+		}
+		
+		if !allianceBreachedDefenses.contains(defense) {
+			//The defense is already not there, return
+			return
+		}
+		
+		//Remove the defense from the list of breached ones
+		allianceBreachedDefenses.removeAtIndex(allianceBreachedDefenses.indexOf(defense)!)
+		
+		//Set it back in the match
+		if allianceColor == 0 {
+			matchPerformance.match?.blueDefensesBreached = NSSet(array: allianceBreachedDefenses)
+		} else {
+			matchPerformance.match?.redDefensesBreached = NSSet(array: allianceBreachedDefenses)
+		}
+		
+		save()
+	}
+	
 	func getLowBar() -> Defense {
 		return getDefense(withName: "Low Bar")!
 	}

@@ -83,6 +83,47 @@ class NeutralViewController: UIViewController {
 		}
 	}
 	
+	@IBAction func breachedLowBar(sender: UISwitch) {
+		switch sender.on {
+		case true:
+			dataManager.setDidBreachDefense(dataManager.getLowBar(), inMatchPerformance: standsScoutingController.matchPerformance!)
+		case false:
+			dataManager.setDidNotBreachDefense(dataManager.getLowBar(), inMatchPerformance: standsScoutingController.matchPerformance!)
+		}
+	}
+	@IBAction func breachedDefense4(sender: UISwitch) {
+		switch sender.on {
+		case true:
+			dataManager.setDidBreachDefense(defenses![0], inMatchPerformance: standsScoutingController.matchPerformance!)
+		case false:
+			dataManager.setDidNotBreachDefense(defenses![0], inMatchPerformance: standsScoutingController.matchPerformance!)
+		}
+	}
+	@IBAction func breachedDefense3(sender: UISwitch) {
+		switch sender.on {
+		case true:
+			dataManager.setDidBreachDefense(defenses![1], inMatchPerformance: standsScoutingController.matchPerformance!)
+		case false:
+			dataManager.setDidNotBreachDefense(defenses![1], inMatchPerformance: standsScoutingController.matchPerformance!)
+		}
+	}
+	@IBAction func breachedDefense2(sender: UISwitch) {
+		switch sender.on {
+		case true:
+			dataManager.setDidBreachDefense(defenses![2], inMatchPerformance: standsScoutingController.matchPerformance!)
+		case false:
+			dataManager.setDidNotBreachDefense(defenses![2], inMatchPerformance: standsScoutingController.matchPerformance!)
+		}
+	}
+	@IBAction func breachedDefense1(sender: UISwitch) {
+		switch sender.on {
+		case true:
+			dataManager.setDidBreachDefense(defenses![3], inMatchPerformance: standsScoutingController.matchPerformance!)
+		case false:
+			dataManager.setDidNotBreachDefense(defenses![3], inMatchPerformance: standsScoutingController.matchPerformance!)
+		}
+	}
+	
     /*
     // MARK: - Navigation
 

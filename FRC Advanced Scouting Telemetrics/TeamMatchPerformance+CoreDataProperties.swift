@@ -16,6 +16,8 @@ extension TeamMatchPerformance {
 
     @NSManaged var allianceColor: NSNumber?
     @NSManaged var allianceTeam: NSNumber?
+	@NSManaged var didChallengeTower: NSNumber?
+	@NSManaged var didScaleTower: NSNumber?
     @NSManaged var regionalPerformance: NSManagedObject?
     @NSManaged var match: Match?
     @NSManaged var autonomousCycles: NSSet?

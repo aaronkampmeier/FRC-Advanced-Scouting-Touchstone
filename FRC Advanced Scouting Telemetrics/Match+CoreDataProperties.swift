@@ -19,5 +19,7 @@ extension Match {
     @NSManaged var regional: Regional?
     @NSManaged var teamPerformances: NSSet?
     @NSManaged var defenses: NSSet?
+	@NSManaged var redDefensesBreached: NSSet?
+	@NSManaged var blueDefensesBreached: NSSet?
 
 }

@@ -25,7 +25,9 @@
     <entity name="Match" representedClassName=".Match" syncable="YES">
         <attribute name="matchNumber" attributeType="Integer 64" defaultValueString="0" syncable="YES"/>
         <attribute name="time" optional="YES" attributeType="Date" syncable="YES"/>
+        <relationship name="blueDefensesBreached" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Defense" syncable="YES"/>
         <relationship name="defenses" optional="YES" toMany="YES" maxCount="4" deletionRule="Nullify" destinationEntity="Defense" inverseName="matches" inverseEntity="Defense" syncable="YES"/>
+        <relationship name="redDefensesBreached" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Defense" syncable="YES"/>
         <relationship name="regional" maxCount="1" deletionRule="Nullify" destinationEntity="Regional" inverseName="matches" inverseEntity="Regional" syncable="YES"/>
         <relationship name="teamPerformances" optional="YES" toMany="YES" maxCount="6" deletionRule="Cascade" destinationEntity="TeamMatchPerformance" inverseName="match" inverseEntity="TeamMatchPerformance" syncable="YES"/>
         <fetchedProperty name="b1" optional="YES" syncable="YES">
@@ -74,6 +76,8 @@
     <entity name="TeamMatchPerformance" representedClassName=".TeamMatchPerformance" syncable="YES">
         <attribute name="allianceColor" attributeType="Integer 64" minValueString="0" maxValueString="1" syncable="YES"/>
         <attribute name="allianceTeam" attributeType="Integer 64" minValueString="1" maxValueString="3" syncable="YES"/>
+        <attribute name="didChallengeTower" optional="YES" attributeType="Boolean" syncable="YES"/>
+        <attribute name="didScaleTower" optional="YES" attributeType="Boolean" syncable="YES"/>
         <relationship name="autonomousCycles" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="AutonomousCycle" inverseName="matchPerformance" inverseEntity="AutonomousCycle" syncable="YES"/>
         <relationship name="defenseBlocks" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="Shot" inverseName="blockingTeam" inverseEntity="Shot" syncable="YES"/>
         <relationship name="defenseCrossTimes" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="DefenseCrossTime" inverseName="teamMatchPerformance" inverseEntity="DefenseCrossTime" syncable="YES"/>
@@ -97,14 +101,14 @@
         <element name="Defense" positionX="124" positionY="-54" width="128" height="88"/>
         <element name="DefenseCrossTime" positionX="187" positionY="405" width="128" height="90"/>
         <element name="DraftBoard" positionX="-351" positionY="-27" width="128" height="60"/>
-        <element name="Match" positionX="-108" positionY="502" width="128" height="149"/>
+        <element name="Match" positionX="-108" positionY="502" width="128" height="176"/>
         <element name="Regional" positionX="-281" positionY="162" width="128" height="105"/>
         <element name="Shot" positionX="198" positionY="278" width="128" height="118"/>
         <element name="Stat" positionX="-630" positionY="272" width="128" height="88"/>
         <element name="StatsBoard" positionX="-639" positionY="54" width="128" height="75"/>
         <element name="StatType" positionX="-522" positionY="161" width="128" height="73"/>
         <element name="Team" positionX="-81" positionY="-72" width="128" height="180"/>
-        <element name="TeamMatchPerformance" positionX="-99" positionY="267" width="128" height="180"/>
+        <element name="TeamMatchPerformance" positionX="-99" positionY="267" width="128" height="208"/>
         <element name="TeamRegionalPerformance" positionX="-92" positionY="144" width="128" height="90"/>
         <element name="TimeMarker" positionX="180" positionY="521" width="126" height="88"/>
     </elements>
