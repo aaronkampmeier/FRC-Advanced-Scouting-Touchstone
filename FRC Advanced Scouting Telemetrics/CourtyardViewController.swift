@@ -117,12 +117,7 @@ class CourtyardViewController: UIViewController, UITableViewDataSource, UITableV
 		let location = sender.locationInView(invisibleView)
 		//Create a new shot
 		selectedShot = CourtyardShot(shot: dataManager.createShot(atPoint: translatePointCoordinateToStoredCordinate(location, viewSize: invisibleView.frame.size, storedSize: storedSizeOfImage)))
-		switch defenseOrOffense! {
-		case .Defense:
-			selectedShot?.shot?.blockingTeam = standsScoutingVC?.matchPerformance
-		case .Offense:
-			selectedShot?.shot?.shootingTeam = standsScoutingVC?.matchPerformance
-		}
+		selectedShot?.shot?.shootingTeam = standsScoutingVC?.matchPerformance
 		
 		//Make a view for the shot
 		let point = location
@@ -143,7 +138,6 @@ class CourtyardViewController: UIViewController, UITableViewDataSource, UITableV
 		teamTable.delegate = self
 		blockedTable.dataSource = self
 		blockedTable.delegate = self
-		teamsOfOppositeColor = (standsScoutingVC?.matchPerformance?.match?.teamPerformances?.allObjects as! [TeamMatchPerformance]).filter({$0.allianceColor != standsScoutingVC?.matchPerformance?.allianceColor})
 		
 		popoverVC?.modalPresentationStyle = .Popover
 		let popover = popoverVC?.popoverPresentationController
@@ -205,12 +199,10 @@ class CourtyardViewController: UIViewController, UITableViewDataSource, UITableV
 	}
 	
 	//Table View
-	var teamsOfOppositeColor: [TeamMatchPerformance]?
-	
 	func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
 		switch tableView.tag {
 		case 7:
-			return teamsOfOppositeColor!.count
+			return 2
 		case 2:
 			return 2
 		default:
@@ -226,11 +218,13 @@ class CourtyardViewController: UIViewController, UITableViewDataSource, UITableV
 		let cell = tableView.dequeueReusableCellWithIdentifier("basic")
 		switch tableView.tag {
 		case 7:
-			
-			if standsScoutingVC?.matchPerformance?.allianceColor == 0 {
-				cell?.textLabel?.text = "Red Team \(teamsOfOppositeColor![indexPath.row].regionalPerformance!.valueForKey("team")!.valueForKey("teamNumber")!)"
-			} else {
-				cell?.textLabel?.text = "Blue Team \(teamsOfOppositeColor![indexPath.row].regionalPerformance!.valueForKey("team")!.valueForKey("teamNumber")!)"
+			switch indexPath.row {
+			case 0:
+				cell?.textLabel?.text = "Low Goal"
+			case 1:
+				cell?.textLabel?.text = "High Goal"
+			default:
+				cell?.textLabel?.text = ""
 			}
 			return cell!
 		case 2:
@@ -251,15 +245,8 @@ class CourtyardViewController: UIViewController, UITableViewDataSource, UITableV
 	func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
 		switch tableView.tag {
 		case 7:
-			//Get the team at the selected index path
-			let team = teamsOfOppositeColor![indexPath.row]
-			
-			switch defenseOrOffense! {
-			case .Defense:
-				selectedShot?.shot?.shootingTeam = team
-			case .Offense:
-				selectedShot?.shot?.blockingTeam = team
-			}
+			//Save if it was the high goal or not
+			selectedShot?.shot?.highGoal = indexPath.row
 		case 2:
 			if indexPath.row == 0 {
 				selectedShot?.shot?.blocked = true

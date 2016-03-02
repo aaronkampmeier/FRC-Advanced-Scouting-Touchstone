@@ -14,7 +14,6 @@ class PitScoutingController: UIViewController, UIImagePickerControllerDelegate, 
     //IBOutlets
     @IBOutlet weak var frontImage: UIImageView!
     @IBOutlet weak var sideImage: UIImageView!
-    @IBOutlet weak var updateTeamButton: UIButton!
     @IBOutlet weak var driverXpField: UITextField!
     @IBOutlet weak var validTeamSymbol: UIImageView!
     @IBOutlet weak var weightField: UITextField!
@@ -27,58 +26,56 @@ class PitScoutingController: UIViewController, UIImagePickerControllerDelegate, 
     
     let notificationCenter = NSNotificationCenter.defaultCenter()
     
-    private var acceptableTeam = false
-    
+	private var acceptableTeam: Bool {
+		get {
+			return selectedTeam != nil
+		}
+		set {
+			selectedTeam = dataManager.getTeams(teamNumberField.text!).first
+		}
+	}
+	
+	var selectedTeam: Team? //Make sure to check acceptableTeam first
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
-        updateTeamButton.layer.cornerRadius = 10
-        updateTeamButton.clipsToBounds = true
     }
+	
+	override func viewWillDisappear(animated: Bool) {
+		super.viewWillDisappear(animated)
+		
+		dataManager.commitChanges()
+	}
     
     @IBAction func desiredTeamEdited(sender: UITextField) {
         if let number = teamNumberField.text {
             if dataManager.getTeams(number).count >= 1 {
                 acceptableTeam = true
                 validTeamSymbol.image = UIImage(named: "CorrectIcon")
-            } else {
+			} else {
                 acceptableTeam = false
                 validTeamSymbol.image = UIImage(named: "IncorrectIcon")
             }
         }
+		
+		//Set all the fields to their correct values
+		weightField.text = String(selectedTeam?.robotWeight ?? "") ?? ""
+		driverXpField.text = String(selectedTeam?.driverExp ?? "") ?? ""
+		frontImage.image = UIImage(data: (selectedTeam?.frontImage) ?? NSData())
+		sideImage.image = UIImage(data: (selectedTeam?.sideImage) ?? NSData())
     }
-    
-    @IBAction func updateTeamPressed(sender: UIButton) {
-        
-        if acceptableTeam {
-            let driverXp = driverXpField.text
-            let weight = weightField.text
-            let teamNumber = teamNumberField.text
-            
-            let returnedTeams = dataManager.getTeams(teamNumber!)
-            
-            for team in returnedTeams {
-                
-                team.driverExp = Double(driverXp!)!
-                team.robotWeight = Double(weight!)!
-                team.frontImage = UIImageJPEGRepresentation(frontImage.image!, 1)
-                team.sideImage = UIImageJPEGRepresentation(sideImage.image!, 1)
-            }
-            
-            dataManager.save()
-            
-            //Present Confirmation Alert
-            presentOkAlert("Team Updated", message: "Weight: \(weight!) lbs. \n Driver XP: \(driverXp!) yrs. \n Added to Team \(teamNumber!)")
-        } else {
-            //Alert that the team does not exist
-            presentOkAlert("Team Doesn't Exist", message: "The team you entered does not exist in the local databse")
-        }
-    }
-    
-    func dismissAlert(alertAction: UIAlertAction) {
-        dismissViewControllerAnimated(true, completion: nil)
-    }
+	
+	@IBAction func weightEdited(sender: UITextField) {
+		if acceptableTeam {
+			selectedTeam!.robotWeight = Double(sender.text!)
+		}
+	}
+	
+	@IBAction func xpEdited(sender: UITextField) {
+		if acceptableTeam {
+			selectedTeam!.driverExp = Double(sender.text!)
+		}
+	}
     
     @IBAction func frontPhotoPressed(sender: UIButton) {
         getPhoto(.front)
@@ -139,6 +136,37 @@ class PitScoutingController: UIViewController, UIImagePickerControllerDelegate, 
     enum imagePOV {
         case front, side
     }
+	
+	//Functions for managing the defenses that a team can do
+	@IBAction func selectedDefense(sender: UIButton) {
+		if sender.layer.borderWidth == 0 {
+			//Hasn't been selected previously, set it selected
+			sender.layer.borderWidth = 5
+			sender.layer.borderColor = UIColor.greenColor().CGColor
+			sender.layer.cornerRadius = 10
+			
+//			sender.layer.shadowOpacity = 0.5
+//			sender.layer.shadowColor = UIColor.greenColor().CGColor
+//			sender.layer.shadowOffset = CGSizeMake(0, 0)
+//			sender.layer.shadowRadius = 10
+			
+			if acceptableTeam {
+				//First, get the defense for the button
+				let defense = dataManager.getDefense(withName: sender.titleForState(.Normal)!)
+				
+				dataManager.addDefense(defense!, toTeam: selectedTeam!)
+			}
+		} else {
+			//Was selected, set it not selected
+			sender.layer.borderWidth = 0
+			
+			if acceptableTeam {
+				let defense = dataManager.getDefense(withName: sender.titleForState(.Normal)!)
+				
+				dataManager.removeDefense(defense!, fromTeam: selectedTeam!)
+			}
+		}
+	}
     
     //Function for presenting a simple alert
     func presentOkAlert(title: String, message: String) {

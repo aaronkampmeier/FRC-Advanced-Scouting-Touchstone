@@ -46,7 +46,6 @@ class AdminConfigureDetailRegionalViewController: UIViewController {
 	func viewWillChange() {
 		//Chang the name and save it
 		selectedRegional?.name = nameField.text
-		TeamDataManager().save()
 	}
 
     /*

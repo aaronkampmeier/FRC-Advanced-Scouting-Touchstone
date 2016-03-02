@@ -10,8 +10,6 @@
 		1F12CF141C78FD370014200C /* CourtyardViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F12CF131C78FD370014200C /* CourtyardViewController.swift */; };
 		1F12CF181C7A6CD70014200C /* Stopwatch.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F12CF171C7A6CD70014200C /* Stopwatch.swift */; };
 		1F21DF121C66942200C55D0E /* SortVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F21DF111C66942200C55D0E /* SortVC.swift */; };
-		1F21DF141C66965100C55D0E /* StatTypePickerData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F21DF131C66965100C55D0E /* StatTypePickerData.swift */; };
-		1F21DF161C66A57F00C55D0E /* Popovers.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 1F21DF151C66A57F00C55D0E /* Popovers.storyboard */; };
 		1F45340E1C6FC3EA004EDDB9 /* GameStatsCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F45340D1C6FC3EA004EDDB9 /* GameStatsCollectionViewCell.swift */; };
 		1F4534101C6FF916004EDDB9 /* StandsScoutingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F45340F1C6FF916004EDDB9 /* StandsScoutingViewController.swift */; };
 		1F4534151C6FFC38004EDDB9 /* AutonomousViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F4534141C6FFC38004EDDB9 /* AutonomousViewController.swift */; };
@@ -61,7 +59,6 @@
 		1FB99DB31C741840004BC2C1 /* AdminConfigureDetailRegionalViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FB99DB21C741840004BC2C1 /* AdminConfigureDetailRegionalViewController.swift */; };
 		1FB99DB51C75272F004BC2C1 /* ArrayExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FB99DB41C75272F004BC2C1 /* ArrayExtension.swift */; };
 		1FCA7ADA1C630BAE004294D1 /* StatsVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FCA7AD91C630BAE004294D1 /* StatsVC.swift */; };
-		1FCA7ADD1C64152E004294D1 /* AddStatVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FCA7ADC1C64152E004294D1 /* AddStatVC.swift */; };
 		1FE2C1291C80136800CECBF1 /* ShotChartViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FE2C1281C80136800CECBF1 /* ShotChartViewController.swift */; };
 		1FE2C12B1C80DFBD00CECBF1 /* NeutralViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FE2C12A1C80DFBD00CECBF1 /* NeutralViewController.swift */; };
 		1FE2C12D1C81875A00CECBF1 /* ImageScalingFunctions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FE2C12C1C81875A00CECBF1 /* ImageScalingFunctions.swift */; };
@@ -95,8 +92,6 @@
 		1F12CF131C78FD370014200C /* CourtyardViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CourtyardViewController.swift; sourceTree = "<group>"; };
 		1F12CF171C7A6CD70014200C /* Stopwatch.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Stopwatch.swift; sourceTree = "<group>"; };
 		1F21DF111C66942200C55D0E /* SortVC.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SortVC.swift; sourceTree = "<group>"; };
-		1F21DF131C66965100C55D0E /* StatTypePickerData.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StatTypePickerData.swift; sourceTree = "<group>"; };
-		1F21DF151C66A57F00C55D0E /* Popovers.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = Popovers.storyboard; sourceTree = "<group>"; };
 		1F2422421C73DF08008A5AFC /* FRC_Advanced_Scouting_Telemetrics CD 7.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "FRC_Advanced_Scouting_Telemetrics CD 7.xcdatamodel"; sourceTree = "<group>"; };
 		1F45340D1C6FC3EA004EDDB9 /* GameStatsCollectionViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GameStatsCollectionViewCell.swift; sourceTree = "<group>"; };
 		1F45340F1C6FF916004EDDB9 /* StandsScoutingViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StandsScoutingViewController.swift; sourceTree = "<group>"; };
@@ -156,7 +151,6 @@
 		1FB99DB41C75272F004BC2C1 /* ArrayExtension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ArrayExtension.swift; sourceTree = "<group>"; };
 		1FCA7ACC1C61AB38004294D1 /* FRC_Advanced_Scouting_Telemetrics CD 4.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "FRC_Advanced_Scouting_Telemetrics CD 4.xcdatamodel"; sourceTree = "<group>"; };
 		1FCA7AD91C630BAE004294D1 /* StatsVC.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StatsVC.swift; sourceTree = "<group>"; };
-		1FCA7ADC1C64152E004294D1 /* AddStatVC.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AddStatVC.swift; sourceTree = "<group>"; };
 		1FE2C1281C80136800CECBF1 /* ShotChartViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ShotChartViewController.swift; sourceTree = "<group>"; };
 		1FE2C12A1C80DFBD00CECBF1 /* NeutralViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NeutralViewController.swift; sourceTree = "<group>"; };
 		1FE2C12C1C81875A00CECBF1 /* ImageScalingFunctions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ImageScalingFunctions.swift; sourceTree = "<group>"; };
@@ -205,7 +199,6 @@
 				1F4534131C6FFC13004EDDB9 /* Stands Scouting */,
 				1FCA7AD91C630BAE004294D1 /* StatsVC.swift */,
 				1F21DF111C66942200C55D0E /* SortVC.swift */,
-				1FCA7ADC1C64152E004294D1 /* AddStatVC.swift */,
 				1F4FEDAD1C4C5DEA00F4016D /* AddTeamVC.swift */,
 				1F4FEDA91C4AD95C00F4016D /* PitScoutingController.swift */,
 			);
@@ -218,8 +211,8 @@
 				1FF32A271C6E990C00CD028C /* AdminConfigureDetailMatchVC.swift */,
 				1FB99DB21C741840004BC2C1 /* AdminConfigureDetailRegionalViewController.swift */,
 				1FF32A221C6E7AAC00CD028C /* AdminConfigureDetailVC.swift */,
-				1F4FEDAB1C4B686000F4016D /* AdminConsoleController.swift */,
 				1FF32A201C6D194B00CD028C /* AdminConfigureVC.swift */,
+				1F4FEDAB1C4B686000F4016D /* AdminConsoleController.swift */,
 			);
 			name = "Admin Console";
 			sourceTree = "<group>";
@@ -263,13 +256,11 @@
 				1FE2C12C1C81875A00CECBF1 /* ImageScalingFunctions.swift */,
 				1F51D1C51C7FFBC000B4D6C5 /* GameStatsLayout.swift */,
 				1FB99DB41C75272F004BC2C1 /* ArrayExtension.swift */,
-				1F21DF131C66965100C55D0E /* StatTypePickerData.swift */,
 				1FCA7ADB1C6408B2004294D1 /* Core Data */,
 				1F78E7821C3B469300221927 /* AppDelegate.swift */,
 				1F21DF101C645D1F00C55D0E /* View Controllers */,
 				1FF1F1781C4604370051EE54 /* TeamDataManager.swift */,
 				1F78E7861C3B469300221927 /* Main.storyboard */,
-				1F21DF151C66A57F00C55D0E /* Popovers.storyboard */,
 				1F78E78C1C3B469300221927 /* Assets.xcassets */,
 				1F78E78E1C3B469300221927 /* LaunchScreen.storyboard */,
 				1F78E7911C3B469300221927 /* Info.plist */,
@@ -436,7 +427,6 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				1F21DF161C66A57F00C55D0E /* Popovers.storyboard in Resources */,
 				1F78E7901C3B469300221927 /* LaunchScreen.storyboard in Resources */,
 				1F78E78D1C3B469300221927 /* Assets.xcassets in Resources */,
 				1F78E7881C3B469300221927 /* Main.storyboard in Resources */,
@@ -476,7 +466,6 @@
 				1F4534411C7242B9004EDDB9 /* StatType.swift in Sources */,
 				1FF32A211C6D194B00CD028C /* AdminConfigureVC.swift in Sources */,
 				1F12CF141C78FD370014200C /* CourtyardViewController.swift in Sources */,
-				1F21DF141C66965100C55D0E /* StatTypePickerData.swift in Sources */,
 				1F4534511C7242B9004EDDB9 /* TeamMatchPerformance.swift in Sources */,
 				1F4534421C7242B9004EDDB9 /* Shot+CoreDataProperties.swift in Sources */,
 				1F45343A1C7242B9004EDDB9 /* DefenseCrossTime+CoreDataProperties.swift in Sources */,
@@ -498,7 +487,6 @@
 				1F4534461C7242B9004EDDB9 /* Regional+CoreDataProperties.swift in Sources */,
 				1F4534361C7242B9004EDDB9 /* Defense+CoreDataProperties.swift in Sources */,
 				1F51D1C61C7FFBC000B4D6C5 /* GameStatsLayout.swift in Sources */,
-				1FCA7ADD1C64152E004294D1 /* AddStatVC.swift in Sources */,
 				1F4534501C7242B9004EDDB9 /* TeamMatchPerformance+CoreDataProperties.swift in Sources */,
 				1F45344D1C7242B9004EDDB9 /* StatsBoard.swift in Sources */,
 				1F4534381C7242B9004EDDB9 /* TimeMarker+CoreDataProperties.swift in Sources */,

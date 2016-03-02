@@ -157,35 +157,44 @@ class AdminConfigureVC: UIViewController, UITableViewDelegate, UITableViewDataSo
     func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
         switch configureSetting! {
         case .Matches:
-            if regionalsAndMatches[indexPath.section].count != indexPath.row /*The row selected is not the last row*/{
-                selectedMatch = regionalsAndMatches[indexPath.section][indexPath.row]
-            } else /*The row selected is the last row with the plus button*/{
-                tableView.beginUpdates()
-                //Create a new match
-                do {
-                    var previousNumber = 0
-                    if let previousMatch = regionalsAndMatches[indexPath.section].last {
-                        previousNumber = Int((previousMatch.matchNumber?.intValue)!)
-                    }
-                    let newMatch = try dataManager.createNewMatch(previousNumber + 1, inRegional: regionals[indexPath.section])
-					regionalsAndMatches[indexPath.section].append(newMatch)
-                    //Insert new match's cell into table view
-                    tableView.insertRowsAtIndexPaths([NSIndexPath.init(forRow: previousNumber, inSection: indexPath.section)], withRowAnimation: .Middle)
-                } catch {
-                    //Present Alert saying unable to create new match
-                    let alert = UIAlertController(title: "Unable to Create New Match", message: "Contact the system administrator to have this diagnosed", preferredStyle: .Alert)
-                    alert.addAction(UIAlertAction(title: "OK", style: .Default, handler: nil))
-                    presentViewController(alert, animated: true, completion: nil)
-                }
-                
-                //Deselct the plus row
-                tableView.deselectRowAtIndexPath(indexPath, animated: true)
-                
-                //Select the new match row
-                //tableView.selectRowAtIndexPath(NSIndexPath(forRow: indexPath.row, inSection: 0), animated: true, scrollPosition: .Bottom)
-                
-                tableView.endUpdates()
-            }
+			//First check if the view can change
+			if (detailViewController as! AdminConfigureDetailMatchVC).allowsChange {
+				
+				if regionalsAndMatches[indexPath.section].count != indexPath.row /*The row selected is not the last row*/{
+					selectedMatch = regionalsAndMatches[indexPath.section][indexPath.row]
+				} else /*The row selected is the last row with the plus button*/{
+					tableView.beginUpdates()
+					//Create a new match
+					do {
+						var previousNumber = 0
+						if let previousMatch = regionalsAndMatches[indexPath.section].last {
+							previousNumber = Int((previousMatch.matchNumber?.intValue)!)
+						}
+						let newMatch = try dataManager.createNewMatch(previousNumber + 1, inRegional: regionals[indexPath.section])
+						regionalsAndMatches[indexPath.section].append(newMatch)
+						//Insert new match's cell into table view
+						tableView.insertRowsAtIndexPaths([NSIndexPath.init(forRow: previousNumber, inSection: indexPath.section)], withRowAnimation: .Middle)
+					} catch {
+						//Present Alert saying unable to create new match
+						let alert = UIAlertController(title: "Unable to Create New Match", message: "Contact the system administrator to have this diagnosed", preferredStyle: .Alert)
+						alert.addAction(UIAlertAction(title: "OK", style: .Default, handler: nil))
+						presentViewController(alert, animated: true, completion: nil)
+					}
+					
+					//Deselct the plus row
+					tableView.deselectRowAtIndexPath(indexPath, animated: true)
+					tableView.endUpdates()
+					
+					//Select the new match row
+					tableView.selectRowAtIndexPath(NSIndexPath(forRow: indexPath.row, inSection: 0), animated: true, scrollPosition: .Bottom)
+					self.tableView(tableView, didSelectRowAtIndexPath: indexPath)
+				}
+			} else {
+				tableView.deselectRowAtIndexPath(indexPath, animated: true)
+				let alert = UIAlertController(title: "Slow Down There, Hare", message: "Make sure you finish setting non-optional match settings (like defenses) before moving on.", preferredStyle: .Alert)
+				alert.addAction(UIAlertAction(title: "Alright, Mother", style: .Default, handler: nil))
+				presentViewController(alert, animated: true, completion: nil)
+			}
         case .Statistics:
             fallthrough
 		case .Regionals:
@@ -264,6 +273,10 @@ class AdminConfigureVC: UIViewController, UITableViewDelegate, UITableViewDataSo
         if editingStyle == .Delete {
 			switch configureSetting! {
 			case .Matches:
+				//Notify the detail view
+				(detailViewController as! AdminConfigureDetailMatchVC).removedMatch(regionalsAndMatches[indexPath.section][indexPath.row])
+				
+				//Remove it from the table, from the data array, and from the persistent store
 				dataManager.deleteMatch(regionalsAndMatches[indexPath.section][indexPath.row])
 				regionalsAndMatches[indexPath.section].removeAtIndex(indexPath.row)
 				tableView.beginUpdates()

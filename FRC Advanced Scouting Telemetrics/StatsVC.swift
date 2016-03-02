@@ -12,37 +12,8 @@ import UIKit
 class StatsVC: UIViewController {
     @IBOutlet weak var statsLabel: UILabel!
     let dataManager = TeamDataManager()
-    var team: Team?
     
-    override func viewDidLoad() {
-        loadStats()
-        NSNotificationCenter.defaultCenter().addObserverForName("New Stat", object: nil, queue: nil, usingBlock: {(notification) in self.loadStats()})
-    }
-    
-    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
-        super.prepareForSegue(segue, sender: sender)
-        
-        if segue.identifier == "addStatSegue" {
-            let destinationVC = segue.destinationViewController as! AddStatVC
-            
-            destinationVC.team = team!
-        }
-    }
-    
-    func loadStats() {
-        if let currentTeam = team {
-            let stats = dataManager.getStatsForTeam(currentTeam)
-            
-            var statsString = ""
-            
-            for stat in stats {
-                let statType = (stat.statType!).name
-                
-                statsString.appendContentsOf("\(statType!): \(stat.value!) \n")
-                statsLabel.numberOfLines += 1
-            }
-            
-            statsLabel.text = statsString
-        }
+	override func viewDidLoad() {
+		
     }
 }

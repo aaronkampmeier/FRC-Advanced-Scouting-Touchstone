@@ -13,7 +13,23 @@ import CoreData
 class TeamDataManager {
     
     static let managedContext = (UIApplication.sharedApplication().delegate as! AppDelegate).managedObjectContext
-    
+	
+	func save() {
+        do {
+            try TeamDataManager.managedContext.save()
+        } catch let error as NSError {
+            NSLog("Could not save: \(error), \(error.userInfo)")
+        }
+    }
+	
+	func commitChanges() {
+		save()
+	}
+	
+	func discardChanges() {
+		TeamDataManager.managedContext.rollback()
+	}
+	
     func saveTeamNumber(number: String) -> Team {
         //Get the entity for a Team and then create a new one
         let entity = NSEntityDescription.entityForName("Team", inManagedObjectContext: TeamDataManager.managedContext)
@@ -43,14 +59,36 @@ class TeamDataManager {
         save()
     }
     
-    func save() {
-        do {
-            try TeamDataManager.managedContext.save()
-        } catch let error as NSError {
-            NSLog("Could not save: \(error), \(error.userInfo)")
-        }
-    }
-    
+	func addDefense(defense: Defense, toTeam team: Team) {
+		let mutableDefensesSet = team.defensesAbleToCross?.mutableCopy() as! NSMutableSet
+		
+		//Check if it is already there
+		if mutableDefensesSet.containsObject(defense) {
+			//The defense is already there, return
+			return
+		}
+		
+		mutableDefensesSet.addObject(defense)
+		
+		//Set the data back in the team
+		team.defensesAbleToCross = (mutableDefensesSet.copy() as! NSSet)
+	}
+	
+	func removeDefense(defense: Defense, fromTeam team: Team) {
+		let mutableDefensesSet = team.defensesAbleToCross?.mutableCopy() as! NSMutableSet
+		
+		//Check if the defense is actually in the set
+		if !mutableDefensesSet.containsObject(defense) {
+			//The defense isn't even in the set, return
+			return
+		}
+		
+		mutableDefensesSet.removeObject(defense)
+		
+		//Set the data back into the team
+		team.defensesAbleToCross = (mutableDefensesSet.copy() as! NSSet)
+	}
+	
     func getRootDraftBoard() throws -> DraftBoard {
         //Create a fetch request for the draft board
         let fetchRequest = NSFetchRequest(entityName: "DraftBoard")
@@ -134,100 +172,100 @@ class TeamDataManager {
     }
     
     //FUNCTIONS FOR MANAGING TEAM STATISTICS
-    
-    func getStatsForTeam(team: Team) -> [Stat]{
-        return team.stats?.allObjects as! [Stat]
-    }
-    
-    func getStatsForTeam(teamNumber: String) throws -> [Stat] {
-        let team = getTeams(teamNumber)
-        
-        if team.count > 1 {
-            throw DataManagingError.DuplicateTeams
-        }
-        
-        return getStatsForTeam(team[0])
-    }
-    
-    func getStatTypes() throws -> [StatType] {
-        let statsBoard: StatsBoard?
-        do {
-            statsBoard = try getRootStatsBoard()
-        } catch {
-            throw DataManagingError.UnableToFetch
-        }
-        
-        if let board = statsBoard {
-            return board.types?.allObjects as! [StatType]
-        }
-    }
-    
-    func createNewStatType(name: String) throws -> StatType {
-        //Check if the Stat Type already exists
-        do {
-            for type in try getRootStatsBoard().types?.allObjects as! [StatType] {
-                if type.name == name {
-                    throw DataManagingError.TypeAlreadyExists
-                }
-            }
-        } catch {
-            NSLog("Unable to Check if type already existed")
-            throw DataManagingError.UnableToGetStatsBoard
-        }
-        
-        let newStatType = StatType(entity: NSEntityDescription.entityForName("StatType", inManagedObjectContext: TeamDataManager.managedContext)!, insertIntoManagedObjectContext: TeamDataManager.managedContext)
-        
-        //Set the new statType's name
-        newStatType.name = name
-        do {
-            newStatType.statsBoard = try getRootStatsBoard()
-        } catch let error as DataManagingError {
-            NSLog(error.errorDescription)
-            throw error
-        }
-        
-        save()
-        
-        return newStatType
-    }
-    
-    func addStatToTeam(team: Team, statType: StatType, statValue: Double) {
-        let newStat = Stat(entity: NSEntityDescription.entityForName("Stat", inManagedObjectContext: TeamDataManager.managedContext)!, insertIntoManagedObjectContext: TeamDataManager.managedContext)
-        
-        newStat.value = statValue
-        newStat.statType = statType
-        newStat.team = team
-        newStat.statsBoard = statType.statsBoard
-        
-        save()
-    }
-    
-    func getRootStatsBoard() throws -> StatsBoard {
-        //Create a fetch request for the draft board
-        let fetchRequest = NSFetchRequest(entityName: "StatsBoard")
-        
-        do {
-            let results = try TeamDataManager.managedContext.executeFetchRequest(fetchRequest)
-            
-            if results.count > 1 {
-                NSLog("Somehow multiple stats boards were created. Select the one for deletion")
-                throw DataManagingError.DuplicateStatsBoards
-            } else if results.count == 1 {
-                NSLog("One Statsboard")
-                return results[0] as! StatsBoard
-            } else if results.isEmpty {
-                NSLog("Creating new stats board")
-                //Create a new stats board and return it
-                let newStatsBoard = StatsBoard(entity: NSEntityDescription.entityForName("StatsBoard", inManagedObjectContext: TeamDataManager.managedContext)!, insertIntoManagedObjectContext: TeamDataManager.managedContext)
-                save()
-                return newStatsBoard
-            }
-        } catch let error as NSError {
-            NSLog("Could not fetch \(error), \(error.userInfo)")
-        }
-        throw DataManagingError.UnableToFetch
-    }
-    
+//    DEPRECATED
+//    func getStatsForTeam(team: Team) -> [Stat]{
+//        return team.stats?.allObjects as! [Stat]
+//    }
+//    
+//    func getStatsForTeam(teamNumber: String) throws -> [Stat] {
+//        let team = getTeams(teamNumber)
+//        
+//        if team.count > 1 {
+//            throw DataManagingError.DuplicateTeams
+//        }
+//        
+//        return getStatsForTeam(team[0])
+//    }
+//    
+//    func getStatTypes() throws -> [StatType] {
+//        let statsBoard: StatsBoard?
+//        do {
+//            statsBoard = try getRootStatsBoard()
+//        } catch {
+//            throw DataManagingError.UnableToFetch
+//        }
+//        
+//        if let board = statsBoard {
+//            return board.types?.allObjects as! [StatType]
+//        }
+//    }
+//    
+//    func createNewStatType(name: String) throws -> StatType {
+//        //Check if the Stat Type already exists
+//        do {
+//            for type in try getRootStatsBoard().types?.allObjects as! [StatType] {
+//                if type.name == name {
+//                    throw DataManagingError.TypeAlreadyExists
+//                }
+//            }
+//        } catch {
+//            NSLog("Unable to Check if type already existed")
+//            throw DataManagingError.UnableToGetStatsBoard
+//        }
+//        
+//        let newStatType = StatType(entity: NSEntityDescription.entityForName("StatType", inManagedObjectContext: TeamDataManager.managedContext)!, insertIntoManagedObjectContext: TeamDataManager.managedContext)
+//        
+//        //Set the new statType's name
+//        newStatType.name = name
+//        do {
+//            newStatType.statsBoard = try getRootStatsBoard()
+//        } catch let error as DataManagingError {
+//            NSLog(error.errorDescription)
+//            throw error
+//        }
+//        
+//        save()
+//        
+//        return newStatType
+//    }
+//    
+//    func addStatToTeam(team: Team, statType: StatType, statValue: Double) {
+//        let newStat = Stat(entity: NSEntityDescription.entityForName("Stat", inManagedObjectContext: TeamDataManager.managedContext)!, insertIntoManagedObjectContext: TeamDataManager.managedContext)
+//        
+//        newStat.value = statValue
+//        newStat.statType = statType
+//        newStat.team = team
+//        newStat.statsBoard = statType.statsBoard
+//        
+//        save()
+//    }
+//    
+//    func getRootStatsBoard() throws -> StatsBoard {
+//        //Create a fetch request for the draft board
+//        let fetchRequest = NSFetchRequest(entityName: "StatsBoard")
+//        
+//        do {
+//            let results = try TeamDataManager.managedContext.executeFetchRequest(fetchRequest)
+//            
+//            if results.count > 1 {
+//                NSLog("Somehow multiple stats boards were created. Select the one for deletion")
+//                throw DataManagingError.DuplicateStatsBoards
+//            } else if results.count == 1 {
+//                NSLog("One Statsboard")
+//                return results[0] as! StatsBoard
+//            } else if results.isEmpty {
+//                NSLog("Creating new stats board")
+//                //Create a new stats board and return it
+//                let newStatsBoard = StatsBoard(entity: NSEntityDescription.entityForName("StatsBoard", inManagedObjectContext: TeamDataManager.managedContext)!, insertIntoManagedObjectContext: TeamDataManager.managedContext)
+//                save()
+//                return newStatsBoard
+//            }
+//        } catch let error as NSError {
+//            NSLog("Could not fetch \(error), \(error.userInfo)")
+//        }
+//        throw DataManagingError.UnableToFetch
+//    }
+	
     //FUNCTIONS FOR REGIONALS
     func addRegional(regionalNumber num: Int, withName name: String) -> Regional {
         //Check to make sure that the regional doesn't exist
@@ -240,7 +278,6 @@ class TeamDataManager {
         
         newRegional.name = name
         newRegional.regionalNumber = num
-        save()
         return newRegional
     }
     
@@ -285,13 +322,11 @@ class TeamDataManager {
         
         newRegionalPerformance.regional = regional
         newRegionalPerformance.team = team
-        save()
         return newRegionalPerformance
     }
 	
 	func delete(Regional regional: Regional) {
 		TeamDataManager.managedContext.deleteObject(regional)
-		save()
 	}
     
     //FUNCTIONS FOR MATCHES
@@ -306,14 +341,11 @@ class TeamDataManager {
         newMatch.matchNumber = matchNumber
         
         newMatch.regional = regional
-        
-        save()
 		return newMatch
     }
     
     func deleteMatch(match: Match) {
         TeamDataManager.managedContext.deleteObject(match)
-        save()
     }
 	
 	//Newer and preferred method for setting teams in a match
@@ -368,12 +400,11 @@ class TeamDataManager {
 				}
 			}
 		}
-		save()
 	}
 	
 	func delete(matchPerformance: TeamMatchPerformance) {
 		//Get the regional performance before deletion
-		let regionalPerformance = matchPerformance.regionalPerformance as! TeamRegionalPerformance
+		let regionalPerformance = matchPerformance.regionalPerformance!
 		
 		//Delete the match performance
 		TeamDataManager.managedContext.deleteObject(matchPerformance)
@@ -383,8 +414,6 @@ class TeamDataManager {
 			//It was the last match performance, delete the regional performance now, too
 			TeamDataManager.managedContext.deleteObject(regionalPerformance)
 		}
-		
-		save()
 	}
 	
 	func createNewMatchPerformance(withTeam team: Team, inMatch match: Match) -> TeamMatchPerformance {
@@ -454,11 +483,9 @@ class TeamDataManager {
 		let defensesSet = NSSet(array: [a!, b!, c!, d!])
 		
 		match.defenses = defensesSet
-		
-		save()
 	}
 	
-	enum CategoryADefense {
+	enum CategoryADefense: Int {
 		case Portcullis
 		case ChevalDeFrise
 		
@@ -472,7 +499,7 @@ class TeamDataManager {
 		}
 	}
 	
-	enum CategoryBDefense {
+	enum CategoryBDefense: Int {
 		case Moat
 		case Ramparts
 		
@@ -486,7 +513,7 @@ class TeamDataManager {
 		}
 	}
 	
-	enum CategoryCDefense {
+	enum CategoryCDefense: Int {
 		case Drawbridge
 		case SallyPort
 		
@@ -500,7 +527,7 @@ class TeamDataManager {
 		}
 	}
 	
-	enum CategoryDDefense {
+	enum CategoryDDefense: Int {
 		case RockWall
 		case RoughTerrain
 		
@@ -604,8 +631,6 @@ class TeamDataManager {
 		} else {
 			matchPerformance.match?.redDefensesBreached = NSSet(array: allianceBreachedDefenses)
 		}
-		
-		save()
 	}
 	
 	func setDidNotBreachDefense(defense: Defense, inMatchPerformance matchPerformance: TeamMatchPerformance) {
@@ -632,8 +657,6 @@ class TeamDataManager {
 		} else {
 			matchPerformance.match?.redDefensesBreached = NSSet(array: allianceBreachedDefenses)
 		}
-		
-		save()
 	}
 	
 	func getLowBar() -> Defense {
@@ -678,8 +701,6 @@ class TeamDataManager {
 		newMarker.event = event.rawValue
 		newMarker.time = time
 		newMarker.teamMatchPerformance = matchPerformance
-		
-		save()
 	}
 	
 	//METHODS FOR DEFENSE CROSS TIMING
@@ -689,8 +710,6 @@ class TeamDataManager {
 		newCrossTime.time = time
 		newCrossTime.teamMatchPerformance = matchPerformance
 		newCrossTime.defense = defense
-		
-		save()
 	}
 	
 	enum TimeMarkerEvent: Int {
