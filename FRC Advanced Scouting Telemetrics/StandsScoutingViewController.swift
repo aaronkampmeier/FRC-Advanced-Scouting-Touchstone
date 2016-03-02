@@ -38,6 +38,9 @@ class StandsScoutingViewController: UIViewController {
 			NSTimer.scheduledTimerWithTimeInterval(0.1, target: self, selector: "updateTimeLabel:", userInfo: nil, repeats: true)
 			stopwatch.start()
 			
+			//Reset previous data
+			dataManager.discardChanges()
+			
 			//Update the button
 			timerButton.setTitle("Stop", forState: .Normal)
 			timerButton.backgroundColor = UIColor.redColor()
@@ -50,7 +53,7 @@ class StandsScoutingViewController: UIViewController {
 			segmentedControl.enabled = true
 			
 			//Go to autonomous
-			cycleFromViewController(currentVC!, toViewController: initialChild!)
+			cycleFromViewController(currentVC!, toViewController: autonomousVC!)
 		} else {
 			stopwatch.stop()
 			
@@ -77,7 +80,7 @@ class StandsScoutingViewController: UIViewController {
 	var currentVC: UIViewController?
 	var initialChild: UIViewController?
 	var autonomousVC: AutonomousViewController?
-	var defenseVC: CourtyardViewController?
+	var defenseVC: UIViewController?
 	var offenseVC: CourtyardViewController?
 	var neutralVC: NeutralViewController?
 
@@ -89,12 +92,11 @@ class StandsScoutingViewController: UIViewController {
 		
 		//Get all the view controllers
 		autonomousVC = storyboard?.instantiateViewControllerWithIdentifier("standsAutonomous") as? AutonomousViewController
-		defenseVC = storyboard?.instantiateViewControllerWithIdentifier("standsCourtyard") as? CourtyardViewController
+		defenseVC = storyboard?.instantiateViewControllerWithIdentifier("standsDefense")
 		offenseVC = storyboard?.instantiateViewControllerWithIdentifier("standsCourtyard") as? CourtyardViewController
 		neutralVC = storyboard?.instantiateViewControllerWithIdentifier("standsNeutral") as? NeutralViewController
 		
-		//Set the type for each courtyard view controller
-		defenseVC?.defenseOrOffense = .Defense
+		//Set the type for the courtyard view controller
 		offenseVC?.defenseOrOffense = .Offense
 		
 		//Make it look nice
@@ -148,7 +150,9 @@ class StandsScoutingViewController: UIViewController {
 	
 	func close(andSave shouldSave: Bool) {
 		if shouldSave {
-			dataManager.save()
+			dataManager.commitChanges()
+		} else {
+			dataManager.discardChanges()
 		}
 		
 		dismissViewControllerAnimated(true, completion: nil)

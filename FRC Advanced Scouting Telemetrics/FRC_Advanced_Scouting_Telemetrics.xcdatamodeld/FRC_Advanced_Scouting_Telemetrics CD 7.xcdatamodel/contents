@@ -42,9 +42,9 @@
     </entity>
     <entity name="Shot" representedClassName=".Shot" syncable="YES">
         <attribute name="blocked" attributeType="Boolean" syncable="YES"/>
+        <attribute name="highGoal" attributeType="Boolean" syncable="YES"/>
         <attribute name="xLocation" optional="YES" attributeType="Double" defaultValueString="0.0" syncable="YES"/>
         <attribute name="yLocation" optional="YES" attributeType="Double" defaultValueString="0.0" syncable="YES"/>
-        <relationship name="blockingTeam" maxCount="1" deletionRule="Nullify" destinationEntity="TeamMatchPerformance" inverseName="defenseBlocks" inverseEntity="TeamMatchPerformance" syncable="YES"/>
         <relationship name="shootingTeam" maxCount="1" deletionRule="Nullify" destinationEntity="TeamMatchPerformance" inverseName="offenseShots" inverseEntity="TeamMatchPerformance" syncable="YES"/>
     </entity>
     <entity name="Stat" representedClassName=".Stat" syncable="YES">
@@ -79,7 +79,6 @@
         <attribute name="didChallengeTower" optional="YES" attributeType="Boolean" syncable="YES"/>
         <attribute name="didScaleTower" optional="YES" attributeType="Boolean" syncable="YES"/>
         <relationship name="autonomousCycles" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="AutonomousCycle" inverseName="matchPerformance" inverseEntity="AutonomousCycle" syncable="YES"/>
-        <relationship name="defenseBlocks" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="Shot" inverseName="blockingTeam" inverseEntity="Shot" syncable="YES"/>
         <relationship name="defenseCrossTimes" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="DefenseCrossTime" inverseName="teamMatchPerformance" inverseEntity="DefenseCrossTime" syncable="YES"/>
         <relationship name="match" maxCount="1" deletionRule="Nullify" destinationEntity="Match" inverseName="teamPerformances" inverseEntity="Match" syncable="YES"/>
         <relationship name="offenseShots" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="Shot" inverseName="shootingTeam" inverseEntity="Shot" syncable="YES"/>
@@ -108,7 +107,7 @@
         <element name="StatsBoard" positionX="-639" positionY="54" width="128" height="75"/>
         <element name="StatType" positionX="-522" positionY="161" width="128" height="73"/>
         <element name="Team" positionX="-81" positionY="-72" width="128" height="180"/>
-        <element name="TeamMatchPerformance" positionX="-99" positionY="267" width="128" height="208"/>
+        <element name="TeamMatchPerformance" positionX="-99" positionY="267" width="128" height="193"/>
         <element name="TeamRegionalPerformance" positionX="-92" positionY="144" width="128" height="90"/>
         <element name="TimeMarker" positionX="180" positionY="521" width="126" height="88"/>
     </elements>

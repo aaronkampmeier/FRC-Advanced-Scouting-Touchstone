@@ -25,7 +25,28 @@ class AdminConfigureDetailMatchVC: UIViewController, UITableViewDelegate, UITabl
     let datePicker = UIDatePicker()
     let dataManager = TeamDataManager()
     var selectedMatch: Match?
-    
+	
+	var allowsChange: Bool {
+		get {
+			if let override = nextAllowsChangeOverride {
+				nextAllowsChangeOverride = nil
+				return override
+			} else {
+				//Check to see if there are defenses selected, if there aren't then don't allow the view to change
+				if (catADefensesTable.indexPathForSelectedRow != nil && catBDefensesTable.indexPathForSelectedRow != nil && catCDefensesTable.indexPathForSelectedRow != nil && catDDefensesTable.indexPathForSelectedRow != nil) || view.hidden {
+					return true
+				} else {
+					return false
+				}
+			}
+		}
+		
+		set {
+			nextAllowsChangeOverride = newValue
+		}
+	}
+	var nextAllowsChangeOverride: Bool? = nil
+	
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -56,7 +77,17 @@ class AdminConfigureDetailMatchVC: UIViewController, UITableViewDelegate, UITabl
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
     }
-    
+	
+	func removedCurrentMatch() {
+		view.hidden = true
+	}
+	
+	func removedMatch(match: Match) {
+		if match == selectedMatch {
+			removedCurrentMatch()
+		}
+	}
+	
     func didSelectMatch(match: Match) {
         viewWillChange()
         view.hidden = false
@@ -104,7 +135,33 @@ class AdminConfigureDetailMatchVC: UIViewController, UITableViewDelegate, UITabl
 		}
 		
 		//Select the appropriate rows in the table views
-		//--TODO--
+		//First get the defenses being used
+		let defenses = match.defenses?.allObjects as! [Defense]
+		for defense in defenses {
+			var first: Bool?
+			var defenseTable: UITableView?
+			switch defense.category! {
+			case "A":
+				first = TeamDataManager.CategoryADefense.Portcullis.string == defense.defenseName
+				defenseTable = catADefensesTable
+			case "B":
+				first = TeamDataManager.CategoryBDefense.Moat.string == defense.defenseName
+				defenseTable = catBDefensesTable
+			case "C":
+				first = TeamDataManager.CategoryCDefense.Drawbridge.string == defense.defenseName
+				defenseTable = catCDefensesTable
+			case "D":
+				first = TeamDataManager.CategoryDDefense.RockWall.string == defense.defenseName
+				defenseTable = catDDefensesTable
+			default:
+				break
+			}
+			
+			//Now select the row and notify the delegate
+			let indexPath = NSIndexPath.init(forRow: first!.hashValue, inSection: 0)
+			defenseTable!.selectRowAtIndexPath(indexPath, animated: false, scrollPosition: .None)
+			defenseTable?.delegate?.tableView!(defenseTable!, didSelectRowAtIndexPath: indexPath)
+		}
     }
     
     @IBAction func textFieldValueChanged(sender: UITextField) {
@@ -130,11 +187,11 @@ class AdminConfigureDetailMatchVC: UIViewController, UITableViewDelegate, UITabl
             incorrectImageView.frame = CGRect(x: 0, y: 0, width: 25, height: 25)
             sender.rightView = incorrectImageView
         }
-    }
-    
+	}
+	
     func viewWillChange() {
-        //Save the match's new data
-        if !view.hidden {
+        //Save the match's new data only if the view was shown and if the user was allowed to leave the scene
+        if !view.hidden && allowsChange {
             //First, retrieve all the teams using the values in the text fields
             var blue1Team: Team? {
                 let teamArray = self.dataManager.getTeams(self.blue1Field.text!)

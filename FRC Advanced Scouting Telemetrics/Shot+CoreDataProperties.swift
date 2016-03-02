@@ -17,7 +17,7 @@ extension Shot {
     @NSManaged var blocked: NSNumber?
     @NSManaged var xLocation: NSNumber?
     @NSManaged var yLocation: NSNumber?
+	@NSManaged var highGoal: NSNumber?
     @NSManaged var shootingTeam: NSManagedObject?
-    @NSManaged var blockingTeam: NSManagedObject?
 
 }

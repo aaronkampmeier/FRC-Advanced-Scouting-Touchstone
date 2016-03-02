@@ -27,7 +27,7 @@ class NeutralViewController: UIViewController {
         // Do any additional setup after loading the view.
 		standsScoutingController = parentViewController as! StandsScoutingViewController
 		//Get the defenses
-		defenses = standsScoutingController.matchPerformance?.match?.defenses?.allObjects as? [Defense]
+		defenses = standsScoutingController.defenses
 		
 		//Set up all the buttons
 		lowBarButton.imageView?.contentMode = .ScaleAspectFit
@@ -73,6 +73,13 @@ class NeutralViewController: UIViewController {
 		}
 		
 		dataManager.addDefenseCrossTime(forMatchPerformance: standsScoutingController.matchPerformance!, inDefense: defense, withTime: stopwatch.elapsedTime)
+		
+		//Switch to the offense courtyard
+		standsScoutingController.segmentedControl.selectedSegmentIndex = 1
+		standsScoutingController.selectedNewPart(standsScoutingController.segmentedControl)
+		
+		//Reset the time label
+		elapsedTimeLabel.text = "Hold Down on a defense"
 	}
 	
 	func updateTimeLabel(sender: NSTimer) {

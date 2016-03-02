@@ -28,6 +28,7 @@ class TeamListController: UIViewController, UITableViewDataSource, UITableViewDe
 	var currentChildVC: UIViewController?
 	var gameStatsController: GameStatsController?
 	var shotChartController: ShotChartViewController?
+	var statsViewController: StatsVC?
     
 	var teams: [Team] {
 		get {
@@ -96,7 +97,8 @@ class TeamListController: UIViewController, UITableViewDataSource, UITableViewDe
 			//Set to nil, because the selected team might not be in the new regional
 			selectedTeam = nil
 			
-			segmentControl.enabled = true
+			segmentControl.setEnabled(true, forSegmentAtIndex: 0)
+			segmentControl.setEnabled(true, forSegmentAtIndex: 1)
 		} else {
 			currentRegionalTeams = teams
 			regionalSelectionButton.setTitle("All Teams", forState: .Normal)
@@ -104,7 +106,8 @@ class TeamListController: UIViewController, UITableViewDataSource, UITableViewDe
 			let team = selectedTeam
 			selectedTeam = team
 			
-			segmentControl.enabled = false
+			segmentControl.setEnabled(false, forSegmentAtIndex: 0)
+			segmentControl.setEnabled(false, forSegmentAtIndex: 1)
 		}
 		}
 	}
@@ -166,9 +169,10 @@ class TeamListController: UIViewController, UITableViewDataSource, UITableViewDe
         //Set that the current team list is displaying the default order
         isDefault = true
 		
-		//Get the two child view controllers
-		gameStatsController = storyboard?.instantiateViewControllerWithIdentifier("gameStatsCollection") as! GameStatsController
-		shotChartController = storyboard?.instantiateViewControllerWithIdentifier("shotChart") as! ShotChartViewController
+		//Get the child view controllers
+		gameStatsController = (storyboard?.instantiateViewControllerWithIdentifier("gameStatsCollection") as! GameStatsController)
+		shotChartController = (storyboard?.instantiateViewControllerWithIdentifier("shotChart") as! ShotChartViewController)
+		statsViewController = (storyboard?.instantiateViewControllerWithIdentifier("statsView") as! StatsVC)
     }
 	
 	override func viewWillAppear(animated: Bool) {
@@ -197,29 +201,10 @@ class TeamListController: UIViewController, UITableViewDataSource, UITableViewDe
     
     func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
 		return currentTeamsToDisplay.count
-		
-        if isSearching {
-            return searchResultTeams.count
-        } else if isSorted {
-            return sortedTeams.count
-        } else {
-            return teams.count
-        }
     }
     
     /*<---- CELL FOR ROW AT INDEX PATH---->*/
     func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
-        var teamDataArray = [Team]()
-        
-        //If there are search results, then display those
-        if isSearching {
-            teamDataArray = searchResultTeams
-        } else if isSorted {
-            teamDataArray = sortedTeams
-        } else {
-            teamDataArray = teams
-        }
-        
         //Testing with new rankedCell
         /*
         let cell = teamList.dequeueReusableCellWithIdentifier("rankedCell")
@@ -257,17 +242,6 @@ class TeamListController: UIViewController, UITableViewDataSource, UITableViewDe
     }
     
     func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
-        
-        //Check if we are searching or not
-        var teamDataArray = [Team]()
-        if isSearching {
-            teamDataArray = searchResultTeams
-        } else if isSorted {
-            teamDataArray = sortedTeams
-        } else {
-            teamDataArray = teams
-        }
-        
         selectedTeam = currentTeamsToDisplay[indexPath.row]
         
         teamNumberLabel.text = selectedTeam!.teamNumber
@@ -302,22 +276,6 @@ class TeamListController: UIViewController, UITableViewDataSource, UITableViewDe
 		}
 		
 		return header
-		
-		//Deprecated
-        if isSorted {
-            if let name = sortTypeName {
-                
-                header?.textLabel?.text = "Sorted Teams by: \(name)"
-            } else {
-                header?.textLabel?.text = "Sorted Teams"
-            }
-        } else if isDefault! {
-            header?.textLabel?.text = "All Teams"
-        } else {
-            
-        }
-        
-        return header
     }
     
     //Two functions to allow deletion of Teams from the Table View
@@ -484,11 +442,7 @@ class TeamListController: UIViewController, UITableViewDataSource, UITableViewDe
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
         super.prepareForSegue(segue, sender: sender)
         
-        if segue.identifier == "statsSegue" {
-            let destinationVC = segue.destinationViewController as! StatsVC
-            
-            destinationVC.team = selectedTeam!
-		} else if segue.identifier == "pickARegional" {
+        if segue.identifier == "pickARegional" {
 			(segue.destinationViewController as! RegionalPickerViewController).teamListController = self
 		} else if segue.identifier == "standsScouting" {
 			let destinationVC = segue.destinationViewController as! StandsScoutingViewController
@@ -616,6 +570,8 @@ class TeamListController: UIViewController, UITableViewDataSource, UITableViewDe
 				}
 				presentViewController(alert, animated: true, completion: nil)
 			}
+		case 2:
+			cycleFromViewController(currentChildVC!, toViewController: statsViewController!)
 		default:
 			break
 		}

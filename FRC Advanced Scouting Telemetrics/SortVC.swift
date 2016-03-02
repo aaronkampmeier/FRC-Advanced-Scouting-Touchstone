@@ -9,7 +9,7 @@
 import Foundation
 import UIKit
 
-class SortVC: UIViewController, UIPickerViewDelegate {
+class SortVC: UIViewController, UIPickerViewDelegate, UIPickerViewDataSource {
     @IBOutlet weak var sortTypePicker: UIPickerView!
     @IBOutlet weak var segmentControl: UISegmentedControl!
     
@@ -23,17 +23,11 @@ class SortVC: UIViewController, UIPickerViewDelegate {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
-        sortTypePicker.dataSource = StatTypePickerData()
+
+		sortTypePicker.dataSource = self
         sortTypePicker.delegate = self
         
         segmentControl.enabled = false
-        
-        do {
-            statTypes = try dataManager.getStatTypes()
-        } catch {
-            NSLog("Could not get stat types: \(error)")
-        }
     }
     
     override func viewWillAppear(animated: Bool) {
