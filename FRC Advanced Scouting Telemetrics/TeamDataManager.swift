@@ -94,10 +94,21 @@ class TeamDataManager {
         let fetchRequest = NSFetchRequest(entityName: "DraftBoard")
         
         do {
-            let results = try TeamDataManager.managedContext.executeFetchRequest(fetchRequest)
+            let results = try TeamDataManager.managedContext.executeFetchRequest(fetchRequest) as! [DraftBoard]
             
             if results.count > 1 {
-                NSLog("Somehow multiple draft boards were created. Select the one for deletion")
+                NSLog("Somehow multiple draft boards were created. This could be the result of a sync error.")
+				//Attempt to merge them
+				var board1Mutable = results[0].teams?.array as! [Team]
+				let board2Mutable = results[1].teams?.array as! [Team]
+				for team in board2Mutable {
+					board1Mutable.append(team)
+				}
+				TeamDataManager.managedContext.deleteObject(results[1])
+				results[0].teams = NSOrderedSet(array: board1Mutable)
+				return try getRootDraftBoard()
+				
+				//results.reduce(<#T##initial: T##T#>, combine: <#T##(T, DraftBoard) throws -> T#>)
             } else if results.count == 1 {
                 NSLog("One Draftboard")
                 return results[0] as! DraftBoard

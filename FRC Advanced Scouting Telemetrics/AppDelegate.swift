@@ -128,6 +128,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         var options = [
             NSMigratePersistentStoresAutomaticallyOption: true,
             NSInferMappingModelAutomaticallyOption: true,
+            NSSQLitePragmasOption: ["journal_mode":"DELETE"],
         ]
         
         // The persistent store coordinator for the application. This implementation creates and returns a coordinator, having added the store for the application to it. This property is optional since there are legitimate error conditions that could cause the creation of the store to fail.
@@ -161,6 +162,10 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         managedObjectContext.persistentStoreCoordinator = coordinator
         return managedObjectContext
     }()
+	
+	lazy var coreDataURL: NSURL = {
+		return self.applicationDocumentsDirectory.URLByAppendingPathComponent("SingleViewCoreData.sqlite")
+	}()
 
     // MARK: - Core Data Saving support
 

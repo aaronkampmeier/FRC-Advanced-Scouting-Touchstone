@@ -20,7 +20,6 @@ class TeamListController: UIViewController, UITableViewDataSource, UITableViewDe
     @IBOutlet weak var weightLabel: UILabel!
     @IBOutlet weak var editTeamsButton: UIBarButtonItem!
     @IBOutlet weak var teamListToolbar: UIToolbar!
-    @IBOutlet weak var statsButton: UIBarButtonItem!
 	@IBOutlet weak var standsScoutingButton: UIBarButtonItem!
     
     let teamManager = TeamDataManager()
@@ -162,8 +161,7 @@ class TeamListController: UIViewController, UITableViewDataSource, UITableViewDe
         teamList.contentInset = adjustsForToolbarInsets!
         teamList.scrollIndicatorInsets = adjustsForToolbarInsets!
         
-        //Set the stats button to not selectable since there is no team selected
-        statsButton.enabled = false
+        //Set the stands scouting button to not selectable since there is no team selected
 		standsScoutingButton.enabled = false
         
         //Set that the current team list is displaying the default order
@@ -261,9 +259,6 @@ class TeamListController: UIViewController, UITableViewDataSource, UITableViewDe
         } else {
             sideImageView.image = nil
         }
-        
-        //Set the stats button to be selectable
-        statsButton.enabled = true
     }
     
     func tableView(tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
