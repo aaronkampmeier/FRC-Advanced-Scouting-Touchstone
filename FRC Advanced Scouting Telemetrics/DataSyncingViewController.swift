@@ -17,11 +17,14 @@ class DataSyncingViewController: UIViewController {
 	@IBOutlet weak var searchForDevices: UIBarButtonItem!
 	
 	var syncingManager: SyncingManager?
+	let dataManager = TeamDataManager()
 
     override func viewDidLoad() {
         super.viewDidLoad()
 
         // Do any additional setup after loading the view.
+		//Commit any unsaved changes
+		dataManager.commitChanges()
     }
 
     override func didReceiveMemoryWarning() {

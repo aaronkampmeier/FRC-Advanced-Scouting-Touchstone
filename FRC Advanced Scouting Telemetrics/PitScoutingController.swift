@@ -124,6 +124,9 @@ class PitScoutingController: UIViewController, UIImagePickerControllerDelegate, 
         
         switch frontOrSide {
         case .front:
+			if acceptableTeam {
+				//selectedTeam?.frontImage =
+			}
             frontImage.image = image
         case .side:
             sideImage.image = image

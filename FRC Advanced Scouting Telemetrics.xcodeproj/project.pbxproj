@@ -50,6 +50,7 @@
 		1F4FEDAE1C4C5DEA00F4016D /* AddTeamVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F4FEDAD1C4C5DEA00F4016D /* AddTeamVC.swift */; };
 		1F51D1C21C7FB30F00B4D6C5 /* GameStatsController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F51D1C11C7FB30F00B4D6C5 /* GameStatsController.swift */; };
 		1F51D1C61C7FFBC000B4D6C5 /* GameStatsLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F51D1C51C7FFBC000B4D6C5 /* GameStatsLayout.swift */; };
+		1F75A7A91C8FD3F800B7EB44 /* SyncingConflictViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F75A7A81C8FD3F800B7EB44 /* SyncingConflictViewController.swift */; };
 		1F78E7831C3B469300221927 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F78E7821C3B469300221927 /* AppDelegate.swift */; };
 		1F78E7851C3B469300221927 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F78E7841C3B469300221927 /* ViewController.swift */; };
 		1F78E7881C3B469300221927 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 1F78E7861C3B469300221927 /* Main.storyboard */; };
@@ -136,6 +137,7 @@
 		1F4FEDAD1C4C5DEA00F4016D /* AddTeamVC.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AddTeamVC.swift; sourceTree = "<group>"; };
 		1F51D1C11C7FB30F00B4D6C5 /* GameStatsController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GameStatsController.swift; sourceTree = "<group>"; };
 		1F51D1C51C7FFBC000B4D6C5 /* GameStatsLayout.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GameStatsLayout.swift; sourceTree = "<group>"; };
+		1F75A7A81C8FD3F800B7EB44 /* SyncingConflictViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SyncingConflictViewController.swift; sourceTree = "<group>"; };
 		1F78E77F1C3B469300221927 /* FRC Advanced Scouting Touchstone.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "FRC Advanced Scouting Touchstone.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		1F78E7821C3B469300221927 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		1F78E7841C3B469300221927 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
@@ -193,6 +195,7 @@
 		1F21DF101C645D1F00C55D0E /* View Controllers */ = {
 			isa = PBXGroup;
 			children = (
+				1F75A7A81C8FD3F800B7EB44 /* SyncingConflictViewController.swift */,
 				1F1381D41C8931FD00F27C5E /* DataSyncingViewController.swift */,
 				1F4534551C7276DE004EDDB9 /* RegionalPickerViewController.swift */,
 				1F30CFC91C7E510100A4EFCA /* Admin Console */,
@@ -476,6 +479,7 @@
 				1F4534421C7242B9004EDDB9 /* Shot+CoreDataProperties.swift in Sources */,
 				1F45343A1C7242B9004EDDB9 /* DefenseCrossTime+CoreDataProperties.swift in Sources */,
 				1F45343C1C7242B9004EDDB9 /* Match+CoreDataProperties.swift in Sources */,
+				1F75A7A91C8FD3F800B7EB44 /* SyncingConflictViewController.swift in Sources */,
 				1F51D1C21C7FB30F00B4D6C5 /* GameStatsController.swift in Sources */,
 				1FF1F1791C4604370051EE54 /* TeamDataManager.swift in Sources */,
 				1F45343E1C7242B9004EDDB9 /* DraftBoard+CoreDataProperties.swift in Sources */,

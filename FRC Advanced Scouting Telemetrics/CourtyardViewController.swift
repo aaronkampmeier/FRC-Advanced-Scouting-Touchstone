@@ -176,12 +176,15 @@ class CourtyardViewController: UIViewController, UITableViewDataSource, UITableV
 			var markerType: TeamDataManager.TimeMarkerEvent
 			switch defenseOrOffense! {
 			case .Defense:
-				if selectedShot!.shot?.blocked == true {
-					selectedShot?.pointView.backgroundColor = UIColor.greenColor()
-				} else {
-					selectedShot?.pointView.backgroundColor = UIColor.redColor()
-				}
-				markerType = TeamDataManager.TimeMarkerEvent.DefenseAttemptedBlock
+				markerType = TeamDataManager.TimeMarkerEvent.OffenseAttemptedShot
+				break
+				//Deprecated
+//				if selectedShot!.shot?.blocked == true {
+//					selectedShot?.pointView.backgroundColor = UIColor.greenColor()
+//				} else {
+//					selectedShot?.pointView.backgroundColor = UIColor.redColor()
+//				}
+//				markerType = TeamDataManager.TimeMarkerEvent.DefenseAttemptedBlock
 			case .Offense:
 				if selectedShot!.shot?.blocked == true {
 					selectedShot?.pointView.backgroundColor = UIColor.redColor()

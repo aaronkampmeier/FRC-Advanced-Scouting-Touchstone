@@ -106,6 +106,7 @@ class TeamDataManager {
 				}
 				TeamDataManager.managedContext.deleteObject(results[1])
 				results[0].teams = NSOrderedSet(array: board1Mutable)
+				commitChanges()
 				return try getRootDraftBoard()
 				
 				//results.reduce(<#T##initial: T##T#>, combine: <#T##(T, DraftBoard) throws -> T#>)
@@ -725,7 +726,6 @@ class TeamDataManager {
 	
 	enum TimeMarkerEvent: Int {
 		case BallPickedUp
-		case DefenseAttemptedBlock
 		case OffenseAttemptedShot
 		case MovedToOffenseCourtyard
 		case MovedToDefenseCourtyard

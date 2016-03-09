@@ -139,13 +139,24 @@ extension SyncingManager: MCSessionDelegate {
 			]
 			
 			//Prepare for the merge by setting up the persistent stores in their own coordinators
-			let foreignPersistentStoreCoordinator = NSPersistentStoreCoordinator(managedObjectModel: model)//(UIApplication.sharedApplication().delegate as! AppDelegate).persistentStoreCoordinator
+			let foreignPersistentStoreCoordinator = NSPersistentStoreCoordinator(managedObjectModel: model)
 			let foreignPersistentStore = try foreignPersistentStoreCoordinator.addPersistentStoreWithType(NSSQLiteStoreType, configuration: nil, URL: sourceURL, options: options)
 			let foreignObjectContext = NSManagedObjectContext(concurrencyType: .MainQueueConcurrencyType)
 			foreignObjectContext.persistentStoreCoordinator = foreignPersistentStoreCoordinator
-			let localPersistentStoreCoordinator = (UIApplication.sharedApplication().delegate as! AppDelegate).persistentStoreCoordinator
-			let localPersistentStore = localPersistentStoreCoordinator.persistentStores.first!
-			let localManagedObjectContext = (UIApplication.sharedApplication().delegate as! AppDelegate).managedObjectContext
+//			let localPersistentStoreCoordinator = (UIApplication.sharedApplication().delegate as! AppDelegate).persistentStoreCoordinator
+//			let localPersistentStore = localPersistentStoreCoordinator.persistentStores.first!
+//			let localManagedObjectContext = (UIApplication.sharedApplication().delegate as! AppDelegate).managedObjectContext
+			
+			//Remove the defenses from the foreign database
+			do {
+				let defenses = try foreignObjectContext.executeFetchRequest(NSFetchRequest(entityName: "Defense")) as! [Defense]
+				for defense in defenses {
+					foreignObjectContext.deleteObject(defense)
+				}
+				try foreignObjectContext.save()
+			} catch {
+				NSLog("Unable to clear defenses from foreign database. Remedy this manually.")
+			}
 			
 			do {
 				try foreignPersistentStoreCoordinator.migratePersistentStore(foreignPersistentStore, toURL: destinationURL, options: options, withType: NSSQLiteStoreType)
@@ -163,6 +174,224 @@ extension SyncingManager: MCSessionDelegate {
 		} catch {
 			NSLog("Unable to delete the foreign database")
 		}
+		
+		//Now, fix all the duplicate entities
+		let dataManager = TeamDataManager()
+		//Clear the managed object context
+		TeamDataManager.managedContext.reset()
+		//Draft board will fix itself on next run
+		//Fix the defenses
+		/*do {
+			let defenseNames = ["Portcullis", "Cheval de Frise", "Moat", "Ramparts", "Drawbridge", "Sally Port", "Rock Wall", "Rough Terrain", "Low Bar"]
+			//Fetch all the defenses
+			let defenses = dataManager.getAllDefenses()
+			for defenseName in defenseNames {
+				let filteredDefenses = defenses.filter() {
+					return $0.defenseName == defenseName
+				}
+				
+				if filteredDefenses.count > 1 {
+					//More than one of a defense, transfer all of one defenses relationships to the other
+					
+				}
+			}
+		}*/
+		
+		//First combine all the teams
+		do {
+			let teams = dataManager.getTeams()
+			//Example COnflict data structuring
+//			let mainConflictTitle = "Teams"
+//			let conflicts = ["4256":["localDetail":"Weight: 400", "externalDetail":"Weight 350"]]
+//			let selectionHandler: ([String:SyncSource]) -> Void
+			
+			var hasConflict = false
+			var conflicts = [String:[String:String]]()
+			for team in teams {
+				//Find all teams with the same number
+				let filteredTeams = teams.filter() {
+					$0.teamNumber == team.teamNumber
+				}
+				
+				//Check for data conflicts with the teams
+				for team in filteredTeams {
+					filteredTeams.forEach() {
+						if !($0.driverExp!.isEqualToNumber(team.driverExp!) && $0.robotWeight!.isEqualToNumber(team.robotWeight!) && $0.frontImage!.isEqualToData(team.frontImage!) && $0.sideImage!.isEqualToData(team.sideImage!)) && $0.defensesAbleToCross!.isEqualToSet(team.defensesAbleToCross! as Set<NSObject>) {
+							hasConflict = true
+							conflicts.updateValue(["localDetail":"Weight: \(filteredTeams[0].robotWeight)", "externalDetail":"Weight: \(filteredTeams[1].robotWeight)"], forKey: "\(team.teamNumber)")
+						}
+					}
+				}
+				
+				//Combine the relationships of the teams and make a merged team
+				let mergedTeam = filteredTeams.reduce(dataManager.saveTeamNumber(team.teamNumber!)) {(mergedTeam, team) in
+					//Combine Regional Performances
+					for performance in team.regionalPerformances?.allObjects as! [TeamRegionalPerformance] {
+						performance.team = mergedTeam
+					}
+					
+					//Combine defenses able to cross
+					var defensesAbleToCross = mergedTeam.defensesAbleToCross?.mutableCopy() as! NSMutableSet
+					for defense in team.defensesAbleToCross?.allObjects as! [Defense] {
+						defensesAbleToCross.addObject(defense)
+					}
+					mergedTeam.defensesAbleToCross = (defensesAbleToCross.copy() as! NSSet)
+					
+					//Draft Board fixes itself upon next call of said function in TeamDataManager
+					
+					return mergedTeam
+				}
+				
+				//Now merge the defensesAbleToCross in the mergedTeam, not the team performaces, because that will happen from the regional-based merging.
+				
+			}
+			
+			if hasConflict {
+				//Post a conflict notification
+				dispatch_async(dispatch_get_main_queue()) {
+					NSNotificationCenter.defaultCenter().postNotificationName("DataSyncing:MergeConflict", object: self, userInfo: ["conflictTitle":"Teams", "conflicts":conflicts, "completionHandler":ConflictResolvedHandler.Team(teamConflictsResolved)])
+				}
+			}
+		}
+		
+		//Fix the regionals
+		do {
+			var regionals = dataManager.getAllRegionals()
+			for regional in regionals {
+				let filteredRegionals = regionals.filter() {
+					return $0.name == regional.name
+				}
+				
+				let mergedRegional = filteredRegionals.reduce(dataManager.addRegional(regionalNumber: (filteredRegionals.first?.regionalNumber!.integerValue)!, withName: (filteredRegionals.first?.name)!)) {(mergedRegional, regional) in
+					for match in regional.matches?.allObjects as! [Match] {
+						match.regional = mergedRegional
+					}
+					for regionalPerformance in regional.teamRegionalPerformances?.allObjects as! [TeamRegionalPerformance] {
+						regionalPerformance.regional = mergedRegional
+					}
+					return mergedRegional
+				}
+				
+				//Delete the previous, unmerged, regionals
+				//And Remove all of the extracted regionals from the array of unmerged regionals
+				for regional in filteredRegionals {
+					dataManager.delete(Regional: regional)
+					regionals.removeAtIndex(regionals.indexOf(regional)!)
+				}
+				
+				//Now combine the matches
+				let matchesInMergedRegional = mergedRegional.matches?.allObjects as! [Match]
+				for match in matchesInMergedRegional {
+					let filteredMatches = matchesInMergedRegional.filter() {
+						return $0.matchNumber ==  match.matchNumber
+					}
+					
+					let m = try dataManager.createNewMatch(match.matchNumber!.integerValue, inRegional: mergedRegional)
+					let mergedMatch = filteredMatches.reduce(m) {(mergedMatch, match) in
+						//Combine all the team performances into the merged match
+						for teamPerformance in match.teamPerformances?.allObjects as! [TeamMatchPerformance] {
+							teamPerformance.match = mergedMatch
+						}
+						
+						do {
+							//Combine all the breached defenses
+							let redDefensesBreached = mergedMatch.redDefensesBreached?.mutableCopy() as! NSMutableSet
+							for redBreachedDefense in match.redDefensesBreached?.allObjects as! [Defense] {
+								redDefensesBreached.addObject(redBreachedDefense)
+							}
+							let newBlueBreached = mergedMatch.blueDefensesBreached?.mutableCopy() as! NSMutableSet
+							for blueBreached in match.blueDefensesBreached?.allObjects as! [Defense] {
+								newBlueBreached.addObject(blueBreached)
+							}
+							mergedMatch.redDefensesBreached = (redDefensesBreached.copy() as! NSSet)
+							mergedMatch.blueDefensesBreached = (newBlueBreached.copy() as! NSSet)
+							
+							//Combine the defenses
+							let newDefenses = mergedMatch.defenses?.mutableCopy() as! NSMutableSet
+							for defense in match.defenses?.allObjects as! [Defense] {
+								newDefenses.addObject(defense)
+							}
+							mergedMatch.defenses = (newDefenses.copy() as! NSSet)
+							
+							//Now merge the defenses
+							var mergedRedBreached = mergedMatch.redDefensesBreached?.allObjects as! [Defense]
+							for breachedDefense in mergedRedBreached {
+								var filteredRedBreached = mergedRedBreached.filter() {
+									return $0.defenseName == breachedDefense.defenseName
+								}
+								
+								//Remove the first defense from the filtered to keep it in the mergedRedBreached
+								filteredRedBreached.removeAtIndex(0)
+								for defense in filteredRedBreached {
+									mergedRedBreached.removeAtIndex(mergedRedBreached.indexOf(defense)!)
+								}
+							}
+							var mergedBlueBreached = mergedMatch.blueDefensesBreached?.allObjects as! [Defense]
+							for breachedDefense in mergedBlueBreached {
+								var filteredBlueBreached = mergedBlueBreached.filter() {
+									return $0.defenseName == breachedDefense.defenseName
+								}
+								
+								//Remove the first defense from the filtered to keep it in the mergedBlueBreached
+								filteredBlueBreached.removeAtIndex(0)
+								for defense in filteredBlueBreached {
+									mergedBlueBreached.removeAtIndex(mergedBlueBreached.indexOf(defense)!)
+								}
+							}
+							//Set them back
+							mergedMatch.redDefensesBreached = NSSet(array: mergedRedBreached)
+							mergedMatch.blueDefensesBreached = NSSet(array: mergedBlueBreached)
+							
+							var mergedDefenses = mergedMatch.defenses?.mutableCopy() as! NSMutableSet
+							for defense in mergedDefenses {
+								var filteredDefenses = mergedDefenses.filter() {
+									return $0.defenseName == defense.defenseName
+								}
+								
+								filteredDefenses.removeAtIndex(0)
+								for defense in filteredDefenses {
+									mergedDefenses.removeObject(defense)
+								}
+							}
+							if mergedDefenses.count > 4 {
+								mergedDefenses = NSMutableSet(array: mergedDefenses.dropLast(mergedDefenses.count-4).filter(){_ in return true})
+							}
+							mergedMatch.defenses = mergedDefenses.copy() as! NSSet
+						}
+						
+						//Now merge the match performances
+						do {
+							let combinedMatchPerformances = mergedMatch.teamPerformances?.allObjects as! [TeamMatchPerformance]
+							for matchPerformance in combinedMatchPerformances {
+								let filteredMatchPerformances = combinedMatchPerformances.filter() {
+									return $0.allianceColor == matchPerformance.allianceColor && $0.allianceTeam == matchPerformance.allianceTeam
+								}
+								
+								//First check if the team is the same for that alliance color and team
+								
+							}
+						}
+						
+						return mergedMatch
+					}
+				}
+			}
+		} catch {
+			NSLog("Unable to completely fix all duplicates and syncing conflicts (base: regionals): \(error)")
+		}
+	}
+	
+	func teamConflictsResolved(resolvedConflicts: [String:SyncSource]) {
+		
+	}
+	
+	enum ConflictResolvedHandler {
+		case Team(([String:SyncSource]) -> Void)
+	}
+	
+	enum SyncSource {
+		case Local
+		case External
 	}
 	
 	func session(session: MCSession, didStartReceivingResourceWithName resourceName: String, fromPeer peerID: MCPeerID, withProgress progress: NSProgress) {

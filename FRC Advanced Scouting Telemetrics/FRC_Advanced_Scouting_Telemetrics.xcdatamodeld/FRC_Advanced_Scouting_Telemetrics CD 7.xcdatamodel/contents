@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<model userDefinedModelVersionIdentifier="" type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="10147" systemVersion="15C50" minimumToolsVersion="Automatic">
+<model userDefinedModelVersionIdentifier="" type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="10147" systemVersion="15E56a" minimumToolsVersion="Automatic">
     <entity name="AutonomousCycle" representedClassName=".AutonomousCycle" syncable="YES">
         <attribute name="crossedDefense" optional="YES" attributeType="Boolean" defaultValueString="NO" syncable="YES"/>
         <attribute name="moved" optional="YES" attributeType="Boolean" defaultValueString="NO" syncable="YES"/>
@@ -47,21 +47,6 @@
         <attribute name="yLocation" optional="YES" attributeType="Double" defaultValueString="0.0" syncable="YES"/>
         <relationship name="shootingTeam" maxCount="1" deletionRule="Nullify" destinationEntity="TeamMatchPerformance" inverseName="offenseShots" inverseEntity="TeamMatchPerformance" syncable="YES"/>
     </entity>
-    <entity name="Stat" representedClassName=".Stat" syncable="YES">
-        <attribute name="value" attributeType="Double" defaultValueString="0" syncable="YES"/>
-        <relationship name="statsBoard" maxCount="1" deletionRule="Nullify" destinationEntity="StatsBoard" inverseName="allStats" inverseEntity="StatsBoard" syncable="YES"/>
-        <relationship name="statType" maxCount="1" deletionRule="Nullify" destinationEntity="StatType" inverseName="stats" inverseEntity="StatType" syncable="YES"/>
-        <relationship name="team" maxCount="1" deletionRule="Nullify" destinationEntity="Team" inverseName="stats" inverseEntity="Team" syncable="YES"/>
-    </entity>
-    <entity name="StatsBoard" representedClassName=".StatsBoard" syncable="YES">
-        <relationship name="allStats" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="Stat" inverseName="statsBoard" inverseEntity="Stat" syncable="YES"/>
-        <relationship name="types" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="StatType" inverseName="statsBoard" inverseEntity="StatType" syncable="YES"/>
-    </entity>
-    <entity name="StatType" representedClassName=".StatType" syncable="YES">
-        <attribute name="name" attributeType="String" syncable="YES"/>
-        <relationship name="stats" optional="YES" toMany="YES" deletionRule="Deny" destinationEntity="Stat" inverseName="statType" inverseEntity="Stat" syncable="YES"/>
-        <relationship name="statsBoard" maxCount="1" deletionRule="Nullify" destinationEntity="StatsBoard" inverseName="types" inverseEntity="StatsBoard" syncable="YES"/>
-    </entity>
     <entity name="Team" representedClassName=".Team" syncable="YES">
         <attribute name="driverExp" optional="YES" attributeType="Double" defaultValueString="0" syncable="YES"/>
         <attribute name="frontImage" optional="YES" attributeType="Binary" syncable="YES"/>
@@ -71,7 +56,6 @@
         <relationship name="defensesAbleToCross" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Defense" syncable="YES"/>
         <relationship name="draftBoard" maxCount="1" deletionRule="Nullify" destinationEntity="DraftBoard" inverseName="teams" inverseEntity="DraftBoard" syncable="YES"/>
         <relationship name="regionalPerformances" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="TeamRegionalPerformance" inverseName="team" inverseEntity="TeamRegionalPerformance" syncable="YES"/>
-        <relationship name="stats" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="Stat" inverseName="team" inverseEntity="Stat" syncable="YES"/>
     </entity>
     <entity name="TeamMatchPerformance" representedClassName=".TeamMatchPerformance" syncable="YES">
         <attribute name="allianceColor" attributeType="Integer 64" minValueString="0" maxValueString="1" syncable="YES"/>
@@ -103,10 +87,7 @@
         <element name="Match" positionX="-108" positionY="502" width="128" height="176"/>
         <element name="Regional" positionX="-281" positionY="162" width="128" height="105"/>
         <element name="Shot" positionX="198" positionY="278" width="128" height="118"/>
-        <element name="Stat" positionX="-630" positionY="272" width="128" height="88"/>
-        <element name="StatsBoard" positionX="-639" positionY="54" width="128" height="75"/>
-        <element name="StatType" positionX="-522" positionY="161" width="128" height="73"/>
-        <element name="Team" positionX="-81" positionY="-72" width="128" height="180"/>
+        <element name="Team" positionX="-81" positionY="-72" width="128" height="163"/>
         <element name="TeamMatchPerformance" positionX="-99" positionY="267" width="128" height="193"/>
         <element name="TeamRegionalPerformance" positionX="-92" positionY="144" width="128" height="90"/>
         <element name="TimeMarker" positionX="180" positionY="521" width="126" height="88"/>

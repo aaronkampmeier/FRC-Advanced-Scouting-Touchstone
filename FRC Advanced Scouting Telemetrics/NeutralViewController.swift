@@ -21,6 +21,8 @@ class NeutralViewController: UIViewController {
 	var defenses: [Defense]?
 	let stopwatch = Stopwatch()
 	
+	var startedCrossingTime: NSTimeInterval?
+	
     override func viewDidLoad() {
         super.viewDidLoad()
 
@@ -51,6 +53,7 @@ class NeutralViewController: UIViewController {
 	@IBAction func startedHoldingDownDefense(sender: UIButton) {
 		stopwatch.start()
 		NSTimer.scheduledTimerWithTimeInterval(0.1, target: self, selector: "updateTimeLabel:", userInfo: nil, repeats: true)
+		startedCrossingTime = standsScoutingController.stopwatch.elapsedTime
 	}
 	
 	@IBAction func stoppedHoldingDefense(sender: UIButton) {
@@ -73,6 +76,11 @@ class NeutralViewController: UIViewController {
 		}
 		
 		dataManager.addDefenseCrossTime(forMatchPerformance: standsScoutingController.matchPerformance!, inDefense: defense, withTime: stopwatch.elapsedTime)
+		
+		//Add the time markers
+		dataManager.addTimeMarker(withEvent: TeamDataManager.TimeMarkerEvent.StartedCrossingDefense, atTime: startedCrossingTime!, inMatchPerformance: standsScoutingController.matchPerformance!)
+		dataManager.addTimeMarker(withEvent: TeamDataManager.TimeMarkerEvent.FinishedCrossingDefense, atTime: standsScoutingController.stopwatch.elapsedTime, inMatchPerformance: standsScoutingController.matchPerformance!)
+		startedCrossingTime = nil
 		
 		//Switch to the offense courtyard
 		standsScoutingController.segmentedControl.selectedSegmentIndex = 1
