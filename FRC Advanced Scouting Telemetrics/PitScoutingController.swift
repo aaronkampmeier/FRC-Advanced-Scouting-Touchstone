@@ -125,10 +125,13 @@ class PitScoutingController: UIViewController, UIImagePickerControllerDelegate, 
         switch frontOrSide {
         case .front:
 			if acceptableTeam {
-				//selectedTeam?.frontImage =
+				selectedTeam?.frontImage = UIImageJPEGRepresentation(image, 1)
 			}
             frontImage.image = image
         case .side:
+			if acceptableTeam {
+				selectedTeam?.sideImage = UIImageJPEGRepresentation(image, 1)
+			}
             sideImage.image = image
         }
         

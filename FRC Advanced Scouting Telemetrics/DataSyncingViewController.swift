@@ -65,7 +65,12 @@ class DataSyncingViewController: UIViewController {
 	}
 	
 	@IBAction func syncPressed(sender: UIButton) {
-		progressIndicator.observedProgress = syncingManager?.sync()
+		if #available(iOS 9.0, *) {
+			progressIndicator.observedProgress = syncingManager?.sync()
+		} else {
+			// Fallback on earlier versions
+			
+		}
 	}
 	
 	func didChangeState(notification: NSNotification) {
@@ -88,7 +93,12 @@ class DataSyncingViewController: UIViewController {
 		
 		let userInfo = (notification.userInfo as! [String:AnyObject])
 		let progress = userInfo["progress"] as! NSProgress
-		progressIndicator.observedProgress = progress
+		if #available(iOS 9.0, *) {
+			progressIndicator.observedProgress = progress
+		} else {
+			// Fallback on earlier versions
+			
+		}
 	}
 	
 	func didFinishReceiving(notification: NSNotification) {

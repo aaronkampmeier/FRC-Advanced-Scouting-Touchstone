@@ -170,8 +170,6 @@ class CourtyardViewController: UIViewController, UITableViewDataSource, UITableV
 	
 	func popoverPresentationControllerDidDismissPopover(popoverPresentationController: UIPopoverPresentationController) {
 		if finishedEditingShot {
-			dataManager.save()
-			
 			//Update the dot (rect) on the screen and save a time marker
 			var markerType: TeamDataManager.TimeMarkerEvent
 			switch defenseOrOffense! {

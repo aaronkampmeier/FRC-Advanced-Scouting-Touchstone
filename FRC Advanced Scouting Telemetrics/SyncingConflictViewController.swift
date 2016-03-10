@@ -36,7 +36,7 @@ class SyncingConflictViewController: UIViewController, UITableViewDataSource {
 	}
 	
 	func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
-		<#code#>
+		return conflictManagementTable.dequeueReusableCellWithIdentifier("cell")!
 	}
 	
     /*

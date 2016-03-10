@@ -80,11 +80,13 @@ class TeamListController: UIViewController, UITableViewDataSource, UITableViewDe
 			segmentChanged(segmentControl)
 		}
 		
-			if let _ = selectedRegional {
+			if selectedRegional != nil && selectedTeam != nil {
 				standsScoutingButton.enabled = true
 			} else {
 				standsScoutingButton.enabled = false
 			}
+		
+		NSNotificationCenter.defaultCenter().postNotificationName("Different Team Selected", object: self)
 		}
     }
 	
@@ -98,6 +100,7 @@ class TeamListController: UIViewController, UITableViewDataSource, UITableViewDe
 			
 			segmentControl.setEnabled(true, forSegmentAtIndex: 0)
 			segmentControl.setEnabled(true, forSegmentAtIndex: 1)
+			segmentControl.setEnabled(true, forSegmentAtIndex: 2)
 		} else {
 			currentRegionalTeams = teams
 			regionalSelectionButton.setTitle("All Teams", forState: .Normal)
@@ -107,6 +110,7 @@ class TeamListController: UIViewController, UITableViewDataSource, UITableViewDe
 			
 			segmentControl.setEnabled(false, forSegmentAtIndex: 0)
 			segmentControl.setEnabled(false, forSegmentAtIndex: 1)
+			segmentControl.setEnabled(false, forSegmentAtIndex: 2)
 		}
 		}
 	}
