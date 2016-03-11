@@ -11,14 +11,15 @@ import UIKit
 
 class SortVC: UIViewController, UIPickerViewDelegate, UIPickerViewDataSource {
     @IBOutlet weak var sortTypePicker: UIPickerView!
-    @IBOutlet weak var segmentControl: UISegmentedControl!
+    @IBOutlet weak var orderSegementedControl: UISegmentedControl!
     
     var statTypes: [StatType]?
     var selectedType: StatType?
     let dataManager = TeamDataManager()
     var successful = false
     var currentSortType: StatType?
-    
+	
+	var statContext: StatContext?
     var isAscending = true
     
     override func viewDidLoad() {
@@ -27,12 +28,14 @@ class SortVC: UIViewController, UIPickerViewDelegate, UIPickerViewDataSource {
 		sortTypePicker.dataSource = self
         sortTypePicker.delegate = self
         
-        segmentControl.enabled = false
+        orderSegementedControl.enabled = false
     }
     
     override func viewWillAppear(animated: Bool) {
         super.viewWillAppear(animated)
-        
+		
+		
+		
         //Get the index of the current stat type for sorting
         let row: Int?
         if let type = currentSortType {
@@ -83,10 +86,10 @@ class SortVC: UIViewController, UIPickerViewDelegate, UIPickerViewDataSource {
     func pickerView(pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {
         if row == 0 {
             selectedType = nil
-            segmentControl.enabled = false
+            orderSegementedControl.enabled = false
         } else {
             selectedType = statTypes![row-1]
-            segmentControl.enabled = true
+            orderSegementedControl.enabled = true
         }
     }
     

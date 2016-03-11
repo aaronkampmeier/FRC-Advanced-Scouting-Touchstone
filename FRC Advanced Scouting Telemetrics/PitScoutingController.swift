@@ -67,13 +67,13 @@ class PitScoutingController: UIViewController, UIImagePickerControllerDelegate, 
 	
 	@IBAction func weightEdited(sender: UITextField) {
 		if acceptableTeam {
-			selectedTeam!.robotWeight = Double(sender.text!)
+			selectedTeam!.robotWeight = Double(sender.text!) ?? 0
 		}
 	}
 	
 	@IBAction func xpEdited(sender: UITextField) {
 		if acceptableTeam {
-			selectedTeam!.driverExp = Double(sender.text!)
+			selectedTeam!.driverExp = Double(sender.text!) ?? 0
 		}
 	}
     

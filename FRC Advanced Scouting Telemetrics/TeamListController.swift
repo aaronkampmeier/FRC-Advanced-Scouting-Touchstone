@@ -80,11 +80,11 @@ class TeamListController: UIViewController, UITableViewDataSource, UITableViewDe
 			segmentChanged(segmentControl)
 		}
 		
-			if selectedRegional != nil && selectedTeam != nil {
-				standsScoutingButton.enabled = true
-			} else {
-				standsScoutingButton.enabled = false
-			}
+		if selectedRegional != nil && selectedTeam != nil {
+			standsScoutingButton.enabled = true
+		} else {
+			standsScoutingButton.enabled = false
+		}
 		
 		NSNotificationCenter.defaultCenter().postNotificationName("Different Team Selected", object: self)
 		}
@@ -448,6 +448,14 @@ class TeamListController: UIViewController, UITableViewDataSource, UITableViewDe
 			destinationVC.teamPerformance = teamRegionalPerformance
 		}
     }
+	
+	@IBAction func returningWithSegue(segue: UIStoryboardSegue) {
+		NSLog("Returning with segue")
+		if let selectedIndexPath = teamList.indexPathForSelectedRow {
+			teamList.selectRowAtIndexPath(selectedIndexPath, animated: false, scrollPosition: .None)
+			tableView(teamList, didSelectRowAtIndexPath: selectedIndexPath)
+		}
+	}
     
     @IBAction func sortPressed(sender: UIBarButtonItem) {
         let storyboard = UIStoryboard(name: "Popovers", bundle: nil)
@@ -470,6 +478,21 @@ class TeamListController: UIViewController, UITableViewDataSource, UITableViewDe
     
     //<---FUNCTIONALITY FOR SORTING THE TEAM LIST--->
     //TEMPORARY (Actually maybe not anymore...)
+//	var statContexts: [StatContext] {
+//		return currentRegionalTeams.map() {team in
+//			if let regional = selectedRegional {
+//				let regionalPerformances = Set(regional.teamRegionalPerformances?.allObjects as! [TeamRegionalPerformance])
+//				let teamPerformances = Set(team.regionalPerformances?.allObjects as! [TeamRegionalPerformance])
+//				
+//				let regionalPerformance = Array(regionalPerformances.intersect(teamPerformances)).first!
+//				
+//				return StatContext(context: regionalPerformance.matchPerformances!.allObjects as! [TeamMatchPerformance])
+//			} else {
+//				team.map
+//			}
+//		}
+//	}
+
     var sortType: StatType?
     var isAscending: Bool?
     var isDefault: Bool?

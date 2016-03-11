@@ -12,7 +12,7 @@
     <entity name="Defense" representedClassName=".Defense" syncable="YES">
         <attribute name="category" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="defenseName" optional="YES" attributeType="String" syncable="YES"/>
-        <relationship name="matches" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Match" inverseName="defenses" inverseEntity="Match" syncable="YES"/>
+        <relationship name="matches" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Match" inverseName="redDefenses" inverseEntity="Match" syncable="YES"/>
     </entity>
     <entity name="DefenseCrossTime" representedClassName=".DefenseCrossTime" syncable="YES">
         <attribute name="time" attributeType="Double" minValueString="0" defaultValueString="0.0" syncable="YES"/>
@@ -23,10 +23,15 @@
         <relationship name="teams" optional="YES" toMany="YES" deletionRule="Deny" ordered="YES" destinationEntity="Team" inverseName="draftBoard" inverseEntity="Team" syncable="YES"/>
     </entity>
     <entity name="Match" representedClassName=".Match" syncable="YES">
+        <attribute name="blueCapturedTower" optional="YES" attributeType="Boolean" syncable="YES"/>
+        <attribute name="blueFinalScore" optional="YES" attributeType="Integer 64" defaultValueString="0" syncable="YES"/>
         <attribute name="matchNumber" attributeType="Integer 64" defaultValueString="0" syncable="YES"/>
+        <attribute name="redCapturedTower" optional="YES" attributeType="Boolean" syncable="YES"/>
+        <attribute name="redFinalScore" optional="YES" attributeType="Integer 64" defaultValueString="0" syncable="YES"/>
         <attribute name="time" optional="YES" attributeType="Date" syncable="YES"/>
+        <relationship name="blueDefenses" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Defense" syncable="YES"/>
         <relationship name="blueDefensesBreached" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Defense" syncable="YES"/>
-        <relationship name="defenses" optional="YES" toMany="YES" maxCount="4" deletionRule="Nullify" destinationEntity="Defense" inverseName="matches" inverseEntity="Defense" syncable="YES"/>
+        <relationship name="redDefenses" optional="YES" toMany="YES" maxCount="4" deletionRule="Nullify" destinationEntity="Defense" inverseName="matches" inverseEntity="Defense" syncable="YES"/>
         <relationship name="redDefensesBreached" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Defense" syncable="YES"/>
         <relationship name="regional" maxCount="1" deletionRule="Nullify" destinationEntity="Regional" inverseName="matches" inverseEntity="Regional" syncable="YES"/>
         <relationship name="teamPerformances" optional="YES" toMany="YES" maxCount="6" deletionRule="Cascade" destinationEntity="TeamMatchPerformance" inverseName="match" inverseEntity="TeamMatchPerformance" syncable="YES"/>
@@ -84,7 +89,7 @@
         <element name="Defense" positionX="124" positionY="-54" width="128" height="88"/>
         <element name="DefenseCrossTime" positionX="187" positionY="405" width="128" height="90"/>
         <element name="DraftBoard" positionX="-351" positionY="-27" width="128" height="60"/>
-        <element name="Match" positionX="-108" positionY="502" width="128" height="176"/>
+        <element name="Match" positionX="-108" positionY="502" width="128" height="41"/>
         <element name="Regional" positionX="-281" positionY="162" width="128" height="105"/>
         <element name="Shot" positionX="198" positionY="278" width="128" height="118"/>
         <element name="Team" positionX="-81" positionY="-72" width="128" height="163"/>

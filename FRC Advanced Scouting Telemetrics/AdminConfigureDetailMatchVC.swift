@@ -17,10 +17,20 @@ class AdminConfigureDetailMatchVC: UIViewController, UITableViewDelegate, UITabl
     @IBOutlet weak var red2Field: UITextField!
     @IBOutlet weak var red3Field: UITextField!
 	
-	@IBOutlet weak var catADefensesTable: UITableView!
-	@IBOutlet weak var catBDefensesTable: UITableView!
-	@IBOutlet weak var catCDefensesTable: UITableView!
-	@IBOutlet weak var catDDefensesTable: UITableView!
+	@IBOutlet weak var redCatADefensesTable: UITableView!
+	@IBOutlet weak var redCatBDefensesTable: UITableView!
+	@IBOutlet weak var redCatCDefensesTable: UITableView!
+	@IBOutlet weak var redCatDDefensesTable: UITableView!
+	
+	@IBOutlet weak var blueCatADefensesTable: UITableView!
+	@IBOutlet weak var blueCatBDefensesTable: UITableView!
+	@IBOutlet weak var blueCatCDefensesTable: UITableView!
+	@IBOutlet weak var blueCatDDefensesTable: UITableView!
+	
+	@IBOutlet weak var redStack: UIStackView!
+	@IBOutlet weak var blueStack: UIStackView!
+	@IBOutlet weak var redStackView: UIView!
+	@IBOutlet weak var blueStackView: UIView!
 	
     let datePicker = UIDatePicker()
     let dataManager = TeamDataManager()
@@ -33,7 +43,7 @@ class AdminConfigureDetailMatchVC: UIViewController, UITableViewDelegate, UITabl
 				return override
 			} else {
 				//Check to see if there are defenses selected, if there aren't then don't allow the view to change
-				if (catADefensesTable.indexPathForSelectedRow != nil && catBDefensesTable.indexPathForSelectedRow != nil && catCDefensesTable.indexPathForSelectedRow != nil && catDDefensesTable.indexPathForSelectedRow != nil) || view.hidden {
+				if ((redCatADefensesTable.indexPathForSelectedRow != nil && redCatBDefensesTable.indexPathForSelectedRow != nil && redCatCDefensesTable.indexPathForSelectedRow != nil && redCatDDefensesTable.indexPathForSelectedRow != nil) && (blueCatADefensesTable.indexPathForSelectedRow != nil && blueCatBDefensesTable.indexPathForSelectedRow != nil && blueCatCDefensesTable.indexPathForSelectedRow != nil && blueCatDDefensesTable.indexPathForSelectedRow != nil)) || view.hidden {
 					return true
 				} else {
 					return false
@@ -56,15 +66,32 @@ class AdminConfigureDetailMatchVC: UIViewController, UITableViewDelegate, UITabl
         // Do any additional setup after loading the view.
         dateField.inputView = datePicker
 		
+		redStackView.layer.borderWidth = 5
+		redStackView.layer.borderColor = UIColor.redColor().CGColor
+		redStackView.layer.cornerRadius = 10
+		
+		blueStackView.layer.borderWidth = 5
+		blueStackView.layer.borderColor = UIColor.blueColor().CGColor
+		blueStackView.layer.cornerRadius = 10
+		
 		//Set the data sources and delegates
-		catADefensesTable.dataSource = self
-		catADefensesTable.delegate = self
-		catBDefensesTable.dataSource = self
-		catBDefensesTable.delegate = self
-		catCDefensesTable.dataSource = self
-		catCDefensesTable.delegate = self
-		catDDefensesTable.dataSource = self
-		catDDefensesTable.delegate = self
+		redCatADefensesTable.dataSource = self
+		redCatADefensesTable.delegate = self
+		redCatBDefensesTable.dataSource = self
+		redCatBDefensesTable.delegate = self
+		redCatCDefensesTable.dataSource = self
+		redCatCDefensesTable.delegate = self
+		redCatDDefensesTable.dataSource = self
+		redCatDDefensesTable.delegate = self
+		
+		blueCatADefensesTable.dataSource = self
+		blueCatADefensesTable.delegate = self
+		blueCatBDefensesTable.dataSource = self
+		blueCatBDefensesTable.delegate = self
+		blueCatCDefensesTable.dataSource = self
+		blueCatCDefensesTable.delegate = self
+		blueCatDDefensesTable.dataSource = self
+		blueCatDDefensesTable.delegate = self
     }
     
     override func viewWillDisappear(animated: Bool) {
@@ -136,23 +163,50 @@ class AdminConfigureDetailMatchVC: UIViewController, UITableViewDelegate, UITabl
 		
 		//Select the appropriate rows in the table views
 		//First get the defenses being used
-		let defenses = match.defenses?.allObjects as! [Defense]
-		for defense in defenses {
+		let redDefenses = match.redDefenses?.allObjects as! [Defense]
+		for defense in redDefenses {
 			var first: Bool?
 			var defenseTable: UITableView?
 			switch defense.category! {
 			case "A":
-				first = TeamDataManager.CategoryADefense.Portcullis.string == defense.defenseName
-				defenseTable = catADefensesTable
+				first = !(TeamDataManager.CategoryADefense.Portcullis.string == defense.defenseName)
+				defenseTable = redCatADefensesTable
 			case "B":
-				first = TeamDataManager.CategoryBDefense.Moat.string == defense.defenseName
-				defenseTable = catBDefensesTable
+				first = !(TeamDataManager.CategoryBDefense.Moat.string == defense.defenseName)
+				defenseTable = redCatBDefensesTable
 			case "C":
-				first = TeamDataManager.CategoryCDefense.Drawbridge.string == defense.defenseName
-				defenseTable = catCDefensesTable
+				first = !(TeamDataManager.CategoryCDefense.Drawbridge.string == defense.defenseName)
+				defenseTable = redCatCDefensesTable
 			case "D":
-				first = TeamDataManager.CategoryDDefense.RockWall.string == defense.defenseName
-				defenseTable = catDDefensesTable
+				first = !(TeamDataManager.CategoryDDefense.RockWall.string == defense.defenseName)
+				defenseTable = redCatDDefensesTable
+			default:
+				break
+			}
+			
+			//Now select the row and notify the delegate
+			let indexPath = NSIndexPath.init(forRow: first!.hashValue, inSection: 0)
+			defenseTable!.selectRowAtIndexPath(indexPath, animated: false, scrollPosition: .None)
+			defenseTable?.delegate?.tableView!(defenseTable!, didSelectRowAtIndexPath: indexPath)
+		}
+		
+		let blueDefenses = match.blueDefenses?.allObjects as! [Defense]
+		for defense in blueDefenses {
+			var first: Bool?
+			var defenseTable: UITableView?
+			switch defense.category! {
+			case "A":
+				first = !(TeamDataManager.CategoryADefense.Portcullis.string == defense.defenseName)
+				defenseTable = blueCatADefensesTable
+			case "B":
+				first = !(TeamDataManager.CategoryBDefense.Moat.string == defense.defenseName)
+				defenseTable = blueCatBDefensesTable
+			case "C":
+				first = !(TeamDataManager.CategoryCDefense.Drawbridge.string == defense.defenseName)
+				defenseTable = blueCatCDefensesTable
+			case "D":
+				first = !(TeamDataManager.CategoryDDefense.RockWall.string == defense.defenseName)
+				defenseTable = blueCatDDefensesTable
 			default:
 				break
 			}
@@ -248,8 +302,9 @@ class AdminConfigureDetailMatchVC: UIViewController, UITableViewDelegate, UITabl
 			//Set the teams in the match
 			dataManager.setTeamsInMatch(teamsAndPlaces, inMatch: selectedMatch!)
 			
-			//Now set the defense for the match
-			dataManager.setDefenses(inMatch: selectedMatch!, defenseA: defenseA!, defenseB: defenseB!, defenseC: defenseC!, defenseD: defenseD!)
+			//Now set the defenses for the match
+			dataManager.setDefenses(inMatch: selectedMatch!, redOrBlue: TeamDataManager.AllianceColor.Red, defenseA: redDefenseA!, defenseB: redDefenseB!, defenseC: redDefenseC!, defenseD: redDefenseD!)
+			dataManager.setDefenses(inMatch: selectedMatch!, redOrBlue: TeamDataManager.AllianceColor.Blue, defenseA: blueDefenseA!, defenseB: blueDefenseB!, defenseC: blueDefenseC!, defenseD: blueDefenseD!)
 		
 			//Next, do some cleanup of the view
 			//Remove all the right images on the text fields
@@ -260,10 +315,10 @@ class AdminConfigureDetailMatchVC: UIViewController, UITableViewDelegate, UITabl
 			red2Field.rightView = nil
 			red3Field.rightView = nil
 			//Deselect all the table view rows
-			catADefensesTable.deselectRowAtIndexPath(catADefensesTable.indexPathForSelectedRow!, animated: false)
-			catBDefensesTable.deselectRowAtIndexPath(catBDefensesTable.indexPathForSelectedRow!, animated: false)
-			catCDefensesTable.deselectRowAtIndexPath(catCDefensesTable.indexPathForSelectedRow!, animated: false)
-			catDDefensesTable.deselectRowAtIndexPath(catDDefensesTable.indexPathForSelectedRow!, animated: false)
+			let defenseTables = [redCatADefensesTable, redCatBDefensesTable, redCatCDefensesTable, redCatDDefensesTable, blueCatADefensesTable, blueCatBDefensesTable, blueCatCDefensesTable, blueCatDDefensesTable]
+			for table in defenseTables {
+				table.deselectRowAtIndexPath(table.indexPathForSelectedRow!, animated: false)
+			}
 		}
 	}
 	
@@ -277,21 +332,21 @@ class AdminConfigureDetailMatchVC: UIViewController, UITableViewDelegate, UITabl
 	}
 	
 	func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
-		let cell = catADefensesTable.dequeueReusableCellWithIdentifier("cell")
+		let cell = redCatADefensesTable.dequeueReusableCellWithIdentifier("cell")
 		
 		//Set the defense names
 		var defenseNames = ["",""]
 		switch tableView {
-		case catADefensesTable:
+		case redCatADefensesTable, blueCatADefensesTable:
 			defenseNames[0] = "Portcullis"
 			defenseNames[1] = "Cheval de Frise"
-		case catBDefensesTable:
+		case redCatBDefensesTable, blueCatBDefensesTable:
 			defenseNames[0] = "Moat"
 			defenseNames[1] = "Ramparts"
-		case catCDefensesTable:
+		case redCatCDefensesTable, blueCatCDefensesTable:
 			defenseNames[0] = "Drawbridge"
 			defenseNames[1] = "Sally Port"
-		case catDDefensesTable:
+		case redCatDDefensesTable, blueCatDDefensesTable:
 			defenseNames[0] = "Rock Wall"
 			defenseNames[1] = "Rough Terrain"
 		default:
@@ -303,36 +358,64 @@ class AdminConfigureDetailMatchVC: UIViewController, UITableViewDelegate, UITabl
 		return cell!
 	}
 	
-	var defenseA: TeamDataManager.CategoryADefense?
-	var defenseB: TeamDataManager.CategoryBDefense?
-	var defenseC: TeamDataManager.CategoryCDefense?
-	var defenseD: TeamDataManager.CategoryDDefense?
+	var redDefenseA: TeamDataManager.CategoryADefense?
+	var redDefenseB: TeamDataManager.CategoryBDefense?
+	var redDefenseC: TeamDataManager.CategoryCDefense?
+	var redDefenseD: TeamDataManager.CategoryDDefense?
+	var blueDefenseA: TeamDataManager.CategoryADefense?
+	var blueDefenseB: TeamDataManager.CategoryBDefense?
+	var blueDefenseC: TeamDataManager.CategoryCDefense?
+	var blueDefenseD: TeamDataManager.CategoryDDefense?
 	
 	func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
 		switch tableView {
-		case catADefensesTable:
+		case redCatADefensesTable:
 			if indexPath.row == 0 {
-				defenseA = .Portcullis
+				redDefenseA = .Portcullis
 			} else {
-				defenseA = .ChevalDeFrise
+				redDefenseA = .ChevalDeFrise
 			}
-		case catBDefensesTable:
+		case redCatBDefensesTable:
 			if indexPath.row == 0 {
-				defenseB = .Moat
+				redDefenseB = .Moat
 			} else {
-				defenseB = .Ramparts
+				redDefenseB = .Ramparts
 			}
-		case catCDefensesTable:
+		case redCatCDefensesTable:
 			if indexPath.row == 0 {
-				defenseC = .Drawbridge
+				redDefenseC = .Drawbridge
 			} else {
-				defenseC = .SallyPort
+				redDefenseC = .SallyPort
 			}
-		case catDDefensesTable:
+		case redCatDDefensesTable:
 			if indexPath.row == 0 {
-				defenseD = .RockWall
+				redDefenseD = .RockWall
 			} else {
-				defenseD = .RoughTerrain
+				redDefenseD = .RoughTerrain
+			}
+		case blueCatADefensesTable:
+			if indexPath.row == 0 {
+				blueDefenseA = .Portcullis
+			} else {
+				blueDefenseA = .ChevalDeFrise
+			}
+		case blueCatBDefensesTable:
+			if indexPath.row == 0 {
+				blueDefenseB = .Moat
+			} else {
+				blueDefenseB = .Ramparts
+			}
+		case blueCatCDefensesTable:
+			if indexPath.row == 0 {
+				blueDefenseC = .Drawbridge
+			} else {
+				blueDefenseC = .SallyPort
+			}
+		case blueCatDDefensesTable:
+			if indexPath.row == 0 {
+				blueDefenseD = .RockWall
+			} else {
+				blueDefenseD = .RoughTerrain
 			}
 		default:
 			break

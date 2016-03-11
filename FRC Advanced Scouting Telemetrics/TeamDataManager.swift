@@ -23,10 +23,12 @@ class TeamDataManager {
     }
 	
 	func commitChanges() {
+		NSLog("Committing Changes")
 		save()
 	}
 	
 	func discardChanges() {
+		NSLog("Discarding Changes")
 		TeamDataManager.managedContext.rollback()
 	}
 	
@@ -484,7 +486,16 @@ class TeamDataManager {
 		}
 	}
 	
-	func setDefenses(inMatch match: Match, defenseA: CategoryADefense, defenseB: CategoryBDefense, defenseC: CategoryCDefense, defenseD: CategoryDDefense) {
+	func set(didCaptureTower: Bool, inMatch match: Match, forAlliance alliance: AllianceColor) {
+		switch alliance {
+		case .Red:
+			match.redCapturedTower = didCaptureTower
+		case .Blue:
+			match.blueCapturedTower = didCaptureTower
+		}
+	}
+	
+	func setDefenses(inMatch match: Match, redOrBlue color: AllianceColor, defenseA: CategoryADefense, defenseB: CategoryBDefense, defenseC: CategoryCDefense, defenseD: CategoryDDefense) {
 		//Get the defense objects
 		let a = getDefense(withName: defenseA.string)
 		let b = getDefense(withName: defenseB.string)
@@ -494,7 +505,52 @@ class TeamDataManager {
 		//Make a set with these defenses
 		let defensesSet = NSSet(array: [a!, b!, c!, d!])
 		
-		match.defenses = defensesSet
+		switch color {
+		case .Red:
+			match.redDefenses = defensesSet
+		case .Blue:
+			match.blueDefenses = defensesSet
+		}
+	}
+	
+	enum AllianceColor: Int {
+		case Blue = 0
+		case Red = 1
+	}
+	
+	enum DefenseType: String {
+		case Portcullis = "Portcullis"
+		case ChevalDeFrise = "Cheval de Frise"
+		case Moat = "Moat"
+		case Ramparts = "Ramparts"
+		case Drawbridge = "Drawbridge"
+		case SallyPort = "Sally Port"
+		case RockWall = "Rock Wall"
+		case RoughTerrain = "Rough Terrain"
+		case LowBar = "Low Bar"
+		
+		var string: String {
+			switch self {
+			case .Portcullis:
+				return "Portcullis"
+			case .ChevalDeFrise:
+				return "Cheval de Frise"
+			case .Moat:
+				return "Moat"
+			case .Ramparts:
+				return "Ramparts"
+			case .Drawbridge:
+				return "Drawbridge"
+			case .SallyPort:
+				return "Sally Port"
+			case .RockWall:
+				return "Rock Wall"
+			case .RoughTerrain:
+				return "Rough Terrain"
+			case .LowBar:
+				return "Low Bar"
+			}
+		}
 	}
 	
 	enum CategoryADefense: Int {
@@ -565,12 +621,6 @@ class TeamDataManager {
 	func getMatches(forRegional regional: Regional) -> [Match]{
         return regional.matches?.allObjects as! [Match]
     }
-    
-    /* Deprecated
-    func getMatchesForTeam(team: Team) -> [Match]{
-        return team.matches?.allObjects as! [Match]
-    }
-	*/
 	
 	//METHODS FOR SHOTS
 	func createShot(atPoint location: CGPoint) -> Shot {
@@ -731,6 +781,7 @@ class TeamDataManager {
 		case MovedToDefenseCourtyard
 		case StartedCrossingDefense
 		case FinishedCrossingDefense
+		case MovedToNeutral
 	}
     
     enum DataManagingError: ErrorType {

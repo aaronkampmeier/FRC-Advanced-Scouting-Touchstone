@@ -38,6 +38,12 @@ class NeutralViewController: UIViewController {
 		defense2Button.imageView?.contentMode = .ScaleAspectFit
 		defense1Button.imageView?.contentMode = .ScaleAspectFit
 		
+		//First, check if the defenses are set
+//		if defenses.count < 4 {
+//			let alert = UIAlertController(title: "You Failed Peasant", message: "There are no defenses set for this match. Go set some, later.", preferredStyle: .Alert)
+//		}
+		
+		
 		//Set the buttons with the defenses images
 		defense4Button.setImage(UIImage(named: defenses![0].defenseName!), forState: .Normal)
 		defense3Button.setImage(UIImage(named: defenses![1].defenseName!), forState: .Normal)

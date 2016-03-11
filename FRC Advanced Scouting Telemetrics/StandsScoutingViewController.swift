@@ -25,7 +25,14 @@ class StandsScoutingViewController: UIViewController {
 	var matchPerformance: TeamMatchPerformance? {
 		willSet {
 		matchAndRegionalLabel.text = "Regional: \(teamPerformance!.regional!.name!)  Match: \(newValue!.match!.matchNumber!)"
-		defenses = newValue?.match?.defenses?.allObjects as? [Defense]
+		switch newValue!.allianceColor!.integerValue {
+		case 0:
+			defenses = newValue?.match?.blueDefenses?.allObjects as? [Defense]
+		case 1:
+			defenses = newValue?.match?.redDefenses?.allObjects as? [Defense]
+		default:
+			break
+		}
 		}
 	}
 	var defenses: [Defense]?
@@ -72,7 +79,28 @@ class StandsScoutingViewController: UIViewController {
 			cycleFromViewController(currentVC!, toViewController: initialChild!)
 			segmentedControl.selectedSegmentIndex = 0
 			selectedNewPart(segmentedControl)
+			
+			//Ask for the final score if it lasted longer than 2:15
+			if stopwatch.elapsedTime >= 135 {
+				let finalScorePrompt = UIAlertController(title: "Final Score", message: "Enter the final score for the alliance your team was on.", preferredStyle: .Alert)
+				finalScorePrompt.addTextFieldWithConfigurationHandler(configureTextField)
+				finalScorePrompt.addAction(UIAlertAction(title: "Save", style: .Default, handler: getFinalScore))
+				presentViewController(finalScorePrompt, animated: true, completion: nil)
+			}
 		}
+		}
+	}
+	@IBOutlet var finalScoreTextField: UITextField!
+	func configureTextField(textField: UITextField) {
+		textField.placeholder = "Final Score"
+		self.finalScoreTextField = textField
+	}
+	func getFinalScore(action: UIAlertAction) {
+		switch TeamDataManager.AllianceColor(rawValue: (matchPerformance?.allianceColor?.integerValue)!)! {
+		case .Red:
+			matchPerformance?.match?.redFinalScore = Double(finalScoreTextField.text!)
+		case .Blue:
+			matchPerformance?.match?.blueFinalScore = Double(finalScoreTextField.text!)
 		}
 	}
 	
@@ -116,7 +144,7 @@ class StandsScoutingViewController: UIViewController {
 		super.viewWillAppear(animated)
 		
 		//Ask for the match to use
-		let askAction = UIAlertController(title: "Select Match", message: "Select the match for team \(teamPerformance!.team!.teamNumber!) in the regional \(teamPerformance!.regional!.name!) for stands scouting.", preferredStyle: .Alert)
+		let askAction = UIAlertController(title: "Select Match", message: "Select the match for Team \(teamPerformance!.team!.teamNumber!) in the regional \(teamPerformance!.regional!.name!) for stands scouting.", preferredStyle: .Alert)
 		for match in (teamPerformance?.matchPerformances?.allObjects as! [TeamMatchPerformance]).sort({Int($0.match!.matchNumber!) < Int($1.match!.matchNumber!)}) {
 			askAction.addAction(UIAlertAction(title: "Match \(match.match!.matchNumber!)", style: .Default, handler: {_ in self.matchPerformance = match}))
 		}
@@ -167,6 +195,7 @@ class StandsScoutingViewController: UIViewController {
 			dataManager.addTimeMarker(withEvent: TeamDataManager.TimeMarkerEvent.MovedToOffenseCourtyard, atTime: stopwatch.elapsedTime, inMatchPerformance: matchPerformance!)
 		case 2:
 			cycleFromViewController(currentVC!, toViewController: neutralVC!)
+			dataManager.addTimeMarker(withEvent: TeamDataManager.TimeMarkerEvent.MovedToNeutral, atTime: stopwatch.elapsedTime, inMatchPerformance: matchPerformance!)
 		case 3:
 			cycleFromViewController(currentVC!, toViewController: defenseVC!)
 			dataManager.addTimeMarker(withEvent: TeamDataManager.TimeMarkerEvent.MovedToDefenseCourtyard, atTime: stopwatch.elapsedTime, inMatchPerformance: matchPerformance!)

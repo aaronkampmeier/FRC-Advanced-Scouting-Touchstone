@@ -172,11 +172,13 @@ extension SyncingManager: MCSessionDelegate {
 		NSLog("Finished with attempted merge")
 		
 		//Remove the recently received database from the filesystem
-		do {
-			try NSFileManager.defaultManager().removeItemAtURL(sourceURL)
-		} catch {
-			NSLog("Unable to delete the foreign database")
-		}
+//		do {
+//			try NSFileManager.defaultManager().removeItemAtURL(sourceURL)
+//		} catch {
+//			NSLog("Unable to delete the foreign database")
+//		}
+		
+		TeamDataManager().commitChanges()
 		
 		//Now, fix all the duplicate entities
 		//Clear the managed object context
@@ -195,6 +197,7 @@ extension SyncingManager: MCSessionDelegate {
 	}
 	
 	func mergeData(conflictResolutions resolutions: [String:AnyObject]?) {
+		/*
 		//Draft board will fix itself on next run
 		//Fix the defenses
 		/*do {
@@ -353,6 +356,7 @@ extension SyncingManager: MCSessionDelegate {
 		} catch {
 			NSLog("Unable to completely fix all duplicates and syncing conflicts (base: regionals): \(error)")
 		}
+*/
 	}
 	
 	func mergeTeams(conflictResolution resolution: [String:Team]?) {

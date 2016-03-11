@@ -16,9 +16,14 @@ extension Match {
 
     @NSManaged var matchNumber: NSNumber?
     @NSManaged var time: NSDate?
+	@NSManaged var blueCapturedTower: NSNumber?
+	@NSManaged var blueFinalScore: NSNumber?
+	@NSManaged var redCapturedTower: NSNumber?
+	@NSManaged var redFinalScore: NSNumber?
     @NSManaged var regional: Regional?
     @NSManaged var teamPerformances: NSSet?
-    @NSManaged var defenses: NSSet?
+    @NSManaged var redDefenses: NSSet?
+	@NSManaged var blueDefenses: NSSet?
 	@NSManaged var redDefensesBreached: NSSet?
 	@NSManaged var blueDefensesBreached: NSSet?
 
