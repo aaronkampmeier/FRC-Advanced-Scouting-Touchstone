@@ -114,7 +114,7 @@ class TeamDataManager {
 				//results.reduce(<#T##initial: T##T#>, combine: <#T##(T, DraftBoard) throws -> T#>)
             } else if results.count == 1 {
                 NSLog("One Draftboard")
-                return results[0] as! DraftBoard
+                return results[0]
             } else if results.count == 0 {
                 NSLog("Creating new draft board")
                 //Create a new draft board and return it

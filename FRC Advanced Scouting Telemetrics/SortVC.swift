@@ -12,14 +12,12 @@ import UIKit
 class SortVC: UIViewController, UIPickerViewDelegate, UIPickerViewDataSource {
     @IBOutlet weak var sortTypePicker: UIPickerView!
     @IBOutlet weak var orderSegementedControl: UISegmentedControl!
-    
-    var statTypes: [StatType]?
-    var selectedType: StatType?
+	
+    var selectedStat: Int?
     let dataManager = TeamDataManager()
     var successful = false
-    var currentSortType: StatType?
 	
-	var statContext: StatContext?
+	var statContext: StatContext = StatContext(context: [TeamMatchPerformance]())
     var isAscending = true
     
     override func viewDidLoad() {
@@ -33,31 +31,10 @@ class SortVC: UIViewController, UIPickerViewDelegate, UIPickerViewDataSource {
     
     override func viewWillAppear(animated: Bool) {
         super.viewWillAppear(animated)
-		
-		
-		
-        //Get the index of the current stat type for sorting
-        let row: Int?
-        if let type = currentSortType {
-            row = (statTypes?.indexOf(type))! + 1
-        } else {
-            row = 0
-        }
-        
-        //Set that index in the picker view
-        sortTypePicker.selectRow(row!, inComponent: 0, animated: false)
-        self.pickerView(sortTypePicker, didSelectRow: row!, inComponent: 0)
     }
     
     func pickerView(pickerView: UIPickerView, numberOfRowsInComponent component: Int) -> Int {
-        if statTypes!.count > 0 {
-            successful = true
-            return statTypes!.count + 1
-        } else {
-            //Present an alert
-            presentOkAlert("No Stat Types", descritpion: "There are currently no statistic types. Go to the Admin Console to add some.", okActionHandler: alertActionHandler)
-            return 0
-        }
+		return (statContext.statCalculations.count)
     }
     
     func alertActionHandler(alert: UIAlertAction) {
@@ -73,7 +50,7 @@ class SortVC: UIViewController, UIPickerViewDelegate, UIPickerViewDataSource {
         if row == 0 {
             return "Draft Board (Default)"
         } else {
-            return statTypes![row-1].name
+            return statContext.statCalculations[row-1].stringName
         }
     }
     
@@ -85,10 +62,10 @@ class SortVC: UIViewController, UIPickerViewDelegate, UIPickerViewDataSource {
     
     func pickerView(pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {
         if row == 0 {
-            selectedType = nil
+            selectedStat = nil
             orderSegementedControl.enabled = false
         } else {
-            selectedType = statTypes![row-1]
+            selectedStat = row - 1
             orderSegementedControl.enabled = true
         }
     }
@@ -103,13 +80,5 @@ class SortVC: UIViewController, UIPickerViewDelegate, UIPickerViewDataSource {
     
     override func viewWillDisappear(animated: Bool) {
         super.viewWillDisappear(animated)
-        
-        if successful && selectedType != nil {
-            //Sort the team list
-            NSNotificationCenter.defaultCenter().postNotificationName("New Sort Type", object: self, userInfo: ["SortType":selectedType!, "Ascending":isAscending, "DraftBoardDefault":false])
-        } else if successful && selectedType == nil {
-            //If the default is slected then send the noftication to undo the sorting
-            NSNotificationCenter.defaultCenter().postNotificationName("New Sort Type", object: self, userInfo: ["DraftBoardDefault":true])
-        }
     }
 }

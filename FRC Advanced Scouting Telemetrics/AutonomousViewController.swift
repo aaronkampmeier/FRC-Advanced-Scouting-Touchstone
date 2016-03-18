@@ -169,11 +169,15 @@ class AutonomousViewController: UIViewController, StandsScoutingDetailProtocol, 
     }
 	
     func pickerView(pickerView: UIPickerView, numberOfRowsInComponent component: Int) -> Int {
-        return (standsScoutingVC?.defenses?.count)!
+        return (standsScoutingVC?.defenses?.count)! + 1
     }
     
     func pickerView(pickerView: UIPickerView, titleForRow row: Int, forComponent component: Int) -> String? {
-        return standsScoutingVC?.defenses![row].defenseName
+		if row < standsScoutingVC?.defenses?.count {
+			return standsScoutingVC?.defenses?[row].defenseName
+		} else {
+			return "Low Bar"
+		}
     }
     
     func numberOfComponentsInPickerView(pickerView: UIPickerView) -> Int {
@@ -182,10 +186,14 @@ class AutonomousViewController: UIViewController, StandsScoutingDetailProtocol, 
 	
 	func pickerView(pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {
 		//Update core data
-		autonomousCycles.first?.defenseReached = standsScoutingVC?.defenses![row]
+		if row < standsScoutingVC?.defenses?.count {
+			autonomousCycles.first?.defenseReached = standsScoutingVC?.defenses![row]
+		} else {
+			autonomousCycles.first?.defenseReached = dataManager.getLowBar()
+		}
 		
 		//Update the button
-		defenseReachedButton?.setTitle(standsScoutingVC?.defenses![row].defenseName, forState: .Normal)
+		defenseReachedButton?.setTitle((autonomousCycles.first?.defenseReached?.defenseName) ?? "ERROR", forState: .Normal)
 	}
     
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {

@@ -8,6 +8,7 @@
 
 import UIKit
 import CoreData
+import Alamofire
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
@@ -81,6 +82,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 		
 		//Save all the defenses
 		dataManager.save()
+		
+		//Check if there is a new version of the app
+		//Alamofire.request(.Get, "https://www.dropbox.com/s/xvjxmo77plk3wxz/current.txt?dl=0")
 		
         return true
     }

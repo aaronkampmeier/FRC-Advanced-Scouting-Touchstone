@@ -29,6 +29,8 @@ class GameStatsController: UIViewController, UICollectionViewDataSource, UIColle
 		collectionView.delegate = self
 		
 		collectionView.backgroundColor = UIColor.whiteColor()
+		collectionView.scrollIndicatorInsets = UIEdgeInsets(top: 0, left: 0, bottom: 44, right: 0)
+		collectionView.contentInset = UIEdgeInsets(top: 0, left: 0, bottom: 44, right: 0)
 		
 		//Register cell for Collection View
 		collectionView.registerClass(UICollectionViewCell.self, forCellWithReuseIdentifier: "teamCell")

@@ -82,25 +82,60 @@ class StandsScoutingViewController: UIViewController {
 			
 			//Ask for the final score if it lasted longer than 2:15
 			if stopwatch.elapsedTime >= 135 {
-				let finalScorePrompt = UIAlertController(title: "Final Score", message: "Enter the final score for the alliance your team was on.", preferredStyle: .Alert)
-				finalScorePrompt.addTextFieldWithConfigurationHandler(configureTextField)
+				finalScorePrompt = UIAlertController(title: "Final Scores", message: "Enter the final score for the alliance your team was on.", preferredStyle: .Alert)
+				finalScorePrompt.addTextFieldWithConfigurationHandler() {
+					self.configureTextField($0, label: 0)
+				}
+				finalScorePrompt.addTextFieldWithConfigurationHandler() {
+					self.configureTextField($0, label: 1)
+				}
+				finalScorePrompt.addTextFieldWithConfigurationHandler() {
+					self.configureTextField($0, label: 2)
+				}
+				finalScorePrompt.addTextFieldWithConfigurationHandler() {
+					self.configureTextField($0, label: 3)
+				}
 				finalScorePrompt.addAction(UIAlertAction(title: "Save", style: .Default, handler: getFinalScore))
 				presentViewController(finalScorePrompt, animated: true, completion: nil)
 			}
 		}
 		}
 	}
-	@IBOutlet var finalScoreTextField: UITextField!
-	func configureTextField(textField: UITextField) {
-		textField.placeholder = "Final Score"
-		self.finalScoreTextField = textField
+	var finalScorePrompt: UIAlertController!
+	func configureTextField(textField: UITextField, label: Int) {
+		textField.keyboardType = .NumberPad
+		
+		switch label {
+		case 0:
+			textField.placeholder = "Red Final Score"
+		case 1:
+			textField.placeholder = "Red Ranking Points"
+		case 2:
+			textField.placeholder = "Blue Final Score"
+		case 3:
+			textField.placeholder = "Blue Ranking Points"
+		default:
+			break
+		}
 	}
 	func getFinalScore(action: UIAlertAction) {
-		switch TeamDataManager.AllianceColor(rawValue: (matchPerformance?.allianceColor?.integerValue)!)! {
-		case .Red:
-			matchPerformance?.match?.redFinalScore = Double(finalScoreTextField.text!)
-		case .Blue:
-			matchPerformance?.match?.blueFinalScore = Double(finalScoreTextField.text!)
+		for textField in finalScorePrompt.textFields! {
+			switch textField {
+			case finalScorePrompt.textFields![0]:
+				//Red Final Score
+				matchPerformance?.match?.redFinalScore = Double(textField.text!)
+			case finalScorePrompt.textFields![1]:
+				//Red Ranking Points
+				matchPerformance?.match?.redRankingPoints = Double(textField.text!)
+			case finalScorePrompt.textFields![2]:
+				//Blue Final Score
+				matchPerformance?.match?.blueFinalScore = Double(textField.text!)
+			case finalScorePrompt.textFields![3]:
+				//Blue Ranking Points
+				matchPerformance?.match?.blueRankingPoints = Double(textField.text!)
+			default:
+				break
+			}
 		}
 	}
 	
@@ -228,12 +263,15 @@ class StandsScoutingViewController: UIViewController {
 			
 			if stopwatch.elapsedTime > 160 {
 				isRunning = false
-				let alert = UIAlertController(title: "Too Long", message: "The match should have ended at 2 minutes 30 seconds; the timer has already passed that and automatically stopped. All data will be saved unless timer is started again.", preferredStyle: .Alert)
+				let alert = UIAlertController(title: "Too Long", message: "The match should have ended at 2 minutes 30 seconds; the timer has already passed that and automatically stopped. All data will be saved unless the timer is started again.", preferredStyle: .Alert)
 				alert.addAction(UIAlertAction(title: "OK", style: .Default, handler: nil))
 				presentViewController(alert, animated: true, completion: nil)
 			} else if stopwatch.elapsedTime > 135 {
 				//Show the final tower settings
 				finalTowerView.hidden = false
+				
+				//Change the color of the start/stop button to be blue signifying it is safe to stop it
+				timerButton.backgroundColor = UIColor.blueColor()
 			}
 		} else {
 			timer.invalidate()
