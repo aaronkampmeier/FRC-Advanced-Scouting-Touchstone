@@ -65,12 +65,12 @@ class ShotChartViewController: UIViewController {
 		    matchPerformances.append(matchPerformance)
 		} else {
 			if let performance = teamListVC.teamRegionalPerformance {
-				for mPerformance in performance.matchPerformances! {
+				for mPerformance in performance.matchPerformances?.allObjects as! [TeamMatchPerformance] {
 					matchPerformances.append(mPerformance)
 				}
 			} else {
-				for tPerformance in teamListVC.selectedTeamCache?.team.teamRegionalPerformances ?? [TeamRegionalPerformance]() {
-					for mPerformance in tPerformance.matchPerformances! {
+				for tPerformance in teamListVC.selectedTeamCache?.team.regionalPerformances?.allObjects as! [TeamRegionalPerformance] ?? [TeamRegionalPerformance]() {
+					for mPerformance in tPerformance.matchPerformances?.allObjects as! [TeamMatchPerformance] {
 						matchPerformances.append(mPerformance)
 					}
 				}
