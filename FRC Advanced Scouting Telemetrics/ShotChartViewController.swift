@@ -35,10 +35,9 @@ class ShotChartViewController: UIViewController {
 	
 	override func viewWillTransitionToSize(size: CGSize, withTransitionCoordinator coordinator: UIViewControllerTransitionCoordinator) {
 		super.viewWillTransitionToSize(size, withTransitionCoordinator: coordinator)
-		reloadInvisibleView()
 		
 		let previousSize = invisibleView.frame.size
-		coordinator.animateAlongsideTransition(nil, completion: {_ in self.reloadPoints(previousSize)})
+		coordinator.animateAlongsideTransition(nil, completion: {_ in self.reloadInvisibleView(); self.reloadPoints(previousSize)})
 	}
 	
 	func reloadInvisibleView() {
@@ -69,7 +68,7 @@ class ShotChartViewController: UIViewController {
 					matchPerformances.append(mPerformance)
 				}
 			} else {
-				for tPerformance in teamListVC.selectedTeamCache?.team.regionalPerformances?.allObjects as! [TeamRegionalPerformance] ?? [TeamRegionalPerformance]() {
+				for tPerformance in teamListVC.selectedTeamCache?.team.regionalPerformances?.allObjects as? [TeamRegionalPerformance] ?? [TeamRegionalPerformance]() {
 					for mPerformance in tPerformance.matchPerformances?.allObjects as! [TeamMatchPerformance] {
 						matchPerformances.append(mPerformance)
 					}

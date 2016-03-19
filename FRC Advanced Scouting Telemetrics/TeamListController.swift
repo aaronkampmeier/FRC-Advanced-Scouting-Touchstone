@@ -563,9 +563,11 @@ class TeamListController: UIViewController, UITableViewDataSource, UITableViewDe
 					cycleFromViewController(currentChildVC!, toViewController: shotChartController!)
 				}
 				
-				//Present Alet asking for the match the user would like to view
+				//Present Alert asking for the match the user would like to view
 				let alert = UIAlertController(title: "Select Match", message: "Select a match to see its shots.", preferredStyle: .Alert)
-				for matchPerformance in teamRegionalPerformance?.matchPerformances?.allObjects as! [TeamMatchPerformance] {
+				alert.addAction(UIAlertAction(title: "Overall", style: .Default, handler: {_ in self.shotChartController?.selectedMatchPerformance(nil)}))
+				let sortedMatchPerformances = (teamRegionalPerformance?.matchPerformances?.allObjects as! [TeamMatchPerformance]).sort() {$0.0.match?.matchNumber?.integerValue < $0.1.match?.matchNumber?.integerValue}
+				for matchPerformance in sortedMatchPerformances {
 					alert.addAction(UIAlertAction(title: String(matchPerformance.match!.matchNumber!), style: .Default, handler: {_ in self.shotChartController!.selectedMatchPerformance(matchPerformance)}))
 				}
 				presentViewController(alert, animated: true, completion: nil)
