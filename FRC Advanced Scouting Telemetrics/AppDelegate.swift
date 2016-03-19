@@ -83,11 +83,78 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 		//Save all the defenses
 		dataManager.save()
 		
-		//Check if there is a new version of the app
-		//Alamofire.request(.Get, "https://www.dropbox.com/s/xvjxmo77plk3wxz/current.txt?dl=0")
+		checkForUpdate()
 		
         return true
     }
+	
+	func checkForUpdate(forceful forceful: Bool = false) {
+		if forceful {
+			//Set the skipped version to 0
+			NSUserDefaults.standardUserDefaults().setDouble(0, forKey: skippedVersionKey)
+		}
+		//Check if there is a new version of the app
+		Alamofire.request(.GET, latestVersionStringURL).responseString(completionHandler: didReceiveCurrentVersionResponse)
+	}
+	
+	private func didReceiveCurrentVersionResponse(response: Response<String, NSError>) {
+		let notificationCenter = NSNotificationCenter.defaultCenter()
+		if response.result.isSuccess {
+			//Get the current version of the app on the device
+			let onDeviceVersion = NSBundle.mainBundle().infoDictionary?["CFBundleShortVersionString"] as? String
+			if let deviceVersion = Double(onDeviceVersion ?? "Huh") {
+				if let latestVersion = Double((response.result.value?.stringByTrimmingCharactersInSet(NSCharacterSet.whitespaceAndNewlineCharacterSet()))!) {
+					//Check if they are the same
+					if latestVersion == deviceVersion {
+						NSLog("App is up-to-date")
+						notificationCenter.postNotificationName("UpdateIsAvailable", object: self, userInfo: ["isAvailable":false])
+					} else if latestVersion > deviceVersion {
+						NSLog("This app has a newer version available (\(latestVersion)), please download and install it. Current: \(deviceVersion)")
+						notificationCenter.postNotificationName("UpdateIsAvailable", object: self, userInfo: ["isAvailable":true])
+						
+						//Check if the user has opted to skip this version
+						let userDefaults = NSUserDefaults.standardUserDefaults()
+						let versionToSkip = userDefaults.doubleForKey(skippedVersionKey) ?? 0
+						
+						if versionToSkip != latestVersion {
+							//Create an alert and present it to the user
+							let newVersionAlert = UIAlertController(title: "New Version Available", message: "A new version (\(latestVersion)) of the app is available for download. Please download and install it now or as soon as possible. Your current version is \(deviceVersion).", preferredStyle: .Alert)
+							newVersionAlert.addAction(UIAlertAction(title: "Download Now", style: .Default) {_ in self.downloadNewVersionOfApp()})
+							newVersionAlert.addAction(UIAlertAction(title: "Download Later", style: .Default, handler: nil))
+							newVersionAlert.addAction(UIAlertAction(title: "Skip Version \(latestVersion)", style: .Destructive) {_ in self.skipVersion(versionToSkip: latestVersion)})
+							window?.rootViewController?.presentViewController(newVersionAlert, animated: true, completion: nil)
+						} else {
+							//The user has opted to skip this version
+							NSLog("Skipping version \(versionToSkip)")
+						}
+					} else if deviceVersion > latestVersion {
+						NSLog("You're running a beta, hooray!")
+						notificationCenter.postNotificationName("UpdateIsAvailable", object: self, userInfo: ["isAvailable":false])
+					}
+				} else {
+					NSLog("Unable to check for new version")
+				}
+			} else {
+				NSLog("An error occured while checking for the current version on this deivce")
+			}
+		} else {
+			NSLog("Unable to check for updates")
+		}
+	}
+	
+	private func downloadNewVersionOfApp() {
+		//Remove the skipped version user default
+		let userDefaults = NSUserDefaults.standardUserDefaults()
+		userDefaults.setDouble(0, forKey: skippedVersionKey)
+		//Open the link to the manifest file and let iOS handle the rest
+		UIApplication.sharedApplication().openURL(NSURL(string: appManifestStringURL)!)
+	}
+	
+	private func skipVersion(versionToSkip version: Double) {
+		//Save the version to skip in user defaults
+		let userDefaults = NSUserDefaults.standardUserDefaults()
+		userDefaults.setDouble(version, forKey: skippedVersionKey)
+	}
 
     func applicationWillResignActive(application: UIApplication) {
         // Sent when the application is about to move from active to inactive state. This can occur for certain types of temporary interruptions (such as an incoming phone call or SMS message) or when the user quits the application and it begins the transition to the background state.

@@ -1458,8 +1458,13 @@
                     </view>
                     <navigationItem key="navigationItem" id="FlS-tB-LvY">
                         <nil key="title"/>
+                        <barButtonItem key="leftBarButtonItem" enabled="NO" image="Installing Updates" id="kcz-kJ-Gyc">
+                            <connections>
+                                <action selector="updateButtonPressed:" destination="Bvx-zi-C8Q" id="l7W-6N-kTE"/>
+                            </connections>
+                        </barButtonItem>
                         <button key="titleView" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" id="ABW-L6-OGS">
-                            <rect key="frame" x="211" y="7" width="82" height="30"/>
+                            <rect key="frame" x="215" y="7" width="78" height="30"/>
                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                             <fontDescription key="fontDescription" type="system" pointSize="18"/>
                             <state key="normal" title="All Teams"/>
@@ -1504,6 +1509,7 @@
                         <outlet property="teamList" destination="H30-bW-5wQ" id="EeP-rx-OhX"/>
                         <outlet property="teamListToolbar" destination="j8L-mg-RaZ" id="sca-5R-tNz"/>
                         <outlet property="teamNumberLabel" destination="pFI-uY-fAw" id="VXo-Jw-eOZ"/>
+                        <outlet property="updateButton" destination="kcz-kJ-Gyc" id="7N0-4G-hxb"/>
                         <outlet property="weightLabel" destination="skS-FU-TSM" id="Dat-Qa-NIs"/>
                     </connections>
                 </viewController>
@@ -3181,6 +3187,7 @@
         <image name="Cheval de Frise" width="311" height="162"/>
         <image name="DefenseRender" width="471" height="728"/>
         <image name="Drawbridge" width="231" height="318"/>
+        <image name="Installing Updates" width="50" height="50"/>
         <image name="Low Bar" width="350" height="162"/>
         <image name="Moat" width="325" height="132"/>
         <image name="OffenseRender" width="454" height="698"/>

@@ -57,6 +57,7 @@
 		1FB99DB51C75272F004BC2C1 /* ArrayExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FB99DB41C75272F004BC2C1 /* ArrayExtension.swift */; };
 		1FBB426D1C9A29FC0017E36C /* Statistics.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FBB426C1C9A29FC0017E36C /* Statistics.swift */; };
 		1FCA7ADA1C630BAE004294D1 /* StatsVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FCA7AD91C630BAE004294D1 /* StatsVC.swift */; };
+		1FCEF8F61C9CB231006AC591 /* Globals.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FCEF8F51C9CB231006AC591 /* Globals.swift */; };
 		1FD0A09B1C95093600013A18 /* TeamListTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FD0A09A1C95093600013A18 /* TeamListTableViewCell.swift */; };
 		1FE2C1291C80136800CECBF1 /* ShotChartViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FE2C1281C80136800CECBF1 /* ShotChartViewController.swift */; };
 		1FE2C12B1C80DFBD00CECBF1 /* NeutralViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FE2C12A1C80DFBD00CECBF1 /* NeutralViewController.swift */; };
@@ -150,6 +151,7 @@
 		1FBB426C1C9A29FC0017E36C /* Statistics.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Statistics.swift; sourceTree = "<group>"; };
 		1FCA7ACC1C61AB38004294D1 /* FRC_Advanced_Scouting_Telemetrics CD 4.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "FRC_Advanced_Scouting_Telemetrics CD 4.xcdatamodel"; sourceTree = "<group>"; };
 		1FCA7AD91C630BAE004294D1 /* StatsVC.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StatsVC.swift; sourceTree = "<group>"; };
+		1FCEF8F51C9CB231006AC591 /* Globals.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Globals.swift; sourceTree = "<group>"; };
 		1FD0A09A1C95093600013A18 /* TeamListTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TeamListTableViewCell.swift; sourceTree = "<group>"; };
 		1FE2C1281C80136800CECBF1 /* ShotChartViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ShotChartViewController.swift; sourceTree = "<group>"; };
 		1FE2C12A1C80DFBD00CECBF1 /* NeutralViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NeutralViewController.swift; sourceTree = "<group>"; };
@@ -268,6 +270,7 @@
 				1FB99DB41C75272F004BC2C1 /* ArrayExtension.swift */,
 				1FCA7ADB1C6408B2004294D1 /* Core Data */,
 				1F78E7821C3B469300221927 /* AppDelegate.swift */,
+				1FCEF8F51C9CB231006AC591 /* Globals.swift */,
 				1F21DF101C645D1F00C55D0E /* View Controllers */,
 				1FF1F1781C4604370051EE54 /* TeamDataManager.swift */,
 				1F78E7861C3B469300221927 /* Main.storyboard */,
@@ -564,6 +567,7 @@
 				1F4534501C7242B9004EDDB9 /* TeamMatchPerformance+CoreDataProperties.swift in Sources */,
 				1F4534381C7242B9004EDDB9 /* TimeMarker+CoreDataProperties.swift in Sources */,
 				1F4FEDAA1C4AD95C00F4016D /* PitScoutingController.swift in Sources */,
+				1FCEF8F61C9CB231006AC591 /* Globals.swift in Sources */,
 				1F4534171C7002EB004EDDB9 /* PopoverPickerViewController.swift in Sources */,
 				1F4534371C7242B9004EDDB9 /* Defense.swift in Sources */,
 				1F4534521C7242B9004EDDB9 /* TeamRegionalPerformance+CoreDataProperties.swift in Sources */,

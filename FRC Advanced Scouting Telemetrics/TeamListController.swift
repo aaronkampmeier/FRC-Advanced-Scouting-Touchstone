@@ -21,6 +21,8 @@ class TeamListController: UIViewController, UITableViewDataSource, UITableViewDe
     @IBOutlet weak var editTeamsButton: UIBarButtonItem!
     @IBOutlet weak var teamListToolbar: UIToolbar!
 	@IBOutlet weak var standsScoutingButton: UIBarButtonItem!
+	
+	@IBOutlet weak var updateButton: UIBarButtonItem!
     
     let teamManager = TeamDataManager()
     var adjustsForToolbarInsets: UIEdgeInsets? = nil
@@ -210,6 +212,18 @@ class TeamListController: UIViewController, UITableViewDataSource, UITableViewDe
         
         //Add responder for notification about a new team
         NSNotificationCenter.defaultCenter().addObserverForName("New Team", object: nil, queue: nil, usingBlock: addTeamFromNotification)
+		
+		//Add observer for if the app can be updated
+		NSNotificationCenter.defaultCenter().addObserverForName("UpdateIsAvailable", object: nil, queue: nil) { notification in
+			let userInfo = notification.userInfo
+			let isUpdateAvailable = userInfo!["isAvailable"] as! Bool
+			
+			if isUpdateAvailable {
+				self.updateButton.enabled = true
+			} else {
+				self.updateButton.enabled = false
+			}
+		}
         
         //Create reusable cell
         teamList.registerClass(UITableViewCell.self,
@@ -565,6 +579,10 @@ class TeamListController: UIViewController, UITableViewDataSource, UITableViewDe
 	
 	func didChooseRegional(regional: Regional?) {
 		selectedRegional = regional
+	}
+	
+	@IBAction func updateButtonPressed(sender: UIBarButtonItem) {
+		(UIApplication.sharedApplication().delegate as! AppDelegate).checkForUpdate(forceful: true)
 	}
 }
 
