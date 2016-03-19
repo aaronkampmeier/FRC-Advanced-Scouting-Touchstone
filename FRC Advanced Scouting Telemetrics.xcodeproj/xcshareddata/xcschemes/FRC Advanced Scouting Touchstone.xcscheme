@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Scheme
-   LastUpgradeVersion = "0500"
+   LastUpgradeVersion = "0730"
    version = "1.3">
    <BuildAction
       parallelizeBuildables = "YES"
@@ -15,9 +15,9 @@
             hideIssues = "NO">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "725FC0AB-5C85-4D67-BDA1-23D7F274E9F7"
-               BuildableName = "FRC Advanced Scouting Telemetrics.app"
-               BlueprintName = "FRC Advanced Scouting Telemetrics"
+               BlueprintIdentifier = "1F78E77E1C3B469300221927"
+               BuildableName = "FRC Advanced Scouting Touchstone.app"
+               BlueprintName = "FRC Advanced Scouting Touchstone"
                ReferencedContainer = "container:FRC Advanced Scouting Telemetrics.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
@@ -29,13 +29,33 @@
       selectedLauncherIdentifier = "Xcode.DebuggerFoundation.Launcher.LLDB"
       shouldUseLaunchSchemeArgsEnv = "YES">
       <Testables>
+         <TestableReference
+            skipped = "NO">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "1F78E7951C3B469300221927"
+               BuildableName = "FRC Advanced Scouting Touchstone.xctest"
+               BlueprintName = "FRC Advanced Scouting TouchstoneTests"
+               ReferencedContainer = "container:FRC Advanced Scouting Telemetrics.xcodeproj">
+            </BuildableReference>
+         </TestableReference>
+         <TestableReference
+            skipped = "NO">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "1F78E7A01C3B469300221927"
+               BuildableName = "FRC Advanced Scouting Touchstone.xctest"
+               BlueprintName = "FRC Advanced Scouting TouchstoneUITests"
+               ReferencedContainer = "container:FRC Advanced Scouting Telemetrics.xcodeproj">
+            </BuildableReference>
+         </TestableReference>
       </Testables>
       <MacroExpansion>
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "725FC0AB-5C85-4D67-BDA1-23D7F274E9F7"
-            BuildableName = "FRC Advanced Scouting Telemetrics.app"
-            BlueprintName = "FRC Advanced Scouting Telemetrics"
+            BlueprintIdentifier = "1F78E77E1C3B469300221927"
+            BuildableName = "FRC Advanced Scouting Touchstone.app"
+            BlueprintName = "FRC Advanced Scouting Touchstone"
             ReferencedContainer = "container:FRC Advanced Scouting Telemetrics.xcodeproj">
          </BuildableReference>
       </MacroExpansion>
@@ -56,9 +76,9 @@
          runnableDebuggingMode = "0">
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "725FC0AB-5C85-4D67-BDA1-23D7F274E9F7"
-            BuildableName = "FRC Advanced Scouting Telemetrics.app"
-            BlueprintName = "FRC Advanced Scouting Telemetrics"
+            BlueprintIdentifier = "1F78E77E1C3B469300221927"
+            BuildableName = "FRC Advanced Scouting Touchstone.app"
+            BlueprintName = "FRC Advanced Scouting Touchstone"
             ReferencedContainer = "container:FRC Advanced Scouting Telemetrics.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
@@ -75,9 +95,9 @@
          runnableDebuggingMode = "0">
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "725FC0AB-5C85-4D67-BDA1-23D7F274E9F7"
-            BuildableName = "FRC Advanced Scouting Telemetrics.app"
-            BlueprintName = "FRC Advanced Scouting Telemetrics"
+            BlueprintIdentifier = "1F78E77E1C3B469300221927"
+            BuildableName = "FRC Advanced Scouting Touchstone.app"
+            BlueprintName = "FRC Advanced Scouting Touchstone"
             ReferencedContainer = "container:FRC Advanced Scouting Telemetrics.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
