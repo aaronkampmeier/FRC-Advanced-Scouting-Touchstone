@@ -13,12 +13,14 @@ class ShotChartViewController: UIViewController {
 	@IBOutlet weak var offenseImage: UIImageView!
 	
 	let invisibleView = UIView()
+	var teamListVC: TeamListController!
 
     override func viewDidLoad() {
         super.viewDidLoad()
 
         // Do any additional setup after loading the view.
 		offenseImage.addSubview(invisibleView)
+		teamListVC = parentViewController as! TeamListController
     }
 	
 	override func viewDidAppear(animated: Bool) {
@@ -50,13 +52,32 @@ class ShotChartViewController: UIViewController {
 		}
 	}
 	
-	func selectedMatchPerformance(matchPerformance: TeamMatchPerformance) {
+	func selectedMatchPerformance(matchPerformance: TeamMatchPerformance?) {
 		//First, remove all the previous points
 		for view in invisibleView.subviews {
 			view.removeFromSuperview()
 		}
 		
+		var matchPerformances = [TeamMatchPerformance]()
+		
 		//Then add all the new ones
+		if let matchPerformance = matchPerformance {
+		    matchPerformances.append(matchPerformance)
+		} else {
+			if let performance = teamListVC.teamRegionalPerformance {
+				for mPerformance in performance.matchPerformances! {
+					matchPerformances.append(mPerformance)
+				}
+			} else {
+				for tPerformance in teamListVC.selectedTeamCache?.team.teamRegionalPerformances ?? [TeamRegionalPerformance]() {
+					for mPerformance in tPerformance.matchPerformances! {
+						matchPerformances.append(mPerformance)
+					}
+				}
+			}
+		}
+	
+		for matchPerformance in matchPerformances {
 		for shot in matchPerformance.offenseShots?.allObjects as! [Shot] {
 			let coordinate = CGPoint(x: shot.xLocation!.doubleValue, y: shot.yLocation!.doubleValue)
 			
@@ -75,6 +96,7 @@ class ShotChartViewController: UIViewController {
 			}
 
 			invisibleView.addSubview(pointView)
+		}
 		}
 	}
 
