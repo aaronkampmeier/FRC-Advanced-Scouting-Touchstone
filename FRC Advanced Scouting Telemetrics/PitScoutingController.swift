@@ -18,6 +18,9 @@ class PitScoutingController: UIViewController, UIImagePickerControllerDelegate, 
     @IBOutlet weak var validTeamSymbol: UIImageView!
     @IBOutlet weak var weightField: UITextField!
     @IBOutlet weak var teamNumberField: UITextField!
+	@IBOutlet weak var visionTrackingSlider: UISlider!
+	@IBOutlet weak var driveTrainField: UITextField!
+	@IBOutlet weak var heightField: UITextField!
     
     let dataManager = TeamDataManager()
     let imageController = UIImagePickerController()
@@ -63,6 +66,9 @@ class PitScoutingController: UIViewController, UIImagePickerControllerDelegate, 
 		driverXpField.text = String(selectedTeam?.driverExp ?? "") ?? ""
 		frontImage.image = UIImage(data: (selectedTeam?.frontImage) ?? NSData())
 		sideImage.image = UIImage(data: (selectedTeam?.sideImage) ?? NSData())
+		visionTrackingSlider.setValue((selectedTeam?.visionTrackingRating?.floatValue) ?? 2, animated: false)
+		driveTrainField.text = String(selectedTeam?.driveTrain ?? "") ?? ""
+		heightField.text = String(selectedTeam?.height ?? "") ?? ""
     }
 	
 	@IBAction func visionTrackingValueChanged(sender: UISlider) {
@@ -70,7 +76,19 @@ class PitScoutingController: UIViewController, UIImagePickerControllerDelegate, 
 		sender.setValue(stepValue, animated: true)
 		
 		if acceptableTeam {
-			selectedTeam
+			selectedTeam?.visionTrackingRating = stepValue
+		}
+	}
+	
+	@IBAction func heightEdited(sender: UITextField) {
+		if acceptableTeam {
+			selectedTeam?.height = Double(sender.text ?? "") ?? 0
+		}
+	}
+	
+	@IBAction func driveTrainEdited(sender: UITextField) {
+		if acceptableTeam {
+			selectedTeam?.driveTrain = sender.text
 		}
 	}
 	

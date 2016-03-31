@@ -23,5 +23,9 @@ extension Team {
     @NSManaged var draftBoard: DraftBoard?
     @NSManaged var stats: NSSet?
     @NSManaged var regionalPerformances: NSSet?
+	@NSManaged var driveTrain: String?
+	@NSManaged var height: NSNumber?
+	@NSManaged var visionTrackingRating: NSNumber?
+	@NSManaged var autonomousDefensesAbleToCross: NSSet?
 
 }

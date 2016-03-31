@@ -485,15 +485,21 @@ class TeamListController: UIViewController, UITableViewDataSource, UITableViewDe
 		} else if segue.identifier == "standsScouting" {
 			let destinationVC = segue.destinationViewController as! StandsScoutingViewController
 			destinationVC.teamPerformance = teamRegionalPerformance
+		} else if segue.identifier == "teamDetail" {
+			let destinationVC = (segue.destinationViewController as! UINavigationController).topViewController
+			setUpTeamDetailController(destinationVC!)
 		}
     }
 	
 	@IBAction func returningWithSegue(segue: UIStoryboardSegue) {
-		NSLog("Returning with segue")
 		if let selectedIndexPath = teamList.indexPathForSelectedRow {
 			teamList.selectRowAtIndexPath(selectedIndexPath, animated: false, scrollPosition: .None)
 			tableView(teamList, didSelectRowAtIndexPath: selectedIndexPath)
 		}
+	}
+	
+	@IBAction func returnToTeamList(segue: UIStoryboardSegue) {
+		
 	}
     
     @IBAction func sortPressed(sender: UIBarButtonItem) {
@@ -586,6 +592,36 @@ class TeamListController: UIViewController, UITableViewDataSource, UITableViewDe
 	@IBAction func updateButtonPressed(sender: UIBarButtonItem) {
 		(UIApplication.sharedApplication().delegate as! AppDelegate).checkForUpdate(forceful: true)
 	}
+	
+	//Presenting modal view of more Team details
+	@IBAction func showMoreDetailsPressed(sender: UIButton) {
+		
+	}
+	
+	func setUpTeamDetailController(detailController: UIViewController) {
+//		let detailTable = detailController.view.viewWithTag(1) as! UITableView
+//		let dataAndDelegate = TeamDetailTableViewDataAndDelegate(withTableView: detailTable)
+//		detailTable.dataSource = dataAndDelegate
+//		detailTable.delegate = dataAndDelegate
+//		
+//		dataAndDelegate.setUpWithTeam(selectedTeamCache?.team)
+		
+		let detailsLabel = detailController.view.viewWithTag(2) as! UILabel
+		var detailString = ""
+		detailString.appendContentsOf("\nHeight: \((selectedTeamCache?.team.height) ?? "")")
+		detailString.appendContentsOf("\nDrive Train: \(selectedTeamCache!.team.driveTrain ?? "")")
+		detailString.appendContentsOf("\nVision Tracking Rating: \(selectedTeamCache?.team.visionTrackingRating ?? "")")
+		detailString.appendContentsOf("\nAutonomous Defenses Able To Cross: ")
+		for defense in selectedTeamCache?.team.autonomousDefensesAbleToCross?.allObjects as! [Defense] {
+			detailString.appendContentsOf(", \(defense.defenseName!)")
+		}
+		detailString.appendContentsOf("\nDefenses Able To Cross: ")
+		for defense in selectedTeamCache?.team.defensesAbleToCross?.allObjects as! [Defense] {
+			detailString.appendContentsOf(", \(defense.defenseName!)")
+		}
+		
+		detailsLabel.text = detailString
+	}
 }
 
 extension TeamListController: UIPopoverPresentationControllerDelegate {
@@ -594,6 +630,70 @@ extension TeamListController: UIPopoverPresentationControllerDelegate {
 	}
 }
 
+class TeamDetailTableViewDataAndDelegate: NSObject, UITableViewDataSource, UITableViewDelegate {
+	let tableView: UITableView
+	var currentTeam: Team?
+	
+	init(withTableView tableView: UITableView) {
+		self.tableView = tableView
+//		tableView.rowHeight = UITableViewAutomaticDimension
+//		tableView.estimatedRowHeight = 44
+	}
+	
+	func setUpWithTeam(team: Team?) {
+		currentTeam = team
+		tableView.reloadData()
+	}
+	
+	func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+		return 5
+	}
+	
+	func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
+		var cell = tableView.dequeueReusableCellWithIdentifier("cell")
+		
+		switch indexPath.row {
+		case 0:
+			cell?.textLabel?.text = "Height"
+			cell?.detailTextLabel?.text = String(currentTeam?.height ?? "")
+		case 1:
+			cell?.textLabel?.text = "Drive Train"
+			cell?.detailTextLabel?.text = currentTeam?.driveTrain
+		case 2:
+			cell?.textLabel?.text = "Vision Tracking Rating"
+			cell?.detailTextLabel?.text = String(currentTeam?.visionTrackingRating ?? "")
+		case 3:
+			let largeCell = tableView.dequeueReusableCellWithIdentifier("largeCell") as! TeamDetailLargeCell
+			largeCell.mainLabel?.text = "Autonomous Defenses Able To Cross"
+			var stringOfDefenses = ""
+			for defense in currentTeam?.autonomousDefensesAbleToCross?.allObjects as! [Defense] {
+				stringOfDefenses.appendContentsOf("\n\(defense.defenseName!)")
+			}
+			largeCell.detailLabel?.text = stringOfDefenses
+			
+			cell = largeCell
+		case 4:
+			let largeCell = tableView.dequeueReusableCellWithIdentifier("largeCell") as! TeamDetailLargeCell
+			largeCell.mainLabel?.text = "Defenses Able To Cross"
+			var stringOfDefenses = ""
+			for defense in currentTeam?.defensesAbleToCross?.allObjects as! [Defense] {
+				stringOfDefenses.appendContentsOf("\n\(defense.defenseName!)")
+			}
+			largeCell.detailLabel?.text = stringOfDefenses
+			
+			cell = largeCell
+		default:
+			break
+		}
+		
+		return cell!
+	}
+}
+
+class TeamDetailLargeCell: UITableViewCell {
+	@IBOutlet weak var mainLabel: UILabel!
+	@IBOutlet weak var detailLabel: UILabel!
+}
 
 //extension TeamListController: UICollectionViewDelegateFlowLayout {
 //    func collectionView(collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAtIndexPath indexPath: NSIndexPath) -> CGSize {
