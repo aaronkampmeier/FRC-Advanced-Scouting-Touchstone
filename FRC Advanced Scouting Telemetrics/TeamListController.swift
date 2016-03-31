@@ -608,9 +608,9 @@ class TeamListController: UIViewController, UITableViewDataSource, UITableViewDe
 		
 		let detailsLabel = detailController.view.viewWithTag(2) as! UILabel
 		var detailString = ""
-		detailString.appendContentsOf("\nHeight: \((selectedTeamCache?.team.height) ?? "")")
+		detailString.appendContentsOf("\nHeight: \((selectedTeamCache?.team.height) ?? 0)")
 		detailString.appendContentsOf("\nDrive Train: \(selectedTeamCache!.team.driveTrain ?? "")")
-		detailString.appendContentsOf("\nVision Tracking Rating: \(selectedTeamCache?.team.visionTrackingRating ?? "")")
+		detailString.appendContentsOf("\nVision Tracking Rating: \(selectedTeamCache?.team.visionTrackingRating ?? 0)")
 		detailString.appendContentsOf("\nAutonomous Defenses Able To Cross: ")
 		for defense in selectedTeamCache?.team.autonomousDefensesAbleToCross?.allObjects as! [Defense] {
 			detailString.appendContentsOf(", \(defense.defenseName!)")

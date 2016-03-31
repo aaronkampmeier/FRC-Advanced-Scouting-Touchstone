@@ -61,8 +61,16 @@ class TeamDataManager {
         save()
     }
     
-	func addDefense(defense: Defense, toTeam team: Team) {
-		let mutableDefensesSet = team.defensesAbleToCross?.mutableCopy() as! NSMutableSet
+	func addDefense(defense: Defense, toTeam team: Team, forPart part: GamePart) {
+		var defenseSet: NSSet
+		switch part {
+		case .Autonomous:
+			defenseSet = team.autonomousDefensesAbleToCross!
+		case .Teleop:
+			defenseSet = team.defensesAbleToCross!
+		}
+		
+		let mutableDefensesSet = defenseSet.mutableCopy() as! NSMutableSet
 		
 		//Check if it is already there
 		if mutableDefensesSet.containsObject(defense) {
@@ -73,11 +81,24 @@ class TeamDataManager {
 		mutableDefensesSet.addObject(defense)
 		
 		//Set the data back in the team
-		team.defensesAbleToCross = (mutableDefensesSet.copy() as! NSSet)
+		switch part {
+		case .Autonomous:
+			team.autonomousDefensesAbleToCross = (mutableDefensesSet.copy() as! NSSet)
+		case .Teleop:
+			team.defensesAbleToCross = (mutableDefensesSet.copy() as! NSSet)
+		}
 	}
 	
-	func removeDefense(defense: Defense, fromTeam team: Team) {
-		let mutableDefensesSet = team.defensesAbleToCross?.mutableCopy() as! NSMutableSet
+	func removeDefense(defense: Defense, fromTeam team: Team, forPart part: GamePart) {
+		var defenseSet: NSSet
+		switch part {
+		case .Autonomous:
+			defenseSet = team.autonomousDefensesAbleToCross!
+		case .Teleop:
+			defenseSet = team.defensesAbleToCross!
+		}
+		
+		let mutableDefensesSet = defenseSet.mutableCopy() as! NSMutableSet
 		
 		//Check if the defense is actually in the set
 		if !mutableDefensesSet.containsObject(defense) {
@@ -88,7 +109,12 @@ class TeamDataManager {
 		mutableDefensesSet.removeObject(defense)
 		
 		//Set the data back into the team
-		team.defensesAbleToCross = (mutableDefensesSet.copy() as! NSSet)
+		switch part {
+		case .Autonomous:
+			team.autonomousDefensesAbleToCross = (mutableDefensesSet.copy() as! NSSet)
+		case .Teleop:
+			team.defensesAbleToCross = (mutableDefensesSet.copy() as! NSSet)
+		}
 	}
 	
     func getRootDraftBoard() throws -> DraftBoard {
@@ -801,5 +827,10 @@ class TeamDataManager {
                 return "A problem occured with data management."
             }
         }
-    }
+	}
+}
+	
+enum GamePart {
+	case Autonomous
+	case Teleop
 }
