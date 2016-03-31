@@ -65,6 +65,15 @@ class PitScoutingController: UIViewController, UIImagePickerControllerDelegate, 
 		sideImage.image = UIImage(data: (selectedTeam?.sideImage) ?? NSData())
     }
 	
+	@IBAction func visionTrackingValueChanged(sender: UISlider) {
+		let stepValue = round(sender.value)
+		sender.setValue(stepValue, animated: true)
+		
+		if acceptableTeam {
+			selectedTeam
+		}
+	}
+	
 	@IBAction func weightEdited(sender: UITextField) {
 		if acceptableTeam {
 			selectedTeam!.robotWeight = Double(sender.text!) ?? 0
