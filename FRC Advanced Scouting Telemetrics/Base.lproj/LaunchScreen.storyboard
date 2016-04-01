@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="9531" systemVersion="15C50" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" launchScreen="YES" useTraitCollections="YES" initialViewController="01J-lp-oVM">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="10116" systemVersion="15E56a" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" launchScreen="YES" useTraitCollections="YES" initialViewController="01J-lp-oVM">
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="9529"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="10085"/>
     </dependencies>
     <scenes>
         <!--View Controller-->
@@ -24,11 +24,27 @@
                                     <constraint firstAttribute="height" constant="200" id="o1x-cL-pBz"/>
                                 </constraints>
                             </imageView>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Created by Aaron Kampmeier" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="P8T-Vn-w2W">
+                                <rect key="frame" x="188" y="408" width="225" height="21"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Team 4256: The Cyborg Cats" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="RYj-gM-CAx">
+                                <rect key="frame" x="205" y="434" width="191" height="17"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                <color key="textColor" white="0.33333333333333331" alpha="1" colorSpace="calibratedWhite"/>
+                                <nil key="highlightedColor"/>
+                            </label>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                         <constraints>
+                            <constraint firstItem="P8T-Vn-w2W" firstAttribute="top" secondItem="o0q-E0-BMD" secondAttribute="bottom" constant="8" id="6UV-8p-R1o"/>
+                            <constraint firstItem="RYj-gM-CAx" firstAttribute="top" secondItem="P8T-Vn-w2W" secondAttribute="bottom" constant="5" id="6ec-ud-wFZ"/>
+                            <constraint firstItem="P8T-Vn-w2W" firstAttribute="centerX" secondItem="Ze5-6b-2t3" secondAttribute="centerX" id="8uy-FV-2An"/>
                             <constraint firstItem="o0q-E0-BMD" firstAttribute="centerX" secondItem="Ze5-6b-2t3" secondAttribute="centerX" id="CWq-CM-9uR"/>
                             <constraint firstItem="o0q-E0-BMD" firstAttribute="centerY" secondItem="Ze5-6b-2t3" secondAttribute="centerY" id="fjE-Bz-PBB"/>
+                            <constraint firstItem="RYj-gM-CAx" firstAttribute="centerX" secondItem="Ze5-6b-2t3" secondAttribute="centerX" id="wOc-aM-FTe"/>
                         </constraints>
                     </view>
                 </viewController>
