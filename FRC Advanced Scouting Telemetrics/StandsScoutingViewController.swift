@@ -20,6 +20,7 @@ class StandsScoutingViewController: UIViewController {
 	@IBOutlet weak var finalTowerView: UIView!
 	@IBOutlet weak var challengedTowerSwitch: UISwitch!
 	@IBOutlet weak var scaledTowerSwitch: UISwitch!
+	@IBOutlet weak var notesButton: UIButton!
 	
 	var teamPerformance: TeamRegionalPerformance?
 	var matchPerformance: TeamMatchPerformance? {
@@ -139,7 +140,6 @@ class StandsScoutingViewController: UIViewController {
 		}
 	}
 	
-	var currentDetailViewController: StandsScoutingDetailProtocol?
 	var currentVC: UIViewController?
 	var initialChild: UIViewController?
 	var autonomousVC: AutonomousViewController?
@@ -167,23 +167,24 @@ class StandsScoutingViewController: UIViewController {
 		ballView.layer.borderWidth = 4
 		ballView.layer.cornerRadius = 5
 		ballView.layer.borderColor = UIColor.grayColor().CGColor
-		
-		let shapeLayer = CAShapeLayer()
-		shapeLayer.path = UIBezierPath(roundedRect: ballView.frame, byRoundingCorners: .TopLeft, cornerRadii: CGSize(width: 3, height: 3)).CGPath
-		//ballView.layer.mask = shapeLayer
-		
+		finalTowerView.layer.borderWidth = 4
+		finalTowerView.layer.cornerRadius = 5
+		finalTowerView.layer.borderColor = UIColor.grayColor().CGColor
 		closeButton.layer.cornerRadius = 10
+		notesButton.layer.cornerRadius = 10
     }
 	
 	override func viewWillAppear(animated: Bool) {
 		super.viewWillAppear(animated)
 		
-		//Ask for the match to use
-		let askAction = UIAlertController(title: "Select Match", message: "Select the match for Team \(teamPerformance!.team!.teamNumber!) in the regional \(teamPerformance!.regional!.name!) for stands scouting.", preferredStyle: .Alert)
-		for match in (teamPerformance?.matchPerformances?.allObjects as! [TeamMatchPerformance]).sort({Int($0.match!.matchNumber!) < Int($1.match!.matchNumber!)}) {
-			askAction.addAction(UIAlertAction(title: "Match \(match.match!.matchNumber!)", style: .Default, handler: {_ in self.matchPerformance = match}))
+		if matchPerformance == nil {
+			//Ask for the match to use
+			let askAction = UIAlertController(title: "Select Match", message: "Select the match for Team \(teamPerformance!.team!.teamNumber!) in the regional \(teamPerformance!.regional!.name!) for stands scouting.", preferredStyle: .Alert)
+			for match in (teamPerformance?.matchPerformances?.allObjects as! [TeamMatchPerformance]).sort({Int($0.match!.matchNumber!) < Int($1.match!.matchNumber!)}) {
+				askAction.addAction(UIAlertAction(title: "Match \(match.match!.matchNumber!)", style: .Default, handler: {_ in self.matchPerformance = match}))
+			}
+			presentViewController(askAction, animated: true, completion: nil)
 		}
-		presentViewController(askAction, animated: true, completion: nil)
 	}
 	
 	override func viewDidAppear(animated: Bool) {
@@ -300,8 +301,47 @@ class StandsScoutingViewController: UIViewController {
         // Pass the selected object to the new view controller.
     }
     */
+	
+	@IBAction func returnToStandsScouting(segue: UIStoryboardSegue) {
+		
+	}
 
+	var notesVC: NotesViewController?
+	@IBAction func notesButtonPressed(sender: UIButton) {
+		if notesVC == nil {
+			notesVC = storyboard?.instantiateViewControllerWithIdentifier("notesVC") as! NotesViewController
+		}
+		
+		notesVC?.standsScoutingVC = self
+		
+		notesVC?.modalPresentationStyle = .Popover
+		let popoverController = notesVC?.popoverPresentationController
+		popoverController?.permittedArrowDirections = .Any
+		popoverController?.sourceView = sender
+		notesVC?.preferredContentSize = CGSize(width: 400, height: 600)
+		presentViewController(notesVC!, animated: true, completion: nil)
+	}
 }
 
-protocol StandsScoutingDetailProtocol {
+class NotesViewController: UIViewController {
+	@IBOutlet weak var notesTextView: UITextView!
+	
+	var standsScoutingVC: StandsScoutingViewController!
+	
+	override func viewDidLoad() {
+		super.viewDidLoad()
+	
+	}
+	
+	override func viewWillAppear(animated: Bool) {
+		super.viewWillAppear(animated)
+		
+		notesTextView.text = standsScoutingVC.matchPerformance?.notes
+	}
+	
+	override func viewDidDisappear(animated: Bool) {
+		super.viewDidDisappear(animated)
+		
+		standsScoutingVC.matchPerformance?.notes = notesTextView.text
+	}
 }

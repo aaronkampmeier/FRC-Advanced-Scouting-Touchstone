@@ -37,19 +37,23 @@ class NeutralViewController: UIViewController {
 		defense3Button.imageView?.contentMode = .ScaleAspectFit
 		defense2Button.imageView?.contentMode = .ScaleAspectFit
 		defense1Button.imageView?.contentMode = .ScaleAspectFit
-		
-		//First, check if the defenses are set
-//		if defenses.count < 4 {
-//			let alert = UIAlertController(title: "You Failed Peasant", message: "There are no defenses set for this match. Go set some, later.", preferredStyle: .Alert)
-//		}
-		
-		
-		//Set the buttons with the defenses images
-		defense4Button.setImage(UIImage(named: defenses![0].defenseName!), forState: .Normal)
-		defense3Button.setImage(UIImage(named: defenses![1].defenseName!), forState: .Normal)
-		defense2Button.setImage(UIImage(named: defenses![2].defenseName!), forState: .Normal)
-		defense1Button.setImage(UIImage(named: defenses![3].defenseName!), forState: .Normal)
     }
+	
+	override func viewWillAppear(animated: Bool) {
+		super.viewWillAppear(animated)
+		
+		if defenses?.count == 4 {
+			//Set the buttons with the defenses images
+			defense4Button.setImage(UIImage(named: defenses![0].defenseName!), forState: .Normal)
+			defense3Button.setImage(UIImage(named: defenses![1].defenseName!), forState: .Normal)
+			defense2Button.setImage(UIImage(named: defenses![2].defenseName!), forState: .Normal)
+			defense1Button.setImage(UIImage(named: defenses![3].defenseName!), forState: .Normal)
+		} else {
+			let alert = UIAlertController(title: "No Defenses", message: "There are no defenses set for this match. You must set some in the admin console before tracking neutral times.", preferredStyle: .Alert)
+			alert.addAction(UIAlertAction(title: "OK", style: .Default, handler: nil))
+			presentViewController(alert, animated: true, completion: nil)
+		}
+	}
 
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()

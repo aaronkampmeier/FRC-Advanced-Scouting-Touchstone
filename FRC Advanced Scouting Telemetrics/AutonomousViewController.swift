@@ -8,7 +8,7 @@
 
 import UIKit
 
-class AutonomousViewController: UIViewController, StandsScoutingDetailProtocol, UITableViewDelegate, UITableViewDataSource, UIPickerViewDelegate, UIPickerViewDataSource {
+class AutonomousViewController: UIViewController, UITableViewDelegate, UITableViewDataSource, UIPickerViewDelegate, UIPickerViewDataSource {
     @IBOutlet weak var optionsList: UITableView!
 	
 	var standsScoutingVC: StandsScoutingViewController?

@@ -90,12 +90,11 @@ class GameStatsController: UIViewController, UICollectionViewDataSource, UIColle
 			cell.label.textColor = UIColor(white: 1, alpha: 1)
 		} else if indexPath.item % 7 == 4 || indexPath.item == 4 {
 			cell.contentView.backgroundColor = UIColor(red: 1, green: 0, blue: 0, alpha: 1)
-			
 			cell.label.text = (((matches[indexPath.item/7 as Int].teamPerformances?.allObjects as! [TeamMatchPerformance]).filter({$0.allianceColor! == 1 && $0.allianceTeam! == 1}).first)?.regionalPerformance?.valueForKey("team") as? Team)?.teamNumber
 			cell.label.textColor = UIColor(white: 1, alpha: 1)
 		} else if indexPath.item % 7 == 5 || indexPath.item == 5 {
 			cell.contentView.backgroundColor = UIColor(red: 1, green: 0, blue: 0, alpha: 1)
-			cell.label.text = (((matches[indexPath.item/7 as Int].teamPerformances?.allObjects as! [TeamMatchPerformance]).filter({$0.allianceColor! == 1 && $0.allianceTeam! == 2})[safe: 0])?.regionalPerformance?.valueForKey("team") as? Team)?.teamNumber
+			cell.label.text = (((matches[indexPath.item/7 as Int].teamPerformances?.allObjects as! [TeamMatchPerformance]).filter({$0.allianceColor! == 1 && $0.allianceTeam! == 2}).first)?.regionalPerformance?.valueForKey("team") as? Team)?.teamNumber
 			cell.label.textColor = UIColor(white: 1, alpha: 1)
 		} else if indexPath.item % 7 == 6 || indexPath.item == 6 {
 			cell.contentView.backgroundColor = UIColor(red: 1, green: 0, blue: 0, alpha: 1)

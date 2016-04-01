@@ -143,8 +143,7 @@ class CourtyardViewController: UIViewController, UITableViewDataSource, UITableV
 		let popover = popoverVC?.popoverPresentationController
 		popoverVC?.preferredContentSize = CGSizeMake(300, 200)
 		popover?.delegate = self
-		popover?.sourceView = self.view
-		popover?.sourceRect = (pointView.frame)
+		popover?.sourceView = pointView
 		presentViewController(popoverVC!, animated: true, completion: nil)
 	}
 	
