@@ -19,6 +19,7 @@ extension Team {
     @NSManaged var robotWeight: NSNumber?
     @NSManaged var sideImage: NSData?
     @NSManaged var teamNumber: String?
+	@NSManaged var notes: String?
 	@NSManaged var defensesAbleToCross: NSSet?
     @NSManaged var draftBoard: DraftBoard?
     @NSManaged var stats: NSSet?

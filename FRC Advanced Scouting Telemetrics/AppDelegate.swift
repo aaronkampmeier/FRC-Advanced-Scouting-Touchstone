@@ -81,7 +81,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 		}
 		
 		//Save all the defenses
-		dataManager.save()
+		dataManager.commitChanges()
 		
 		checkForUpdate()
 		
@@ -102,7 +102,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 		if response.result.isSuccess {
 			//Get the current version of the app on the device
 			let onDeviceVersion = NSBundle.mainBundle().infoDictionary?["CFBundleShortVersionString"] as? String
-			if let deviceVersion = Double(onDeviceVersion ?? "Huh") {
+			if let deviceVersion = Double(onDeviceVersion ?? "Huh, why would this not work") {
 				if let latestVersion = Double((response.result.value?.stringByTrimmingCharactersInSet(NSCharacterSet.whitespaceAndNewlineCharacterSet()))!) {
 					//Check if they are the same
 					if latestVersion == deviceVersion {
@@ -168,6 +168,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     func applicationWillEnterForeground(application: UIApplication) {
         // Called as part of the transition from the background to the inactive state; here you can undo many of the changes made on entering the background.
+		checkForUpdate()
     }
 
     func applicationDidBecomeActive(application: UIApplication) {

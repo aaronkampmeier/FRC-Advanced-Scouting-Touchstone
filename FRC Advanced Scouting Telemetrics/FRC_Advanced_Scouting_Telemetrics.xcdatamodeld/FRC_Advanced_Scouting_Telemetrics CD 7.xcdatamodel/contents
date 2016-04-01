@@ -59,6 +59,7 @@
         <attribute name="driveTrain" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="frontImage" optional="YES" attributeType="Binary" allowsExternalBinaryDataStorage="YES" syncable="YES"/>
         <attribute name="height" optional="YES" attributeType="Double" minValueString="0" defaultValueString="0.0" syncable="YES"/>
+        <attribute name="notes" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="robotWeight" optional="YES" attributeType="Double" defaultValueString="0.0" syncable="YES"/>
         <attribute name="sideImage" optional="YES" attributeType="Binary" allowsExternalBinaryDataStorage="YES" syncable="YES"/>
         <attribute name="teamNumber" attributeType="String" syncable="YES"/>
@@ -73,7 +74,6 @@
         <attribute name="allianceTeam" attributeType="Integer 64" minValueString="1" maxValueString="3" syncable="YES"/>
         <attribute name="didChallengeTower" optional="YES" attributeType="Boolean" syncable="YES"/>
         <attribute name="didScaleTower" optional="YES" attributeType="Boolean" syncable="YES"/>
-        <attribute name="notes" optional="YES" attributeType="String" syncable="YES"/>
         <relationship name="autonomousCycles" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="AutonomousCycle" inverseName="matchPerformance" inverseEntity="AutonomousCycle" syncable="YES"/>
         <relationship name="defenseCrossTimes" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="DefenseCrossTime" inverseName="teamMatchPerformance" inverseEntity="DefenseCrossTime" syncable="YES"/>
         <relationship name="match" maxCount="1" deletionRule="Nullify" destinationEntity="Match" inverseName="teamPerformances" inverseEntity="Match" syncable="YES"/>
@@ -99,8 +99,8 @@
         <element name="Match" positionX="-108" positionY="502" width="128" height="284"/>
         <element name="Regional" positionX="-281" positionY="162" width="128" height="105"/>
         <element name="Shot" positionX="198" positionY="278" width="128" height="120"/>
-        <element name="Team" positionX="-92" positionY="-99" width="128" height="225"/>
-        <element name="TeamMatchPerformance" positionX="-99" positionY="267" width="128" height="210"/>
+        <element name="Team" positionX="-92" positionY="-99" width="128" height="240"/>
+        <element name="TeamMatchPerformance" positionX="-99" positionY="267" width="128" height="195"/>
         <element name="TeamRegionalPerformance" positionX="-92" positionY="144" width="128" height="90"/>
         <element name="TimeMarker" positionX="180" positionY="521" width="126" height="88"/>
     </elements>

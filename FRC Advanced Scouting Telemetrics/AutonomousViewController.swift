@@ -48,7 +48,7 @@ class AutonomousViewController: UIViewController, UITableViewDelegate, UITableVi
 	override func viewWillDisappear(animated: Bool) {
 		super.viewWillDisappear(animated)
 		
-		dataManager.save()
+		dataManager.commitChanges()
 	}
     
     func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {

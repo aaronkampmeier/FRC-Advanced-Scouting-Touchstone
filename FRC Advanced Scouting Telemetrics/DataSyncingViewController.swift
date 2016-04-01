@@ -8,16 +8,19 @@
 
 import UIKit
 
-class DataSyncingViewController: UIViewController {
+class DataSyncingViewController: UIViewController, ConflictManager {
 	@IBOutlet weak var statusLabel: UILabel!
-	@IBOutlet weak var activityIndicator: UIActivityIndicatorView!
 	@IBOutlet weak var progressIndicator: UIProgressView!
 	@IBOutlet weak var syncButton: UIButton!
 	@IBOutlet weak var doneButton: UIBarButtonItem!
 	@IBOutlet weak var searchForDevices: UIBarButtonItem!
+	@IBOutlet weak var mergingLabel: UILabel!
+	@IBOutlet weak var mergingActivityIndicator: UIActivityIndicatorView!
 	
 	var syncingManager: SyncingManager?
 	let dataManager = TeamDataManager()
+	
+	var conflictManagerVC: SyncingConflictViewController?
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -48,12 +51,35 @@ class DataSyncingViewController: UIViewController {
 		syncingManager = nil
 	}
 	
+	var completionHandler: ([MergeManager.Conflict] -> Void)?
+	func conflictManager(resolveConflicts conflicts: [MergeManager.Conflict], completionHandler: [MergeManager.Conflict] -> Void) {
+		conflictManagerVC = storyboard?.instantiateViewControllerWithIdentifier("conflictManager") as! SyncingConflictViewController
+		conflictManagerVC?.conflicts = conflicts
+		presentViewController(conflictManagerVC!, animated: true, completion: nil)
+		
+		self.completionHandler = completionHandler
+	}
+	
+	@IBAction func returningFromConflictResolution(segue: UIStoryboardSegue) {
+		completionHandler!((conflictManagerVC?.conflicts)!)
+	}
+	
 	func addObservers(forManager syncManager: SyncingManager) {
 		NSNotificationCenter.defaultCenter().addObserverForName("DataSyncing:DidChangeState", object: syncManager, queue: nil, usingBlock: didChangeState)
 		NSNotificationCenter.defaultCenter().addObserverForName("DataSyncing:DidStartReceiving", object: syncManager, queue: nil, usingBlock: didStartReceiving)
 		NSNotificationCenter.defaultCenter().addObserverForName("DataSyncing:DidFinishReceiving", object: syncManager, queue: nil, usingBlock: didFinishReceiving)
+		
+		NSNotificationCenter.defaultCenter().addObserverForName("Registration needed for conflict manager", object: nil, queue: nil) {_ in
+			NSNotificationCenter.defaultCenter().postNotificationName("Registering for conflict manager", object: self)
+		}
+		NSNotificationCenter.defaultCenter().addObserverForName("MergeManager:MergeCompleted", object: nil, queue: nil) {notification in
+			let alert = notification.userInfo!["alertToPresent"] as! UIAlertController
+			dispatch_async(dispatch_get_main_queue()) {
+				self.presentViewController(alert, animated: true, completion: nil)
+			}
+		}
 	}
-    
+	
 	@IBAction func donePressed(sender: UIBarButtonItem) {
 		dismissViewControllerAnimated(true, completion: nil)
 	}
@@ -65,12 +91,8 @@ class DataSyncingViewController: UIViewController {
 	}
 	
 	@IBAction func syncPressed(sender: UIButton) {
-		if #available(iOS 9.0, *) {
-			progressIndicator.observedProgress = syncingManager?.sync()
-		} else {
-			// Fallback on earlier versions
-			
-		}
+		progressIndicator.observedProgress = syncingManager?.sync()
+		syncButton.enabled = false
 	}
 	
 	func didChangeState(notification: NSNotification) {
@@ -81,10 +103,13 @@ class DataSyncingViewController: UIViewController {
 		switch state! {
 		case .Connected:
 			self.statusLabel.text = "Did connect to \(peerName)"
+			syncButton.enabled = true
 		case .Connecting:
 			self.statusLabel.text = "Connecting to \(peerName)"
+			syncButton.enabled = false
 		case .NotConnected:
 			self.statusLabel.text = "Not Connected"
+			syncButton.enabled = false
 		}
 	}
 	
@@ -93,16 +118,13 @@ class DataSyncingViewController: UIViewController {
 		
 		let userInfo = (notification.userInfo as! [String:AnyObject])
 		let progress = userInfo["progress"] as! NSProgress
-		if #available(iOS 9.0, *) {
-			progressIndicator.observedProgress = progress
-		} else {
-			// Fallback on earlier versions
-			
-		}
+		progressIndicator.observedProgress = progress
 	}
 	
 	func didFinishReceiving(notification: NSNotification) {
-		
+		//Finished receiving, show merging label
+		mergingLabel.hidden = false
+		mergingActivityIndicator.startAnimating()
 	}
 
     /*

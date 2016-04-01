@@ -336,12 +336,12 @@ class NotesViewController: UIViewController {
 	override func viewWillAppear(animated: Bool) {
 		super.viewWillAppear(animated)
 		
-		notesTextView.text = standsScoutingVC.matchPerformance?.notes
+		notesTextView.text = standsScoutingVC.matchPerformance?.regionalPerformance?.team?.notes
 	}
 	
 	override func viewDidDisappear(animated: Bool) {
 		super.viewDidDisappear(animated)
 		
-		standsScoutingVC.matchPerformance?.notes = notesTextView.text
+		standsScoutingVC.matchPerformance?.regionalPerformance?.team?.notes = notesTextView.text
 	}
 }

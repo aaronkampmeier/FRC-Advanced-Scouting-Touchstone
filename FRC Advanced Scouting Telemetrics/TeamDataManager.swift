@@ -14,7 +14,7 @@ class TeamDataManager {
     
     static let managedContext = (UIApplication.sharedApplication().delegate as! AppDelegate).managedObjectContext
 	
-	func save() {
+	private func save() {
         do {
             try TeamDataManager.managedContext.save()
         } catch let error as NSError {
@@ -32,7 +32,7 @@ class TeamDataManager {
 		TeamDataManager.managedContext.rollback()
 	}
 	
-    func saveTeamNumber(number: String) -> Team {
+	func saveTeamNumber(number: String, atRank rank: Int? = nil) -> Team {
         //Get the entity for a Team and then create a new one
         let entity = NSEntityDescription.entityForName("Team", inManagedObjectContext: TeamDataManager.managedContext)
         
@@ -42,24 +42,40 @@ class TeamDataManager {
         team.teamNumber = number
         
         //Add it to the root draft board
-        do {
-            let rootDraftBoard = try getRootDraftBoard()
-            team.draftBoard = rootDraftBoard
-        } catch {
-            NSLog("Could not save team to draft board")
-        }
-        
+		if rank == nil {
+			do {
+				let rootDraftBoard = try getRootDraftBoard()
+				team.draftBoard = rootDraftBoard
+			} catch {
+				NSLog("Could not save team to draft board")
+			}
+		} else {
+			do {
+				let draftBoard = try getRootDraftBoard().teams?.mutableCopy() as! NSMutableOrderedSet
+				draftBoard.insertObject(team, atIndex: rank!)
+				try getRootDraftBoard().teams = draftBoard.copy() as! NSOrderedSet
+			} catch {
+				NSLog("Could not save team to draft board")
+			}
+		}
+		
+		
         //Try to save
         save()
         return team
     }
     
     func deleteTeam(teamForDeletion: Team) {
-        
         TeamDataManager.managedContext.deleteObject(teamForDeletion)
         
         save()
     }
+	
+	func delete(objectsToDelete: NSManagedObject...) {
+		for object in objectsToDelete {
+			TeamDataManager.managedContext.deleteObject(object)
+		}
+	}
     
 	func addDefense(defense: Defense, toTeam team: Team, forPart part: GamePart) {
 		var defenseSet: NSSet
@@ -136,8 +152,6 @@ class TeamDataManager {
 				results[0].teams = NSOrderedSet(array: board1Mutable)
 				commitChanges()
 				return try getRootDraftBoard()
-				
-				//results.reduce(<#T##initial: T##T#>, combine: <#T##(T, DraftBoard) throws -> T#>)
             } else if results.count == 1 {
                 NSLog("One Draftboard")
                 return results[0]
@@ -145,7 +159,7 @@ class TeamDataManager {
                 NSLog("Creating new draft board")
                 //Create a new draft board and return it
                 let newDraftBoard = DraftBoard(entity: NSEntityDescription.entityForName("DraftBoard", inManagedObjectContext: TeamDataManager.managedContext)!, insertIntoManagedObjectContext: TeamDataManager.managedContext)
-                save()
+                commitChanges()
                 return newDraftBoard
             }
         } catch let error as NSError {
@@ -421,7 +435,7 @@ class TeamDataManager {
 						//The team is the same, we're done
 					} else {
 						//The team is different, delete the old one and make a new one
-						delete(preExistentTeamPerformance!)
+						deleteMatchPerformance(preExistentTeamPerformance!)
 						
 						let matchPerformance = createNewMatchPerformance(withTeam: team, inMatch: match)
 						
@@ -436,13 +450,13 @@ class TeamDataManager {
 			} else {
 				//There isn't a team for that color and place, delete whatever was previously there
 				if let performance = preExistentTeamPerformance {
-					delete(performance)
+					deleteMatchPerformance(performance)
 				}
 			}
 		}
 	}
 	
-	func delete(matchPerformance: TeamMatchPerformance) {
+	func deleteMatchPerformance(matchPerformance: TeamMatchPerformance) {
 		//Get the regional performance before deletion
 		let regionalPerformance = matchPerformance.regionalPerformance!
 		
@@ -827,7 +841,7 @@ class TeamDataManager {
                 return "A problem occured with data management."
             }
         }
-	}
+    }
 }
 	
 enum GamePart {

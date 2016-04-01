@@ -18,7 +18,6 @@ extension TeamMatchPerformance {
     @NSManaged var allianceTeam: NSNumber?
     @NSManaged var didChallengeTower: NSNumber?
     @NSManaged var didScaleTower: NSNumber?
-    @NSManaged var notes: String?
     @NSManaged var autonomousCycles: NSSet?
     @NSManaged var defenseCrossTimes: NSSet?
     @NSManaged var match: Match?
