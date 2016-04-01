@@ -330,7 +330,9 @@ class NotesViewController: UIViewController {
 	
 	override func viewDidLoad() {
 		super.viewDidLoad()
-	
+		notesTextView.layer.cornerRadius = 5
+		notesTextView.layer.borderWidth = 3
+		notesTextView.layer.borderColor = UIColor.lightGrayColor().CGColor
 	}
 	
 	override func viewWillAppear(animated: Bool) {

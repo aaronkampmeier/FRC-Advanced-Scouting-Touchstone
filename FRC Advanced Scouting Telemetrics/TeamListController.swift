@@ -621,6 +621,21 @@ class TeamListController: UIViewController, UITableViewDataSource, UITableViewDe
 		}
 		
 		detailsLabel.text = detailString
+		
+		let notesView = detailController.view.viewWithTag(3) as! UITextView
+		notesView.text = selectedTeamCache?.team.notes
+		notesView.layer.cornerRadius = 5
+		notesView.layer.borderWidth = 3
+		notesView.layer.borderColor = UIColor.lightGrayColor().CGColor
+		
+		notesView.delegate = self
+	}
+}
+
+extension TeamListController: UITextViewDelegate {
+	func textViewDidEndEditing(textView: UITextView) {
+		selectedTeamCache?.team.notes = textView.text
+		teamManager.commitChanges()
 	}
 }
 
