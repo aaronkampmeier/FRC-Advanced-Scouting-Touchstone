@@ -673,6 +673,16 @@ class MergeManager {
 //				let secondTeams: [Team] = (second.teamPerformances?.allObjects as! [TeamMatchPerformance]).map() {team in
 //					return (team.regionalPerformance?.team)!
 //				}
+				do {
+					try first.validateForInsert()
+				} catch {
+					assertionFailure()
+				}
+				do {
+					try second.validateForInsert()
+				} catch {
+					assertionFailure()
+				}
 				
 				let conflictIDPrefix = "Match:\(first.regional!.regionalNumber!):\(first.matchNumber!)"
 				newConflicts.append(Conflict(title: "Blue Defenses", description: "", identifier: "\(conflictIDPrefix):BlueDefenses", priority: .Medium, localValue: first.blueDefenses ?? 0, foreignValue: second.blueDefenses ?? 0))
@@ -779,21 +789,33 @@ class MergeManager {
 		}
 		
 		//And then the match performances
-		var matchPerformances = fetchManagedbjects("TeamMatchPerformance", type: TeamMatchPerformance.self)
-		for performance in matchPerformances {
-			let samePerformances = matchPerformances.filter() {
-				if !($0.match?.matchNumber == performance.match?.matchNumber && $0.match?.regional?.regionalNumber == performance.match?.regional?.regionalNumber) {
-					return false
-				} else if !($0.allianceColor == performance.allianceColor && $0.allianceTeam == performance.allianceTeam) {
-					return false
-				} else {
-					return true
-				}
-			}
-			let mergedPerformance = samePerformances.reduceToFirst(mergeTwo)
-			for performance in samePerformances {
-				matchPerformances.removeAtIndex(matchPerformances.indexOf(performance)!)
-			}
+		
+//		var matchPerformances = fetchManagedbjects("TeamMatchPerformance", type: TeamMatchPerformance.self)
+//		for performance in matchPerformances {
+//			let samePerformances = matchPerformances.filter() {
+//				if !($0.match?.matchNumber == performance.match?.matchNumber && $0.match?.regional?.regionalNumber == performance.match?.regional?.regionalNumber) {
+//					return false
+//				} else if !($0.allianceColor == performance.allianceColor && $0.allianceTeam == performance.allianceTeam) {
+//					return false
+//				} else {
+//					return true
+//				}
+//			}
+//			let mergedPerformance = samePerformances.reduceToFirst(mergeTwo)
+//			for performance in samePerformances {
+//				matchPerformances.removeAtIndex(matchPerformances.indexOf(performance)!)
+//			}
+//		}
+		
+		do {
+			try managedObjectContext.save()
+		} catch {
+			NSLog("Unable to save the merge. Error: \(error)")
+			let filteredMatches = fetchManagedbjects("Match", type: Match.self).filter({$0.teamPerformances!.count != 6})
+			NSLog("\(filteredMatches)")
+			let alert = UIAlertController(title: "Merging Failed", message: "The merge failed to complete because it could not save the end result. Please show this to your administrator to have the issue debuged and the database restored.", preferredStyle: .Alert)
+			alert.addAction(UIAlertAction(title: "Dang it, iPad", style: .Default, handler: nil))
+			NSNotificationCenter.defaultCenter().postNotificationName("MergeManager:MergeFinished", object: self, userInfo: ["alertToPresent":alert])
 		}
 		
 		//Present an alert saying it is finished
@@ -801,7 +823,7 @@ class MergeManager {
 		alert.addAction(UIAlertAction(title: "Quit App", style: .Default) {_ in
 			fatalError("Shutting down app to complete merge.")
 		})
-		NSNotificationCenter.defaultCenter().postNotificationName("MergeManager:MergeCompleted", object: self, userInfo: ["alertToPresent":alert])
+		NSNotificationCenter.defaultCenter().postNotificationName("MergeManager:MergeFinished", object: self, userInfo: ["alertToPresent":alert])
 	}
 	
 	private func mergeTwo<T:NSManagedObject>(genericFirst: T, genericSecond: T) -> T {
@@ -811,7 +833,7 @@ class MergeManager {
 			do {
 				let first = genericFirst as! Team
 				let second = genericSecond as! Team
-				mergedTeam = dataManager.saveTeamNumber(first.teamNumber!)
+				mergedTeam = dataManager.saveTeamNumber(first.teamNumber!, performCommit: false)
 				
 				//First merge the driver experiences
 				mergedTeam.driverExp = first.driverExp ~? second.driverExp // ~? is an operator defined in Globals.swift
@@ -819,7 +841,7 @@ class MergeManager {
 				mergedTeam.robotWeight = first.robotWeight ~? second.robotWeight
 				mergedTeam.visionTrackingRating = first.visionTrackingRating ~? second.visionTrackingRating
 				
-				mergedTeam.notes = "\(first.notes)\n\(second.notes)"
+				mergedTeam.notes = "\(first.notes ?? "")\n\(second.notes ?? "")"
 				
 				//Now merge stuff with conflicts
 				mergedTeam.driveTrain = (conflictWithID("Team:\(first.teamNumber!):DriveTrain")!.resolution as? String) ?? ""
@@ -881,11 +903,22 @@ class MergeManager {
 				
 				let conflictIDPrefix = "Match:\(first.regional!.regionalNumber!):\(first.matchNumber!)"
 				mergedMatch.blueDefenses = conflictWithID("\(conflictIDPrefix):BlueDefenses")?.resolution as! NSSet
-				mergedMatch.blueDefensesBreached = first.blueDefensesBreached + second.blueDefensesBreached
+				mergedMatch.blueDefensesBreached = (first.blueDefensesBreached as! Set<NSObject>).intersect(second.blueDefensesBreached as! Set<NSObject>) as! NSSet
 				mergedMatch.redDefenses = conflictWithID("\(conflictIDPrefix):RedDefenses")?.resolution as! NSSet
-				mergedMatch.redDefensesBreached = first.redDefensesBreached + second.redDefensesBreached
+				mergedMatch.redDefensesBreached = (first.redDefensesBreached as! Set<NSObject>).intersect(second.redDefensesBreached as! Set<NSObject>) as! NSSet
 				mergedMatch.regional = first.regional //Should be the same
 				mergedMatch.teamPerformances = first.teamPerformances + second.teamPerformances
+				
+				if mergedMatch.teamPerformances?.count > 12 {
+					let _ = 2 + 2
+				}
+				
+				//Try to merge the TeamMatchPerformances
+				let matchPerformances = mergedMatch.teamPerformances?.allObjects as! [TeamMatchPerformance]
+				for matchPerformance in matchPerformances {
+					let samePlaces = matchPerformances.filter() {$0.allianceColor == matchPerformance.allianceColor && $0.allianceTeam == matchPerformance.allianceTeam}
+					samePlaces.reduceToFirst(mergeTwo)
+				}
 				
 				dataManager.delete(first, second)
 			}
@@ -896,18 +929,20 @@ class MergeManager {
 				let first = genericFirst as! TeamMatchPerformance
 				let second = genericSecond as! TeamMatchPerformance
 				
+				NSLog("Merging MatchPerformance: \(genericFirst) and \(genericSecond)")
 				let id = "TeamMatchPerformance:\((first.match?.regional?.regionalNumber)!):\((first.match?.matchNumber)!):\(first.allianceColor!).\(first.allianceTeam!):Data"
-				let resolvedPerformance = conflictWithID(id)?.resolution as? TeamMatchPerformance
+				let conflict = conflictWithID(id)!
+				let resolvedPerformance = conflict.resolution as? TeamMatchPerformance
 				
 				if let performance = resolvedPerformance {
 					mergedPerformance = performance
-					switch performance {
-					case first:
-						dataManager.delete(second)
-					case second:
-						dataManager.delete(first)
-					default:
-						assertionFailure("Merged Match Performance was neither first nor second.")
+					
+					if performance.equalToOther(conflict.payload1) {
+						dataManager.delete(conflict.payload2 as! NSManagedObject)
+					} else if performance.equalToOther(conflict.payload2) {
+						dataManager.delete(conflict.payload1 as! NSManagedObject)
+					} else {
+						dataManager.delete(first, second)
 					}
 				} else {
 					fatalError("No conflict resolution for Match Performance: \(id)")
@@ -998,11 +1033,14 @@ private extension Array {
 			var newArray = self
 			newArray.removeFirst()
 			
-			for thing in newArray {
-				first = reduceTwo(first: self.first!, other: thing)
-			}
+			let reducedValue = newArray.reduce(self.first!, combine: reduceTwo)
+			return reducedValue
 			
-			return first
+//			for thing in newArray {
+//				first = reduceTwo(first: self.first!, other: thing)
+//			}
+//			
+//			return first
 		}
 	}
 }

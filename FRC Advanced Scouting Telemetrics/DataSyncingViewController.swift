@@ -61,7 +61,9 @@ class DataSyncingViewController: UIViewController, ConflictManager {
 	}
 	
 	@IBAction func returningFromConflictResolution(segue: UIStoryboardSegue) {
-		completionHandler!((conflictManagerVC?.conflicts)!)
+		dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0)) {
+			self.completionHandler!((self.conflictManagerVC?.conflicts)!)
+		}
 	}
 	
 	func addObservers(forManager syncManager: SyncingManager) {
@@ -72,7 +74,7 @@ class DataSyncingViewController: UIViewController, ConflictManager {
 		NSNotificationCenter.defaultCenter().addObserverForName("Registration needed for conflict manager", object: nil, queue: nil) {_ in
 			NSNotificationCenter.defaultCenter().postNotificationName("Registering for conflict manager", object: self)
 		}
-		NSNotificationCenter.defaultCenter().addObserverForName("MergeManager:MergeCompleted", object: nil, queue: nil) {notification in
+		NSNotificationCenter.defaultCenter().addObserverForName("MergeManager:MergeFinished", object: nil, queue: nil) {notification in
 			let alert = notification.userInfo!["alertToPresent"] as! UIAlertController
 			dispatch_async(dispatch_get_main_queue()) {
 				self.presentViewController(alert, animated: true, completion: nil)

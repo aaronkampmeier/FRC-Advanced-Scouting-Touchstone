@@ -32,7 +32,7 @@ class TeamDataManager {
 		TeamDataManager.managedContext.rollback()
 	}
 	
-	func saveTeamNumber(number: String, atRank rank: Int? = nil) -> Team {
+	func saveTeamNumber(number: String, atRank rank: Int? = nil, performCommit shouldSave: Bool = true) -> Team {
         //Get the entity for a Team and then create a new one
         let entity = NSEntityDescription.entityForName("Team", inManagedObjectContext: TeamDataManager.managedContext)
         
@@ -59,9 +59,10 @@ class TeamDataManager {
 			}
 		}
 		
-		
-        //Try to save
-        save()
+		if shouldSave {
+			//Try to save
+			save()
+		}
         return team
     }
     

@@ -9,7 +9,14 @@
 import UIKit
 
 class TeamPickerTableViewController: UITableViewController {
-
+	var teams: [Team] = [Team]() {
+		didSet {
+			shownTeams = teams
+		}
+	}
+	var shownTeams = [Team]()
+	
+	let dataManager = TeamDataManager()
     override func viewDidLoad() {
         super.viewDidLoad()
 
@@ -18,6 +25,8 @@ class TeamPickerTableViewController: UITableViewController {
 
         // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
         // self.navigationItem.rightBarButtonItem = self.editButtonItem()
+		
+		teams = try! dataManager.getDraftBoard()
     }
 
     override func didReceiveMemoryWarning() {
@@ -29,23 +38,30 @@ class TeamPickerTableViewController: UITableViewController {
 
     override func numberOfSectionsInTableView(tableView: UITableView) -> Int {
         // #warning Incomplete implementation, return the number of sections
-        return 0
+        return 1
     }
 
     override func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         // #warning Incomplete implementation, return the number of rows
-        return 0
+        return shownTeams.count
     }
 
-    /*
+	
     override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCellWithIdentifier("reuseIdentifier", forIndexPath: indexPath)
-
-        // Configure the cell...
-
+        let cell = tableView.dequeueReusableCellWithIdentifier("cell", forIndexPath: indexPath)
+		
+		cell.textLabel?.text = "Team \(shownTeams[indexPath.row].teamNumber!)"
+		
         return cell
     }
-    */
+	
+	override func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
+		shownTeams.removeAtIndex(indexPath.row)
+		
+		tableView.beginUpdates()
+		tableView.deleteRowsAtIndexPaths([indexPath], withRowAnimation: .Middle)
+		tableView.endUpdates()
+	}
 
     /*
     // Override to support conditional editing of the table view.
