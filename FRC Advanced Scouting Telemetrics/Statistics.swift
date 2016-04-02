@@ -27,6 +27,17 @@ enum StatCalculation {
 	case AverageTimeInZone([TeamMatchPerformance], GameFieldZone)
 	case TotalPoints([TeamMatchPerformance])
 	
+	//New ones
+	case VisionTracking([Team])
+	case Height([Team])
+	case TotalAutonomousDefenses([Team])
+	case TotalHighGoals([TeamMatchPerformance])
+	case TotalLowGoals([TeamMatchPerformance])
+	case TotalMadeHighGoals([TeamMatchPerformance])
+	case TotalMadeLowGoals([TeamMatchPerformance])
+	case TeamNumber(Team)
+	case TotalDefensesCrossed([TeamMatchPerformance], TeamDataManager.DefenseType)
+	
 	//Calculations for all the stat types
 	var value: Double {
 		switch self {
@@ -53,46 +64,46 @@ enum StatCalculation {
 		case .RankingPoints(let context):
 			//FIX THIS
 			let total: Int = context.reduce(0) {cumulative,matchPerformance in
-				var matchPerformanceTotal = 0
+//				var matchPerformanceTotal = 0
 				let allianceColor = TeamDataManager.AllianceColor(rawValue: matchPerformance.allianceColor!.integerValue)!
 				
-				let redFinalScore = matchPerformance.match?.redFinalScore?.integerValue
-				let blueFinalScore = matchPerformance.match?.blueFinalScore?.integerValue
+//				let redFinalScore = matchPerformance.match?.redFinalScore?.integerValue
+//				let blueFinalScore = matchPerformance.match?.blueFinalScore?.integerValue
 				
 				switch allianceColor {
 				case .Red:
-					//First add points for a capture
-					if (matchPerformance.match?.redCapturedTower?.boolValue) ?? false {
-						matchPerformanceTotal += 1
-					}
-					
-					//Next get points for a breach
-					if matchPerformance.match?.redDefensesBreached?.count >= 4 {
-						matchPerformanceTotal += 1
-					}
-					
-					//Fnally, check who won
-					if redFinalScore > blueFinalScore {
-						matchPerformanceTotal += 2
-					} else if redFinalScore == blueFinalScore {
-						matchPerformanceTotal += 1
-					}
+					return cumulative + (matchPerformance.match?.redRankingPoints?.integerValue ?? 0)
+//					//First add points for a capture
+//					if (matchPerformance.match?.redCapturedTower?.boolValue) ?? false {
+//						matchPerformanceTotal += 1
+//					}
+//					
+//					//Next get points for a breach
+//					if matchPerformance.match?.redDefensesBreached?.count >= 4 {
+//						matchPerformanceTotal += 1
+//					}
+//					
+//					//Fnally, check who won
+//					if redFinalScore > blueFinalScore {
+//						matchPerformanceTotal += 2
+//					} else if redFinalScore == blueFinalScore {
+//						matchPerformanceTotal += 1
+//					}
 				case .Blue:
-					if (matchPerformance.match?.blueCapturedTower?.boolValue) ?? false {
-						matchPerformanceTotal += 1
-					}
-					if matchPerformance.match?.blueDefensesBreached?.count >= 4 {
-						matchPerformanceTotal += 1
-					}
-					//Fnally, check who won
-					if redFinalScore < blueFinalScore {
-						matchPerformanceTotal += 2
-					} else if redFinalScore == blueFinalScore {
-						matchPerformanceTotal += 1
-					}
+					return cumulative + (matchPerformance.match?.blueRankingPoints?.integerValue ?? 0)
+//					if (matchPerformance.match?.blueCapturedTower?.boolValue) ?? false {
+//						matchPerformanceTotal += 1
+//					}
+//					if matchPerformance.match?.blueDefensesBreached?.count >= 4 {
+//						matchPerformanceTotal += 1
+//					}
+//					//Fnally, check who won
+//					if redFinalScore < blueFinalScore {
+//						matchPerformanceTotal += 2
+//					} else if redFinalScore == blueFinalScore {
+//						matchPerformanceTotal += 1
+//					}
 				}
-				
-				return cumulative + matchPerformanceTotal
 			}
 			
 			return Double(total)
@@ -137,6 +148,8 @@ enum StatCalculation {
 			}
 			
 			return Double(total)
+		default:
+			return 0
 		}
 	}
 	
@@ -160,6 +173,8 @@ enum StatCalculation {
 			return "Average Time in \(zone.rawValue)"
 		case .TotalPoints(_):
 			return "Total Points"
+		default:
+			return ""
 		}
 	}
 }
