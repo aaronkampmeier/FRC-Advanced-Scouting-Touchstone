@@ -33,6 +33,7 @@ class AddTeamVC: UIViewController {
             } else {
                 //If it is a number, save the new Team
                 let newTeam = dataManager.saveTeamNumber(teamField.text!)
+				dataManager.commitChanges()
                 
                 //Post Notification of a new Team
                 NSNotificationCenter.defaultCenter().postNotificationName("New Team", object: self, userInfo: ["New Team Object":newTeam])

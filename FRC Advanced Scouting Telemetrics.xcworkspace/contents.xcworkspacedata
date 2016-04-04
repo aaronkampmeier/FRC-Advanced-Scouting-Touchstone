@@ -2,7 +2,7 @@
 <Workspace
    version = "1.0">
    <FileRef
-      location = "group:FRC Advanced Scouting Telemetrics.xcodeproj">
+      location = "group:/Users/aaronkampmeier/Documents/Xcode Projects/FRC Advanced Scouting Telemetrics/FRC Advanced Scouting Touchstone.xcodeproj">
    </FileRef>
    <FileRef
       location = "group:Pods/Pods.xcodeproj">

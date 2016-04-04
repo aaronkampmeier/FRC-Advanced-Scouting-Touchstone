@@ -61,7 +61,7 @@ class TeamDataManager {
 		
 		if shouldSave {
 			//Try to save
-			save()
+			commitChanges()
 		}
         return team
     }
@@ -151,7 +151,6 @@ class TeamDataManager {
 				}
 				TeamDataManager.managedContext.deleteObject(results[1])
 				results[0].teams = NSOrderedSet(array: board1Mutable)
-				commitChanges()
 				return try getRootDraftBoard()
             } else if results.count == 1 {
                 NSLog("One Draftboard")
@@ -160,7 +159,6 @@ class TeamDataManager {
                 NSLog("Creating new draft board")
                 //Create a new draft board and return it
                 let newDraftBoard = DraftBoard(entity: NSEntityDescription.entityForName("DraftBoard", inManagedObjectContext: TeamDataManager.managedContext)!, insertIntoManagedObjectContext: TeamDataManager.managedContext)
-                commitChanges()
                 return newDraftBoard
             }
         } catch let error as NSError {
