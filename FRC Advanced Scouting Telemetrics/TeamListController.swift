@@ -69,13 +69,11 @@ class TeamListController: UIViewController, UITableViewDataSource, UITableViewDe
 	
 	//A structure with sub-structures to cache data about teams and their stats
 	class TeamCache {
-		let team: Team 
-		let rank: Int
+		let team: Team
 		var statContextCache: StatContextCache?
 		
 		init(team: Team) {
 			self.team = team
-			self.rank = try! TeamDataManager().getDraftBoard().indexOf(team)! as Int
 		}
 		
 		struct StatContextCache {
@@ -224,7 +222,13 @@ class TeamListController: UIViewController, UITableViewDataSource, UITableViewDe
 				self.updateButton.enabled = false
 			}
 		}
-        
+		
+		//Add an observer to update the table if new changes are merged in
+//		NSNotificationCenter.defaultCenter().addObserverForName("DataSyncer:NewChangesMerged", object: nil, queue: nil) {notification in
+//			let regional = self.selectedRegional
+//			self.selectedRegional = regional
+//		}
+		
         //Create reusable cell
         teamList.registerClass(UITableViewCell.self,
             forCellReuseIdentifier: "Cell")
@@ -308,7 +312,7 @@ class TeamListController: UIViewController, UITableViewDataSource, UITableViewDe
 			}
         }
 		
-		cell.rankLabel.text = "\(teamCache.rank)"
+		cell.rankLabel.text = "\(try! TeamDataManager().getDraftBoard().indexOf(teamCache.team)! as Int)"
         
         if let image = teamCache.team.frontImage {
 			cell.frontImage.image = UIImage(data: image)

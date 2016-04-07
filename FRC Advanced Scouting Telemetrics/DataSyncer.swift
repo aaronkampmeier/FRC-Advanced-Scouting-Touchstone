@@ -70,24 +70,27 @@ class DataSyncer: NSObject, CDEPersistentStoreEnsembleDelegate {
 		}
 	}
 	
-	func didImportFiles() {
+	@objc private func didImportFiles() {
 		//syncWithCompletion(nil)
 		NSLog("Did import files")
 	}
 	
-	func autoSync(timer: NSTimer) {
-		syncWithCompletion() {error in
-			if let error = error {NSLog("Auto-Sync failed with error: \(error)")} else {NSLog("Auto-Sync completed")}
+	@objc private func autoSync(timer: NSTimer) {
+		if !connectedPeers().isEmpty {
+			syncWithCompletion() {error in
+				if let error = error {NSLog("Auto-Sync failed with error: \(error)")} else {NSLog("Auto-Sync completed")}
+			}
 		}
 	}
 	
 	///Begins an Ensemble merge. Retrieves files from the other devices and merges them with this one.
 	func syncWithCompletion(completion: CDECompletionBlock?) {
-		NSLog("Merging")
+		NSLog("Syncing Files")
 		self.multipeerConnection.syncFilesWithAllPeers()
 		
 		//Wait one second before syncing to allow for remote files to download
 		dispatch_after(dispatch_time(DISPATCH_TIME_NOW, Int64(1 * NSEC_PER_SEC)), dispatch_get_main_queue()) {
+			NSLog("Merging")
 			self.ensemble.mergeWithCompletion() {error in
 				if let error = error {NSLog("Error merging: \(error)")} else {NSLog("Merging completed")}
 				completion?(error)
@@ -130,6 +133,7 @@ class DataSyncer: NSObject, CDEPersistentStoreEnsembleDelegate {
 		TeamDataManager.managedContext.performBlock() {
 			TeamDataManager.managedContext.mergeChangesFromContextDidSaveNotification(notification)
 			NSLog("Did merge changes into main context")
+			NSNotificationCenter.defaultCenter().postNotificationName("DataSyncer:NewChangesMerged", object: self)
 		}
 	}
 	
@@ -146,9 +150,28 @@ class DataSyncer: NSObject, CDEPersistentStoreEnsembleDelegate {
 				globalIdentifiers.append("DraftBoard" as NSString)
 				NSLog("Global identifier is DraftBoard")
 			case is Team:
-				globalIdentifiers.append("\(object.valueForKey("teamNumber")!)")
+				globalIdentifiers.append("Team:\(object.valueForKey("teamNumber")!)")
 			case is Defense:
-				globalIdentifiers.append("\(object.valueForKey("defenseName")!)")
+				globalIdentifiers.append("Defense:\(object.valueForKey("defenseName")!)")
+			case is Regional:
+				globalIdentifiers.append("Regional:\(object.valueForKey("regionalNumber")!)")
+			case is TeamRegionalPerformance:
+				globalIdentifiers.append("RegionalPerformance:\(object.valueForKey("team")!.valueForKey("teamNumber")!):\(object.valueForKey("regional")!.valueForKey("regionalNumber")!)")
+			case is Match:
+				globalIdentifiers.append("Match:\(object.valueForKey("regional")!.valueForKey("regionalNumber")!):\(object.valueForKey("matchNumber")!)")
+			case is TeamMatchPerformance:
+				globalIdentifiers.append("MatchPerformance:\(object.valueForKey("regionalPerformance")!.valueForKey("team")!.valueForKey("teamNumber")!):\(object.valueForKey("regionalPerformance")!.valueForKey("regional")!.valueForKey("regionalNumber")!):\(object.valueForKey("match")!.valueForKey("matchNumber")!)")
+			case is AutonomousCycle:
+				let matchPerformance = object.valueForKey("matchPerformance")!
+				let matchPerformanceID = "\(matchPerformance.valueForKey("regionalPerformance")!.valueForKey("team")!.valueForKey("teamNumber")!):\(matchPerformance.valueForKey("regionalPerformance")!.valueForKey("regional")!.valueForKey("regionalNumber")!):\(matchPerformance.valueForKey("match")!.valueForKey("matchNumber")!)"
+				globalIdentifiers.append("AutonomousCycle:\(matchPerformanceID)")
+			case is Shot:
+				//Use a unique identifier for the shots because two inserted seperately will never be logically equivalent
+				globalIdentifiers.append(NSUUID().UUIDString)
+			case is DefenseCrossTime:
+				globalIdentifiers.append(NSUUID().UUIDString)
+			case is TimeMarker:
+				globalIdentifiers.append(NSUUID().UUIDString)
 			default:
 				globalIdentifiers.append(NSNull)
 			}
@@ -313,7 +336,7 @@ extension MultipeerConnection: MCSessionDelegate {
 		
 		if state == .Connected {
 			dispatch_async(dispatch_get_main_queue()) {
-				self.syncFilesWithAllPeers()
+				DataSyncer.sharedDataSyncer().syncWithCompletion(nil)
 			}
 		}
 	}
