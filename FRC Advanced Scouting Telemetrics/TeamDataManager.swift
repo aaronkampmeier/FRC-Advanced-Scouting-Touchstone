@@ -153,8 +153,7 @@ class TeamDataManager {
 				results[0].teams = NSOrderedSet(array: board1Mutable)
 				return try getRootDraftBoard()
             } else if results.count == 1 {
-                NSLog("One Draftboard")
-                return results[0]
+                return results.first!
             } else if results.count == 0 {
                 NSLog("Creating new draft board")
                 //Create a new draft board and return it

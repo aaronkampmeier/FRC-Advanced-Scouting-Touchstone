@@ -42,6 +42,12 @@ class DataSyncer: NSObject, CDEPersistentStoreEnsembleDelegate {
 		ensemble.delegate = self
 		
 		NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(DataSyncer.didImportFiles), name: CDEMultipeerCloudFileSystemDidImportFilesNotification, object: nil)
+		NSNotificationCenter.defaultCenter().addObserverForName(CDEMonitoredManagedObjectContextDidSaveNotification, object: nil, queue: nil) {notification in
+			self.syncWithCompletion() {error in
+				if let error = error {NSLog("Commit-Sync failed with error: \(error)")} else {NSLog("Commit-Sync completed")}
+			}
+		}
+		NSTimer.scheduledTimerWithTimeInterval(5 * 60, target: self, selector: #selector(DataSyncer.autoSync(_:)), userInfo: nil, repeats: true)
 	}
 	
 	static func sharedDataSyncer() -> DataSyncer {
@@ -69,13 +75,23 @@ class DataSyncer: NSObject, CDEPersistentStoreEnsembleDelegate {
 		NSLog("Did import files")
 	}
 	
+	func autoSync(timer: NSTimer) {
+		syncWithCompletion() {error in
+			if let error = error {NSLog("Auto-Sync failed with error: \(error)")} else {NSLog("Auto-Sync completed")}
+		}
+	}
+	
 	///Begins an Ensemble merge. Retrieves files from the other devices and merges them with this one.
 	func syncWithCompletion(completion: CDECompletionBlock?) {
 		NSLog("Merging")
-		ensemble.mergeWithCompletion() {error in
-			self.multipeerConnection.syncFilesWithAllPeers()
-			if let error = error {NSLog("Error merging: \(error)")} else {NSLog("Merging completed")}
-			completion?(error)
+		self.multipeerConnection.syncFilesWithAllPeers()
+		
+		//Wait one second before syncing to allow for remote files to download
+		dispatch_after(dispatch_time(DISPATCH_TIME_NOW, Int64(1 * NSEC_PER_SEC)), dispatch_get_main_queue()) {
+			self.ensemble.mergeWithCompletion() {error in
+				if let error = error {NSLog("Error merging: \(error)")} else {NSLog("Merging completed")}
+				completion?(error)
+			}
 		}
 	}
 	
@@ -98,6 +114,11 @@ class DataSyncer: NSObject, CDEPersistentStoreEnsembleDelegate {
 	}
 	
 	func persistentStoreEnsemble(ensemble: CDEPersistentStoreEnsemble!, didFailToSaveMergedChangesInManagedObjectContext savingContext: NSManagedObjectContext!, error: NSError!, reparationManagedObjectContext reparationContext: NSManagedObjectContext!) -> Bool {
+//		NSLog("Attempting to fix merge conflicts.")
+//		let objects = Array(savingContext.insertedObjects)
+//		for object in objects {
+//			
+//		}
 		NSLog("Ensemble did fail to save merged changes. Error: \(error)")
 		return false
 	}
@@ -116,9 +137,24 @@ class DataSyncer: NSObject, CDEPersistentStoreEnsembleDelegate {
 		NSLog("Did deleech with error: \(error ?? nil)")
 	}
 	
-//	func persistentStoreEnsemble(ensemble: CDEPersistentStoreEnsemble!, globalIdentifiersForManagedObjects objects: [AnyObject]!) -> [AnyObject]! {
-//
-//	}
+	func persistentStoreEnsemble(ensemble: CDEPersistentStoreEnsemble!, globalIdentifiersForManagedObjects objects: [AnyObject]!) -> [AnyObject]! {
+		NSLog("Setting global identifiers")
+		var globalIdentifiers = [AnyObject]()
+		for object in objects {
+			switch object {
+			case is DraftBoard:
+				globalIdentifiers.append("DraftBoard" as NSString)
+				NSLog("Global identifier is DraftBoard")
+			case is Team:
+				globalIdentifiers.append("\(object.valueForKey("teamNumber")!)")
+			case is Defense:
+				globalIdentifiers.append("\(object.valueForKey("defenseName")!)")
+			default:
+				globalIdentifiers.append(NSNull)
+			}
+		}
+		return globalIdentifiers
+	}
 }
 
 ///For other files to access MCPeerIDs without importing MultipeerConnectivity
