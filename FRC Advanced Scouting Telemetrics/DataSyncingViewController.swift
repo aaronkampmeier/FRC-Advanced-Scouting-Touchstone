@@ -10,6 +10,7 @@ import UIKit
 
 class DataSyncingViewController: UIViewController, UITableViewDataSource{
 	@IBOutlet weak var connectedDevicesTable: UITableView!
+	@IBOutlet weak var syncIDField: UITextField!
 
 	var connectedPeers = [FASTPeer]()
 	
@@ -21,6 +22,13 @@ class DataSyncingViewController: UIViewController, UITableViewDataSource{
 		connectedDevicesTable.dataSource = self
 		
 		NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(DataSyncingViewController.peerChangedState(_:)), name:"DataSyncing:DidChangeState", object: nil)
+		
+		//Retreive the sync secret add display it in the textfield
+		syncIDField.placeholder = "FRC-4256-FAST-EnsembleSync"
+		let syncSecret = NSUserDefaults.standardUserDefaults().stringForKey("SharedSyncSecret")
+		if let secret = syncSecret {
+			syncIDField.text = secret
+		}
     }
 
     override func didReceiveMemoryWarning() {
@@ -55,10 +63,38 @@ class DataSyncingViewController: UIViewController, UITableViewDataSource{
 	@IBAction func syncPressed(sender: UIBarButtonItem) {
 		sender.enabled = false
 		//Start a data merge
-		TeamDataManager().commitChanges()
 		DataSyncer.sharedDataSyncer().syncWithCompletion() {error in
 			sender.enabled = true
 		}
+	}
+	
+	@IBAction func syncIDChanged(sender: UITextField) {
+		let storedSecret = NSUserDefaults.standardUserDefaults().stringForKey("SharedSyncSecret")
+		if sender.text != storedSecret && !(sender.text == "" && storedSecret == nil) {
+			//Save the new sync secret in the user defaults
+			let enteredSecret = sender.text?.stringByTrimmingCharactersInSet(NSCharacterSet.whitespaceAndNewlineCharacterSet()).stringByReplacingOccurrencesOfString(" ", withString: "").stringByReplacingOccurrencesOfString("\n", withString: "")
+			if enteredSecret == nil || enteredSecret == "" {
+				NSUserDefaults.standardUserDefaults().setValue(nil, forKey: "SharedSyncSecret")
+			} else {
+				NSUserDefaults.standardUserDefaults().setValue(enteredSecret!, forKey: "SharedSyncSecret")
+			}
+			
+			//Disconnect from the sync cloud
+			DataSyncer.sharedDataSyncer().disconnectFromCloud()
+			
+			//Present an alert saying the user needs to restart the app
+			let alert = UIAlertController(title: "Please Restart", message: "The app must be restarted in order for this change (updating the sync ID) to take hold.", preferredStyle: .Alert)
+			alert.addAction(UIAlertAction(title: "Quit", style: .Destructive) {action in
+				TeamDataManager().commitChanges()
+				
+				exit(EXIT_SUCCESS)
+			})
+			presentViewController(alert, animated: true, completion: nil)
+		}
+	}
+	
+	@IBAction func donePressed(sender: UITextField) {
+		sender.resignFirstResponder()
 	}
 	
 	func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {

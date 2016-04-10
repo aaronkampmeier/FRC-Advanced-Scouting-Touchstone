@@ -901,7 +901,7 @@
                                 </items>
                             </navigationBar>
                             <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" allowsSelection="NO" rowHeight="44" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="b2F-VS-Y1p">
-                                <rect key="frame" x="20" y="93" width="560" height="507"/>
+                                <rect key="frame" x="20" y="133" width="560" height="467"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <prototypes>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="cell" textLabel="MYW-uI-hJg" style="IBUITableViewCellStyleDefault" id="duo-GT-Do1">
@@ -924,22 +924,44 @@
                                 </prototypes>
                             </tableView>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Connected Devices" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Vkz-KC-NYb">
-                                <rect key="frame" x="212" y="59" width="176" height="24"/>
+                                <rect key="frame" x="212" y="99" width="176" height="24"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="20"/>
                                 <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                 <nil key="highlightedColor"/>
                             </label>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Sync ID:" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Sef-gm-Gli">
+                                <rect key="frame" x="126" y="59" width="64" height="21"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" textAlignment="center" minimumFontSize="17" clearButtonMode="whileEditing" translatesAutoresizingMaskIntoConstraints="NO" id="Wlf-Ll-fXO">
+                                <rect key="frame" x="200" y="54" width="200" height="30"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="200" id="4z1-uM-WDK"/>
+                                </constraints>
+                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                <textInputTraits key="textInputTraits" autocorrectionType="no" spellCheckingType="no" returnKeyType="done"/>
+                                <connections>
+                                    <action selector="donePressed:" destination="ogR-du-coa" eventType="primaryActionTriggered" id="FrN-Yu-IPb"/>
+                                    <action selector="syncIDChanged:" destination="ogR-du-coa" eventType="editingDidEnd" id="LmC-2f-AYQ"/>
+                                </connections>
+                            </textField>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
+                            <constraint firstItem="Vkz-KC-NYb" firstAttribute="top" secondItem="Wlf-Ll-fXO" secondAttribute="bottom" constant="15" id="072-PB-a1N"/>
                             <constraint firstItem="ben-a4-kIv" firstAttribute="top" secondItem="b2F-VS-Y1p" secondAttribute="bottom" id="DHh-UZ-ahZ"/>
                             <constraint firstItem="dfm-Ne-ncB" firstAttribute="top" secondItem="BX7-f6-F4O" secondAttribute="bottom" id="GVy-wl-Y9O"/>
+                            <constraint firstItem="Wlf-Ll-fXO" firstAttribute="centerY" secondItem="Sef-gm-Gli" secondAttribute="centerY" id="L8c-1c-Xbn"/>
                             <constraint firstItem="dfm-Ne-ncB" firstAttribute="leading" secondItem="U7m-SR-a9G" secondAttribute="leading" id="Q8u-uB-jcR"/>
                             <constraint firstAttribute="trailingMargin" secondItem="b2F-VS-Y1p" secondAttribute="trailing" id="TDf-Gc-9De"/>
                             <constraint firstItem="b2F-VS-Y1p" firstAttribute="leading" secondItem="U7m-SR-a9G" secondAttribute="leadingMargin" id="TTe-ff-cN5"/>
+                            <constraint firstItem="Wlf-Ll-fXO" firstAttribute="leading" secondItem="Sef-gm-Gli" secondAttribute="trailing" constant="10" id="amL-GN-fOn"/>
                             <constraint firstItem="Vkz-KC-NYb" firstAttribute="centerX" secondItem="U7m-SR-a9G" secondAttribute="centerX" id="arA-SC-SdN"/>
                             <constraint firstAttribute="trailing" secondItem="dfm-Ne-ncB" secondAttribute="trailing" id="csX-5k-IPE"/>
-                            <constraint firstItem="Vkz-KC-NYb" firstAttribute="top" secondItem="dfm-Ne-ncB" secondAttribute="bottom" constant="15" id="hoL-Xa-IfC"/>
+                            <constraint firstItem="Wlf-Ll-fXO" firstAttribute="centerX" secondItem="U7m-SR-a9G" secondAttribute="centerX" id="nxc-07-3Vj"/>
+                            <constraint firstItem="Wlf-Ll-fXO" firstAttribute="top" secondItem="BX7-f6-F4O" secondAttribute="bottom" constant="54" id="sN6-eW-YYL"/>
                             <constraint firstItem="b2F-VS-Y1p" firstAttribute="top" secondItem="Vkz-KC-NYb" secondAttribute="bottom" constant="10" id="t8n-1q-lbl"/>
                         </constraints>
                     </view>
@@ -947,6 +969,7 @@
                     <size key="freeformSize" width="600" height="600"/>
                     <connections>
                         <outlet property="connectedDevicesTable" destination="b2F-VS-Y1p" id="Csp-qQ-EdD"/>
+                        <outlet property="syncIDField" destination="Wlf-Ll-fXO" id="qqe-do-9xU"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Mhb-fw-Ppa" userLabel="First Responder" sceneMemberID="firstResponder"/>

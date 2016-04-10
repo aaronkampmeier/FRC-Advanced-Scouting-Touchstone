@@ -216,7 +216,6 @@ class TeamDataManager {
     
     func getDraftBoard() throws -> [Team]{
         do {
-            NSLog("Num of draftBoardTeams: \(try getRootDraftBoard().teams?.count)")
             return try getRootDraftBoard().teams?.array as! [Team]
         } catch {
             throw error

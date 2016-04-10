@@ -67,12 +67,22 @@ class DataSyncer: NSObject, CDEPersistentStoreEnsembleDelegate {
 					NSLog("Leech successful")
 				}
 			}
+		} else {
+			NSLog("Already leeched")
+		}
+	}
+	
+	func disconnectFromCloud() {
+		NSLog("Disconnecting")
+		ensemble.deleechPersistentStoreWithCompletion() {error in
+			if let error = error {NSLog("Deleech failed with error: \(error)")} else {NSLog("Deleech Successful")}
 		}
 	}
 	
 	@objc private func didImportFiles() {
 		//syncWithCompletion(nil)
 		NSLog("Did import files")
+		multipeerConnection.syncFilesWithAllPeers()
 	}
 	
 	@objc private func autoSync(timer: NSTimer) {
