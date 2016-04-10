@@ -840,6 +840,11 @@
                                 <segue destination="wvE-ak-8aE" kind="unwind" unwindAction="returningWithSegue:" id="vQG-aN-BKw"/>
                             </connections>
                         </barButtonItem>
+                        <barButtonItem key="rightBarButtonItem" enabled="NO" title="Notes" id="ssT-ah-gtv">
+                            <connections>
+                                <action selector="notesPressed:" destination="Aeh-gy-7kO" id="FUC-WV-4fg"/>
+                            </connections>
+                        </barButtonItem>
                         <connections>
                             <outlet property="backBarButtonItem" destination="qen-F2-EOO" id="meU-zH-JkJ"/>
                         </connections>
@@ -850,6 +855,7 @@
                         <outlet property="frontImage" destination="Tw8-aE-sSw" id="LKR-u1-0J3"/>
                         <outlet property="gamePartSelector" destination="owY-gc-wyj" id="PmF-2j-I9d"/>
                         <outlet property="heightField" destination="dxp-wM-Nkt" id="9eL-qB-dfr"/>
+                        <outlet property="notesButton" destination="ssT-ah-gtv" id="FKd-cP-1Fk"/>
                         <outlet property="sideImage" destination="vUu-Dm-Tpv" id="28t-Hx-0oB"/>
                         <outlet property="teamNumberField" destination="ES9-Pe-KSO" id="HQ5-Bw-r7I"/>
                         <outlet property="validTeamSymbol" destination="1kk-6k-IfX" id="jVe-JX-Eut"/>
@@ -869,7 +875,7 @@
                 <placeholder placeholderIdentifier="IBFirstResponder" id="nVe-gM-o5w" userLabel="First Responder" sceneMemberID="firstResponder"/>
                 <exit id="wvE-ak-8aE" userLabel="Exit" sceneMemberID="exit"/>
             </objects>
-            <point key="canvasLocation" x="3455" y="252"/>
+            <point key="canvasLocation" x="3447" y="217"/>
         </scene>
         <!--Data Syncing View Controller-->
         <scene sceneID="HTp-7C-4cI">
@@ -975,7 +981,7 @@
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Mhb-fw-Ppa" userLabel="First Responder" sceneMemberID="firstResponder"/>
                 <exit id="iLa-lt-thL" userLabel="Exit" sceneMemberID="exit"/>
             </objects>
-            <point key="canvasLocation" x="3368" y="-522"/>
+            <point key="canvasLocation" x="3352" y="-522"/>
         </scene>
         <!--SortVC-->
         <scene sceneID="PCr-3Z-bqY">
@@ -2139,6 +2145,9 @@
                                 <fontDescription key="fontDescription" type="system" pointSize="30"/>
                                 <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                 <nil key="highlightedColor"/>
+                                <variation key="heightClass=regular-widthClass=regular" ambiguous="YES" misplaced="YES">
+                                    <rect key="frame" x="364" y="25" width="73" height="36"/>
+                                </variation>
                             </label>
                             <segmentedControl opaque="NO" contentMode="scaleToFill" enabled="NO" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="0" translatesAutoresizingMaskIntoConstraints="NO" id="QGA-t0-RqS">
                                 <rect key="frame" x="30" y="115" width="540" height="29"/>
@@ -2163,6 +2172,9 @@
                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                 <color key="textColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
                                 <nil key="highlightedColor"/>
+                                <variation key="heightClass=regular-widthClass=regular" ambiguous="YES" misplaced="YES">
+                                    <rect key="frame" x="325" y="71" width="151" height="21"/>
+                                </variation>
                             </label>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="00:00.0" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="pPD-29-ojk">
                                 <rect key="frame" x="415" y="25" width="140" height="45"/>
@@ -3391,7 +3403,7 @@
                                     <navigationItem title="Notes" id="dSs-dZ-qFN">
                                         <barButtonItem key="rightBarButtonItem" systemItem="done" id="AmO-bV-16p">
                                             <connections>
-                                                <segue destination="pn9-7S-jUI" kind="unwind" unwindAction="returnToStandsScouting:" id="uY9-Aw-Rav"/>
+                                                <action selector="donePressed:" destination="Zrr-EK-TVo" id="TFA-bA-dXa"/>
                                             </connections>
                                         </barButtonItem>
                                     </navigationItem>
@@ -3423,9 +3435,8 @@
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="iHX-y4-ITb" userLabel="First Responder" sceneMemberID="firstResponder"/>
-                <exit id="pn9-7S-jUI" userLabel="Exit" sceneMemberID="exit"/>
             </objects>
-            <point key="canvasLocation" x="592" y="-207"/>
+            <point key="canvasLocation" x="590" y="-192"/>
         </scene>
         <!--View Controller-->
         <scene sceneID="Tzo-tk-2m4">

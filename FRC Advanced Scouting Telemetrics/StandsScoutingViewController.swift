@@ -8,7 +8,7 @@
 
 import UIKit
 
-class StandsScoutingViewController: UIViewController {
+class StandsScoutingViewController: UIViewController, ProvidesTeam {
 	@IBOutlet weak var ballButton: UIButton!
 	@IBOutlet weak var ballView: UIView!
 	@IBOutlet weak var timerButton: UIButton!
@@ -35,6 +35,9 @@ class StandsScoutingViewController: UIViewController {
 			break
 		}
 		}
+	}
+	var team: Team {
+		return teamPerformance!.team!
 	}
 	var defenses: [Defense]?
 	let dataManager = TeamDataManager()
@@ -312,7 +315,7 @@ class StandsScoutingViewController: UIViewController {
 			notesVC = storyboard?.instantiateViewControllerWithIdentifier("notesVC") as! NotesViewController
 		}
 		
-		notesVC?.standsScoutingVC = self
+		notesVC?.originatingView = self
 		
 		notesVC?.modalPresentationStyle = .Popover
 		let popoverController = notesVC?.popoverPresentationController
@@ -323,10 +326,14 @@ class StandsScoutingViewController: UIViewController {
 	}
 }
 
+protocol ProvidesTeam {
+	var team: Team {get}
+}
+
 class NotesViewController: UIViewController {
 	@IBOutlet weak var notesTextView: UITextView!
 	
-	var standsScoutingVC: StandsScoutingViewController!
+	var originatingView: ProvidesTeam!
 	
 	override func viewDidLoad() {
 		super.viewDidLoad()
@@ -338,12 +345,16 @@ class NotesViewController: UIViewController {
 	override func viewWillAppear(animated: Bool) {
 		super.viewWillAppear(animated)
 		
-		notesTextView.text = standsScoutingVC.matchPerformance?.regionalPerformance?.team?.notes
+		notesTextView.text = originatingView.team.notes
 	}
 	
 	override func viewDidDisappear(animated: Bool) {
 		super.viewDidDisappear(animated)
 		
-		standsScoutingVC.matchPerformance?.regionalPerformance?.team?.notes = notesTextView.text
+		originatingView.team.notes = notesTextView.text
+	}
+	
+	@IBAction func donePressed(sender: UIBarButtonItem) {
+		dismissViewControllerAnimated(true, completion: nil)
 	}
 }

@@ -10,7 +10,7 @@ import Foundation
 import UIKit
 import AVFoundation
 
-class PitScoutingController: UIViewController, UIImagePickerControllerDelegate, UINavigationControllerDelegate {
+class PitScoutingController: UIViewController, UIImagePickerControllerDelegate, UINavigationControllerDelegate, ProvidesTeam {
     //IBOutlets
     @IBOutlet weak var frontImage: UIImageView!
     @IBOutlet weak var sideImage: UIImageView!
@@ -23,6 +23,7 @@ class PitScoutingController: UIViewController, UIImagePickerControllerDelegate, 
 	@IBOutlet weak var heightField: UITextField!
 	@IBOutlet var defenseButtons: [UIButton]!
 	@IBOutlet weak var gamePartSelector: UISegmentedControl!
+	@IBOutlet var notesButton: UIBarButtonItem!
     
     let dataManager = TeamDataManager()
     let imageController = UIImagePickerController()
@@ -31,7 +32,26 @@ class PitScoutingController: UIViewController, UIImagePickerControllerDelegate, 
     
     let notificationCenter = NSNotificationCenter.defaultCenter()
 	
-	var selectedTeam: TeamSelection = TeamSelection.Invalid
+	var selectedTeam: TeamSelection = TeamSelection.Invalid {
+		didSet {
+			switch selectedTeam {
+			case .Invalid:
+				notesButton.enabled = false
+			case .Valid(let _):
+				notesButton.enabled = true
+			}
+		}
+	}
+	
+	var team: Team {
+		switch selectedTeam {
+		case .Invalid:
+			assertionFailure("No selected team")
+			fatalError()
+		case .Valid(let team):
+			return team
+		}
+	}
 	
 	enum TeamSelection {
 		case Invalid
@@ -256,6 +276,16 @@ class PitScoutingController: UIViewController, UIImagePickerControllerDelegate, 
 				dataManager.removeDefense(defense!, fromTeam: team, forPart: currentGamePart())
 			}
 		}
+	}
+	
+	@IBAction func notesPressed(sender: UIBarButtonItem) {
+		let notesVC = storyboard?.instantiateViewControllerWithIdentifier("notesVC") as! NotesViewController
+		notesVC.originatingView = self
+		notesVC.preferredContentSize = CGSize(width: 400, height: 500)
+		notesVC.modalPresentationStyle = .Popover
+		let popoverVC = notesVC.popoverPresentationController
+		popoverVC?.barButtonItem = sender
+		presentViewController(notesVC, animated: true, completion: nil)
 	}
 	
 	func currentGamePart() -> GamePart {
