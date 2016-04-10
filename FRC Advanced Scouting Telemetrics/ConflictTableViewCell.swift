@@ -10,11 +10,10 @@ import UIKit
 
 class ConflictTableViewCell: UITableViewCell {
 	@IBOutlet weak var mainTitle: UILabel!
-	@IBOutlet weak var firstTitle: UILabel!
 	@IBOutlet weak var firstDetail: UILabel!
-	@IBOutlet weak var secondTitle: UILabel!
 	@IBOutlet weak var secondDetail: UILabel!
 	@IBOutlet weak var resolutionPicker: UISegmentedControl!
+	@IBOutlet weak var identifierLabel: UILabel!
 
     override func awakeFromNib() {
         super.awakeFromNib()

@@ -32,7 +32,7 @@ class TeamDataManager {
 		TeamDataManager.managedContext.rollback()
 	}
 	
-	func saveTeamNumber(number: String, atRank rank: Int? = nil) -> Team {
+	func saveTeamNumber(number: String, atRank rank: Int? = nil, performCommit shouldSave: Bool = true) -> Team {
         //Get the entity for a Team and then create a new one
         let entity = NSEntityDescription.entityForName("Team", inManagedObjectContext: TeamDataManager.managedContext)
         
@@ -59,9 +59,10 @@ class TeamDataManager {
 			}
 		}
 		
-		
-        //Try to save
-        save()
+		if shouldSave {
+			//Try to save
+			commitChanges()
+		}
         return team
     }
     
@@ -150,16 +151,13 @@ class TeamDataManager {
 				}
 				TeamDataManager.managedContext.deleteObject(results[1])
 				results[0].teams = NSOrderedSet(array: board1Mutable)
-				commitChanges()
 				return try getRootDraftBoard()
             } else if results.count == 1 {
-                NSLog("One Draftboard")
-                return results[0]
+                return results.first!
             } else if results.count == 0 {
                 NSLog("Creating new draft board")
                 //Create a new draft board and return it
                 let newDraftBoard = DraftBoard(entity: NSEntityDescription.entityForName("DraftBoard", inManagedObjectContext: TeamDataManager.managedContext)!, insertIntoManagedObjectContext: TeamDataManager.managedContext)
-                commitChanges()
                 return newDraftBoard
             }
         } catch let error as NSError {
@@ -218,7 +216,6 @@ class TeamDataManager {
     
     func getDraftBoard() throws -> [Team]{
         do {
-            NSLog("Num of draftBoardTeams: \(try getRootDraftBoard().teams?.count)")
             return try getRootDraftBoard().teams?.array as! [Team]
         } catch {
             throw error

@@ -8,26 +8,27 @@
 
 import UIKit
 
-class DataSyncingViewController: UIViewController, ConflictManager {
-	@IBOutlet weak var statusLabel: UILabel!
-	@IBOutlet weak var progressIndicator: UIProgressView!
-	@IBOutlet weak var syncButton: UIButton!
-	@IBOutlet weak var doneButton: UIBarButtonItem!
-	@IBOutlet weak var searchForDevices: UIBarButtonItem!
-	@IBOutlet weak var mergingLabel: UILabel!
-	@IBOutlet weak var mergingActivityIndicator: UIActivityIndicatorView!
-	
-	var syncingManager: SyncingManager?
-	let dataManager = TeamDataManager()
-	
-	var conflictManagerVC: SyncingConflictViewController?
+class DataSyncingViewController: UIViewController, UITableViewDataSource{
+	@IBOutlet weak var connectedDevicesTable: UITableView!
+	@IBOutlet weak var syncIDField: UITextField!
 
+	var connectedPeers = [FASTPeer]()
+	
     override func viewDidLoad() {
         super.viewDidLoad()
 
         // Do any additional setup after loading the view.
-		//Commit any unsaved changes
-		dataManager.commitChanges()
+		connectedPeers = DataSyncer.sharedDataSyncer().connectedPeers()
+		connectedDevicesTable.dataSource = self
+		
+		NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(DataSyncingViewController.peerChangedState(_:)), name:"DataSyncing:DidChangeState", object: nil)
+		
+		//Retreive the sync secret add display it in the textfield
+		syncIDField.placeholder = "FRC-4256-FAST-EnsembleSync"
+		let syncSecret = NSUserDefaults.standardUserDefaults().stringForKey("SharedSyncSecret")
+		if let secret = syncSecret {
+			syncIDField.text = secret
+		}
     }
 
     override func didReceiveMemoryWarning() {
@@ -40,101 +41,69 @@ class DataSyncingViewController: UIViewController, ConflictManager {
 		
 	}
 	
-	override func viewWillAppear(animated: Bool) {
-		super.viewWillAppear(animated)
-		syncingManager = SyncingManager()
-		addObservers(forManager: syncingManager!)
-	}
-	
-	override func viewWillDisappear(animated: Bool) {
-		super.viewWillDisappear(animated)
-		syncingManager = nil
-	}
-	
-	var completionHandler: ([MergeManager.Conflict] -> Void)?
-	func conflictManager(resolveConflicts conflicts: [MergeManager.Conflict], completionHandler: [MergeManager.Conflict] -> Void) {
-		conflictManagerVC = storyboard?.instantiateViewControllerWithIdentifier("conflictManager") as! SyncingConflictViewController
-		conflictManagerVC?.conflicts = conflicts
-		presentViewController(conflictManagerVC!, animated: true, completion: nil)
+	func peerChangedState(notification: NSNotification) {
+		let peer = notification.userInfo!["peer"] as! FASTPeer
+		let state = SessionState.init(rawValue: notification.userInfo!["state"] as! Int)!
 		
-		self.completionHandler = completionHandler
-	}
-	
-	@IBAction func returningFromConflictResolution(segue: UIStoryboardSegue) {
-		completionHandler!((conflictManagerVC?.conflicts)!)
-	}
-	
-	func addObservers(forManager syncManager: SyncingManager) {
-		NSNotificationCenter.defaultCenter().addObserverForName("DataSyncing:DidChangeState", object: syncManager, queue: nil, usingBlock: didChangeState)
-		NSNotificationCenter.defaultCenter().addObserverForName("DataSyncing:DidStartReceiving", object: syncManager, queue: nil, usingBlock: didStartReceiving)
-		NSNotificationCenter.defaultCenter().addObserverForName("DataSyncing:DidFinishReceiving", object: syncManager, queue: nil, usingBlock: didFinishReceiving)
-		
-		NSNotificationCenter.defaultCenter().addObserverForName("Registration needed for conflict manager", object: nil, queue: nil) {_ in
-			NSNotificationCenter.defaultCenter().postNotificationName("Registering for conflict manager", object: self)
-		}
-		NSNotificationCenter.defaultCenter().addObserverForName("MergeManager:MergeCompleted", object: nil, queue: nil) {notification in
-			let alert = notification.userInfo!["alertToPresent"] as! UIAlertController
-			dispatch_async(dispatch_get_main_queue()) {
-				self.presentViewController(alert, animated: true, completion: nil)
+		switch state {
+		case .Connected:
+			connectedPeers.append(peer)
+			connectedDevicesTable.beginUpdates()
+			connectedDevicesTable.insertRowsAtIndexPaths([NSIndexPath.init(forRow: connectedPeers.indexOf(peer)!, inSection: 0)], withRowAnimation: .Automatic)
+			connectedDevicesTable.endUpdates()
+		case .Connecting, .NotConnected:
+			if connectedPeers.contains(peer) {
+				let index = connectedPeers.indexOf(peer)!
+				connectedPeers.removeAtIndex(index)
+				connectedDevicesTable.deleteRowsAtIndexPaths([NSIndexPath.init(forRow: index, inSection: 0)], withRowAnimation: .Automatic)
 			}
 		}
 	}
-	
-	@IBAction func donePressed(sender: UIBarButtonItem) {
-		dismissViewControllerAnimated(true, completion: nil)
-	}
-	
-	@IBAction func connectPressed(sender: UIBarButtonItem) {
-		//Get a MCBrowserViewController
-		let browserVC = syncingManager!.getServiceBrowserViewController()
-		presentViewController(browserVC, animated: true, completion: nil)
-	}
-	
-	@IBAction func syncPressed(sender: UIButton) {
-		progressIndicator.observedProgress = syncingManager?.sync()
-		syncButton.enabled = false
-	}
-	
-	func didChangeState(notification: NSNotification) {
-		let userInfo = (notification.userInfo as! [String:AnyObject])
-		let state = SessionState.init(rawValue: userInfo["state"] as! Int)
-		let peerName = userInfo["peer"] as! String
-		
-		switch state! {
-		case .Connected:
-			self.statusLabel.text = "Did connect to \(peerName)"
-			syncButton.enabled = true
-		case .Connecting:
-			self.statusLabel.text = "Connecting to \(peerName)"
-			syncButton.enabled = false
-		case .NotConnected:
-			self.statusLabel.text = "Not Connected"
-			syncButton.enabled = false
+
+	@IBAction func syncPressed(sender: UIBarButtonItem) {
+		sender.enabled = false
+		//Start a data merge
+		DataSyncer.sharedDataSyncer().syncWithCompletion() {error in
+			sender.enabled = true
 		}
 	}
 	
-	func didStartReceiving(notification: NSNotification) {
-		syncButton.enabled = false
-		
-		let userInfo = (notification.userInfo as! [String:AnyObject])
-		let progress = userInfo["progress"] as! NSProgress
-		progressIndicator.observedProgress = progress
+	@IBAction func syncIDChanged(sender: UITextField) {
+		let storedSecret = NSUserDefaults.standardUserDefaults().stringForKey("SharedSyncSecret")
+		if sender.text != storedSecret && !(sender.text == "" && storedSecret == nil) {
+			//Save the new sync secret in the user defaults
+			let enteredSecret = sender.text?.stringByTrimmingCharactersInSet(NSCharacterSet.whitespaceAndNewlineCharacterSet()).stringByReplacingOccurrencesOfString(" ", withString: "").stringByReplacingOccurrencesOfString("\n", withString: "")
+			if enteredSecret == nil || enteredSecret == "" {
+				NSUserDefaults.standardUserDefaults().setValue(nil, forKey: "SharedSyncSecret")
+			} else {
+				NSUserDefaults.standardUserDefaults().setValue(enteredSecret!, forKey: "SharedSyncSecret")
+			}
+			
+			//Disconnect from the sync cloud
+			DataSyncer.sharedDataSyncer().disconnectFromCloud()
+			
+			//Present an alert saying the user needs to restart the app
+			let alert = UIAlertController(title: "Please Restart", message: "The app must be restarted in order for this change (updating the sync ID) to take hold.", preferredStyle: .Alert)
+			alert.addAction(UIAlertAction(title: "Quit", style: .Destructive) {action in
+				TeamDataManager().commitChanges()
+				
+				exit(EXIT_SUCCESS)
+			})
+			presentViewController(alert, animated: true, completion: nil)
+		}
 	}
 	
-	func didFinishReceiving(notification: NSNotification) {
-		//Finished receiving, show merging label
-		mergingLabel.hidden = false
-		mergingActivityIndicator.startAnimating()
+	@IBAction func donePressed(sender: UITextField) {
+		sender.resignFirstResponder()
 	}
-
-    /*
-    // MARK: - Navigation
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
-        // Get the new view controller using segue.destinationViewController.
-        // Pass the selected object to the new view controller.
-    }
-    */
-
+	
+	func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+		return connectedPeers.count
+	}
+	
+	func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
+		let cell = tableView.dequeueReusableCellWithIdentifier("cell")!
+		cell.textLabel!.text = connectedPeers[indexPath.row].displayName
+		return cell
+	}
 }

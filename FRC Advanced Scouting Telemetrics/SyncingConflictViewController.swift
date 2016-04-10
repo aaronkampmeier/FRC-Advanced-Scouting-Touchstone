@@ -21,7 +21,13 @@ class SyncingConflictViewController: UIViewController, UITableViewDataSource {
 	
 	var highUnresolvedConflicts: [MergeManager.Conflict] = Array()
 	
-	var resolvedConflicts: [MergeManager.Conflict] = Array()
+	var resolvedConflicts: [MergeManager.Conflict] = Array() {
+		didSet {
+			if resolvedConflicts.count == highUnresolvedConflicts.count {
+				doneButton.enabled = true
+			}
+		}
+	}
 	
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -36,6 +42,11 @@ class SyncingConflictViewController: UIViewController, UITableViewDataSource {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
     }
+	
+	override func viewDidAppear(animated: Bool) {
+		super.viewDidAppear(animated)
+		return
+	}
 	
 	@IBAction func resolutionPicked(sender: UISegmentedControl) {
 		var indexPath: NSIndexPath = NSIndexPath()
@@ -62,12 +73,19 @@ class SyncingConflictViewController: UIViewController, UITableViewDataSource {
 		}
 		
 		if !resolvedConflicts.contains({$0 === conflict}) {
-			resolvedConflicts.append(conflict) 
+			resolvedConflicts.append(conflict)
 		}
+	}
+	
+	@IBAction func selectAllLeft(sender: UIButton) {
+		for conflict in highUnresolvedConflicts {
+			conflict.resolution = conflict.payload1
+		}
+		resolvedConflicts = highUnresolvedConflicts
 		
-		if resolvedConflicts.count == highUnresolvedConflicts.count {
-			doneButton.enabled = true
-		}
+		conflictManagementTable.beginUpdates()
+		conflictManagementTable.reloadRowsAtIndexPaths(conflictManagementTable.indexPathsForVisibleRows!, withRowAnimation: .Automatic)
+		conflictManagementTable.endUpdates()
 	}
 	
 	func numberOfSectionsInTableView(tableView: UITableView) -> Int {
@@ -83,11 +101,10 @@ class SyncingConflictViewController: UIViewController, UITableViewDataSource {
 		
 		let conflict = highUnresolvedConflicts[indexPath.row]
 		cell.mainTitle.text = conflict.title
-		cell.firstTitle.text = "First"
+		cell.identifierLabel.text = conflict.identifier
 		let payload = conflict.payload1
 		let description = payload.description
 		cell.firstDetail.text = description
-		cell.secondTitle.text = "Second"
 		cell.secondDetail.text = conflict.payload2.description
 		
 		if let resolution = conflict.resolution as? AnyObject {

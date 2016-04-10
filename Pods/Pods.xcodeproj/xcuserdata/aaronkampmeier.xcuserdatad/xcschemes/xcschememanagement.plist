@@ -9,7 +9,17 @@
 			<key>isShown</key>
 			<false/>
 		</dict>
+		<key>Ensembles.xcscheme</key>
+		<dict>
+			<key>isShown</key>
+			<false/>
+		</dict>
 		<key>Pods.xcscheme</key>
+		<dict>
+			<key>isShown</key>
+			<false/>
+		</dict>
+		<key>SSZipArchive.xcscheme</key>
 		<dict>
 			<key>isShown</key>
 			<false/>
@@ -22,7 +32,22 @@
 			<key>primary</key>
 			<true/>
 		</dict>
+		<key>5892A5B3BB6212A0F14339B7E5FE7C11</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
 		<key>79C040AFDDCE1BCBF6D8B5EB0B85887F</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>8925D59D16C9C324D1232A11411C07F0</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>892C878329AA994A9E191CEE3B46E87F</key>
 		<dict>
 			<key>primary</key>
 			<true/>

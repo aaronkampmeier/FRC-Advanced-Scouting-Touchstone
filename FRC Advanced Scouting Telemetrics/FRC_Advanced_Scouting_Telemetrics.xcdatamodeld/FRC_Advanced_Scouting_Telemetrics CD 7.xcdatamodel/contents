@@ -37,9 +37,6 @@
         <relationship name="redDefensesBreached" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Defense" syncable="YES"/>
         <relationship name="regional" maxCount="1" deletionRule="Nullify" destinationEntity="Regional" inverseName="matches" inverseEntity="Regional" syncable="YES"/>
         <relationship name="teamPerformances" optional="YES" toMany="YES" maxCount="6" deletionRule="Cascade" destinationEntity="TeamMatchPerformance" inverseName="match" inverseEntity="TeamMatchPerformance" syncable="YES"/>
-        <fetchedProperty name="b1" optional="YES" syncable="YES">
-            <fetchRequest name="fetchedPropertyFetchRequest" entity="TeamMatchPerformance" predicateString="$FETCH_SOURCE == $FETCHED_PROPERTY.match &amp;&amp; $FETCHED_PROPERTY.allianceColor == 0 &amp;&amp; $FETCHED_PROPERTY.allianceTeam == 1"/>
-        </fetchedProperty>
     </entity>
     <entity name="Regional" representedClassName=".Regional" syncable="YES">
         <attribute name="name" attributeType="String" syncable="YES"/>
@@ -96,7 +93,7 @@
         <element name="Defense" positionX="124" positionY="-54" width="128" height="88"/>
         <element name="DefenseCrossTime" positionX="187" positionY="405" width="128" height="90"/>
         <element name="DraftBoard" positionX="-351" positionY="-27" width="128" height="60"/>
-        <element name="Match" positionX="-108" positionY="502" width="128" height="284"/>
+        <element name="Match" positionX="-108" positionY="502" width="128" height="253"/>
         <element name="Regional" positionX="-281" positionY="162" width="128" height="105"/>
         <element name="Shot" positionX="198" positionY="278" width="128" height="120"/>
         <element name="Team" positionX="-92" positionY="-99" width="128" height="240"/>
