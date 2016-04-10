@@ -186,7 +186,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 		let backgroundTaskIdentifier = UIApplication.sharedApplication().beginBackgroundTaskWithExpirationHandler(nil)
 		dispatch_async(dispatch_get_global_queue(0, 0)) {
 			self.managedObjectContext.performBlock() {
-				try? self.managedObjectContext.save()
+				self.saveContext()
 				DataSyncer.sharedDataSyncer().ensemble.processPendingChangesWithCompletion() {error in
 					if let error = error {NSLog("Unable to process pending changes in the background with error: \(error)")} else {NSLog("Processing pending changes in the background completed.")}
 					UIApplication.sharedApplication().endBackgroundTask(backgroundTaskIdentifier)

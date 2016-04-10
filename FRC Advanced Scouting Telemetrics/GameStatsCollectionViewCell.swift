@@ -10,5 +10,14 @@ import UIKit
 
 class GameStatsCollectionViewCell: UICollectionViewCell {
     @IBOutlet weak var label: UILabel!
-    
+	@IBOutlet weak var button: UIButton!
+	var tapDelegate: GameStatsCollectionViewCellTapDelegate?
+	
+	@IBAction func tapped(sender: UIButton) {
+		tapDelegate?.gameStatsCellDidTap(onCell: self)
+	}
+}
+
+protocol GameStatsCollectionViewCellTapDelegate {
+	func gameStatsCellDidTap(onCell cell: UICollectionViewCell)
 }

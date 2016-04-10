@@ -55,6 +55,9 @@ class GameStatsController: UIViewController, UICollectionViewDataSource, UIColle
 		let matches: [Match] = (teamListController?.teamRegionalPerformance?.matchPerformances!.allObjects as! [TeamMatchPerformance]).map({$0.match!}).sort({$0.matchNumber?.intValue < $1.matchNumber?.intValue})
 		
 		let cell = collectionView.dequeueReusableCellWithReuseIdentifier("teamTrialCell", forIndexPath: indexPath) as! GameStatsCollectionViewCell
+		
+		cell.tapDelegate = self
+		
 		if indexPath.item % 7 == 0 {
 			let matchNumber = matches[indexPath.item/7].matchNumber
 			//Set the matches label
@@ -75,14 +78,6 @@ class GameStatsController: UIViewController, UICollectionViewDataSource, UIColle
 			
 			let matchPerformance = filteredTeams.first
 			cell.label.text = (matchPerformance?.regionalPerformance?.valueForKey("team") as? Team)?.teamNumber
-			
-			//			if filteredTeams.count > 0 {
-			//				cell.label.text = (filteredTeams[0].regionalPerformance?.valueForKey("team") as! Team).teamNumber
-			//			} else {
-			//				cell.label.text = nil
-			//			}
-			
-			//cell.label.text = (((matches[indexPath.item/7 as Int].teamPerformances?.allObjects as! [TeamMatchPerformance]).filter({$0.allianceColor! == 0 && $0.allianceTeam! == 2})[0]).regionalPerformance?.valueForKey("team") as! Team).teamNumber
 			cell.label.textColor = UIColor(white: 1, alpha: 1)
 		} else if indexPath.item % 7 == 3 || indexPath.item == 3 {
 			cell.contentView.backgroundColor = UIColor(red: 0, green: 0, blue: 1, alpha: 1)
@@ -114,5 +109,16 @@ class GameStatsController: UIViewController, UICollectionViewDataSource, UIColle
 		let columnWidth = contentWidth / CGFloat(7)
 		
 		return CGSize(width: columnWidth, height: 50)
+	}
+}
+
+extension GameStatsController: GameStatsCollectionViewCellTapDelegate {
+	func gameStatsCellDidTap(onCell cell: UICollectionViewCell) {
+//		//Find what row it is in
+//		let indexPath = collectionView.indexPathForCell(cell)
+//		if let item = indexPath?.item {
+//			let row = item / 7
+//			
+//		}
 	}
 }

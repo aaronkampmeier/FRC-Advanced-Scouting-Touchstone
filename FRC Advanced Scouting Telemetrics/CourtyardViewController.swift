@@ -55,7 +55,7 @@ class CourtyardViewController: UIViewController, UITableViewDataSource, UITableV
         // Do any additional setup after loading the view.
 		//Add the invisible layer and add the tap gesture recognizer
 		courtyardImage.addSubview(invisibleView)
-		tapGesture.addTarget(self, action: "tappedOnImage:")
+		tapGesture.addTarget(self, action: #selector(CourtyardViewController.tappedOnImage(_:)))
 		invisibleView.addGestureRecognizer(tapGesture)
 		
 		standsScoutingVC = parentViewController as? StandsScoutingViewController
