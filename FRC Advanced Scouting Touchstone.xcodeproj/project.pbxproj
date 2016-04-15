@@ -123,6 +123,7 @@
 		1F4534351C7242B9004EDDB9 /* TeamRegionalPerformance.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TeamRegionalPerformance.swift; sourceTree = "<group>"; };
 		1F4534541C7242FB004EDDB9 /* FRC_Advanced_Scouting_Telemetrics CD 6.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "FRC_Advanced_Scouting_Telemetrics CD 6.xcdatamodel"; sourceTree = "<group>"; };
 		1F4534551C7276DE004EDDB9 /* RegionalPickerViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RegionalPickerViewController.swift; sourceTree = "<group>"; };
+		1F4F79E61CBF3FDF00239216 /* FRC_Advanced_Scouting_Telemetrics Version 9.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "FRC_Advanced_Scouting_Telemetrics Version 9.xcdatamodel"; sourceTree = "<group>"; };
 		1F4FEDA91C4AD95C00F4016D /* PitScoutingController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PitScoutingController.swift; sourceTree = "<group>"; };
 		1F4FEDAB1C4B686000F4016D /* AdminConsoleController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AdminConsoleController.swift; sourceTree = "<group>"; };
 		1F4FEDAD1C4C5DEA00F4016D /* AddTeamVC.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AddTeamVC.swift; sourceTree = "<group>"; };
@@ -847,6 +848,7 @@
 		1F78E7891C3B469300221927 /* FRC_Advanced_Scouting_Telemetrics.xcdatamodeld */ = {
 			isa = XCVersionGroup;
 			children = (
+				1F4F79E61CBF3FDF00239216 /* FRC_Advanced_Scouting_Telemetrics Version 9.xcdatamodel */,
 				1F2422421C73DF08008A5AFC /* FRC_Advanced_Scouting_Telemetrics CD 7.xcdatamodel */,
 				1F4534541C7242FB004EDDB9 /* FRC_Advanced_Scouting_Telemetrics CD 6.xcdatamodel */,
 				1F9A53861C6AB0F000B0AAE3 /* FRC_Advanced_Scouting_Telemetrics CD 5.xcdatamodel */,
@@ -855,7 +857,7 @@
 				1F0296661C5C6E42008CA8C2 /* FRC_Advanced_Scouting_Telemetrics CD 2.xcdatamodel */,
 				1F78E78A1C3B469300221927 /* FRC_Advanced_Scouting_Telemetrics.xcdatamodel */,
 			);
-			currentVersion = 1F2422421C73DF08008A5AFC /* FRC_Advanced_Scouting_Telemetrics CD 7.xcdatamodel */;
+			currentVersion = 1F4F79E61CBF3FDF00239216 /* FRC_Advanced_Scouting_Telemetrics Version 9.xcdatamodel */;
 			path = FRC_Advanced_Scouting_Telemetrics.xcdatamodeld;
 			sourceTree = "<group>";
 			versionGroupType = wrapper.xcdatamodel;

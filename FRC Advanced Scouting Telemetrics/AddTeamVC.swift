@@ -10,18 +10,21 @@ import Foundation
 import UIKit
 
 class AddTeamVC: UIViewController {
+	@IBOutlet weak var addButton: UIBarButtonItem!
     @IBOutlet weak var teamField: UITextField!
-    @IBOutlet weak var addButton: UIButton!
     let dataManager = TeamDataManager()
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        //Round the button's corners
-        addButton.layer.cornerRadius = 10
-        addButton.clipsToBounds = true
     }
+	
+	override func viewDidAppear(animated: Bool) {
+		super.viewDidAppear(animated)
+		
+		teamField.becomeFirstResponder()
+	}
     
-    @IBAction func addButtonPressed(sender: UIButton) {
+    @IBAction func addButtonPressed(sender: AnyObject) {
         //Check if the team already exists
         if dataManager.getTeams(teamField.text!).count == 0 {
             //Check to make sure it is actually a number
@@ -53,6 +56,11 @@ class AddTeamVC: UIViewController {
         }
         
     }
+	
+	
+	@IBAction func textEntryEnterPressed(sender: UITextField) {
+		addButtonPressed(sender)
+	}
     
     @IBAction func cancelPressed(sender: AnyObject) {
         dismissViewControllerAnimated(true, completion: nil)

@@ -33,16 +33,22 @@ class RegionalPickerViewController: UIViewController, UIPickerViewDelegate, UIPi
         // Dispose of any resources that can be recreated.
     }
 	
-	override func viewDidAppear(animated: Bool) {
-		super.viewDidAppear(animated)
+	override func viewWillAppear(animated: Bool) {
+		super.viewWillAppear(animated)
 		
 		currentRegional = teamListController?.selectedRegional
 		
 		if let current = currentRegional {
 			let index = (regionals?.indexOf(current))! + 1
-			regionalPicker.selectRow(index, inComponent: 0, animated: true)
+			regionalPicker.selectRow(index, inComponent: 0, animated: false)
 			pickerView(regionalPicker, didSelectRow: index, inComponent: 0)
 		}
+	}
+	
+	override func viewDidAppear(animated: Bool) {
+		super.viewDidAppear(animated)
+		
+		
 	}
 	
 	override func viewWillDisappear(animated: Bool) {

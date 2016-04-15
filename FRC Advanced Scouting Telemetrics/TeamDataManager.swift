@@ -77,6 +77,24 @@ class TeamDataManager {
 			TeamDataManager.managedContext.deleteObject(object)
 		}
 	}
+	
+	func setDefenseAbleToShootFrom(defense: Defense, toTeam team: Team, canShootFrom: Bool) {
+		let defenseSet = team.autonomousDefensesAbleToShoot?.mutableCopy() as! NSMutableSet
+		
+		if canShootFrom == true {
+			if defenseSet.containsObject(defense) {
+				return
+			}
+			
+			defenseSet.addObject(defense)
+		} else {
+			if defenseSet.containsObject(defense) {
+				defenseSet.removeObject(defense)
+			}
+		}
+		
+		team.autonomousDefensesAbleToShoot = (defenseSet.copy() as! NSSet)
+	}
     
 	func addDefense(defense: Defense, toTeam team: Team, forPart part: GamePart) {
 		var defenseSet: NSSet

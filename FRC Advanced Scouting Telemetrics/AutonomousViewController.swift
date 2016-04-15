@@ -47,8 +47,6 @@ class AutonomousViewController: UIViewController, UITableViewDelegate, UITableVi
 	
 	override func viewWillDisappear(animated: Bool) {
 		super.viewWillDisappear(animated)
-		
-		dataManager.commitChanges()
 	}
     
     func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -70,14 +68,14 @@ class AutonomousViewController: UIViewController, UITableViewDelegate, UITableVi
             (cell?.viewWithTag(1) as! UILabel).text = "Did they move?"
             let switchView = cell?.viewWithTag(3) as! UISwitch
             switchView.on = false
-            switchView.addTarget(self, action: "didMoveSwitchFlipped:", forControlEvents: .ValueChanged)
+            switchView.addTarget(self, action: #selector(AutonomousViewController.didMoveSwitchFlipped(_:)), forControlEvents: .ValueChanged)
             return cell!
         } else if indexPath.row == 1 {
             let cell = tableView.dequeueReusableCellWithIdentifier("mainCell")
             (cell?.viewWithTag(1) as! UILabel).text = "Did they reach a defense?"
             let switchView = cell?.viewWithTag(3) as! UISwitch
             switchView.on = false
-            switchView.addTarget(self, action: "didReachDefenseSwitchFlipped:", forControlEvents: .ValueChanged)
+            switchView.addTarget(self, action: #selector(AutonomousViewController.didReachDefenseSwitchFlipped(_:)), forControlEvents: .ValueChanged)
             return cell!
         } else if indexPath.row == 2 {
             let cell = tableView.dequeueReusableCellWithIdentifier("defenseReachedCell")
@@ -88,21 +86,21 @@ class AutonomousViewController: UIViewController, UITableViewDelegate, UITableVi
             (cell?.viewWithTag(1) as! UILabel).text = "Did they cross it succesfully?"
             let switchView = cell?.viewWithTag(3) as! UISwitch
             switchView.on = false
-            switchView.addTarget(self, action: "crossedSwitchFlipped:", forControlEvents: .ValueChanged)
+            switchView.addTarget(self, action: #selector(AutonomousViewController.crossedSwitchFlipped(_:)), forControlEvents: .ValueChanged)
             return cell!
         } else if indexPath.row == 4 {
             let cell = tableView.dequeueReusableCellWithIdentifier("mainCell")
             (cell?.viewWithTag(1) as! UILabel).text = "Did they shoot?"
             let switchView = cell?.viewWithTag(3) as! UISwitch
             switchView.on = false
-            switchView.addTarget(self, action: "shotSwitchFlipped:", forControlEvents: .ValueChanged)
+            switchView.addTarget(self, action: #selector(AutonomousViewController.shotSwitchFlipped(_:)), forControlEvents: .ValueChanged)
             return cell!
         } else if indexPath.row == 5 {
             let cell = tableView.dequeueReusableCellWithIdentifier("mainCell")
             (cell?.viewWithTag(1) as! UILabel).text = "Did they return?"
             let switchView = cell?.viewWithTag(3) as! UISwitch
             switchView.on = false
-            switchView.addTarget(self, action: "returnSwitchFlipped:", forControlEvents: .ValueChanged)
+            switchView.addTarget(self, action: #selector(AutonomousViewController.returnSwitchFlipped(_:)), forControlEvents: .ValueChanged)
             return cell!
         } else {
             return UITableViewCell()

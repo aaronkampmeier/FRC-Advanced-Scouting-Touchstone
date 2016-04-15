@@ -615,8 +615,13 @@ class TeamListController: UIViewController, UITableViewDataSource, UITableViewDe
 		detailString.appendContentsOf("\nHeight: \((selectedTeamCache?.team.height) ?? 0)")
 		detailString.appendContentsOf("\nDrive Train: \(selectedTeamCache!.team.driveTrain ?? "")")
 		detailString.appendContentsOf("\nVision Tracking Rating: \(selectedTeamCache?.team.visionTrackingRating ?? 0)")
+		detailString.appendContentsOf("\nTurret: \(selectedTeamCache?.team.turret?.boolValue ?? false)")
 		detailString.appendContentsOf("\nAutonomous Defenses Able To Cross: ")
 		for defense in selectedTeamCache?.team.autonomousDefensesAbleToCross?.allObjects as! [Defense] {
+			detailString.appendContentsOf(", \(defense.defenseName!)")
+		}
+		detailString.appendContentsOf("\nAutonomous Defenses Able To Shoot From: ")
+		for defense in selectedTeamCache?.team.autonomousDefensesAbleToShoot?.allObjects as! [Defense] {
 			detailString.appendContentsOf(", \(defense.defenseName!)")
 		}
 		detailString.appendContentsOf("\nDefenses Able To Cross: ")

@@ -24,6 +24,7 @@ class PitScoutingController: UIViewController, UIImagePickerControllerDelegate, 
 	@IBOutlet var defenseButtons: [UIButton]!
 	@IBOutlet weak var gamePartSelector: UISegmentedControl!
 	@IBOutlet var notesButton: UIBarButtonItem!
+	@IBOutlet weak var turretSwitch: UISwitch!
     
     let dataManager = TeamDataManager()
     let imageController = UIImagePickerController()
@@ -82,6 +83,11 @@ class PitScoutingController: UIViewController, UIImagePickerControllerDelegate, 
         super.viewDidLoad()
     }
 	
+	override func viewDidAppear(animated: Bool) {
+		super.viewDidAppear(animated)
+		teamNumberField.becomeFirstResponder()
+	}
+	
 	override func viewWillDisappear(animated: Bool) {
 		super.viewWillDisappear(animated)
 		
@@ -107,6 +113,7 @@ class PitScoutingController: UIViewController, UIImagePickerControllerDelegate, 
 		visionTrackingSlider.setValue((selectedTeam.optionalTeam?.visionTrackingRating?.floatValue) ?? 0, animated: false)
 		driveTrainField.text = String(selectedTeam.optionalTeam?.driveTrain ?? "") ?? ""
 		heightField.text = String(selectedTeam.optionalTeam?.height ?? "") ?? ""
+		turretSwitch.on = selectedTeam.optionalTeam?.turret?.boolValue ?? false
 		setDefensesAbleToCross(forPart: currentGamePart(), inTeam: selectedTeam.optionalTeam)
     }
 	
@@ -117,14 +124,16 @@ class PitScoutingController: UIViewController, UIImagePickerControllerDelegate, 
 	func setDefensesAbleToCross(forPart part: GamePart, inTeam team: Team?) {
 		//Set all the buttons to not selected
 		for defenseButton in defenseButtons {
-			setDefenseButton(defenseButton, selected: false)
+			setDefenseButton(defenseButton, state: .NotSelected)
 		}
 		
 		if let team = team {
 			let defenses: [Defense]
+			var autonomousDefensesForShooting: [Defense] = [Defense]()
 			switch part {
 			case .Autonomous:
 				defenses = team.autonomousDefensesAbleToCross?.allObjects as! [Defense]
+				autonomousDefensesForShooting = team.autonomousDefensesAbleToShoot?.allObjects as! [Defense]
 			case .Teleop:
 				defenses = team.defensesAbleToCross?.allObjects as! [Defense]
 			}
@@ -134,20 +143,36 @@ class PitScoutingController: UIViewController, UIImagePickerControllerDelegate, 
 				let defenseButton = defenseButtons.filter() {
 					$0.titleForState(.Normal) == defense.defenseName
 					}.first!
-				setDefenseButton(defenseButton, selected: true)
+				setDefenseButton(defenseButton, state: .CanCross)
+			}
+			for defense in autonomousDefensesForShooting {
+				let defenseButton = defenseButtons.filter() {
+					$0.titleForState(.Normal) == defense.defenseName
+					}.first!
+				setDefenseButton(defenseButton, state: .CanShootFrom)
 			}
 		}
 	}
 	
-	func setDefenseButton(button: UIButton, selected: Bool) {
-		switch selected {
-		case true:
+	func setDefenseButton(button: UIButton, state: DefenseButtonState) {
+		switch state {
+		case .CanShootFrom:
+			button.layer.borderWidth = 5
+			button.layer.borderColor = UIColor.blueColor().CGColor
+			button.layer.cornerRadius = 10
+		case .CanCross:
 			button.layer.borderWidth = 5
 			button.layer.borderColor = UIColor.greenColor().CGColor
 			button.layer.cornerRadius = 10
-		case false:
+		case .NotSelected:
 			button.layer.borderWidth = 0
 		}
+	}
+	
+	enum DefenseButtonState {
+		case NotSelected
+		case CanCross
+		case CanShootFrom
 	}
 	
 	@IBAction func visionTrackingValueChanged(sender: UISlider) {
@@ -180,6 +205,12 @@ class PitScoutingController: UIViewController, UIImagePickerControllerDelegate, 
 	@IBAction func xpEdited(sender: UITextField) {
 		if let team = selectedTeam.optionalTeam {
 			team.driverExp = Double(sender.text!) ?? 0
+		}
+	}
+	
+	@IBAction func turretSwitched(sender: UISwitch) {
+		if let team = selectedTeam.optionalTeam {
+			team.turret = sender.on
 		}
 	}
     
@@ -253,7 +284,7 @@ class PitScoutingController: UIViewController, UIImagePickerControllerDelegate, 
 	@IBAction func selectedDefense(sender: UIButton) {
 		if sender.layer.borderWidth == 0 {
 			//Hasn't been selected previously, set it selected
-			setDefenseButton(sender, selected: true)
+			setDefenseButton(sender, state: .CanCross)
 			
 //			sender.layer.shadowOpacity = 0.5
 //			sender.layer.shadowColor = UIColor.greenColor().CGColor
@@ -266,13 +297,30 @@ class PitScoutingController: UIViewController, UIImagePickerControllerDelegate, 
 				
 				dataManager.addDefense(defense!, toTeam: team, forPart: currentGamePart())
 			}
-		} else {
-			//Was selected, set it not selected
-			setDefenseButton(sender, selected: false)
-			
+		} else if CGColorEqualToColor(sender.layer.borderColor, UIColor.greenColor().CGColor) {
+			//Was selected as can cross
+			switch currentGamePart() {
+			case .Autonomous:
+				setDefenseButton(sender, state: .CanShootFrom)
+				if let team = selectedTeam.optionalTeam {
+					let defense = dataManager.getDefense(withName: sender.titleForState(.Normal)!)
+					
+					dataManager.setDefenseAbleToShootFrom(defense!, toTeam: team, canShootFrom: true)
+				}
+			case .Teleop:
+				setDefenseButton(sender, state: .NotSelected)
+				if let team = selectedTeam.optionalTeam {
+					let defense = dataManager.getDefense(withName: sender.titleForState(.Normal)!)
+					
+					dataManager.removeDefense(defense!, fromTeam: team, forPart: currentGamePart())
+				}
+			}
+		} else if CGColorEqualToColor(sender.layer.borderColor, UIColor.blueColor().CGColor) {
+			setDefenseButton(sender, state: .NotSelected)
 			if let team = selectedTeam.optionalTeam {
 				let defense = dataManager.getDefense(withName: sender.titleForState(.Normal)!)
 				
+				dataManager.setDefenseAbleToShootFrom(defense!, toTeam: team, canShootFrom: false)
 				dataManager.removeDefense(defense!, fromTeam: team, forPart: currentGamePart())
 			}
 		}
