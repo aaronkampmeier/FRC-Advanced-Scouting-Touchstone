@@ -225,8 +225,7 @@ class TeamListController: UIViewController, UITableViewDataSource, UITableViewDe
 		
 		//Add an observer to update the table if new changes are merged in
 //		NSNotificationCenter.defaultCenter().addObserverForName("DataSyncer:NewChangesMerged", object: nil, queue: nil) {notification in
-//			let regional = self.selectedRegional
-//			self.selectedRegional = regional
+//			self.teamList.reloadData()
 //		}
 		
         //Create reusable cell

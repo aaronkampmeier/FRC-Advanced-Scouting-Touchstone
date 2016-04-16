@@ -118,7 +118,7 @@ enum StatCalculation {
 			let totalPerformanceAverages: Double = context.reduce(0) {cumulative,matchPerformance in
 				//First filter the defenseCrossTimes to only be for the specified defense
 				let defenseCrossTimes: [DefenseCrossTime] = (matchPerformance.defenseCrossTimes?.filter() {defenseCrossTime in
-					return (defenseCrossTime as! DefenseCrossTime).defense?.defenseName == defense.string
+					return (defenseCrossTime as! DefenseCrossTime).defense?.defenseName == defense.description
 					}) as! [DefenseCrossTime]
 				
 				let matchPerformanceTotal = defenseCrossTimes.reduce(0) {counter, crossTime in
@@ -168,7 +168,7 @@ enum StatCalculation {
 		case .ShotAccuracy(_):
 			return "Shot Accuracy"
 		case .AverageDefenseCrossTime(_, let defenseType):
-			return "Average \(defenseType.string) Cross Time"
+			return "Average \(defenseType.description) Cross Time"
 		case .AverageTimeInZone(_, let zone):
 			return "Average Time in \(zone.rawValue)"
 		case .TotalPoints(_):

@@ -26,20 +26,23 @@ class StandsScoutingViewController: UIViewController, ProvidesTeam {
 	var matchPerformance: TeamMatchPerformance? {
 		willSet {
 		matchAndRegionalLabel.text = "Regional: \(teamPerformance!.regional!.name!)  Match: \(newValue!.match!.matchNumber!)"
-		switch newValue!.allianceColor!.integerValue {
-		case 0:
-			defenses = newValue?.match?.blueDefenses?.allObjects as? [Defense]
-		case 1:
-			defenses = newValue?.match?.redDefenses?.allObjects as? [Defense]
-		default:
-			break
-		}
 		}
 	}
 	var team: Team {
 		return teamPerformance!.team!
 	}
-	var defenses: [Defense]?
+	var defenses: [Defense]? {
+		get {
+			switch matchPerformance!.allianceColor!.integerValue {
+			case 0:
+				return matchPerformance?.match?.blueDefenses?.allObjects as! [Defense]
+			case 1:
+				return matchPerformance?.match?.redDefenses?.allObjects as! [Defense]
+			default:
+				return [Defense]()
+			}
+		}
+	}
 	let dataManager = TeamDataManager()
 	
 	let stopwatch = Stopwatch()
@@ -50,7 +53,7 @@ class StandsScoutingViewController: UIViewController, ProvidesTeam {
 			stopwatch.start()
 			
 			//Reset previous data
-			dataManager.discardChanges()
+			//dataManager.discardChanges()
 			
 			//Update the button
 			timerButton.setTitle("Stop", forState: .Normal)
@@ -180,14 +183,7 @@ class StandsScoutingViewController: UIViewController, ProvidesTeam {
 	override func viewWillAppear(animated: Bool) {
 		super.viewWillAppear(animated)
 		
-		if matchPerformance == nil {
-			//Ask for the match to use
-			let askAction = UIAlertController(title: "Select Match", message: "Select the match for Team \(teamPerformance!.team!.teamNumber!) in the regional \(teamPerformance!.regional!.name!) for stands scouting.", preferredStyle: .Alert)
-			for match in (teamPerformance?.matchPerformances?.allObjects as! [TeamMatchPerformance]).sort({Int($0.match!.matchNumber!) < Int($1.match!.matchNumber!)}) {
-				askAction.addAction(UIAlertAction(title: "Match \(match.match!.matchNumber!)", style: .Default, handler: {_ in self.matchPerformance = match}))
-			}
-			presentViewController(askAction, animated: true, completion: nil)
-		}
+		setUpStandsScouting()
 	}
 	
 	override func viewDidAppear(animated: Bool) {
@@ -202,6 +198,27 @@ class StandsScoutingViewController: UIViewController, ProvidesTeam {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
     }
+	
+	func setUpStandsScouting() {
+		let defenseSelectorVC = storyboard?.instantiateViewControllerWithIdentifier("defenseSelector") as! DefenseSelector
+		defenseSelectorVC.standsScoutingVC = self
+		
+		if matchPerformance == nil {
+			//Ask for the match to use
+			let askAction = UIAlertController(title: "Select Match", message: "Select the match for Team \(teamPerformance!.team!.teamNumber!) in the regional \(teamPerformance!.regional!.name!) for stands scouting.", preferredStyle: .Alert)
+			for match in (teamPerformance?.matchPerformances?.allObjects as! [TeamMatchPerformance]).sort({Int($0.match!.matchNumber!) < Int($1.match!.matchNumber!)}) {
+				askAction.addAction(UIAlertAction(title: "Match \(match.match!.matchNumber!)", style: .Default, handler: {_ in self.matchPerformance = match; self.presentViewController(defenseSelectorVC, animated: true, completion: nil); defenseSelectorVC.loadDefenses(forMatch: match.match!)}))
+			}
+			
+			askAction.addAction(UIAlertAction(title: "Cancel", style: .Destructive) {action in
+				self.close(andSave: false)
+			})
+			presentViewController(askAction, animated: true, completion: nil)
+		} else {
+			defenseSelectorVC.loadDefenses(forMatch: matchPerformance!.match!)
+			presentViewController(defenseSelectorVC, animated: true, completion: nil)
+		}
+	}
 	
 	@IBAction func closePressed(sender: UIButton) {
 		if 150 - stopwatch.elapsedTime > 5 {
@@ -358,3 +375,160 @@ class NotesViewController: UIViewController {
 		dismissViewControllerAnimated(true, completion: nil)
 	}
 }
+
+class DefenseSelector: UIViewController, UICollectionViewDataSource, UICollectionViewDelegate {
+	@IBOutlet weak var defenseCollectionView: UICollectionView!
+	@IBOutlet weak var doneButton: UIBarButtonItem!
+	
+	let dataManager = TeamDataManager()
+	var standsScoutingVC: StandsScoutingViewController?
+	
+	var redDefenses: [TeamDataManager.DefenseCategory:Defense] = Dictionary<TeamDataManager.DefenseCategory, Defense>() {
+		didSet {
+			if redDefenses.count == 4 && blueDefenses.count == 4 {
+				doneButton.enabled = true
+			} else {
+				doneButton.enabled = false
+			}
+		}
+	}
+	var blueDefenses: [TeamDataManager.DefenseCategory:Defense] = Dictionary<TeamDataManager.DefenseCategory, Defense>() {
+		didSet {
+			if redDefenses.count == 4 && blueDefenses.count == 4 {
+				doneButton.enabled = true
+			} else {
+				doneButton.enabled = false
+			}
+		}
+	}
+	
+	override func viewDidLoad() {
+		super.viewDidLoad()
+		doneButton.enabled = false
+	}
+	
+	override func viewDidAppear(animated: Bool) {
+		super.viewDidAppear(animated)
+		
+		for cell in defenseCollectionView.visibleCells() as! [DefenseSelectionCell] {
+			switch cell.color! {
+			case .Red:
+				cell.defenseSelection = redDefenses[cell.defenseCategory!]?.defenseType
+			case .Blue:
+				cell.defenseSelection = blueDefenses[cell.defenseCategory!]?.defenseType
+			}
+		}
+	}
+	
+	func loadDefenses(forMatch match: Match) {
+		for defense in (match.redDefenses?.allObjects as! [Defense]) {
+			redDefenses[defense.defenseCategory] = defense
+		}
+		for defense in (match.blueDefenses?.allObjects as! [Defense]) {
+			blueDefenses[defense.defenseCategory] = defense
+		}
+		defenseCollectionView.reloadData()
+	}
+	
+	func numberOfSectionsInCollectionView(collectionView: UICollectionView) -> Int {
+		return 2
+	}
+	
+	func collectionView(collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+		return 4
+	}
+	
+	func collectionView(collectionView: UICollectionView, cellForItemAtIndexPath indexPath: NSIndexPath) -> UICollectionViewCell {
+		let cell = collectionView.dequeueReusableCellWithReuseIdentifier("cell", forIndexPath: indexPath) as! DefenseSelectionCell
+		
+		cell.defenseSelector = self
+		cell.defenseCategory = TeamDataManager.DefenseCategory(rawValue: indexPath.item)
+		if indexPath.section == 0 {
+			cell.color = TeamDataManager.AllianceColor.Red
+		} else {
+			cell.color = TeamDataManager.AllianceColor.Blue
+		}
+		
+		return cell
+	}
+	
+	func collectionView(collectionView: UICollectionView, viewForSupplementaryElementOfKind kind: String, atIndexPath indexPath: NSIndexPath) -> UICollectionReusableView {
+		switch kind {
+		case UICollectionElementKindSectionHeader:
+			let header = collectionView.dequeueReusableSupplementaryViewOfKind(kind, withReuseIdentifier: "header", forIndexPath: indexPath)
+			let titleLabel = header.viewWithTag(1) as! UILabel
+			if indexPath.section == 0 {
+				titleLabel.text = "Red Defenses"
+				titleLabel.textColor = UIColor.redColor()
+			} else {
+				titleLabel.text = "Blue Defenses"
+				titleLabel.textColor = UIColor.blueColor()
+			}
+			return header
+		default:
+			assertionFailure("Unknown supplementary view identifier.")
+			fatalError()
+		}
+	}
+	
+	func didSelectDefense(color: TeamDataManager.AllianceColor, defense: TeamDataManager.DefenseType) {
+		switch color {
+		case .Red:
+			redDefenses[defense.category] = defense.defense
+		case .Blue:
+			blueDefenses[defense.category] = defense.defense
+		}
+	}
+	
+	@IBAction func donePressed(sender: UIBarButtonItem) {
+		standsScoutingVC?.matchPerformance?.match?.redDefenses = NSSet(array: Array(redDefenses.values))
+		standsScoutingVC?.matchPerformance?.match?.blueDefenses = NSSet(array: Array(blueDefenses.values))
+		dataManager.commitChanges()
+		dismissViewControllerAnimated(true, completion: nil)
+	}
+}
+
+class DefenseSelectionCell: UICollectionViewCell, UITableViewDataSource, UITableViewDelegate {
+	@IBOutlet weak var tableView: UITableView!
+	
+	var color: TeamDataManager.AllianceColor?
+	var defenseCategory: TeamDataManager.DefenseCategory? {
+		didSet {
+			tableView.reloadData()
+		}
+	}
+	var defenseSelection: TeamDataManager.DefenseType? {
+		didSet {
+			if let defenseSelection = defenseSelection {
+				tableView.selectRowAtIndexPath(NSIndexPath.init(forRow: defenseCategory!.defenses.indexOf(defenseSelection) ?? 2, inSection: 0), animated: false, scrollPosition: .None)
+			} else {
+				if let selectedPath = tableView.indexPathForSelectedRow {
+					tableView.deselectRowAtIndexPath(selectedPath, animated: false)
+				}
+			}
+		}
+	}
+	var defenseSelector: DefenseSelector?
+	
+	override func layoutSubviews() {
+		tableView.dataSource = self
+		tableView.delegate = self
+	}
+	
+	func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+		return 2
+	}
+	
+	func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
+		let cell = tableView.dequeueReusableCellWithIdentifier("cell")
+		
+		cell?.textLabel?.text = defenseCategory?.defenses[indexPath.row].description ?? ""
+		
+		return cell!
+	}
+	
+	func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
+		defenseSelector?.didSelectDefense(color!, defense: defenseCategory!.defenses[indexPath.row])
+	}
+}
+

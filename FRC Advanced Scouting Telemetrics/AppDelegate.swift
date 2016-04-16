@@ -127,7 +127,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 							NSLog("Skipping version \(versionToSkip)")
 						}
 					} else if deviceVersion > latestVersion {
-						NSLog("You're running a beta, hooray!")
+						NSLog("You're running a prerelease version, hooray!")
 						notificationCenter.postNotificationName("UpdateIsAvailable", object: self, userInfo: ["isAvailable":false])
 					}
 				} else {
