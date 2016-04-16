@@ -270,6 +270,11 @@ class TeamListController: UIViewController, UITableViewDataSource, UITableViewDe
 		if currentChildVC != gameStatsController {
 			cycleFromViewController(childViewControllers.first!, toViewController: gameStatsController!)
 		}
+		
+		if let selectedIndexPath = teamList.indexPathForSelectedRow {
+			teamList.selectRowAtIndexPath(selectedIndexPath, animated: false, scrollPosition: .None)
+			tableView(teamList, didSelectRowAtIndexPath: selectedIndexPath)
+		}
 	}
 	
 	func cycleFromViewController(oldVC: UIViewController, toViewController newVC: UIViewController) {
@@ -495,10 +500,7 @@ class TeamListController: UIViewController, UITableViewDataSource, UITableViewDe
     }
 	
 	@IBAction func returningWithSegue(segue: UIStoryboardSegue) {
-		if let selectedIndexPath = teamList.indexPathForSelectedRow {
-			teamList.selectRowAtIndexPath(selectedIndexPath, animated: false, scrollPosition: .None)
-			tableView(teamList, didSelectRowAtIndexPath: selectedIndexPath)
-		}
+		
 	}
 	
 	@IBAction func returnToTeamList(segue: UIStoryboardSegue) {
