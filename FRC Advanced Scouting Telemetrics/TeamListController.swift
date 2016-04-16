@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import Crashlytics
 
 class TeamListController: UIViewController, UITableViewDataSource, UITableViewDelegate, UISearchBarDelegate {
 	@IBOutlet weak var regionalSelectionButton: UIButton!
@@ -490,6 +491,7 @@ class TeamListController: UIViewController, UITableViewDataSource, UITableViewDe
 			let destinationVC = segue.destinationViewController as! StandsScoutingViewController
 			destinationVC.teamPerformance = teamRegionalPerformance
 		} else if segue.identifier == "teamDetail" {
+			Answers.logCustomEventWithName("Showed Team Detail", customAttributes: ["Team Number":(selectedTeamCache?.team.teamNumber)!])
 			let destinationVC = (segue.destinationViewController as! UINavigationController).topViewController
 			setUpTeamDetailController(destinationVC!)
 		}
