@@ -1794,7 +1794,7 @@
                             </barButtonItem>
                         </leftBarButtonItems>
                         <button key="titleView" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" id="ABW-L6-OGS">
-                            <rect key="frame" x="215" y="7" width="78" height="30"/>
+                            <rect key="frame" x="236" y="7" width="78" height="30"/>
                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                             <fontDescription key="fontDescription" type="system" pointSize="18"/>
                             <state key="normal" title="All Teams"/>
@@ -1810,14 +1810,14 @@
                                     <action selector="editTeamsPressed:" destination="Bvx-zi-C8Q" id="3yn-yt-RJg"/>
                                 </connections>
                             </barButtonItem>
+                            <barButtonItem image="Pit Scouting" id="0K6-lZ-aao">
+                                <connections>
+                                    <segue destination="Aeh-gy-7kO" kind="show" id="veD-Ch-xER"/>
+                                </connections>
+                            </barButtonItem>
                             <barButtonItem image="Settings-50" id="b8f-RH-V7i">
                                 <connections>
                                     <segue destination="U26-lM-I1S" kind="presentation" modalPresentationStyle="formSheet" id="fk5-ed-E1D"/>
-                                </connections>
-                            </barButtonItem>
-                            <barButtonItem title="Pit" id="0K6-lZ-aao">
-                                <connections>
-                                    <segue destination="Aeh-gy-7kO" kind="show" id="veD-Ch-xER"/>
                                 </connections>
                             </barButtonItem>
                             <barButtonItem image="Synchronize-50" id="34p-qD-gbL">
@@ -3854,19 +3854,20 @@
         <image name="Cheval de Frise" width="311" height="162"/>
         <image name="DefenseRender" width="471" height="728"/>
         <image name="Drawbridge" width="231" height="318"/>
-        <image name="Installing Updates" width="50" height="50"/>
+        <image name="Installing Updates" width="27" height="27"/>
         <image name="Low Bar" width="350" height="162"/>
         <image name="Moat" width="325" height="132"/>
         <image name="OffenseRender" width="454" height="698"/>
+        <image name="Pit Scouting" width="31" height="31"/>
         <image name="Plus Filled-50" width="50" height="50"/>
         <image name="Portcullis" width="195" height="258"/>
         <image name="Ramparts" width="349" height="160"/>
         <image name="Rock Wall" width="1146" height="594"/>
         <image name="Rough Terrain" width="293" height="172"/>
         <image name="Sally Port" width="370" height="255"/>
-        <image name="Settings-50" width="50" height="50"/>
-        <image name="Sort" width="45" height="44"/>
-        <image name="Synchronize-50" width="50" height="50"/>
-        <image name="Team Picker" width="45" height="44"/>
+        <image name="Settings-50" width="27" height="27"/>
+        <image name="Sort" width="27" height="27"/>
+        <image name="Synchronize-50" width="27" height="27"/>
+        <image name="Team Picker" width="27" height="27"/>
     </resources>
 </document>
