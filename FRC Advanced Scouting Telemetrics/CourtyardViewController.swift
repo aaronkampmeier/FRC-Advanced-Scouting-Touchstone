@@ -141,7 +141,7 @@ class CourtyardViewController: UIViewController, UITableViewDataSource, UITableV
 		
 		popoverVC?.modalPresentationStyle = .Popover
 		let popover = popoverVC?.popoverPresentationController
-		popoverVC?.preferredContentSize = CGSizeMake(300, 200)
+		popoverVC?.preferredContentSize = CGSizeMake(300, 150)
 		popover?.delegate = self
 		popover?.sourceView = pointView
 		presentViewController(popoverVC!, animated: true, completion: nil)
@@ -175,13 +175,6 @@ class CourtyardViewController: UIViewController, UITableViewDataSource, UITableV
 			case .Defense:
 				markerType = TeamDataManager.TimeMarkerEvent.OffenseAttemptedShot
 				break
-				//Deprecated
-//				if selectedShot!.shot?.blocked == true {
-//					selectedShot?.pointView.backgroundColor = UIColor.greenColor()
-//				} else {
-//					selectedShot?.pointView.backgroundColor = UIColor.redColor()
-//				}
-//				markerType = TeamDataManager.TimeMarkerEvent.DefenseAttemptedBlock
 			case .Offense:
 				if selectedShot!.shot?.blocked == true {
 					selectedShot?.pointView.backgroundColor = UIColor.redColor()
@@ -230,9 +223,9 @@ class CourtyardViewController: UIViewController, UITableViewDataSource, UITableV
 		case 2:
 			switch indexPath.row {
 			case 0:
-				cell?.textLabel?.text = "Yes"
-			case 1:
 				cell?.textLabel?.text = "No"
+			case 1:
+				cell?.textLabel?.text = "Yes"
 			default:
 				break
 			}
@@ -268,4 +261,26 @@ class CourtyardViewController: UIViewController, UITableViewDataSource, UITableV
     }
     */
 
+}
+
+class DefenseVC: UIViewController {
+	let dataManager = TeamDataManager()
+	var standsScoutingVC: StandsScoutingViewController?
+	
+	override func viewDidLoad() {
+		super.viewDidLoad()
+	}
+	
+	override func viewWillAppear(animated: Bool) {
+		super.viewWillAppear(animated)
+		standsScoutingVC = parentViewController as! StandsScoutingViewController
+	}
+	
+	@IBAction func contact(sender: UIButton) {
+		dataManager.addTimeMarker(withEvent: .Contact, atTime: (standsScoutingVC?.stopwatch.elapsedTime)!, inMatchPerformance: (standsScoutingVC?.matchPerformance)!)
+	}
+	
+	@IBAction func contactDisruptingShot(sender: UIButton) {
+		dataManager.addTimeMarker(withEvent: .ContactDisruptingShot, atTime: (standsScoutingVC?.stopwatch.elapsedTime)!, inMatchPerformance: (standsScoutingVC?.matchPerformance)!)
+	}
 }

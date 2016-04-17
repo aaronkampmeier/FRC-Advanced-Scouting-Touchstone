@@ -894,6 +894,8 @@ class TeamDataManager {
 		case StartedCrossingDefense
 		case FinishedCrossingDefense
 		case MovedToNeutral
+		case Contact
+		case ContactDisruptingShot
 	}
     
     enum DataManagingError: ErrorType {

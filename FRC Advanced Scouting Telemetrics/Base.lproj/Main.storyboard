@@ -2822,10 +2822,10 @@
             </objects>
             <point key="canvasLocation" x="201" y="-456"/>
         </scene>
-        <!--View Controller-->
+        <!--DefenseVC-->
         <scene sceneID="bpd-hZ-flo">
             <objects>
-                <viewController storyboardIdentifier="standsDefense" id="WL6-Ai-EVK" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="standsDefense" id="WL6-Ai-EVK" customClass="DefenseVC" customModule="FRC_Advanced_Scouting_Touchstone" customModuleProvider="target" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="42h-RV-2jS"/>
                         <viewControllerLayoutGuide type="bottom" id="aFW-4w-QHQ"/>
@@ -2840,11 +2840,29 @@
                                 <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                 <nil key="highlightedColor"/>
                             </label>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="S8p-HY-zQE">
+                                <rect key="frame" x="173" y="84" width="55" height="30"/>
+                                <state key="normal" title="Contact"/>
+                                <connections>
+                                    <action selector="contact:" destination="WL6-Ai-EVK" eventType="touchUpInside" id="RhS-sj-a2j"/>
+                                </connections>
+                            </button>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="s69-wK-bwK">
+                                <rect key="frame" x="118" y="119" width="165" height="30"/>
+                                <state key="normal" title="Contact Disrupting Shot"/>
+                                <connections>
+                                    <action selector="contactDisruptingShot:" destination="WL6-Ai-EVK" eventType="touchUpInside" id="89z-TM-EC9"/>
+                                </connections>
+                            </button>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
                             <constraint firstItem="DRZ-Oz-Oz4" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="eoO-b5-crs" secondAttribute="leadingMargin" constant="10" id="A0a-Jv-aCZ"/>
+                            <constraint firstItem="S8p-HY-zQE" firstAttribute="centerX" secondItem="eoO-b5-crs" secondAttribute="centerX" id="Did-vZ-iW0"/>
                             <constraint firstItem="DRZ-Oz-Oz4" firstAttribute="centerX" secondItem="eoO-b5-crs" secondAttribute="centerX" id="K2Q-nJ-mgW"/>
+                            <constraint firstItem="DRZ-Oz-Oz4" firstAttribute="top" secondItem="s69-wK-bwK" secondAttribute="bottom" constant="20" id="M31-fX-GqY"/>
+                            <constraint firstItem="s69-wK-bwK" firstAttribute="centerX" secondItem="eoO-b5-crs" secondAttribute="centerX" id="P7q-8C-aPG"/>
+                            <constraint firstItem="s69-wK-bwK" firstAttribute="top" secondItem="S8p-HY-zQE" secondAttribute="bottom" constant="5" id="aYm-Hd-VQh"/>
                             <constraint firstItem="DRZ-Oz-Oz4" firstAttribute="centerY" secondItem="eoO-b5-crs" secondAttribute="centerY" id="riv-bU-zeo"/>
                         </constraints>
                     </view>
@@ -2913,8 +2931,8 @@
                                     </tableViewCell>
                                 </prototypes>
                             </tableView>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Blocked?" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="rfk-qb-Tgv">
-                                <rect key="frame" x="192" y="20" width="70" height="21"/>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Made?" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="rfk-qb-Tgv">
+                                <rect key="frame" x="201" y="20" width="52" height="21"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                 <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                 <nil key="highlightedColor"/>
@@ -3009,9 +3027,7 @@
                                     </mask>
                                 </variation>
                                 <connections>
-                                    <action selector="startedHoldingDownDefense:" destination="BFm-Rq-KIG" eventType="touchDown" id="Yce-NS-ZVJ"/>
-                                    <action selector="stoppedHoldingDefense:" destination="BFm-Rq-KIG" eventType="touchUpOutside" id="CTB-Hf-dRp"/>
-                                    <action selector="stoppedHoldingDefense:" destination="BFm-Rq-KIG" eventType="touchUpInside" id="Cxg-Xv-opP"/>
+                                    <action selector="defensePressed:" destination="BFm-Rq-KIG" eventType="touchUpInside" id="v7Q-qE-Mgr"/>
                                 </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="1FK-9P-UAZ">
@@ -3034,9 +3050,30 @@
                                     </mask>
                                 </variation>
                                 <connections>
-                                    <action selector="startedHoldingDownDefense:" destination="BFm-Rq-KIG" eventType="touchDown" id="mpf-ps-wZK"/>
-                                    <action selector="stoppedHoldingDefense:" destination="BFm-Rq-KIG" eventType="touchUpOutside" id="HfB-rc-Dun"/>
-                                    <action selector="stoppedHoldingDefense:" destination="BFm-Rq-KIG" eventType="touchUpInside" id="L7U-dx-B5H"/>
+                                    <action selector="defensePressed:" destination="BFm-Rq-KIG" eventType="touchUpInside" id="oiJ-7h-xVv"/>
+                                </connections>
+                            </button>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="1aL-7I-SoH">
+                                <rect key="frame" x="0.0" y="192" width="200" height="96"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="96" id="HTx-ru-cW1"/>
+                                    <constraint firstAttribute="width" constant="200" id="JNw-WJ-k56"/>
+                                </constraints>
+                                <state key="normal" title="Defense 3"/>
+                                <variation key="default">
+                                    <mask key="constraints">
+                                        <exclude reference="HTx-ru-cW1"/>
+                                        <exclude reference="JNw-WJ-k56"/>
+                                    </mask>
+                                </variation>
+                                <variation key="heightClass=regular-widthClass=regular">
+                                    <mask key="constraints">
+                                        <include reference="HTx-ru-cW1"/>
+                                        <include reference="JNw-WJ-k56"/>
+                                    </mask>
+                                </variation>
+                                <connections>
+                                    <action selector="defensePressed:" destination="BFm-Rq-KIG" eventType="touchUpInside" id="n5z-Fn-A79"/>
                                 </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="vvA-nd-e4v">
@@ -3059,9 +3096,7 @@
                                     </mask>
                                 </variation>
                                 <connections>
-                                    <action selector="startedHoldingDownDefense:" destination="BFm-Rq-KIG" eventType="touchDown" id="tF5-VO-KIe"/>
-                                    <action selector="stoppedHoldingDefense:" destination="BFm-Rq-KIG" eventType="touchUpInside" id="0Bb-OM-yTr"/>
-                                    <action selector="stoppedHoldingDefense:" destination="BFm-Rq-KIG" eventType="touchUpOutside" id="b0d-ss-y6b"/>
+                                    <action selector="defensePressed:" destination="BFm-Rq-KIG" eventType="touchUpInside" id="Hz7-IH-5ve"/>
                                 </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="tJV-Nj-MXp">
@@ -3084,13 +3119,11 @@
                                     </mask>
                                 </variation>
                                 <connections>
-                                    <action selector="startedHoldingDownDefense:" destination="BFm-Rq-KIG" eventType="touchDown" id="u3d-Db-iR2"/>
-                                    <action selector="stoppedHoldingDefense:" destination="BFm-Rq-KIG" eventType="touchUpOutside" id="3FG-uh-boT"/>
-                                    <action selector="stoppedHoldingDefense:" destination="BFm-Rq-KIG" eventType="touchUpInside" id="auU-RU-uwh"/>
+                                    <action selector="defensePressed:" destination="BFm-Rq-KIG" eventType="touchUpInside" id="Usa-Wa-rKb"/>
                                 </connections>
                             </button>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Hold Down on a Defense" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ofO-Yx-g5v">
-                                <rect key="frame" x="20" y="20" width="189" height="21"/>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Note: Only select defenses that the robot crosses on its own." textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ofO-Yx-g5v">
+                                <rect key="frame" x="20" y="20" width="466" height="21"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                 <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                 <nil key="highlightedColor"/>
@@ -3131,31 +3164,6 @@
                                     <action selector="breachedDefense1:" destination="BFm-Rq-KIG" eventType="valueChanged" id="tkN-UM-TAQ"/>
                                 </connections>
                             </switch>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="1aL-7I-SoH">
-                                <rect key="frame" x="0.0" y="192" width="200" height="96"/>
-                                <constraints>
-                                    <constraint firstAttribute="height" constant="96" id="HTx-ru-cW1"/>
-                                    <constraint firstAttribute="width" constant="200" id="JNw-WJ-k56"/>
-                                </constraints>
-                                <state key="normal" title="Defense 3"/>
-                                <variation key="default">
-                                    <mask key="constraints">
-                                        <exclude reference="HTx-ru-cW1"/>
-                                        <exclude reference="JNw-WJ-k56"/>
-                                    </mask>
-                                </variation>
-                                <variation key="heightClass=regular-widthClass=regular">
-                                    <mask key="constraints">
-                                        <include reference="HTx-ru-cW1"/>
-                                        <include reference="JNw-WJ-k56"/>
-                                    </mask>
-                                </variation>
-                                <connections>
-                                    <action selector="startedHoldingDownDefense:" destination="BFm-Rq-KIG" eventType="touchDown" id="Np7-kw-V4i"/>
-                                    <action selector="stoppedHoldingDefense:" destination="BFm-Rq-KIG" eventType="touchUpOutside" id="czv-7s-wA5"/>
-                                    <action selector="stoppedHoldingDefense:" destination="BFm-Rq-KIG" eventType="touchUpInside" id="vJh-yR-seu"/>
-                                </connections>
-                            </button>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
@@ -3195,9 +3203,9 @@
                             <mask key="subviews">
                                 <exclude reference="hUd-Dh-F2W"/>
                                 <exclude reference="1FK-9P-UAZ"/>
+                                <exclude reference="1aL-7I-SoH"/>
                                 <exclude reference="vvA-nd-e4v"/>
                                 <exclude reference="tJV-Nj-MXp"/>
-                                <exclude reference="1aL-7I-SoH"/>
                             </mask>
                             <mask key="constraints">
                                 <exclude reference="Qbm-kP-kfH"/>
@@ -3222,9 +3230,9 @@
                             <mask key="subviews">
                                 <include reference="hUd-Dh-F2W"/>
                                 <include reference="1FK-9P-UAZ"/>
+                                <include reference="1aL-7I-SoH"/>
                                 <include reference="vvA-nd-e4v"/>
                                 <include reference="tJV-Nj-MXp"/>
-                                <include reference="1aL-7I-SoH"/>
                             </mask>
                             <mask key="constraints">
                                 <include reference="Qbm-kP-kfH"/>
@@ -3822,7 +3830,7 @@
         <image name="Rough Terrain" width="293" height="172"/>
         <image name="Sally Port" width="370" height="255"/>
         <image name="Settings-50" width="50" height="50"/>
-        <image name="Sort" width="45" height="44"/>
+        <image name="Sort" width="40" height="39"/>
         <image name="Synchronize-50" width="50" height="50"/>
         <image name="Team Picker" width="45" height="44"/>
     </resources>

@@ -19,9 +19,6 @@ class NeutralViewController: UIViewController {
 	var standsScoutingController: StandsScoutingViewController!
 	let dataManager = TeamDataManager()
 	var defenses: [Defense]?
-	let stopwatch = Stopwatch()
-	
-	var startedCrossingTime: NSTimeInterval?
 	
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -60,15 +57,7 @@ class NeutralViewController: UIViewController {
         // Dispose of any resources that can be recreated.
     }
 	
-	@IBAction func startedHoldingDownDefense(sender: UIButton) {
-		stopwatch.start()
-		NSTimer.scheduledTimerWithTimeInterval(0.1, target: self, selector: #selector(NeutralViewController.updateTimeLabel(_:)), userInfo: nil, repeats: true)
-		startedCrossingTime = standsScoutingController.stopwatch.elapsedTime
-	}
-	
-	@IBAction func stoppedHoldingDefense(sender: UIButton) {
-		stopwatch.stop()
-		
+	@IBAction func defensePressed(sender: UIButton) {
 		let defense: Defense!
 		switch sender {
 		case lowBarButton:
@@ -85,27 +74,12 @@ class NeutralViewController: UIViewController {
 			defense = nil
 		}
 		
-		dataManager.addDefenseCrossTime(forMatchPerformance: standsScoutingController.matchPerformance!, inDefense: defense, withTime: stopwatch.elapsedTime)
-		
-		//Add the time markers
-		dataManager.addTimeMarker(withEvent: TeamDataManager.TimeMarkerEvent.StartedCrossingDefense, atTime: startedCrossingTime!, inMatchPerformance: standsScoutingController.matchPerformance!)
+		dataManager.addDefenseCrossTime(forMatchPerformance: standsScoutingController.matchPerformance!, inDefense: defense, withTime: 1)
 		dataManager.addTimeMarker(withEvent: TeamDataManager.TimeMarkerEvent.FinishedCrossingDefense, atTime: standsScoutingController.stopwatch.elapsedTime, inMatchPerformance: standsScoutingController.matchPerformance!)
-		startedCrossingTime = nil
 		
 		//Switch to the offense courtyard
 		standsScoutingController.segmentedControl.selectedSegmentIndex = 1
 		standsScoutingController.selectedNewPart(standsScoutingController.segmentedControl)
-		
-		//Reset the time label
-		elapsedTimeLabel.text = "Hold Down on a defense"
-	}
-	
-	func updateTimeLabel(sender: NSTimer) {
-		if stopwatch.isRunning {
-			elapsedTimeLabel.text = stopwatch.elapsedTimeAsString
-		} else {
-			sender.invalidate()
-		}
 	}
 	
 	@IBAction func breachedLowBar(sender: UISwitch) {
