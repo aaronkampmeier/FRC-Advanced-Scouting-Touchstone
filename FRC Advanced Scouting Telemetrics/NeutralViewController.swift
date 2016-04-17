@@ -62,7 +62,7 @@ class NeutralViewController: UIViewController {
 	
 	@IBAction func startedHoldingDownDefense(sender: UIButton) {
 		stopwatch.start()
-		NSTimer.scheduledTimerWithTimeInterval(0.1, target: self, selector: "updateTimeLabel:", userInfo: nil, repeats: true)
+		NSTimer.scheduledTimerWithTimeInterval(0.1, target: self, selector: #selector(NeutralViewController.updateTimeLabel(_:)), userInfo: nil, repeats: true)
 		startedCrossingTime = standsScoutingController.stopwatch.elapsedTime
 	}
 	
