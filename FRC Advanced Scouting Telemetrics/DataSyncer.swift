@@ -9,6 +9,7 @@
 import Foundation
 import MultipeerConnectivity
 import Ensembles
+import Crashlytics
 
 let CDEMultipeerCloudFileSystemDidImportFilesNotification = "CDEMultipeerCloudFileSystemDidImportFilesNotification"
 
@@ -132,7 +133,8 @@ class DataSyncer: NSObject, CDEPersistentStoreEnsembleDelegate {
 //		for object in objects {
 //			
 //		}
-		NSLog("Ensemble did fail to save merged changes. Error: \(error)")
+		CLSNSLogv("Ensemble did fail to save merged changes. Error: %d", getVaList([error]))
+		Crashlytics.sharedInstance().recordError(error)
 		return false
 	}
 	
