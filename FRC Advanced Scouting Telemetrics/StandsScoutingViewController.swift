@@ -420,6 +420,11 @@ class DefenseSelector: UIViewController, UICollectionViewDataSource, UICollectio
 		}
 	}
 	
+	@IBAction func cancelPressed(sender: UIBarButtonItem) {
+		dismissViewControllerAnimated(true, completion: nil)
+		standsScoutingVC?.close(andSave: false)
+	}
+	
 	func loadDefenses(forMatch match: Match) {
 		for defense in (match.redDefenses?.allObjects as! [Defense]) {
 			redDefenses[defense.defenseCategory] = defense
