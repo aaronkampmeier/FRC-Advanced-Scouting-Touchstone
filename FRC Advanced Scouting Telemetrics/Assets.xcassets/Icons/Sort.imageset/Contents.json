@@ -2,17 +2,27 @@
   "images" : [
     {
       "idiom" : "universal",
+<<<<<<< HEAD
       "filename" : "Sorting Arrows Filled-102.png",
+=======
+      "filename" : "Sort Icon.png",
+>>>>>>> StandsScoutingImprovements
       "scale" : "1x"
     },
     {
       "idiom" : "universal",
+<<<<<<< HEAD
       "filename" : "Sorting Arrows Filled-101.png",
+=======
+>>>>>>> StandsScoutingImprovements
       "scale" : "2x"
     },
     {
       "idiom" : "universal",
+<<<<<<< HEAD
       "filename" : "Sorting Arrows Filled-100.png",
+=======
+>>>>>>> StandsScoutingImprovements
       "scale" : "3x"
     }
   ],

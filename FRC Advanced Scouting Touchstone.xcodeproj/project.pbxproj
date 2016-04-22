@@ -32,7 +32,6 @@
 		1F4534471C7242B9004EDDB9 /* Regional.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F4534291C7242B9004EDDB9 /* Regional.swift */; };
 		1F45344E1C7242B9004EDDB9 /* Team+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F4534301C7242B9004EDDB9 /* Team+CoreDataProperties.swift */; };
 		1F45344F1C7242B9004EDDB9 /* Team.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F4534311C7242B9004EDDB9 /* Team.swift */; };
-		1F4534501C7242B9004EDDB9 /* TeamMatchPerformance+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F4534321C7242B9004EDDB9 /* TeamMatchPerformance+CoreDataProperties.swift */; };
 		1F4534511C7242B9004EDDB9 /* TeamMatchPerformance.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F4534331C7242B9004EDDB9 /* TeamMatchPerformance.swift */; };
 		1F4534521C7242B9004EDDB9 /* TeamRegionalPerformance+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F4534341C7242B9004EDDB9 /* TeamRegionalPerformance+CoreDataProperties.swift */; };
 		1F4534531C7242B9004EDDB9 /* TeamRegionalPerformance.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F4534351C7242B9004EDDB9 /* TeamRegionalPerformance.swift */; };
@@ -56,6 +55,7 @@
 		1FBB426D1C9A29FC0017E36C /* Statistics.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FBB426C1C9A29FC0017E36C /* Statistics.swift */; };
 		1FBC9E691CC2EE11005DB3F4 /* Fabric.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1FBC9E671CC2EE11005DB3F4 /* Fabric.framework */; };
 		1FBC9E6C1CC2F007005DB3F4 /* Crashlytics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1FBC9E6B1CC2F007005DB3F4 /* Crashlytics.framework */; };
+		1FBC9E6E1CC45C63005DB3F4 /* TeamMatchPerformance+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FBC9E6D1CC45C63005DB3F4 /* TeamMatchPerformance+CoreDataProperties.swift */; };
 		1FBE627F1CAEE0FB001FDFB7 /* TeamPickerTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FBE627E1CAEE0FB001FDFB7 /* TeamPickerTableViewController.swift */; };
 		1FBE62811CAEF617001FDFB7 /* MatchOverviewViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FBE62801CAEF617001FDFB7 /* MatchOverviewViewController.swift */; };
 		1FCA7ADA1C630BAE004294D1 /* StatsVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FCA7AD91C630BAE004294D1 /* StatsVC.swift */; };
@@ -119,7 +119,6 @@
 		1F4534291C7242B9004EDDB9 /* Regional.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Regional.swift; sourceTree = "<group>"; };
 		1F4534301C7242B9004EDDB9 /* Team+CoreDataProperties.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Team+CoreDataProperties.swift"; sourceTree = "<group>"; };
 		1F4534311C7242B9004EDDB9 /* Team.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Team.swift; sourceTree = "<group>"; };
-		1F4534321C7242B9004EDDB9 /* TeamMatchPerformance+CoreDataProperties.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "TeamMatchPerformance+CoreDataProperties.swift"; sourceTree = "<group>"; };
 		1F4534331C7242B9004EDDB9 /* TeamMatchPerformance.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TeamMatchPerformance.swift; sourceTree = "<group>"; };
 		1F4534341C7242B9004EDDB9 /* TeamRegionalPerformance+CoreDataProperties.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "TeamRegionalPerformance+CoreDataProperties.swift"; sourceTree = "<group>"; };
 		1F4534351C7242B9004EDDB9 /* TeamRegionalPerformance.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TeamRegionalPerformance.swift; sourceTree = "<group>"; };
@@ -152,6 +151,7 @@
 		1FBB426C1C9A29FC0017E36C /* Statistics.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Statistics.swift; sourceTree = "<group>"; };
 		1FBC9E671CC2EE11005DB3F4 /* Fabric.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Fabric.framework; sourceTree = SOURCE_ROOT; };
 		1FBC9E6B1CC2F007005DB3F4 /* Crashlytics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Crashlytics.framework; sourceTree = SOURCE_ROOT; };
+		1FBC9E6D1CC45C63005DB3F4 /* TeamMatchPerformance+CoreDataProperties.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "TeamMatchPerformance+CoreDataProperties.swift"; sourceTree = "<group>"; };
 		1FBE627E1CAEE0FB001FDFB7 /* TeamPickerTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TeamPickerTableViewController.swift; sourceTree = "<group>"; };
 		1FBE62801CAEF617001FDFB7 /* MatchOverviewViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MatchOverviewViewController.swift; sourceTree = "<group>"; };
 		1FCA7ACC1C61AB38004294D1 /* FRC_Advanced_Scouting_Telemetrics CD 4.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "FRC_Advanced_Scouting_Telemetrics CD 4.xcdatamodel"; sourceTree = "<group>"; };
@@ -331,7 +331,7 @@
 				1F4534291C7242B9004EDDB9 /* Regional.swift */,
 				1F4534301C7242B9004EDDB9 /* Team+CoreDataProperties.swift */,
 				1F4534311C7242B9004EDDB9 /* Team.swift */,
-				1F4534321C7242B9004EDDB9 /* TeamMatchPerformance+CoreDataProperties.swift */,
+				1FBC9E6D1CC45C63005DB3F4 /* TeamMatchPerformance+CoreDataProperties.swift */,
 				1F4534331C7242B9004EDDB9 /* TeamMatchPerformance.swift */,
 				1F4534341C7242B9004EDDB9 /* TeamRegionalPerformance+CoreDataProperties.swift */,
 				1F4534351C7242B9004EDDB9 /* TeamRegionalPerformance.swift */,
@@ -589,7 +589,6 @@
 				1F4534461C7242B9004EDDB9 /* Regional+CoreDataProperties.swift in Sources */,
 				1F4534361C7242B9004EDDB9 /* Defense+CoreDataProperties.swift in Sources */,
 				1F51D1C61C7FFBC000B4D6C5 /* GameStatsLayout.swift in Sources */,
-				1F4534501C7242B9004EDDB9 /* TeamMatchPerformance+CoreDataProperties.swift in Sources */,
 				1F4534381C7242B9004EDDB9 /* TimeMarker+CoreDataProperties.swift in Sources */,
 				1F4FEDAA1C4AD95C00F4016D /* PitScoutingController.swift in Sources */,
 				1FCEF8F61C9CB231006AC591 /* Globals.swift in Sources */,
@@ -601,6 +600,7 @@
 				1F4534561C7276DE004EDDB9 /* RegionalPickerViewController.swift in Sources */,
 				1F4534101C6FF916004EDDB9 /* StandsScoutingViewController.swift in Sources */,
 				1F665D721CB1DA91003CAC1D /* DataSyncingViewController.swift in Sources */,
+				1FBC9E6E1CC45C63005DB3F4 /* TeamMatchPerformance+CoreDataProperties.swift in Sources */,
 				1F21DF121C66942200C55D0E /* SortVC.swift in Sources */,
 				1FCA7ADA1C630BAE004294D1 /* StatsVC.swift in Sources */,
 				1F45344E1C7242B9004EDDB9 /* Team+CoreDataProperties.swift in Sources */,

@@ -573,7 +573,7 @@ class TeamDataManager {
 		case Red = 1
 	}
 	
-	enum DefenseType: String {
+	enum DefenseType: String, CustomStringConvertible, Hashable {
 		case Portcullis = "Portcullis"
 		case ChevalDeFrise = "Cheval de Frise"
 		case Moat = "Moat"
@@ -584,7 +584,7 @@ class TeamDataManager {
 		case RoughTerrain = "Rough Terrain"
 		case LowBar = "Low Bar"
 		
-		var string: String {
+		var description: String {
 			switch self {
 			case .Portcullis:
 				return "Portcullis"
@@ -604,6 +604,63 @@ class TeamDataManager {
 				return "Rough Terrain"
 			case .LowBar:
 				return "Low Bar"
+			}
+		}
+		
+		var category: DefenseCategory {
+			switch self {
+			case .Portcullis, .ChevalDeFrise:
+				return .A
+			case .Moat, .Ramparts:
+				return .B
+			case .Drawbridge, .SallyPort:
+				return .C
+			case .RockWall, .RoughTerrain:
+				return .D
+			case .LowBar:
+				return .LowBar
+			}
+		}
+		
+		var defense: Defense {
+			return TeamDataManager().getDefense(withName: self.description)!
+		}
+	}
+	
+	enum DefenseCategory: Int {
+		case A
+		case B
+		case C
+		case D
+		case LowBar
+		
+		var defenses: [DefenseType] {
+			switch self {
+			case .A:
+				return [.Portcullis, .ChevalDeFrise]
+			case .B:
+				return [.Moat, .Ramparts]
+			case .C:
+				return [.Drawbridge, .SallyPort]
+			case .D:
+				return [.RockWall, .RoughTerrain]
+			case .LowBar:
+				return [.LowBar]
+			}
+		}
+		
+		init(category: Character) {
+			switch category {
+			case "A":
+				self = .A
+			case "B":
+				self = .B
+			case "C":
+				self = .C
+			case "D":
+				self = .D
+			default:
+				self = .LowBar
 			}
 		}
 	}
@@ -693,9 +750,12 @@ class TeamDataManager {
 	}
 	
 	//METHODS FOR AUTONOMOUS CYCLES
-	func createAutonomousCycle(inMatchPerformance matchPerformance: TeamMatchPerformance) -> AutonomousCycle {
+	func createAutonomousCycle(inMatchPerformance matchPerformance: TeamMatchPerformance, atPlace place: Int) -> AutonomousCycle {
 		let newCycle = AutonomousCycle(entity: NSEntityDescription.entityForName("AutonomousCycle", inManagedObjectContext: TeamDataManager.managedContext)!, insertIntoManagedObjectContext: TeamDataManager.managedContext)
-		newCycle.matchPerformance = matchPerformance
+		
+		let mutableSet = matchPerformance.autonomousCycles?.mutableCopy() as! NSMutableOrderedSet
+		mutableSet.insertObject(newCycle, atIndex: place)
+		matchPerformance.autonomousCycles = mutableSet.copy() as! NSOrderedSet
 		
 		return newCycle
 	}
@@ -837,6 +897,8 @@ class TeamDataManager {
 		case StartedCrossingDefense
 		case FinishedCrossingDefense
 		case MovedToNeutral
+		case Contact
+		case ContactDisruptingShot
 	}
     
     enum DataManagingError: ErrorType {

@@ -2,17 +2,27 @@
   "images" : [
     {
       "idiom" : "universal",
+<<<<<<< HEAD
       "filename" : "Checklist-100-4.png",
+=======
+      "filename" : "Team List Icon.png",
+>>>>>>> StandsScoutingImprovements
       "scale" : "1x"
     },
     {
       "idiom" : "universal",
+<<<<<<< HEAD
       "filename" : "Checklist-100-3.png",
+=======
+>>>>>>> StandsScoutingImprovements
       "scale" : "2x"
     },
     {
       "idiom" : "universal",
+<<<<<<< HEAD
       "filename" : "Checklist-100-2.png",
+=======
+>>>>>>> StandsScoutingImprovements
       "scale" : "3x"
     }
   ],

@@ -1,8 +1,8 @@
 //
 //  TeamMatchPerformance+CoreDataProperties.swift
-//  FRC Advanced Scouting Telemetrics
+//  FRC Advanced Scouting Touchstone
 //
-//  Created by Aaron Kampmeier on 3/31/16.
+//  Created by Aaron Kampmeier on 4/17/16.
 //  Copyright © 2016 Kampfire Technologies. All rights reserved.
 //
 //  Choose "Create NSManagedObject Subclass…" from the Core Data editor menu
@@ -18,7 +18,11 @@ extension TeamMatchPerformance {
     @NSManaged var allianceTeam: NSNumber?
     @NSManaged var didChallengeTower: NSNumber?
     @NSManaged var didScaleTower: NSNumber?
-    @NSManaged var autonomousCycles: NSSet?
+    @NSManaged var autoSpy: NSNumber?
+    @NSManaged var autoSpyDidShoot: NSNumber?
+    @NSManaged var autoSpyDidMakeShot: NSNumber?
+    @NSManaged var autoSpyShotHighGoal: NSNumber?
+    @NSManaged var autonomousCycles: NSOrderedSet?
     @NSManaged var defenseCrossTimes: NSSet?
     @NSManaged var match: Match?
     @NSManaged var offenseShots: NSSet?

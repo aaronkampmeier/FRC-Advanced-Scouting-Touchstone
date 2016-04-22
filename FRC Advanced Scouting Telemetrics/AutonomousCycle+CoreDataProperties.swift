@@ -20,6 +20,6 @@ extension AutonomousCycle {
     @NSManaged var shot: NSNumber?
     @NSManaged var returned: NSNumber?
     @NSManaged var defenseReached: Defense?
-    @NSManaged var matchPerformance: NSManagedObject?
+    @NSManaged var matchPerformance: TeamMatchPerformance?
 
 }

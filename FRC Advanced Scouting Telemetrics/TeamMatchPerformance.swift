@@ -14,4 +14,77 @@ class TeamMatchPerformance: NSManagedObject {
 
 // Insert code here to add functionality to your managed object subclass
 
+	enum AutonomousVariable {
+		case CrossedDefense
+		case Moved
+		case ReachedDefense
+		case Returned
+		case Shot
+		case AutoSpy
+		case AutoSpyDidMakeShot
+		case AutoSpyDidShoot
+		case AutoSpyShotHighGoal
+		
+		func setValue(value: AutoValue, inCycle cycle: AutonomousCycle) {
+			switch self {
+			case .CrossedDefense:
+				cycle.crossedDefense = value as! Bool
+			case .Moved:
+				cycle.moved = value as! Bool
+			case .ReachedDefense:
+				cycle.reachedDefense = value as! Bool
+			case .Returned:
+				cycle.returned = value as! Bool
+			case .Shot:
+				cycle.shot = value as! Bool
+			case .AutoSpy:
+				cycle.matchPerformance?.autoSpy = value as! Bool
+			case .AutoSpyDidMakeShot:
+				cycle.matchPerformance?.autoSpyDidMakeShot = value as! Bool
+			case .AutoSpyDidShoot:
+				cycle.matchPerformance?.autoSpyDidShoot = value as! Bool
+			case .AutoSpyShotHighGoal:
+				cycle.matchPerformance?.autoSpyShotHighGoal = value as! Bool
+			}
+		}
+		
+		func getValue(inCycle cycle: AutonomousCycle) -> AutoValue? {
+			switch self {
+			case .CrossedDefense:
+				return cycle.crossedDefense?.boolValue
+			case .Moved:
+				return cycle.moved?.boolValue
+			case .ReachedDefense:
+				return cycle.reachedDefense?.boolValue
+			case .Returned:
+				return cycle.returned?.boolValue
+			case .Shot:
+				return cycle.shot?.boolValue
+			case .AutoSpy:
+				return cycle.matchPerformance?.autoSpy?.boolValue
+			case .AutoSpyDidShoot:
+				return cycle.matchPerformance?.autoSpyDidShoot?.boolValue
+			case .AutoSpyDidMakeShot:
+				return cycle.matchPerformance?.autoSpyDidMakeShot?.boolValue
+			case .AutoSpyShotHighGoal:
+				return cycle.matchPerformance?.autoSpyShotHighGoal?.boolValue
+			}
+		}
+	}
+	
+	func setValue(value: Bool, forAutonomousVariable autoVar: AutonomousVariable) {
+		
+	}
+}
+
+protocol AutoValue {
+	
+}
+
+extension Bool: AutoValue {
+	
+}
+
+extension Defense: AutoValue {
+	
 }

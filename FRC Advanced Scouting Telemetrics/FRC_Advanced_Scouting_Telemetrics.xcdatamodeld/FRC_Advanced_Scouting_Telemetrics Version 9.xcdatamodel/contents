@@ -71,9 +71,13 @@
     <entity name="TeamMatchPerformance" representedClassName=".TeamMatchPerformance" syncable="YES">
         <attribute name="allianceColor" attributeType="Integer 64" minValueString="0" maxValueString="1" syncable="YES"/>
         <attribute name="allianceTeam" attributeType="Integer 64" minValueString="1" maxValueString="3" syncable="YES"/>
+        <attribute name="autoSpy" optional="YES" attributeType="Boolean" syncable="YES"/>
+        <attribute name="autoSpyDidMakeShot" optional="YES" attributeType="Boolean" syncable="YES"/>
+        <attribute name="autoSpyDidShoot" optional="YES" attributeType="Boolean" syncable="YES"/>
+        <attribute name="autoSpyShotHighGoal" optional="YES" attributeType="Boolean" syncable="YES"/>
         <attribute name="didChallengeTower" optional="YES" attributeType="Boolean" syncable="YES"/>
         <attribute name="didScaleTower" optional="YES" attributeType="Boolean" syncable="YES"/>
-        <relationship name="autonomousCycles" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="AutonomousCycle" inverseName="matchPerformance" inverseEntity="AutonomousCycle" syncable="YES"/>
+        <relationship name="autonomousCycles" optional="YES" toMany="YES" deletionRule="Cascade" ordered="YES" destinationEntity="AutonomousCycle" inverseName="matchPerformance" inverseEntity="AutonomousCycle" syncable="YES"/>
         <relationship name="defenseCrossTimes" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="DefenseCrossTime" inverseName="teamMatchPerformance" inverseEntity="DefenseCrossTime" syncable="YES"/>
         <relationship name="match" maxCount="1" deletionRule="Nullify" destinationEntity="Match" inverseName="teamPerformances" inverseEntity="Match" syncable="YES"/>
         <relationship name="offenseShots" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="Shot" inverseName="shootingTeam" inverseEntity="Shot" syncable="YES"/>
@@ -99,7 +103,7 @@
         <element name="Regional" positionX="-281" positionY="162" width="128" height="105"/>
         <element name="Shot" positionX="198" positionY="278" width="128" height="120"/>
         <element name="Team" positionX="-92" positionY="-99" width="128" height="270"/>
-        <element name="TeamMatchPerformance" positionX="-99" positionY="267" width="128" height="195"/>
+        <element name="TeamMatchPerformance" positionX="-99" positionY="267" width="128" height="255"/>
         <element name="TeamRegionalPerformance" positionX="-92" positionY="144" width="128" height="90"/>
         <element name="TimeMarker" positionX="180" positionY="521" width="126" height="88"/>
     </elements>

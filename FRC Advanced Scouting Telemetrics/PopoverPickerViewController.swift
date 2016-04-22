@@ -26,9 +26,6 @@ class PopoverPickerViewController: UIViewController {
     
     override func viewDidAppear(animated: Bool) {
         super.viewDidAppear(animated)
-        
-        picker.dataSource = autonomousViewController!
-        picker.delegate = autonomousViewController!
     }
 
     /*
