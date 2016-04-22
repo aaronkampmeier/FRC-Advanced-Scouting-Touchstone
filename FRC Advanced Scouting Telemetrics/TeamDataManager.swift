@@ -750,9 +750,12 @@ class TeamDataManager {
 	}
 	
 	//METHODS FOR AUTONOMOUS CYCLES
-	func createAutonomousCycle(inMatchPerformance matchPerformance: TeamMatchPerformance) -> AutonomousCycle {
+	func createAutonomousCycle(inMatchPerformance matchPerformance: TeamMatchPerformance, atPlace place: Int) -> AutonomousCycle {
 		let newCycle = AutonomousCycle(entity: NSEntityDescription.entityForName("AutonomousCycle", inManagedObjectContext: TeamDataManager.managedContext)!, insertIntoManagedObjectContext: TeamDataManager.managedContext)
-		newCycle.matchPerformance = matchPerformance
+		
+		let mutableSet = matchPerformance.autonomousCycles?.mutableCopy() as! NSMutableOrderedSet
+		mutableSet.insertObject(newCycle, atIndex: place)
+		matchPerformance.autonomousCycles = mutableSet.copy() as! NSOrderedSet
 		
 		return newCycle
 	}

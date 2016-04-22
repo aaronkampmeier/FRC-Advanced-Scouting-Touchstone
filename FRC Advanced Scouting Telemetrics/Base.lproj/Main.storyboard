@@ -2270,7 +2270,7 @@
                                 </connections>
                             </button>
                             <view hidden="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="vEu-IZ-yd1">
-                                <rect key="frame" x="0.0" y="450" width="200" height="150"/>
+                                <rect key="frame" x="-5" y="455" width="200" height="150"/>
                                 <subviews>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Challenged the Tower?" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="0XQ-Qc-bjB">
                                         <rect key="frame" x="10" y="15" width="175" height="21"/>
@@ -2346,10 +2346,10 @@
                             <constraint firstItem="Lru-Lt-EpD" firstAttribute="top" secondItem="Bbi-Ai-nXV" secondAttribute="bottom" constant="10" id="gWH-A0-tqw"/>
                             <constraint firstItem="1h0-qg-iFO" firstAttribute="top" secondItem="KcV-wt-zE3" secondAttribute="bottom" constant="8" id="gqf-hR-mjN"/>
                             <constraint firstItem="QGA-t0-RqS" firstAttribute="top" secondItem="1h0-qg-iFO" secondAttribute="bottom" constant="8" id="iGg-9o-xNK"/>
-                            <constraint firstItem="vEu-IZ-yd1" firstAttribute="leading" secondItem="wUX-MR-7lm" secondAttribute="leading" id="jEV-rh-u59"/>
+                            <constraint firstItem="vEu-IZ-yd1" firstAttribute="leading" secondItem="wUX-MR-7lm" secondAttribute="leading" constant="-5" id="jEV-rh-u59"/>
                             <constraint firstAttribute="trailingMargin" secondItem="oFz-q8-xdy" secondAttribute="trailing" constant="25" id="m5Q-01-7u8"/>
                             <constraint firstItem="8dn-cM-IPc" firstAttribute="centerX" secondItem="wUX-MR-7lm" secondAttribute="centerX" id="naS-Za-0mo"/>
-                            <constraint firstItem="2ao-PM-RlD" firstAttribute="top" secondItem="vEu-IZ-yd1" secondAttribute="bottom" id="o7y-GS-yaR"/>
+                            <constraint firstItem="2ao-PM-RlD" firstAttribute="top" secondItem="vEu-IZ-yd1" secondAttribute="bottom" constant="-5" id="o7y-GS-yaR"/>
                             <constraint firstItem="8dn-cM-IPc" firstAttribute="leading" secondItem="wUX-MR-7lm" secondAttribute="leadingMargin" constant="10" id="oi7-AY-O6j"/>
                             <constraint firstItem="Lru-Lt-EpD" firstAttribute="centerX" secondItem="wUX-MR-7lm" secondAttribute="centerX" id="pdV-F0-USp"/>
                             <constraint firstItem="Bbi-Ai-nXV" firstAttribute="centerX" secondItem="wUX-MR-7lm" secondAttribute="centerX" id="vCf-91-uaf"/>
@@ -2731,7 +2731,7 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="WyS-j4-irB">
-                                <rect key="frame" x="20" y="30" width="460" height="440"/>
+                                <rect key="frame" x="20" y="40" width="460" height="420"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <prototypes>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="mainCell" id="RZH-G9-b31" customClass="AutonomousSwitchCell" customModule="FRC_Advanced_Scouting_Touchstone" customModuleProvider="target">
@@ -2854,18 +2854,36 @@
                                     </tableViewCell>
                                 </prototypes>
                             </tableView>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Cycles:" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="85e-i3-KG8">
+                                <rect key="frame" x="24" y="5" width="56" height="21"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <stepper opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" value="1" minimumValue="1" maximumValue="10" translatesAutoresizingMaskIntoConstraints="NO" id="QZN-8Y-LV0">
+                                <rect key="frame" x="100" y="1" width="94" height="29"/>
+                                <connections>
+                                    <action selector="cycleStepperChangedValue:" destination="a2V-UA-4ta" eventType="valueChanged" id="WSU-le-E0L"/>
+                                </connections>
+                            </stepper>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
                             <constraint firstItem="WyS-j4-irB" firstAttribute="leading" secondItem="6Rx-mj-PfQ" secondAttribute="leadingMargin" id="4gj-q6-X7w"/>
+                            <constraint firstItem="85e-i3-KG8" firstAttribute="leading" secondItem="6Rx-mj-PfQ" secondAttribute="leadingMargin" constant="4" id="IeI-3t-HKR"/>
+                            <constraint firstItem="WyS-j4-irB" firstAttribute="top" secondItem="QZN-8Y-LV0" secondAttribute="bottom" constant="10" id="LnT-WM-hV4"/>
+                            <constraint firstItem="85e-i3-KG8" firstAttribute="top" secondItem="fwu-lI-VGN" secondAttribute="bottom" constant="5" id="Vym-rk-lS9"/>
+                            <constraint firstItem="QZN-8Y-LV0" firstAttribute="leading" secondItem="85e-i3-KG8" secondAttribute="trailing" constant="20" id="id7-C9-UtN"/>
                             <constraint firstItem="WyS-j4-irB" firstAttribute="centerX" secondItem="6Rx-mj-PfQ" secondAttribute="centerX" id="lWT-49-m5I"/>
-                            <constraint firstItem="WyS-j4-irB" firstAttribute="top" secondItem="fwu-lI-VGN" secondAttribute="bottom" constant="10" id="mJT-Lp-JPf"/>
                             <constraint firstItem="WyS-j4-irB" firstAttribute="centerY" secondItem="6Rx-mj-PfQ" secondAttribute="centerY" id="rcR-AD-AR4"/>
+                            <constraint firstItem="QZN-8Y-LV0" firstAttribute="centerY" secondItem="85e-i3-KG8" secondAttribute="centerY" id="tiw-Ue-UuW"/>
                         </constraints>
                     </view>
+                    <nil key="simulatedStatusBarMetrics"/>
                     <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
                     <size key="freeformSize" width="500" height="500"/>
                     <connections>
+                        <outlet property="cycleStepper" destination="QZN-8Y-LV0" id="CSd-rT-kgc"/>
                         <outlet property="optionsList" destination="WyS-j4-irB" id="Tvm-I3-MmZ"/>
                     </connections>
                 </viewController>

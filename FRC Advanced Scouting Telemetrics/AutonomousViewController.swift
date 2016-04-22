@@ -10,12 +10,14 @@ import UIKit
 
 class AutonomousViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
     @IBOutlet weak var optionsList: UITableView!
+	@IBOutlet weak var cycleStepper: UIStepper!
 	
 	var standsScoutingVC: StandsScoutingViewController?
 	let dataManager = TeamDataManager()
 	
 	var autonomousCycles: [AutonomousCycle] = [AutonomousCycle]()
 	var sections: [AutonomousSection] = []
+	var cachedSections: [AutonomousSection] = []
 	
     var rowStage = 0
 	
@@ -28,28 +30,28 @@ class AutonomousViewController: UIViewController, UITableViewDelegate, UITableVi
 		var rows = [AutonomousRow]()
 		var autonomousCycle: AutonomousCycle? {
 			didSet {
-				var newRows = [AutonomousRow]()
-				for row in rows {
-					var newRow = row
-					switch newRow.label {
-					case "Did they move?":
-						newRow.associatedProperty = autonomousCycle?.moved
-					case "Did they reach a defense?":
-						newRow.associatedProperty = autonomousCycle?.reachedDefense
-					case "Did they cross it successfully?":
-						newRow.associatedProperty = autonomousCycle?.crossedDefense
-					case "Did they shoot?":
-						newRow.associatedProperty = autonomousCycle?.shot
-					case "Did they return?":
-						newRow.associatedProperty = autonomousCycle?.returned
-					default:
-						break
-					}
-					
-					newRows.append(newRow)
-				}
-				
-				rows = newRows
+//				var newRows = [AutonomousRow]()
+//				for row in rows {
+//					var newRow = row
+//					switch newRow.label {
+//					case "Did they move?":
+//						newRow.associatedProperty = .Moved
+//					case "Did they reach a defense?":
+//						newRow.associatedProperty = .ReachedDefense
+//					case "Did they cross it successfully?":
+//						newRow.associatedProperty = .CrossedDefense
+//					case "Did they shoot?":
+//						newRow.associatedProperty = .Shot
+//					case "Did they return?":
+//						newRow.associatedProperty = .Returned
+//					default:
+//						break
+//					}
+//					
+//					newRows.append(newRow)
+//				}
+//				
+//				rows = newRows
 			}
 		}
 		
@@ -66,7 +68,7 @@ class AutonomousViewController: UIViewController, UITableViewDelegate, UITableVi
 	
 	struct AutonomousRow {
 		var cellType: UITableViewCell.Type
-		var associatedProperty: NSNumber?
+		var associatedProperty: TeamMatchPerformance.AutonomousVariable?
 		var label: String
 		
 		var firstLabel: String?
@@ -77,13 +79,13 @@ class AutonomousViewController: UIViewController, UITableViewDelegate, UITableVi
 			self.label = label
 		}
 		
-		init(cellType: UITableViewCell.Type, label: String, property: NSNumber?) {
+		init(cellType: UITableViewCell.Type, label: String, property: TeamMatchPerformance.AutonomousVariable) {
 			self.cellType = cellType
 			self.label = label
 			self.associatedProperty = property
 		}
 		
-		init(cellType: UITableViewCell.Type, label: String, property: NSNumber?, first: String, second: String) {
+		init(cellType: UITableViewCell.Type, label: String, property: TeamMatchPerformance.AutonomousVariable, first: String, second: String) {
 			self.cellType = cellType
 			self.label = label
 			self.associatedProperty = property
@@ -113,27 +115,28 @@ class AutonomousViewController: UIViewController, UITableViewDelegate, UITableVi
 			isSetup = true
 			standsScoutingVC = (parentViewController as! StandsScoutingViewController)
 			if standsScoutingVC?.matchPerformance?.autonomousCycles?.count == 0 {
-				let cycle = dataManager.createAutonomousCycle(inMatchPerformance: standsScoutingVC!.matchPerformance!)
+				let cycle = dataManager.createAutonomousCycle(inMatchPerformance: standsScoutingVC!.matchPerformance!, atPlace: 0)
 				autonomousCycles.append(cycle)
 			} else {
-				autonomousCycles = standsScoutingVC?.matchPerformance?.autonomousCycles?.allObjects as! [AutonomousCycle]
+				autonomousCycles = standsScoutingVC?.matchPerformance?.autonomousCycles?.array as! [AutonomousCycle]
 			}
 			
 			normalRows = [
-				AutonomousRow(cellType: AutonomousSwitchCell.self, label: "Did they move?"),
-				AutonomousRow(cellType: AutonomousSwitchCell.self, label: "Did they reach a defense?"),
+				AutonomousRow(cellType: AutonomousSwitchCell.self, label: "Did they move?", property: .Moved),
+				AutonomousRow(cellType: AutonomousSwitchCell.self, label: "Did they reach a defense?", property: .ReachedDefense),
 				AutonomousRow(cellType: AutonomousPickerCell.self, label: "Defense Reached"),
-				AutonomousRow(cellType: AutonomousSwitchCell.self, label: "Did they cross it successfully?"),
-				AutonomousRow(cellType: AutonomousSwitchCell.self, label: "Did they shoot?"),
-				AutonomousRow(cellType: AutonomousSwitchCell.self, label: "Did they return?")
+				AutonomousRow(cellType: AutonomousSwitchCell.self, label: "Did they cross it successfully?", property: .CrossedDefense),
+				AutonomousRow(cellType: AutonomousSwitchCell.self, label: "Did they shoot?", property: .Shot),
+				AutonomousRow(cellType: AutonomousSwitchCell.self, label: "Did they return?", property: .Returned)
 			]
 			
 			spySection.rows = [
-				AutonomousRow(cellType: AutonomousSwitchCell.self, label: "Start in the spy box", property: (standsScoutingVC?.matchPerformance?.autoSpy)),
-				AutonomousRow(cellType: AutonomousSwitchCell.self, label: "Did they shoot?", property: (standsScoutingVC?.matchPerformance?.autoSpyDidShoot)),
-				AutonomousRow(cellType: AutonomousSwitchCell.self, label: "Did they make it?", property: (standsScoutingVC?.matchPerformance?.autoSpyDidMakeShot)),
-				AutonomousRow(cellType: AutonomousSegmentCell.self, label: "In what goal?", property: (standsScoutingVC?.matchPerformance?.autoSpyShotHighGoal), first: "Low Goal", second: "High Goal")
+				AutonomousRow(cellType: AutonomousSwitchCell.self, label: "Start in the spy box", property: .AutoSpy),
+				AutonomousRow(cellType: AutonomousSwitchCell.self, label: "Did they shoot?", property: .AutoSpyDidShoot),
+				AutonomousRow(cellType: AutonomousSwitchCell.self, label: "Did they make it?", property: .AutoSpyDidMakeShot),
+				AutonomousRow(cellType: AutonomousSegmentCell.self, label: "In what goal?", property: .AutoSpyShotHighGoal, first: "Low Goal", second: "High Goal")
 			]
+			spySection.autonomousCycle = autonomousCycles.first! //Add random cycle to use for referencing to the match performance
 			
 			sections.append(spySection)
 			sections.append(AutonomousSection(title: "Cycle 1", withRows: normalRows, andAutonomousCycle: autonomousCycles.first!))
@@ -148,6 +151,36 @@ class AutonomousViewController: UIViewController, UITableViewDelegate, UITableVi
 	
 	override func viewWillDisappear(animated: Bool) {
 		super.viewWillDisappear(animated)
+	}
+	
+	@IBAction func cycleStepperChangedValue(sender: UIStepper) {
+		while Int(sender.value) + 1 > sections.count {
+			optionsList.beginUpdates()
+			if cachedSections.isEmpty {
+				sections.append(AutonomousSection(title: "Cycle \(sections.count)", withRows: normalRows, andAutonomousCycle: getAutoCycle(atIndex: sections.count - 1)))
+			} else {
+				sections.append(cachedSections.first!)
+			}
+			optionsList.insertSections(NSIndexSet.init(index: Int(sender.value)), withRowAnimation: .Top)
+			optionsList.endUpdates()
+		}
+		
+		while Int(sender.value) + 1 < sections.count {
+			optionsList.beginUpdates()
+			let droppedOne = sections.removeLast()
+			cachedSections.insert(droppedOne, atIndex: 0)
+			optionsList.deleteSections(NSIndexSet.init(index: Int(sender.value) + 1), withRowAnimation: .Top)
+			optionsList.endUpdates()
+		}
+	}
+	
+	private func getAutoCycle(atIndex index: Int) -> AutonomousCycle {
+		if autonomousCycles.count > index {
+			return autonomousCycles[index]
+		} else {
+			autonomousCycles.append(dataManager.createAutonomousCycle(inMatchPerformance: standsScoutingVC!.matchPerformance!, atPlace: index))
+			return autonomousCycles[index]
+		}
 	}
 	
 	func numberOfSectionsInTableView(tableView: UITableView) -> Int {
@@ -174,11 +207,13 @@ class AutonomousViewController: UIViewController, UITableViewDelegate, UITableVi
 		case is AutonomousSwitchCell.Type:
 			let cell = tableView.dequeueReusableCellWithIdentifier("mainCell") as! AutonomousSwitchCell
 			cell.label.text = row.label
+			cell.autonomousCycle = sections[indexPath.section].autonomousCycle
 			cell.associatedProperty = row.associatedProperty
 			return cell
 		case is AutonomousSegmentCell.Type:
 			let cell = tableView.dequeueReusableCellWithIdentifier("segmentCell") as! AutonomousSegmentCell
 			cell.label.text = row.label
+			cell.autonomousCycle = sections[indexPath.section].autonomousCycle
 			cell.associatedProperty = row.associatedProperty
 			cell.firstOption = row.firstLabel
 			cell.secondOption = row.secondLabel
@@ -193,16 +228,19 @@ class AutonomousSwitchCell: UITableViewCell {
 	@IBOutlet weak var toggleSwitch: UISwitch!
 	@IBOutlet weak var label: UILabel!
 	
-	var associatedProperty: NSNumber? {
+	var autonomousCycle: AutonomousCycle?
+	var associatedProperty: TeamMatchPerformance.AutonomousVariable? {
 		didSet {
 			if let property = associatedProperty {
-				toggleSwitch.on = property.boolValue
+				toggleSwitch.on = property.getValue(inCycle: autonomousCycle!) as? Bool ?? false
+			} else {
+				toggleSwitch.on = false
 			}
 		}
 	}
 	
 	@IBAction func switchSwitched(sender: UISwitch) {
-		associatedProperty = sender.on
+		associatedProperty?.setValue(sender.on, inCycle: autonomousCycle!)
 	}
 }
 
@@ -210,10 +248,17 @@ class AutonomousSegmentCell: UITableViewCell {
 	@IBOutlet weak var label: UILabel!
 	@IBOutlet weak var segmentedControl: UISegmentedControl!
 	
-	var associatedProperty: NSNumber? {
+	var autonomousCycle: AutonomousCycle?
+	var associatedProperty: TeamMatchPerformance.AutonomousVariable? {
 		didSet {
 			if let property = associatedProperty {
-				segmentedControl.selectedSegmentIndex = property.integerValue
+				if let selectedSegment = property.getValue(inCycle: autonomousCycle!) as? Bool {
+					segmentedControl.selectedSegmentIndex = Int(selectedSegment)
+				} else {
+					segmentedControl.selectedSegmentIndex = -1
+				}
+			} else {
+				segmentedControl.selectedSegmentIndex = -1
 			}
 		}
 	}
@@ -229,7 +274,7 @@ class AutonomousSegmentCell: UITableViewCell {
 	}
 	
 	@IBAction func segmentChanged(sender: UISegmentedControl) {
-		associatedProperty = sender.selectedSegmentIndex
+		associatedProperty?.setValue(Bool(sender.selectedSegmentIndex), inCycle: autonomousCycle!)
 	}
 }
 
@@ -238,7 +283,7 @@ class AutonomousPickerCell: UITableViewCell, UIPickerViewDataSource, UIPickerVie
 	var associatedAutonomousCycle: AutonomousCycle? {
 		didSet {
 			if let cycle = associatedAutonomousCycle {
-				selectButton.setTitle(cycle.defenseReached?.defenseName ?? "", forState: .Normal)
+				selectButton.setTitle(cycle.defenseReached?.defenseName ?? "Select Defense", forState: .Normal)
 			}
 		}
 	}

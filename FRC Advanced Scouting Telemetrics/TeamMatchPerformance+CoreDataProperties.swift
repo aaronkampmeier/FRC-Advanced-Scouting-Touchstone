@@ -22,7 +22,7 @@ extension TeamMatchPerformance {
     @NSManaged var autoSpyDidShoot: NSNumber?
     @NSManaged var autoSpyDidMakeShot: NSNumber?
     @NSManaged var autoSpyShotHighGoal: NSNumber?
-    @NSManaged var autonomousCycles: NSSet?
+    @NSManaged var autonomousCycles: NSOrderedSet?
     @NSManaged var defenseCrossTimes: NSSet?
     @NSManaged var match: Match?
     @NSManaged var offenseShots: NSSet?
