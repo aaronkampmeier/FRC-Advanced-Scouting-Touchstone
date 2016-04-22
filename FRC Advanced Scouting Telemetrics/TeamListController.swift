@@ -226,8 +226,7 @@ class TeamListController: UIViewController, UITableViewDataSource, UITableViewDe
 		
 		//Add an observer to update the table if new changes are merged in
 //		NSNotificationCenter.defaultCenter().addObserverForName("DataSyncer:NewChangesMerged", object: nil, queue: nil) {notification in
-//			let regional = self.selectedRegional
-//			self.selectedRegional = regional
+//			self.teamList.reloadData()
 //		}
 		
         //Create reusable cell
@@ -271,6 +270,11 @@ class TeamListController: UIViewController, UITableViewDataSource, UITableViewDe
 		//Move initially to the game stats
 		if currentChildVC != gameStatsController {
 			cycleFromViewController(childViewControllers.first!, toViewController: gameStatsController!)
+		}
+		
+		if let selectedIndexPath = teamList.indexPathForSelectedRow {
+			teamList.selectRowAtIndexPath(selectedIndexPath, animated: false, scrollPosition: .None)
+			tableView(teamList, didSelectRowAtIndexPath: selectedIndexPath)
 		}
 	}
 	
@@ -498,10 +502,7 @@ class TeamListController: UIViewController, UITableViewDataSource, UITableViewDe
     }
 	
 	@IBAction func returningWithSegue(segue: UIStoryboardSegue) {
-		if let selectedIndexPath = teamList.indexPathForSelectedRow {
-			teamList.selectRowAtIndexPath(selectedIndexPath, animated: false, scrollPosition: .None)
-			tableView(teamList, didSelectRowAtIndexPath: selectedIndexPath)
-		}
+		
 	}
 	
 	@IBAction func returnToTeamList(segue: UIStoryboardSegue) {

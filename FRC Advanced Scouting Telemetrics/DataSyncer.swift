@@ -185,7 +185,7 @@ class DataSyncer: NSObject, CDEPersistentStoreEnsembleDelegate {
 			case is TimeMarker:
 				globalIdentifiers.append(NSUUID().UUIDString)
 			default:
-				globalIdentifiers.append(NSNull)
+				globalIdentifiers.append(NSNull())
 			}
 		}
 		return globalIdentifiers

@@ -14,4 +14,11 @@ class Defense: NSManagedObject {
 
 // Insert code here to add functionality to your managed object subclass
 
+	var defenseCategory: TeamDataManager.DefenseCategory {
+		return TeamDataManager.DefenseCategory(category: category!.characters.first!)
+	}
+	
+	var defenseType: TeamDataManager.DefenseType {
+		return TeamDataManager.DefenseType(rawValue: defenseName!)!
+	}
 }
