@@ -28,32 +28,7 @@ class AutonomousViewController: UIViewController, UITableViewDelegate, UITableVi
 	struct AutonomousSection {
 		let title: String
 		var rows = [AutonomousRow]()
-		var autonomousCycle: AutonomousCycle? {
-			didSet {
-//				var newRows = [AutonomousRow]()
-//				for row in rows {
-//					var newRow = row
-//					switch newRow.label {
-//					case "Did they move?":
-//						newRow.associatedProperty = .Moved
-//					case "Did they reach a defense?":
-//						newRow.associatedProperty = .ReachedDefense
-//					case "Did they cross it successfully?":
-//						newRow.associatedProperty = .CrossedDefense
-//					case "Did they shoot?":
-//						newRow.associatedProperty = .Shot
-//					case "Did they return?":
-//						newRow.associatedProperty = .Returned
-//					default:
-//						break
-//					}
-//					
-//					newRows.append(newRow)
-//				}
-//				
-//				rows = newRows
-			}
-		}
+		var autonomousCycle: AutonomousCycle?
 		
 		init(title: String) {
 			self.title = title
@@ -159,7 +134,7 @@ class AutonomousViewController: UIViewController, UITableViewDelegate, UITableVi
 			if cachedSections.isEmpty {
 				sections.append(AutonomousSection(title: "Cycle \(sections.count)", withRows: normalRows, andAutonomousCycle: getAutoCycle(atIndex: sections.count - 1)))
 			} else {
-				sections.append(cachedSections.first!)
+				sections.append(cachedSections.removeLast())
 			}
 			optionsList.insertSections(NSIndexSet.init(index: Int(sender.value)), withRowAnimation: .Top)
 			optionsList.endUpdates()
@@ -167,8 +142,7 @@ class AutonomousViewController: UIViewController, UITableViewDelegate, UITableVi
 		
 		while Int(sender.value) + 1 < sections.count {
 			optionsList.beginUpdates()
-			let droppedOne = sections.removeLast()
-			cachedSections.insert(droppedOne, atIndex: 0)
+			cachedSections.append(sections.removeLast())
 			optionsList.deleteSections(NSIndexSet.init(index: Int(sender.value) + 1), withRowAnimation: .Top)
 			optionsList.endUpdates()
 		}
