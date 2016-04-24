@@ -74,8 +74,8 @@ class NeutralViewController: UIViewController {
 			defense = nil
 		}
 		
-		dataManager.addDefenseCrossTime(forMatchPerformance: standsScoutingController.matchPerformance!, inDefense: defense, withTime: 1)
-		dataManager.addTimeMarker(withEvent: TeamDataManager.TimeMarkerEvent.FinishedCrossingDefense, atTime: standsScoutingController.stopwatch.elapsedTime, inMatchPerformance: standsScoutingController.matchPerformance!)
+		dataManager.addDefenseCrossTime(forMatchPerformance: standsScoutingController.matchPerformance!, inDefense: defense, atTime: standsScoutingController.stopwatch.elapsedTime)
+		dataManager.addTimeMarker(withEvent: TeamDataManager.TimeMarkerEventType.CrossedDefense, atTime: standsScoutingController.stopwatch.elapsedTime, inMatchPerformance: standsScoutingController.matchPerformance!)
 		
 		//Switch to the offense courtyard
 		standsScoutingController.segmentedControl.selectedSegmentIndex = 1

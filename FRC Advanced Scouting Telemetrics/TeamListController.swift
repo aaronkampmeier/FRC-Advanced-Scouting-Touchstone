@@ -117,6 +117,7 @@ class TeamListController: UIViewController, UITableViewDataSource, UITableViewDe
 				let regionalPerformance = Array(regionalPerformances.intersect(teamPerformances)).first!
 				
 				context = StatContext(context: regionalPerformance.matchPerformances!.allObjects as! [TeamMatchPerformance])
+				context.setRegionalPerformanceStatistics([regionalPerformance])
 			} else {
 				let combinedMatchPerformances = newValue[index].team.regionalPerformances?.reduce([TeamMatchPerformance]()) {matchPerformances,regionalPerformance in
 					let newMatchPerformances = regionalPerformance.matchPerformances!?.allObjects as![TeamMatchPerformance]
@@ -126,6 +127,7 @@ class TeamListController: UIViewController, UITableViewDataSource, UITableViewDe
 				}
 				
 				context =  StatContext(context: combinedMatchPerformances!)
+				context.setRegionalPerformanceStatistics(newValue[index].team.regionalPerformances?.allObjects as! [TeamRegionalPerformance])
 			}
 			currentlyEditingTeams = true
 			newValue[index].statContextCache = TeamCache.StatContextCache(statContext: context)
@@ -511,11 +513,10 @@ class TeamListController: UIViewController, UITableViewDataSource, UITableViewDe
     
     @IBAction func sortPressed(sender: UIBarButtonItem) {
         sortVC.modalPresentationStyle = .Popover
-        sortVC.preferredContentSize = CGSizeMake(300, 350)
+        sortVC.preferredContentSize = CGSizeMake(350, 350)
         
         let popoverVC = sortVC.popoverPresentationController
         
-        popoverVC?.permittedArrowDirections = .Up
         popoverVC?.delegate = self
         popoverVC?.barButtonItem = sender
         presentViewController(sortVC, animated: true, completion: nil)
@@ -523,8 +524,6 @@ class TeamListController: UIViewController, UITableViewDataSource, UITableViewDe
     
     
     //<---FUNCTIONALITY FOR SORTING THE TEAM LIST--->
-    //TEMPORARY (Actually maybe not anymore...)
-	var isAscending: Bool?
     
 	func sortList(withStat stat: Int?, isAscending ascending: Bool) {
 		
@@ -532,7 +531,7 @@ class TeamListController: UIViewController, UITableViewDataSource, UITableViewDe
 			//Update stats in cache
 			currentlyEditingTeams = true
 			for index in 0..<currentRegionalTeams.count {
-				currentRegionalTeams[index].statContextCache!.calculationCache = TeamCache.StatContextCache.StatCalculationCache(statCalculation: currentRegionalTeams[index].statContextCache!.statContext.statCalculations[stat])
+				currentRegionalTeams[index].statContextCache!.calculationCache = TeamCache.StatContextCache.StatCalculationCache(statCalculation: currentRegionalTeams[index].statContextCache!.statContext.possibleStats[stat])
 			}
 			currentlyEditingTeams = false
 			

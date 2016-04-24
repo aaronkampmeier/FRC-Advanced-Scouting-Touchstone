@@ -72,7 +72,7 @@ class StatsVC: UIViewController, UITableViewDataSource, UITableViewDelegate {
 	}
 	
 	func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-		return (statContexts.first?.statCalculations.count)!
+		return (statContexts.first?.matchPerformanceStatistics.count)!
 	}
 	
 	func tableView(tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
@@ -87,8 +87,8 @@ class StatsVC: UIViewController, UITableViewDataSource, UITableViewDelegate {
 	func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
 		let cell = tableView.dequeueReusableCellWithIdentifier("cell")!
 		
-		cell.textLabel?.text = statContexts[indexPath.section].statCalculations[indexPath.row].stringName
-		cell.detailTextLabel?.text = "\(statContexts[indexPath.section].statCalculations[indexPath.row].value)"
+		cell.textLabel?.text = statContexts[indexPath.section].matchPerformanceStatistics[indexPath.row].stringName
+		cell.detailTextLabel?.text = "\(statContexts[indexPath.section].matchPerformanceStatistics[indexPath.row].value)"
 		
 		return cell
 	}

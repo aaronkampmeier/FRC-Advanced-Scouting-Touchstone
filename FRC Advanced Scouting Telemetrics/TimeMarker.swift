@@ -14,4 +14,7 @@ class TimeMarker: NSManagedObject {
 
 // Insert code here to add functionality to your managed object subclass
 
+	var timeMarkerEventType: TeamDataManager.TimeMarkerEventType {
+		return TeamDataManager.TimeMarkerEventType(rawValue: event!.integerValue)!
+	}
 }

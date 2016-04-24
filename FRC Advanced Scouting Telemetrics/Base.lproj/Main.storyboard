@@ -1043,16 +1043,16 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Sort" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="t23-tO-skm">
-                                <rect key="frame" x="181" y="20" width="39" height="26"/>
+                                <rect key="frame" x="181" y="10" width="39" height="26"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="21"/>
                                 <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                 <nil key="highlightedColor"/>
                             </label>
-                            <pickerView contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="svs-Jc-Q2Y">
-                                <rect key="frame" x="20" y="61" width="360" height="216"/>
-                            </pickerView>
                             <segmentedControl opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="0" translatesAutoresizingMaskIntoConstraints="NO" id="SPL-gJ-B4f">
-                                <rect key="frame" x="114" y="297" width="173" height="29"/>
+                                <rect key="frame" x="114" y="321" width="173" height="29"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="28" id="FaA-r4-Qxc"/>
+                                </constraints>
                                 <segments>
                                     <segment title="Descending"/>
                                     <segment title="Ascending"/>
@@ -1061,18 +1061,26 @@
                                     <action selector="segmentedControlChanged:" destination="LzG-mF-Xm8" eventType="valueChanged" id="U3y-vo-oc1"/>
                                 </connections>
                             </segmentedControl>
+                            <pickerView contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="svs-Jc-Q2Y">
+                                <rect key="frame" x="0.0" y="51" width="400" height="250"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="250" id="mSu-fI-MZa"/>
+                                </constraints>
+                            </pickerView>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
-                            <constraint firstItem="t23-tO-skm" firstAttribute="top" secondItem="7qs-wb-MrS" secondAttribute="bottom" id="7e8-w4-q9t"/>
+                            <constraint firstItem="t23-tO-skm" firstAttribute="top" secondItem="7qs-wb-MrS" secondAttribute="bottom" constant="10" id="7e8-w4-q9t"/>
                             <constraint firstItem="t23-tO-skm" firstAttribute="centerX" secondItem="kgZ-CR-sl5" secondAttribute="centerX" id="A0y-No-ERv"/>
-                            <constraint firstItem="SPL-gJ-B4f" firstAttribute="top" secondItem="svs-Jc-Q2Y" secondAttribute="bottom" constant="20" id="ISD-jZ-jEi"/>
+                            <constraint firstItem="SPL-gJ-B4f" firstAttribute="top" secondItem="svs-Jc-Q2Y" secondAttribute="bottom" priority="750" constant="20" id="ISD-jZ-jEi"/>
                             <constraint firstItem="svs-Jc-Q2Y" firstAttribute="top" secondItem="t23-tO-skm" secondAttribute="bottom" constant="15" id="J1p-X5-oED"/>
-                            <constraint firstItem="svs-Jc-Q2Y" firstAttribute="leading" secondItem="kgZ-CR-sl5" secondAttribute="leadingMargin" id="VEi-ul-Omw"/>
-                            <constraint firstItem="svs-Jc-Q2Y" firstAttribute="centerX" secondItem="kgZ-CR-sl5" secondAttribute="centerX" id="bOb-G0-a0Z"/>
+                            <constraint firstItem="svs-Jc-Q2Y" firstAttribute="leading" secondItem="kgZ-CR-sl5" secondAttribute="leading" id="VEi-ul-Omw"/>
                             <constraint firstItem="SPL-gJ-B4f" firstAttribute="centerX" secondItem="kgZ-CR-sl5" secondAttribute="centerX" id="c44-PT-Qjw"/>
+                            <constraint firstItem="VA4-xt-SJp" firstAttribute="top" relation="greaterThanOrEqual" secondItem="SPL-gJ-B4f" secondAttribute="bottom" constant="10" id="pdZ-Sf-lPJ"/>
+                            <constraint firstAttribute="trailing" secondItem="svs-Jc-Q2Y" secondAttribute="trailing" id="udw-1I-hPX"/>
                         </constraints>
                     </view>
+                    <nil key="simulatedStatusBarMetrics"/>
                     <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
                     <size key="freeformSize" width="400" height="400"/>
                     <connections>
@@ -3515,7 +3523,7 @@
             </objects>
             <point key="canvasLocation" x="1922" y="165"/>
         </scene>
-        <!--Team Picker-->
+        <!--Pick List-->
         <scene sceneID="dv2-aE-BW4">
             <objects>
                 <tableViewController id="Klq-Xd-jly" customClass="TeamPickerTableViewController" customModule="FRC_Advanced_Scouting_Touchstone" customModuleProvider="target" sceneMemberID="viewController">
@@ -3547,7 +3555,7 @@
                             <outlet property="delegate" destination="Klq-Xd-jly" id="wjc-UA-9GM"/>
                         </connections>
                     </tableView>
-                    <navigationItem key="navigationItem" title="Team Picker" id="O5q-IC-5pt">
+                    <navigationItem key="navigationItem" title="Pick List" id="O5q-IC-5pt">
                         <barButtonItem key="rightBarButtonItem" systemItem="done" id="kLA-hf-fh2">
                             <connections>
                                 <segue destination="9nT-OE-T78" kind="unwind" unwindAction="returnToTeamList:" id="D5z-FQ-y6N"/>

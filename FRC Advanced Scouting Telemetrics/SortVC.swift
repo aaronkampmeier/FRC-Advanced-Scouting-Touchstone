@@ -34,7 +34,7 @@ class SortVC: UIViewController, UIPickerViewDelegate, UIPickerViewDataSource {
     }
     
     func pickerView(pickerView: UIPickerView, numberOfRowsInComponent component: Int) -> Int {
-		return (statContext.statCalculations.count)
+		return (statContext.possibleStats.count)
     }
     
     func alertActionHandler(alert: UIAlertAction) {
@@ -50,7 +50,7 @@ class SortVC: UIViewController, UIPickerViewDelegate, UIPickerViewDataSource {
         if row == 0 {
             return "Draft Board (Default)"
         } else {
-            return statContext.statCalculations[row-1].stringName
+            return statContext.possibleStats[row-1].stringName
         }
     }
     

@@ -32,6 +32,7 @@ class TeamDataManager {
 		TeamDataManager.managedContext.rollback()
 	}
 	
+	//MARK: Teams
 	func saveTeamNumber(number: String, atRank rank: Int? = nil, performCommit shouldSave: Bool = true) -> Team {
         //Get the entity for a Team and then create a new one
         let entity = NSEntityDescription.entityForName("Team", inManagedObjectContext: TeamDataManager.managedContext)
@@ -239,103 +240,8 @@ class TeamDataManager {
             throw error
         }
     }
-    
-    //FUNCTIONS FOR MANAGING TEAM STATISTICS
-//    DEPRECATED
-//    func getStatsForTeam(team: Team) -> [Stat]{
-//        return team.stats?.allObjects as! [Stat]
-//    }
-//    
-//    func getStatsForTeam(teamNumber: String) throws -> [Stat] {
-//        let team = getTeams(teamNumber)
-//        
-//        if team.count > 1 {
-//            throw DataManagingError.DuplicateTeams
-//        }
-//        
-//        return getStatsForTeam(team[0])
-//    }
-//    
-//    func getStatTypes() throws -> [StatType] {
-//        let statsBoard: StatsBoard?
-//        do {
-//            statsBoard = try getRootStatsBoard()
-//        } catch {
-//            throw DataManagingError.UnableToFetch
-//        }
-//        
-//        if let board = statsBoard {
-//            return board.types?.allObjects as! [StatType]
-//        }
-//    }
-//    
-//    func createNewStatType(name: String) throws -> StatType {
-//        //Check if the Stat Type already exists
-//        do {
-//            for type in try getRootStatsBoard().types?.allObjects as! [StatType] {
-//                if type.name == name {
-//                    throw DataManagingError.TypeAlreadyExists
-//                }
-//            }
-//        } catch {
-//            NSLog("Unable to Check if type already existed")
-//            throw DataManagingError.UnableToGetStatsBoard
-//        }
-//        
-//        let newStatType = StatType(entity: NSEntityDescription.entityForName("StatType", inManagedObjectContext: TeamDataManager.managedContext)!, insertIntoManagedObjectContext: TeamDataManager.managedContext)
-//        
-//        //Set the new statType's name
-//        newStatType.name = name
-//        do {
-//            newStatType.statsBoard = try getRootStatsBoard()
-//        } catch let error as DataManagingError {
-//            NSLog(error.errorDescription)
-//            throw error
-//        }
-//        
-//        save()
-//        
-//        return newStatType
-//    }
-//    
-//    func addStatToTeam(team: Team, statType: StatType, statValue: Double) {
-//        let newStat = Stat(entity: NSEntityDescription.entityForName("Stat", inManagedObjectContext: TeamDataManager.managedContext)!, insertIntoManagedObjectContext: TeamDataManager.managedContext)
-//        
-//        newStat.value = statValue
-//        newStat.statType = statType
-//        newStat.team = team
-//        newStat.statsBoard = statType.statsBoard
-//        
-//        save()
-//    }
-//    
-//    func getRootStatsBoard() throws -> StatsBoard {
-//        //Create a fetch request for the draft board
-//        let fetchRequest = NSFetchRequest(entityName: "StatsBoard")
-//        
-//        do {
-//            let results = try TeamDataManager.managedContext.executeFetchRequest(fetchRequest)
-//            
-//            if results.count > 1 {
-//                NSLog("Somehow multiple stats boards were created. Select the one for deletion")
-//                throw DataManagingError.DuplicateStatsBoards
-//            } else if results.count == 1 {
-//                NSLog("One Statsboard")
-//                return results[0] as! StatsBoard
-//            } else if results.isEmpty {
-//                NSLog("Creating new stats board")
-//                //Create a new stats board and return it
-//                let newStatsBoard = StatsBoard(entity: NSEntityDescription.entityForName("StatsBoard", inManagedObjectContext: TeamDataManager.managedContext)!, insertIntoManagedObjectContext: TeamDataManager.managedContext)
-//                save()
-//                return newStatsBoard
-//            }
-//        } catch let error as NSError {
-//            NSLog("Could not fetch \(error), \(error.userInfo)")
-//        }
-//        throw DataManagingError.UnableToFetch
-//    }
 	
-    //FUNCTIONS FOR REGIONALS
+    //MARK: Regionals
     func addRegional(regionalNumber num: Int, withName name: String) -> Regional {
         //Check to make sure that the regional doesn't exist
         let previousRegionals = getAllRegionals().filter({$0.regionalNumber == num})
@@ -398,7 +304,7 @@ class TeamDataManager {
 		TeamDataManager.managedContext.deleteObject(regional)
 	}
     
-    //FUNCTIONS FOR MATCHES
+    //MARK: Matches
     func createNewMatch(matchNumber: Int, inRegional regional: Regional) throws -> Match {
         //First, check to make sure it doesn't already exist
         guard (regional.matches?.allObjects as! [Match]).filter({return $0.matchNumber == matchNumber}).isEmpty else {
@@ -550,6 +456,8 @@ class TeamDataManager {
 		}
 	}
 	
+	
+	//MARK: Defenses and Matches
 	func setDefenses(inMatch match: Match, redOrBlue color: AllianceColor, defenseA: CategoryADefense, defenseB: CategoryBDefense, defenseC: CategoryCDefense, defenseD: CategoryDDefense) {
 		//Get the defense objects
 		let a = getDefense(withName: defenseA.string)
@@ -585,26 +493,7 @@ class TeamDataManager {
 		case LowBar = "Low Bar"
 		
 		var description: String {
-			switch self {
-			case .Portcullis:
-				return "Portcullis"
-			case .ChevalDeFrise:
-				return "Cheval de Frise"
-			case .Moat:
-				return "Moat"
-			case .Ramparts:
-				return "Ramparts"
-			case .Drawbridge:
-				return "Drawbridge"
-			case .SallyPort:
-				return "Sally Port"
-			case .RockWall:
-				return "Rock Wall"
-			case .RoughTerrain:
-				return "Rough Terrain"
-			case .LowBar:
-				return "Low Bar"
-			}
+			return self.rawValue
 		}
 		
 		var category: DefenseCategory {
@@ -624,6 +513,10 @@ class TeamDataManager {
 		
 		var defense: Defense {
 			return TeamDataManager().getDefense(withName: self.description)!
+		}
+		
+		static var allDefenses: [TeamDataManager.DefenseType] {
+			return [.Portcullis, .ChevalDeFrise, .Moat, .Ramparts, .Drawbridge, .SallyPort, .RockWall, .RoughTerrain, .LowBar]
 		}
 	}
 	
@@ -734,7 +627,7 @@ class TeamDataManager {
         return regional.matches?.allObjects as! [Match]
     }
 	
-	//METHODS FOR SHOTS
+	//MARK: Shots
 	func createShot(atPoint location: CGPoint) -> Shot {
 		let newShot = Shot(entity: NSEntityDescription.entityForName("Shot", inManagedObjectContext: TeamDataManager.managedContext)!, insertIntoManagedObjectContext: TeamDataManager.managedContext)
 		
@@ -749,7 +642,13 @@ class TeamDataManager {
 		TeamDataManager.managedContext.deleteObject(shot)
 	}
 	
-	//METHODS FOR AUTONOMOUS CYCLES
+	enum ShotGoal: Int {
+		case Low
+		case High
+		case Both //Specifically for stats
+	}
+	
+	//MARK: AutonomousCycles
 	func createAutonomousCycle(inMatchPerformance matchPerformance: TeamMatchPerformance, atPlace place: Int) -> AutonomousCycle {
 		let newCycle = AutonomousCycle(entity: NSEntityDescription.entityForName("AutonomousCycle", inManagedObjectContext: TeamDataManager.managedContext)!, insertIntoManagedObjectContext: TeamDataManager.managedContext)
 		
@@ -760,7 +659,7 @@ class TeamDataManager {
 		return newCycle
 	}
 	
-	//METHODS FOR DEFENSES
+	//MARK: Defenses
 	func createDefense(withName name: String, inCategory category: Character) -> Defense {
 		//Format the strings first
 		let categoryString = String(category)
@@ -871,8 +770,8 @@ class TeamDataManager {
 		return results
 	}
 	
-	//METHODS FOR TIME MARKERS
-	func addTimeMarker(withEvent event: TimeMarkerEvent, atTime time: NSTimeInterval, inMatchPerformance matchPerformance: TeamMatchPerformance) {
+	//MARK: Time Markers
+	func addTimeMarker(withEvent event: TimeMarkerEventType, atTime time: NSTimeInterval, inMatchPerformance matchPerformance: TeamMatchPerformance) {
 		let newMarker = TimeMarker(entity: NSEntityDescription.entityForName("TimeMarker", inManagedObjectContext: TeamDataManager.managedContext)!, insertIntoManagedObjectContext: TeamDataManager.managedContext)
 		
 		newMarker.event = event.rawValue
@@ -880,25 +779,45 @@ class TeamDataManager {
 		newMarker.teamMatchPerformance = matchPerformance
 	}
 	
-	//METHODS FOR DEFENSE CROSS TIMING
-	func addDefenseCrossTime(forMatchPerformance matchPerformance: TeamMatchPerformance, inDefense defense: Defense, withTime time: NSTimeInterval) {
-		let newCrossTime = DefenseCrossTime(entity: NSEntityDescription.entityForName("DefenseCrossTime", inManagedObjectContext: TeamDataManager.managedContext)!, insertIntoManagedObjectContext: TeamDataManager.managedContext)
-		
-		newCrossTime.time = time
-		newCrossTime.teamMatchPerformance = matchPerformance
-		newCrossTime.defense = defense
-	}
-	
-	enum TimeMarkerEvent: Int {
+	enum TimeMarkerEventType: Int {
 		case BallPickedUp
-		case OffenseAttemptedShot
+		case AttemptedShot
 		case MovedToOffenseCourtyard
 		case MovedToDefenseCourtyard
-		case StartedCrossingDefense
-		case FinishedCrossingDefense
+		case CrossedDefense
 		case MovedToNeutral
 		case Contact
 		case ContactDisruptingShot
+	}
+	
+	struct TimeMarkerEvent {
+		let time: NSTimeInterval
+		let type: TimeMarkerEventType
+		
+		init(type: TimeMarkerEventType, atTime time: NSTimeInterval) {
+			self.time = time
+			self.type = type
+		}
+	}
+	
+	func timeOverview(forMatchPerformance matchPerformance: TeamMatchPerformance) -> [TimeMarkerEvent] {
+		var timeOverview = [TimeMarkerEvent]()
+		for timeMarker in matchPerformance.timeMarkers?.array as! [TimeMarker] {
+			timeOverview.append(TimeMarkerEvent(type: timeMarker.timeMarkerEventType, atTime: timeMarker.time?.doubleValue ?? -1))
+		}
+		return timeOverview.sort() {first, second in
+			return first.time < second.time
+		}
+	}
+	
+	//MARK: Defense Cross Timing
+	func addDefenseCrossTime(forMatchPerformance matchPerformance: TeamMatchPerformance, inDefense defense: Defense, atTime time: NSTimeInterval) {
+		let newCrossTime = DefenseCrossTime(entity: NSEntityDescription.entityForName("DefenseCrossTime", inManagedObjectContext: TeamDataManager.managedContext)!, insertIntoManagedObjectContext: TeamDataManager.managedContext)
+		
+		newCrossTime.endTime = time
+		newCrossTime.duration = 0
+		newCrossTime.teamMatchPerformance = matchPerformance
+		newCrossTime.defense = defense
 	}
     
     enum DataManagingError: ErrorType {

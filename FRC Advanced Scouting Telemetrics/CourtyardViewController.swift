@@ -19,7 +19,6 @@ class CourtyardViewController: UIViewController, UITableViewDataSource, UITableV
 	var selectedShot: CourtyardShot?
 	
 	var standsScoutingVC: StandsScoutingViewController?
-	var defenseOrOffense: DefenseOrOffense?
 	var storedSizeOfImage: CGSize!
 	
 	struct CourtyardShot {
@@ -60,15 +59,8 @@ class CourtyardViewController: UIViewController, UITableViewDataSource, UITableV
 		
 		standsScoutingVC = parentViewController as? StandsScoutingViewController
 		
-		//Set the image
-		switch defenseOrOffense! {
-		case .Defense:
-			courtyardImage.image = UIImage(named: "DefenseRender")
-			storedSizeOfImage = ImageConstants.defenseImageStoredSize
-		case .Offense:
-			courtyardImage.image = UIImage(named: "OffenseRender")
-			storedSizeOfImage = ImageConstants.offenseImageStoredSize
-		}
+		courtyardImage.image = UIImage(named: "OffenseRender")
+		storedSizeOfImage = ImageConstants.offenseImageStoredSize
     }
 	
 	override func viewWillAppear(animated: Bool) {
@@ -159,7 +151,7 @@ class CourtyardViewController: UIViewController, UITableViewDataSource, UITableV
 		}
 		
 		finishedEditingShot = false
-		let alert = UIAlertController(title: "Select Team and Blocked status", message: "Please select an opposing team and if the shot was blocked or not, or else the shot will be removed.", preferredStyle: .Alert)
+		let alert = UIAlertController(title: "Select Team and Blocked status", message: "Please select the goal and if the shot was blocked or not, or else the shot will be removed.", preferredStyle: .Alert)
 		alert.addAction(UIAlertAction(title: "Remove shot", style: .Destructive, handler: {_ in self.dismissViewControllerAnimated(true, completion: {_ in self.popoverPresentationControllerDidDismissPopover(popoverPresentationController)})}))
 		alert.addAction(UIAlertAction(title: "OK", style: .Default, handler: nil))
 		popoverPresentationController.presentedViewController.presentViewController(alert, animated: true, completion: nil)
@@ -170,19 +162,15 @@ class CourtyardViewController: UIViewController, UITableViewDataSource, UITableV
 	func popoverPresentationControllerDidDismissPopover(popoverPresentationController: UIPopoverPresentationController) {
 		if finishedEditingShot {
 			//Update the dot (rect) on the screen and save a time marker
-			var markerType: TeamDataManager.TimeMarkerEvent
-			switch defenseOrOffense! {
-			case .Defense:
-				markerType = TeamDataManager.TimeMarkerEvent.OffenseAttemptedShot
-				break
-			case .Offense:
-				if selectedShot!.shot?.blocked == true {
-					selectedShot?.pointView.backgroundColor = UIColor.redColor()
-				} else {
-					selectedShot?.pointView.backgroundColor = UIColor.greenColor()
-				}
-				markerType = TeamDataManager.TimeMarkerEvent.OffenseAttemptedShot
+			var markerType: TeamDataManager.TimeMarkerEventType
+			
+			if selectedShot!.shot?.blocked == true {
+				selectedShot?.pointView.backgroundColor = UIColor.redColor()
+			} else {
+				selectedShot?.pointView.backgroundColor = UIColor.greenColor()
 			}
+			markerType = TeamDataManager.TimeMarkerEventType.AttemptedShot
+			
 			dataManager.addTimeMarker(withEvent: markerType, atTime: (standsScoutingVC?.stopwatch.elapsedTime)!, inMatchPerformance: (standsScoutingVC?.matchPerformance)!)
 		} else {
 			dataManager.remove(selectedShot!.shot!)
@@ -227,7 +215,7 @@ class CourtyardViewController: UIViewController, UITableViewDataSource, UITableV
 			case 1:
 				cell?.textLabel?.text = "Yes"
 			default:
-				break
+				cell?.textLabel?.text = ""
 			}
 			return cell!
 		default:

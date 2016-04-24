@@ -165,9 +165,6 @@ class StandsScoutingViewController: UIViewController, ProvidesTeam {
 		offenseVC = storyboard?.instantiateViewControllerWithIdentifier("standsCourtyard") as? CourtyardViewController
 		neutralVC = storyboard?.instantiateViewControllerWithIdentifier("standsNeutral") as? NeutralViewController
 		
-		//Set the type for the courtyard view controller
-		offenseVC?.defenseOrOffense = .Offense
-		
 		//Make it look nice
 		timerButton.layer.cornerRadius = 10
 		ballView.layer.borderWidth = 4
@@ -248,13 +245,13 @@ class StandsScoutingViewController: UIViewController, ProvidesTeam {
 			cycleFromViewController(currentVC!, toViewController: autonomousVC!)
 		case 1:
 			cycleFromViewController(currentVC!, toViewController: offenseVC!)
-			dataManager.addTimeMarker(withEvent: TeamDataManager.TimeMarkerEvent.MovedToOffenseCourtyard, atTime: stopwatch.elapsedTime, inMatchPerformance: matchPerformance!)
+			dataManager.addTimeMarker(withEvent: TeamDataManager.TimeMarkerEventType.MovedToOffenseCourtyard, atTime: stopwatch.elapsedTime, inMatchPerformance: matchPerformance!)
 		case 2:
 			cycleFromViewController(currentVC!, toViewController: neutralVC!)
-			dataManager.addTimeMarker(withEvent: TeamDataManager.TimeMarkerEvent.MovedToNeutral, atTime: stopwatch.elapsedTime, inMatchPerformance: matchPerformance!)
+			dataManager.addTimeMarker(withEvent: TeamDataManager.TimeMarkerEventType.MovedToNeutral, atTime: stopwatch.elapsedTime, inMatchPerformance: matchPerformance!)
 		case 3:
 			cycleFromViewController(currentVC!, toViewController: defenseVC!)
-			dataManager.addTimeMarker(withEvent: TeamDataManager.TimeMarkerEvent.MovedToDefenseCourtyard, atTime: stopwatch.elapsedTime, inMatchPerformance: matchPerformance!)
+			dataManager.addTimeMarker(withEvent: TeamDataManager.TimeMarkerEventType.MovedToDefenseCourtyard, atTime: stopwatch.elapsedTime, inMatchPerformance: matchPerformance!)
 		default:
 			break
 		}
@@ -300,7 +297,7 @@ class StandsScoutingViewController: UIViewController, ProvidesTeam {
 	}
 
 	@IBAction func gotBallPressed(sender: UIButton) {
-		dataManager.addTimeMarker(withEvent: TeamDataManager.TimeMarkerEvent.BallPickedUp, atTime: stopwatch.elapsedTime, inMatchPerformance: matchPerformance!)
+		dataManager.addTimeMarker(withEvent: TeamDataManager.TimeMarkerEventType.BallPickedUp, atTime: stopwatch.elapsedTime, inMatchPerformance: matchPerformance!)
 	}
 	
 	//FINAL TOWER VIEW
