@@ -526,7 +526,7 @@ class TeamListController: UIViewController, UITableViewDataSource, UITableViewDe
     //<---FUNCTIONALITY FOR SORTING THE TEAM LIST--->
     
 	func sortList(withStat stat: Int?, isAscending ascending: Bool) {
-		
+		var statName = ""
 		if let stat = stat {
 			//Update stats in cache
 			currentlyEditingTeams = true
@@ -539,6 +539,7 @@ class TeamListController: UIViewController, UITableViewDataSource, UITableViewDe
 			let currentTeams = currentRegionalTeams
 			currentSortedTeams = currentTeams.sort() {team1,team2 in
 				let before = team1.statContextCache?.calculationCache?.value > team2.statContextCache?.calculationCache?.value
+				statName = team1.statContextCache?.calculationCache?.name ?? ""
 				if ascending {
 					return before
 				} else {
@@ -555,6 +556,8 @@ class TeamListController: UIViewController, UITableViewDataSource, UITableViewDe
 			
 			isSorted = false
 		}
+		
+		Answers.logCustomEventWithName("Sort Team List", customAttributes: ["Stat":statName, "Ascending":ascending.hashValue])
     }
     
     //Functionality for the Segemented Control
