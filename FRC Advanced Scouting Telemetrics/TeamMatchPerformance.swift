@@ -13,6 +13,27 @@ import CoreData
 class TeamMatchPerformance: NSManagedObject {
 
 // Insert code here to add functionality to your managed object subclass
+	
+	var finalScore: Double {
+		let color = TeamDataManager.AllianceColor(rawValue: allianceColor!.integerValue)!
+		switch color {
+		case .Blue:
+			return match?.blueFinalScore?.doubleValue ?? 0
+		case .Red:
+			return match?.redFinalScore?.doubleValue ?? 0
+		}
+	}
+	
+	var winningMargin: Double {
+		let selfFinalScore = finalScore
+		let color = TeamDataManager.AllianceColor(rawValue: allianceColor!.integerValue)!
+		switch color {
+		case .Blue:
+			return selfFinalScore - (match?.redFinalScore?.doubleValue ?? 0)
+		case .Red:
+			return selfFinalScore - (match?.blueFinalScore?.doubleValue ?? 0)
+		}
+	}
 
 	enum AutonomousVariable {
 		case CrossedDefense

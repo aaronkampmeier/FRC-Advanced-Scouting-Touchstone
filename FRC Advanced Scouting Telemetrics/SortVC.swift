@@ -17,7 +17,7 @@ class SortVC: UIViewController, UIPickerViewDelegate, UIPickerViewDataSource {
     let dataManager = TeamDataManager()
     var successful = false
 	
-	var statContext: StatContext = StatContext(context: [TeamMatchPerformance]())
+	var statContext: StatContext?
     var isAscending = true
     
     override func viewDidLoad() {
@@ -31,10 +31,11 @@ class SortVC: UIViewController, UIPickerViewDelegate, UIPickerViewDataSource {
     
     override func viewWillAppear(animated: Bool) {
         super.viewWillAppear(animated)
+		sortTypePicker.reloadAllComponents()
     }
     
     func pickerView(pickerView: UIPickerView, numberOfRowsInComponent component: Int) -> Int {
-		return (statContext.possibleStats.count)
+		return (statContext?.possibleStats.count) ?? 0
     }
     
     func alertActionHandler(alert: UIAlertAction) {
@@ -50,14 +51,8 @@ class SortVC: UIViewController, UIPickerViewDelegate, UIPickerViewDataSource {
         if row == 0 {
             return "Draft Board (Default)"
         } else {
-            return statContext.possibleStats[row-1].stringName
+            return statContext?.possibleStats[row-1].description ?? ""
         }
-    }
-    
-    func presentOkAlert(title: String, descritpion: String, okActionHandler: ((UIAlertAction)->Void)?) {
-        let alert = UIAlertController(title: title, message: description, preferredStyle: .Alert)
-        alert.addAction(UIAlertAction(title: "OK", style: .Default, handler: okActionHandler))
-        presentViewController(alert, animated: true, completion: nil)
     }
     
     func pickerView(pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {

@@ -11,6 +11,8 @@ import Foundation
 private let dataManager = TeamDataManager()
 
 struct StatContext {
+	var name: String?
+	
 	var matchPerformanceStatistics: [StatCalculation]
 	var regionalPerformanceStatistics: [StatCalculation]
 	var teamStatistics: [StatCalculation]
@@ -18,7 +20,13 @@ struct StatContext {
 	var possibleStats: [StatCalculation] {
 		return teamStatistics + regionalPerformanceStatistics + matchPerformanceStatistics
 	}
-
+	
+	init() {
+		matchPerformanceStatistics = []
+		teamStatistics = []
+		regionalPerformanceStatistics = []
+	}
+	
 	init(context: [TeamMatchPerformance]) {
 		matchPerformanceStatistics = []
 		teamStatistics = []
@@ -26,38 +34,51 @@ struct StatContext {
 		setMatchPerformanceStatistics(context)
 	}
 	
-	init(context: [Team]) {
+	init(context: Team) {
 		matchPerformanceStatistics = []
 		teamStatistics = []
 		regionalPerformanceStatistics = []
 		setTeamStatistics(context)
 	}
 	
-	init(context: [TeamRegionalPerformance]) {
+	init(context: TeamRegionalPerformance) {
 		matchPerformanceStatistics = []
 		teamStatistics = []
 		regionalPerformanceStatistics = []
 		setRegionalPerformanceStatistics(context)
 	}
 	
-	mutating func setRegionalPerformanceStatistics(context: [TeamRegionalPerformance]) {
-		regionalPerformanceStatistics = [.OPR(context), .DPR(context), .CCWM(context)]
-	}
-	
-	mutating func setMatchPerformanceStatistics(context: [TeamMatchPerformance]) {
-		matchPerformanceStatistics = [.TotalPoints(context), .TotalShots(context), .TotalMadeShots(context), .TotalHighGoals(context), .TotalMadeHighGoals(context), .TotalLowGoals(context), .TotalMadeLowGoals(context), .ShotAccuracy(context, TeamDataManager.ShotGoal.Both), .TotalScales(context), .RankingPoints(context), .DefensesCrossed(context), .AverageTimeInZone(context, .DefenseCourtyard), .AverageTimeInZone(context, .OffenseCourtyard), .AverageTimeInZone(context, .Neutral), .CycleTime(context), .TotalContacts(context), .TotalContactsDisruptingShots(context), .TotalGamesWithTimeInSection(context, .DefenseCourtyard, 30)]
-		
-		for defenseType in TeamDataManager.DefenseType.allDefenses {
-			matchPerformanceStatistics.append(.TotalCrossingsForDefense(context, defenseType))
+	mutating func setRegionalPerformanceStatistics(context: TeamRegionalPerformance?) {
+		if let context = context {
+			regionalPerformanceStatistics = [.OPR(context), .DPR(context), .CCWM(context)]
+		} else {
+			regionalPerformanceStatistics = []
 		}
 	}
 	
-	mutating func setTeamStatistics(context: [Team]) {
-		teamStatistics = [.VisionTracking(context), .Height(context), .Weight(context), .TotalAutonomousDefenses(context)]
+	mutating func setMatchPerformanceStatistics(context: [TeamMatchPerformance]?) {
+		if let context = context {
+			matchPerformanceStatistics = [.TotalPoints(context), .TotalShots(context), .TotalMadeShots(context), .TotalHighGoals(context), .TotalMadeHighGoals(context), .TotalLowGoals(context), .TotalMadeLowGoals(context), .ShotAccuracy(context, TeamDataManager.ShotGoal.Both), .TotalScales(context), .RankingPoints(context), .DefensesCrossed(context), .AverageTimeInZone(context, .DefenseCourtyard), .AverageTimeInZone(context, .OffenseCourtyard), .AverageTimeInZone(context, .Neutral), .CycleTime(context), .TotalContacts(context), .TotalContactsDisruptingShots(context), .TotalGamesWithTimeInSection(context, .DefenseCourtyard, 30)]
+			for defenseType in TeamDataManager.DefenseType.allDefenses {
+				matchPerformanceStatistics.append(.TotalCrossingsForDefense(context, defenseType))
+			}
+		} else {
+			matchPerformanceStatistics = []
+		}
+		
+		
+	}
+	
+	mutating func setTeamStatistics(context: Team?) {
+		if let context = context {
+			teamStatistics = [.TeamNumber(context), .VisionTracking([context]), .Height([context]), .Weight([context]), .TotalAutonomousDefenses([context])]
+		} else {
+			teamStatistics = []
+		}
 	}
 }
 
-enum StatCalculation {
+enum StatCalculation: CustomStringConvertible {
 	case TotalShots([TeamMatchPerformance])
 	case TotalMadeShots([TeamMatchPerformance])
 	case TotalScales([TeamMatchPerformance])
@@ -82,9 +103,9 @@ enum StatCalculation {
 	case TotalContacts([TeamMatchPerformance])
 	case TotalContactsDisruptingShots([TeamMatchPerformance])
 	case TotalGamesWithTimeInSection([TeamMatchPerformance], GameFieldZone, NSTimeInterval)
-	case OPR([TeamRegionalPerformance])
-	case DPR([TeamRegionalPerformance])
-	case CCWM([TeamRegionalPerformance])
+	case OPR(TeamRegionalPerformance)
+	case DPR(TeamRegionalPerformance)
+	case CCWM(TeamRegionalPerformance)
 	
 	//Calculations for all the stat types
 	var value: Double {
@@ -285,12 +306,87 @@ enum StatCalculation {
 				return false
 			}
 			return Double(filtered.count)
-		default:
-			return 0
+		case .OPR(let regionalPerformance):
+			//OPR stands for offensive power rating. The main idea: robot1+robot2+robot3 = redScore & robot4+robot5+robot6 = blueScore. It is calculated as follows. First, a N*N matrix (A), where N is the number of teams, is created. Each value in A is the number of matches that the two teams comprising the index play together. Then an array (B) is created where the number of elements is equal to the number of teams, N, and in the same order as A. Each element in B is the sum of all match scores for the team at that index. A third array (x) is also size N and each value in it represents the OPR for the team at that index. A * x = B. Given A and B, one can solve for x. (Alliance color doesn't really matter for this calculation)
+			
+			let regional = regionalPerformance.regional!
+			let teamPerformances = regional.teamRegionalPerformances?.allObjects as! [TeamRegionalPerformance]
+			let numOfTeams = teamPerformances.count
+			
+			//Check to make sure there are multiple teams to perform the calculation
+			if numOfTeams == 1 {
+				return 0
+			}
+			
+			let matrixA = createMatrixA(withTeamPerformances: teamPerformances)
+			
+			var arrayB = zeros(numOfTeams)
+			for teamPerformance in teamPerformances {
+				let sumOfMatchScores: Double = teamPerformance.matchPerformances!.reduce(0) {cumulative, matchPerformance in
+					return (matchPerformance as! TeamMatchPerformance).finalScore + cumulative
+				}
+				let place = teamPerformances.indexOf(teamPerformance)!
+				arrayB[place...place] <- sumOfMatchScores
+			}
+			
+			//Now solve for x
+			let arrayx = solve(matrixA, b: arrayB)
+			let oprForTeam = arrayx[teamPerformances.indexOf(regionalPerformance)!]
+			return oprForTeam
+		case .CCWM(let regionalPerformance):
+			let regional = regionalPerformance.regional!
+			let teamPerformances = regional.teamRegionalPerformances?.allObjects as! [TeamRegionalPerformance]
+			let numOfTeams = teamPerformances.count
+			//Check to make sure there are multiple teams to perform the calculation
+			if numOfTeams == 1 {
+				return 0
+			}
+			
+			let matrixA = createMatrixA(withTeamPerformances: teamPerformances)
+			
+			var arrayB = zeros(numOfTeams)
+			for teamPerformance in teamPerformances {
+				let sumOfMatchScores: Double = teamPerformance.matchPerformances!.reduce(0) {cumulative, matchPerformance in
+					return (matchPerformance as! TeamMatchPerformance).winningMargin + cumulative
+				}
+				let place = teamPerformances.indexOf(teamPerformance)!
+				arrayB[place...place] <- sumOfMatchScores
+			}
+			
+			//Now solve for x
+			let arrayx = solve(matrixA, b: arrayB)
+			let ccwmForTeam = arrayx[teamPerformances.indexOf(regionalPerformance)!]
+			return ccwmForTeam
+		case .DPR(let regionalPerformance):
+			return StatCalculation.OPR(regionalPerformance).value - StatCalculation.CCWM(regionalPerformance).value
 		}
 	}
 	
-	var stringName: String {
+	private func createMatrixA(withTeamPerformances teamPerformances: [TeamRegionalPerformance]) -> matrix {
+		let numOfTeams = teamPerformances.count
+		var matrixA = zeros((numOfTeams, numOfTeams))
+		for firstTeamPerformance in teamPerformances {
+			let firstPlace = teamPerformances.indexOf(firstTeamPerformance)!.hashValue
+			let firstMatches: Set<Match> = Set(firstTeamPerformance.matchPerformances!.map() {performance in
+				return (performance as! TeamMatchPerformance).match!
+				})
+			for secondTeamPerformance in teamPerformances {
+				let secondPlace = teamPerformances.indexOf(secondTeamPerformance)!.hashValue
+				let secondMatches: Set<Match> = Set(secondTeamPerformance.matchPerformances!.map() {performance in
+					return (performance as! TeamMatchPerformance).match!
+					})
+				
+				//Find the matches they have in common
+				let sharedMatches = firstMatches.intersect(secondMatches)
+				
+				//Set the number of shared matches in the matrix
+				matrixA[firstPlace...firstPlace, secondPlace...secondPlace] <- sharedMatches.count.double
+			}
+		}
+		return matrixA
+	}
+	
+	var description: String {
 		switch self {
 		case .TotalShots(_):
 			return "Total Shots"

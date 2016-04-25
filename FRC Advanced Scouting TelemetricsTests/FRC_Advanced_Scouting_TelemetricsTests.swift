@@ -7,10 +7,9 @@
 //
 
 import XCTest
-@testable import FRC_Advanced_Scouting_Telemetrics
+@testable import FRC_Advanced_Scouting_Touchstone
 
 class FRC_Advanced_Scouting_TelemetricsTests: XCTestCase {
-    
     override func setUp() {
         super.setUp()
         // Put setup code here. This method is called before the invocation of each test method in the class.

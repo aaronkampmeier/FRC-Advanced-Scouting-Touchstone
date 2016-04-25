@@ -71,19 +71,16 @@ class TeamListController: UIViewController, UITableViewDataSource, UITableViewDe
 	//A structure with sub-structures to cache data about teams and their stats
 	class TeamCache {
 		let team: Team
-		var statContextCache: StatContextCache?
+		var statContextCache: StatContextCache = StatContextCache()
 		
 		init(team: Team) {
 			self.team = team
+			statContextCache.statContext.setTeamStatistics(team)
 		}
 		
 		struct StatContextCache {
-			let statContext: StatContext
+			var statContext: StatContext = StatContext()
 			var calculationCache: StatCalculationCache?
-			
-			init(statContext context: StatContext) {
-				statContext = context
-			}
 			
 			struct StatCalculationCache {
 				let calculation: StatCalculation
@@ -93,7 +90,7 @@ class TeamListController: UIViewController, UITableViewDataSource, UITableViewDe
 				init(statCalculation calculation: StatCalculation) {
 					self.calculation = calculation
 					value = calculation.value
-					name = calculation.stringName
+					name = calculation.description
 				}
 			}
 		}
@@ -109,15 +106,15 @@ class TeamListController: UIViewController, UITableViewDataSource, UITableViewDe
 		willSet {
 		//Reset the stat contexts in the team caches
 		for index in 0..<newValue.count {
-			var context: StatContext
+			var context: StatContext = newValue[index].statContextCache.statContext
 			if let regional = selectedRegional {
 				let regionalPerformances = Set(regional.teamRegionalPerformances?.allObjects as! [TeamRegionalPerformance])
 				let teamPerformances = Set(newValue[index].team.regionalPerformances?.allObjects as! [TeamRegionalPerformance])
 				
 				let regionalPerformance = Array(regionalPerformances.intersect(teamPerformances)).first!
 				
-				context = StatContext(context: regionalPerformance.matchPerformances!.allObjects as! [TeamMatchPerformance])
-				context.setRegionalPerformanceStatistics([regionalPerformance])
+				context.setRegionalPerformanceStatistics(regionalPerformance)
+				context.setMatchPerformanceStatistics(regionalPerformance.matchPerformances!.allObjects as! [TeamMatchPerformance])
 			} else {
 				let combinedMatchPerformances = newValue[index].team.regionalPerformances?.reduce([TeamMatchPerformance]()) {matchPerformances,regionalPerformance in
 					let newMatchPerformances = regionalPerformance.matchPerformances!?.allObjects as![TeamMatchPerformance]
@@ -125,13 +122,10 @@ class TeamListController: UIViewController, UITableViewDataSource, UITableViewDe
 					mutableMatchPerformances.appendContentsOf(newMatchPerformances)
 					return mutableMatchPerformances
 				}
-				
-				context =  StatContext(context: combinedMatchPerformances!)
-				context.setRegionalPerformanceStatistics(newValue[index].team.regionalPerformances?.allObjects as! [TeamRegionalPerformance])
+				context.setRegionalPerformanceStatistics(nil)
+				context.setMatchPerformanceStatistics(combinedMatchPerformances)
 			}
-			currentlyEditingTeams = true
-			newValue[index].statContextCache = TeamCache.StatContextCache(statContext: context)
-			currentlyEditingTeams = false
+			newValue[index].statContextCache.statContext = context
 		}
 		}
 	}
@@ -313,7 +307,7 @@ class TeamListController: UIViewController, UITableViewDataSource, UITableViewDe
         } else {
             cell.teamLabel.text = "Team \(teamCache.team.teamNumber!)"
 			if isSorted {
-				cell.statLabel.text = "\((teamCache.statContextCache?.calculationCache?.value)!)"
+				cell.statLabel.text = "\((teamCache.statContextCache.calculationCache?.value)!)"
 			} else {
 				cell.statLabel.text = ""
 			}
@@ -512,6 +506,7 @@ class TeamListController: UIViewController, UITableViewDataSource, UITableViewDe
 	}
     
     @IBAction func sortPressed(sender: UIBarButtonItem) {
+		sortVC.statContext = currentTeamsToDisplay.first?.statContextCache.statContext
         sortVC.modalPresentationStyle = .Popover
         sortVC.preferredContentSize = CGSizeMake(350, 350)
         
@@ -531,15 +526,15 @@ class TeamListController: UIViewController, UITableViewDataSource, UITableViewDe
 			//Update stats in cache
 			currentlyEditingTeams = true
 			for index in 0..<currentRegionalTeams.count {
-				currentRegionalTeams[index].statContextCache!.calculationCache = TeamCache.StatContextCache.StatCalculationCache(statCalculation: currentRegionalTeams[index].statContextCache!.statContext.possibleStats[stat])
+				currentRegionalTeams[index].statContextCache.calculationCache = TeamCache.StatContextCache.StatCalculationCache(statCalculation: currentRegionalTeams[index].statContextCache.statContext.possibleStats[stat])
 			}
 			currentlyEditingTeams = false
 			
 			//Sort
 			let currentTeams = currentRegionalTeams
 			currentSortedTeams = currentTeams.sort() {team1,team2 in
-				let before = team1.statContextCache?.calculationCache?.value > team2.statContextCache?.calculationCache?.value
-				statName = team1.statContextCache?.calculationCache?.name ?? ""
+				let before = team1.statContextCache.calculationCache?.value > team2.statContextCache.calculationCache?.value
+				statName = team1.statContextCache.calculationCache?.name ?? ""
 				if ascending {
 					return before
 				} else {
@@ -551,8 +546,10 @@ class TeamListController: UIViewController, UITableViewDataSource, UITableViewDe
 		} else {
 			//Update stats in cache
 			for index in 0..<currentRegionalTeams.count {
-				currentRegionalTeams[index].statContextCache!.calculationCache = nil
+				currentRegionalTeams[index].statContextCache.calculationCache = nil
 			}
+			
+			statName = "Draft Board (Default)"
 			
 			isSorted = false
 		}
