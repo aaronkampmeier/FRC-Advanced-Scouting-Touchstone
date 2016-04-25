@@ -60,10 +60,8 @@
         <attribute name="robotWeight" optional="YES" attributeType="Double" defaultValueString="0.0" syncable="YES"/>
         <attribute name="sideImage" optional="YES" attributeType="Binary" allowsExternalBinaryDataStorage="YES" syncable="YES"/>
         <attribute name="teamNumber" attributeType="String" syncable="YES"/>
-        <attribute name="turret" optional="YES" attributeType="Boolean" syncable="YES"/>
         <attribute name="visionTrackingRating" optional="YES" attributeType="Integer 64" minValueString="0" maxValueString="5" syncable="YES"/>
         <relationship name="autonomousDefensesAbleToCross" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Defense" syncable="YES"/>
-        <relationship name="autonomousDefensesAbleToShoot" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Defense" syncable="YES"/>
         <relationship name="defensesAbleToCross" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Defense" syncable="YES"/>
         <relationship name="draftBoard" maxCount="1" deletionRule="Nullify" destinationEntity="DraftBoard" inverseName="teams" inverseEntity="DraftBoard" syncable="YES"/>
         <relationship name="regionalPerformances" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="TeamRegionalPerformance" inverseName="team" inverseEntity="TeamRegionalPerformance" syncable="YES"/>
@@ -98,7 +96,7 @@
         <element name="Match" positionX="-108" positionY="502" width="128" height="253"/>
         <element name="Regional" positionX="-281" positionY="162" width="128" height="105"/>
         <element name="Shot" positionX="198" positionY="278" width="128" height="120"/>
-        <element name="Team" positionX="-92" positionY="-99" width="128" height="270"/>
+        <element name="Team" positionX="-92" positionY="-99" width="128" height="240"/>
         <element name="TeamMatchPerformance" positionX="-99" positionY="267" width="128" height="195"/>
         <element name="TeamRegionalPerformance" positionX="-92" positionY="144" width="128" height="90"/>
         <element name="TimeMarker" positionX="180" positionY="521" width="126" height="88"/>
