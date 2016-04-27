@@ -297,7 +297,19 @@ class StandsScoutingViewController: UIViewController, ProvidesTeam {
 	}
 
 	@IBAction func gotBallPressed(sender: UIButton) {
-		dataManager.addTimeMarker(withEvent: TeamDataManager.TimeMarkerEventType.BallPickedUp, atTime: stopwatch.elapsedTime, inMatchPerformance: matchPerformance!)
+		let pickUpTime = stopwatch.elapsedTime
+		let locationSelector = UIAlertController(title: "Select Pickup Location", message: "Select where the ball was retrieved from.", preferredStyle: .ActionSheet)
+		locationSelector.popoverPresentationController?.sourceView = sender
+		locationSelector.addAction(UIAlertAction(title: "Offense Courtyard", style: .Default) {_ in
+			self.dataManager.addTimeMarker(withEvent: TeamDataManager.TimeMarkerEventType.BallPickedUpFromOffense, atTime: pickUpTime, inMatchPerformance: self.matchPerformance!)
+			})
+		locationSelector.addAction(UIAlertAction(title: "Neutral Zone", style: .Default) {_ in
+			self.dataManager.addTimeMarker(withEvent: TeamDataManager.TimeMarkerEventType.BallPickedUpFromNeutral, atTime: pickUpTime, inMatchPerformance: self.matchPerformance!)
+			})
+		locationSelector.addAction(UIAlertAction(title: "Defense Courtyard", style: .Default) {_ in
+			self.dataManager.addTimeMarker(withEvent: TeamDataManager.TimeMarkerEventType.BallPickedUpFromDefense, atTime: pickUpTime, inMatchPerformance: self.matchPerformance!)
+			})
+		presentViewController(locationSelector, animated: true, completion: nil)
 	}
 	
 	//FINAL TOWER VIEW

@@ -31,7 +31,7 @@ class AdminConfigureVC: UIViewController, UITableViewDelegate, UITableViewDataSo
 		matchTitleLabel.text = "Regional \(newValue!.regionalNumber!)"
 		(detailViewController as! AdminConfigureDetailRegionalViewController).didSelectRegional(newValue!)
 		if let regional = selectedRegional {
-			tableView.reloadRowsAtIndexPaths([NSIndexPath.init(forRow: regionals.indexOf(regional)!, inSection: 0)], withRowAnimation: .Fade)
+			tableView.reloadRowsAtIndexPaths([NSIndexPath.init(forRow: regionals.indexOf(regional) ?? 0, inSection: 0)], withRowAnimation: .Fade)
 		}
 		}
 	}
@@ -60,10 +60,7 @@ class AdminConfigureVC: UIViewController, UITableViewDelegate, UITableViewDataSo
         //Set the detail view to what is being edited
         switch configureSetting! {
         case .Matches:
-            containerViewController!.presentMatchDetailView()
-        case .Statistics:
-            containerViewController!.presentStatDetailView()
-		case .Regionals:
+            containerViewController!.presentMatchDetailView()case .Regionals:
 			containerViewController!.presentRegionalDetailView()
         default:
             break
@@ -75,7 +72,6 @@ class AdminConfigureVC: UIViewController, UITableViewDelegate, UITableViewDataSo
     
     enum CofigureSetting {
         case Matches
-        case Statistics
 		case Regionals
         case Unknown
         
@@ -83,8 +79,6 @@ class AdminConfigureVC: UIViewController, UITableViewDelegate, UITableViewDataSo
             switch self {
             case .Matches:
                 return "Matches"
-            case .Statistics:
-                return "Statistics"
 			case .Regionals:
 				return "Regionals"
             case .Unknown:
@@ -106,8 +100,6 @@ class AdminConfigureVC: UIViewController, UITableViewDelegate, UITableViewDataSo
 		switch configureSetting! {
 		case .Matches:
 			return (regionals.count)
-		case .Statistics:
-			fallthrough
 		case .Regionals:
 			return 1
 		default:
@@ -119,8 +111,6 @@ class AdminConfigureVC: UIViewController, UITableViewDelegate, UITableViewDataSo
         switch configureSetting! {
         case .Matches:
             return regionalsAndMatches[section].count + 1
-        case .Statistics:
-            return 0
 		case .Regionals:
 			return regionals.count + 1
         default:
@@ -139,8 +129,6 @@ class AdminConfigureVC: UIViewController, UITableViewDelegate, UITableViewDataSo
             } else {
                 return tableView.dequeueReusableCellWithIdentifier("plusCell")!
             }
-        case .Statistics:
-            return UITableViewCell()
 		case .Regionals:
 			if regionals.count != indexPath.row {
 				let cell = tableView.dequeueReusableCellWithIdentifier("cell")
@@ -157,46 +145,35 @@ class AdminConfigureVC: UIViewController, UITableViewDelegate, UITableViewDataSo
     func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
         switch configureSetting! {
         case .Matches:
-			//First check if the view can change
-			if (detailViewController as! AdminConfigureDetailMatchVC).allowsChange {
-				
-				if regionalsAndMatches[indexPath.section].count != indexPath.row /*The row selected is not the last row*/{
-					selectedMatch = regionalsAndMatches[indexPath.section][indexPath.row]
-				} else /*The row selected is the last row with the plus button*/{
-					tableView.beginUpdates()
-					//Create a new match
-					do {
-						var previousNumber = 0
-						if let previousMatch = regionalsAndMatches[indexPath.section].last {
-							previousNumber = Int((previousMatch.matchNumber?.intValue)!)
-						}
-						let newMatch = try dataManager.createNewMatch(previousNumber + 1, inRegional: regionals[indexPath.section])
-						regionalsAndMatches[indexPath.section].append(newMatch)
-						//Insert new match's cell into table view
-						tableView.insertRowsAtIndexPaths([NSIndexPath.init(forRow: previousNumber, inSection: indexPath.section)], withRowAnimation: .Middle)
-					} catch {
-						//Present Alert saying unable to create new match
-						let alert = UIAlertController(title: "Unable to Create New Match", message: "Contact the system administrator to have this diagnosed", preferredStyle: .Alert)
-						alert.addAction(UIAlertAction(title: "OK", style: .Default, handler: nil))
-						presentViewController(alert, animated: true, completion: nil)
+			if regionalsAndMatches[indexPath.section].count != indexPath.row /*The row selected is not the last row*/{
+				selectedMatch = regionalsAndMatches[indexPath.section][indexPath.row]
+			} else /*The row selected is the last row with the plus button*/{
+				tableView.beginUpdates()
+				//Create a new match
+				do {
+					var previousNumber = 0
+					if let previousMatch = regionalsAndMatches[indexPath.section].last {
+						previousNumber = Int((previousMatch.matchNumber?.intValue)!)
 					}
-					
-					//Deselct the plus row
-					tableView.deselectRowAtIndexPath(indexPath, animated: true)
-					tableView.endUpdates()
-					
-					//Select the new match row
-					tableView.selectRowAtIndexPath(NSIndexPath(forRow: indexPath.row, inSection: 0), animated: true, scrollPosition: .Bottom)
-					self.tableView(tableView, didSelectRowAtIndexPath: indexPath)
+					let newMatch = try dataManager.createNewMatch(previousNumber + 1, inRegional: regionals[indexPath.section])
+					regionalsAndMatches[indexPath.section].append(newMatch)
+					//Insert new match's cell into table view
+					tableView.insertRowsAtIndexPaths([NSIndexPath.init(forRow: previousNumber, inSection: indexPath.section)], withRowAnimation: .Middle)
+				} catch {
+					//Present Alert saying unable to create new match
+					let alert = UIAlertController(title: "Unable to Create New Match", message: "Contact the system administrator to have this diagnosed", preferredStyle: .Alert)
+					alert.addAction(UIAlertAction(title: "OK", style: .Default, handler: nil))
+					presentViewController(alert, animated: true, completion: nil)
 				}
-			} else {
+				
+				//Deselct the plus row
 				tableView.deselectRowAtIndexPath(indexPath, animated: true)
-				let alert = UIAlertController(title: "Slow Down There, Hare", message: "Make sure you finish setting non-optional match settings (like defenses) before moving on.", preferredStyle: .Alert)
-				alert.addAction(UIAlertAction(title: "Alright, Mother", style: .Default, handler: nil))
-				presentViewController(alert, animated: true, completion: nil)
+				tableView.endUpdates()
+				
+				//Select the new match row
+				tableView.selectRowAtIndexPath(NSIndexPath(forRow: indexPath.row, inSection: 0), animated: true, scrollPosition: .Bottom)
+				self.tableView(tableView, didSelectRowAtIndexPath: indexPath)
 			}
-        case .Statistics:
-            fallthrough
 		case .Regionals:
 			if regionals.count != indexPath.row {
 				selectedRegional = regionals[indexPath.row]
@@ -237,8 +214,6 @@ class AdminConfigureVC: UIViewController, UITableViewDelegate, UITableViewDataSo
 			} else {
 				return false
 			}
-		case .Statistics:
-			fallthrough
 		case .Regionals:
 			if regionals.count - 1 == indexPath.row {
 				return true

@@ -197,6 +197,10 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 			}
 		}
 	}
+	
+	func presentViewControllerOnTop(viewControllerToPresent: UIViewController, animated flag: Bool, completion: (() -> Void)? = nil) {
+		window?.rootViewController?.presentViewControllerFromVisibleViewController(viewControllerToPresent, animated: flag, completion: completion)
+	}
 
     // MARK: - Core Data stack
 

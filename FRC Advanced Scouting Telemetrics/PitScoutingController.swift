@@ -215,15 +215,15 @@ class PitScoutingController: UIViewController, UIImagePickerControllerDelegate, 
 	}
     
     @IBAction func frontPhotoPressed(sender: UIButton) {
-        getPhoto(.Front)
+        getPhoto(.Front, sender: sender)
     }
     
     @IBAction func sidePhotoPressed(sender: UIButton) {
-        getPhoto(.Side)
+		getPhoto(.Side, sender: sender)
     }
     
     func imagePickerController(picker: UIImagePickerController, didFinishPickingImage image: UIImage, editingInfo: [String : AnyObject]?) {
-        //Dismiss the Cam view
+        //Dismiss the camera view
         dismissViewControllerAnimated(true, completion: nil)
         
         //Create and post notification of image selected with userInfo of the image
@@ -232,31 +232,57 @@ class PitScoutingController: UIViewController, UIImagePickerControllerDelegate, 
         notificationCenter.postNotification(notification)
     }
     
-    func getPhoto(frontOrSide: imagePOV) {
+	func getPhoto(frontOrSide: imagePOV, sender: UIView!) {
         //Check to make sure there is a camera
-        if UIImagePickerController.isSourceTypeAvailable(.Camera) {
-            //Ask fro permission
+        if UIImagePickerController.isSourceTypeAvailable(.Camera) || UIImagePickerController.isSourceTypeAvailable(.PhotoLibrary) {
+            //Ask for permission
             let authStatus = AVCaptureDevice.authorizationStatusForMediaType(AVMediaTypeVideo)
             if  authStatus != .Authorized && authStatus == .NotDetermined {
-                AVCaptureDevice.requestAccessForMediaType(AVMediaTypeVideo, completionHandler: nil)
-            } else if authStatus == .Denied {
-                presentOkAlert("You Have Denied Acces to the Camera", message: "Go to Settings> Privacy> Camera> FAST and turn it on.")
-            } else if authStatus == .Authorized {
-                //Set up the camera view and present it
-                imageController.delegate = self
-                imageController.sourceType = .Camera
-                presentViewController(imageController, animated: true, completion: nil)
-                
-                //Add observer for the new image notification
-                observer = notificationCenter.addObserverForName("newImage", object: self, queue: nil, usingBlock: {(notification: NSNotification) in self.setPhoto(frontOrSide, image: ((notification.userInfo!) as! [String: UIImage])["image"]!)})
+				AVCaptureDevice.requestAccessForMediaType(AVMediaTypeVideo, completionHandler: nil)
+			} else if authStatus == .Denied {
+				presentOkAlert("You Have Denied Acces to the Camera", message: "Go to Settings> Privacy> Camera> FAST and turn it on.")
+			} else if authStatus == .Authorized {
+				//Set up the camera view and present it
+				imageController.delegate = self
+				imageController.allowsEditing = true
+				
+				//Figure out which source to use
+				if !UIImagePickerController.isSourceTypeAvailable(.Camera) {
+					presentImageController(imageController, withSource: .Camera, forFrontOrSide: frontOrSide, sender: sender)
+				} else {
+					let sourceSelector = UIAlertController(title: nil, message: nil, preferredStyle: .ActionSheet)
+					sourceSelector.addAction(UIAlertAction(title: "Camera", style: .Default) {_ in
+						self.presentImageController(self.imageController, withSource: .Camera, forFrontOrSide: frontOrSide, sender: sender)
+						})
+					sourceSelector.addAction(UIAlertAction(title: "Photo Library", style: .Default) {_ in
+						self.presentImageController(self.imageController, withSource: .PhotoLibrary, forFrontOrSide: frontOrSide, sender: sender)
+						})
+					sourceSelector.popoverPresentationController?.sourceView = sender
+					presentViewController(sourceSelector, animated: true, completion: nil)
+				}
             } else {
-                
+				
             }
         } else {
             presentOkAlert("No Camera", message: "The device you are using does not have image taking abilities.")
         }
     }
-    
+	
+	func presentImageController(controller: UIImagePickerController, withSource source: UIImagePickerControllerSourceType, forFrontOrSide frontOrSide: imagePOV, sender: UIView!) {
+		controller.sourceType = source
+		
+		if source == .Camera {
+			imageController.modalPresentationStyle = .FullScreen
+		} else {
+			imageController.modalPresentationStyle = .Popover
+			imageController.popoverPresentationController?.sourceView = sender
+		}
+		presentViewController(controller, animated: true, completion: nil)
+		
+		//Add observer for the new image notification
+		observer = notificationCenter.addObserverForName("newImage", object: self, queue: nil, usingBlock: {(notification: NSNotification) in self.setPhoto(frontOrSide, image: ((notification.userInfo!) as! [String: UIImage])["image"]!)})
+	}
+	
     func setPhoto(frontOrSide: imagePOV, image: UIImage) {
         
         switch frontOrSide {

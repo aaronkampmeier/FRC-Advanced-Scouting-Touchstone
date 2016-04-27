@@ -162,16 +162,24 @@ class CourtyardViewController: UIViewController, UITableViewDataSource, UITableV
 	func popoverPresentationControllerDidDismissPopover(popoverPresentationController: UIPopoverPresentationController) {
 		if finishedEditingShot {
 			//Update the dot (rect) on the screen and save a time marker
-			var markerType: TeamDataManager.TimeMarkerEventType
 			
 			if selectedShot!.shot?.blocked == true {
 				selectedShot?.pointView.backgroundColor = UIColor.redColor()
 			} else {
 				selectedShot?.pointView.backgroundColor = UIColor.greenColor()
 			}
-			markerType = TeamDataManager.TimeMarkerEventType.AttemptedShot
 			
-			dataManager.addTimeMarker(withEvent: markerType, atTime: (standsScoutingVC?.stopwatch.elapsedTime)!, inMatchPerformance: (standsScoutingVC?.matchPerformance)!)
+			if let highGoal = selectedShot?.shot?.highGoal?.boolValue {
+				if highGoal && selectedShot!.shot?.blocked == true {
+					dataManager.addTimeMarker(withEvent: TeamDataManager.TimeMarkerEventType.FailedHighShot, atTime: standsScoutingVC!.stopwatch.elapsedTime, inMatchPerformance: standsScoutingVC!.matchPerformance!)
+				} else if highGoal && selectedShot!.shot?.blocked == false {
+					dataManager.addTimeMarker(withEvent: TeamDataManager.TimeMarkerEventType.SuccessfulHighShot, atTime: standsScoutingVC!.stopwatch.elapsedTime, inMatchPerformance: standsScoutingVC!.matchPerformance!)
+				} else if !highGoal && selectedShot!.shot?.blocked == true {
+					dataManager.addTimeMarker(withEvent: TeamDataManager.TimeMarkerEventType.FailedLowShot, atTime: standsScoutingVC!.stopwatch.elapsedTime, inMatchPerformance: standsScoutingVC!.matchPerformance!)
+				} else if !highGoal && selectedShot!.shot?.blocked == false {
+					dataManager.addTimeMarker(withEvent: TeamDataManager.TimeMarkerEventType.SuccessfulLowShot, atTime: standsScoutingVC!.stopwatch.elapsedTime, inMatchPerformance: standsScoutingVC!.matchPerformance!)
+				}
+			}
 		} else {
 			dataManager.remove(selectedShot!.shot!)
 			selectedShot?.pointView.removeFromSuperview()

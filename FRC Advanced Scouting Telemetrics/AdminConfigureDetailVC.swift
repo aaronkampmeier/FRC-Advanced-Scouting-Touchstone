@@ -29,10 +29,6 @@ class AdminConfigureDetailVC: UIViewController {
     func presentMatchDetailView() {
         performSegueWithIdentifier("configureMatchDetailSegue", sender: nil)
     }
-    
-    func presentStatDetailView() {
-        performSegueWithIdentifier("configureStatDetailSegue", sender: nil)
-    }
 	
 	func presentRegionalDetailView() {
 		performSegueWithIdentifier("configureRegionalDetailSegue", sender: nil)
@@ -41,7 +37,7 @@ class AdminConfigureDetailVC: UIViewController {
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
         super.prepareForSegue(segue, sender: sender)
         
-        if segue.identifier == "configureMatchDetailSegue" || segue.identifier == "configureStatDetailSegue" || segue.identifier == "configureRegionalDetailSegue" {
+        if segue.identifier == "configureMatchDetailSegue" || segue.identifier == "configureRegionalDetailSegue" {
             detailViewController = segue.destinationViewController
         }
     }
