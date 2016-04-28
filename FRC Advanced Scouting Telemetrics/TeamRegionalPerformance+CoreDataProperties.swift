@@ -16,6 +16,6 @@ extension TeamRegionalPerformance {
 
     @NSManaged var team: Team?
     @NSManaged var matchPerformances: NSSet?
-    @NSManaged var regional: Regional?
+	@NSManaged var regional: Regional?
 
 }

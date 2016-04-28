@@ -114,7 +114,7 @@ class DataSyncer: NSObject, CDEPersistentStoreEnsembleDelegate {
 	}
 	
 	func attemptToFixDeelechError() {
-		
+		DataSyncer.begin()
 	}
 	
 	//MARK: Ensemble Delegate
@@ -133,11 +133,30 @@ class DataSyncer: NSObject, CDEPersistentStoreEnsembleDelegate {
 	
 	func persistentStoreEnsemble(ensemble: CDEPersistentStoreEnsemble!, didFailToSaveMergedChangesInManagedObjectContext savingContext: NSManagedObjectContext!, error: NSError!, reparationManagedObjectContext reparationContext: NSManagedObjectContext!) -> Bool {
 		CLSNSLogv("Ensemble did fail to save merged changes. Error: %d", getVaList([error]))
-		let alert = UIAlertController(title: "Save Failed", message: "The save and sync failed. Ask your admin for help wiith this issue.", preferredStyle: .Alert)
+		let alert = UIAlertController(title: "Save Failed", message: "The save and sync failed. Ask your admin for help wiith this issue. Attempting to fix...", preferredStyle: .Alert)
 		alert.addAction(UIAlertAction(title: "OK", style: .Default, handler: nil))
 		(UIApplication.sharedApplication().delegate as! AppDelegate).presentViewControllerOnTop(alert, animated: true)
+		
+//		savingContext.performBlockAndWait() {
+//			for object in savingContext.updatedObjects {
+//				switch object {
+//				case is Match:
+//					var defenses = object.valueForKey("redDefenses")
+//					do {
+//						try object.validateValue(&defenses, forKey: "redDefenses")
+//					} catch {
+//						reparationContext.performBlockAndWait() {
+//							reparationContext.objectWithID(object.objectID).setValue(nil, forKey: "redDefenses")
+//						}
+//					}
+//				default:
+//					break
+//				}
+//			}
+//		}
+		
 		Crashlytics.sharedInstance().recordError(error)
-		return false
+		return true
 	}
 	
 	func persistentStoreEnsemble(ensemble: CDEPersistentStoreEnsemble!, didSaveMergeChangesWithNotification notification: NSNotification!) {
@@ -153,7 +172,7 @@ class DataSyncer: NSObject, CDEPersistentStoreEnsembleDelegate {
 	
 	func persistentStoreEnsemble(ensemble: CDEPersistentStoreEnsemble!, didDeleechWithError error: NSError!) {
 		let alert = UIAlertController(title: "Sync Error: Deleech", message: "There was an internal data integrity error which forced your app to disconnect from the shared cloud of data. Ask your admin for help with fixing this.", preferredStyle: .Alert)
-//		alert.addAction(UIAlertAction(title: "Attempt to Fix", style: .Default, handler: {_ in self.attemptToFixDeelechError()}))
+		alert.addAction(UIAlertAction(title: "Attempt to Fix", style: .Default, handler: {_ in self.attemptToFixDeelechError()}))
 		alert.addAction(UIAlertAction(title: "OK", style: .Default, handler: nil))
 		(UIApplication.sharedApplication().delegate as! AppDelegate).presentViewControllerOnTop(alert, animated: true)
 		
@@ -183,10 +202,6 @@ class DataSyncer: NSObject, CDEPersistentStoreEnsembleDelegate {
 				globalIdentifiers.append("MatchPerformance:\(object.valueForKey("regionalPerformance")!.valueForKey("team")!.valueForKey("teamNumber")!):\(object.valueForKey("regionalPerformance")!.valueForKey("regional")!.valueForKey("regionalNumber")!):\(object.valueForKey("match")!.valueForKey("matchNumber")!)")
 			case is AutonomousCycle:
 				globalIdentifiers.append("\(NSUUID().UUIDString)")
-				
-//				let matchPerformance = object.valueForKey("matchPerformance")!
-//				let matchPerformanceID = "\(matchPerformance.valueForKey("regionalPerformance")!.valueForKey("team")!.valueForKey("teamNumber")!):\(matchPerformance.valueForKey("regionalPerformance")!.valueForKey("regional")!.valueForKey("regionalNumber")!):\(matchPerformance.valueForKey("match")!.valueForKey("matchNumber")!)"
-//				globalIdentifiers.append("AutonomousCycle:\(matchPerformanceID)")
 			case is Shot:
 				//Use a unique identifier for the shots because two inserted seperately will never be logically equivalent
 				globalIdentifiers.append("\(NSUUID().UUIDString)")

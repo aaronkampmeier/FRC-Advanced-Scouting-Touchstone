@@ -87,8 +87,6 @@ enum StatCalculation: CustomStringConvertible {
 	case ShotAccuracy([TeamMatchPerformance], TeamDataManager.ShotGoal)
 	case AverageTimeInZone([TeamMatchPerformance], GameFieldZone)
 	case TotalPoints([TeamMatchPerformance])
-	
-	//New ones
 	case VisionTracking([Team])
 	case Height([Team])
 	case Weight([Team])
@@ -106,6 +104,11 @@ enum StatCalculation: CustomStringConvertible {
 	case OPR(TeamRegionalPerformance)
 	case DPR(TeamRegionalPerformance)
 	case CCWM(TeamRegionalPerformance)
+	
+	//Newbs
+	case LowGoalAccuracy([TeamMatchPerformance])
+	case HighGoalAccuracy([TeamMatchPerformance])
+	case AutonomousPoints([TeamMatchPerformance])
 	
 	//Calculations for all the stat types
 	var value: Double {
@@ -359,6 +362,8 @@ enum StatCalculation: CustomStringConvertible {
 			return ccwmForTeam
 		case .DPR(let regionalPerformance):
 			return StatCalculation.OPR(regionalPerformance).value - StatCalculation.CCWM(regionalPerformance).value
+		default:
+			return 0
 		}
 	}
 	
@@ -438,6 +443,8 @@ enum StatCalculation: CustomStringConvertible {
 			return "DPR"
 		case .CCWM(_):
 			return "CCWM"
+		default:
+			return ""
 		}
 	}
 }

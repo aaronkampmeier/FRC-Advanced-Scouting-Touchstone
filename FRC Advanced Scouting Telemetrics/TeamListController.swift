@@ -338,7 +338,7 @@ class TeamListController: UIViewController, UITableViewDataSource, UITableViewDe
 			}
         }
 		
-		cell.rankLabel.text = "\(try! TeamDataManager().getDraftBoard().indexOf(teamCache.team)! as Int)"
+		cell.rankLabel.text = "\(try! TeamDataManager().getDraftBoard().indexOf(teamCache.team)! as Int + 1)"
         
         if let image = teamCache.team.frontImage {
 			cell.frontImage.image = UIImage(data: image)

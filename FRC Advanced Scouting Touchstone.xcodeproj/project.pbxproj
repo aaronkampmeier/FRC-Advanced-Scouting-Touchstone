@@ -126,6 +126,7 @@
 		1F21DF111C66942200C55D0E /* SortVC.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SortVC.swift; sourceTree = "<group>"; };
 		1F2422421C73DF08008A5AFC /* FRC_Advanced_Scouting_Telemetrics CD 7.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "FRC_Advanced_Scouting_Telemetrics CD 7.xcdatamodel"; sourceTree = "<group>"; };
 		1F34C74B1CD1A85B005255D5 /* FRC_Advanced_Scouting_Telemetrics Version 11.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "FRC_Advanced_Scouting_Telemetrics Version 11.xcdatamodel"; sourceTree = "<group>"; };
+		1F34C74C1CD2540B005255D5 /* FRC_Advanced_Scouting_Telemetrics Version 12.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "FRC_Advanced_Scouting_Telemetrics Version 12.xcdatamodel"; sourceTree = "<group>"; };
 		1F45340D1C6FC3EA004EDDB9 /* GameStatsCollectionViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GameStatsCollectionViewCell.swift; sourceTree = "<group>"; };
 		1F45340F1C6FF916004EDDB9 /* StandsScoutingViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StandsScoutingViewController.swift; sourceTree = "<group>"; };
 		1F4534141C6FFC38004EDDB9 /* AutonomousViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AutonomousViewController.swift; sourceTree = "<group>"; };
@@ -1105,6 +1106,7 @@
 		1F78E7891C3B469300221927 /* FRC_Advanced_Scouting_Telemetrics.xcdatamodeld */ = {
 			isa = XCVersionGroup;
 			children = (
+				1F34C74C1CD2540B005255D5 /* FRC_Advanced_Scouting_Telemetrics Version 12.xcdatamodel */,
 				1F34C74B1CD1A85B005255D5 /* FRC_Advanced_Scouting_Telemetrics Version 11.xcdatamodel */,
 				1FDE568A1CCC915A009042CD /* FRC_Advanced_Scouting_Telemetrics Version 10.xcdatamodel */,
 				1F4F79E61CBF3FDF00239216 /* FRC_Advanced_Scouting_Telemetrics Version 9.xcdatamodel */,
@@ -1116,7 +1118,7 @@
 				1F0296661C5C6E42008CA8C2 /* FRC_Advanced_Scouting_Telemetrics CD 2.xcdatamodel */,
 				1F78E78A1C3B469300221927 /* FRC_Advanced_Scouting_Telemetrics.xcdatamodel */,
 			);
-			currentVersion = 1F34C74B1CD1A85B005255D5 /* FRC_Advanced_Scouting_Telemetrics Version 11.xcdatamodel */;
+			currentVersion = 1F34C74C1CD2540B005255D5 /* FRC_Advanced_Scouting_Telemetrics Version 12.xcdatamodel */;
 			path = FRC_Advanced_Scouting_Telemetrics.xcdatamodeld;
 			sourceTree = "<group>";
 			versionGroupType = wrapper.xcdatamodel;
