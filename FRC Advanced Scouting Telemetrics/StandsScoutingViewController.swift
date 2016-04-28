@@ -50,7 +50,7 @@ class StandsScoutingViewController: UIViewController, ProvidesTeam {
 	var isRunning = false {
 		willSet {
 		if newValue {
-			NSTimer.scheduledTimerWithTimeInterval(0.1, target: self, selector: "updateTimeLabel:", userInfo: nil, repeats: true)
+			NSTimer.scheduledTimerWithTimeInterval(0.1, target: self, selector: #selector(StandsScoutingViewController.updateTimeLabel(_:)), userInfo: nil, repeats: true)
 			stopwatch.start()
 			
 			//Reset previous data
@@ -86,7 +86,6 @@ class StandsScoutingViewController: UIViewController, ProvidesTeam {
 			//Go back to the initial screen
 			cycleFromViewController(currentVC!, toViewController: initialChild!)
 			segmentedControl.selectedSegmentIndex = 0
-			selectedNewPart(segmentedControl)
 			
 			//Ask for the final score if it lasted longer than 2:15
 			if stopwatch.elapsedTime >= 135 {

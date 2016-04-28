@@ -955,7 +955,7 @@
 					"-iquote",
 					"\"$CONFIGURATION_BUILD_DIR/SSZipArchive.framework/Headers\"",
 				);
-				OTHER_SWIFT_FLAGS = "$(inherited) \"-D\" \"COCOAPODS\" -DDEBUG";
+				OTHER_SWIFT_FLAGS = "$(inherited) \"-D\" \"COCOAPODS\"";
 				PRODUCT_BUNDLE_IDENTIFIER = "com.kampmeier.FRC-Advanced-Scouting-Touchstone";
 				PRODUCT_NAME = "FRC Advanced Scouting Touchstone";
 				PROVISIONING_PROFILE = "";
@@ -991,7 +991,7 @@
 					"-iquote",
 					"\"$CONFIGURATION_BUILD_DIR/SSZipArchive.framework/Headers\"",
 				);
-				OTHER_SWIFT_FLAGS = "$(inherited) \"-D\" \"COCOAPODS\" -DRELEASE";
+				OTHER_SWIFT_FLAGS = "$(inherited) \"-D\" \"COCOAPODS\"";
 				PRODUCT_BUNDLE_IDENTIFIER = "com.kampmeier.FRC-Advanced-Scouting-Touchstone";
 				PRODUCT_NAME = "FRC Advanced Scouting Touchstone";
 				PROVISIONING_PROFILE = "";
