@@ -8,11 +8,12 @@
 
 import UIKit
 import Crashlytics
+import NYTPhotoViewer
 
 class TeamListController: UIViewController, UITableViewDataSource, UITableViewDelegate, UISearchBarDelegate {
 	@IBOutlet weak var regionalSelectionButton: UIButton!
-    @IBOutlet weak var sideImageView: UIImageView!
-    @IBOutlet weak var frontImageView: UIImageView!
+	@IBOutlet weak var frontImageButton: UIButton!
+	@IBOutlet weak var sideImageButton: UIButton!
     @IBOutlet weak var searchBar: UISearchBar!
     @IBOutlet weak var segmentControl: UISegmentedControl!
     @IBOutlet weak var teamList: UITableView!
@@ -22,16 +23,31 @@ class TeamListController: UIViewController, UITableViewDataSource, UITableViewDe
     @IBOutlet weak var editTeamsButton: UIBarButtonItem!
     @IBOutlet weak var teamListToolbar: UIToolbar!
 	@IBOutlet weak var standsScoutingButton: UIBarButtonItem!
-	
+	@IBOutlet weak var segmentControl2: UISegmentedControl!
 	@IBOutlet weak var updateButton: UIBarButtonItem!
+	
+	var frontImage: TeamImagePhoto? {
+		didSet {
+			frontImageButton.setImage(frontImage?.image, forState: .Normal)
+		}
+	}
+	
+	var sideImage: TeamImagePhoto? {
+		didSet {
+			sideImageButton.setImage(sideImage?.image, forState: .Normal)
+		}
+	}
     
     let teamManager = TeamDataManager()
     var adjustsForToolbarInsets: UIEdgeInsets? = nil
+	//Child View COntrollers
 	var currentChildVC: UIViewController?
 	var gameStatsController: GameStatsController?
 	var shotChartController: ShotChartViewController?
 	var statsViewController: StatsVC?
 	var sortVC: SortVC!
+	var teamDetailVC: UIViewController?
+	var matchOverviewVC: MatchOverviewViewController?
     
 	var teams: [Team] {
 		get {
@@ -141,11 +157,11 @@ class TeamListController: UIViewController, UITableViewDataSource, UITableViewDe
 		gameStatsController?.selectedNewThing(teamRegionalPerformance)
 		
 		if teamRegionalPerformance != nil {
-			segmentControl.selectedSegmentIndex = 0
-			segmentChanged(segmentControl)
+			setSelectedSegment(0)
+			segmentSelected(0, sender: nil)
 		} else {
-			segmentControl.selectedSegmentIndex = -1
-			segmentChanged(segmentControl)
+			setSelectedSegment(-1)
+			segmentSelected(-1, sender: nil)
 		}
 		
 		if selectedRegional != nil && selectedTeamCache != nil {
@@ -161,8 +177,8 @@ class TeamListController: UIViewController, UITableViewDataSource, UITableViewDe
 	var selectedRegional: Regional? {
 		didSet {
 		isSorted = false
-		segmentControl.selectedSegmentIndex = -1
-		segmentChanged(segmentControl!)
+		setSelectedSegment(-1)
+		segmentSelected(-1, sender: nil)
 		if let regional = selectedRegional {
 			//Set to nil, because the selected team might not be in the new regional
 			selectedTeamCache = nil
@@ -201,7 +217,8 @@ class TeamListController: UIViewController, UITableViewDataSource, UITableViewDe
 			return nil
 		}
 	}
-    
+	
+	//MARK: ViewDidLoad
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -256,8 +273,14 @@ class TeamListController: UIViewController, UITableViewDataSource, UITableViewDe
 		gameStatsController = (storyboard?.instantiateViewControllerWithIdentifier("gameStatsCollection") as! GameStatsController)
 		shotChartController = (storyboard?.instantiateViewControllerWithIdentifier("shotChart") as! ShotChartViewController)
 		statsViewController = (storyboard?.instantiateViewControllerWithIdentifier("statsView") as! StatsVC)
+		teamDetailVC = storyboard?.instantiateViewControllerWithIdentifier("teamDetail")
+		matchOverviewVC = (storyboard?.instantiateViewControllerWithIdentifier("matchOverview") as! MatchOverviewViewController)
 		
 		sortVC = storyboard!.instantiateViewControllerWithIdentifier("statsSortView") as! SortVC
+		
+		//Set the images(buttons) content sizing property
+		frontImageButton.imageView?.contentMode = .ScaleAspectFit
+		sideImageButton.imageView?.contentMode = .ScaleAspectFit
     }
 	
 	override func viewWillAppear(animated: Bool) {
@@ -288,6 +311,8 @@ class TeamListController: UIViewController, UITableViewDataSource, UITableViewDe
 		isSorted = false
         selectedRegional = nil
     }
+	
+	//MARK: Table View
     
     func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
 		return currentTeamsToDisplay.count
@@ -338,14 +363,14 @@ class TeamListController: UIViewController, UITableViewDataSource, UITableViewDe
         
         //Populate the images, if there are images
         if let image = selectedTeamCache!.team.frontImage {
-            frontImageView.image = UIImage(data: image)
+			frontImage = TeamImagePhoto(image: UIImage(data: image), attributedCaptionTitle: NSAttributedString(string: "Team \(selectedTeamCache!.team.teamNumber!): Front Image"))
         } else {
-            frontImageView.image = nil
+			frontImage = nil
         }
         if let image = selectedTeamCache!.team.sideImage {
-            sideImageView.image = UIImage(data: image)
+			sideImage = TeamImagePhoto(image: UIImage(data: image), attributedCaptionTitle: NSAttributedString(string: "Team \(selectedTeamCache!.team.teamNumber!): Side Image"))
         } else {
-            sideImageView.image = nil
+            sideImage = nil
         }
     }
     
@@ -405,7 +430,8 @@ class TeamListController: UIViewController, UITableViewDataSource, UITableViewDe
         }
     }
     //
-    
+	
+	//MARK: Search Bar
     //Functions for the search bar delegate
     func searchBarTextDidBeginEditing(searchBar: UISearchBar) {
         //Set that we are searching
@@ -490,10 +516,6 @@ class TeamListController: UIViewController, UITableViewDataSource, UITableViewDe
 		} else if segue.identifier == "standsScouting" {
 			let destinationVC = segue.destinationViewController as! StandsScoutingViewController
 			destinationVC.teamPerformance = teamRegionalPerformance
-		} else if segue.identifier == "teamDetail" {
-			Answers.logCustomEventWithName("Showed Team Detail", customAttributes: ["Team Number":(selectedTeamCache?.team.teamNumber)!])
-			let destinationVC = (segue.destinationViewController as! UINavigationController).topViewController
-			setUpTeamDetailController(destinationVC!)
 		}
     }
 	
@@ -504,7 +526,8 @@ class TeamListController: UIViewController, UITableViewDataSource, UITableViewDe
 	@IBAction func returnToTeamList(segue: UIStoryboardSegue) {
 		
 	}
-    
+	
+	//MARK: Sorting
     @IBAction func sortPressed(sender: UIBarButtonItem) {
 		sortVC.statContext = currentTeamsToDisplay.first?.statContextCache.statContext
         sortVC.modalPresentationStyle = .Popover
@@ -556,10 +579,22 @@ class TeamListController: UIViewController, UITableViewDataSource, UITableViewDe
 		
 		Answers.logCustomEventWithName("Sort Team List", customAttributes: ["Stat":statName, "Ascending":ascending.hashValue])
     }
-    
+	
+	//MARK: Segmented Control
     //Functionality for the Segemented Control
     @IBAction func segmentChanged(sender: UISegmentedControl) {
-		switch sender.selectedSegmentIndex {
+		//Check which row control it is
+		if sender == segmentControl {
+			segmentControl2.selectedSegmentIndex = -1
+			segmentSelected(sender.selectedSegmentIndex, sender: sender)
+		} else if sender == segmentControl2 {
+			segmentControl.selectedSegmentIndex = -1
+			segmentSelected(sender.selectedSegmentIndex + 3, sender: sender)
+		}
+    }
+	
+	func segmentSelected(segment: Int, sender: UISegmentedControl?) {
+		switch segment {
 		case 0, -1:
 			//Check to see if the current view controller is the same as the game stats controller. If it is different, than switch to it.
 			if currentChildVC != gameStatsController {
@@ -568,7 +603,7 @@ class TeamListController: UIViewController, UITableViewDataSource, UITableViewDe
 		case 1:
 			if selectedRegional == nil {
 				//Haha, nope. You aren't in a regional
-				sender.selectedSegmentIndex = 0
+				setSelectedSegment(0)
 			} else {
 				//Check to see if the current view controller is the same as the shot chart controller. If it is different, than switch to it.
 				if currentChildVC != shotChartController {
@@ -578,7 +613,7 @@ class TeamListController: UIViewController, UITableViewDataSource, UITableViewDe
 				//Present Alert asking for the match the user would like to view
 				let alert = UIAlertController(title: "Select Match", message: "Select a match to see its shots.", preferredStyle: .Alert)
 				alert.addAction(UIAlertAction(title: "Overall", style: .Default, handler: {_ in self.shotChartController?.selectedMatchPerformance(nil)}))
-				let sortedMatchPerformances = (teamRegionalPerformance?.matchPerformances?.allObjects as! [TeamMatchPerformance]).sort() {$0.0.match?.matchNumber?.integerValue < $0.1.match?.matchNumber?.integerValue}
+				let sortedMatchPerformances = (teamRegionalPerformance?.matchPerformances?.allObjects as? [TeamMatchPerformance] ?? [TeamMatchPerformance]()).sort() {$0.0.match?.matchNumber?.integerValue < $0.1.match?.matchNumber?.integerValue}
 				for matchPerformance in sortedMatchPerformances {
 					alert.addAction(UIAlertAction(title: String(matchPerformance.match!.matchNumber!), style: .Default, handler: {_ in self.shotChartController!.selectedMatchPerformance(matchPerformance)}))
 				}
@@ -586,10 +621,28 @@ class TeamListController: UIViewController, UITableViewDataSource, UITableViewDe
 			}
 		case 2:
 			cycleFromViewController(currentChildVC!, toViewController: statsViewController!)
+		case 3:
+			setUpTeamDetailController(teamDetailVC!)
+			cycleFromViewController(currentChildVC!, toViewController: teamDetailVC!)
+		case 4:
+			cycleFromViewController(currentChildVC!, toViewController: matchOverviewVC!)
 		default:
 			break
 		}
-    }
+	}
+	
+	func setSelectedSegment(segment: Int) {
+		if segment == -1 {
+			segmentControl.selectedSegmentIndex = -1
+			segmentControl2.selectedSegmentIndex = -1
+		} else if segment <= 2 {
+			segmentControl.selectedSegmentIndex = segment
+			segmentControl2.selectedSegmentIndex = -1
+		} else {
+			segmentControl2.selectedSegmentIndex = segment - 3
+			segmentControl.selectedSegmentIndex = -1
+		}
+	}
 	
 	func didChooseRegional(regional: Regional?) {
 		selectedRegional = regional
@@ -615,19 +668,19 @@ class TeamListController: UIViewController, UITableViewDataSource, UITableViewDe
 		let detailsLabel = detailController.view.viewWithTag(2) as! UILabel
 		var detailString = ""
 		detailString.appendContentsOf("\nHeight: \((selectedTeamCache?.team.height) ?? 0)")
-		detailString.appendContentsOf("\nDrive Train: \(selectedTeamCache!.team.driveTrain ?? "")")
+		detailString.appendContentsOf("\nDrive Train: \(selectedTeamCache?.team.driveTrain ?? "")")
 		detailString.appendContentsOf("\nVision Tracking Rating: \(selectedTeamCache?.team.visionTrackingRating ?? 0)")
 		detailString.appendContentsOf("\nTurret: \(selectedTeamCache?.team.turret?.boolValue ?? false)")
 		detailString.appendContentsOf("\nAutonomous Defenses Able To Cross: ")
-		for defense in selectedTeamCache?.team.autonomousDefensesAbleToCross?.allObjects as! [Defense] {
+		for defense in selectedTeamCache?.team.autonomousDefensesAbleToCross?.allObjects as? [Defense] ?? [Defense]() {
 			detailString.appendContentsOf(", \(defense.defenseName!)")
 		}
 		detailString.appendContentsOf("\nAutonomous Defenses Able To Shoot From: ")
-		for defense in selectedTeamCache?.team.autonomousDefensesAbleToShoot?.allObjects as! [Defense] {
+		for defense in selectedTeamCache?.team.autonomousDefensesAbleToShoot?.allObjects as? [Defense] ?? [Defense]() {
 			detailString.appendContentsOf(", \(defense.defenseName!)")
 		}
 		detailString.appendContentsOf("\nDefenses Able To Cross: ")
-		for defense in selectedTeamCache?.team.defensesAbleToCross?.allObjects as! [Defense] {
+		for defense in selectedTeamCache?.team.defensesAbleToCross?.allObjects as? [Defense] ?? [Defense]() {
 			detailString.appendContentsOf(", \(defense.defenseName!)")
 		}
 		
@@ -641,6 +694,49 @@ class TeamListController: UIViewController, UITableViewDataSource, UITableViewDe
 		
 		notesView.delegate = self
 	}
+	
+	//MARK: Displaying full screen photos
+	@IBAction func selectedImage(sender: UIButton) {
+		let photo: NYTPhoto
+		var photosArray: [NYTPhoto] = []
+		switch sender {
+		case frontImageButton:
+			if let image = frontImage {
+				photo = image
+			} else {return}
+		case sideImageButton:
+			if let image = sideImage {
+				photo = image
+			} else {return}
+		default:
+			return
+		}
+		
+		if let image = frontImage {
+			photosArray.append(image)
+		}
+		if let image = sideImage {
+			photosArray.append(image)
+		}
+		
+		let photoVC = NYTPhotosViewController(photos: photosArray, initialPhoto: photo, delegate: self)
+		presentViewController(photoVC, animated: true, completion: nil)
+	}
+}
+
+class TeamImagePhoto: NSObject, NYTPhoto {
+	var image: UIImage?
+	var imageData: NSData?
+	var placeholderImage: UIImage?
+	var attributedCaptionTitle: NSAttributedString?
+	var attributedCaptionCredit: NSAttributedString?
+	var attributedCaptionSummary: NSAttributedString?
+	
+	init(image: UIImage?, imageData: NSData? = nil, attributedCaptionTitle: NSAttributedString) {
+		self.image = image
+		self.imageData = imageData
+		self.attributedCaptionTitle = attributedCaptionTitle
+	}
 }
 
 extension TeamListController: UITextViewDelegate {
@@ -653,6 +749,34 @@ extension TeamListController: UITextViewDelegate {
 extension TeamListController: UIPopoverPresentationControllerDelegate {
 	func popoverPresentationControllerDidDismissPopover(popoverPresentationController: UIPopoverPresentationController) {
 		sortList(withStat: sortVC.selectedStat, isAscending: sortVC.isAscending)
+	}
+}
+
+extension TeamListController: NYTPhotosViewControllerDelegate {
+	func photosViewController(photosViewController: NYTPhotosViewController, captionViewForPhoto photo: NYTPhoto) -> UIView? {
+		return nil
+	}
+	
+	func photosViewController(photosViewController: NYTPhotosViewController, referenceViewForPhoto photo: NYTPhoto) -> UIView? {
+		if let photo = photo as? TeamImagePhoto {
+			if photo == frontImage {
+				return frontImageButton
+			} else if photo == sideImage {
+				return sideImageButton
+			} else {
+				return nil
+			}
+		} else {
+			return nil
+		}
+	}
+	
+	func photosViewController(photosViewController: NYTPhotosViewController, titleForPhoto photo: NYTPhoto, atIndex photoIndex: UInt, totalPhotoCount: UInt) -> String? {
+		return nil
+	}
+	
+	func photosViewController(photosViewController: NYTPhotosViewController, maximumZoomScaleForPhoto photo: NYTPhoto) -> CGFloat {
+		return CGFloat(2)
 	}
 }
 

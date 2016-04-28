@@ -19,23 +19,6 @@ class AdminConfigureDetailMatchVC: UIViewController {
     let dataManager = TeamDataManager()
     var selectedMatch: Match?
 	
-	var allowsChange: Bool {
-		get {
-			if let override = nextAllowsChangeOverride {
-				nextAllowsChangeOverride = nil
-				return override
-			} else {
-				//Check to see if there are defenses selected, if there aren't then don't allow the view to change
-				return true
-			}
-		}
-		
-		set {
-			nextAllowsChangeOverride = newValue
-		}
-	}
-	var nextAllowsChangeOverride: Bool?
-	
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -138,7 +121,7 @@ class AdminConfigureDetailMatchVC: UIViewController {
 	
     func viewWillChange() {
         //Save the match's new data only if the view was shown and if the user was allowed to leave the scene
-        if !view.hidden && allowsChange {
+        if !view.hidden {
             //First, retrieve all the teams using the values in the text fields
             var blue1Team: Team? {
                 let teamArray = self.dataManager.getTeams(self.blue1Field.text!)

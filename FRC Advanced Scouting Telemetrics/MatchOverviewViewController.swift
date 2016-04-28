@@ -13,6 +13,17 @@ class MatchOverviewViewController: UIViewController, UITableViewDataSource {
 	
 	var teamListController: TeamListController!
 	var matchTimeMarkers: [[TeamDataManager.TimeMarkerEvent]] = Array<Array<TeamDataManager.TimeMarkerEvent>>()
+	var matchPerformances: [TeamMatchPerformance] = [] {
+		didSet {
+			matchTimeMarkers.removeAll()
+			for performance in matchPerformances {
+				matchTimeMarkers.append(dataManager.timeOverview(forMatchPerformance: performance))
+			}
+			matchOverviewTable.reloadData()
+		}
+	}
+	
+	let dataManager = TeamDataManager()
 	
 	enum MatchPerformance {
 		
@@ -23,28 +34,46 @@ class MatchOverviewViewController: UIViewController, UITableViewDataSource {
 
         // Do any additional setup after loading the view.
 		teamListController = parentViewController as! TeamListController
-		for performance in teamListController.teamRegionalPerformance?.matchPerformances ?? NSSet() {
-			
-		}
+		
 		
 		matchOverviewTable.dataSource = self
+		matchOverviewTable.contentInset = UIEdgeInsets(top: 0, left: 0, bottom: 44, right: 0)
+		matchOverviewTable.scrollIndicatorInsets = UIEdgeInsets(top: 0, left: 0, bottom: 44, right: 0)
     }
+	
+	override func viewWillAppear(animated: Bool) {
+		super.viewWillAppear(animated)
+		
+		matchPerformances = (teamListController.teamRegionalPerformance?.matchPerformances?.allObjects as? [TeamMatchPerformance] ?? []).sort() {
+			return $0.0.match!.matchNumber!.doubleValue < $0.1.match!.matchNumber!.doubleValue
+		}
+	}
 
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
     }
 	
+	func tableView(tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
+		let matchPerformance = matchPerformances[section]
+		let match = matchPerformance.match!
+		return "Match \(match.matchNumber!)"
+	}
+	
 	func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
 		return matchTimeMarkers[section].count
 	}
 	
 	func numberOfSectionsInTableView(tableView: UITableView) -> Int {
-		return teamListController.teamRegionalPerformance?.matchPerformances?.count ?? 0
+		return matchTimeMarkers.count
 	}
 	
 	func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
-		return UITableViewCell()
+		let cell = tableView.dequeueReusableCellWithIdentifier("cell")!
+		let timeMarkers = matchTimeMarkers[indexPath.section]
+		cell.textLabel?.text = "\(round(timeMarkers[indexPath.row].time*100)/100) sec"
+		cell.detailTextLabel?.text = timeMarkers[indexPath.row].type.description
+		return cell
 	}
 
     /*

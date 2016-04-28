@@ -150,7 +150,8 @@ class DataSyncer: NSObject, CDEPersistentStoreEnsembleDelegate {
 	}
 	
 	func persistentStoreEnsemble(ensemble: CDEPersistentStoreEnsemble!, didDeleechWithError error: NSError!) {
-		NSLog("Did deleech with error: \(error ?? nil)")
+		CLSNSLogv("Did deleech with error: %d", getVaList([error ?? nil]))
+		Crashlytics.sharedInstance().recordError(error)
 	}
 	
 	func persistentStoreEnsemble(ensemble: CDEPersistentStoreEnsemble!, globalIdentifiersForManagedObjects objects: [AnyObject]!) -> [AnyObject]! {
@@ -174,16 +175,18 @@ class DataSyncer: NSObject, CDEPersistentStoreEnsembleDelegate {
 			case is TeamMatchPerformance:
 				globalIdentifiers.append("MatchPerformance:\(object.valueForKey("regionalPerformance")!.valueForKey("team")!.valueForKey("teamNumber")!):\(object.valueForKey("regionalPerformance")!.valueForKey("regional")!.valueForKey("regionalNumber")!):\(object.valueForKey("match")!.valueForKey("matchNumber")!)")
 			case is AutonomousCycle:
-				let matchPerformance = object.valueForKey("matchPerformance")!
-				let matchPerformanceID = "\(matchPerformance.valueForKey("regionalPerformance")!.valueForKey("team")!.valueForKey("teamNumber")!):\(matchPerformance.valueForKey("regionalPerformance")!.valueForKey("regional")!.valueForKey("regionalNumber")!):\(matchPerformance.valueForKey("match")!.valueForKey("matchNumber")!)"
-				globalIdentifiers.append("AutonomousCycle:\(matchPerformanceID)")
+				globalIdentifiers.append("\(NSUUID().UUIDString)")
+				
+//				let matchPerformance = object.valueForKey("matchPerformance")!
+//				let matchPerformanceID = "\(matchPerformance.valueForKey("regionalPerformance")!.valueForKey("team")!.valueForKey("teamNumber")!):\(matchPerformance.valueForKey("regionalPerformance")!.valueForKey("regional")!.valueForKey("regionalNumber")!):\(matchPerformance.valueForKey("match")!.valueForKey("matchNumber")!)"
+//				globalIdentifiers.append("AutonomousCycle:\(matchPerformanceID)")
 			case is Shot:
 				//Use a unique identifier for the shots because two inserted seperately will never be logically equivalent
-				globalIdentifiers.append(NSUUID().UUIDString)
+				globalIdentifiers.append("\(NSUUID().UUIDString)")
 			case is DefenseCrossTime:
-				globalIdentifiers.append(NSUUID().UUIDString)
+				globalIdentifiers.append("\(NSUUID().UUIDString)")
 			case is TimeMarker:
-				globalIdentifiers.append(NSUUID().UUIDString)
+				globalIdentifiers.append("\(NSUUID().UUIDString)")
 			default:
 				globalIdentifiers.append(NSNull())
 			}

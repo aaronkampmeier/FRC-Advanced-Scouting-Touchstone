@@ -86,10 +86,14 @@ strip_invalid_archs() {
 if [[ "$CONFIGURATION" == "Debug" ]]; then
   install_framework "Pods/Alamofire.framework"
   install_framework "Pods/Ensembles.framework"
+  install_framework "Pods/FLAnimatedImage.framework"
+  install_framework "Pods/NYTPhotoViewer.framework"
   install_framework "Pods/SSZipArchive.framework"
 fi
 if [[ "$CONFIGURATION" == "Release" ]]; then
   install_framework "Pods/Alamofire.framework"
   install_framework "Pods/Ensembles.framework"
+  install_framework "Pods/FLAnimatedImage.framework"
+  install_framework "Pods/NYTPhotoViewer.framework"
   install_framework "Pods/SSZipArchive.framework"
 fi

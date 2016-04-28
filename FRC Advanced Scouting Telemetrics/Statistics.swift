@@ -259,7 +259,7 @@ enum StatCalculation: CustomStringConvertible {
 				var shotBeforeAt: NSTimeInterval?
 				var hasCrossedDefenseSinceLastTime = false
 				for event in timeOverview {
-					if event.type == .AttemptedShot {
+					if event.type == .AttemptedShot || event.type == .SuccessfulHighShot || event.type == .SuccessfulLowShot {
 						if let previousShotTime = shotBeforeAt {
 							if hasCrossedDefenseSinceLastTime {
 								cycleTimes.append(event.time - previousShotTime)

@@ -14,6 +14,21 @@
 			<key>isShown</key>
 			<false/>
 		</dict>
+		<key>FLAnimatedImage.xcscheme</key>
+		<dict>
+			<key>isShown</key>
+			<false/>
+		</dict>
+		<key>NYTPhotoViewer-NYTPhotoViewer.xcscheme</key>
+		<dict>
+			<key>isShown</key>
+			<false/>
+		</dict>
+		<key>NYTPhotoViewer.xcscheme</key>
+		<dict>
+			<key>isShown</key>
+			<false/>
+		</dict>
 		<key>Pods.xcscheme</key>
 		<dict>
 			<key>isShown</key>
@@ -52,12 +67,17 @@
 			<key>primary</key>
 			<true/>
 		</dict>
-		<key>8925D59D16C9C324D1232A11411C07F0</key>
+		<key>892C878329AA994A9E191CEE3B46E87F</key>
 		<dict>
 			<key>primary</key>
 			<true/>
 		</dict>
-		<key>892C878329AA994A9E191CEE3B46E87F</key>
+		<key>C3E9899D0CDE721D520110A605893510</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>FE113CEF81C16AA59EC049ACE130BCB2</key>
 		<dict>
 			<key>primary</key>
 			<true/>

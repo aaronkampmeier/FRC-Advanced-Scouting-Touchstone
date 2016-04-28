@@ -779,7 +779,7 @@ class TeamDataManager {
 		newMarker.teamMatchPerformance = matchPerformance
 	}
 	
-	enum TimeMarkerEventType: Int {
+	enum TimeMarkerEventType: Int, CustomStringConvertible {
 		case BallPickedUp
 		case AttemptedShot
 		case MovedToOffenseCourtyard
@@ -788,6 +788,51 @@ class TeamDataManager {
 		case MovedToNeutral
 		case Contact
 		case ContactDisruptingShot
+		case BallPickedUpFromDefense
+		case BallPickedUpFromNeutral
+		case BallPickedUpFromOffense
+		case SuccessfulHighShot
+		case FailedHighShot
+		case SuccessfulLowShot
+		case FailedLowShot
+		case Error
+		
+		var description: String {
+			switch self {
+			case .BallPickedUp:
+				return "Ball Picked Up"
+			case .AttemptedShot:
+				return "Attempted Shot"
+			case .MovedToOffenseCourtyard:
+				return "Moved to Offense Courtyard"
+			case .MovedToDefenseCourtyard:
+				return "Moved to Defense Courtyard"
+			case .CrossedDefense:
+				return "Crossed Defense"
+			case .MovedToNeutral:
+				return "Moved to Neutral Zone"
+			case .Contact:
+				return "Contact"
+			case .ContactDisruptingShot:
+				return "Contact Disrupting Shot"
+			case .BallPickedUpFromDefense:
+				return "Ball Picked Up From Defense Courtyard"
+			case .BallPickedUpFromNeutral:
+				return "Ball Picked Up From Neutral Zone"
+			case .BallPickedUpFromOffense:
+				return "Ball Picked Up From Offense Courtyard"
+			case .SuccessfulHighShot:
+				return "Successful High Goal Shot"
+			case .FailedHighShot:
+				return "Failed High Goal Shot"
+			case .SuccessfulLowShot:
+				return "Successful Low Goal Shot"
+			case .FailedLowShot:
+				return "Failed Low Goal Shot"
+			case .Error:
+				return "Error: Unknown Time Marker"
+			}
+		}
 	}
 	
 	struct TimeMarkerEvent {

@@ -51,6 +51,7 @@
 		1F78E7901C3B469300221927 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 1F78E78E1C3B469300221927 /* LaunchScreen.storyboard */; };
 		1F78E79B1C3B469300221927 /* FRC_Advanced_Scouting_TelemetricsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F78E79A1C3B469300221927 /* FRC_Advanced_Scouting_TelemetricsTests.swift */; };
 		1F78E7A61C3B469300221927 /* FRC_Advanced_Scouting_TelemetricsUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F78E7A51C3B469300221927 /* FRC_Advanced_Scouting_TelemetricsUITests.swift */; };
+		1F9B78271CD07F5700B4E5AE /* opencv2.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1FDE56921CCD376B009042CD /* opencv2.framework */; };
 		1FB99DB31C741840004BC2C1 /* AdminConfigureDetailRegionalViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FB99DB21C741840004BC2C1 /* AdminConfigureDetailRegionalViewController.swift */; };
 		1FBB426D1C9A29FC0017E36C /* Statistics.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FBB426C1C9A29FC0017E36C /* Statistics.swift */; };
 		1FBC9E691CC2EE11005DB3F4 /* Fabric.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1FBC9E671CC2EE11005DB3F4 /* Fabric.framework */; };
@@ -95,7 +96,6 @@
 		1FF32A211C6D194B00CD028C /* AdminConfigureVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FF32A201C6D194B00CD028C /* AdminConfigureVC.swift */; };
 		1FF32A231C6E7AAC00CD028C /* AdminConfigureDetailVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FF32A221C6E7AAC00CD028C /* AdminConfigureDetailVC.swift */; };
 		1FF32A281C6E990C00CD028C /* AdminConfigureDetailMatchVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FF32A271C6E990C00CD028C /* AdminConfigureDetailMatchVC.swift */; };
-		1FFF70B81CCD7B0A002BDC59 /* opencv2.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1FDE56921CCD376B009042CD /* opencv2.framework */; };
 		B57D6D43A840A163A005FE54 /* Pods.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1C713CB13EB7BA66AC808E54 /* Pods.framework */; };
 /* End PBXBuildFile section */
 
@@ -174,6 +174,7 @@
 		1F78E7A51C3B469300221927 /* FRC_Advanced_Scouting_TelemetricsUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FRC_Advanced_Scouting_TelemetricsUITests.swift; sourceTree = "<group>"; };
 		1F78E7A71C3B469300221927 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		1F9A53861C6AB0F000B0AAE3 /* FRC_Advanced_Scouting_Telemetrics CD 5.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "FRC_Advanced_Scouting_Telemetrics CD 5.xcdatamodel"; sourceTree = "<group>"; };
+		1F9B78241CD07C7000B4E5AE /* NYTPhotoViewer.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = NYTPhotoViewer.framework; path = "Pods/../build/Debug-iphoneos/NYTPhotoViewer.framework"; sourceTree = "<group>"; };
 		1FB99DB21C741840004BC2C1 /* AdminConfigureDetailRegionalViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AdminConfigureDetailRegionalViewController.swift; sourceTree = "<group>"; };
 		1FBB426C1C9A29FC0017E36C /* Statistics.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Statistics.swift; sourceTree = "<group>"; };
 		1FBC9E671CC2EE11005DB3F4 /* Fabric.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Fabric.framework; sourceTree = SOURCE_ROOT; };
@@ -232,7 +233,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				1FFF70B81CCD7B0A002BDC59 /* opencv2.framework in Frameworks */,
+				1F9B78271CD07F5700B4E5AE /* opencv2.framework in Frameworks */,
 				B57D6D43A840A163A005FE54 /* Pods.framework in Frameworks */,
 				1FBC9E6C1CC2F007005DB3F4 /* Crashlytics.framework in Frameworks */,
 				1FBC9E691CC2EE11005DB3F4 /* Fabric.framework in Frameworks */,
@@ -261,17 +262,13 @@
 			isa = PBXGroup;
 			children = (
 				1F665D711CB1DA91003CAC1D /* DataSyncingViewController.swift */,
-				1FBE62801CAEF617001FDFB7 /* MatchOverviewViewController.swift */,
+				1FF1F1721C3CC74A0051EE54 /* TeamListController.swift */,
+				1F4178BF1CD02E4200801D5B /* Team List Segments */,
 				1FBE627E1CAEE0FB001FDFB7 /* TeamPickerTableViewController.swift */,
 				1F4534551C7276DE004EDDB9 /* RegionalPickerViewController.swift */,
 				1F30CFC91C7E510100A4EFCA /* Admin Console */,
 				1F78E7841C3B469300221927 /* ViewController.swift */,
-				1FF1F1721C3CC74A0051EE54 /* TeamListController.swift */,
-				1F51D1C11C7FB30F00B4D6C5 /* GameStatsController.swift */,
-				1FE2C1281C80136800CECBF1 /* ShotChartViewController.swift */,
-				1F45340D1C6FC3EA004EDDB9 /* GameStatsCollectionViewCell.swift */,
 				1F4534131C6FFC13004EDDB9 /* Stands Scouting */,
-				1FCA7AD91C630BAE004294D1 /* StatsVC.swift */,
 				1F21DF111C66942200C55D0E /* SortVC.swift */,
 				1F4FEDAD1C4C5DEA00F4016D /* AddTeamVC.swift */,
 				1F4FEDA91C4AD95C00F4016D /* PitScoutingController.swift */,
@@ -289,6 +286,18 @@
 				1F4FEDAB1C4B686000F4016D /* AdminConsoleController.swift */,
 			);
 			name = "Admin Console";
+			sourceTree = "<group>";
+		};
+		1F4178BF1CD02E4200801D5B /* Team List Segments */ = {
+			isa = PBXGroup;
+			children = (
+				1FBE62801CAEF617001FDFB7 /* MatchOverviewViewController.swift */,
+				1F51D1C11C7FB30F00B4D6C5 /* GameStatsController.swift */,
+				1FE2C1281C80136800CECBF1 /* ShotChartViewController.swift */,
+				1F45340D1C6FC3EA004EDDB9 /* GameStatsCollectionViewCell.swift */,
+				1FCA7AD91C630BAE004294D1 /* StatsVC.swift */,
+			);
+			name = "Team List Segments";
 			sourceTree = "<group>";
 		};
 		1F4534131C6FFC13004EDDB9 /* Stands Scouting */ = {
@@ -477,6 +486,7 @@
 		247597E7D320F6FF4FC40A15 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				1F9B78241CD07C7000B4E5AE /* NYTPhotoViewer.framework */,
 				1FDE56921CCD376B009042CD /* opencv2.framework */,
 				1FBC9E6B1CC2F007005DB3F4 /* Crashlytics.framework */,
 				1FBC9E671CC2EE11005DB3F4 /* Fabric.framework */,
@@ -923,6 +933,11 @@
 					"$(inherited)",
 					"$(PROJECT_DIR)",
 					"$(PROJECT_DIR)/FRC\\ Advanced\\ Scouting\\ Telemetrics/swix/objc",
+					"$(PROJECT_DIR)/build/Debug-iphoneos",
+					"$(PROJECT_DIR)/FRC",
+					Advanced,
+					Scouting,
+					Telemetrics/swix/objc,
 				);
 				INFOPLIST_FILE = "FRC Advanced Scouting Telemetrics/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
@@ -953,6 +968,11 @@
 					"$(inherited)",
 					"$(PROJECT_DIR)",
 					"$(PROJECT_DIR)/FRC\\ Advanced\\ Scouting\\ Telemetrics/swix/objc",
+					"$(PROJECT_DIR)/build/Debug-iphoneos",
+					"$(PROJECT_DIR)/FRC",
+					Advanced,
+					Scouting,
+					Telemetrics/swix/objc,
 				);
 				INFOPLIST_FILE = "FRC Advanced Scouting Telemetrics/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";

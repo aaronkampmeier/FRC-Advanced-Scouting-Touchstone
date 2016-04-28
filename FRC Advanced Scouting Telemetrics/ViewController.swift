@@ -9,32 +9,25 @@
 import UIKit
 
 class ViewController: UIViewController {
-    @IBOutlet weak var teamListButton: UIButton!
-    @IBOutlet weak var pitScoutingButton: UIButton!
-
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view, typically from a nib.
-        
-        
-        //Round all the buttons' corners
-        teamListButton.layer.cornerRadius = 10
-        teamListButton.clipsToBounds = true
-        
-        pitScoutingButton.layer.cornerRadius = 10
-        pitScoutingButton.clipsToBounds = true
     }
 
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
     }
+}
 
-    @IBAction func teamListPressed(sender: AnyObject) {
-        
-    }
-    
-    @IBAction func pitScoutingPressed(sender: AnyObject) {
-        
-    }
+extension UIViewController {
+	func presentViewControllerFromVisibleViewController(viewControllerToPresent: UIViewController, animated flag: Bool, completion: (() -> Void)? = nil) {
+		if let navigationController = self as? UINavigationController, let topViewController = navigationController.topViewController {
+			topViewController.presentViewControllerFromVisibleViewController(viewControllerToPresent, animated: true, completion: completion)
+		} else if (presentedViewController != nil) {
+			presentedViewController!.presentViewControllerFromVisibleViewController(viewControllerToPresent, animated: true, completion: completion)
+		} else {
+			presentViewController(viewControllerToPresent, animated: true, completion: completion)
+		}
+	}
 }
