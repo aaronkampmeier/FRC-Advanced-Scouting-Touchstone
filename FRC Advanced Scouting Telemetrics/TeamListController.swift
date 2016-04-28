@@ -671,8 +671,8 @@ class TeamListController: UIViewController, UITableViewDataSource, UITableViewDe
 		detailString.appendContentsOf("\nDrive Train: \(selectedTeamCache?.team.driveTrain ?? "")")
 		detailString.appendContentsOf("\nVision Tracking Rating: \(selectedTeamCache?.team.visionTrackingRating ?? 0)")
 		detailString.appendContentsOf("\nClimber: \(selectedTeamCache?.team.climber?.boolValue ?? false)")
-		detailString.appendContentsOf("\nHighGoal: \(selectedTeamCache?.team.highGoal?.boolValue ?? false)")
-		detailString.appendContentsOf("\nLowGoal: \(selectedTeamCache?.team.lowGoal?.boolValue ?? false)")
+		detailString.appendContentsOf("\nHigh Goal: \(selectedTeamCache?.team.highGoal?.boolValue ?? false)")
+		detailString.appendContentsOf("\nLow Goal: \(selectedTeamCache?.team.lowGoal?.boolValue ?? false)")
 		detailString.appendContentsOf("\nAutonomous Defenses Able To Cross: ")
 		for defense in selectedTeamCache?.team.autonomousDefensesAbleToCross?.allObjects as? [Defense] ?? [Defense]() {
 			detailString.appendContentsOf(" \(defense.defenseName!),")
