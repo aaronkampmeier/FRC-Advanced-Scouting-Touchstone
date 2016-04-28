@@ -12,8 +12,8 @@ import NYTPhotoViewer
 
 class TeamListController: UIViewController, UITableViewDataSource, UITableViewDelegate, UISearchBarDelegate {
 	@IBOutlet weak var regionalSelectionButton: UIButton!
-    @IBOutlet weak var sideImageView: UIImageView!
-    @IBOutlet weak var frontImageView: UIImageView!
+	@IBOutlet weak var frontImageButton: UIButton!
+	@IBOutlet weak var sideImageButton: UIButton!
     @IBOutlet weak var searchBar: UISearchBar!
     @IBOutlet weak var segmentControl: UISegmentedControl!
     @IBOutlet weak var teamList: UITableView!
@@ -24,8 +24,19 @@ class TeamListController: UIViewController, UITableViewDataSource, UITableViewDe
     @IBOutlet weak var teamListToolbar: UIToolbar!
 	@IBOutlet weak var standsScoutingButton: UIBarButtonItem!
 	@IBOutlet weak var segmentControl2: UISegmentedControl!
-	
 	@IBOutlet weak var updateButton: UIBarButtonItem!
+	
+	var frontImage: TeamImagePhoto? {
+		didSet {
+			frontImageButton.setImage(frontImage?.image, forState: .Normal)
+		}
+	}
+	
+	var sideImage: TeamImagePhoto? {
+		didSet {
+			sideImageButton.setImage(sideImage?.image, forState: .Normal)
+		}
+	}
     
     let teamManager = TeamDataManager()
     var adjustsForToolbarInsets: UIEdgeInsets? = nil
@@ -266,6 +277,10 @@ class TeamListController: UIViewController, UITableViewDataSource, UITableViewDe
 		matchOverviewVC = (storyboard?.instantiateViewControllerWithIdentifier("matchOverview") as! MatchOverviewViewController)
 		
 		sortVC = storyboard!.instantiateViewControllerWithIdentifier("statsSortView") as! SortVC
+		
+		//Set the images(buttons) content sizing property
+		frontImageButton.imageView?.contentMode = .ScaleAspectFit
+		sideImageButton.imageView?.contentMode = .ScaleAspectFit
     }
 	
 	override func viewWillAppear(animated: Bool) {
@@ -348,14 +363,14 @@ class TeamListController: UIViewController, UITableViewDataSource, UITableViewDe
         
         //Populate the images, if there are images
         if let image = selectedTeamCache!.team.frontImage {
-            frontImageView.image = UIImage(data: image)
+			frontImage = TeamImagePhoto(image: UIImage(data: image), attributedCaptionTitle: NSAttributedString(string: "Team \(selectedTeamCache!.team.teamNumber!): Front Image"))
         } else {
-            frontImageView.image = nil
+			frontImage = nil
         }
         if let image = selectedTeamCache!.team.sideImage {
-            sideImageView.image = UIImage(data: image)
+			sideImage = TeamImagePhoto(image: UIImage(data: image), attributedCaptionTitle: NSAttributedString(string: "Team \(selectedTeamCache!.team.teamNumber!): Side Image"))
         } else {
-            sideImageView.image = nil
+            sideImage = nil
         }
     }
     
@@ -679,6 +694,49 @@ class TeamListController: UIViewController, UITableViewDataSource, UITableViewDe
 		
 		notesView.delegate = self
 	}
+	
+	//MARK: Displaying full screen photos
+	@IBAction func selectedImage(sender: UIButton) {
+		let photo: NYTPhoto
+		var photosArray: [NYTPhoto] = []
+		switch sender {
+		case frontImageButton:
+			if let image = frontImage {
+				photo = image
+			} else {return}
+		case sideImageButton:
+			if let image = sideImage {
+				photo = image
+			} else {return}
+		default:
+			return
+		}
+		
+		if let image = frontImage {
+			photosArray.append(image)
+		}
+		if let image = sideImage {
+			photosArray.append(image)
+		}
+		
+		let photoVC = NYTPhotosViewController(photos: photosArray, initialPhoto: photo, delegate: self)
+		presentViewController(photoVC, animated: true, completion: nil)
+	}
+}
+
+class TeamImagePhoto: NSObject, NYTPhoto {
+	var image: UIImage?
+	var imageData: NSData?
+	var placeholderImage: UIImage?
+	var attributedCaptionTitle: NSAttributedString?
+	var attributedCaptionCredit: NSAttributedString?
+	var attributedCaptionSummary: NSAttributedString?
+	
+	init(image: UIImage?, imageData: NSData? = nil, attributedCaptionTitle: NSAttributedString) {
+		self.image = image
+		self.imageData = imageData
+		self.attributedCaptionTitle = attributedCaptionTitle
+	}
 }
 
 extension TeamListController: UITextViewDelegate {
@@ -691,6 +749,34 @@ extension TeamListController: UITextViewDelegate {
 extension TeamListController: UIPopoverPresentationControllerDelegate {
 	func popoverPresentationControllerDidDismissPopover(popoverPresentationController: UIPopoverPresentationController) {
 		sortList(withStat: sortVC.selectedStat, isAscending: sortVC.isAscending)
+	}
+}
+
+extension TeamListController: NYTPhotosViewControllerDelegate {
+	func photosViewController(photosViewController: NYTPhotosViewController, captionViewForPhoto photo: NYTPhoto) -> UIView? {
+		return nil
+	}
+	
+	func photosViewController(photosViewController: NYTPhotosViewController, referenceViewForPhoto photo: NYTPhoto) -> UIView? {
+		if let photo = photo as? TeamImagePhoto {
+			if photo == frontImage {
+				return frontImageButton
+			} else if photo == sideImage {
+				return sideImageButton
+			} else {
+				return nil
+			}
+		} else {
+			return nil
+		}
+	}
+	
+	func photosViewController(photosViewController: NYTPhotosViewController, titleForPhoto photo: NYTPhoto, atIndex photoIndex: UInt, totalPhotoCount: UInt) -> String? {
+		return nil
+	}
+	
+	func photosViewController(photosViewController: NYTPhotosViewController, maximumZoomScaleForPhoto photo: NYTPhoto) -> CGFloat {
+		return CGFloat(2)
 	}
 }
 
