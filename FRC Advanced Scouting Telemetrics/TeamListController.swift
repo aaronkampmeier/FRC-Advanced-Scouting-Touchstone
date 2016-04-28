@@ -667,21 +667,23 @@ class TeamListController: UIViewController, UITableViewDataSource, UITableViewDe
 		
 		let detailsLabel = detailController.view.viewWithTag(2) as! UILabel
 		var detailString = ""
-		detailString.appendContentsOf("\nHeight: \((selectedTeamCache?.team.height) ?? 0)")
+		detailString.appendContentsOf("Height: \((selectedTeamCache?.team.height) ?? 0)")
 		detailString.appendContentsOf("\nDrive Train: \(selectedTeamCache?.team.driveTrain ?? "")")
 		detailString.appendContentsOf("\nVision Tracking Rating: \(selectedTeamCache?.team.visionTrackingRating ?? 0)")
-		detailString.appendContentsOf("\nTurret: \(selectedTeamCache?.team.turret?.boolValue ?? false)")
+		detailString.appendContentsOf("\nClimber: \(selectedTeamCache?.team.climber?.boolValue ?? false)")
+		detailString.appendContentsOf("\nHighGoal: \(selectedTeamCache?.team.highGoal?.boolValue ?? false)")
+		detailString.appendContentsOf("\nLowGoal: \(selectedTeamCache?.team.lowGoal?.boolValue ?? false)")
 		detailString.appendContentsOf("\nAutonomous Defenses Able To Cross: ")
 		for defense in selectedTeamCache?.team.autonomousDefensesAbleToCross?.allObjects as? [Defense] ?? [Defense]() {
-			detailString.appendContentsOf(", \(defense.defenseName!)")
+			detailString.appendContentsOf(" \(defense.defenseName!),")
 		}
 		detailString.appendContentsOf("\nAutonomous Defenses Able To Shoot From: ")
 		for defense in selectedTeamCache?.team.autonomousDefensesAbleToShoot?.allObjects as? [Defense] ?? [Defense]() {
-			detailString.appendContentsOf(", \(defense.defenseName!)")
+			detailString.appendContentsOf(" \(defense.defenseName!),")
 		}
 		detailString.appendContentsOf("\nDefenses Able To Cross: ")
 		for defense in selectedTeamCache?.team.defensesAbleToCross?.allObjects as? [Defense] ?? [Defense]() {
-			detailString.appendContentsOf(", \(defense.defenseName!)")
+			detailString.appendContentsOf(" \(defense.defenseName!),")
 		}
 		
 		detailsLabel.text = detailString
@@ -721,6 +723,7 @@ class TeamListController: UIViewController, UITableViewDataSource, UITableViewDe
 		
 		let photoVC = NYTPhotosViewController(photos: photosArray, initialPhoto: photo, delegate: self)
 		presentViewController(photoVC, animated: true, completion: nil)
+		Answers.logContentViewWithName("Team Robot Images", contentType: "Photo", contentId: nil, customAttributes: ["Team":"\(selectedTeamCache?.team.teamNumber ?? "")"])
 	}
 }
 
@@ -777,6 +780,11 @@ extension TeamListController: NYTPhotosViewControllerDelegate {
 	
 	func photosViewController(photosViewController: NYTPhotosViewController, maximumZoomScaleForPhoto photo: NYTPhoto) -> CGFloat {
 		return CGFloat(2)
+	}
+	
+	func photosViewController(photosViewController: NYTPhotosViewController, actionCompletedWithActivityType activityType: String?) {
+		NSLog("Completed Action: \(activityType ?? "Unknown")")
+		Answers.logShareWithMethod(activityType, contentName: "Team Photos", contentType: "Photo", contentId: nil, customAttributes: nil)
 	}
 }
 

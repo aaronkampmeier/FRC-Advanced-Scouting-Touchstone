@@ -10,8 +10,8 @@ import Foundation
 import UIKit
 
 class AdminConsoleController: UIViewController, UITableViewDataSource, UITableViewDelegate {
-    @IBOutlet weak var newStatTypeField: UITextField!
     @IBOutlet weak var tableView: UITableView!
+	@IBOutlet weak var navigationBar: UINavigationItem!
     
     let dataManager = TeamDataManager()
     

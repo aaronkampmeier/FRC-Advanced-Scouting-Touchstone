@@ -22,7 +22,9 @@ extension Team {
 	@NSManaged var notes: String?
 	@NSManaged var defensesAbleToCross: NSSet?
     @NSManaged var draftBoard: DraftBoard?
-	@NSManaged var turret: NSNumber?
+	@NSManaged var climber: NSNumber?
+	@NSManaged var highGoal: NSNumber?
+	@NSManaged var lowGoal: NSNumber?
     @NSManaged var stats: NSSet?
     @NSManaged var regionalPerformances: NSSet?
 	@NSManaged var driveTrain: String?

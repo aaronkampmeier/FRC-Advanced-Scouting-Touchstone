@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import Crashlytics
 
 class StandsScoutingViewController: UIViewController, ProvidesTeam {
 	@IBOutlet weak var ballButton: UIButton!
@@ -105,6 +106,8 @@ class StandsScoutingViewController: UIViewController, ProvidesTeam {
 				finalScorePrompt.addAction(UIAlertAction(title: "Save", style: .Default, handler: getFinalScore))
 				presentViewController(finalScorePrompt, animated: true, completion: nil)
 			}
+			
+			Answers.logCustomEventWithName("Stopped Stands Scouting Timer", customAttributes: ["At Time":stopwatch.elapsedTimeAsString])
 		}
 		}
 	}
@@ -218,7 +221,7 @@ class StandsScoutingViewController: UIViewController, ProvidesTeam {
 	}
 	
 	@IBAction func closePressed(sender: UIButton) {
-		if 150 - stopwatch.elapsedTime > 5 {
+		if 150 - stopwatch.elapsedTime > 15 {
 			let alert = UIAlertController(title: "Hold On, You're Not Finished", message: "It doesn't look like you've completed a full 2 minute 30 second match. Are you sure you want to close with this partial data?", preferredStyle: .Alert)
 			alert.addAction(UIAlertAction(title: "No, don't close", style: .Cancel, handler: nil))
 			alert.addAction(UIAlertAction(title: "Yes, close and save final data", style: .Default, handler: {_ in self.close(andSave: true)}))
@@ -237,6 +240,7 @@ class StandsScoutingViewController: UIViewController, ProvidesTeam {
 		}
 		
 		dismissViewControllerAnimated(true, completion: nil)
+		Answers.logCustomEventWithName("Closed Stands Scouting", customAttributes: ["With Save":shouldSave.description])
 	}
     
 	@IBAction func selectedNewPart(sender: UISegmentedControl) {

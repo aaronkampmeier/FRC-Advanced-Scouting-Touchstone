@@ -113,6 +113,10 @@ class DataSyncer: NSObject, CDEPersistentStoreEnsembleDelegate {
 		return multipeerConnection.session.connectedPeers
 	}
 	
+	func attemptToFixDeelechError() {
+		
+	}
+	
 	//MARK: Ensemble Delegate
 	func persistentStoreEnsembleWillImportStore(ensemble: CDEPersistentStoreEnsemble!) {
 		NSLog("Ensemble will import store")
@@ -128,12 +132,10 @@ class DataSyncer: NSObject, CDEPersistentStoreEnsembleDelegate {
 	}
 	
 	func persistentStoreEnsemble(ensemble: CDEPersistentStoreEnsemble!, didFailToSaveMergedChangesInManagedObjectContext savingContext: NSManagedObjectContext!, error: NSError!, reparationManagedObjectContext reparationContext: NSManagedObjectContext!) -> Bool {
-//		NSLog("Attempting to fix merge conflicts.")
-//		let objects = Array(savingContext.insertedObjects)
-//		for object in objects {
-//			
-//		}
 		CLSNSLogv("Ensemble did fail to save merged changes. Error: %d", getVaList([error]))
+		let alert = UIAlertController(title: "Save Failed", message: "The save and sync failed. Ask your admin for help wiith this issue.", preferredStyle: .Alert)
+		alert.addAction(UIAlertAction(title: "OK", style: .Default, handler: nil))
+		(UIApplication.sharedApplication().delegate as! AppDelegate).presentViewControllerOnTop(alert, animated: true)
 		Crashlytics.sharedInstance().recordError(error)
 		return false
 	}
@@ -150,6 +152,11 @@ class DataSyncer: NSObject, CDEPersistentStoreEnsembleDelegate {
 	}
 	
 	func persistentStoreEnsemble(ensemble: CDEPersistentStoreEnsemble!, didDeleechWithError error: NSError!) {
+		let alert = UIAlertController(title: "Sync Error: Deleech", message: "There was an internal data integrity error which forced your app to disconnect from the shared cloud of data. Ask your admin for help with fixing this.", preferredStyle: .Alert)
+//		alert.addAction(UIAlertAction(title: "Attempt to Fix", style: .Default, handler: {_ in self.attemptToFixDeelechError()}))
+		alert.addAction(UIAlertAction(title: "OK", style: .Default, handler: nil))
+		(UIApplication.sharedApplication().delegate as! AppDelegate).presentViewControllerOnTop(alert, animated: true)
+		
 		CLSNSLogv("Did deleech with error: %d", getVaList([error ?? nil]))
 		Crashlytics.sharedInstance().recordError(error)
 	}

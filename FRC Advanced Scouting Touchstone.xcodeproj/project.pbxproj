@@ -52,6 +52,7 @@
 		1F78E79B1C3B469300221927 /* FRC_Advanced_Scouting_TelemetricsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F78E79A1C3B469300221927 /* FRC_Advanced_Scouting_TelemetricsTests.swift */; };
 		1F78E7A61C3B469300221927 /* FRC_Advanced_Scouting_TelemetricsUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F78E7A51C3B469300221927 /* FRC_Advanced_Scouting_TelemetricsUITests.swift */; };
 		1F9B78271CD07F5700B4E5AE /* opencv2.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1FDE56921CCD376B009042CD /* opencv2.framework */; };
+		1F9B782B1CD1A42400B4E5AE /* HiddenDebugViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F9B782A1CD1A42400B4E5AE /* HiddenDebugViewController.swift */; };
 		1FB99DB31C741840004BC2C1 /* AdminConfigureDetailRegionalViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FB99DB21C741840004BC2C1 /* AdminConfigureDetailRegionalViewController.swift */; };
 		1FBB426D1C9A29FC0017E36C /* Statistics.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FBB426C1C9A29FC0017E36C /* Statistics.swift */; };
 		1FBC9E691CC2EE11005DB3F4 /* Fabric.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1FBC9E671CC2EE11005DB3F4 /* Fabric.framework */; };
@@ -124,6 +125,7 @@
 		1F12CF171C7A6CD70014200C /* Stopwatch.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Stopwatch.swift; sourceTree = "<group>"; };
 		1F21DF111C66942200C55D0E /* SortVC.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SortVC.swift; sourceTree = "<group>"; };
 		1F2422421C73DF08008A5AFC /* FRC_Advanced_Scouting_Telemetrics CD 7.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "FRC_Advanced_Scouting_Telemetrics CD 7.xcdatamodel"; sourceTree = "<group>"; };
+		1F34C74B1CD1A85B005255D5 /* FRC_Advanced_Scouting_Telemetrics Version 11.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "FRC_Advanced_Scouting_Telemetrics Version 11.xcdatamodel"; sourceTree = "<group>"; };
 		1F45340D1C6FC3EA004EDDB9 /* GameStatsCollectionViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GameStatsCollectionViewCell.swift; sourceTree = "<group>"; };
 		1F45340F1C6FF916004EDDB9 /* StandsScoutingViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StandsScoutingViewController.swift; sourceTree = "<group>"; };
 		1F4534141C6FFC38004EDDB9 /* AutonomousViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AutonomousViewController.swift; sourceTree = "<group>"; };
@@ -175,6 +177,7 @@
 		1F78E7A71C3B469300221927 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		1F9A53861C6AB0F000B0AAE3 /* FRC_Advanced_Scouting_Telemetrics CD 5.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "FRC_Advanced_Scouting_Telemetrics CD 5.xcdatamodel"; sourceTree = "<group>"; };
 		1F9B78241CD07C7000B4E5AE /* NYTPhotoViewer.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = NYTPhotoViewer.framework; path = "Pods/../build/Debug-iphoneos/NYTPhotoViewer.framework"; sourceTree = "<group>"; };
+		1F9B782A1CD1A42400B4E5AE /* HiddenDebugViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HiddenDebugViewController.swift; sourceTree = "<group>"; };
 		1FB99DB21C741840004BC2C1 /* AdminConfigureDetailRegionalViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AdminConfigureDetailRegionalViewController.swift; sourceTree = "<group>"; };
 		1FBB426C1C9A29FC0017E36C /* Statistics.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Statistics.swift; sourceTree = "<group>"; };
 		1FBC9E671CC2EE11005DB3F4 /* Fabric.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Fabric.framework; sourceTree = SOURCE_ROOT; };
@@ -261,6 +264,7 @@
 		1F21DF101C645D1F00C55D0E /* View Controllers */ = {
 			isa = PBXGroup;
 			children = (
+				1F9B782A1CD1A42400B4E5AE /* HiddenDebugViewController.swift */,
 				1F665D711CB1DA91003CAC1D /* DataSyncingViewController.swift */,
 				1FF1F1721C3CC74A0051EE54 /* TeamListController.swift */,
 				1F4178BF1CD02E4200801D5B /* Team List Segments */,
@@ -762,6 +766,7 @@
 				1F58308F1CB09AF900D6F513 /* DataSyncer.swift in Sources */,
 				1F4534561C7276DE004EDDB9 /* RegionalPickerViewController.swift in Sources */,
 				1FDE56C41CCD3C64009042CD /* ndarray.swift in Sources */,
+				1F9B782B1CD1A42400B4E5AE /* HiddenDebugViewController.swift in Sources */,
 				1F4534101C6FF916004EDDB9 /* StandsScoutingViewController.swift in Sources */,
 				1F665D721CB1DA91003CAC1D /* DataSyncingViewController.swift in Sources */,
 				1FBC9E6E1CC45C63005DB3F4 /* TeamMatchPerformance+CoreDataProperties.swift in Sources */,
@@ -950,6 +955,7 @@
 					"-iquote",
 					"\"$CONFIGURATION_BUILD_DIR/SSZipArchive.framework/Headers\"",
 				);
+				OTHER_SWIFT_FLAGS = "$(inherited) \"-D\" \"COCOAPODS\" -DDEBUG";
 				PRODUCT_BUNDLE_IDENTIFIER = "com.kampmeier.FRC-Advanced-Scouting-Touchstone";
 				PRODUCT_NAME = "FRC Advanced Scouting Touchstone";
 				PROVISIONING_PROFILE = "";
@@ -985,6 +991,7 @@
 					"-iquote",
 					"\"$CONFIGURATION_BUILD_DIR/SSZipArchive.framework/Headers\"",
 				);
+				OTHER_SWIFT_FLAGS = "$(inherited) \"-D\" \"COCOAPODS\" -DRELEASE";
 				PRODUCT_BUNDLE_IDENTIFIER = "com.kampmeier.FRC-Advanced-Scouting-Touchstone";
 				PRODUCT_NAME = "FRC Advanced Scouting Touchstone";
 				PROVISIONING_PROFILE = "";
@@ -1098,6 +1105,7 @@
 		1F78E7891C3B469300221927 /* FRC_Advanced_Scouting_Telemetrics.xcdatamodeld */ = {
 			isa = XCVersionGroup;
 			children = (
+				1F34C74B1CD1A85B005255D5 /* FRC_Advanced_Scouting_Telemetrics Version 11.xcdatamodel */,
 				1FDE568A1CCC915A009042CD /* FRC_Advanced_Scouting_Telemetrics Version 10.xcdatamodel */,
 				1F4F79E61CBF3FDF00239216 /* FRC_Advanced_Scouting_Telemetrics Version 9.xcdatamodel */,
 				1F2422421C73DF08008A5AFC /* FRC_Advanced_Scouting_Telemetrics CD 7.xcdatamodel */,
@@ -1108,7 +1116,7 @@
 				1F0296661C5C6E42008CA8C2 /* FRC_Advanced_Scouting_Telemetrics CD 2.xcdatamodel */,
 				1F78E78A1C3B469300221927 /* FRC_Advanced_Scouting_Telemetrics.xcdatamodel */,
 			);
-			currentVersion = 1FDE568A1CCC915A009042CD /* FRC_Advanced_Scouting_Telemetrics Version 10.xcdatamodel */;
+			currentVersion = 1F34C74B1CD1A85B005255D5 /* FRC_Advanced_Scouting_Telemetrics Version 11.xcdatamodel */;
 			path = FRC_Advanced_Scouting_Telemetrics.xcdatamodeld;
 			sourceTree = "<group>";
 			versionGroupType = wrapper.xcdatamodel;

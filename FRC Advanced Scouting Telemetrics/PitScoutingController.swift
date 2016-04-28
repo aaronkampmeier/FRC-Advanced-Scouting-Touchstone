@@ -9,6 +9,7 @@
 import Foundation
 import UIKit
 import AVFoundation
+import Crashlytics
 
 class PitScoutingController: UIViewController, UIImagePickerControllerDelegate, UINavigationControllerDelegate, ProvidesTeam {
     //IBOutlets
@@ -23,8 +24,10 @@ class PitScoutingController: UIViewController, UIImagePickerControllerDelegate, 
 	@IBOutlet weak var heightField: UITextField!
 	@IBOutlet var defenseButtons: [UIButton]!
 	@IBOutlet weak var gamePartSelector: UISegmentedControl!
-	@IBOutlet var notesButton: UIBarButtonItem!
-	@IBOutlet weak var turretSwitch: UISwitch!
+	@IBOutlet weak var notesButton: UIBarButtonItem!
+	@IBOutlet weak var climberSwitch: UISwitch!
+	@IBOutlet weak var highGoalSwitch: UISwitch!
+	@IBOutlet weak var lowGoalSwitch: UISwitch!
     
     let dataManager = TeamDataManager()
     let imageController = UIImagePickerController()
@@ -113,7 +116,9 @@ class PitScoutingController: UIViewController, UIImagePickerControllerDelegate, 
 		visionTrackingSlider.setValue((selectedTeam.optionalTeam?.visionTrackingRating?.floatValue) ?? 0, animated: false)
 		driveTrainField.text = String(selectedTeam.optionalTeam?.driveTrain ?? "") ?? ""
 		heightField.text = String(selectedTeam.optionalTeam?.height ?? "") ?? ""
-		turretSwitch.on = selectedTeam.optionalTeam?.turret?.boolValue ?? false
+		climberSwitch.on = selectedTeam.optionalTeam?.climber?.boolValue ?? false
+		highGoalSwitch.on = selectedTeam.optionalTeam?.highGoal?.boolValue ?? false
+		lowGoalSwitch.on = selectedTeam.optionalTeam?.lowGoal?.boolValue ?? false
 		setDefensesAbleToCross(forPart: currentGamePart(), inTeam: selectedTeam.optionalTeam)
     }
 	
@@ -208,9 +213,21 @@ class PitScoutingController: UIViewController, UIImagePickerControllerDelegate, 
 		}
 	}
 	
-	@IBAction func turretSwitched(sender: UISwitch) {
+	@IBAction func climberSwitched(sender: UISwitch) {
 		if let team = selectedTeam.optionalTeam {
-			team.turret = sender.on
+			team.climber = sender.on
+		}
+	}
+	
+	@IBAction func highGoalSwitched(sender: UISwitch) {
+		if let team = selectedTeam.optionalTeam {
+			team.highGoal = sender.on
+		}
+	}
+	
+	@IBAction func lowGoalSwitched(sender: UISwitch) {
+		if let team = selectedTeam.optionalTeam {
+			team.lowGoal = sender.on
 		}
 	}
     
@@ -253,9 +270,11 @@ class PitScoutingController: UIViewController, UIImagePickerControllerDelegate, 
 					let sourceSelector = UIAlertController(title: nil, message: nil, preferredStyle: .ActionSheet)
 					sourceSelector.addAction(UIAlertAction(title: "Camera", style: .Default) {_ in
 						self.presentImageController(self.imageController, withSource: .Camera, forFrontOrSide: frontOrSide, sender: sender)
+						Answers.logCustomEventWithName("Added Team Photo", customAttributes: ["View":frontOrSide.description, "Source":"Camera"])
 						})
 					sourceSelector.addAction(UIAlertAction(title: "Photo Library", style: .Default) {_ in
 						self.presentImageController(self.imageController, withSource: .PhotoLibrary, forFrontOrSide: frontOrSide, sender: sender)
+						Answers.logCustomEventWithName("Added Team Photo", customAttributes: ["View":frontOrSide.description, "Source":"Photo Library"])
 						})
 					sourceSelector.popoverPresentationController?.sourceView = sender
 					presentViewController(sourceSelector, animated: true, completion: nil)
@@ -302,8 +321,17 @@ class PitScoutingController: UIViewController, UIImagePickerControllerDelegate, 
         notificationCenter.removeObserver(observer!, name: "newImage", object: self)
     }
 	
-    enum imagePOV {
+	enum imagePOV: CustomStringConvertible {
         case Front, Side
+		
+		var description: String {
+			switch self {
+			case .Front:
+				return "Front"
+			case .Side:
+				return "Side"
+			}
+		}
     }
 	
 	//Functions for managing the defenses that a team can do

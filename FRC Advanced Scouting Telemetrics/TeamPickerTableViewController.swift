@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import Crashlytics
 
 class TeamPickerTableViewController: UITableViewController {
 	var teams: [Team] = [Team]() {
@@ -27,6 +28,8 @@ class TeamPickerTableViewController: UITableViewController {
         // self.navigationItem.rightBarButtonItem = self.editButtonItem()
 		
 		teams = try! dataManager.getDraftBoard()
+		
+		Answers.logCustomEventWithName("Opened Team Pick List", customAttributes: nil)
     }
 
     override func didReceiveMemoryWarning() {
