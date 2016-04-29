@@ -24,11 +24,11 @@ class HiddenDebugViewController: UIViewController {
     }
 	
 	@IBAction func testFailedSave(sender: UIButton) {
-		let dataSyncer = DataSyncer.sharedDataSyncer()
-		
-		let newMatch = Match(entity: NSEntityDescription.entityForName("Match", inManagedObjectContext: TeamDataManager.managedContext)!, insertIntoManagedObjectContext: TeamDataManager.managedContext)
-		newMatch.redDefenses = NSSet(array: dataManager.getAllDefenses())
-		dataManager.commitChanges()
+//		let dataSyncer = DataSyncer.sharedDataSyncer()
+//		
+//		let newMatch = Match(entity: NSEntityDescription.entityForName("Match", inManagedObjectContext: TeamDataManager.managedContext)!, insertIntoManagedObjectContext: TeamDataManager.managedContext)
+//		newMatch.redDefenses = NSSet(array: Defense.allDefenses)
+//		dataManager.commitChanges()
 	}
 
     /*

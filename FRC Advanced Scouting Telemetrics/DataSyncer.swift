@@ -36,7 +36,7 @@ class DataSyncer: NSObject, CDEPersistentStoreEnsembleDelegate {
 		
 		fileSystem = CDEMultipeerCloudFileSystem(rootDirectory: rootDir, multipeerConnection: multipeerConnection)
 		multipeerConnection.fileSystem = (fileSystem as! CDEMultipeerCloudFileSystem)
-		ensemble = CDEPersistentStoreEnsemble(ensembleIdentifier: "MainStore", persistentStoreURL: appDelegate.coreDataURL, managedObjectModelURL: appDelegate.managedObjectModelURL, cloudFileSystem: fileSystem)
+		ensemble = CDEPersistentStoreEnsemble(ensembleIdentifier: "FASTStore", persistentStoreURL: appDelegate.coreDataURL, managedObjectModelURL: appDelegate.managedObjectModelURL, cloudFileSystem: fileSystem)
 		
 		super.init()
 		
@@ -132,8 +132,8 @@ class DataSyncer: NSObject, CDEPersistentStoreEnsembleDelegate {
 	}
 	
 	func persistentStoreEnsemble(ensemble: CDEPersistentStoreEnsemble!, didFailToSaveMergedChangesInManagedObjectContext savingContext: NSManagedObjectContext!, error: NSError!, reparationManagedObjectContext reparationContext: NSManagedObjectContext!) -> Bool {
-		CLSNSLogv("Ensemble did fail to save merged changes. Error: %d", getVaList([error]))
-		let alert = UIAlertController(title: "Save Failed", message: "The save and sync failed. Ask your admin for help wiith this issue. Attempting to fix...", preferredStyle: .Alert)
+		CLSNSLogv("Ensemble did fail to save merged changes. Error: %d", getVaList([error ?? nil]))
+		let alert = UIAlertController(title: "Save Failed", message: "The save and sync failed. Ask your admin for help with this issue. Attempting to fix...", preferredStyle: .Alert)
 		alert.addAction(UIAlertAction(title: "OK", style: .Default, handler: nil))
 		(UIApplication.sharedApplication().delegate as! AppDelegate).presentViewControllerOnTop(alert, animated: true)
 		
@@ -190,8 +190,6 @@ class DataSyncer: NSObject, CDEPersistentStoreEnsembleDelegate {
 				NSLog("Global identifier is DraftBoard")
 			case is Team:
 				globalIdentifiers.append("Team:\(object.valueForKey("teamNumber")!)")
-			case is Defense:
-				globalIdentifiers.append("Defense:\(object.valueForKey("defenseName")!)")
 			case is Regional:
 				globalIdentifiers.append("Regional:\(object.valueForKey("regionalNumber")!)")
 			case is TeamRegionalPerformance:

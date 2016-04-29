@@ -59,7 +59,7 @@ struct StatContext {
 	mutating func setMatchPerformanceStatistics(context: [TeamMatchPerformance]?) {
 		if let context = context {
 			matchPerformanceStatistics = [.TotalPoints(context), .TotalShots(context), .TotalMadeShots(context), .TotalHighGoals(context), .TotalMadeHighGoals(context), .TotalLowGoals(context), .TotalMadeLowGoals(context), .ShotAccuracy(context, TeamDataManager.ShotGoal.Both), .TotalScales(context), .RankingPoints(context), .DefensesCrossed(context), .AverageTimeInZone(context, .DefenseCourtyard), .AverageTimeInZone(context, .OffenseCourtyard), .AverageTimeInZone(context, .Neutral), .CycleTime(context), .TotalContacts(context), .TotalContactsDisruptingShots(context), .TotalGamesWithTimeInSection(context, .DefenseCourtyard, 30)]
-			for defenseType in TeamDataManager.DefenseType.allDefenses {
+			for defenseType in Defense.allDefenses {
 				matchPerformanceStatistics.append(.TotalCrossingsForDefense(context, defenseType))
 			}
 		} else {
@@ -96,7 +96,7 @@ enum StatCalculation: CustomStringConvertible {
 	case TotalMadeHighGoals([TeamMatchPerformance])
 	case TotalMadeLowGoals([TeamMatchPerformance])
 	case TeamNumber(Team)
-	case TotalCrossingsForDefense([TeamMatchPerformance], TeamDataManager.DefenseType)
+	case TotalCrossingsForDefense([TeamMatchPerformance], Defense)
 	case CycleTime([TeamMatchPerformance])
 	case TotalContacts([TeamMatchPerformance])
 	case TotalContactsDisruptingShots([TeamMatchPerformance])
@@ -246,10 +246,10 @@ enum StatCalculation: CustomStringConvertible {
 			return Double(total)
 		case .TeamNumber(let team):
 			return Double(team.teamNumber ?? "") ?? 0
-		case .TotalCrossingsForDefense(let performances, let defenseType):
+		case .TotalCrossingsForDefense(let performances, let defense):
 			let total: Int = performances.reduce(0) {cumulative, performance in
 				let defenseCrossTimes = (performance.defenseCrossTimes?.allObjects as! [DefenseCrossTime]).filter() {defenseCrossTime in
-					return defenseCrossTime.defense?.defenseType == defenseType
+					return defenseCrossTime.getDefense() == defense
 				}
 				return defenseCrossTimes.count
 			}

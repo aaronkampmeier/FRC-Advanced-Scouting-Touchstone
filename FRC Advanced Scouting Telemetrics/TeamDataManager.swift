@@ -80,76 +80,66 @@ class TeamDataManager {
 	}
 	
 	func setDefenseAbleToShootFrom(defense: Defense, toTeam team: Team, canShootFrom: Bool) {
-		let defenseSet = team.autonomousDefensesAbleToShoot?.mutableCopy() as! NSMutableSet
+		var defenses = team.autonomousDefensesAbleToShootArray
 		
-		if canShootFrom == true {
-			if defenseSet.containsObject(defense) {
-				return
+		if canShootFrom {
+			if !defenses.contains(defense) {
+				defenses.append(defense)
 			}
-			
-			defenseSet.addObject(defense)
 		} else {
-			if defenseSet.containsObject(defense) {
-				defenseSet.removeObject(defense)
+			if let index = defenses.indexOf(defense) {
+				defenses.removeAtIndex(index)
 			}
 		}
 		
-		team.autonomousDefensesAbleToShoot = (defenseSet.copy() as! NSSet)
+		team.autonomousDefensesAbleToShootArray = defenses
 	}
     
 	func addDefense(defense: Defense, toTeam team: Team, forPart part: GamePart) {
-		var defenseSet: NSSet
+		var defenses: [Defense]
+		//Retrieve the current defenses
 		switch part {
 		case .Autonomous:
-			defenseSet = team.autonomousDefensesAbleToCross!
+			defenses = team.autonomousDefensesAbleToCrossArray
 		case .Teleop:
-			defenseSet = team.defensesAbleToCross!
+			defenses = team.defensesAbleToCrossArray
 		}
 		
-		let mutableDefensesSet = defenseSet.mutableCopy() as! NSMutableSet
-		
-		//Check if it is already there
-		if mutableDefensesSet.containsObject(defense) {
-			//The defense is already there, return
-			return
+		//Add it if it isn't already there
+		if !defenses.contains(defense) {
+			defenses.append(defense)
 		}
 		
-		mutableDefensesSet.addObject(defense)
-		
-		//Set the data back in the team
+		//Set the data back
 		switch part {
 		case .Autonomous:
-			team.autonomousDefensesAbleToCross = (mutableDefensesSet.copy() as! NSSet)
+			team.autonomousDefensesAbleToCrossArray = defenses
 		case .Teleop:
-			team.defensesAbleToCross = (mutableDefensesSet.copy() as! NSSet)
+			team.defensesAbleToCrossArray = defenses
 		}
 	}
 	
 	func removeDefense(defense: Defense, fromTeam team: Team, forPart part: GamePart) {
-		var defenseSet: NSSet
+		var defenses: [Defense]
+		//Retrieve the current defenses
 		switch part {
 		case .Autonomous:
-			defenseSet = team.autonomousDefensesAbleToCross!
+			defenses = team.autonomousDefensesAbleToCrossArray
 		case .Teleop:
-			defenseSet = team.defensesAbleToCross!
+			defenses = team.defensesAbleToCrossArray
 		}
 		
-		let mutableDefensesSet = defenseSet.mutableCopy() as! NSMutableSet
-		
-		//Check if the defense is actually in the set
-		if !mutableDefensesSet.containsObject(defense) {
-			//The defense isn't even in the set, return
-			return
+		//Remove it if it is there
+		if let index = defenses.indexOf(defense) {
+			defenses.removeAtIndex(index)
 		}
 		
-		mutableDefensesSet.removeObject(defense)
-		
-		//Set the data back into the team
+		//Set the data back
 		switch part {
 		case .Autonomous:
-			team.autonomousDefensesAbleToCross = (mutableDefensesSet.copy() as! NSSet)
+			team.autonomousDefensesAbleToCrossArray = defenses
 		case .Teleop:
-			team.defensesAbleToCross = (mutableDefensesSet.copy() as! NSSet)
+			team.defensesAbleToCrossArray = defenses
 		}
 	}
 	
@@ -307,7 +297,7 @@ class TeamDataManager {
     //MARK: Matches
     func createNewMatch(matchNumber: Int, inRegional regional: Regional) throws -> Match {
         //First, check to make sure it doesn't already exist
-        guard (regional.matches?.allObjects as! [Match]).filter({return $0.matchNumber == matchNumber}).isEmpty else {
+        guard (regional.regionalMatches?.allObjects as! [Match]).filter({return $0.matchNumber == matchNumber}).isEmpty else {
             throw DataManagingError.MatchAlreadyExists
         }
         
@@ -459,159 +449,46 @@ class TeamDataManager {
 	
 	//MARK: Defenses and Matches
 	func setDefenses(inMatch match: Match, redOrBlue color: AllianceColor, defenseA: CategoryADefense, defenseB: CategoryBDefense, defenseC: CategoryCDefense, defenseD: CategoryDDefense) {
-		//Get the defense objects
-		let a = getDefense(withName: defenseA.string)
-		let b = getDefense(withName: defenseB.string)
-		let c = getDefense(withName: defenseC.string)
-		let d = getDefense(withName: defenseD.string)
-		
-		//Make a set with these defenses
-		let defensesSet = NSSet(array: [a!, b!, c!, d!])
+		let defenses = [defenseA.defense, defenseB.defense, defenseC.defense, defenseD.defense]
 		
 		switch color {
 		case .Red:
-			match.redDefenses = defensesSet
+			match.redDefensesArray = defenses
 		case .Blue:
-			match.blueDefenses = defensesSet
+			match.blueDefensesArray = defenses
 		}
+	}
+	
+	func setDefenses(inMatch match: Match, redOrBlue color: AllianceColor, withDefenseArray defenses: [Defense]) throws {
+		if !(defenses.count == 4) {throw DataManagingError.InvalidNumberOfDefenses}
+		
+		var defenseA: CategoryADefense?
+		var defenseB: CategoryBDefense?
+		var defenseC: CategoryCDefense?
+		var defenseD: CategoryDDefense?
+		
+		for defense in defenses {
+			if defense.category == .A {
+				defenseA = CategoryADefense(rawValue: defense.rawValue)
+			} else if defense.category == .B {
+				defenseB = CategoryBDefense(rawValue: defense.rawValue)
+			} else if defense.category == .C {
+				defenseC = CategoryCDefense(rawValue: defense.rawValue)
+			} else if defense.category == .D {
+				defenseD = CategoryDDefense(rawValue: defense.rawValue)
+			}
+		}
+		
+		if defenseA == nil || defenseB == nil || defenseC == nil || defenseD == nil {
+			throw DataManagingError.InvalidDefenseCategoryRepresentation
+		}
+		
+		setDefenses(inMatch: match, redOrBlue: color, defenseA: defenseA!, defenseB: defenseB!, defenseC: defenseC!, defenseD: defenseD!)
 	}
 	
 	enum AllianceColor: Int {
 		case Blue = 0
 		case Red = 1
-	}
-	
-	enum DefenseType: String, CustomStringConvertible, Hashable {
-		case Portcullis = "Portcullis"
-		case ChevalDeFrise = "Cheval de Frise"
-		case Moat = "Moat"
-		case Ramparts = "Ramparts"
-		case Drawbridge = "Drawbridge"
-		case SallyPort = "Sally Port"
-		case RockWall = "Rock Wall"
-		case RoughTerrain = "Rough Terrain"
-		case LowBar = "Low Bar"
-		
-		var description: String {
-			return self.rawValue
-		}
-		
-		var category: DefenseCategory {
-			switch self {
-			case .Portcullis, .ChevalDeFrise:
-				return .A
-			case .Moat, .Ramparts:
-				return .B
-			case .Drawbridge, .SallyPort:
-				return .C
-			case .RockWall, .RoughTerrain:
-				return .D
-			case .LowBar:
-				return .LowBar
-			}
-		}
-		
-		var defense: Defense {
-			return TeamDataManager().getDefense(withName: self.description)!
-		}
-		
-		static var allDefenses: [TeamDataManager.DefenseType] {
-			return [.Portcullis, .ChevalDeFrise, .Moat, .Ramparts, .Drawbridge, .SallyPort, .RockWall, .RoughTerrain, .LowBar]
-		}
-	}
-	
-	enum DefenseCategory: Int {
-		case A
-		case B
-		case C
-		case D
-		case LowBar
-		
-		var defenses: [DefenseType] {
-			switch self {
-			case .A:
-				return [.Portcullis, .ChevalDeFrise]
-			case .B:
-				return [.Moat, .Ramparts]
-			case .C:
-				return [.Drawbridge, .SallyPort]
-			case .D:
-				return [.RockWall, .RoughTerrain]
-			case .LowBar:
-				return [.LowBar]
-			}
-		}
-		
-		init(category: Character) {
-			switch category {
-			case "A":
-				self = .A
-			case "B":
-				self = .B
-			case "C":
-				self = .C
-			case "D":
-				self = .D
-			default:
-				self = .LowBar
-			}
-		}
-	}
-	
-	enum CategoryADefense: Int {
-		case Portcullis
-		case ChevalDeFrise
-		
-		var string: String {
-			switch self {
-			case .Portcullis:
-				return "Portcullis"
-			case .ChevalDeFrise:
-				return "Cheval de Frise"
-			}
-		}
-	}
-	
-	enum CategoryBDefense: Int {
-		case Moat
-		case Ramparts
-		
-		var string: String {
-			switch self {
-			case .Moat:
-				return "Moat"
-			case .Ramparts:
-				return "Ramparts"
-			}
-		}
-	}
-	
-	enum CategoryCDefense: Int {
-		case Drawbridge
-		case SallyPort
-		
-		var string: String {
-			switch self {
-			case .Drawbridge:
-				return "Drawbridge"
-			case .SallyPort:
-				return "Sally Port"
-			}
-		}
-	}
-	
-	enum CategoryDDefense: Int {
-		case RockWall
-		case RoughTerrain
-		
-		var string: String {
-			switch self {
-			case .RockWall:
-				return "Rock Wall"
-			case .RoughTerrain:
-				return "Rough Terrain"
-			}
-		}
 	}
     
     func getTeamsForMatch(match: Match) -> [TeamMatchPerformance] {
@@ -624,7 +501,7 @@ class TeamDataManager {
     }
     
 	func getMatches(forRegional regional: Regional) -> [Match]{
-        return regional.matches?.allObjects as! [Match]
+        return regional.regionalMatches?.allObjects as! [Match]
     }
 	
 	//MARK: Shots
@@ -660,114 +537,37 @@ class TeamDataManager {
 	}
 	
 	//MARK: Defenses
-	func createDefense(withName name: String, inCategory category: Character) -> Defense {
-		//Format the strings first
-		let categoryString = String(category)
-		categoryString.uppercaseString
+	func setDefense(defense: Defense, state: DefenseState, inMatchPerformance matchPerformance: TeamMatchPerformance) {
+		let allianceColor = matchPerformance.allianceColor?.integerValue
+		var allianceBreachedDefenses: [Defense]
 		
-		//First check if this defense already exists
-		let currentDefenses = getDefenses(inCategory: category)
-		for defense in currentDefenses {
-			if defense.defenseName == name {
-				return defense
+		if allianceColor == 0 {
+			allianceBreachedDefenses = matchPerformance.match?.blueBreachedDefensesArray ?? []
+		} else {
+			allianceBreachedDefenses = matchPerformance.match?.redBreachedDefensesArray ?? []
+		}
+		
+		switch state {
+		case .Breached:
+			if !allianceBreachedDefenses.contains(defense) {
+				allianceBreachedDefenses.append(defense)
+			}
+		case .NotBreached:
+			if let index = allianceBreachedDefenses.indexOf(defense) {
+				allianceBreachedDefenses.removeAtIndex(index)
 			}
 		}
 		
-		let newDefense = Defense(entity: NSEntityDescription.entityForName("Defense", inManagedObjectContext: TeamDataManager.managedContext)!, insertIntoManagedObjectContext: TeamDataManager.managedContext)
-		
-		newDefense.defenseName = name
-		newDefense.category = categoryString
-		
-		return newDefense
-	}
-	
-	func setDidBreachDefense(defense: Defense, inMatchPerformance matchPerformance: TeamMatchPerformance) {
-		//Check if the defense is already labeled as breached
-		//Get the alliance color
-		let allianceColor = matchPerformance.allianceColor?.integerValue
-		var allianceBreachedDefenses: [Defense]
 		if allianceColor == 0 {
-			allianceBreachedDefenses = matchPerformance.match?.blueDefensesBreached?.allObjects as! [Defense]
+			matchPerformance.match?.blueBreachedDefensesArray = allianceBreachedDefenses
 		} else {
-			allianceBreachedDefenses = matchPerformance.match?.redDefensesBreached?.allObjects as! [Defense]
-		}
-		
-		for breachedDefense in allianceBreachedDefenses {
-			if breachedDefense == defense {
-				//The breached defense is already saved, return
-				return
-			}
-		}
-		
-		//Add the defense to the set
-		allianceBreachedDefenses.append(defense)
-		
-		if allianceColor == 0 {
-			matchPerformance.match?.blueDefensesBreached = NSSet(array: allianceBreachedDefenses)
-		} else {
-			matchPerformance.match?.redDefensesBreached = NSSet(array: allianceBreachedDefenses)
+			matchPerformance.match?.redBreachedDefensesArray = allianceBreachedDefenses
 		}
 	}
 	
-	func setDidNotBreachDefense(defense: Defense, inMatchPerformance matchPerformance: TeamMatchPerformance) {
-		//Check to see if it is actually there
-		let allianceColor = matchPerformance.allianceColor?.integerValue
-		var allianceBreachedDefenses: [Defense]
-		if allianceColor == 0 {
-			allianceBreachedDefenses = matchPerformance.match?.blueDefensesBreached?.allObjects as! [Defense]
-		} else {
-			allianceBreachedDefenses = matchPerformance.match?.redDefensesBreached?.allObjects as! [Defense]
-		}
-		
-		if !allianceBreachedDefenses.contains(defense) {
-			//The defense is already not there, return
-			return
-		}
-		
-		//Remove the defense from the list of breached ones
-		allianceBreachedDefenses.removeAtIndex(allianceBreachedDefenses.indexOf(defense)!)
-		
-		//Set it back in the match
-		if allianceColor == 0 {
-			matchPerformance.match?.blueDefensesBreached = NSSet(array: allianceBreachedDefenses)
-		} else {
-			matchPerformance.match?.redDefensesBreached = NSSet(array: allianceBreachedDefenses)
-		}
-	}
-	
-	func getLowBar() -> Defense {
-		return getDefense(withName: "Low Bar")!
-	}
-	
-	func getAllDefenses() -> [Defense] {
-		return getDefenses(withPredicate: nil)
-	}
-	
-	func getDefenses(inCategory category: Character) -> [Defense] {
-		let predicate = NSPredicate(format: "%K like %@", "category", String(category))
-		
-		return getDefenses(withPredicate: predicate)
-	}
-	
-	func getDefense(withName name: String) -> Defense? {
-		let predicate = NSPredicate(format: "%K like %@", "defenseName", name)
-		
-		let defenses = getDefenses(withPredicate: predicate)
-		
-		return defenses.first
-	}
-	
-	func getDefenses(withPredicate predicate: NSPredicate?) -> [Defense] {
-		let fetchRequest = NSFetchRequest(entityName: "Defense")
-		fetchRequest.predicate = predicate
-		var results = [Defense]()
-		do {
-			results = try TeamDataManager.managedContext.executeFetchRequest(fetchRequest) as! [Defense]
-		} catch {
-			NSLog("Unable to retrieve defenses")
-		}
-		
-		return results
+	enum DefenseState {
+		case Breached
+		case NotBreached
 	}
 	
 	//MARK: Time Markers
@@ -862,7 +662,7 @@ class TeamDataManager {
 		newCrossTime.endTime = time
 		newCrossTime.duration = 0
 		newCrossTime.teamMatchPerformance = matchPerformance
-		newCrossTime.defense = defense
+		newCrossTime.defense = defense.rawValue
 	}
     
     enum DataManagingError: ErrorType {
@@ -873,11 +673,17 @@ class TeamDataManager {
         case TypeAlreadyExists
         case UnableToGetStatsBoard
         case MatchAlreadyExists
+		case InvalidNumberOfDefenses
+		case InvalidDefenseCategoryRepresentation
         
         var errorDescription: String {
             switch self {
             case .DuplicateTeams:
                 return "There are more than one team entities with the specified team number."
+			case .InvalidNumberOfDefenses:
+				return "There are the wrong number of defenses to be set in to a match."
+			case .InvalidDefenseCategoryRepresentation:
+				return "There was not a defense from every category in the defenses to be set in to the match."
             default:
                 return "A problem occured with data management."
             }
@@ -889,3 +695,132 @@ enum GamePart {
 	case Autonomous
 	case Teleop
 }
+	
+	enum Defense: String, CustomStringConvertible, Hashable {
+		case Portcullis = "Portcullis"
+		case ChevalDeFrise = "Cheval de Frise"
+		case Moat = "Moat"
+		case Ramparts = "Ramparts"
+		case Drawbridge = "Drawbridge"
+		case SallyPort = "Sally Port"
+		case RockWall = "Rock Wall"
+		case RoughTerrain = "Rough Terrain"
+		case LowBar = "Low Bar"
+		
+		var description: String {
+			return self.rawValue
+		}
+		
+		var category: DefenseCategory {
+			switch self {
+			case .Portcullis, .ChevalDeFrise:
+				return .A
+			case .Moat, .Ramparts:
+				return .B
+			case .Drawbridge, .SallyPort:
+				return .C
+			case .RockWall, .RoughTerrain:
+				return .D
+			case .LowBar:
+				return .LowBar
+			}
+		}
+		
+		static var allDefenses: [Defense] {
+			return [.Portcullis, .ChevalDeFrise, .Moat, .Ramparts, .Drawbridge, .SallyPort, .RockWall, .RoughTerrain, .LowBar]
+		}
+	}
+	
+	enum DefenseCategory: Int {
+		case A
+		case B
+		case C
+		case D
+		case LowBar
+		
+		var defenses: [Defense] {
+			switch self {
+			case .A:
+				return [.Portcullis, .ChevalDeFrise]
+			case .B:
+				return [.Moat, .Ramparts]
+			case .C:
+				return [.Drawbridge, .SallyPort]
+			case .D:
+				return [.RockWall, .RoughTerrain]
+			case .LowBar:
+				return [.LowBar]
+			}
+		}
+		
+		init(category: Character) {
+			switch category {
+			case "A":
+				self = .A
+			case "B":
+				self = .B
+			case "C":
+				self = .C
+			case "D":
+				self = .D
+			default:
+				self = .LowBar
+			}
+		}
+	}
+	
+	enum CategoryADefense: String {
+		case Portcullis = "Portcullis"
+		case ChevalDeFrise = "Cheval de Frise"
+		
+		var defense: Defense {
+			switch self {
+			case .Portcullis:
+				return .Portcullis
+			case .ChevalDeFrise:
+				return .ChevalDeFrise
+			}
+		}
+	}
+	
+	enum CategoryBDefense: String {
+		case Moat = "Moat"
+		case Ramparts = "Ramparts"
+		
+		var defense: Defense {
+			switch self {
+			case .Moat:
+				return .Moat
+			case .Ramparts:
+				return .Ramparts
+			}
+		}
+	}
+	
+	enum CategoryCDefense: String {
+		case Drawbridge = "Drawbridge"
+		case SallyPort = "Sally Port"
+		
+		var defense: Defense {
+			switch self {
+			case .Drawbridge:
+				return .Drawbridge
+			case .SallyPort:
+				return .SallyPort
+			}
+		}
+	}
+	
+	enum CategoryDDefense: String {
+		case RockWall = "Rock Wall"
+		case RoughTerrain = "Rough Terrain"
+		
+		var defense: Defense {
+			switch self {
+			case .RockWall:
+				return .RockWall
+			case .RoughTerrain:
+				return .RoughTerrain
+			}
+		}
+	}

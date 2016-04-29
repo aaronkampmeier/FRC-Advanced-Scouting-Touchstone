@@ -137,22 +137,22 @@ class PitScoutingController: UIViewController, UIImagePickerControllerDelegate, 
 			var autonomousDefensesForShooting: [Defense] = [Defense]()
 			switch part {
 			case .Autonomous:
-				defenses = team.autonomousDefensesAbleToCross?.allObjects as! [Defense]
-				autonomousDefensesForShooting = team.autonomousDefensesAbleToShoot?.allObjects as! [Defense]
+				defenses = team.autonomousDefensesAbleToCrossArray
+				autonomousDefensesForShooting = team.autonomousDefensesAbleToShootArray
 			case .Teleop:
-				defenses = team.defensesAbleToCross?.allObjects as! [Defense]
+				defenses = team.defensesAbleToCrossArray
 			}
 			
 			//Set the ones that are able to be crossed as selected
 			for defense in defenses {
 				let defenseButton = defenseButtons.filter() {
-					$0.titleForState(.Normal) == defense.defenseName
+					$0.titleForState(.Normal) == defense.description
 					}.first!
 				setDefenseButton(defenseButton, state: .CanCross)
 			}
 			for defense in autonomousDefensesForShooting {
 				let defenseButton = defenseButtons.filter() {
-					$0.titleForState(.Normal) == defense.defenseName
+					$0.titleForState(.Normal) == defense.description
 					}.first!
 				setDefenseButton(defenseButton, state: .CanShootFrom)
 			}
@@ -347,7 +347,7 @@ class PitScoutingController: UIViewController, UIImagePickerControllerDelegate, 
 			
 			if let team = selectedTeam.optionalTeam {
 				//First, get the defense for the button
-				let defense = dataManager.getDefense(withName: sender.titleForState(.Normal)!)
+				let defense = Defense(rawValue: sender.titleForState(.Normal)!)
 				
 				dataManager.addDefense(defense!, toTeam: team, forPart: currentGamePart())
 			}
@@ -357,14 +357,14 @@ class PitScoutingController: UIViewController, UIImagePickerControllerDelegate, 
 			case .Autonomous:
 				setDefenseButton(sender, state: .CanShootFrom)
 				if let team = selectedTeam.optionalTeam {
-					let defense = dataManager.getDefense(withName: sender.titleForState(.Normal)!)
+					let defense = Defense(rawValue: sender.titleForState(.Normal)!)
 					
 					dataManager.setDefenseAbleToShootFrom(defense!, toTeam: team, canShootFrom: true)
 				}
 			case .Teleop:
 				setDefenseButton(sender, state: .NotSelected)
 				if let team = selectedTeam.optionalTeam {
-					let defense = dataManager.getDefense(withName: sender.titleForState(.Normal)!)
+					let defense = Defense(rawValue: sender.titleForState(.Normal)!)
 					
 					dataManager.removeDefense(defense!, fromTeam: team, forPart: currentGamePart())
 				}
@@ -372,7 +372,7 @@ class PitScoutingController: UIViewController, UIImagePickerControllerDelegate, 
 		} else if CGColorEqualToColor(sender.layer.borderColor, UIColor.blueColor().CGColor) {
 			setDefenseButton(sender, state: .NotSelected)
 			if let team = selectedTeam.optionalTeam {
-				let defense = dataManager.getDefense(withName: sender.titleForState(.Normal)!)
+				let defense = Defense(rawValue: sender.titleForState(.Normal)!)
 				
 				dataManager.setDefenseAbleToShootFrom(defense!, toTeam: team, canShootFrom: false)
 				dataManager.removeDefense(defense!, fromTeam: team, forPart: currentGamePart())

@@ -13,5 +13,13 @@ import CoreData
 class AutonomousCycle: NSManagedObject {
 
 // Insert code here to add functionality to your managed object subclass
-
+	var defenseReachedDefense: Defense? {
+		get {
+			return Defense(rawValue: defenseReached ?? "")
+		}
+		
+		set {
+			defenseReached = newValue?.rawValue
+		}
+	}
 }

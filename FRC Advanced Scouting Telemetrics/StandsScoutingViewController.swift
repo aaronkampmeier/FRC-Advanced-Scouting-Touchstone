@@ -36,11 +36,11 @@ class StandsScoutingViewController: UIViewController, ProvidesTeam {
 		get {
 			switch matchPerformance!.allianceColor!.integerValue {
 			case 0:
-				return matchPerformance?.match?.blueDefenses?.allObjects as! [Defense]
+				return matchPerformance?.match?.blueDefensesArray
 			case 1:
-				return matchPerformance?.match?.redDefenses?.allObjects as! [Defense]
+				return matchPerformance?.match?.redDefensesArray
 			default:
-				return [Defense]()
+				return []
 			}
 		}
 	}
@@ -395,7 +395,7 @@ class DefenseSelector: UIViewController, UICollectionViewDataSource, UICollectio
 	let dataManager = TeamDataManager()
 	var standsScoutingVC: StandsScoutingViewController?
 	
-	var redDefenses: [TeamDataManager.DefenseCategory:Defense] = Dictionary<TeamDataManager.DefenseCategory, Defense>() {
+	var redDefenses: [DefenseCategory:Defense] = Dictionary<DefenseCategory, Defense>() {
 		didSet {
 			if redDefenses.count == 4 && blueDefenses.count == 4 {
 				doneButton.enabled = true
@@ -404,7 +404,7 @@ class DefenseSelector: UIViewController, UICollectionViewDataSource, UICollectio
 			}
 		}
 	}
-	var blueDefenses: [TeamDataManager.DefenseCategory:Defense] = Dictionary<TeamDataManager.DefenseCategory, Defense>() {
+	var blueDefenses: [DefenseCategory:Defense] = Dictionary<DefenseCategory, Defense>() {
 		didSet {
 			if redDefenses.count == 4 && blueDefenses.count == 4 {
 				doneButton.enabled = true
@@ -425,9 +425,9 @@ class DefenseSelector: UIViewController, UICollectionViewDataSource, UICollectio
 		for cell in defenseCollectionView.visibleCells() as! [DefenseSelectionCell] {
 			switch cell.color! {
 			case .Red:
-				cell.defenseSelection = redDefenses[cell.defenseCategory!]?.defenseType
+				cell.defenseSelection = redDefenses[cell.defenseCategory!]
 			case .Blue:
-				cell.defenseSelection = blueDefenses[cell.defenseCategory!]?.defenseType
+				cell.defenseSelection = blueDefenses[cell.defenseCategory!]
 			}
 		}
 	}
@@ -438,11 +438,11 @@ class DefenseSelector: UIViewController, UICollectionViewDataSource, UICollectio
 	}
 	
 	func loadDefenses(forMatch match: Match) {
-		for defense in (match.redDefenses?.allObjects as! [Defense]) {
-			redDefenses[defense.defenseCategory] = defense
+		for defense in match.redDefensesArray {
+			redDefenses[defense.category] = defense
 		}
-		for defense in (match.blueDefenses?.allObjects as! [Defense]) {
-			blueDefenses[defense.defenseCategory] = defense
+		for defense in match.blueDefensesArray {
+			blueDefenses[defense.category] = defense
 		}
 		defenseCollectionView.reloadData()
 	}
@@ -459,7 +459,7 @@ class DefenseSelector: UIViewController, UICollectionViewDataSource, UICollectio
 		let cell = collectionView.dequeueReusableCellWithReuseIdentifier("cell", forIndexPath: indexPath) as! DefenseSelectionCell
 		
 		cell.defenseSelector = self
-		cell.defenseCategory = TeamDataManager.DefenseCategory(rawValue: indexPath.item)
+		cell.defenseCategory = DefenseCategory(rawValue: indexPath.item)
 		if indexPath.section == 0 {
 			cell.color = TeamDataManager.AllianceColor.Red
 		} else {
@@ -488,18 +488,22 @@ class DefenseSelector: UIViewController, UICollectionViewDataSource, UICollectio
 		}
 	}
 	
-	func didSelectDefense(color: TeamDataManager.AllianceColor, defense: TeamDataManager.DefenseType) {
+	func didSelectDefense(color: TeamDataManager.AllianceColor, defense: Defense) {
 		switch color {
 		case .Red:
-			redDefenses[defense.category] = defense.defense
+			redDefenses[defense.category] = defense
 		case .Blue:
-			blueDefenses[defense.category] = defense.defense
+			blueDefenses[defense.category] = defense
 		}
 	}
 	
 	@IBAction func donePressed(sender: UIBarButtonItem) {
-		standsScoutingVC?.matchPerformance?.match?.redDefenses = NSSet(array: Array(redDefenses.values))
-		standsScoutingVC?.matchPerformance?.match?.blueDefenses = NSSet(array: Array(blueDefenses.values))
+		do {
+		try dataManager.setDefenses(inMatch: standsScoutingVC!.matchPerformance!.match!, redOrBlue: TeamDataManager.AllianceColor.Red, withDefenseArray: Array(redDefenses.values))
+		try dataManager.setDefenses(inMatch: standsScoutingVC!.matchPerformance!.match!, redOrBlue: TeamDataManager.AllianceColor.Blue, withDefenseArray: Array(blueDefenses.values))
+		} catch {
+			CLSNSLogv("\(error)", getVaList([]))
+		}
 		dataManager.commitChanges()
 		dismissViewControllerAnimated(true, completion: nil)
 	}
@@ -509,12 +513,12 @@ class DefenseSelectionCell: UICollectionViewCell, UITableViewDataSource, UITable
 	@IBOutlet weak var tableView: UITableView!
 	
 	var color: TeamDataManager.AllianceColor?
-	var defenseCategory: TeamDataManager.DefenseCategory? {
+	var defenseCategory: DefenseCategory? {
 		didSet {
 			tableView.reloadData()
 		}
 	}
-	var defenseSelection: TeamDataManager.DefenseType? {
+	var defenseSelection: Defense? {
 		didSet {
 			if let defenseSelection = defenseSelection {
 				tableView.selectRowAtIndexPath(NSIndexPath.init(forRow: defenseCategory!.defenses.indexOf(defenseSelection) ?? 2, inSection: 0), animated: false, scrollPosition: .None)

@@ -7,6 +7,9 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		1F08B5081CD2F76100C9B7E8 /* Team+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F08B5071CD2F76100C9B7E8 /* Team+CoreDataProperties.swift */; };
+		1F08B50E1CD32BBA00C9B7E8 /* Model.xcmappingmodel in Sources */ = {isa = PBXBuildFile; fileRef = 1F08B50D1CD32BBA00C9B7E8 /* Model.xcmappingmodel */; };
+		1F08B5111CD34D9100C9B7E8 /* MigrationPolicies.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F08B5101CD34D9100C9B7E8 /* MigrationPolicies.swift */; };
 		1F12CF141C78FD370014200C /* CourtyardViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F12CF131C78FD370014200C /* CourtyardViewController.swift */; };
 		1F12CF181C7A6CD70014200C /* Stopwatch.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F12CF171C7A6CD70014200C /* Stopwatch.swift */; };
 		1F21DF121C66942200C55D0E /* SortVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F21DF111C66942200C55D0E /* SortVC.swift */; };
@@ -14,8 +17,6 @@
 		1F4534101C6FF916004EDDB9 /* StandsScoutingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F45340F1C6FF916004EDDB9 /* StandsScoutingViewController.swift */; };
 		1F4534151C6FFC38004EDDB9 /* AutonomousViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F4534141C6FFC38004EDDB9 /* AutonomousViewController.swift */; };
 		1F4534171C7002EB004EDDB9 /* PopoverPickerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F4534161C7002EB004EDDB9 /* PopoverPickerViewController.swift */; };
-		1F4534361C7242B9004EDDB9 /* Defense+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F4534181C7242B9004EDDB9 /* Defense+CoreDataProperties.swift */; };
-		1F4534371C7242B9004EDDB9 /* Defense.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F4534191C7242B9004EDDB9 /* Defense.swift */; };
 		1F4534381C7242B9004EDDB9 /* TimeMarker+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F45341A1C7242B9004EDDB9 /* TimeMarker+CoreDataProperties.swift */; };
 		1F4534391C7242B9004EDDB9 /* TimeMarker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F45341B1C7242B9004EDDB9 /* TimeMarker.swift */; };
 		1F45343A1C7242B9004EDDB9 /* DefenseCrossTime+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F45341C1C7242B9004EDDB9 /* DefenseCrossTime+CoreDataProperties.swift */; };
@@ -30,7 +31,6 @@
 		1F4534451C7242B9004EDDB9 /* AutonomousCycle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F4534271C7242B9004EDDB9 /* AutonomousCycle.swift */; };
 		1F4534461C7242B9004EDDB9 /* Regional+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F4534281C7242B9004EDDB9 /* Regional+CoreDataProperties.swift */; };
 		1F4534471C7242B9004EDDB9 /* Regional.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F4534291C7242B9004EDDB9 /* Regional.swift */; };
-		1F45344E1C7242B9004EDDB9 /* Team+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F4534301C7242B9004EDDB9 /* Team+CoreDataProperties.swift */; };
 		1F45344F1C7242B9004EDDB9 /* Team.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F4534311C7242B9004EDDB9 /* Team.swift */; };
 		1F4534511C7242B9004EDDB9 /* TeamMatchPerformance.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F4534331C7242B9004EDDB9 /* TeamMatchPerformance.swift */; };
 		1F4534521C7242B9004EDDB9 /* TeamRegionalPerformance+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F4534341C7242B9004EDDB9 /* TeamRegionalPerformance+CoreDataProperties.swift */; };
@@ -121,6 +121,11 @@
 		1C713CB13EB7BA66AC808E54 /* Pods.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		1F0296661C5C6E42008CA8C2 /* FRC_Advanced_Scouting_Telemetrics CD 2.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "FRC_Advanced_Scouting_Telemetrics CD 2.xcdatamodel"; sourceTree = "<group>"; };
 		1F0296691C5D5439008CA8C2 /* FRC_Advanced_Scouting_Telemetrics CD 3.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "FRC_Advanced_Scouting_Telemetrics CD 3.xcdatamodel"; sourceTree = "<group>"; };
+		1F08B5041CD2F2BF00C9B7E8 /* FRC_Advanced_Scouting_Telemetrics Version 13.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "FRC_Advanced_Scouting_Telemetrics Version 13.xcdatamodel"; sourceTree = "<group>"; };
+		1F08B5071CD2F76100C9B7E8 /* Team+CoreDataProperties.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Team+CoreDataProperties.swift"; sourceTree = "<group>"; };
+		1F08B50D1CD32BBA00C9B7E8 /* Model.xcmappingmodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcmappingmodel; path = Model.xcmappingmodel; sourceTree = "<group>"; };
+		1F08B50F1CD33AFD00C9B7E8 /* FRC_Advanced_Scouting_Telemetrics Version 12-5.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "FRC_Advanced_Scouting_Telemetrics Version 12-5.xcdatamodel"; sourceTree = "<group>"; };
+		1F08B5101CD34D9100C9B7E8 /* MigrationPolicies.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MigrationPolicies.swift; sourceTree = "<group>"; };
 		1F12CF131C78FD370014200C /* CourtyardViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CourtyardViewController.swift; sourceTree = "<group>"; };
 		1F12CF171C7A6CD70014200C /* Stopwatch.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Stopwatch.swift; sourceTree = "<group>"; };
 		1F21DF111C66942200C55D0E /* SortVC.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SortVC.swift; sourceTree = "<group>"; };
@@ -131,8 +136,6 @@
 		1F45340F1C6FF916004EDDB9 /* StandsScoutingViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StandsScoutingViewController.swift; sourceTree = "<group>"; };
 		1F4534141C6FFC38004EDDB9 /* AutonomousViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AutonomousViewController.swift; sourceTree = "<group>"; };
 		1F4534161C7002EB004EDDB9 /* PopoverPickerViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PopoverPickerViewController.swift; sourceTree = "<group>"; };
-		1F4534181C7242B9004EDDB9 /* Defense+CoreDataProperties.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Defense+CoreDataProperties.swift"; sourceTree = "<group>"; };
-		1F4534191C7242B9004EDDB9 /* Defense.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Defense.swift; sourceTree = "<group>"; };
 		1F45341A1C7242B9004EDDB9 /* TimeMarker+CoreDataProperties.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "TimeMarker+CoreDataProperties.swift"; sourceTree = "<group>"; };
 		1F45341B1C7242B9004EDDB9 /* TimeMarker.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TimeMarker.swift; sourceTree = "<group>"; };
 		1F45341C1C7242B9004EDDB9 /* DefenseCrossTime+CoreDataProperties.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "DefenseCrossTime+CoreDataProperties.swift"; sourceTree = "<group>"; };
@@ -147,7 +150,6 @@
 		1F4534271C7242B9004EDDB9 /* AutonomousCycle.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AutonomousCycle.swift; sourceTree = "<group>"; };
 		1F4534281C7242B9004EDDB9 /* Regional+CoreDataProperties.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Regional+CoreDataProperties.swift"; sourceTree = "<group>"; };
 		1F4534291C7242B9004EDDB9 /* Regional.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Regional.swift; sourceTree = "<group>"; };
-		1F4534301C7242B9004EDDB9 /* Team+CoreDataProperties.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Team+CoreDataProperties.swift"; sourceTree = "<group>"; };
 		1F4534311C7242B9004EDDB9 /* Team.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Team.swift; sourceTree = "<group>"; };
 		1F4534331C7242B9004EDDB9 /* TeamMatchPerformance.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TeamMatchPerformance.swift; sourceTree = "<group>"; };
 		1F4534341C7242B9004EDDB9 /* TeamRegionalPerformance+CoreDataProperties.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "TeamRegionalPerformance+CoreDataProperties.swift"; sourceTree = "<group>"; };
@@ -358,6 +360,7 @@
 				1F78E78C1C3B469300221927 /* Assets.xcassets */,
 				1F78E78E1C3B469300221927 /* LaunchScreen.storyboard */,
 				1F78E7911C3B469300221927 /* Info.plist */,
+				1F08B50D1CD32BBA00C9B7E8 /* Model.xcmappingmodel */,
 				1F78E7891C3B469300221927 /* FRC_Advanced_Scouting_Telemetrics.xcdatamodeld */,
 			);
 			name = "FRC Advanced Scouting Touchstone";
@@ -387,8 +390,7 @@
 		1FCA7ADB1C6408B2004294D1 /* Core Data */ = {
 			isa = PBXGroup;
 			children = (
-				1F4534181C7242B9004EDDB9 /* Defense+CoreDataProperties.swift */,
-				1F4534191C7242B9004EDDB9 /* Defense.swift */,
+				1F08B5101CD34D9100C9B7E8 /* MigrationPolicies.swift */,
 				1F45341A1C7242B9004EDDB9 /* TimeMarker+CoreDataProperties.swift */,
 				1F45341B1C7242B9004EDDB9 /* TimeMarker.swift */,
 				1F45341C1C7242B9004EDDB9 /* DefenseCrossTime+CoreDataProperties.swift */,
@@ -403,7 +405,7 @@
 				1F4534271C7242B9004EDDB9 /* AutonomousCycle.swift */,
 				1F4534281C7242B9004EDDB9 /* Regional+CoreDataProperties.swift */,
 				1F4534291C7242B9004EDDB9 /* Regional.swift */,
-				1F4534301C7242B9004EDDB9 /* Team+CoreDataProperties.swift */,
+				1F08B5071CD2F76100C9B7E8 /* Team+CoreDataProperties.swift */,
 				1F4534311C7242B9004EDDB9 /* Team.swift */,
 				1FBC9E6D1CC45C63005DB3F4 /* TeamMatchPerformance+CoreDataProperties.swift */,
 				1F4534331C7242B9004EDDB9 /* TeamMatchPerformance.swift */,
@@ -709,6 +711,7 @@
 			files = (
 				1F45343F1C7242B9004EDDB9 /* DraftBoard.swift in Sources */,
 				1FDE56D01CCD3C64009042CD /* tests.swift in Sources */,
+				1F08B50E1CD32BBA00C9B7E8 /* Model.xcmappingmodel in Sources */,
 				1FB99DB31C741840004BC2C1 /* AdminConfigureDetailRegionalViewController.swift in Sources */,
 				1F78E7851C3B469300221927 /* ViewController.swift in Sources */,
 				1F78E78B1C3B469300221927 /* FRC_Advanced_Scouting_Telemetrics.xcdatamodeld in Sources */,
@@ -742,13 +745,13 @@
 				1FDE56CF1CCD3C64009042CD /* speed.swift in Sources */,
 				1F4534471C7242B9004EDDB9 /* Regional.swift in Sources */,
 				1F4534431C7242B9004EDDB9 /* Shot.swift in Sources */,
+				1F08B5111CD34D9100C9B7E8 /* MigrationPolicies.swift in Sources */,
 				1FBB426D1C9A29FC0017E36C /* Statistics.swift in Sources */,
 				1FDE56C71CCD3C64009042CD /* numbers.swift in Sources */,
 				1FDE56CE1CCD3C64009042CD /* ScalarArithmetic-bleed.swift in Sources */,
 				1F45343B1C7242B9004EDDB9 /* DefenseCrossTime.swift in Sources */,
 				1F4534451C7242B9004EDDB9 /* AutonomousCycle.swift in Sources */,
 				1F4534461C7242B9004EDDB9 /* Regional+CoreDataProperties.swift in Sources */,
-				1F4534361C7242B9004EDDB9 /* Defense+CoreDataProperties.swift in Sources */,
 				1FDE56C11CCD3C64009042CD /* complex-math.swift in Sources */,
 				1F51D1C61C7FFBC000B4D6C5 /* GameStatsLayout.swift in Sources */,
 				1F4534381C7242B9004EDDB9 /* TimeMarker+CoreDataProperties.swift in Sources */,
@@ -759,7 +762,6 @@
 				1FCEF8F61C9CB231006AC591 /* Globals.swift in Sources */,
 				1FDE56C51CCD3C64009042CD /* operators.swift in Sources */,
 				1F4534171C7002EB004EDDB9 /* PopoverPickerViewController.swift in Sources */,
-				1F4534371C7242B9004EDDB9 /* Defense.swift in Sources */,
 				1FDE56C01CCD3C64009042CD /* m-simple-math.swift in Sources */,
 				1FDE56BB1CCD3C64009042CD /* m-helper-functions.swift in Sources */,
 				1F4534521C7242B9004EDDB9 /* TeamRegionalPerformance+CoreDataProperties.swift in Sources */,
@@ -773,9 +775,9 @@
 				1FBC9E6E1CC45C63005DB3F4 /* TeamMatchPerformance+CoreDataProperties.swift in Sources */,
 				1FDE56C21CCD3C64009042CD /* helper-functions.swift in Sources */,
 				1F21DF121C66942200C55D0E /* SortVC.swift in Sources */,
+				1F08B5081CD2F76100C9B7E8 /* Team+CoreDataProperties.swift in Sources */,
 				1FDE56BC1CCD3C64009042CD /* m-image.swift in Sources */,
 				1FCA7ADA1C630BAE004294D1 /* StatsVC.swift in Sources */,
-				1F45344E1C7242B9004EDDB9 /* Team+CoreDataProperties.swift in Sources */,
 				1F45344F1C7242B9004EDDB9 /* Team.swift in Sources */,
 				1FDE56BF1CCD3C64009042CD /* m-operators.swift in Sources */,
 				1FDE56CD1CCD3C64009042CD /* operations-and-indexing.m in Sources */,
@@ -904,7 +906,7 @@
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: Donna Kampmeier (3T77TK2ECU)";
 				COPY_PHASE_STRIP = NO;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				ENABLE_NS_ASSERTIONS = NO;
@@ -959,7 +961,7 @@
 				OTHER_SWIFT_FLAGS = "$(inherited) \"-D\" \"COCOAPODS\"";
 				PRODUCT_BUNDLE_IDENTIFIER = "com.kampmeier.FRC-Advanced-Scouting-Touchstone";
 				PRODUCT_NAME = "FRC Advanced Scouting Touchstone";
-				PROVISIONING_PROFILE = "";
+				PROVISIONING_PROFILE = "1da15394-14e2-4de2-b834-e3feca4d0125";
 			};
 			name = Debug;
 		};
@@ -968,8 +970,8 @@
 			baseConfigurationReference = 7A0B0ED33C5CDE3647C7F796 /* Pods.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				CODE_SIGN_IDENTITY = "iPhone Developer";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				CODE_SIGN_IDENTITY = "iPhone Distribution";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution";
 				ENABLE_BITCODE = NO;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
@@ -995,7 +997,7 @@
 				OTHER_SWIFT_FLAGS = "$(inherited) \"-D\" \"COCOAPODS\"";
 				PRODUCT_BUNDLE_IDENTIFIER = "com.kampmeier.FRC-Advanced-Scouting-Touchstone";
 				PRODUCT_NAME = "FRC Advanced Scouting Touchstone";
-				PROVISIONING_PROFILE = "";
+				PROVISIONING_PROFILE = "a024fa9d-3610-436f-a7c6-08fbb75be7bc";
 			};
 			name = Release;
 		};
@@ -1106,6 +1108,8 @@
 		1F78E7891C3B469300221927 /* FRC_Advanced_Scouting_Telemetrics.xcdatamodeld */ = {
 			isa = XCVersionGroup;
 			children = (
+				1F08B50F1CD33AFD00C9B7E8 /* FRC_Advanced_Scouting_Telemetrics Version 12-5.xcdatamodel */,
+				1F08B5041CD2F2BF00C9B7E8 /* FRC_Advanced_Scouting_Telemetrics Version 13.xcdatamodel */,
 				1F34C74C1CD2540B005255D5 /* FRC_Advanced_Scouting_Telemetrics Version 12.xcdatamodel */,
 				1F34C74B1CD1A85B005255D5 /* FRC_Advanced_Scouting_Telemetrics Version 11.xcdatamodel */,
 				1FDE568A1CCC915A009042CD /* FRC_Advanced_Scouting_Telemetrics Version 10.xcdatamodel */,
@@ -1118,7 +1122,7 @@
 				1F0296661C5C6E42008CA8C2 /* FRC_Advanced_Scouting_Telemetrics CD 2.xcdatamodel */,
 				1F78E78A1C3B469300221927 /* FRC_Advanced_Scouting_Telemetrics.xcdatamodel */,
 			);
-			currentVersion = 1F34C74C1CD2540B005255D5 /* FRC_Advanced_Scouting_Telemetrics Version 12.xcdatamodel */;
+			currentVersion = 1F08B5041CD2F2BF00C9B7E8 /* FRC_Advanced_Scouting_Telemetrics Version 13.xcdatamodel */;
 			path = FRC_Advanced_Scouting_Telemetrics.xcdatamodeld;
 			sourceTree = "<group>";
 			versionGroupType = wrapper.xcdatamodel;

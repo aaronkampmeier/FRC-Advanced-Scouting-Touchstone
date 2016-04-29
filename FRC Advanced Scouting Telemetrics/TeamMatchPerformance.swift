@@ -105,7 +105,3 @@ protocol AutoValue {
 extension Bool: AutoValue {
 	
 }
-
-extension Defense: AutoValue {
-	
-}

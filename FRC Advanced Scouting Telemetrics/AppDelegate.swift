@@ -20,70 +20,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     func application(application: UIApplication, didFinishLaunchingWithOptions launchOptions: [NSObject: AnyObject]?) -> Bool {
         // Override point for customization after application launch.
 		Fabric.with([Answers.self, Crashlytics.self])
+		Crashlytics.sharedInstance().setUserIdentifier(UIDevice.currentDevice().identifierForVendor?.UUIDString ?? "Unknown")
 		
 		DataSyncer.begin()
-		
-		let dataManager = TeamDataManager()
-		//Set up and manage all the defenses. They should always be constant: Two defenses for 4 categories and a low bar.
-		//Set up category A
-		let catADefenses = dataManager.getDefenses(inCategory: "A")
-		if catADefenses.filter({$0.defenseName == "Portcullis"}).isEmpty {
-			//There is no portcullis defense, make one
-			NSLog("Making Portcullis Defense")
-			dataManager.createDefense(withName: "Portcullis", inCategory: "A")
-		}
-		if catADefenses.filter({$0.defenseName == "Cheval de Frise"}).isEmpty {
-			//There is no Cheval de Frise, make one
-			NSLog("Making Cheval De Frise Defense")
-			dataManager.createDefense(withName: "Cheval de Frise", inCategory: "A")
-		}
-		
-		//Set up category B
-		let catBDefenses = dataManager.getDefenses(inCategory: "B")
-		if catBDefenses.filter({$0.defenseName == "Moat"}).isEmpty {
-			//There is no Moat defense, make one
-			NSLog("Making Moat Defense")
-			dataManager.createDefense(withName: "Moat", inCategory: "B")
-		}
-		if catBDefenses.filter({$0.defenseName == "Ramparts"}).isEmpty {
-			//There is no Ramparts, make one
-			NSLog("Making Ramparts Defense")
-			dataManager.createDefense(withName: "Ramparts", inCategory: "B")
-		}
-		
-		//Set up category C
-		let catCDefenses = dataManager.getDefenses(inCategory: "C")
-		if catCDefenses.filter({$0.defenseName == "Drawbridge"}).isEmpty {
-			//There is no Drawbridge defense, make one
-			NSLog("Making Drawbridge Defense")
-			dataManager.createDefense(withName: "Drawbridge", inCategory: "C")
-		}
-		if catCDefenses.filter({$0.defenseName == "Sally Port"}).isEmpty {
-			//There is no Sally Port, make one
-			NSLog("Making Sally Port Defense")
-			dataManager.createDefense(withName: "Sally Port", inCategory: "C")
-		}
-		
-		//Set up category D
-		let catDDefenses = dataManager.getDefenses(inCategory: "D")
-		if catDDefenses.filter({$0.defenseName == "Rock Wall"}).isEmpty {
-			//There is no Rock Wall defense, make one
-			NSLog("Making Rock Wall Defense")
-			dataManager.createDefense(withName: "Rock Wall", inCategory: "D")
-		}
-		if catDDefenses.filter({$0.defenseName == "Rough Terrain"}).isEmpty {
-			//There is no Rough Terrain, make one
-			NSLog("Making Rough Terrain Defense")
-			dataManager.createDefense(withName: "Rough Terrain", inCategory: "D")
-		}
-		
-		//Set up category E (an imaginary one to hold the low bar)
-		let catEDefenses = dataManager.getDefenses(inCategory: "E")
-		if catEDefenses.filter({$0.defenseName == "Low Bar"}).isEmpty {
-			//There is no Low Bar, make one
-			NSLog("Making Low Bar Defense")
-			dataManager.createDefense(withName: "Low Bar", inCategory: "E")
-		}
 		
 		checkForUpdate()
 		
@@ -199,7 +138,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 	}
 	
 	func presentViewControllerOnTop(viewControllerToPresent: UIViewController, animated flag: Bool, completion: (() -> Void)? = nil) {
-		window?.rootViewController?.presentViewControllerFromVisibleViewController(viewControllerToPresent, animated: flag, completion: completion)
+		dispatch_async(dispatch_get_main_queue()) {
+			self.window?.rootViewController?.presentViewControllerFromVisibleViewController(viewControllerToPresent, animated: flag, completion: completion)
+		}
 	}
 
     // MARK: - Core Data stack
@@ -241,7 +182,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             dict[NSLocalizedDescriptionKey] = "Failed to initialize the application's saved data"
             dict[NSLocalizedFailureReasonErrorKey] = failureReason
 
-            dict[NSUnderlyingErrorKey] = error as NSError
+            dict[NSUnderlyingErrorKey] = error as! NSError
             let wrappedError = NSError(domain: "YOUR_ERROR_DOMAIN", code: 9999, userInfo: dict)
             // Replace this with code to handle the error appropriately.
             // abort() causes the application to generate a crash log and terminate. You should not use this function in a shipping application, although it may be useful during development.

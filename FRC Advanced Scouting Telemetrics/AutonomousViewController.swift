@@ -257,7 +257,7 @@ class AutonomousPickerCell: UITableViewCell, UIPickerViewDataSource, UIPickerVie
 	var associatedAutonomousCycle: AutonomousCycle? {
 		didSet {
 			if let cycle = associatedAutonomousCycle {
-				selectButton.setTitle(cycle.defenseReached?.defenseName ?? "Select Defense", forState: .Normal)
+				selectButton.setTitle(cycle.defenseReached ?? "Select Defense", forState: .Normal)
 			}
 		}
 	}
@@ -287,7 +287,7 @@ class AutonomousPickerCell: UITableViewCell, UIPickerViewDataSource, UIPickerVie
 	
 	func pickerView(pickerView: UIPickerView, titleForRow row: Int, forComponent component: Int) -> String? {
 		if row < defenses?.count {
-			return defenses![row].defenseName
+			return defenses![row].description
 		} else {
 			return "Low Bar"
 		}
@@ -296,11 +296,11 @@ class AutonomousPickerCell: UITableViewCell, UIPickerViewDataSource, UIPickerVie
 	func pickerView(pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {
 		//Update core data
 		if row < defenses?.count {
-			associatedAutonomousCycle?.defenseReached = defenses?[row]
+			associatedAutonomousCycle?.defenseReachedDefense = defenses?[row]
 		} else {
-			associatedAutonomousCycle?.defenseReached = autonomousVC?.dataManager.getLowBar()
+			associatedAutonomousCycle?.defenseReachedDefense = Defense.LowBar
 		}
 		
-		selectButton.setTitle((associatedAutonomousCycle?.defenseReached?.defenseName) ?? "ERROR", forState: .Normal)
+		selectButton.setTitle((associatedAutonomousCycle?.defenseReached) ?? "ERROR", forState: .Normal)
 	}
 }

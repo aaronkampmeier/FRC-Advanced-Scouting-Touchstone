@@ -41,10 +41,10 @@ class NeutralViewController: UIViewController {
 		
 		if defenses?.count == 4 {
 			//Set the buttons with the defenses images
-			defense4Button.setImage(UIImage(named: defenses![0].defenseName!), forState: .Normal)
-			defense3Button.setImage(UIImage(named: defenses![1].defenseName!), forState: .Normal)
-			defense2Button.setImage(UIImage(named: defenses![2].defenseName!), forState: .Normal)
-			defense1Button.setImage(UIImage(named: defenses![3].defenseName!), forState: .Normal)
+			defense4Button.setImage(UIImage(named: defenses![0].description), forState: .Normal)
+			defense3Button.setImage(UIImage(named: defenses![1].description), forState: .Normal)
+			defense2Button.setImage(UIImage(named: defenses![2].description), forState: .Normal)
+			defense1Button.setImage(UIImage(named: defenses![3].description), forState: .Normal)
 		} else {
 			let alert = UIAlertController(title: "No Defenses", message: "There are no defenses set for this match. You must set some in the admin console before tracking neutral times.", preferredStyle: .Alert)
 			alert.addAction(UIAlertAction(title: "OK", style: .Default, handler: nil))
@@ -61,7 +61,7 @@ class NeutralViewController: UIViewController {
 		let defense: Defense!
 		switch sender {
 		case lowBarButton:
-			defense = dataManager.getLowBar()
+			defense = Defense.LowBar
 		case defense4Button:
 			defense = defenses![0]
 		case defense3Button:
@@ -85,41 +85,41 @@ class NeutralViewController: UIViewController {
 	@IBAction func breachedLowBar(sender: UISwitch) {
 		switch sender.on {
 		case true:
-			dataManager.setDidBreachDefense(dataManager.getLowBar(), inMatchPerformance: standsScoutingController.matchPerformance!)
+			dataManager.setDefense(Defense.LowBar, state: TeamDataManager.DefenseState.Breached, inMatchPerformance: standsScoutingController.matchPerformance!)
 		case false:
-			dataManager.setDidNotBreachDefense(dataManager.getLowBar(), inMatchPerformance: standsScoutingController.matchPerformance!)
+			dataManager.setDefense(Defense.LowBar, state: TeamDataManager.DefenseState.NotBreached, inMatchPerformance: standsScoutingController.matchPerformance!)
 		}
 	}
 	@IBAction func breachedDefense4(sender: UISwitch) {
 		switch sender.on {
 		case true:
-			dataManager.setDidBreachDefense(defenses![0], inMatchPerformance: standsScoutingController.matchPerformance!)
+			dataManager.setDefense(defenses![0], state: TeamDataManager.DefenseState.Breached, inMatchPerformance: standsScoutingController.matchPerformance!)
 		case false:
-			dataManager.setDidNotBreachDefense(defenses![0], inMatchPerformance: standsScoutingController.matchPerformance!)
+			dataManager.setDefense(defenses![0], state: TeamDataManager.DefenseState.NotBreached, inMatchPerformance: standsScoutingController.matchPerformance!)
 		}
 	}
 	@IBAction func breachedDefense3(sender: UISwitch) {
 		switch sender.on {
 		case true:
-			dataManager.setDidBreachDefense(defenses![1], inMatchPerformance: standsScoutingController.matchPerformance!)
+			dataManager.setDefense(defenses![1], state: TeamDataManager.DefenseState.Breached, inMatchPerformance: standsScoutingController.matchPerformance!)
 		case false:
-			dataManager.setDidNotBreachDefense(defenses![1], inMatchPerformance: standsScoutingController.matchPerformance!)
+			dataManager.setDefense(defenses![1], state: TeamDataManager.DefenseState.NotBreached, inMatchPerformance: standsScoutingController.matchPerformance!)
 		}
 	}
 	@IBAction func breachedDefense2(sender: UISwitch) {
 		switch sender.on {
 		case true:
-			dataManager.setDidBreachDefense(defenses![2], inMatchPerformance: standsScoutingController.matchPerformance!)
+			dataManager.setDefense(defenses![2], state: TeamDataManager.DefenseState.Breached, inMatchPerformance: standsScoutingController.matchPerformance!)
 		case false:
-			dataManager.setDidNotBreachDefense(defenses![2], inMatchPerformance: standsScoutingController.matchPerformance!)
+			dataManager.setDefense(defenses![2], state: TeamDataManager.DefenseState.NotBreached, inMatchPerformance: standsScoutingController.matchPerformance!)
 		}
 	}
 	@IBAction func breachedDefense1(sender: UISwitch) {
 		switch sender.on {
 		case true:
-			dataManager.setDidBreachDefense(defenses![3], inMatchPerformance: standsScoutingController.matchPerformance!)
+			dataManager.setDefense(defenses![3], state: TeamDataManager.DefenseState.Breached, inMatchPerformance: standsScoutingController.matchPerformance!)
 		case false:
-			dataManager.setDidNotBreachDefense(defenses![3], inMatchPerformance: standsScoutingController.matchPerformance!)
+			dataManager.setDefense(defenses![3], state: TeamDataManager.DefenseState.NotBreached, inMatchPerformance: standsScoutingController.matchPerformance!)
 		}
 	}
 	

@@ -13,5 +13,7 @@ import CoreData
 class DefenseCrossTime: NSManagedObject {
 
 // Insert code here to add functionality to your managed object subclass
-
+	func getDefense() -> Defense? {
+		return Defense(rawValue: defense ?? "")
+	}
 }
