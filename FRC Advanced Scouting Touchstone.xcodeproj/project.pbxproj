@@ -53,6 +53,7 @@
 		1F78E7A61C3B469300221927 /* FRC_Advanced_Scouting_TelemetricsUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F78E7A51C3B469300221927 /* FRC_Advanced_Scouting_TelemetricsUITests.swift */; };
 		1F9B78271CD07F5700B4E5AE /* opencv2.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1FDE56921CCD376B009042CD /* opencv2.framework */; };
 		1F9B782B1CD1A42400B4E5AE /* HiddenDebugViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F9B782A1CD1A42400B4E5AE /* HiddenDebugViewController.swift */; };
+		1FA6A73E1CD3B4DD00772C63 /* TransferInfoTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FA6A73D1CD3B4DD00772C63 /* TransferInfoTableViewController.swift */; };
 		1FB99DB31C741840004BC2C1 /* AdminConfigureDetailRegionalViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FB99DB21C741840004BC2C1 /* AdminConfigureDetailRegionalViewController.swift */; };
 		1FBB426D1C9A29FC0017E36C /* Statistics.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FBB426C1C9A29FC0017E36C /* Statistics.swift */; };
 		1FBC9E691CC2EE11005DB3F4 /* Fabric.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1FBC9E671CC2EE11005DB3F4 /* Fabric.framework */; };
@@ -181,6 +182,7 @@
 		1F9A53861C6AB0F000B0AAE3 /* FRC_Advanced_Scouting_Telemetrics CD 5.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "FRC_Advanced_Scouting_Telemetrics CD 5.xcdatamodel"; sourceTree = "<group>"; };
 		1F9B78241CD07C7000B4E5AE /* NYTPhotoViewer.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = NYTPhotoViewer.framework; path = "Pods/../build/Debug-iphoneos/NYTPhotoViewer.framework"; sourceTree = "<group>"; };
 		1F9B782A1CD1A42400B4E5AE /* HiddenDebugViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HiddenDebugViewController.swift; sourceTree = "<group>"; };
+		1FA6A73D1CD3B4DD00772C63 /* TransferInfoTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TransferInfoTableViewController.swift; sourceTree = "<group>"; };
 		1FB99DB21C741840004BC2C1 /* AdminConfigureDetailRegionalViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AdminConfigureDetailRegionalViewController.swift; sourceTree = "<group>"; };
 		1FBB426C1C9A29FC0017E36C /* Statistics.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Statistics.swift; sourceTree = "<group>"; };
 		1FBC9E671CC2EE11005DB3F4 /* Fabric.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Fabric.framework; sourceTree = SOURCE_ROOT; };
@@ -268,7 +270,7 @@
 			isa = PBXGroup;
 			children = (
 				1F9B782A1CD1A42400B4E5AE /* HiddenDebugViewController.swift */,
-				1F665D711CB1DA91003CAC1D /* DataSyncingViewController.swift */,
+				1FA6A73F1CD3B4E800772C63 /* Data Syncing */,
 				1FF1F1721C3CC74A0051EE54 /* TeamListController.swift */,
 				1F4178BF1CD02E4200801D5B /* Team List Segments */,
 				1FBE627E1CAEE0FB001FDFB7 /* TeamPickerTableViewController.swift */,
@@ -385,6 +387,15 @@
 			);
 			name = "FRC Advanced Scouting TouchstoneUITests";
 			path = "FRC Advanced Scouting TelemetricsUITests";
+			sourceTree = "<group>";
+		};
+		1FA6A73F1CD3B4E800772C63 /* Data Syncing */ = {
+			isa = PBXGroup;
+			children = (
+				1F665D711CB1DA91003CAC1D /* DataSyncingViewController.swift */,
+				1FA6A73D1CD3B4DD00772C63 /* TransferInfoTableViewController.swift */,
+			);
+			name = "Data Syncing";
 			sourceTree = "<group>";
 		};
 		1FCA7ADB1C6408B2004294D1 /* Core Data */ = {
@@ -764,6 +775,7 @@
 				1F4534171C7002EB004EDDB9 /* PopoverPickerViewController.swift in Sources */,
 				1FDE56C01CCD3C64009042CD /* m-simple-math.swift in Sources */,
 				1FDE56BB1CCD3C64009042CD /* m-helper-functions.swift in Sources */,
+				1FA6A73E1CD3B4DD00772C63 /* TransferInfoTableViewController.swift in Sources */,
 				1F4534521C7242B9004EDDB9 /* TeamRegionalPerformance+CoreDataProperties.swift in Sources */,
 				1F4534531C7242B9004EDDB9 /* TeamRegionalPerformance.swift in Sources */,
 				1F58308F1CB09AF900D6F513 /* DataSyncer.swift in Sources */,

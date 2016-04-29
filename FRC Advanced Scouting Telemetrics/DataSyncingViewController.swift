@@ -11,7 +11,9 @@ import UIKit
 class DataSyncingViewController: UIViewController, UITableViewDataSource{
 	@IBOutlet weak var connectedDevicesTable: UITableView!
 	@IBOutlet weak var syncIDField: UITextField!
-
+	@IBOutlet weak var transferNumberLabel: UILabel!
+	@IBOutlet weak var transferInfoButton: UIButton!
+	
 	var connectedPeers = [FASTPeer]()
 	
     override func viewDidLoad() {
@@ -22,6 +24,9 @@ class DataSyncingViewController: UIViewController, UITableViewDataSource{
 		connectedDevicesTable.dataSource = self
 		
 		NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(DataSyncingViewController.peerChangedState(_:)), name:"DataSyncing:DidChangeState", object: nil)
+		NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(DataSyncingViewController.numberOfTransfersChanged(_:)), name: DSTransferNumberChanged, object: nil)
+		
+		transferNumberLabel.text = "\(DataSyncer.sharedDataSyncer().multipeerConnection.currentFileTransfers.count)"
 		
 		//Retreive the sync secret add display it in the textfield
 		syncIDField.placeholder = "FRC-4256-FAST-EnsembleSync"
@@ -38,6 +43,10 @@ class DataSyncingViewController: UIViewController, UITableViewDataSource{
 	
 	override func viewDidAppear(animated: Bool) {
 		super.viewDidAppear(animated)
+		
+	}
+	
+	@IBAction func returnToDataSyncing(unwindSegue: UIStoryboardSegue) {
 		
 	}
 	
@@ -59,6 +68,10 @@ class DataSyncingViewController: UIViewController, UITableViewDataSource{
 			}
 		}
 	}
+	
+	func numberOfTransfersChanged(notification: NSNotification) {
+		transferNumberLabel.text = "\(DataSyncer.sharedDataSyncer().multipeerConnection.currentFileTransfers.count)"
+	}
 
 	@IBAction func syncPressed(sender: UIBarButtonItem) {
 		sender.enabled = false
@@ -66,6 +79,14 @@ class DataSyncingViewController: UIViewController, UITableViewDataSource{
 		DataSyncer.sharedDataSyncer().syncWithCompletion() {error in
 			sender.enabled = true
 		}
+	}
+	
+	@IBAction func transferInfoPressed(sender: UIButton) {
+		let transferInfoVC = storyboard?.instantiateViewControllerWithIdentifier("transferInfoTable") as! TransferInfoTableViewController
+		transferInfoVC.preferredContentSize = CGSize(width: 300, height: 300)
+		transferInfoVC.modalPresentationStyle = .Popover
+		transferInfoVC.popoverPresentationController?.sourceView = sender
+		presentViewController(transferInfoVC, animated: true, completion: nil)
 	}
 	
 	@IBAction func syncIDChanged(sender: UITextField) {

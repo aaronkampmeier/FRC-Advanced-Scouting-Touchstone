@@ -26,8 +26,19 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 		
 		checkForUpdate()
 		
+		clearTMPFolder()
+		
         return true
     }
+	
+	func clearTMPFolder() {
+//		do {
+//			print(NSTemporaryDirectory())
+//			try NSFileManager.defaultManager().removeItemAtPath(NSTemporaryDirectory())
+//		} catch {
+//			CLSNSLogv("Unable to clear temporary directory.", getVaList([]))
+//		}
+	}
 	
 	func checkForUpdate(forceful forceful: Bool = false) {
 		if forceful {

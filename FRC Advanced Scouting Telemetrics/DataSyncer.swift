@@ -12,6 +12,7 @@ import Ensembles
 import Crashlytics
 
 let CDEMultipeerCloudFileSystemDidImportFilesNotification = "CDEMultipeerCloudFileSystemDidImportFilesNotification"
+let DSTransferNumberChanged = "DSTransferNumberChanged"
 
 class DataSyncer: NSObject, CDEPersistentStoreEnsembleDelegate {
 	private static var sharedInstance: DataSyncer = DataSyncer()
@@ -132,7 +133,7 @@ class DataSyncer: NSObject, CDEPersistentStoreEnsembleDelegate {
 	}
 	
 	func persistentStoreEnsemble(ensemble: CDEPersistentStoreEnsemble!, didFailToSaveMergedChangesInManagedObjectContext savingContext: NSManagedObjectContext!, error: NSError!, reparationManagedObjectContext reparationContext: NSManagedObjectContext!) -> Bool {
-		CLSNSLogv("Ensemble did fail to save merged changes. Error: %d", getVaList([error ?? nil]))
+		CLSNSLogv("Ensemble did fail to save merged changes. Error: \(error)", getVaList([]))
 		let alert = UIAlertController(title: "Save Failed", message: "The save and sync failed. Ask your admin for help with this issue. Attempting to fix...", preferredStyle: .Alert)
 		alert.addAction(UIAlertAction(title: "OK", style: .Default, handler: nil))
 		(UIApplication.sharedApplication().delegate as! AppDelegate).presentViewControllerOnTop(alert, animated: true)
@@ -176,7 +177,7 @@ class DataSyncer: NSObject, CDEPersistentStoreEnsembleDelegate {
 		alert.addAction(UIAlertAction(title: "OK", style: .Default, handler: nil))
 		(UIApplication.sharedApplication().delegate as! AppDelegate).presentViewControllerOnTop(alert, animated: true)
 		
-		CLSNSLogv("Did deleech with error: %d", getVaList([error ?? nil]))
+		CLSNSLogv("Did deleech with error: \(error)", getVaList([]))
 		Crashlytics.sharedInstance().recordError(error)
 	}
 	
@@ -223,11 +224,20 @@ class MultipeerConnection: NSObject, CDEMultipeerConnection {
 	let mySyncSecret: String
 	
 	private let myPeerID = MCPeerID(displayName: UIDevice.currentDevice().name)
-	private let serviceAdvertiser: MCNearbyServiceAdvertiser
 	
+	private let serviceAdvertiser: MCNearbyServiceAdvertiser
 	private let serviceBrowser: MCNearbyServiceBrowser
 	
 	let session: MCSession
+	
+	var currentFileTransfers = [String:(NSProgress, FASTPeer)]() {
+		didSet {
+			let oldKeys = Set(oldValue.keys)
+			let newKeys = Set(currentFileTransfers.keys)
+			let updatedKeys = oldKeys.exclusiveOr(newKeys)
+			NSNotificationCenter.defaultCenter().postNotificationName(DSTransferNumberChanged, object: self, userInfo: ["UpdatedKeys":Array(updatedKeys)])
+		}
+	}
 	
 	weak var fileSystem: CDEMultipeerCloudFileSystem?
 	
@@ -358,12 +368,12 @@ extension MultipeerConnection: MCNearbyServiceBrowserDelegate {
 /** Session Delegate */
 extension MultipeerConnection: MCSessionDelegate {
 	func session(session: MCSession, didReceiveData data: NSData, fromPeer peerID: MCPeerID) {
-		NSLog("Received Data")
+		CLSNSLogv("Received Data", getVaList([]))
 		fileSystem?.receiveData(data, fromPeerWithID: peerID)
 	}
 	
 	func session(session: MCSession, peer peerID: MCPeerID, didChangeState state: MCSessionState) {
-		NSLog("Peer: \(peerID.displayName), Did change state: \(state.stringValue())")
+		CLSNSLogv("Peer: \(peerID.displayName), Did change state: \(state)", getVaList([]))
 		
 		dispatch_async(dispatch_get_main_queue()) {
 			NSNotificationCenter.defaultCenter().postNotificationName("DataSyncing:DidChangeState", object: self, userInfo: ["peer":peerID as FASTPeer, "state":state.rawValue])
@@ -381,13 +391,14 @@ extension MultipeerConnection: MCSessionDelegate {
 	}
 	
 	func session(session: MCSession, didFinishReceivingResourceWithName resourceName: String, fromPeer peerID: MCPeerID, atURL localURL: NSURL, withError error: NSError?) {
-		NSLog("Did finish receiving resource: \(resourceName)")
+		CLSNSLogv("Did finish receiving resource: \(resourceName)", getVaList([]))
+		currentFileTransfers.removeValueForKey(resourceName)
 		dispatch_async(dispatch_get_main_queue()) {
 			NSNotificationCenter.defaultCenter().postNotificationName("DataSyncing:DidFinishReceiving", object: self, userInfo: ["peer": peerID.displayName, "url":localURL, "name":resourceName])
 		}
 		
 		if error != nil {
-			NSLog("Error receiving file: \(error)")
+			CLSNSLogv("Error receiving file: \(error)", getVaList([]))
 			return
 		} else {
 			fileSystem?.receiveResourceAtURL(localURL, fromPeerWithID: peerID)
@@ -395,11 +406,12 @@ extension MultipeerConnection: MCSessionDelegate {
 	}
 	
 	func session(session: MCSession, didStartReceivingResourceWithName resourceName: String, fromPeer peerID: MCPeerID, withProgress progress: NSProgress) {
-		NSLog("Did start receiving resource: \(resourceName)")
+		CLSNSLogv("Did start receiving resource: \(resourceName)", getVaList([]))
+		currentFileTransfers[resourceName] = (progress, peerID)
 	}
 }
 
-extension MCSessionState {
+extension MCSessionState: CustomStringConvertible {
 	func stringValue() -> String {
 		switch self {
 		case .NotConnected:
@@ -409,6 +421,10 @@ extension MCSessionState {
 		case .Connected:
 			return "Connected"
 		}
+	}
+	
+	public var description: String {
+		return self.stringValue()
 	}
 }
 
