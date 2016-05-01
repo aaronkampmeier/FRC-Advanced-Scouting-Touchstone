@@ -54,7 +54,7 @@ class TeamDataManager {
 			do {
 				let draftBoard = try getRootDraftBoard().teams?.mutableCopy() as! NSMutableOrderedSet
 				draftBoard.insertObject(team, atIndex: rank!)
-				try getRootDraftBoard().teams = draftBoard.copy() as! NSOrderedSet
+				try getRootDraftBoard().teams = (draftBoard.copy() as! NSOrderedSet)
 			} catch {
 				NSLog("Could not save team to draft board")
 			}
@@ -531,7 +531,7 @@ class TeamDataManager {
 		
 		let mutableSet = matchPerformance.autonomousCycles?.mutableCopy() as! NSMutableOrderedSet
 		mutableSet.insertObject(newCycle, atIndex: place)
-		matchPerformance.autonomousCycles = mutableSet.copy() as! NSOrderedSet
+		matchPerformance.autonomousCycles = (mutableSet.copy() as! NSOrderedSet)
 		
 		return newCycle
 	}

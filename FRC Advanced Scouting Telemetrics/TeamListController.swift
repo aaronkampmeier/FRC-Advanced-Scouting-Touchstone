@@ -111,6 +111,7 @@ class TeamListController: UIViewController, UITableViewDataSource, UITableViewDe
 			}
 		}
 	}
+	let teamImagesCache = NSCache()
 	
 	var currentlyEditingTeams = false
 	
@@ -130,7 +131,7 @@ class TeamListController: UIViewController, UITableViewDataSource, UITableViewDe
 				let regionalPerformance = Array(regionalPerformances.intersect(teamPerformances)).first!
 				
 				context.setRegionalPerformanceStatistics(regionalPerformance)
-				context.setMatchPerformanceStatistics(regionalPerformance.matchPerformances!.allObjects as! [TeamMatchPerformance])
+				context.setMatchPerformanceStatistics((regionalPerformance.matchPerformances!.allObjects as! [TeamMatchPerformance]))
 			} else {
 				let combinedMatchPerformances = newValue[index].team.regionalPerformances?.reduce([TeamMatchPerformance]()) {matchPerformances,regionalPerformance in
 					let newMatchPerformances = regionalPerformance.matchPerformances!?.allObjects as![TeamMatchPerformance]
@@ -339,15 +340,20 @@ class TeamListController: UIViewController, UITableViewDataSource, UITableViewDe
         }
 		
 		cell.rankLabel.text = "\(try! TeamDataManager().getDraftBoard().indexOf(teamCache.team)! as Int + 1)"
-        
-        if let image = teamCache.team.frontImage {
-			cell.frontImage.image = UIImage(data: image)
-			//cell!.imageView?.image = UIImage(data: image)
-        } else {
-			cell.frontImage.image = UIImage(named: "FRC-Logo")
-			//cell!.imageView?.image = UIImage(named: "FRC-Logo")
-        }
-        
+		
+		if let image = teamImagesCache.objectForKey("\(teamCache.team.teamNumber!)") {
+			cell.frontImage.image = (image as! UIImage)
+		} else {
+			if let imageData = teamCache.team.frontImage {
+				guard let uiImage = UIImage(data: imageData) else {
+					fatalError("Image data corrupted")
+				}
+				cell.frontImage.image = uiImage
+				teamImagesCache.setObject(uiImage, forKey: "\(teamCache.team.teamNumber!)")
+			} else {
+				cell.frontImage.image = UIImage(named: "FRC-Logo")
+			}
+		}
         
         return cell
     }
@@ -650,11 +656,6 @@ class TeamListController: UIViewController, UITableViewDataSource, UITableViewDe
 	
 	@IBAction func updateButtonPressed(sender: UIBarButtonItem) {
 		(UIApplication.sharedApplication().delegate as! AppDelegate).checkForUpdate(forceful: true)
-	}
-	
-	//Presenting modal view of more Team details
-	@IBAction func showMoreDetailsPressed(sender: UIButton) {
-		
 	}
 	
 	func setUpTeamDetailController(detailController: UIViewController) {

@@ -9,6 +9,8 @@
 import Foundation
 
 private let dataManager = TeamDataManager()
+private let matrixACache = NSCache()
+private let arrayXCache = NSCache()
 
 struct StatContext {
 	var name: String?
@@ -316,79 +318,121 @@ enum StatCalculation: CustomStringConvertible {
 			let teamPerformances = regional.teamRegionalPerformances?.allObjects as! [TeamRegionalPerformance]
 			let numOfTeams = teamPerformances.count
 			
-			//Check to make sure there are multiple teams to perform the calculation
-			if numOfTeams == 1 {
-				return 0
-			}
-			
-			let matrixA = createMatrixA(withTeamPerformances: teamPerformances)
-			
-			var arrayB = zeros(numOfTeams)
-			for teamPerformance in teamPerformances {
-				let sumOfMatchScores: Double = teamPerformance.matchPerformances!.reduce(0) {cumulative, matchPerformance in
-					return (matchPerformance as! TeamMatchPerformance).finalScore + cumulative
+			let arrayx: ndarray
+			//Cache the resulting array because it is an expensive calculation
+			if let cachedArray = arrayXCache.objectForKey("OPR: \(regional.regionalNumber!.integerValue)") as? CachedArray {
+				arrayx = cachedArray.array
+			} else {
+				//Check to make sure there are multiple teams to perform the calculation
+				if numOfTeams == 1 {
+					return 0
 				}
-				let place = teamPerformances.indexOf(teamPerformance)!
-				arrayB[place...place] <- sumOfMatchScores
+				
+				let matrixA = createMatrixA(withRegional: regional)
+				
+				var arrayB = zeros(numOfTeams)
+				for teamPerformance in teamPerformances {
+					let sumOfMatchScores: Double = teamPerformance.matchPerformances!.reduce(0) {cumulative, matchPerformance in
+						return (matchPerformance as! TeamMatchPerformance).finalScore + cumulative
+					}
+					let place = teamPerformances.indexOf(teamPerformance)!
+					arrayB[place...place] <- sumOfMatchScores
+				}
+				
+				//Now solve for x
+				arrayx = solve(matrixA, b: arrayB)
+				arrayXCache.setObject(CachedArray(array: arrayx), forKey: "OPR: \(regional.regionalNumber!.integerValue)")
 			}
 			
-			//Now solve for x
-			let arrayx = solve(matrixA, b: arrayB)
 			let oprForTeam = arrayx[teamPerformances.indexOf(regionalPerformance)!]
 			return oprForTeam
 		case .CCWM(let regionalPerformance):
+			//CCWM stands for Calculated Contribution to the Winning Margin. It is calculated the same as OPR except for the elements in array B are the sums of the winning margins for each match.
+			
 			let regional = regionalPerformance.regional!
 			let teamPerformances = regional.teamRegionalPerformances?.allObjects as! [TeamRegionalPerformance]
 			let numOfTeams = teamPerformances.count
-			//Check to make sure there are multiple teams to perform the calculation
-			if numOfTeams == 1 {
-				return 0
-			}
 			
-			let matrixA = createMatrixA(withTeamPerformances: teamPerformances)
-			
-			var arrayB = zeros(numOfTeams)
-			for teamPerformance in teamPerformances {
-				let sumOfMatchScores: Double = teamPerformance.matchPerformances!.reduce(0) {cumulative, matchPerformance in
-					return (matchPerformance as! TeamMatchPerformance).winningMargin + cumulative
+			let arrayx: ndarray
+			//Cache the resulting array because it is an expensive calculation
+			if let cachedArray = arrayXCache.objectForKey("CCWM: \(regional.regionalNumber!.integerValue)") as? CachedArray {
+				arrayx = cachedArray.array
+			} else {
+				//Check to make sure there are multiple teams to perform the calculation
+				if numOfTeams == 1 {
+					return 0
 				}
-				let place = teamPerformances.indexOf(teamPerformance)!
-				arrayB[place...place] <- sumOfMatchScores
+				
+				let matrixA = createMatrixA(withRegional: regional)
+				
+				var arrayB = zeros(numOfTeams)
+				for teamPerformance in teamPerformances {
+					let sumOfMatchScores: Double = teamPerformance.matchPerformances!.reduce(0) {cumulative, matchPerformance in
+						return (matchPerformance as! TeamMatchPerformance).winningMargin + cumulative
+					}
+					let place = teamPerformances.indexOf(teamPerformance)!
+					arrayB[place...place] <- sumOfMatchScores
+				}
+				
+				//Now solve for x
+				arrayx = solve(matrixA, b: arrayB)
 			}
 			
-			//Now solve for x
-			let arrayx = solve(matrixA, b: arrayB)
 			let ccwmForTeam = arrayx[teamPerformances.indexOf(regionalPerformance)!]
 			return ccwmForTeam
 		case .DPR(let regionalPerformance):
+			//DPR stands for Defensive Power Rating. It is OPR - CCWM.
 			return StatCalculation.OPR(regionalPerformance).value - StatCalculation.CCWM(regionalPerformance).value
 		default:
 			return 0
 		}
 	}
 	
-	private func createMatrixA(withTeamPerformances teamPerformances: [TeamRegionalPerformance]) -> matrix {
-		let numOfTeams = teamPerformances.count
-		var matrixA = zeros((numOfTeams, numOfTeams))
-		for firstTeamPerformance in teamPerformances {
-			let firstPlace = teamPerformances.indexOf(firstTeamPerformance)!.hashValue
-			let firstMatches: Set<Match> = Set(firstTeamPerformance.matchPerformances!.map() {performance in
-				return (performance as! TeamMatchPerformance).match!
-				})
-			for secondTeamPerformance in teamPerformances {
-				let secondPlace = teamPerformances.indexOf(secondTeamPerformance)!.hashValue
-				let secondMatches: Set<Match> = Set(secondTeamPerformance.matchPerformances!.map() {performance in
+	private func createMatrixA(withRegional regional: Regional) -> matrix {
+		//Cache the matrix because it is expensive to create
+		if let cachedMatrix = matrixACache.objectForKey(regional) as? CachedMatrix {
+			return cachedMatrix.matrixA
+		} else {
+			let teamPerformances = regional.teamRegionalPerformances?.allObjects as! [TeamRegionalPerformance]
+			let numOfTeams = teamPerformances.count
+			var matrixA = zeros((numOfTeams, numOfTeams))
+			for firstTeamPerformance in teamPerformances {
+				let firstPlace = teamPerformances.indexOf(firstTeamPerformance)!.hashValue
+				let firstMatches: Set<Match> = Set(firstTeamPerformance.matchPerformances!.map() {performance in
 					return (performance as! TeamMatchPerformance).match!
 					})
-				
-				//Find the matches they have in common
-				let sharedMatches = firstMatches.intersect(secondMatches)
-				
-				//Set the number of shared matches in the matrix
-				matrixA[firstPlace...firstPlace, secondPlace...secondPlace] <- sharedMatches.count.double
+				for secondTeamPerformance in teamPerformances {
+					let secondPlace = teamPerformances.indexOf(secondTeamPerformance)!.hashValue
+					let secondMatches: Set<Match> = Set(secondTeamPerformance.matchPerformances!.map() {performance in
+						return (performance as! TeamMatchPerformance).match!
+						})
+					
+					//Find the matches they have in common
+					let sharedMatches = firstMatches.intersect(secondMatches)
+					
+					//Set the number of shared matches in the matrix
+					matrixA[firstPlace...firstPlace, secondPlace...secondPlace] <- sharedMatches.count.double
+				}
 			}
+			matrixACache.setObject(CachedMatrix(matrixA: matrixA), forKey: regional)
+			return matrixA
 		}
-		return matrixA
+	}
+	
+	class CachedMatrix {
+		let matrixA: matrix
+		
+		init(matrixA: matrix) {
+			self.matrixA = matrixA
+		}
+	}
+	
+	class CachedArray {
+		let array: ndarray
+		
+		init(array: ndarray) {
+			self.array = array
+		}
 	}
 	
 	var description: String {

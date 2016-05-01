@@ -70,7 +70,9 @@ class DataSyncingViewController: UIViewController, UITableViewDataSource{
 	}
 	
 	func numberOfTransfersChanged(notification: NSNotification) {
-		transferNumberLabel.text = "\(DataSyncer.sharedDataSyncer().multipeerConnection.currentFileTransfers.count)"
+		dispatch_async(dispatch_get_main_queue()) {
+			self.transferNumberLabel.text = "\(DataSyncer.sharedDataSyncer().multipeerConnection.currentFileTransfers.count)"
+		}
 	}
 
 	@IBAction func syncPressed(sender: UIBarButtonItem) {

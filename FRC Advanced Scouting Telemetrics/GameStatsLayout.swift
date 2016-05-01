@@ -28,7 +28,7 @@ class GameStatsLayout: UICollectionViewLayout {
 	}
 	
 	override func prepareLayout() {
-		let columnWidth = contentWidth / CGFloat(numberOfColumns)
+		_ = contentWidth / CGFloat(numberOfColumns)
 		
 	}
 }

@@ -41,7 +41,7 @@ class PitScoutingController: UIViewController, UIImagePickerControllerDelegate, 
 			switch selectedTeam {
 			case .Invalid:
 				notesButton.enabled = false
-			case .Valid(let _):
+			case .Valid(_):
 				notesButton.enabled = true
 			}
 		}

@@ -341,7 +341,7 @@ class StandsScoutingViewController: UIViewController, ProvidesTeam {
 	var notesVC: NotesViewController?
 	@IBAction func notesButtonPressed(sender: UIButton) {
 		if notesVC == nil {
-			notesVC = storyboard?.instantiateViewControllerWithIdentifier("notesVC") as! NotesViewController
+			notesVC = (storyboard?.instantiateViewControllerWithIdentifier("notesVC") as! NotesViewController)
 		}
 		
 		notesVC?.originatingView = self

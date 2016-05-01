@@ -34,7 +34,7 @@ class DataSyncer: NSObject, CDEPersistentStoreEnsembleDelegate {
 		
 		multipeerConnection = MultipeerConnection(syncSecret: syncSecret)
 		let rootDir = appDelegate.applicationDocumentsDirectory.URLByAppendingPathComponent("EnsembleMultipeerSync", isDirectory: true).path
-		
+		1
 		fileSystem = CDEMultipeerCloudFileSystem(rootDirectory: rootDir, multipeerConnection: multipeerConnection)
 		multipeerConnection.fileSystem = (fileSystem as! CDEMultipeerCloudFileSystem)
 		ensemble = CDEPersistentStoreEnsemble(ensembleIdentifier: "FASTStore", persistentStoreURL: appDelegate.coreDataURL, managedObjectModelURL: appDelegate.managedObjectModelURL, cloudFileSystem: fileSystem)
@@ -134,7 +134,7 @@ class DataSyncer: NSObject, CDEPersistentStoreEnsembleDelegate {
 	
 	func persistentStoreEnsemble(ensemble: CDEPersistentStoreEnsemble!, didFailToSaveMergedChangesInManagedObjectContext savingContext: NSManagedObjectContext!, error: NSError!, reparationManagedObjectContext reparationContext: NSManagedObjectContext!) -> Bool {
 		CLSNSLogv("Ensemble did fail to save merged changes. Error: \(error)", getVaList([]))
-		let alert = UIAlertController(title: "Save Failed", message: "The save and sync failed. Ask your admin for help with this issue. Attempting to fix...", preferredStyle: .Alert)
+		let alert = UIAlertController(title: "Save Failed", message: "The save and sync failed. Ask your admin for help with this issue.", preferredStyle: .Alert)
 		alert.addAction(UIAlertAction(title: "OK", style: .Default, handler: nil))
 		(UIApplication.sharedApplication().delegate as! AppDelegate).presentViewControllerOnTop(alert, animated: true)
 		
@@ -157,7 +157,7 @@ class DataSyncer: NSObject, CDEPersistentStoreEnsembleDelegate {
 //		}
 		
 		Crashlytics.sharedInstance().recordError(error)
-		return true
+		return false
 	}
 	
 	func persistentStoreEnsemble(ensemble: CDEPersistentStoreEnsemble!, didSaveMergeChangesWithNotification notification: NSNotification!) {

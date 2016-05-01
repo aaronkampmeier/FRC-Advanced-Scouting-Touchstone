@@ -16,6 +16,8 @@ class AdminConfigureDetailMatchVC: UIViewController {
     @IBOutlet weak var red2Field: UITextField!
     @IBOutlet weak var red3Field: UITextField!
 	
+	@IBOutlet var textFields: [UITextField]!
+	
     let dataManager = TeamDataManager()
     var selectedMatch: Match?
 	

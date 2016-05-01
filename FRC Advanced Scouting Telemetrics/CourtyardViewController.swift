@@ -269,7 +269,7 @@ class DefenseVC: UIViewController {
 	
 	override func viewWillAppear(animated: Bool) {
 		super.viewWillAppear(animated)
-		standsScoutingVC = parentViewController as! StandsScoutingViewController
+		standsScoutingVC = (parentViewController as! StandsScoutingViewController)
 	}
 	
 	@IBAction func contact(sender: UIButton) {
