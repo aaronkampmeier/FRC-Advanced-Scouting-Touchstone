@@ -44,7 +44,6 @@
 		1F58308F1CB09AF900D6F513 /* DataSyncer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F58308E1CB09AF900D6F513 /* DataSyncer.swift */; };
 		1F665D721CB1DA91003CAC1D /* DataSyncingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F665D711CB1DA91003CAC1D /* DataSyncingViewController.swift */; };
 		1F78E7831C3B469300221927 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F78E7821C3B469300221927 /* AppDelegate.swift */; };
-		1F78E7851C3B469300221927 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F78E7841C3B469300221927 /* ViewController.swift */; };
 		1F78E7881C3B469300221927 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 1F78E7861C3B469300221927 /* Main.storyboard */; };
 		1F78E78B1C3B469300221927 /* FRC_Advanced_Scouting_Telemetrics.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 1F78E7891C3B469300221927 /* FRC_Advanced_Scouting_Telemetrics.xcdatamodeld */; };
 		1F78E78D1C3B469300221927 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 1F78E78C1C3B469300221927 /* Assets.xcassets */; };
@@ -64,6 +63,10 @@
 		1FCA7ADA1C630BAE004294D1 /* StatsVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FCA7AD91C630BAE004294D1 /* StatsVC.swift */; };
 		1FCEF8F61C9CB231006AC591 /* Globals.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FCEF8F51C9CB231006AC591 /* Globals.swift */; };
 		1FD0A09B1C95093600013A18 /* TeamListTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FD0A09A1C95093600013A18 /* TeamListTableViewCell.swift */; };
+		1FDC1BCE1CD69EBB00ABE327 /* TeamListSplitViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FDC1BCD1CD69EBB00ABE327 /* TeamListSplitViewController.swift */; };
+		1FDC1BD11CD69F5F00ABE327 /* TeamListTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FDC1BD01CD69F5F00ABE327 /* TeamListTableViewController.swift */; };
+		1FDC1BD31CD6A35F00ABE327 /* TeamListDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FDC1BD21CD6A35F00ABE327 /* TeamListDetailViewController.swift */; };
+		1FDC1BD71CD6EB0800ABE327 /* TeamListSearchController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FDC1BD61CD6EB0800ABE327 /* TeamListSearchController.swift */; };
 		1FDE56B71CCD3C64009042CD /* imshow.py in Resources */ = {isa = PBXBuildFile; fileRef = 1FDE56961CCD3C64009042CD /* imshow.py */; };
 		1FDE56B81CCD3C64009042CD /* io.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FDE56971CCD3C64009042CD /* io.swift */; };
 		1FDE56B91CCD3C64009042CD /* machine_learning.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FDE56991CCD3C64009042CD /* machine_learning.swift */; };
@@ -167,7 +170,6 @@
 		1F665D711CB1DA91003CAC1D /* DataSyncingViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DataSyncingViewController.swift; sourceTree = "<group>"; };
 		1F78E77F1C3B469300221927 /* FRC Advanced Scouting Touchstone.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "FRC Advanced Scouting Touchstone.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		1F78E7821C3B469300221927 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
-		1F78E7841C3B469300221927 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
 		1F78E7871C3B469300221927 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		1F78E78A1C3B469300221927 /* FRC_Advanced_Scouting_Telemetrics.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = FRC_Advanced_Scouting_Telemetrics.xcdatamodel; sourceTree = "<group>"; };
 		1F78E78C1C3B469300221927 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
@@ -194,6 +196,10 @@
 		1FCA7AD91C630BAE004294D1 /* StatsVC.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StatsVC.swift; sourceTree = "<group>"; };
 		1FCEF8F51C9CB231006AC591 /* Globals.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Globals.swift; sourceTree = "<group>"; };
 		1FD0A09A1C95093600013A18 /* TeamListTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TeamListTableViewCell.swift; sourceTree = "<group>"; };
+		1FDC1BCD1CD69EBB00ABE327 /* TeamListSplitViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TeamListSplitViewController.swift; sourceTree = "<group>"; };
+		1FDC1BD01CD69F5F00ABE327 /* TeamListTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TeamListTableViewController.swift; sourceTree = "<group>"; };
+		1FDC1BD21CD6A35F00ABE327 /* TeamListDetailViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TeamListDetailViewController.swift; sourceTree = "<group>"; };
+		1FDC1BD61CD6EB0800ABE327 /* TeamListSearchController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TeamListSearchController.swift; sourceTree = "<group>"; };
 		1FDE568A1CCC915A009042CD /* FRC_Advanced_Scouting_Telemetrics Version 10.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "FRC_Advanced_Scouting_Telemetrics Version 10.xcdatamodel"; sourceTree = "<group>"; };
 		1FDE56921CCD376B009042CD /* opencv2.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = opencv2.framework; path = "FRC Advanced Scouting Telemetrics/swix/objc/opencv2.framework"; sourceTree = "<group>"; };
 		1FDE56961CCD3C64009042CD /* imshow.py */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.python; path = imshow.py; sourceTree = "<group>"; };
@@ -271,12 +277,10 @@
 			children = (
 				1F9B782A1CD1A42400B4E5AE /* HiddenDebugViewController.swift */,
 				1FA6A73F1CD3B4E800772C63 /* Data Syncing */,
-				1FF1F1721C3CC74A0051EE54 /* TeamListController.swift */,
-				1F4178BF1CD02E4200801D5B /* Team List Segments */,
+				1F4178BF1CD02E4200801D5B /* Team List */,
 				1FBE627E1CAEE0FB001FDFB7 /* TeamPickerTableViewController.swift */,
 				1F4534551C7276DE004EDDB9 /* RegionalPickerViewController.swift */,
 				1F30CFC91C7E510100A4EFCA /* Admin Console */,
-				1F78E7841C3B469300221927 /* ViewController.swift */,
 				1F4534131C6FFC13004EDDB9 /* Stands Scouting */,
 				1F21DF111C66942200C55D0E /* SortVC.swift */,
 				1F4FEDAD1C4C5DEA00F4016D /* AddTeamVC.swift */,
@@ -297,17 +301,18 @@
 			name = "Admin Console";
 			sourceTree = "<group>";
 		};
-		1F4178BF1CD02E4200801D5B /* Team List Segments */ = {
+		1F4178BF1CD02E4200801D5B /* Team List */ = {
 			isa = PBXGroup;
 			children = (
+				1FF1F1721C3CC74A0051EE54 /* TeamListController.swift */,
 				1FD0A09A1C95093600013A18 /* TeamListTableViewCell.swift */,
-				1FBE62801CAEF617001FDFB7 /* MatchOverviewViewController.swift */,
-				1F51D1C11C7FB30F00B4D6C5 /* GameStatsController.swift */,
-				1FE2C1281C80136800CECBF1 /* ShotChartViewController.swift */,
-				1F45340D1C6FC3EA004EDDB9 /* GameStatsCollectionViewCell.swift */,
-				1FCA7AD91C630BAE004294D1 /* StatsVC.swift */,
+				1FDC1BD01CD69F5F00ABE327 /* TeamListTableViewController.swift */,
+				1FDC1BD21CD6A35F00ABE327 /* TeamListDetailViewController.swift */,
+				1FDC1BCD1CD69EBB00ABE327 /* TeamListSplitViewController.swift */,
+				1FDC1BD61CD6EB0800ABE327 /* TeamListSearchController.swift */,
+				1FDC1BCF1CD69EDE00ABE327 /* Segments */,
 			);
-			name = "Team List Segments";
+			name = "Team List";
 			sourceTree = "<group>";
 		};
 		1F4534131C6FFC13004EDDB9 /* Stands Scouting */ = {
@@ -424,6 +429,18 @@
 				1F4534351C7242B9004EDDB9 /* TeamRegionalPerformance.swift */,
 			);
 			name = "Core Data";
+			sourceTree = "<group>";
+		};
+		1FDC1BCF1CD69EDE00ABE327 /* Segments */ = {
+			isa = PBXGroup;
+			children = (
+				1FBE62801CAEF617001FDFB7 /* MatchOverviewViewController.swift */,
+				1F51D1C11C7FB30F00B4D6C5 /* GameStatsController.swift */,
+				1FE2C1281C80136800CECBF1 /* ShotChartViewController.swift */,
+				1F45340D1C6FC3EA004EDDB9 /* GameStatsCollectionViewCell.swift */,
+				1FCA7AD91C630BAE004294D1 /* StatsVC.swift */,
+			);
+			name = Segments;
 			sourceTree = "<group>";
 		};
 		1FDE56951CCD3C64009042CD /* swix */ = {
@@ -724,13 +741,13 @@
 				1FDE56D01CCD3C64009042CD /* tests.swift in Sources */,
 				1F08B50E1CD32BBA00C9B7E8 /* Model.xcmappingmodel in Sources */,
 				1FB99DB31C741840004BC2C1 /* AdminConfigureDetailRegionalViewController.swift in Sources */,
-				1F78E7851C3B469300221927 /* ViewController.swift in Sources */,
 				1F78E78B1C3B469300221927 /* FRC_Advanced_Scouting_Telemetrics.xcdatamodeld in Sources */,
 				1FF32A281C6E990C00CD028C /* AdminConfigureDetailMatchVC.swift in Sources */,
 				1F4534391C7242B9004EDDB9 /* TimeMarker.swift in Sources */,
 				1FF1F1731C3CC74A0051EE54 /* TeamListController.swift in Sources */,
 				1FE2C12B1C80DFBD00CECBF1 /* NeutralViewController.swift in Sources */,
 				1FF32A211C6D194B00CD028C /* AdminConfigureVC.swift in Sources */,
+				1FDC1BD11CD69F5F00ABE327 /* TeamListTableViewController.swift in Sources */,
 				1F12CF141C78FD370014200C /* CourtyardViewController.swift in Sources */,
 				1F4534511C7242B9004EDDB9 /* TeamMatchPerformance.swift in Sources */,
 				1F4534421C7242B9004EDDB9 /* Shot+CoreDataProperties.swift in Sources */,
@@ -779,11 +796,13 @@
 				1F4534521C7242B9004EDDB9 /* TeamRegionalPerformance+CoreDataProperties.swift in Sources */,
 				1F4534531C7242B9004EDDB9 /* TeamRegionalPerformance.swift in Sources */,
 				1F58308F1CB09AF900D6F513 /* DataSyncer.swift in Sources */,
+				1FDC1BD31CD6A35F00ABE327 /* TeamListDetailViewController.swift in Sources */,
 				1F4534561C7276DE004EDDB9 /* RegionalPickerViewController.swift in Sources */,
 				1FDE56C41CCD3C64009042CD /* ndarray.swift in Sources */,
 				1F9B782B1CD1A42400B4E5AE /* HiddenDebugViewController.swift in Sources */,
 				1F4534101C6FF916004EDDB9 /* StandsScoutingViewController.swift in Sources */,
 				1F665D721CB1DA91003CAC1D /* DataSyncingViewController.swift in Sources */,
+				1FDC1BCE1CD69EBB00ABE327 /* TeamListSplitViewController.swift in Sources */,
 				1FBC9E6E1CC45C63005DB3F4 /* TeamMatchPerformance+CoreDataProperties.swift in Sources */,
 				1FDE56C21CCD3C64009042CD /* helper-functions.swift in Sources */,
 				1F21DF121C66942200C55D0E /* SortVC.swift in Sources */,
@@ -792,6 +811,7 @@
 				1FCA7ADA1C630BAE004294D1 /* StatsVC.swift in Sources */,
 				1F45344F1C7242B9004EDDB9 /* Team.swift in Sources */,
 				1FDE56BF1CCD3C64009042CD /* m-operators.swift in Sources */,
+				1FDC1BD71CD6EB0800ABE327 /* TeamListSearchController.swift in Sources */,
 				1FDE56CD1CCD3C64009042CD /* operations-and-indexing.m in Sources */,
 				1F4FEDAC1C4B686000F4016D /* AdminConsoleController.swift in Sources */,
 				1FDE56B81CCD3C64009042CD /* io.swift in Sources */,
@@ -974,6 +994,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = "com.kampmeier.FRC-Advanced-Scouting-Touchstone";
 				PRODUCT_NAME = "FRC Advanced Scouting Touchstone";
 				PROVISIONING_PROFILE = "1da15394-14e2-4de2-b834-e3feca4d0125";
+				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Debug;
 		};
@@ -1010,6 +1031,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = "com.kampmeier.FRC-Advanced-Scouting-Touchstone";
 				PRODUCT_NAME = "FRC Advanced Scouting Touchstone";
 				PROVISIONING_PROFILE = "a024fa9d-3610-436f-a7c6-08fbb75be7bc";
+				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Release;
 		};

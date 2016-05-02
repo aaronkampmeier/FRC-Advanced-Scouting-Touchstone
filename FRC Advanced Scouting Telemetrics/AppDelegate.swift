@@ -235,3 +235,14 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
 }
 
+extension UIViewController {
+	func presentViewControllerFromVisibleViewController(viewControllerToPresent: UIViewController, animated flag: Bool, completion: (() -> Void)? = nil) {
+		if let navigationController = self as? UINavigationController, let topViewController = navigationController.topViewController {
+			topViewController.presentViewControllerFromVisibleViewController(viewControllerToPresent, animated: true, completion: completion)
+		} else if (presentedViewController != nil) {
+			presentedViewController!.presentViewControllerFromVisibleViewController(viewControllerToPresent, animated: true, completion: completion)
+		} else {
+			presentViewController(viewControllerToPresent, animated: true, completion: completion)
+		}
+	}
+}
