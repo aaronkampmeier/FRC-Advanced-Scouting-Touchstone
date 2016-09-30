@@ -1,0 +1,9 @@
+<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="FRC Advanced Scouting Touchstone" type="AppleRunConfiguration" factoryName="Application" WORKING_DIR="" PASS_PARENT_ENVS_2="true" PROJECT_NAME="FRC Advanced Scouting Touchstone" TARGET_NAME="FRC Advanced Scouting Touchstone" CONFIG_NAME="Debug" SCHEME_NAME="FRC Advanced Scouting Touchstone" RUN_TARGET_PROJECT_NAME="FRC Advanced Scouting Touchstone" RUN_TARGET_NAME="FRC Advanced Scouting Touchstone" MAKE_ACTIVE="TRUE" WAIT_FOR="FALSE">
+    <envs />
+    <EXTENSION ID="org.jetbrains.appcode.reveal.RevealRunConfigurationExtension">
+      <REVEAL_SETTINGS autoInject="false" autoInstall="true" askToEnableAutoInstall="true" />
+    </EXTENSION>
+    <method />
+  </configuration>
+</component>

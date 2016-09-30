@@ -1,0 +1,545 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ChangeListManager">
+    <list default="true" id="37a6f969-e84e-41b2-b62f-77fc2b1d1e1e" name="Default" comment="">
+      <change type="DELETED" beforePath="$PROJECT_DIR$/FRC Advanced Scouting Telemetrics/AddTeamVC.swift" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/FRC Advanced Scouting Telemetrics/AdminConfigureDetailMatchVC.swift" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/FRC Advanced Scouting Telemetrics/AdminConfigureDetailRegionalViewController.swift" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/FRC Advanced Scouting Telemetrics/AdminConfigureDetailVC.swift" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/FRC Advanced Scouting Telemetrics/AdminConfigureVC.swift" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/FRC Advanced Scouting Telemetrics/AdminConsoleController.swift" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/FRC Advanced Scouting Telemetrics/AppDelegate.swift" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/FRC Advanced Scouting Telemetrics/Assets.xcassets/67jPwR2l.imageset/67jPwR2l.jpeg" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/FRC Advanced Scouting Telemetrics/Assets.xcassets/67jPwR2l.imageset/Contents.json" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/FRC Advanced Scouting Telemetrics/Assets.xcassets/AppIcon.appiconset/152 PT Logo Resized.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/FRC Advanced Scouting Telemetrics/Assets.xcassets/AppIcon.appiconset/29 pt FAST Icon FINAL.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/FRC Advanced Scouting Telemetrics/Assets.xcassets/AppIcon.appiconset/40 PT FAST Icon.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/FRC Advanced Scouting Telemetrics/Assets.xcassets/AppIcon.appiconset/58 PT Logo Resized copy.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/FRC Advanced Scouting Telemetrics/Assets.xcassets/AppIcon.appiconset/76 PT FINAL FAST Logo.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/FRC Advanced Scouting Telemetrics/Assets.xcassets/AppIcon.appiconset/80 PT Logo Resized copy.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/FRC Advanced Scouting Telemetrics/Assets.xcassets/AppIcon.appiconset/83.5 PT FAST Icon copy.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/FRC Advanced Scouting Telemetrics/Assets.xcassets/AppIcon.appiconset/Contents.json" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/FRC Advanced Scouting Telemetrics/Assets.xcassets/Ball.imageset/Contents.json" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/FRC Advanced Scouting Telemetrics/Assets.xcassets/Ball.imageset/am-3276-2.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/FRC Advanced Scouting Telemetrics/Assets.xcassets/Contents.json" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/FRC Advanced Scouting Telemetrics/Assets.xcassets/DefenseRender.imageset/Contents.json" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/FRC Advanced Scouting Telemetrics/Assets.xcassets/DefenseRender.imageset/DefenseRender.jpg" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/FRC Advanced Scouting Telemetrics/Assets.xcassets/Defenses/Cheval De Frise.imageset/Contents.json" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/FRC Advanced Scouting Telemetrics/Assets.xcassets/Defenses/Cheval de Frise.imageset/Cheval De Frise.jpg" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/FRC Advanced Scouting Telemetrics/Assets.xcassets/Defenses/Contents.json" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/FRC Advanced Scouting Telemetrics/Assets.xcassets/Defenses/Drawbridge.imageset/Contents.json" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/FRC Advanced Scouting Telemetrics/Assets.xcassets/Defenses/Drawbridge.imageset/pasted-graphic-4.jpg" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/FRC Advanced Scouting Telemetrics/Assets.xcassets/Defenses/Low Bar.imageset/Contents.json" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/FRC Advanced Scouting Telemetrics/Assets.xcassets/Defenses/Low Bar.imageset/LowBar.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/FRC Advanced Scouting Telemetrics/Assets.xcassets/Defenses/Moat.imageset/Contents.json" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/FRC Advanced Scouting Telemetrics/Assets.xcassets/Defenses/Moat.imageset/Moat.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/FRC Advanced Scouting Telemetrics/Assets.xcassets/Defenses/Portcullis.imageset/Contents.json" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/FRC Advanced Scouting Telemetrics/Assets.xcassets/Defenses/Portcullis.imageset/Portcullis.jpg" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/FRC Advanced Scouting Telemetrics/Assets.xcassets/Defenses/Ramparts.imageset/Contents.json" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/FRC Advanced Scouting Telemetrics/Assets.xcassets/Defenses/Ramparts.imageset/pasted-graphic-5.jpg" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/FRC Advanced Scouting Telemetrics/Assets.xcassets/Defenses/Rock Wall.imageset/Contents.json" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/FRC Advanced Scouting Telemetrics/Assets.xcassets/Defenses/Rock Wall.imageset/Rock Wall.jpg" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/FRC Advanced Scouting Telemetrics/Assets.xcassets/Defenses/Rough Terrain.imageset/Contents.json" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/FRC Advanced Scouting Telemetrics/Assets.xcassets/Defenses/Rough Terrain.imageset/Rough Terrain.jpg" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/FRC Advanced Scouting Telemetrics/Assets.xcassets/Defenses/Sally Port.imageset/Contents.json" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/FRC Advanced Scouting Telemetrics/Assets.xcassets/Defenses/Sally Port.imageset/pasted-graphic-3.jpg" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/FRC Advanced Scouting Telemetrics/Assets.xcassets/DefensesTopView.imageset/Contents.json" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/FRC Advanced Scouting Telemetrics/Assets.xcassets/DefensesTopView.imageset/Defenses.jpg" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/FRC Advanced Scouting Telemetrics/Assets.xcassets/FRC-Logo.imageset/Contents.json" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/FRC Advanced Scouting Telemetrics/Assets.xcassets/FRC-Logo.imageset/FRC-Logo1.jpg" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/FRC Advanced Scouting Telemetrics/Assets.xcassets/GameField.imageset/Contents.json" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/FRC Advanced Scouting Telemetrics/Assets.xcassets/GameField.imageset/FullSizeRender.jpg" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/FRC Advanced Scouting Telemetrics/Assets.xcassets/GameFieldDefenses.imageset/Contents.json" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/FRC Advanced Scouting Telemetrics/Assets.xcassets/GameFieldDefenses.imageset/FullSizeRender-1.jpg" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/FRC Advanced Scouting Telemetrics/Assets.xcassets/Icons/Contents.json" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/FRC Advanced Scouting Telemetrics/Assets.xcassets/Icons/CorrectIcon.imageset/20151012_561baec9780a5.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/FRC Advanced Scouting Telemetrics/Assets.xcassets/Icons/CorrectIcon.imageset/Contents.json" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/FRC Advanced Scouting Telemetrics/Assets.xcassets/Icons/IncorrectIcon.imageset/20151208_56663ec9a70e8.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/FRC Advanced Scouting Telemetrics/Assets.xcassets/Icons/IncorrectIcon.imageset/Contents.json" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/FRC Advanced Scouting Telemetrics/Assets.xcassets/Icons/Installing Updates.imageset/Contents.json" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/FRC Advanced Scouting Telemetrics/Assets.xcassets/Icons/Installing Updates.imageset/Installing Updates-1.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/FRC Advanced Scouting Telemetrics/Assets.xcassets/Icons/Installing Updates.imageset/Installing Updates-2.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/FRC Advanced Scouting Telemetrics/Assets.xcassets/Icons/Installing Updates.imageset/Installing Updates.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/FRC Advanced Scouting Telemetrics/Assets.xcassets/Icons/Pit Scouting.imageset/Contents.json" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/FRC Advanced Scouting Telemetrics/Assets.xcassets/Icons/Pit Scouting.imageset/Inspection-100.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/FRC Advanced Scouting Telemetrics/Assets.xcassets/Icons/Pit Scouting.imageset/Inspection-101.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/FRC Advanced Scouting Telemetrics/Assets.xcassets/Icons/Pit Scouting.imageset/Inspection-102.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/FRC Advanced Scouting Telemetrics/Assets.xcassets/Icons/Plus Filled-50.imageset/Contents.json" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/FRC Advanced Scouting Telemetrics/Assets.xcassets/Icons/Plus Filled-50.imageset/Plus Filled-50.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/FRC Advanced Scouting Telemetrics/Assets.xcassets/Icons/Settings-50.imageset/Contents.json" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/FRC Advanced Scouting Telemetrics/Assets.xcassets/Icons/Settings-50.imageset/Settings-1.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/FRC Advanced Scouting Telemetrics/Assets.xcassets/Icons/Settings-50.imageset/Settings-2.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/FRC Advanced Scouting Telemetrics/Assets.xcassets/Icons/Settings-50.imageset/Settings.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/FRC Advanced Scouting Telemetrics/Assets.xcassets/Icons/Sort.imageset/Contents.json" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/FRC Advanced Scouting Telemetrics/Assets.xcassets/Icons/Sort.imageset/Sorting Arrows Filled-100.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/FRC Advanced Scouting Telemetrics/Assets.xcassets/Icons/Sort.imageset/Sorting Arrows Filled-101.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/FRC Advanced Scouting Telemetrics/Assets.xcassets/Icons/Sort.imageset/Sorting Arrows Filled-102.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/FRC Advanced Scouting Telemetrics/Assets.xcassets/Icons/Synchronize-50.imageset/Contents.json" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/FRC Advanced Scouting Telemetrics/Assets.xcassets/Icons/Synchronize-50.imageset/Synchronize-100.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/FRC Advanced Scouting Telemetrics/Assets.xcassets/Icons/Synchronize-50.imageset/Synchronize-101.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/FRC Advanced Scouting Telemetrics/Assets.xcassets/Icons/Synchronize-50.imageset/Synchronize-102.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/FRC Advanced Scouting Telemetrics/Assets.xcassets/Icons/Team Picker.imageset/Checklist-100-2.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/FRC Advanced Scouting Telemetrics/Assets.xcassets/Icons/Team Picker.imageset/Checklist-100-3.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/FRC Advanced Scouting Telemetrics/Assets.xcassets/Icons/Team Picker.imageset/Checklist-100-4.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/FRC Advanced Scouting Telemetrics/Assets.xcassets/Icons/Team Picker.imageset/Contents.json" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/FRC Advanced Scouting Telemetrics/Assets.xcassets/OffenseRender.imageset/Contents.json" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/FRC Advanced Scouting Telemetrics/Assets.xcassets/OffenseRender.imageset/OffenseRender.jpg" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/FRC Advanced Scouting Telemetrics/AutonomousCycle+CoreDataProperties.swift" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/FRC Advanced Scouting Telemetrics/AutonomousCycle.swift" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/FRC Advanced Scouting Telemetrics/AutonomousViewController.swift" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/FRC Advanced Scouting Telemetrics/Base.lproj/LaunchScreen.storyboard" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/FRC Advanced Scouting Telemetrics/Base.lproj/Main.storyboard" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/FRC Advanced Scouting Telemetrics/ConflictTableViewCell.swift" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/FRC Advanced Scouting Telemetrics/CourtyardViewController.swift" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/FRC Advanced Scouting Telemetrics/DataSyncer.swift" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/FRC Advanced Scouting Telemetrics/DataSyncingViewController.swift" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/FRC Advanced Scouting Telemetrics/DefenseCrossTime+CoreDataProperties.swift" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/FRC Advanced Scouting Telemetrics/DefenseCrossTime.swift" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/FRC Advanced Scouting Telemetrics/DraftBoard+CoreDataProperties.swift" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/FRC Advanced Scouting Telemetrics/DraftBoard.swift" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/FRC Advanced Scouting Telemetrics/FRC_Advanced_Scouting_Telemetrics.xcdatamodeld/.xccurrentversion" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/FRC Advanced Scouting Telemetrics/FRC_Advanced_Scouting_Telemetrics.xcdatamodeld/FRC_Advanced_Scouting_Telemetrics CD 2.xcdatamodel/contents" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/FRC Advanced Scouting Telemetrics/FRC_Advanced_Scouting_Telemetrics.xcdatamodeld/FRC_Advanced_Scouting_Telemetrics CD 3.xcdatamodel/contents" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/FRC Advanced Scouting Telemetrics/FRC_Advanced_Scouting_Telemetrics.xcdatamodeld/FRC_Advanced_Scouting_Telemetrics CD 4.xcdatamodel/contents" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/FRC Advanced Scouting Telemetrics/FRC_Advanced_Scouting_Telemetrics.xcdatamodeld/FRC_Advanced_Scouting_Telemetrics CD 5.xcdatamodel/contents" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/FRC Advanced Scouting Telemetrics/FRC_Advanced_Scouting_Telemetrics.xcdatamodeld/FRC_Advanced_Scouting_Telemetrics CD 6.xcdatamodel/contents" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/FRC Advanced Scouting Telemetrics/FRC_Advanced_Scouting_Telemetrics.xcdatamodeld/FRC_Advanced_Scouting_Telemetrics CD 7.xcdatamodel/contents" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/FRC Advanced Scouting Telemetrics/FRC_Advanced_Scouting_Telemetrics.xcdatamodeld/FRC_Advanced_Scouting_Telemetrics CD 8.xcdatamodel/contents" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/FRC Advanced Scouting Telemetrics/FRC_Advanced_Scouting_Telemetrics.xcdatamodeld/FRC_Advanced_Scouting_Telemetrics Version 10.xcdatamodel/contents" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/FRC Advanced Scouting Telemetrics/FRC_Advanced_Scouting_Telemetrics.xcdatamodeld/FRC_Advanced_Scouting_Telemetrics Version 11.xcdatamodel/contents" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/FRC Advanced Scouting Telemetrics/FRC_Advanced_Scouting_Telemetrics.xcdatamodeld/FRC_Advanced_Scouting_Telemetrics Version 12-5.xcdatamodel/contents" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/FRC Advanced Scouting Telemetrics/FRC_Advanced_Scouting_Telemetrics.xcdatamodeld/FRC_Advanced_Scouting_Telemetrics Version 12.xcdatamodel/contents" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/FRC Advanced Scouting Telemetrics/FRC_Advanced_Scouting_Telemetrics.xcdatamodeld/FRC_Advanced_Scouting_Telemetrics Version 13.xcdatamodel/contents" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/FRC Advanced Scouting Telemetrics/FRC_Advanced_Scouting_Telemetrics.xcdatamodeld/FRC_Advanced_Scouting_Telemetrics Version 9.xcdatamodel/contents" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/FRC Advanced Scouting Telemetrics/FRC_Advanced_Scouting_Telemetrics.xcdatamodeld/FRC_Advanced_Scouting_Telemetrics.xcdatamodel/contents" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/FRC Advanced Scouting Telemetrics/GameStatsCollectionViewCell.swift" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/FRC Advanced Scouting Telemetrics/GameStatsController.swift" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/FRC Advanced Scouting Telemetrics/GameStatsLayout.swift" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/FRC Advanced Scouting Telemetrics/Globals.swift" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/FRC Advanced Scouting Telemetrics/HiddenDebugViewController.swift" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/FRC Advanced Scouting Telemetrics/ImageScalingFunctions.swift" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/FRC Advanced Scouting Telemetrics/Info.plist" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/FRC Advanced Scouting Telemetrics/Match+CoreDataProperties.swift" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/FRC Advanced Scouting Telemetrics/Match.swift" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/FRC Advanced Scouting Telemetrics/MatchOverviewViewController.swift" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/FRC Advanced Scouting Telemetrics/MigrationPolicies.swift" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/FRC Advanced Scouting Telemetrics/Model.xcmappingmodel/xcmapping.xml" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/FRC Advanced Scouting Telemetrics/NeutralViewController.swift" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/FRC Advanced Scouting Telemetrics/PitScoutingController.swift" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/FRC Advanced Scouting Telemetrics/PopoverPickerViewController.swift" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/FRC Advanced Scouting Telemetrics/Regional+CoreDataProperties.swift" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/FRC Advanced Scouting Telemetrics/Regional.swift" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/FRC Advanced Scouting Telemetrics/RegionalPickerViewController.swift" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/FRC Advanced Scouting Telemetrics/Shot+CoreDataProperties.swift" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/FRC Advanced Scouting Telemetrics/Shot.swift" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/FRC Advanced Scouting Telemetrics/ShotChartViewController.swift" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/FRC Advanced Scouting Telemetrics/SortVC.swift" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/FRC Advanced Scouting Telemetrics/StandsScoutingViewController.swift" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/FRC Advanced Scouting Telemetrics/Statistics.swift" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/FRC Advanced Scouting Telemetrics/StatsVC.swift" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/FRC Advanced Scouting Telemetrics/Stopwatch.swift" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/FRC Advanced Scouting Telemetrics/SyncingAndMerging.swift" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/FRC Advanced Scouting Telemetrics/SyncingConflictViewController.swift" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/FRC Advanced Scouting Telemetrics/SyncingManager.swift" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/FRC Advanced Scouting Telemetrics/Team+CoreDataProperties.swift" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/FRC Advanced Scouting Telemetrics/Team.swift" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/FRC Advanced Scouting Telemetrics/TeamDataManager.swift" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/FRC Advanced Scouting Telemetrics/TeamListController.swift" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/FRC Advanced Scouting Telemetrics/TeamListDetailViewController.swift" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/FRC Advanced Scouting Telemetrics/TeamListSearchController.swift" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/FRC Advanced Scouting Telemetrics/TeamListSplitViewController.swift" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/FRC Advanced Scouting Telemetrics/TeamListTableViewCell.swift" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/FRC Advanced Scouting Telemetrics/TeamListTableViewController.swift" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/FRC Advanced Scouting Telemetrics/TeamMatchPerformance+CoreDataProperties.swift" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/FRC Advanced Scouting Telemetrics/TeamMatchPerformance.swift" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/FRC Advanced Scouting Telemetrics/TeamPickerTableViewController.swift" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/FRC Advanced Scouting Telemetrics/TeamRegionalPerformance+CoreDataProperties.swift" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/FRC Advanced Scouting Telemetrics/TeamRegionalPerformance.swift" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/FRC Advanced Scouting Telemetrics/TimeMarker+CoreDataProperties.swift" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/FRC Advanced Scouting Telemetrics/TimeMarker.swift" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/FRC Advanced Scouting Telemetrics/TransferInfoTableViewController.swift" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/FRC Advanced Scouting Telemetrics/swix/ScalarArithmetic-bleed.swift" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/FRC Advanced Scouting Telemetrics/swix/imshow.py" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/FRC Advanced Scouting Telemetrics/swix/io.swift" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/FRC Advanced Scouting Telemetrics/swix/machine_learning/machine_learning.swift" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/FRC Advanced Scouting Telemetrics/swix/matrix/m-complex-math.swift" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/FRC Advanced Scouting Telemetrics/swix/matrix/m-helper-functions.swift" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/FRC Advanced Scouting Telemetrics/swix/matrix/m-image.swift" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/FRC Advanced Scouting Telemetrics/swix/matrix/m-initing.swift" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/FRC Advanced Scouting Telemetrics/swix/matrix/m-matrix.swift" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/FRC Advanced Scouting Telemetrics/swix/matrix/m-operators.swift" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/FRC Advanced Scouting Telemetrics/swix/matrix/m-simple-math.swift" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/FRC Advanced Scouting Telemetrics/swix/ndarray/complex-math.swift" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/FRC Advanced Scouting Telemetrics/swix/ndarray/helper-functions.swift" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/FRC Advanced Scouting Telemetrics/swix/ndarray/initing.swift" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/FRC Advanced Scouting Telemetrics/swix/ndarray/ndarray.swift" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/FRC Advanced Scouting Telemetrics/swix/ndarray/operators.swift" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/FRC Advanced Scouting Telemetrics/swix/ndarray/simple-math.swift" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/FRC Advanced Scouting Telemetrics/swix/numbers.swift" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/FRC Advanced Scouting Telemetrics/swix/objc/OpenCV.h" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/FRC Advanced Scouting Telemetrics/swix/objc/conversion.swift" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/FRC Advanced Scouting Telemetrics/swix/objc/machine_learning.mm" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/FRC Advanced Scouting Telemetrics/swix/objc/math.m" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/FRC Advanced Scouting Telemetrics/swix/objc/opencv.mm" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/FRC Advanced Scouting Telemetrics/swix/objc/opencv2.framework/Headers" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/FRC Advanced Scouting Telemetrics/swix/objc/opencv2.framework/Resources" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/FRC Advanced Scouting Telemetrics/swix/objc/opencv2.framework/Versions/A/Headers/calib3d/calib3d.hpp" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/FRC Advanced Scouting Telemetrics/swix/objc/opencv2.framework/Versions/A/Headers/contrib/contrib.hpp" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/FRC Advanced Scouting Telemetrics/swix/objc/opencv2.framework/Versions/A/Headers/contrib/detection_based_tracker.hpp" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/FRC Advanced Scouting Telemetrics/swix/objc/opencv2.framework/Versions/A/Headers/contrib/hybridtracker.hpp" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/FRC Advanced Scouting Telemetrics/swix/objc/opencv2.framework/Versions/A/Headers/contrib/openfabmap.hpp" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/FRC Advanced Scouting Telemetrics/swix/objc/opencv2.framework/Versions/A/Headers/contrib/retina.hpp" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/FRC Advanced Scouting Telemetrics/swix/objc/opencv2.framework/Versions/A/Headers/core/affine.hpp" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/FRC Advanced Scouting Telemetrics/swix/objc/opencv2.framework/Versions/A/Headers/core/core.hpp" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/FRC Advanced Scouting Telemetrics/swix/objc/opencv2.framework/Versions/A/Headers/core/core_c.h" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/FRC Advanced Scouting Telemetrics/swix/objc/opencv2.framework/Versions/A/Headers/core/cuda_devptrs.hpp" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/FRC Advanced Scouting Telemetrics/swix/objc/opencv2.framework/Versions/A/Headers/core/devmem2d.hpp" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/FRC Advanced Scouting Telemetrics/swix/objc/opencv2.framework/Versions/A/Headers/core/eigen.hpp" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/FRC Advanced Scouting Telemetrics/swix/objc/opencv2.framework/Versions/A/Headers/core/gpumat.hpp" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/FRC Advanced Scouting Telemetrics/swix/objc/opencv2.framework/Versions/A/Headers/core/internal.hpp" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/FRC Advanced Scouting Telemetrics/swix/objc/opencv2.framework/Versions/A/Headers/core/mat.hpp" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/FRC Advanced Scouting Telemetrics/swix/objc/opencv2.framework/Versions/A/Headers/core/opengl_interop.hpp" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/FRC Advanced Scouting Telemetrics/swix/objc/opencv2.framework/Versions/A/Headers/core/opengl_interop_deprecated.hpp" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/FRC Advanced Scouting Telemetrics/swix/objc/opencv2.framework/Versions/A/Headers/core/operations.hpp" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/FRC Advanced Scouting Telemetrics/swix/objc/opencv2.framework/Versions/A/Headers/core/types_c.h" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/FRC Advanced Scouting Telemetrics/swix/objc/opencv2.framework/Versions/A/Headers/core/version.hpp" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/FRC Advanced Scouting Telemetrics/swix/objc/opencv2.framework/Versions/A/Headers/core/wimage.hpp" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/FRC Advanced Scouting Telemetrics/swix/objc/opencv2.framework/Versions/A/Headers/features2d/features2d.hpp" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/FRC Advanced Scouting Telemetrics/swix/objc/opencv2.framework/Versions/A/Headers/flann/all_indices.h" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/FRC Advanced Scouting Telemetrics/swix/objc/opencv2.framework/Versions/A/Headers/flann/allocator.h" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/FRC Advanced Scouting Telemetrics/swix/objc/opencv2.framework/Versions/A/Headers/flann/any.h" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/FRC Advanced Scouting Telemetrics/swix/objc/opencv2.framework/Versions/A/Headers/flann/autotuned_index.h" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/FRC Advanced Scouting Telemetrics/swix/objc/opencv2.framework/Versions/A/Headers/flann/composite_index.h" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/FRC Advanced Scouting Telemetrics/swix/objc/opencv2.framework/Versions/A/Headers/flann/config.h" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/FRC Advanced Scouting Telemetrics/swix/objc/opencv2.framework/Versions/A/Headers/flann/defines.h" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/FRC Advanced Scouting Telemetrics/swix/objc/opencv2.framework/Versions/A/Headers/flann/dist.h" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/FRC Advanced Scouting Telemetrics/swix/objc/opencv2.framework/Versions/A/Headers/flann/dummy.h" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/FRC Advanced Scouting Telemetrics/swix/objc/opencv2.framework/Versions/A/Headers/flann/dynamic_bitset.h" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/FRC Advanced Scouting Telemetrics/swix/objc/opencv2.framework/Versions/A/Headers/flann/flann.hpp" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/FRC Advanced Scouting Telemetrics/swix/objc/opencv2.framework/Versions/A/Headers/flann/flann_base.hpp" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/FRC Advanced Scouting Telemetrics/swix/objc/opencv2.framework/Versions/A/Headers/flann/general.h" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/FRC Advanced Scouting Telemetrics/swix/objc/opencv2.framework/Versions/A/Headers/flann/ground_truth.h" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/FRC Advanced Scouting Telemetrics/swix/objc/opencv2.framework/Versions/A/Headers/flann/hdf5.h" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/FRC Advanced Scouting Telemetrics/swix/objc/opencv2.framework/Versions/A/Headers/flann/heap.h" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/FRC Advanced Scouting Telemetrics/swix/objc/opencv2.framework/Versions/A/Headers/flann/hierarchical_clustering_index.h" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/FRC Advanced Scouting Telemetrics/swix/objc/opencv2.framework/Versions/A/Headers/flann/index_testing.h" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/FRC Advanced Scouting Telemetrics/swix/objc/opencv2.framework/Versions/A/Headers/flann/kdtree_index.h" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/FRC Advanced Scouting Telemetrics/swix/objc/opencv2.framework/Versions/A/Headers/flann/kdtree_single_index.h" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/FRC Advanced Scouting Telemetrics/swix/objc/opencv2.framework/Versions/A/Headers/flann/kmeans_index.h" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/FRC Advanced Scouting Telemetrics/swix/objc/opencv2.framework/Versions/A/Headers/flann/linear_index.h" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/FRC Advanced Scouting Telemetrics/swix/objc/opencv2.framework/Versions/A/Headers/flann/logger.h" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/FRC Advanced Scouting Telemetrics/swix/objc/opencv2.framework/Versions/A/Headers/flann/lsh_index.h" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/FRC Advanced Scouting Telemetrics/swix/objc/opencv2.framework/Versions/A/Headers/flann/lsh_table.h" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/FRC Advanced Scouting Telemetrics/swix/objc/opencv2.framework/Versions/A/Headers/flann/matrix.h" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/FRC Advanced Scouting Telemetrics/swix/objc/opencv2.framework/Versions/A/Headers/flann/miniflann.hpp" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/FRC Advanced Scouting Telemetrics/swix/objc/opencv2.framework/Versions/A/Headers/flann/nn_index.h" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/FRC Advanced Scouting Telemetrics/swix/objc/opencv2.framework/Versions/A/Headers/flann/object_factory.h" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/FRC Advanced Scouting Telemetrics/swix/objc/opencv2.framework/Versions/A/Headers/flann/params.h" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/FRC Advanced Scouting Telemetrics/swix/objc/opencv2.framework/Versions/A/Headers/flann/random.h" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/FRC Advanced Scouting Telemetrics/swix/objc/opencv2.framework/Versions/A/Headers/flann/result_set.h" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/FRC Advanced Scouting Telemetrics/swix/objc/opencv2.framework/Versions/A/Headers/flann/sampling.h" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/FRC Advanced Scouting Telemetrics/swix/objc/opencv2.framework/Versions/A/Headers/flann/saving.h" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/FRC Advanced Scouting Telemetrics/swix/objc/opencv2.framework/Versions/A/Headers/flann/simplex_downhill.h" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/FRC Advanced Scouting Telemetrics/swix/objc/opencv2.framework/Versions/A/Headers/flann/timer.h" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/FRC Advanced Scouting Telemetrics/swix/objc/opencv2.framework/Versions/A/Headers/highgui/cap_ios.h" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/FRC Advanced Scouting Telemetrics/swix/objc/opencv2.framework/Versions/A/Headers/highgui/highgui.hpp" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/FRC Advanced Scouting Telemetrics/swix/objc/opencv2.framework/Versions/A/Headers/highgui/highgui_c.h" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/FRC Advanced Scouting Telemetrics/swix/objc/opencv2.framework/Versions/A/Headers/highgui/ios.h" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/FRC Advanced Scouting Telemetrics/swix/objc/opencv2.framework/Versions/A/Headers/imgproc/imgproc.hpp" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/FRC Advanced Scouting Telemetrics/swix/objc/opencv2.framework/Versions/A/Headers/imgproc/imgproc_c.h" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/FRC Advanced Scouting Telemetrics/swix/objc/opencv2.framework/Versions/A/Headers/imgproc/types_c.h" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/FRC Advanced Scouting Telemetrics/swix/objc/opencv2.framework/Versions/A/Headers/legacy/blobtrack.hpp" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/FRC Advanced Scouting Telemetrics/swix/objc/opencv2.framework/Versions/A/Headers/legacy/compat.hpp" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/FRC Advanced Scouting Telemetrics/swix/objc/opencv2.framework/Versions/A/Headers/legacy/legacy.hpp" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/FRC Advanced Scouting Telemetrics/swix/objc/opencv2.framework/Versions/A/Headers/legacy/streams.hpp" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/FRC Advanced Scouting Telemetrics/swix/objc/opencv2.framework/Versions/A/Headers/ml/ml.hpp" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/FRC Advanced Scouting Telemetrics/swix/objc/opencv2.framework/Versions/A/Headers/nonfree/features2d.hpp" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/FRC Advanced Scouting Telemetrics/swix/objc/opencv2.framework/Versions/A/Headers/nonfree/gpu.hpp" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/FRC Advanced Scouting Telemetrics/swix/objc/opencv2.framework/Versions/A/Headers/nonfree/nonfree.hpp" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/FRC Advanced Scouting Telemetrics/swix/objc/opencv2.framework/Versions/A/Headers/nonfree/ocl.hpp" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/FRC Advanced Scouting Telemetrics/swix/objc/opencv2.framework/Versions/A/Headers/objdetect/objdetect.hpp" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/FRC Advanced Scouting Telemetrics/swix/objc/opencv2.framework/Versions/A/Headers/opencv.hpp" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/FRC Advanced Scouting Telemetrics/swix/objc/opencv2.framework/Versions/A/Headers/opencv_modules.hpp" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/FRC Advanced Scouting Telemetrics/swix/objc/opencv2.framework/Versions/A/Headers/photo/photo.hpp" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/FRC Advanced Scouting Telemetrics/swix/objc/opencv2.framework/Versions/A/Headers/photo/photo_c.h" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/FRC Advanced Scouting Telemetrics/swix/objc/opencv2.framework/Versions/A/Headers/stitching/detail/autocalib.hpp" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/FRC Advanced Scouting Telemetrics/swix/objc/opencv2.framework/Versions/A/Headers/stitching/detail/blenders.hpp" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/FRC Advanced Scouting Telemetrics/swix/objc/opencv2.framework/Versions/A/Headers/stitching/detail/camera.hpp" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/FRC Advanced Scouting Telemetrics/swix/objc/opencv2.framework/Versions/A/Headers/stitching/detail/exposure_compensate.hpp" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/FRC Advanced Scouting Telemetrics/swix/objc/opencv2.framework/Versions/A/Headers/stitching/detail/matchers.hpp" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/FRC Advanced Scouting Telemetrics/swix/objc/opencv2.framework/Versions/A/Headers/stitching/detail/motion_estimators.hpp" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/FRC Advanced Scouting Telemetrics/swix/objc/opencv2.framework/Versions/A/Headers/stitching/detail/seam_finders.hpp" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/FRC Advanced Scouting Telemetrics/swix/objc/opencv2.framework/Versions/A/Headers/stitching/detail/util.hpp" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/FRC Advanced Scouting Telemetrics/swix/objc/opencv2.framework/Versions/A/Headers/stitching/detail/util_inl.hpp" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/FRC Advanced Scouting Telemetrics/swix/objc/opencv2.framework/Versions/A/Headers/stitching/detail/warpers.hpp" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/FRC Advanced Scouting Telemetrics/swix/objc/opencv2.framework/Versions/A/Headers/stitching/detail/warpers_inl.hpp" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/FRC Advanced Scouting Telemetrics/swix/objc/opencv2.framework/Versions/A/Headers/stitching/stitcher.hpp" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/FRC Advanced Scouting Telemetrics/swix/objc/opencv2.framework/Versions/A/Headers/stitching/warpers.hpp" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/FRC Advanced Scouting Telemetrics/swix/objc/opencv2.framework/Versions/A/Headers/video/background_segm.hpp" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/FRC Advanced Scouting Telemetrics/swix/objc/opencv2.framework/Versions/A/Headers/video/tracking.hpp" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/FRC Advanced Scouting Telemetrics/swix/objc/opencv2.framework/Versions/A/Headers/video/video.hpp" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/FRC Advanced Scouting Telemetrics/swix/objc/opencv2.framework/Versions/A/Headers/videostab/deblurring.hpp" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/FRC Advanced Scouting Telemetrics/swix/objc/opencv2.framework/Versions/A/Headers/videostab/fast_marching.hpp" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/FRC Advanced Scouting Telemetrics/swix/objc/opencv2.framework/Versions/A/Headers/videostab/fast_marching_inl.hpp" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/FRC Advanced Scouting Telemetrics/swix/objc/opencv2.framework/Versions/A/Headers/videostab/frame_source.hpp" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/FRC Advanced Scouting Telemetrics/swix/objc/opencv2.framework/Versions/A/Headers/videostab/global_motion.hpp" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/FRC Advanced Scouting Telemetrics/swix/objc/opencv2.framework/Versions/A/Headers/videostab/inpainting.hpp" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/FRC Advanced Scouting Telemetrics/swix/objc/opencv2.framework/Versions/A/Headers/videostab/log.hpp" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/FRC Advanced Scouting Telemetrics/swix/objc/opencv2.framework/Versions/A/Headers/videostab/motion_stabilizing.hpp" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/FRC Advanced Scouting Telemetrics/swix/objc/opencv2.framework/Versions/A/Headers/videostab/optical_flow.hpp" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/FRC Advanced Scouting Telemetrics/swix/objc/opencv2.framework/Versions/A/Headers/videostab/stabilizer.hpp" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/FRC Advanced Scouting Telemetrics/swix/objc/opencv2.framework/Versions/A/Headers/videostab/videostab.hpp" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/FRC Advanced Scouting Telemetrics/swix/objc/opencv2.framework/Versions/A/Headers/world/world.hpp" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/FRC Advanced Scouting Telemetrics/swix/objc/opencv2.framework/Versions/A/Resources/Info.plist" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/FRC Advanced Scouting Telemetrics/swix/objc/opencv2.framework/Versions/A/opencv2" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/FRC Advanced Scouting Telemetrics/swix/objc/opencv2.framework/Versions/Current" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/FRC Advanced Scouting Telemetrics/swix/objc/opencv2.framework/opencv2" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/FRC Advanced Scouting Telemetrics/swix/objc/operations-and-indexing.m" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/FRC Advanced Scouting Telemetrics/swix/objc/swix-Bridging-Header.h" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/FRC Advanced Scouting Telemetrics/swix/tests/speed.swift" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/FRC Advanced Scouting Telemetrics/swix/tests/tests.swift" afterPath="" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/FRC Advanced Scouting Touchstone.xcodeproj/project.pbxproj" afterPath="$PROJECT_DIR$/FRC Advanced Scouting Touchstone.xcodeproj/project.pbxproj" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Pods/Pods.xcodeproj/xcuserdata/aaronkampmeier.xcuserdatad/xcschemes/Alamofire.xcscheme" afterPath="$PROJECT_DIR$/Pods/Pods.xcodeproj/xcuserdata/aaronkampmeier.xcuserdatad/xcschemes/Alamofire.xcscheme" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Pods/Pods.xcodeproj/xcuserdata/aaronkampmeier.xcuserdatad/xcschemes/Ensembles.xcscheme" afterPath="$PROJECT_DIR$/Pods/Pods.xcodeproj/xcuserdata/aaronkampmeier.xcuserdatad/xcschemes/Ensembles.xcscheme" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Pods/Pods.xcodeproj/xcuserdata/aaronkampmeier.xcuserdatad/xcschemes/FLAnimatedImage.xcscheme" afterPath="$PROJECT_DIR$/Pods/Pods.xcodeproj/xcuserdata/aaronkampmeier.xcuserdatad/xcschemes/FLAnimatedImage.xcscheme" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Pods/Pods.xcodeproj/xcuserdata/aaronkampmeier.xcuserdatad/xcschemes/NYTPhotoViewer-NYTPhotoViewer.xcscheme" afterPath="$PROJECT_DIR$/Pods/Pods.xcodeproj/xcuserdata/aaronkampmeier.xcuserdatad/xcschemes/NYTPhotoViewer-NYTPhotoViewer.xcscheme" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Pods/Pods.xcodeproj/xcuserdata/aaronkampmeier.xcuserdatad/xcschemes/NYTPhotoViewer.xcscheme" afterPath="$PROJECT_DIR$/Pods/Pods.xcodeproj/xcuserdata/aaronkampmeier.xcuserdatad/xcschemes/NYTPhotoViewer.xcscheme" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Pods/Pods.xcodeproj/xcuserdata/aaronkampmeier.xcuserdatad/xcschemes/Pods.xcscheme" afterPath="$PROJECT_DIR$/Pods/Pods.xcodeproj/xcuserdata/aaronkampmeier.xcuserdatad/xcschemes/Pods.xcscheme" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Pods/Pods.xcodeproj/xcuserdata/aaronkampmeier.xcuserdatad/xcschemes/SSZipArchive.xcscheme" afterPath="$PROJECT_DIR$/Pods/Pods.xcodeproj/xcuserdata/aaronkampmeier.xcuserdatad/xcschemes/SSZipArchive.xcscheme" />
+    </list>
+    <ignored path="FRC Advanced Scouting Telemetrics.iws" />
+    <ignored path=".idea/workspace.xml" />
+    <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
+    <option name="TRACKING_ENABLED" value="true" />
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="ChangesViewManager" flattened_view="true" show_ignored="false" />
+  <component name="CreatePatchCommitExecutor">
+    <option name="PATCH_PATH" value="" />
+  </component>
+  <component name="ExecutionTargetManager" SELECTED_TARGET="iphoneos" />
+  <component name="FavoritesManager">
+    <favorites_list name="FRC Advanced Scouting Touchstone" />
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="JsBuildToolGruntFileManager" detection-done="true" sorting="DEFINITION_ORDER" />
+  <component name="JsBuildToolPackageJson" detection-done="true" sorting="DEFINITION_ORDER" />
+  <component name="JsGulpfileManager">
+    <detection-done>true</detection-done>
+    <sorting>DEFINITION_ORDER</sorting>
+  </component>
+  <component name="ProjectFrameBounds">
+    <option name="width" value="1440" />
+    <option name="height" value="900" />
+  </component>
+  <component name="ProjectLevelVcsManager" settingsEditedManually="false">
+    <OptionsSetting value="true" id="Add" />
+    <OptionsSetting value="true" id="Remove" />
+    <OptionsSetting value="true" id="Checkout" />
+    <OptionsSetting value="true" id="Update" />
+    <OptionsSetting value="true" id="Status" />
+    <OptionsSetting value="true" id="Edit" />
+    <ConfirmationsSetting value="0" id="Add" />
+    <ConfirmationsSetting value="0" id="Remove" />
+  </component>
+  <component name="ProjectView">
+    <navigator currentView="ProjectPane" proportions="" version="1">
+      <flattenPackages />
+      <showMembers />
+      <showModules />
+      <showLibraryContents />
+      <hideEmptyPackages />
+      <abbreviatePackageNames />
+      <autoscrollToSource />
+      <autoscrollFromSource />
+      <sortByType />
+      <manualOrder />
+      <foldersAlwaysOnTop value="true" />
+    </navigator>
+    <panes>
+      <pane id="Cidr.FilesView" />
+      <pane id="ProjectPane">
+        <subPane>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" />
+              <option name="myItemType" value="com.jetbrains.cidr.projectView.XcodeRootNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" />
+              <option name="myItemType" value="com.jetbrains.cidr.projectView.XcodeRootNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="FRC Advanced Scouting Touchstone" />
+              <option name="myItemType" value="com.jetbrains.cidr.projectView.XcodeProjectNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" />
+              <option name="myItemType" value="com.jetbrains.cidr.projectView.XcodeRootNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="FRC Advanced Scouting Touchstone" />
+              <option name="myItemType" value="com.jetbrains.cidr.projectView.XcodeProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="FRC Advanced Scouting Touchstone" />
+              <option name="myItemType" value="com.jetbrains.cidr.projectView.XcodeViewNode" />
+            </PATH_ELEMENT>
+          </PATH>
+        </subPane>
+      </pane>
+    </panes>
+  </component>
+  <component name="PropertiesComponent">
+    <property name="FullScreen" value="true" />
+    <property name="FileHistory.git4idea.history.GitHistoryProvider_flatWidth0" value="140" />
+    <property name="FileHistory.git4idea.history.GitHistoryProvider_flatOrder0" value="0" />
+    <property name="FileHistory.git4idea.history.GitHistoryProvider_flatWidth1" value="156" />
+    <property name="FileHistory.git4idea.history.GitHistoryProvider_flatOrder1" value="1" />
+    <property name="FileHistory.git4idea.history.GitHistoryProvider_flatWidth2" value="160" />
+    <property name="FileHistory.git4idea.history.GitHistoryProvider_flatOrder2" value="2" />
+    <property name="FileHistory.git4idea.history.GitHistoryProvider_flatWidth3" value="954" />
+    <property name="FileHistory.git4idea.history.GitHistoryProvider_flatOrder3" value="3" />
+    <property name="FileHistory.git4idea.history.GitHistoryProvider_treeWidth0" value="151" />
+    <property name="FileHistory.git4idea.history.GitHistoryProvider_treeOrder0" value="0" />
+    <property name="FileHistory.git4idea.history.GitHistoryProvider_treeWidth1" value="153" />
+    <property name="FileHistory.git4idea.history.GitHistoryProvider_treeOrder1" value="1" />
+    <property name="FileHistory.git4idea.history.GitHistoryProvider_treeWidth2" value="156" />
+    <property name="FileHistory.git4idea.history.GitHistoryProvider_treeOrder2" value="2" />
+    <property name="FileHistory.git4idea.history.GitHistoryProvider_treeWidth3" value="950" />
+    <property name="FileHistory.git4idea.history.GitHistoryProvider_treeOrder3" value="3" />
+  </component>
+  <component name="RunManager" selected="Application.FRC Advanced Scouting Touchstone">
+    <configuration default="true" type="AppleRunConfiguration" factoryName="Application" PASS_PARENT_ENVS_2="true" PROJECT_NAME="FRC Advanced Scouting Touchstone" TARGET_NAME="FRC Advanced Scouting Touchstone" CONFIG_NAME="Debug" RUN_TARGET_PROJECT_NAME="FRC Advanced Scouting Touchstone" RUN_TARGET_NAME="FRC Advanced Scouting Touchstone" MAKE_ACTIVE="TRUE" WAIT_FOR="FALSE">
+      <envs />
+      <EXTENSION ID="org.jetbrains.appcode.reveal.RevealRunConfigurationExtension">
+        <REVEAL_SETTINGS autoInject="false" autoInstall="true" askToEnableAutoInstall="true" />
+      </EXTENSION>
+      <method />
+    </configuration>
+    <configuration default="false" name="Alamofire" type="AppleRunConfiguration" factoryName="Application" WORKING_DIR="" PASS_PARENT_ENVS_2="true" PROJECT_NAME="Pods" TARGET_NAME="Alamofire" CONFIG_NAME="Debug" SCHEME_NAME="Alamofire" MAKE_ACTIVE="TRUE" WAIT_FOR="FALSE">
+      <envs />
+      <EXTENSION ID="org.jetbrains.appcode.reveal.RevealRunConfigurationExtension">
+        <REVEAL_SETTINGS autoInject="false" autoInstall="true" askToEnableAutoInstall="true" />
+      </EXTENSION>
+      <method />
+    </configuration>
+    <configuration default="false" name="Ensembles" type="AppleRunConfiguration" factoryName="Application" WORKING_DIR="" PASS_PARENT_ENVS_2="true" PROJECT_NAME="Pods" TARGET_NAME="Ensembles" CONFIG_NAME="Debug" SCHEME_NAME="Ensembles" MAKE_ACTIVE="TRUE" WAIT_FOR="FALSE">
+      <envs />
+      <EXTENSION ID="org.jetbrains.appcode.reveal.RevealRunConfigurationExtension">
+        <REVEAL_SETTINGS autoInject="false" autoInstall="true" askToEnableAutoInstall="true" />
+      </EXTENSION>
+      <method />
+    </configuration>
+    <configuration default="false" name="FLAnimatedImage" type="AppleRunConfiguration" factoryName="Application" WORKING_DIR="" PASS_PARENT_ENVS_2="true" PROJECT_NAME="Pods" TARGET_NAME="FLAnimatedImage" CONFIG_NAME="Debug" SCHEME_NAME="FLAnimatedImage" MAKE_ACTIVE="TRUE" WAIT_FOR="FALSE">
+      <envs />
+      <EXTENSION ID="org.jetbrains.appcode.reveal.RevealRunConfigurationExtension">
+        <REVEAL_SETTINGS autoInject="false" autoInstall="true" askToEnableAutoInstall="true" />
+      </EXTENSION>
+      <method />
+    </configuration>
+    <configuration default="false" name="NYTPhotoViewer-NYTPhotoViewer" type="AppleRunConfiguration" factoryName="Application" WORKING_DIR="" PASS_PARENT_ENVS_2="true" PROJECT_NAME="Pods" TARGET_NAME="NYTPhotoViewer-NYTPhotoViewer" CONFIG_NAME="Debug" SCHEME_NAME="NYTPhotoViewer-NYTPhotoViewer" MAKE_ACTIVE="TRUE" WAIT_FOR="FALSE">
+      <envs />
+      <EXTENSION ID="org.jetbrains.appcode.reveal.RevealRunConfigurationExtension">
+        <REVEAL_SETTINGS autoInject="false" autoInstall="true" askToEnableAutoInstall="true" />
+      </EXTENSION>
+      <method />
+    </configuration>
+    <configuration default="false" name="NYTPhotoViewer" type="AppleRunConfiguration" factoryName="Application" WORKING_DIR="" PASS_PARENT_ENVS_2="true" PROJECT_NAME="Pods" TARGET_NAME="NYTPhotoViewer" CONFIG_NAME="Debug" SCHEME_NAME="NYTPhotoViewer" MAKE_ACTIVE="TRUE" WAIT_FOR="FALSE">
+      <envs />
+      <EXTENSION ID="org.jetbrains.appcode.reveal.RevealRunConfigurationExtension">
+        <REVEAL_SETTINGS autoInject="false" autoInstall="true" askToEnableAutoInstall="true" />
+      </EXTENSION>
+      <method />
+    </configuration>
+    <configuration default="false" name="Pods" type="AppleRunConfiguration" factoryName="Application" WORKING_DIR="" PASS_PARENT_ENVS_2="true" PROJECT_NAME="Pods" TARGET_NAME="Pods" CONFIG_NAME="Debug" SCHEME_NAME="Pods" MAKE_ACTIVE="TRUE" WAIT_FOR="FALSE">
+      <envs />
+      <EXTENSION ID="org.jetbrains.appcode.reveal.RevealRunConfigurationExtension">
+        <REVEAL_SETTINGS autoInject="false" autoInstall="true" askToEnableAutoInstall="true" />
+      </EXTENSION>
+      <method />
+    </configuration>
+    <configuration default="false" name="SSZipArchive" type="AppleRunConfiguration" factoryName="Application" WORKING_DIR="" PASS_PARENT_ENVS_2="true" PROJECT_NAME="Pods" TARGET_NAME="SSZipArchive" CONFIG_NAME="Debug" SCHEME_NAME="SSZipArchive" MAKE_ACTIVE="TRUE" WAIT_FOR="FALSE">
+      <envs />
+      <EXTENSION ID="org.jetbrains.appcode.reveal.RevealRunConfigurationExtension">
+        <REVEAL_SETTINGS autoInject="false" autoInstall="true" askToEnableAutoInstall="true" />
+      </EXTENSION>
+      <method />
+    </configuration>
+    <list size="8">
+      <item index="0" class="java.lang.String" itemvalue="Application.FRC Advanced Scouting Touchstone" />
+      <item index="1" class="java.lang.String" itemvalue="Application.Alamofire" />
+      <item index="2" class="java.lang.String" itemvalue="Application.Ensembles" />
+      <item index="3" class="java.lang.String" itemvalue="Application.FLAnimatedImage" />
+      <item index="4" class="java.lang.String" itemvalue="Application.NYTPhotoViewer-NYTPhotoViewer" />
+      <item index="5" class="java.lang.String" itemvalue="Application.NYTPhotoViewer" />
+      <item index="6" class="java.lang.String" itemvalue="Application.Pods" />
+      <item index="7" class="java.lang.String" itemvalue="Application.SSZipArchive" />
+    </list>
+  </component>
+  <component name="ShelveChangesManager" show_recycled="false">
+    <option name="remove_strategy" value="false" />
+  </component>
+  <component name="SvnConfiguration">
+    <configuration />
+  </component>
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="37a6f969-e84e-41b2-b62f-77fc2b1d1e1e" name="Default" comment="" />
+      <created>1468011576119</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1468011576119</updated>
+    </task>
+    <servers />
+  </component>
+  <component name="ToolWindowManager">
+    <frame x="0" y="0" width="1440" height="900" extended-state="0" />
+    <editor active="false" />
+    <layout>
+      <window_info id="Designer" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="-1" side_tool="false" content_ui="tabs" />
+      <window_info id="Project" active="true" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.24305555" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
+      <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.32942554" sideWeight="0.5" order="-1" side_tool="false" content_ui="tabs" />
+      <window_info id="Palette&#9;" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="-1" side_tool="false" content_ui="tabs" />
+      <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="-1" side_tool="true" content_ui="tabs" />
+      <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32942554" sideWeight="0.5" order="-1" side_tool="false" content_ui="tabs" />
+      <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
+      <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="-1" side_tool="false" content_ui="tabs" />
+      <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="-1" side_tool="true" content_ui="tabs" />
+      <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
+      <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="2" side_tool="false" content_ui="combo" />
+      <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
+      <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
+      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
+      <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
+      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
+      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
+    </layout>
+  </component>
+  <component name="Vcs.Log.UiProperties">
+    <option name="RECENTLY_FILTERED_USER_GROUPS">
+      <collection />
+    </option>
+    <option name="RECENTLY_FILTERED_BRANCH_GROUPS">
+      <collection />
+    </option>
+  </component>
+  <component name="VcsContentAnnotationSettings">
+    <option name="myLimit" value="2678400000" />
+  </component>
+  <component name="XDebuggerManager">
+    <breakpoint-manager />
+    <watches-manager />
+  </component>
+</project>
