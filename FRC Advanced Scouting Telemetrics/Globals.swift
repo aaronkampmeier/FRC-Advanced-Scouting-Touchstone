@@ -18,7 +18,7 @@ let latestVersionStringURL = "https://dl.dropboxusercontent.com/s/xvjxmo77plk3wx
 /**
 An operator to easily decide which of two values to use in a merged object
 */
-infix operator ~? {}
+infix operator ~?
 
 func ~? (left: Double, right: Double) -> Double {
 	//Check is the numbers represent bools
@@ -44,11 +44,11 @@ func ~? (left: Int, right: Int) -> Int {
 }
 
 func ~? (left: NSNumber, right: NSNumber) -> NSNumber {
-	return NSNumber(double: left.doubleValue ~? right.doubleValue)
+	return NSNumber(value: left.doubleValue ~? right.doubleValue)
 }
 
 func ~? (left: NSNumber?, right: NSNumber?) -> NSNumber? {
-	let result = NSNumber(double: left?.doubleValue ?? 0 ~? right?.doubleValue ?? 0)
+	let result = NSNumber(value: left?.doubleValue ?? 0 ~? (right?.doubleValue)! ?? 0)
 	if result != 0 {
 		return result
 	} else {
@@ -64,7 +64,7 @@ func ~? (left: String?, right: String?) -> String? {
 		return right
 	} else if right == nil && left != nil {
 		return left
-	} else if left?.characters.count > right?.characters.count {
+	} else if (left?.characters.count)! > (right?.characters.count)! {
 		return left
 	} else {
 		return right
@@ -72,7 +72,7 @@ func ~? (left: String?, right: String?) -> String? {
 }
 
 func + (left: NSSet?, right: NSSet?) -> NSSet {
-	return left?.setByAddingObjectsFromSet(right as? Set<NSObject> ?? Set()) ?? NSSet()
+	return left?.addingObjects(from: right as? Set<NSObject> ?? Set()) as NSSet? ?? NSSet()
 }
 
 //func ==(left: Payload, right: Payload) -> Bool {

@@ -34,39 +34,39 @@ class PitScoutingController: UIViewController, UIImagePickerControllerDelegate, 
     
     var observer: NSObjectProtocol? = nil
     
-    let notificationCenter = NSNotificationCenter.defaultCenter()
+    let notificationCenter = NotificationCenter.default
 	
-	var selectedTeam: TeamSelection = TeamSelection.Invalid {
+	var selectedTeam: TeamSelection = TeamSelection.invalid {
 		didSet {
 			switch selectedTeam {
-			case .Invalid:
-				notesButton.enabled = false
-			case .Valid(_):
-				notesButton.enabled = true
+			case .invalid:
+				notesButton.isEnabled = false
+			case .valid(_):
+				notesButton.isEnabled = true
 			}
 		}
 	}
 	
 	var team: Team {
 		switch selectedTeam {
-		case .Invalid:
+		case .invalid:
 			assertionFailure("No selected team")
 			fatalError()
-		case .Valid(let team):
+		case .valid(let team):
 			return team
 		}
 	}
 	
 	enum TeamSelection {
-		case Invalid
-		case Valid(Team)
+		case invalid
+		case valid(Team)
 		
 		var optionalTeam: Team? {
 			get {
 				switch self {
-				case .Invalid:
+				case .invalid:
 					return nil
-				case .Valid(let team):
+				case .valid(let team):
 					return team
 				}
 			}
@@ -74,9 +74,9 @@ class PitScoutingController: UIViewController, UIImagePickerControllerDelegate, 
 		
 		var vaild: Bool {
 			switch self {
-			case .Invalid:
+			case .invalid:
 				return false
-			case .Valid(_):
+			case .valid(_):
 				return true
 			}
 		}
@@ -86,198 +86,198 @@ class PitScoutingController: UIViewController, UIImagePickerControllerDelegate, 
         super.viewDidLoad()
     }
 	
-	override func viewDidAppear(animated: Bool) {
+	override func viewDidAppear(_ animated: Bool) {
 		super.viewDidAppear(animated)
 		teamNumberField.becomeFirstResponder()
 	}
 	
-	override func viewWillDisappear(animated: Bool) {
+	override func viewWillDisappear(_ animated: Bool) {
 		super.viewWillDisappear(animated)
 		
 		dataManager.commitChanges()
 	}
     
-    @IBAction func desiredTeamEdited(sender: UITextField) {
+    @IBAction func desiredTeamEdited(_ sender: UITextField) {
         if let number = teamNumberField.text {
             if let team = dataManager.getTeams(number).first {
-                selectedTeam = .Valid(team)
+                selectedTeam = .valid(team)
                 validTeamSymbol.image = UIImage(named: "CorrectIcon")
 			} else {
-                selectedTeam = .Invalid
+                selectedTeam = .invalid
                 validTeamSymbol.image = UIImage(named: "IncorrectIcon")
             }
         }
 		
 		//Set all the fields to their correct values
-		weightField.text = String(selectedTeam.optionalTeam?.robotWeight ?? "") ?? ""
-		driverXpField.text = String(selectedTeam.optionalTeam?.driverExp ?? "") ?? ""
-		frontImage.image = UIImage(data: (selectedTeam.optionalTeam?.frontImage) ?? NSData())
-		sideImage.image = UIImage(data: (selectedTeam.optionalTeam?.sideImage) ?? NSData())
+		weightField.text = String((selectedTeam.optionalTeam?.robotWeight)! ?? "") ?? ""
+		driverXpField.text = String((selectedTeam.optionalTeam?.driverExp)! ?? "") ?? ""
+		frontImage.image = UIImage(data: ((selectedTeam.optionalTeam?.frontImage) ?? Data()) as Data)
+		sideImage.image = UIImage(data: ((selectedTeam.optionalTeam?.sideImage) ?? Data()) as Data)
 		visionTrackingSlider.setValue((selectedTeam.optionalTeam?.visionTrackingRating?.floatValue) ?? 0, animated: false)
 		driveTrainField.text = String(selectedTeam.optionalTeam?.driveTrain ?? "") ?? ""
-		heightField.text = String(selectedTeam.optionalTeam?.height ?? "") ?? ""
-		climberSwitch.on = selectedTeam.optionalTeam?.climber?.boolValue ?? false
-		highGoalSwitch.on = selectedTeam.optionalTeam?.highGoal?.boolValue ?? false
-		lowGoalSwitch.on = selectedTeam.optionalTeam?.lowGoal?.boolValue ?? false
+		heightField.text = String((selectedTeam.optionalTeam?.height)! ?? "") ?? ""
+		climberSwitch.isOn = selectedTeam.optionalTeam?.climber?.boolValue ?? false
+		highGoalSwitch.isOn = selectedTeam.optionalTeam?.highGoal?.boolValue ?? false
+		lowGoalSwitch.isOn = selectedTeam.optionalTeam?.lowGoal?.boolValue ?? false
 		setDefensesAbleToCross(forPart: currentGamePart(), inTeam: selectedTeam.optionalTeam)
     }
 	
-	@IBAction func gamePartChanged(sender: UISegmentedControl) {
+	@IBAction func gamePartChanged(_ sender: UISegmentedControl) {
 		setDefensesAbleToCross(forPart: currentGamePart(), inTeam: selectedTeam.optionalTeam)
 	}
 	
 	func setDefensesAbleToCross(forPart part: GamePart, inTeam team: Team?) {
 		//Set all the buttons to not selected
 		for defenseButton in defenseButtons {
-			setDefenseButton(defenseButton, state: .NotSelected)
+			setDefenseButton(defenseButton, state: .notSelected)
 		}
 		
 		if let team = team {
 			let defenses: [Defense]
 			var autonomousDefensesForShooting: [Defense] = [Defense]()
 			switch part {
-			case .Autonomous:
+			case .autonomous:
 				defenses = team.autonomousDefensesAbleToCrossArray
 				autonomousDefensesForShooting = team.autonomousDefensesAbleToShootArray
-			case .Teleop:
+			case .teleop:
 				defenses = team.defensesAbleToCrossArray
 			}
 			
 			//Set the ones that are able to be crossed as selected
 			for defense in defenses {
 				let defenseButton = defenseButtons.filter() {
-					$0.titleForState(.Normal) == defense.description
+					$0.title(for: UIControlState()) == defense.description
 					}.first!
-				setDefenseButton(defenseButton, state: .CanCross)
+				setDefenseButton(defenseButton, state: .canCross)
 			}
 			for defense in autonomousDefensesForShooting {
 				let defenseButton = defenseButtons.filter() {
-					$0.titleForState(.Normal) == defense.description
+					$0.title(for: UIControlState()) == defense.description
 					}.first!
-				setDefenseButton(defenseButton, state: .CanShootFrom)
+				setDefenseButton(defenseButton, state: .canShootFrom)
 			}
 		}
 	}
 	
-	func setDefenseButton(button: UIButton, state: DefenseButtonState) {
+	func setDefenseButton(_ button: UIButton, state: DefenseButtonState) {
 		switch state {
-		case .CanShootFrom:
+		case .canShootFrom:
 			button.layer.borderWidth = 5
-			button.layer.borderColor = UIColor.blueColor().CGColor
+			button.layer.borderColor = UIColor.blue.cgColor
 			button.layer.cornerRadius = 10
-		case .CanCross:
+		case .canCross:
 			button.layer.borderWidth = 5
-			button.layer.borderColor = UIColor.greenColor().CGColor
+			button.layer.borderColor = UIColor.green.cgColor
 			button.layer.cornerRadius = 10
-		case .NotSelected:
+		case .notSelected:
 			button.layer.borderWidth = 0
 		}
 	}
 	
 	enum DefenseButtonState {
-		case NotSelected
-		case CanCross
-		case CanShootFrom
+		case notSelected
+		case canCross
+		case canShootFrom
 	}
 	
-	@IBAction func visionTrackingValueChanged(sender: UISlider) {
+	@IBAction func visionTrackingValueChanged(_ sender: UISlider) {
 		let stepValue = round(sender.value)
 		sender.setValue(stepValue, animated: true)
 		
 		if let team = selectedTeam.optionalTeam {
-			team.visionTrackingRating = stepValue
+			team.visionTrackingRating = stepValue as NSNumber?
 		}
 	}
 	
-	@IBAction func heightEdited(sender: UITextField) {
+	@IBAction func heightEdited(_ sender: UITextField) {
 		if let team = selectedTeam.optionalTeam {
-			team.height = Double(sender.text!) ?? 0
+			team.height = Double(sender.text!) as NSNumber?? ?? 0
 		}
 	}
 	
-	@IBAction func driveTrainEdited(sender: UITextField) {
+	@IBAction func driveTrainEdited(_ sender: UITextField) {
 		if let team = selectedTeam.optionalTeam {
 			team.driveTrain = sender.text
 		}
 	}
 	
-	@IBAction func weightEdited(sender: UITextField) {
+	@IBAction func weightEdited(_ sender: UITextField) {
 		if let team = selectedTeam.optionalTeam {
-			team.robotWeight = Double(sender.text!) ?? 0
+			team.robotWeight = Double(sender.text!) as NSNumber?? ?? 0
 		}
 	}
 	
-	@IBAction func xpEdited(sender: UITextField) {
+	@IBAction func xpEdited(_ sender: UITextField) {
 		if let team = selectedTeam.optionalTeam {
-			team.driverExp = Double(sender.text!) ?? 0
+			team.driverExp = Double(sender.text!) as NSNumber?? ?? 0
 		}
 	}
 	
-	@IBAction func climberSwitched(sender: UISwitch) {
+	@IBAction func climberSwitched(_ sender: UISwitch) {
 		if let team = selectedTeam.optionalTeam {
-			team.climber = sender.on
+			team.climber = sender.isOn as NSNumber?
 		}
 	}
 	
-	@IBAction func highGoalSwitched(sender: UISwitch) {
+	@IBAction func highGoalSwitched(_ sender: UISwitch) {
 		if let team = selectedTeam.optionalTeam {
-			team.highGoal = sender.on
+			team.highGoal = sender.isOn as NSNumber?
 		}
 	}
 	
-	@IBAction func lowGoalSwitched(sender: UISwitch) {
+	@IBAction func lowGoalSwitched(_ sender: UISwitch) {
 		if let team = selectedTeam.optionalTeam {
-			team.lowGoal = sender.on
+			team.lowGoal = sender.isOn as NSNumber?
 		}
 	}
     
-    @IBAction func frontPhotoPressed(sender: UIButton) {
-        getPhoto(.Front, sender: sender)
+    @IBAction func frontPhotoPressed(_ sender: UIButton) {
+        getPhoto(.front, sender: sender)
     }
     
-    @IBAction func sidePhotoPressed(sender: UIButton) {
-		getPhoto(.Side, sender: sender)
+    @IBAction func sidePhotoPressed(_ sender: UIButton) {
+		getPhoto(.side, sender: sender)
     }
     
-    func imagePickerController(picker: UIImagePickerController, didFinishPickingImage image: UIImage, editingInfo: [String : AnyObject]?) {
+    func imagePickerController(_ picker: UIImagePickerController, didFinishPickingImage image: UIImage, editingInfo: [String : AnyObject]?) {
         //Dismiss the camera view
-        dismissViewControllerAnimated(true, completion: nil)
+        dismiss(animated: true, completion: nil)
         
         //Create and post notification of image selected with userInfo of the image
-        let notification = NSNotification(name: "newImage", object: self, userInfo: ["image":image])
+        let notification = Notification(name: "newImage" as Name, object: self, userInfo: ["image":image])
         
-        notificationCenter.postNotification(notification)
+        notificationCenter.post(notification)
     }
     
-	func getPhoto(frontOrSide: imagePOV, sender: UIView!) {
+	func getPhoto(_ frontOrSide: imagePOV, sender: UIView!) {
         //Check to make sure there is a camera
-        if UIImagePickerController.isSourceTypeAvailable(.Camera) || UIImagePickerController.isSourceTypeAvailable(.PhotoLibrary) {
+        if UIImagePickerController.isSourceTypeAvailable(.camera) || UIImagePickerController.isSourceTypeAvailable(.photoLibrary) {
             //Ask for permission
-            let authStatus = AVCaptureDevice.authorizationStatusForMediaType(AVMediaTypeVideo)
-            if  authStatus != .Authorized && authStatus == .NotDetermined {
-				AVCaptureDevice.requestAccessForMediaType(AVMediaTypeVideo, completionHandler: nil)
-			} else if authStatus == .Denied {
+            let authStatus = AVCaptureDevice.authorizationStatus(forMediaType: AVMediaTypeVideo)
+            if  authStatus != .authorized && authStatus == .notDetermined {
+				AVCaptureDevice.requestAccess(forMediaType: AVMediaTypeVideo, completionHandler: nil)
+			} else if authStatus == .denied {
 				presentOkAlert("You Have Denied Acces to the Camera", message: "Go to Settings> Privacy> Camera> FAST and turn it on.")
-			} else if authStatus == .Authorized {
+			} else if authStatus == .authorized {
 				//Set up the camera view and present it
 				imageController.delegate = self
 				imageController.allowsEditing = true
 				
 				//Figure out which source to use
-				if !UIImagePickerController.isSourceTypeAvailable(.Camera) {
-					presentImageController(imageController, withSource: .Camera, forFrontOrSide: frontOrSide, sender: sender)
+				if !UIImagePickerController.isSourceTypeAvailable(.camera) {
+					presentImageController(imageController, withSource: .camera, forFrontOrSide: frontOrSide, sender: sender)
 				} else {
-					let sourceSelector = UIAlertController(title: nil, message: nil, preferredStyle: .ActionSheet)
-					sourceSelector.addAction(UIAlertAction(title: "Camera", style: .Default) {_ in
-						self.presentImageController(self.imageController, withSource: .Camera, forFrontOrSide: frontOrSide, sender: sender)
-						Answers.logCustomEventWithName("Added Team Photo", customAttributes: ["View":frontOrSide.description, "Source":"Camera"])
+					let sourceSelector = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
+					sourceSelector.addAction(UIAlertAction(title: "Camera", style: .default) {_ in
+						self.presentImageController(self.imageController, withSource: .camera, forFrontOrSide: frontOrSide, sender: sender)
+						Answers.logCustomEvent(withName: "Added Team Photo", customAttributes: ["View":frontOrSide.description, "Source":"Camera"])
 						})
-					sourceSelector.addAction(UIAlertAction(title: "Photo Library", style: .Default) {_ in
-						self.presentImageController(self.imageController, withSource: .PhotoLibrary, forFrontOrSide: frontOrSide, sender: sender)
-						Answers.logCustomEventWithName("Added Team Photo", customAttributes: ["View":frontOrSide.description, "Source":"Photo Library"])
+					sourceSelector.addAction(UIAlertAction(title: "Photo Library", style: .default) {_ in
+						self.presentImageController(self.imageController, withSource: .photoLibrary, forFrontOrSide: frontOrSide, sender: sender)
+						Answers.logCustomEvent(withName: "Added Team Photo", customAttributes: ["View":frontOrSide.description, "Source":"Photo Library"])
 						})
 					sourceSelector.popoverPresentationController?.sourceView = sender
-					presentViewController(sourceSelector, animated: true, completion: nil)
+					present(sourceSelector, animated: true, completion: nil)
 				}
             } else {
 				
@@ -287,30 +287,30 @@ class PitScoutingController: UIViewController, UIImagePickerControllerDelegate, 
         }
     }
 	
-	func presentImageController(controller: UIImagePickerController, withSource source: UIImagePickerControllerSourceType, forFrontOrSide frontOrSide: imagePOV, sender: UIView!) {
+	func presentImageController(_ controller: UIImagePickerController, withSource source: UIImagePickerControllerSourceType, forFrontOrSide frontOrSide: imagePOV, sender: UIView!) {
 		controller.sourceType = source
 		
-		if source == .Camera {
-			imageController.modalPresentationStyle = .FullScreen
+		if source == .camera {
+			imageController.modalPresentationStyle = .fullScreen
 		} else {
-			imageController.modalPresentationStyle = .Popover
+			imageController.modalPresentationStyle = .popover
 			imageController.popoverPresentationController?.sourceView = sender
 		}
-		presentViewController(controller, animated: true, completion: nil)
+		present(controller, animated: true, completion: nil)
 		
 		//Add observer for the new image notification
-		observer = notificationCenter.addObserverForName("newImage", object: self, queue: nil, usingBlock: {(notification: NSNotification) in self.setPhoto(frontOrSide, image: ((notification.userInfo!) as! [String: UIImage])["image"]!)})
+		observer = notificationCenter.addObserver(forName: "newImage" as NSNotification.Name, object: self, queue: nil, using: {(notification: Notification) in self.setPhoto(frontOrSide, image: (((notification as NSNotification).userInfo!) as! [String: UIImage])["image"]!)})
 	}
 	
-    func setPhoto(frontOrSide: imagePOV, image: UIImage) {
+    func setPhoto(_ frontOrSide: imagePOV, image: UIImage) {
         
         switch frontOrSide {
-        case .Front:
+        case .front:
 			if let team = selectedTeam.optionalTeam {
 				team.frontImage = UIImageJPEGRepresentation(image, 1)
 			}
             frontImage.image = image
-        case .Side:
+        case .side:
 			if let team = selectedTeam.optionalTeam {
 				team.sideImage = UIImageJPEGRepresentation(image, 1)
 			}
@@ -318,27 +318,27 @@ class PitScoutingController: UIViewController, UIImagePickerControllerDelegate, 
         }
         
         //Remove the observer so we don't get repeated commands
-        notificationCenter.removeObserver(observer!, name: "newImage", object: self)
+        notificationCenter.removeObserver(observer!, name: "newImage" as NSNotification.Name, object: self)
     }
 	
 	enum imagePOV: CustomStringConvertible {
-        case Front, Side
+        case front, side
 		
 		var description: String {
 			switch self {
-			case .Front:
+			case .front:
 				return "Front"
-			case .Side:
+			case .side:
 				return "Side"
 			}
 		}
     }
 	
 	//Functions for managing the defenses that a team can do
-	@IBAction func selectedDefense(sender: UIButton) {
+	@IBAction func selectedDefense(_ sender: UIButton) {
 		if sender.layer.borderWidth == 0 {
 			//Hasn't been selected previously, set it selected
-			setDefenseButton(sender, state: .CanCross)
+			setDefenseButton(sender, state: .canCross)
 			
 //			sender.layer.shadowOpacity = 0.5
 //			sender.layer.shadowColor = UIColor.greenColor().CGColor
@@ -347,32 +347,32 @@ class PitScoutingController: UIViewController, UIImagePickerControllerDelegate, 
 			
 			if let team = selectedTeam.optionalTeam {
 				//First, get the defense for the button
-				let defense = Defense(rawValue: sender.titleForState(.Normal)!)
+				let defense = Defense(rawValue: sender.title(for: UIControlState())!)
 				
 				dataManager.addDefense(defense!, toTeam: team, forPart: currentGamePart())
 			}
-		} else if CGColorEqualToColor(sender.layer.borderColor, UIColor.greenColor().CGColor) {
+		} else if ((sender.layer.borderColor?.equalTo(UIColor.green().cgColor)) != nil) {
 			//Was selected as can cross
 			switch currentGamePart() {
-			case .Autonomous:
-				setDefenseButton(sender, state: .CanShootFrom)
+			case .autonomous:
+				setDefenseButton(sender, state: .canShootFrom)
 				if let team = selectedTeam.optionalTeam {
-					let defense = Defense(rawValue: sender.titleForState(.Normal)!)
+					let defense = Defense(rawValue: sender.title(for: UIControlState())!)
 					
 					dataManager.setDefenseAbleToShootFrom(defense!, toTeam: team, canShootFrom: true)
 				}
-			case .Teleop:
-				setDefenseButton(sender, state: .NotSelected)
+			case .teleop:
+				setDefenseButton(sender, state: .notSelected)
 				if let team = selectedTeam.optionalTeam {
-					let defense = Defense(rawValue: sender.titleForState(.Normal)!)
+					let defense = Defense(rawValue: sender.title(for: UIControlState())!)
 					
 					dataManager.removeDefense(defense!, fromTeam: team, forPart: currentGamePart())
 				}
 			}
-		} else if CGColorEqualToColor(sender.layer.borderColor, UIColor.blueColor().CGColor) {
-			setDefenseButton(sender, state: .NotSelected)
+		} else if ((sender.layer.borderColor?.equalTo(UIColor.blue().cgColor)) != nil) {
+			setDefenseButton(sender, state: .notSelected)
 			if let team = selectedTeam.optionalTeam {
-				let defense = Defense(rawValue: sender.titleForState(.Normal)!)
+				let defense = Defense(rawValue: sender.title(for: UIControlState())!)
 				
 				dataManager.setDefenseAbleToShootFrom(defense!, toTeam: team, canShootFrom: false)
 				dataManager.removeDefense(defense!, fromTeam: team, forPart: currentGamePart())
@@ -380,28 +380,28 @@ class PitScoutingController: UIViewController, UIImagePickerControllerDelegate, 
 		}
 	}
 	
-	@IBAction func notesPressed(sender: UIBarButtonItem) {
-		let notesVC = storyboard?.instantiateViewControllerWithIdentifier("notesVC") as! NotesViewController
+	@IBAction func notesPressed(_ sender: UIBarButtonItem) {
+		let notesVC = storyboard?.instantiateViewController(withIdentifier: "notesVC") as! NotesViewController
 		notesVC.originatingView = self
 		notesVC.preferredContentSize = CGSize(width: 400, height: 500)
-		notesVC.modalPresentationStyle = .Popover
+		notesVC.modalPresentationStyle = .popover
 		let popoverVC = notesVC.popoverPresentationController
 		popoverVC?.barButtonItem = sender
-		presentViewController(notesVC, animated: true, completion: nil)
+		present(notesVC, animated: true, completion: nil)
 	}
 	
 	func currentGamePart() -> GamePart {
 		if gamePartSelector.selectedSegmentIndex == 0 {
-			return GamePart.Autonomous
+			return GamePart.autonomous
 		} else {
-			return GamePart.Teleop
+			return GamePart.teleop
 		}
 	}
     
     //Function for presenting a simple alert
-    func presentOkAlert(title: String, message: String) {
-        let alert = UIAlertController(title: title, message: message, preferredStyle: .Alert)
-        alert.addAction(UIAlertAction(title: "OK", style: .Default, handler: nil))
-        presentViewController(alert, animated: true, completion: nil)
+    func presentOkAlert(_ title: String, message: String) {
+        let alert = UIAlertController(title: title, message: message, preferredStyle: .alert)
+        alert.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
+        present(alert, animated: true, completion: nil)
     }
 }

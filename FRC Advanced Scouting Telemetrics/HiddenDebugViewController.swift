@@ -23,7 +23,7 @@ class HiddenDebugViewController: UIViewController {
         // Dispose of any resources that can be recreated.
     }
 	
-	@IBAction func testFailedSave(sender: UIButton) {
+	@IBAction func testFailedSave(_ sender: UIButton) {
 //		let dataSyncer = DataSyncer.sharedDataSyncer()
 //		
 //		let newMatch = Match(entity: NSEntityDescription.entityForName("Match", inManagedObjectContext: TeamDataManager.managedContext)!, insertIntoManagedObjectContext: TeamDataManager.managedContext)

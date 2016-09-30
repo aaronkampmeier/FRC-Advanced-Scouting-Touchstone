@@ -13,17 +13,16 @@ class ShotChartViewController: UIViewController {
 	@IBOutlet weak var offenseImage: UIImageView!
 	
 	let invisibleView = UIView()
-	var teamListVC: TeamListController!
+	var dataSource: TeamListSegmentsDataSource?
 
     override func viewDidLoad() {
         super.viewDidLoad()
 
         // Do any additional setup after loading the view.
 		offenseImage.addSubview(invisibleView)
-		teamListVC = parentViewController as! TeamListController
     }
 	
-	override func viewDidAppear(animated: Bool) {
+	override func viewDidAppear(_ animated: Bool) {
 		super.viewDidAppear(animated)
 		reloadInvisibleView()
 	}
@@ -33,25 +32,25 @@ class ShotChartViewController: UIViewController {
         // Dispose of any resources that can be recreated.
     }
 	
-	override func viewWillTransitionToSize(size: CGSize, withTransitionCoordinator coordinator: UIViewControllerTransitionCoordinator) {
-		super.viewWillTransitionToSize(size, withTransitionCoordinator: coordinator)
+	override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
+		super.viewWillTransition(to: size, with: coordinator)
 		
 		let previousSize = invisibleView.frame.size
-		coordinator.animateAlongsideTransition(nil, completion: {_ in self.reloadInvisibleView(); self.reloadPoints(previousSize)})
+		coordinator.animate(alongsideTransition: nil, completion: {_ in self.reloadInvisibleView(); self.reloadPoints(previousSize)})
 	}
 	
-	func reloadInvisibleView() {
-		let rect = AVMakeRectWithAspectRatioInsideRect(offenseImage.image!.size, offenseImage.bounds)
+	private func reloadInvisibleView() {
+		let rect = AVMakeRect(aspectRatio: offenseImage.image!.size, insideRect: offenseImage.bounds)
 		invisibleView.frame = rect
 	}
 	
-	func reloadPoints(oldSize: CGSize) {
+	private func reloadPoints(_ oldSize: CGSize) {
 		for pointView in invisibleView.subviews {
 			pointView.frame.origin = translatePoint(pointView.frame.origin, fromSize: oldSize, toSize: invisibleView.frame.size)
 		}
 	}
 	
-	func selectedMatchPerformance(matchPerformance: TeamMatchPerformance?) {
+	func loadForMatchPerformance(_ matchPerformance: TeamMatchPerformance?) {
 		//First, remove all the previous points
 		for view in invisibleView.subviews {
 			view.removeFromSuperview()
@@ -63,12 +62,12 @@ class ShotChartViewController: UIViewController {
 		if let matchPerformance = matchPerformance {
 		    matchPerformances.append(matchPerformance)
 		} else {
-			if let performance = teamListVC.teamRegionalPerformance {
+			if let performance = dataSource?.currentRegionalPerformance() {
 				for mPerformance in performance.matchPerformances?.allObjects as! [TeamMatchPerformance] {
 					matchPerformances.append(mPerformance)
 				}
 			} else {
-				for tPerformance in teamListVC.selectedTeamCache?.team.regionalPerformances?.allObjects as? [TeamRegionalPerformance] ?? [TeamRegionalPerformance]() {
+				for tPerformance in dataSource?.currentTeam()?.regionalPerformances?.allObjects as? [TeamRegionalPerformance] ?? [TeamRegionalPerformance]() {
 					for mPerformance in tPerformance.matchPerformances?.allObjects as! [TeamMatchPerformance] {
 						matchPerformances.append(mPerformance)
 					}
@@ -89,9 +88,9 @@ class ShotChartViewController: UIViewController {
 
 			//Set the correct color
 			if shot.blocked == true {
-				pointView.backgroundColor = UIColor.redColor()
+				pointView.backgroundColor = UIColor.red
 			} else {
-				pointView.backgroundColor = UIColor.greenColor()
+				pointView.backgroundColor = UIColor.green
 			}
 
 			invisibleView.addSubview(pointView)

@@ -15,85 +15,85 @@ class TeamMatchPerformance: NSManagedObject {
 // Insert code here to add functionality to your managed object subclass
 	
 	var finalScore: Double {
-		let color = TeamDataManager.AllianceColor(rawValue: allianceColor!.integerValue)!
+		let color = TeamDataManager.AllianceColor(rawValue: allianceColor!.intValue)!
 		switch color {
-		case .Blue:
+		case .blue:
 			return match?.blueFinalScore?.doubleValue ?? 0
-		case .Red:
+		case .red:
 			return match?.redFinalScore?.doubleValue ?? 0
 		}
 	}
 	
 	var winningMargin: Double {
 		let selfFinalScore = finalScore
-		let color = TeamDataManager.AllianceColor(rawValue: allianceColor!.integerValue)!
+		let color = TeamDataManager.AllianceColor(rawValue: allianceColor!.intValue)!
 		switch color {
-		case .Blue:
+		case .blue:
 			return selfFinalScore - (match?.redFinalScore?.doubleValue ?? 0)
-		case .Red:
+		case .red:
 			return selfFinalScore - (match?.blueFinalScore?.doubleValue ?? 0)
 		}
 	}
 
 	enum AutonomousVariable {
-		case CrossedDefense
-		case Moved
-		case ReachedDefense
-		case Returned
-		case Shot
-		case AutoSpy
-		case AutoSpyDidMakeShot
-		case AutoSpyDidShoot
-		case AutoSpyShotHighGoal
+		case crossedDefense
+		case moved
+		case reachedDefense
+		case returned
+		case shot
+		case autoSpy
+		case autoSpyDidMakeShot
+		case autoSpyDidShoot
+		case autoSpyShotHighGoal
 		
-		func setValue(value: AutoValue, inCycle cycle: AutonomousCycle) {
+		func setValue(_ value: AutoValue, inCycle cycle: AutonomousCycle) {
 			switch self {
-			case .CrossedDefense:
-				cycle.crossedDefense = value as! Bool
-			case .Moved:
-				cycle.moved = value as! Bool
-			case .ReachedDefense:
-				cycle.reachedDefense = value as! Bool
-			case .Returned:
-				cycle.returned = value as! Bool
-			case .Shot:
-				cycle.shot = value as! Bool
-			case .AutoSpy:
-				cycle.matchPerformance?.autoSpy = value as! Bool
-			case .AutoSpyDidMakeShot:
-				cycle.matchPerformance?.autoSpyDidMakeShot = value as! Bool
-			case .AutoSpyDidShoot:
-				cycle.matchPerformance?.autoSpyDidShoot = value as! Bool
-			case .AutoSpyShotHighGoal:
-				cycle.matchPerformance?.autoSpyShotHighGoal = value as! Bool
+			case .crossedDefense:
+				cycle.crossedDefense = value as! Bool as NSNumber?
+			case .moved:
+				cycle.moved = value as! Bool as NSNumber?
+			case .reachedDefense:
+				cycle.reachedDefense = value as! Bool as NSNumber?
+			case .returned:
+				cycle.returned = value as! Bool as NSNumber?
+			case .shot:
+				cycle.shot = value as! Bool as NSNumber?
+			case .autoSpy:
+				cycle.matchPerformance?.autoSpy = value as! Bool as NSNumber?
+			case .autoSpyDidMakeShot:
+				cycle.matchPerformance?.autoSpyDidMakeShot = value as! Bool as NSNumber?
+			case .autoSpyDidShoot:
+				cycle.matchPerformance?.autoSpyDidShoot = value as! Bool as NSNumber?
+			case .autoSpyShotHighGoal:
+				cycle.matchPerformance?.autoSpyShotHighGoal = value as! Bool as NSNumber?
 			}
 		}
 		
 		func getValue(inCycle cycle: AutonomousCycle) -> AutoValue? {
 			switch self {
-			case .CrossedDefense:
+			case .crossedDefense:
 				return cycle.crossedDefense?.boolValue
-			case .Moved:
+			case .moved:
 				return cycle.moved?.boolValue
-			case .ReachedDefense:
+			case .reachedDefense:
 				return cycle.reachedDefense?.boolValue
-			case .Returned:
+			case .returned:
 				return cycle.returned?.boolValue
-			case .Shot:
+			case .shot:
 				return cycle.shot?.boolValue
-			case .AutoSpy:
+			case .autoSpy:
 				return cycle.matchPerformance?.autoSpy?.boolValue
-			case .AutoSpyDidShoot:
+			case .autoSpyDidShoot:
 				return cycle.matchPerformance?.autoSpyDidShoot?.boolValue
-			case .AutoSpyDidMakeShot:
+			case .autoSpyDidMakeShot:
 				return cycle.matchPerformance?.autoSpyDidMakeShot?.boolValue
-			case .AutoSpyShotHighGoal:
+			case .autoSpyShotHighGoal:
 				return cycle.matchPerformance?.autoSpyShotHighGoal?.boolValue
 			}
 		}
 	}
 	
-	func setValue(value: Bool, forAutonomousVariable autoVar: AutonomousVariable) {
+	func setValue(_ value: Bool, forAutonomousVariable autoVar: AutonomousVariable) {
 		
 	}
 }

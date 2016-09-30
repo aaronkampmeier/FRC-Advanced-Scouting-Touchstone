@@ -13,7 +13,7 @@ class GameStatsCollectionViewCell: UICollectionViewCell {
 	@IBOutlet weak var button: UIButton!
 	var tapDelegate: GameStatsCollectionViewCellTapDelegate?
 	
-	@IBAction func tapped(sender: UIButton) {
+	@IBAction func tapped(_ sender: UIButton) {
 		tapDelegate?.gameStatsCellDidTap(onCell: self)
 	}
 }

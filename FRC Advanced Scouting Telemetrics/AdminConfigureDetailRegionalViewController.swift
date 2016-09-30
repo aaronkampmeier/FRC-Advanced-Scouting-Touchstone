@@ -17,10 +17,10 @@ class AdminConfigureDetailRegionalViewController: UIViewController {
         super.viewDidLoad()
 
         // Do any additional setup after loading the view.
-		view.hidden = true
+		view.isHidden = true
     }
 	
-	override func viewWillDisappear(animated: Bool) {
+	override func viewWillDisappear(_ animated: Bool) {
 		super.viewWillDisappear(animated)
 		
 		viewWillChange()
@@ -31,13 +31,13 @@ class AdminConfigureDetailRegionalViewController: UIViewController {
         // Dispose of any resources that can be recreated.
     }
     
-	@IBAction func nameChanged(sender: UITextField) {
+	@IBAction func nameChanged(_ sender: UITextField) {
 		
 	}
 	
-	func didSelectRegional(regional: Regional) {
+	func didSelectRegional(_ regional: Regional) {
 		viewWillChange()
-		view.hidden = false
+		view.isHidden = false
 		
 		nameField.text = regional.name
 		selectedRegional = regional

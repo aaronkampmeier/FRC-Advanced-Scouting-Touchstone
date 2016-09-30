@@ -79,7 +79,7 @@ class AutonomousViewController: UIViewController, UITableViewDelegate, UITableVi
         optionsList.allowsSelection = false
     }
 	
-	override func viewWillAppear(animated: Bool) {
+	override func viewWillAppear(_ animated: Bool) {
 		super.viewWillAppear(animated)
 		setup()
 	}
@@ -88,7 +88,7 @@ class AutonomousViewController: UIViewController, UITableViewDelegate, UITableVi
 	func setup() {
 		if !isSetup {
 			isSetup = true
-			standsScoutingVC = (parentViewController as! StandsScoutingViewController)
+			standsScoutingVC = (parent as! StandsScoutingViewController)
 			if standsScoutingVC?.matchPerformance?.autonomousCycles?.count == 0 {
 				let cycle = dataManager.createAutonomousCycle(inMatchPerformance: standsScoutingVC!.matchPerformance!, atPlace: 0)
 				autonomousCycles.append(cycle)
@@ -97,19 +97,19 @@ class AutonomousViewController: UIViewController, UITableViewDelegate, UITableVi
 			}
 			
 			normalRows = [
-				AutonomousRow(cellType: AutonomousSwitchCell.self, label: "Did they move?", property: .Moved),
-				AutonomousRow(cellType: AutonomousSwitchCell.self, label: "Did they reach a defense?", property: .ReachedDefense),
+				AutonomousRow(cellType: AutonomousSwitchCell.self, label: "Did they move?", property: .moved),
+				AutonomousRow(cellType: AutonomousSwitchCell.self, label: "Did they reach a defense?", property: .reachedDefense),
 				AutonomousRow(cellType: AutonomousPickerCell.self, label: "Defense Reached"),
-				AutonomousRow(cellType: AutonomousSwitchCell.self, label: "Did they cross it successfully?", property: .CrossedDefense),
-				AutonomousRow(cellType: AutonomousSwitchCell.self, label: "Did they shoot?", property: .Shot),
-				AutonomousRow(cellType: AutonomousSwitchCell.self, label: "Did they return?", property: .Returned)
+				AutonomousRow(cellType: AutonomousSwitchCell.self, label: "Did they cross it successfully?", property: .crossedDefense),
+				AutonomousRow(cellType: AutonomousSwitchCell.self, label: "Did they shoot?", property: .shot),
+				AutonomousRow(cellType: AutonomousSwitchCell.self, label: "Did they return?", property: .returned)
 			]
 			
 			spySection.rows = [
-				AutonomousRow(cellType: AutonomousSwitchCell.self, label: "Start in the spy box", property: .AutoSpy),
-				AutonomousRow(cellType: AutonomousSwitchCell.self, label: "Did they shoot?", property: .AutoSpyDidShoot),
-				AutonomousRow(cellType: AutonomousSwitchCell.self, label: "Did they make it?", property: .AutoSpyDidMakeShot),
-				AutonomousRow(cellType: AutonomousSegmentCell.self, label: "In what goal?", property: .AutoSpyShotHighGoal, first: "Low Goal", second: "High Goal")
+				AutonomousRow(cellType: AutonomousSwitchCell.self, label: "Start in the spy box", property: .autoSpy),
+				AutonomousRow(cellType: AutonomousSwitchCell.self, label: "Did they shoot?", property: .autoSpyDidShoot),
+				AutonomousRow(cellType: AutonomousSwitchCell.self, label: "Did they make it?", property: .autoSpyDidMakeShot),
+				AutonomousRow(cellType: AutonomousSegmentCell.self, label: "In what goal?", property: .autoSpyShotHighGoal, first: "Low Goal", second: "High Goal")
 			]
 			spySection.autonomousCycle = autonomousCycles.first! //Add random cycle to use for referencing to the match performance
 			
@@ -124,11 +124,11 @@ class AutonomousViewController: UIViewController, UITableViewDelegate, UITableVi
         // Dispose of any resources that can be recreated.
     }
 	
-	override func viewWillDisappear(animated: Bool) {
+	override func viewWillDisappear(_ animated: Bool) {
 		super.viewWillDisappear(animated)
 	}
 	
-	@IBAction func cycleStepperChangedValue(sender: UIStepper) {
+	@IBAction func cycleStepperChangedValue(_ sender: UIStepper) {
 		while Int(sender.value) + 1 > sections.count {
 			optionsList.beginUpdates()
 			if cachedSections.isEmpty {
@@ -136,14 +136,14 @@ class AutonomousViewController: UIViewController, UITableViewDelegate, UITableVi
 			} else {
 				sections.append(cachedSections.removeLast())
 			}
-			optionsList.insertSections(NSIndexSet.init(index: Int(sender.value)), withRowAnimation: .Top)
+			optionsList.insertSections(IndexSet.init(integer: Int(sender.value)), with: .top)
 			optionsList.endUpdates()
 		}
 		
 		while Int(sender.value) + 1 < sections.count {
 			optionsList.beginUpdates()
 			cachedSections.append(sections.removeLast())
-			optionsList.deleteSections(NSIndexSet.init(index: Int(sender.value) + 1), withRowAnimation: .Top)
+			optionsList.deleteSections(IndexSet.init(integer: Int(sender.value) + 1), with: .top)
 			optionsList.endUpdates()
 		}
 	}
@@ -157,37 +157,37 @@ class AutonomousViewController: UIViewController, UITableViewDelegate, UITableVi
 		}
 	}
 	
-	func numberOfSectionsInTableView(tableView: UITableView) -> Int {
+	func numberOfSections(in tableView: UITableView) -> Int {
 		return sections.count
 	}
     
-    func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return sections[section].rows.count
     }
 	
-	func tableView(tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
+	func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
 		return sections[section].title
 	}
     
-    func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
-		let row = sections[indexPath.section].rows[indexPath.row]
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+		let row = sections[(indexPath as NSIndexPath).section].rows[(indexPath as NSIndexPath).row]
 		switch row.cellType {
 		case is AutonomousPickerCell.Type:
-			let cell = tableView.dequeueReusableCellWithIdentifier("defenseReachedCell") as! AutonomousPickerCell
-			cell.associatedAutonomousCycle = sections[indexPath.section].autonomousCycle
+			let cell = tableView.dequeueReusableCell(withIdentifier: "defenseReachedCell") as! AutonomousPickerCell
+			cell.associatedAutonomousCycle = sections[(indexPath as NSIndexPath).section].autonomousCycle
 			cell.autonomousVC = self
 			cell.defenses = standsScoutingVC?.defenses
 			return cell
 		case is AutonomousSwitchCell.Type:
-			let cell = tableView.dequeueReusableCellWithIdentifier("mainCell") as! AutonomousSwitchCell
+			let cell = tableView.dequeueReusableCell(withIdentifier: "mainCell") as! AutonomousSwitchCell
 			cell.label.text = row.label
-			cell.autonomousCycle = sections[indexPath.section].autonomousCycle
+			cell.autonomousCycle = sections[(indexPath as NSIndexPath).section].autonomousCycle
 			cell.associatedProperty = row.associatedProperty
 			return cell
 		case is AutonomousSegmentCell.Type:
-			let cell = tableView.dequeueReusableCellWithIdentifier("segmentCell") as! AutonomousSegmentCell
+			let cell = tableView.dequeueReusableCell(withIdentifier: "segmentCell") as! AutonomousSegmentCell
 			cell.label.text = row.label
-			cell.autonomousCycle = sections[indexPath.section].autonomousCycle
+			cell.autonomousCycle = sections[(indexPath as NSIndexPath).section].autonomousCycle
 			cell.associatedProperty = row.associatedProperty
 			cell.firstOption = row.firstLabel
 			cell.secondOption = row.secondLabel
@@ -206,15 +206,15 @@ class AutonomousSwitchCell: UITableViewCell {
 	var associatedProperty: TeamMatchPerformance.AutonomousVariable? {
 		didSet {
 			if let property = associatedProperty {
-				toggleSwitch.on = property.getValue(inCycle: autonomousCycle!) as? Bool ?? false
+				toggleSwitch.isOn = property.getValue(inCycle: autonomousCycle!) as? Bool ?? false
 			} else {
-				toggleSwitch.on = false
+				toggleSwitch.isOn = false
 			}
 		}
 	}
 	
-	@IBAction func switchSwitched(sender: UISwitch) {
-		associatedProperty?.setValue(sender.on, inCycle: autonomousCycle!)
+	@IBAction func switchSwitched(_ sender: UISwitch) {
+		associatedProperty?.setValue(sender.isOn, inCycle: autonomousCycle!)
 	}
 }
 
@@ -238,16 +238,16 @@ class AutonomousSegmentCell: UITableViewCell {
 	}
 	var firstOption: String? {
 		didSet {
-			segmentedControl.setTitle(firstOption, forSegmentAtIndex: 0)
+			segmentedControl.setTitle(firstOption, forSegmentAt: 0)
 		}
 	}
 	var secondOption: String? {
 		didSet {
-			segmentedControl.setTitle(secondOption, forSegmentAtIndex: 1)
+			segmentedControl.setTitle(secondOption, forSegmentAt: 1)
 		}
 	}
 	
-	@IBAction func segmentChanged(sender: UISegmentedControl) {
+	@IBAction func segmentChanged(_ sender: UISegmentedControl) {
 		associatedProperty?.setValue(Bool(sender.selectedSegmentIndex), inCycle: autonomousCycle!)
 	}
 }
@@ -257,50 +257,50 @@ class AutonomousPickerCell: UITableViewCell, UIPickerViewDataSource, UIPickerVie
 	var associatedAutonomousCycle: AutonomousCycle? {
 		didSet {
 			if let cycle = associatedAutonomousCycle {
-				selectButton.setTitle(cycle.defenseReached ?? "Select Defense", forState: .Normal)
+				selectButton.setTitle(cycle.defenseReached ?? "Select Defense", for: UIControlState())
 			}
 		}
 	}
 	var autonomousVC: AutonomousViewController?
 	var defenses: [Defense]?
 	
-	@IBAction func selectDefenseButtonPressed(sender: UIButton) {
-		let defensePickerVC = UIStoryboard.init(name: "Main", bundle: nil).instantiateViewControllerWithIdentifier("defensePicker") as! PopoverPickerViewController
-		defensePickerVC.modalPresentationStyle = .Popover
+	@IBAction func selectDefenseButtonPressed(_ sender: UIButton) {
+		let defensePickerVC = UIStoryboard.init(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "defensePicker") as! PopoverPickerViewController
+		defensePickerVC.modalPresentationStyle = .popover
 		defensePickerVC.preferredContentSize = CGSize(width: 300, height: 250)
 		let popoverController = defensePickerVC.popoverPresentationController!
 		popoverController.sourceView = sender
 		
-		autonomousVC?.presentViewController(defensePickerVC, animated: true) {
+		autonomousVC?.present(defensePickerVC, animated: true) {
 			defensePickerVC.picker.dataSource = self
 			defensePickerVC.picker.delegate = self
 		}
 	}
 	
-	func numberOfComponentsInPickerView(pickerView: UIPickerView) -> Int {
+	func numberOfComponents(in pickerView: UIPickerView) -> Int {
 		return 1
 	}
 	
-	func pickerView(pickerView: UIPickerView, numberOfRowsInComponent component: Int) -> Int {
+	func pickerView(_ pickerView: UIPickerView, numberOfRowsInComponent component: Int) -> Int {
 		return (autonomousVC?.standsScoutingVC?.defenses?.count ?? 0) + 1
 	}
 	
-	func pickerView(pickerView: UIPickerView, titleForRow row: Int, forComponent component: Int) -> String? {
-		if row < defenses?.count {
+	func pickerView(_ pickerView: UIPickerView, titleForRow row: Int, forComponent component: Int) -> String? {
+		if row < (defenses?.count)! {
 			return defenses![row].description
 		} else {
 			return "Low Bar"
 		}
 	}
 	
-	func pickerView(pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {
+	func pickerView(_ pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {
 		//Update core data
-		if row < defenses?.count {
+		if row < (defenses?.count)! {
 			associatedAutonomousCycle?.defenseReachedDefense = defenses?[row]
 		} else {
 			associatedAutonomousCycle?.defenseReachedDefense = Defense.LowBar
 		}
 		
-		selectButton.setTitle((associatedAutonomousCycle?.defenseReached) ?? "ERROR", forState: .Normal)
+		selectButton.setTitle((associatedAutonomousCycle?.defenseReached) ?? "ERROR", for: UIControlState())
 	}
 }

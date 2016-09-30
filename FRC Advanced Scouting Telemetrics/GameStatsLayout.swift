@@ -24,10 +24,10 @@ class GameStatsLayout: UICollectionViewLayout {
 	private var contentHeight: CGFloat  = 0.0
 	private var contentWidth: CGFloat {
 		let insets = collectionView!.contentInset
-		return CGRectGetWidth(collectionView!.bounds) - (insets.left + insets.right)
+		return collectionView!.bounds.width - (insets.left + insets.right)
 	}
 	
-	override func prepareLayout() {
+	override func prepare() {
 		_ = contentWidth / CGFloat(numberOfColumns)
 		
 	}

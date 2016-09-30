@@ -10,7 +10,7 @@ import UIKit
 
 class TransferInfoTableViewController: UITableViewController {
 	
-	var currentTransfers = [String:(NSProgress, FASTPeer)]() {
+	var currentTransfers = [String:(Progress, FASTPeer)]() {
 		didSet {
 			resourceNames = Array(currentTransfers.keys)
 			tableView.reloadData()
@@ -30,8 +30,8 @@ class TransferInfoTableViewController: UITableViewController {
 		currentTransfers = DataSyncer.sharedDataSyncer().multipeerConnection.currentFileTransfers
 		resourceNames = Array(currentTransfers.keys)
 		
-		NSNotificationCenter.defaultCenter().addObserverForName(DSTransferNumberChanged, object: nil, queue: nil) {notification in
-			dispatch_async(dispatch_get_main_queue()) {
+		NotificationCenter.default.addObserver(forName: NSNotification.Name(rawValue: DSTransferNumberChanged), object: nil, queue: nil) {notification in
+			DispatchQueue.main.async {
 				self.currentTransfers = DataSyncer.sharedDataSyncer().multipeerConnection.currentFileTransfers
 				
 //				self.tableView.beginUpdates()
@@ -65,21 +65,21 @@ class TransferInfoTableViewController: UITableViewController {
 
     // MARK: - Table view data source
 
-    override func numberOfSectionsInTableView(tableView: UITableView) -> Int {
+    override func numberOfSections(in tableView: UITableView) -> Int {
         // #warning Incomplete implementation, return the number of sections
         return 1
     }
 
-    override func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+    override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         // #warning Incomplete implementation, return the number of rows
         return currentTransfers.count
     }
 
 	
-    override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCellWithIdentifier("cell", forIndexPath: indexPath)
+    override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath)
 		
-		if let transfer = currentTransfers[resourceNames[indexPath.row]] {
+		if let transfer = currentTransfers[resourceNames[(indexPath as NSIndexPath).row]] {
 			(cell.viewWithTag(1) as! UILabel).text = transfer.1.displayName ?? "Unknown"
 			(cell.viewWithTag(2) as! UIProgressView).observedProgress = transfer.0
 		}

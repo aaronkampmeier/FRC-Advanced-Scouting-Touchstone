@@ -25,10 +25,10 @@ class AdminConfigureDetailMatchVC: UIViewController {
         super.viewDidLoad()
         
         //Hide the view, until a match is selected
-        view.hidden = true
+        view.isHidden = true
     }
     
-    override func viewWillDisappear(animated: Bool) {
+    override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
         
         viewWillChange()
@@ -40,18 +40,18 @@ class AdminConfigureDetailMatchVC: UIViewController {
     }
 	
 	func removedCurrentMatch() {
-		view.hidden = true
+		view.isHidden = true
 	}
 	
-	func removedMatch(match: Match) {
+	func removedMatch(_ match: Match) {
 		if match == selectedMatch {
 			removedCurrentMatch()
 		}
 	}
 	
-    func didSelectMatch(match: Match) {
+    func didSelectMatch(_ match: Match) {
         viewWillChange()
-        view.hidden = false
+        view.isHidden = false
 		
 		//Set up the view
 		blue1Field.text = nil
@@ -71,22 +71,22 @@ class AdminConfigureDetailMatchVC: UIViewController {
 			case 0:
 				switch Int(teamAndPlace.allianceTeam!) {
 				case 1:
-					blue1Field.text = (teamAndPlace.regionalPerformance?.valueForKey("team") as! Team).teamNumber
+					blue1Field.text = (teamAndPlace.regionalPerformance?.value(forKey: "team") as! Team).teamNumber
 				case 2:
-					blue2Field.text = (teamAndPlace.regionalPerformance?.valueForKey("team") as! Team).teamNumber
+					blue2Field.text = (teamAndPlace.regionalPerformance?.value(forKey: "team") as! Team).teamNumber
 				case 3:
-					blue3Field.text = (teamAndPlace.regionalPerformance?.valueForKey("team") as! Team).teamNumber
+					blue3Field.text = (teamAndPlace.regionalPerformance?.value(forKey: "team") as! Team).teamNumber
 				default:
 					break
 				}
 			case 1:
 				switch Int(teamAndPlace.allianceTeam!) {
 				case 1:
-					red1Field.text = (teamAndPlace.regionalPerformance?.valueForKey("team") as! Team).teamNumber
+					red1Field.text = (teamAndPlace.regionalPerformance?.value(forKey: "team") as! Team).teamNumber
 				case 2:
-					red2Field.text = (teamAndPlace.regionalPerformance?.valueForKey("team") as! Team).teamNumber
+					red2Field.text = (teamAndPlace.regionalPerformance?.value(forKey: "team") as! Team).teamNumber
 				case 3:
-					red3Field.text = (teamAndPlace.regionalPerformance?.valueForKey("team") as! Team).teamNumber
+					red3Field.text = (teamAndPlace.regionalPerformance?.value(forKey: "team") as! Team).teamNumber
 				default:
 					break
 				}
@@ -96,7 +96,7 @@ class AdminConfigureDetailMatchVC: UIViewController {
 		}
 	}
 	
-    @IBAction func textFieldValueChanged(sender: UITextField) {
+    @IBAction func textFieldValueChanged(_ sender: UITextField) {
         var isAcceptable: Bool
         
         let teamNumber = sender.text
@@ -107,15 +107,15 @@ class AdminConfigureDetailMatchVC: UIViewController {
             isAcceptable = false
         }
         
-        sender.rightViewMode = .Always
+        sender.rightViewMode = .always
         if isAcceptable {
             let correctImageView = UIImageView(image: UIImage(named: "CorrectIcon"))
-            correctImageView.contentMode = .ScaleAspectFit
+            correctImageView.contentMode = .scaleAspectFit
             correctImageView.frame = CGRect(x: 0, y: 0, width: 25, height: 25)
             sender.rightView = correctImageView
         } else {
             let incorrectImageView = UIImageView(image: UIImage(named: "IncorrectIcon"))
-            incorrectImageView.contentMode = .ScaleAspectFit
+            incorrectImageView.contentMode = .scaleAspectFit
             incorrectImageView.frame = CGRect(x: 0, y: 0, width: 25, height: 25)
             sender.rightView = incorrectImageView
         }
@@ -123,7 +123,7 @@ class AdminConfigureDetailMatchVC: UIViewController {
 	
     func viewWillChange() {
         //Save the match's new data only if the view was shown and if the user was allowed to leave the scene
-        if !view.hidden {
+        if !view.isHidden {
             //First, retrieve all the teams using the values in the text fields
             var blue1Team: Team? {
                 let teamArray = self.dataManager.getTeams(self.blue1Field.text!)
@@ -175,7 +175,7 @@ class AdminConfigureDetailMatchVC: UIViewController {
             }
 			
 			//Create an array of all the Teams and Match Places
-			let teamsAndPlaces: [TeamDataManager.TeamAndMatchPlace] = [TeamDataManager.TeamAndMatchPlace.Blue1(blue1Team), TeamDataManager.TeamAndMatchPlace.Blue2(blue2Team), TeamDataManager.TeamAndMatchPlace.Blue3(blue3Team), TeamDataManager.TeamAndMatchPlace.Red1(red1Team), TeamDataManager.TeamAndMatchPlace.Red2(red2Team), TeamDataManager.TeamAndMatchPlace.Red3(red3Team)]
+			let teamsAndPlaces: [TeamDataManager.TeamAndMatchPlace] = [TeamDataManager.TeamAndMatchPlace.blue1(blue1Team), TeamDataManager.TeamAndMatchPlace.blue2(blue2Team), TeamDataManager.TeamAndMatchPlace.blue3(blue3Team), TeamDataManager.TeamAndMatchPlace.red1(red1Team), TeamDataManager.TeamAndMatchPlace.red2(red2Team), TeamDataManager.TeamAndMatchPlace.red3(red3Team)]
 			
 			//Set the teams in the match
 			dataManager.setTeamsInMatch(teamsAndPlaces, inMatch: selectedMatch!)

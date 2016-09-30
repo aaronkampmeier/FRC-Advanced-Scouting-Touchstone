@@ -31,7 +31,7 @@ class AdminConfigureVC: UIViewController, UITableViewDelegate, UITableViewDataSo
 		matchTitleLabel.text = "Regional \(newValue!.regionalNumber!)"
 		(detailViewController as! AdminConfigureDetailRegionalViewController).didSelectRegional(newValue!)
 		if let regional = selectedRegional {
-			tableView.reloadRowsAtIndexPaths([NSIndexPath.init(forRow: regionals.indexOf(regional) ?? 0, inSection: 0)], withRowAnimation: .Fade)
+			tableView.reloadRows(at: [IndexPath.init(row: regionals.index(of: regional) ?? 0, section: 0)], with: .fade)
 		}
 		}
 	}
@@ -54,13 +54,13 @@ class AdminConfigureVC: UIViewController, UITableViewDelegate, UITableViewDataSo
 		regionalsAndMatches = regionals.map({matchesForRegional($0)})
     }
     
-    override func viewDidAppear(animated: Bool) {
+    override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         
         //Set the detail view to what is being edited
         switch configureSetting! {
-        case .Matches:
-            containerViewController!.presentMatchDetailView()case .Regionals:
+        case .matches:
+            containerViewController!.presentMatchDetailView()case .regionals:
 			containerViewController!.presentRegionalDetailView()
         default:
             break
@@ -71,47 +71,47 @@ class AdminConfigureVC: UIViewController, UITableViewDelegate, UITableViewDataSo
     }
     
     enum CofigureSetting {
-        case Matches
-		case Regionals
-        case Unknown
+        case matches
+		case regionals
+        case unknown
         
         func stringDescription() -> String {
             switch self {
-            case .Matches:
+            case .matches:
                 return "Matches"
-			case .Regionals:
+			case .regionals:
 				return "Regionals"
-            case .Unknown:
+            case .unknown:
                 return ""
             }
         }
     }
 	
-	func matchesForRegional(regional: Regional) -> [Match] {
-		return dataManager.getMatches(forRegional: regional).sort({
+	func matchesForRegional(_ regional: Regional) -> [Match] {
+		return dataManager.getMatches(forRegional: regional).sorted(by: {
 			let match1 = $0 as Match
 			let match2 = $1 as Match
 			
-			return match1.matchNumber?.intValue < match2.matchNumber?.intValue
+			return (match1.matchNumber?.int32Value)! < (match2.matchNumber?.int32Value)!
 		})
 	}
 	
-	func numberOfSectionsInTableView(tableView: UITableView) -> Int {
+	func numberOfSections(in tableView: UITableView) -> Int {
 		switch configureSetting! {
-		case .Matches:
+		case .matches:
 			return (regionals.count)
-		case .Regionals:
+		case .regionals:
 			return 1
 		default:
 			return 0
 		}
 	}
     
-    func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         switch configureSetting! {
-        case .Matches:
+        case .matches:
             return regionalsAndMatches[section].count + 1
-		case .Regionals:
+		case .regionals:
 			return regionals.count + 1
         default:
             return 0
@@ -119,77 +119,77 @@ class AdminConfigureVC: UIViewController, UITableViewDelegate, UITableViewDataSo
        
     }
     
-    func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         switch configureSetting! {
-        case .Matches:
-            if regionalsAndMatches[indexPath.section].count != indexPath.row {
-				let cell = tableView.dequeueReusableCellWithIdentifier("cell")
-				cell?.textLabel?.text = "Match \(regionalsAndMatches[indexPath.section][indexPath.row].matchNumber!)"
+        case .matches:
+            if regionalsAndMatches[(indexPath as NSIndexPath).section].count != (indexPath as NSIndexPath).row {
+				let cell = tableView.dequeueReusableCell(withIdentifier: "cell")
+				cell?.textLabel?.text = "Match \(regionalsAndMatches[(indexPath as NSIndexPath).section][(indexPath as NSIndexPath).row].matchNumber!)"
 				return cell!
             } else {
-                return tableView.dequeueReusableCellWithIdentifier("plusCell")!
+                return tableView.dequeueReusableCell(withIdentifier: "plusCell")!
             }
-		case .Regionals:
-			if regionals.count != indexPath.row {
-				let cell = tableView.dequeueReusableCellWithIdentifier("cell")
-				cell?.textLabel?.text = "\(regionals[indexPath.row].regionalNumber!). \(regionals[indexPath.row].name!)"
+		case .regionals:
+			if regionals.count != (indexPath as NSIndexPath).row {
+				let cell = tableView.dequeueReusableCell(withIdentifier: "cell")
+				cell?.textLabel?.text = "\(regionals[(indexPath as NSIndexPath).row].regionalNumber!). \(regionals[(indexPath as NSIndexPath).row].name!)"
 				return cell!
 			} else {
-				return tableView.dequeueReusableCellWithIdentifier("plusCell")!
+				return tableView.dequeueReusableCell(withIdentifier: "plusCell")!
 			}
         default:
             return UITableViewCell()
         }
     }
     
-    func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         switch configureSetting! {
-        case .Matches:
-			if regionalsAndMatches[indexPath.section].count != indexPath.row /*The row selected is not the last row*/{
-				selectedMatch = regionalsAndMatches[indexPath.section][indexPath.row]
+        case .matches:
+			if regionalsAndMatches[(indexPath as NSIndexPath).section].count != (indexPath as NSIndexPath).row /*The row selected is not the last row*/{
+				selectedMatch = regionalsAndMatches[(indexPath as NSIndexPath).section][(indexPath as NSIndexPath).row]
 			} else /*The row selected is the last row with the plus button*/{
 				tableView.beginUpdates()
 				//Create a new match
 				do {
 					var previousNumber = 0
-					if let previousMatch = regionalsAndMatches[indexPath.section].last {
-						previousNumber = Int((previousMatch.matchNumber?.intValue)!)
+					if let previousMatch = regionalsAndMatches[(indexPath as NSIndexPath).section].last {
+						previousNumber = Int((previousMatch.matchNumber?.int32Value)!)
 					}
-					let newMatch = try dataManager.createNewMatch(previousNumber + 1, inRegional: regionals[indexPath.section])
-					regionalsAndMatches[indexPath.section].append(newMatch)
+					let newMatch = try dataManager.createNewMatch(previousNumber + 1, inRegional: regionals[(indexPath as NSIndexPath).section])
+					regionalsAndMatches[(indexPath as NSIndexPath).section].append(newMatch)
 					//Insert new match's cell into table view
-					tableView.insertRowsAtIndexPaths([NSIndexPath.init(forRow: previousNumber, inSection: indexPath.section)], withRowAnimation: .Middle)
+					tableView.insertRows(at: [IndexPath.init(row: previousNumber, section: (indexPath as NSIndexPath).section)], with: .middle)
 				} catch {
 					//Present Alert saying unable to create new match
-					let alert = UIAlertController(title: "Unable to Create New Match", message: "Contact the system administrator to have this diagnosed", preferredStyle: .Alert)
-					alert.addAction(UIAlertAction(title: "OK", style: .Default, handler: nil))
-					presentViewController(alert, animated: true, completion: nil)
+					let alert = UIAlertController(title: "Unable to Create New Match", message: "Contact the system administrator to have this diagnosed", preferredStyle: .alert)
+					alert.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
+					present(alert, animated: true, completion: nil)
 				}
 				
 				//Deselct the plus row
-				tableView.deselectRowAtIndexPath(indexPath, animated: true)
+				tableView.deselectRow(at: indexPath, animated: true)
 				tableView.endUpdates()
 				
 				//Select the new match row
-				tableView.selectRowAtIndexPath(NSIndexPath(forRow: indexPath.row, inSection: 0), animated: true, scrollPosition: .Bottom)
-				self.tableView(tableView, didSelectRowAtIndexPath: indexPath)
+				tableView.selectRow(at: IndexPath(row: (indexPath as NSIndexPath).row, section: 0), animated: true, scrollPosition: .bottom)
+				self.tableView(tableView, didSelectRowAt: indexPath)
 			}
-		case .Regionals:
-			if regionals.count != indexPath.row {
-				selectedRegional = regionals[indexPath.row]
+		case .regionals:
+			if regionals.count != (indexPath as NSIndexPath).row {
+				selectedRegional = regionals[(indexPath as NSIndexPath).row]
 			} else {
 				tableView.beginUpdates()
 				
 				var previousNumber = 0
 				if let previousRegional = regionals.last {
-					previousNumber = Int((previousRegional.regionalNumber?.intValue)!)
+					previousNumber = Int((previousRegional.regionalNumber?.int32Value)!)
 				}
 				let newRegional = dataManager.addRegional(regionalNumber: previousNumber + 1, withName: "(NO NAME YET)")
 				regionals.append(newRegional)
 				
 				//Insert the new cell in the table view
-				tableView.insertRowsAtIndexPaths([NSIndexPath.init(forRow: previousNumber, inSection: 0)], withRowAnimation: .Middle)
-				tableView.deselectRowAtIndexPath(indexPath, animated: true)
+				tableView.insertRows(at: [IndexPath.init(row: previousNumber, section: 0)], with: .middle)
+				tableView.deselectRow(at: indexPath, animated: true)
 				tableView.endUpdates()
 			}
         default:
@@ -197,25 +197,25 @@ class AdminConfigureVC: UIViewController, UITableViewDelegate, UITableViewDataSo
         }
     }
 	
-	func tableView(tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
+	func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
 		switch configureSetting! {
-		case .Matches:
+		case .matches:
 			return regionals[section].name!
 		default:
 			return nil
 		}
 	}
     
-    func tableView(tableView: UITableView, canEditRowAtIndexPath indexPath: NSIndexPath) -> Bool {
+    func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
 		switch configureSetting! {
-		case .Matches:
-			if indexPath.row == regionalsAndMatches[indexPath.section].count - 1 {
+		case .matches:
+			if (indexPath as NSIndexPath).row == regionalsAndMatches[(indexPath as NSIndexPath).section].count - 1 {
 				return true
 			} else {
 				return false
 			}
-		case .Regionals:
-			if regionals.count - 1 == indexPath.row {
+		case .regionals:
+			if regionals.count - 1 == (indexPath as NSIndexPath).row {
 				return true
 			} else {
 				return false
@@ -225,71 +225,71 @@ class AdminConfigureVC: UIViewController, UITableViewDelegate, UITableViewDataSo
 		}
 	}
 	
-    func tableView(tableView: UITableView, editingStyleForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCellEditingStyle {
+    func tableView(_ tableView: UITableView, editingStyleForRowAt indexPath: IndexPath) -> UITableViewCellEditingStyle {
 		switch configureSetting! {
-		case .Matches:
-			if indexPath.row == regionalsAndMatches[indexPath.section].count - 1 {
-				return .Delete
+		case .matches:
+			if (indexPath as NSIndexPath).row == regionalsAndMatches[(indexPath as NSIndexPath).section].count - 1 {
+				return .delete
 			} else {
-				return .None
+				return .none
 			}
-		case .Regionals:
-			if regionals.count - 1 == indexPath.row {
-				return .Delete
+		case .regionals:
+			if regionals.count - 1 == (indexPath as NSIndexPath).row {
+				return .delete
 			} else {
-				return .None
+				return .none
 			}
 		default:
-			return .None
+			return .none
 		}
     }
 	
-    func tableView(tableView: UITableView, commitEditingStyle editingStyle: UITableViewCellEditingStyle, forRowAtIndexPath indexPath: NSIndexPath) {
-        if editingStyle == .Delete {
+    func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCellEditingStyle, forRowAt indexPath: IndexPath) {
+        if editingStyle == .delete {
 			switch configureSetting! {
-			case .Matches:
+			case .matches:
 				//Notify the detail view
-				(detailViewController as! AdminConfigureDetailMatchVC).removedMatch(regionalsAndMatches[indexPath.section][indexPath.row])
+				(detailViewController as! AdminConfigureDetailMatchVC).removedMatch(regionalsAndMatches[(indexPath as NSIndexPath).section][(indexPath as NSIndexPath).row])
 				
 				//Remove it from the table, from the data array, and from the persistent store
-				dataManager.deleteMatch(regionalsAndMatches[indexPath.section][indexPath.row])
-				regionalsAndMatches[indexPath.section].removeAtIndex(indexPath.row)
+				dataManager.deleteMatch(regionalsAndMatches[(indexPath as NSIndexPath).section][(indexPath as NSIndexPath).row])
+				regionalsAndMatches[(indexPath as NSIndexPath).section].remove(at: (indexPath as NSIndexPath).row)
 				tableView.beginUpdates()
-				tableView.deleteRowsAtIndexPaths([indexPath], withRowAnimation: .Top)
+				tableView.deleteRows(at: [indexPath], with: .top)
 				tableView.endUpdates()
-			case .Regionals:
+			case .regionals:
 				//Warn the user of what they are doing
-				let alert = UIAlertController(title: "Confidence Level?", message: "Are you sure you want to delete this regional? It will cause all associated matches and team data for those matches to be deleted as well.", preferredStyle: .Alert)
-				let deleteAction: UIAlertAction = UIAlertAction(title: "Yes, Delete", style: .Destructive) {
+				let alert = UIAlertController(title: "Confidence Level?", message: "Are you sure you want to delete this regional? It will cause all associated matches and team data for those matches to be deleted as well.", preferredStyle: .alert)
+				let deleteAction: UIAlertAction = UIAlertAction(title: "Yes, Delete", style: .destructive) {
 					(alert: UIAlertAction) in
-					self.dataManager.delete(Regional: self.regionals[indexPath.row])
-					self.regionals.removeAtIndex(indexPath.row)
+					self.dataManager.delete(Regional: self.regionals[(indexPath as NSIndexPath).row])
+					self.regionals.remove(at: (indexPath as NSIndexPath).row)
 					tableView.beginUpdates()
-					tableView.deleteRowsAtIndexPaths([indexPath], withRowAnimation: .Middle)
+					tableView.deleteRows(at: [indexPath], with: .middle)
 					tableView.endUpdates()
 				}
-				let cancelAction = UIAlertAction(title: "No, Cancel", style: .Default, handler: nil)
+				let cancelAction = UIAlertAction(title: "No, Cancel", style: .default, handler: nil)
 				
 				alert.addAction(deleteAction)
 				alert.addAction(cancelAction)
-				presentViewController(alert, animated: true, completion: nil)
+				present(alert, animated: true, completion: nil)
 			default:
 				break
 			}
         }
     }
     
-    override func viewWillDisappear(animated: Bool) {
+    override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
         previousViewController?.comingBackFromConfigure()
     }
     
-    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
-        super.prepareForSegue(segue, sender: sender)
+    override func prepare(for segue: UIStoryboardSegue, sender: AnyObject?) {
+        super.prepare(for: segue, sender: sender)
         
         if segue.identifier == "adminConfigureDetail" {
             //When the detail view controller is being shown, capture the reference to it
-            containerViewController = segue.destinationViewController as? AdminConfigureDetailVC
+            containerViewController = segue.destination as? AdminConfigureDetailVC
         }
     }
 }

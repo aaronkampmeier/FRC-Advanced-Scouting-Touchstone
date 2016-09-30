@@ -1,23 +1,15 @@
 //
-//  TeamPickerTableViewController.swift
-//  FRC Advanced Scouting Telemetrics
+//  TeamListSearchResultsTableViewController.swift
+//  FRC Advanced Scouting Touchstone
 //
-//  Created by Aaron Kampmeier on 4/1/16.
+//  Created by Aaron Kampmeier on 5/10/16.
 //  Copyright © 2016 Kampfire Technologies. All rights reserved.
 //
 
 import UIKit
-import Crashlytics
 
-class TeamPickerTableViewController: UITableViewController {
-	var teams: [Team] = [Team]() {
-		didSet {
-			shownTeams = teams
-		}
-	}
-	var shownTeams = [Team]()
-	
-	let dataManager = TeamDataManager()
+class TeamListSearchResultsTableViewController: UITableViewController, UISearchResultsUpdating {
+
     override func viewDidLoad() {
         super.viewDidLoad()
 
@@ -26,45 +18,38 @@ class TeamPickerTableViewController: UITableViewController {
 
         // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
         // self.navigationItem.rightBarButtonItem = self.editButtonItem()
-		
-		teams = try! dataManager.getDraftBoard()
-		
-		Answers.logCustomEvent(withName: "Opened Team Pick List", customAttributes: nil)
     }
 
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
     }
+	
+	func updateSearchResults(for searchController: UISearchController) {
+		
+	}
 
     // MARK: - Table view data source
 
     override func numberOfSections(in tableView: UITableView) -> Int {
         // #warning Incomplete implementation, return the number of sections
-        return 1
+        return 0
     }
 
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         // #warning Incomplete implementation, return the number of rows
-        return shownTeams.count
+        return 0
     }
 
-	
-    override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath)
-		
-		cell.textLabel?.text = "Team \(shownTeams[(indexPath as NSIndexPath).row].teamNumber!)"
-		
+    /*
+    override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
+        let cell = tableView.dequeueReusableCellWithIdentifier("reuseIdentifier", forIndexPath: indexPath)
+
+        // Configure the cell...
+
         return cell
     }
-	
-	override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-		shownTeams.remove(at: (indexPath as NSIndexPath).row)
-		
-		tableView.beginUpdates()
-		tableView.deleteRows(at: [indexPath], with: .middle)
-		tableView.endUpdates()
-	}
+    */
 
     /*
     // Override to support conditional editing of the table view.

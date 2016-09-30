@@ -17,12 +17,12 @@ class Shot: NSManagedObject {
 	var goal: TeamDataManager.ShotGoal {
 		if let highGoal = highGoal?.boolValue {
 			if highGoal {
-				return TeamDataManager.ShotGoal.High
+				return TeamDataManager.ShotGoal.high
 			} else {
-				return TeamDataManager.ShotGoal.Low
+				return TeamDataManager.ShotGoal.low
 			}
 		} else {
-			return TeamDataManager.ShotGoal.Both
+			return TeamDataManager.ShotGoal.both
 		}
 	}
 }

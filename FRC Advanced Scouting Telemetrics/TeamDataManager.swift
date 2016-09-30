@@ -12,7 +12,7 @@ import CoreData
 
 class TeamDataManager {
     
-    static let managedContext = (UIApplication.sharedApplication().delegate as! AppDelegate).managedObjectContext
+    static let managedContext = (UIApplication.shared.delegate as! AppDelegate).managedObjectContext
 	
 	private func save() {
         do {
@@ -33,11 +33,11 @@ class TeamDataManager {
 	}
 	
 	//MARK: Teams
-	func saveTeamNumber(number: String, atRank rank: Int? = nil, performCommit shouldSave: Bool = true) -> Team {
+	func saveTeamNumber(_ number: String, atRank rank: Int? = nil, performCommit shouldSave: Bool = true) -> Team {
         //Get the entity for a Team and then create a new one
-        let entity = NSEntityDescription.entityForName("Team", inManagedObjectContext: TeamDataManager.managedContext)
+        let entity = NSEntityDescription.entity(forEntityName: "Team", in: TeamDataManager.managedContext)
         
-        let team = Team(entity: entity!, insertIntoManagedObjectContext: TeamDataManager.managedContext)
+        let team = Team(entity: entity!, insertInto: TeamDataManager.managedContext)
         
         //Set the value we want
         team.teamNumber = number
@@ -53,8 +53,8 @@ class TeamDataManager {
 		} else {
 			do {
 				let draftBoard = try getRootDraftBoard().teams?.mutableCopy() as! NSMutableOrderedSet
-				draftBoard.insertObject(team, atIndex: rank!)
-				try getRootDraftBoard().teams = (draftBoard.copy() as! NSOrderedSet)
+				draftBoard.insert(team, at: rank!)
+				try getRootDraftBoard().teams = (draftBoard.copy() as! OrderedSet)
 			} catch {
 				NSLog("Could not save team to draft board")
 			}
@@ -67,19 +67,19 @@ class TeamDataManager {
         return team
     }
     
-    func deleteTeam(teamForDeletion: Team) {
-        TeamDataManager.managedContext.deleteObject(teamForDeletion)
+    func deleteTeam(_ teamForDeletion: Team) {
+        TeamDataManager.managedContext.delete(teamForDeletion)
         
         save()
     }
 	
-	func delete(objectsToDelete: NSManagedObject...) {
+	func delete(_ objectsToDelete: NSManagedObject...) {
 		for object in objectsToDelete {
-			TeamDataManager.managedContext.deleteObject(object)
+			TeamDataManager.managedContext.delete(object)
 		}
 	}
 	
-	func setDefenseAbleToShootFrom(defense: Defense, toTeam team: Team, canShootFrom: Bool) {
+	func setDefenseAbleToShootFrom(_ defense: Defense, toTeam team: Team, canShootFrom: Bool) {
 		var defenses = team.autonomousDefensesAbleToShootArray
 		
 		if canShootFrom {
@@ -87,21 +87,21 @@ class TeamDataManager {
 				defenses.append(defense)
 			}
 		} else {
-			if let index = defenses.indexOf(defense) {
-				defenses.removeAtIndex(index)
+			if let index = defenses.index(of: defense) {
+				defenses.remove(at: index)
 			}
 		}
 		
 		team.autonomousDefensesAbleToShootArray = defenses
 	}
     
-	func addDefense(defense: Defense, toTeam team: Team, forPart part: GamePart) {
+	func addDefense(_ defense: Defense, toTeam team: Team, forPart part: GamePart) {
 		var defenses: [Defense]
 		//Retrieve the current defenses
 		switch part {
-		case .Autonomous:
+		case .autonomous:
 			defenses = team.autonomousDefensesAbleToCrossArray
-		case .Teleop:
+		case .teleop:
 			defenses = team.defensesAbleToCrossArray
 		}
 		
@@ -112,33 +112,33 @@ class TeamDataManager {
 		
 		//Set the data back
 		switch part {
-		case .Autonomous:
+		case .autonomous:
 			team.autonomousDefensesAbleToCrossArray = defenses
-		case .Teleop:
+		case .teleop:
 			team.defensesAbleToCrossArray = defenses
 		}
 	}
 	
-	func removeDefense(defense: Defense, fromTeam team: Team, forPart part: GamePart) {
+	func removeDefense(_ defense: Defense, fromTeam team: Team, forPart part: GamePart) {
 		var defenses: [Defense]
 		//Retrieve the current defenses
 		switch part {
-		case .Autonomous:
+		case .autonomous:
 			defenses = team.autonomousDefensesAbleToCrossArray
-		case .Teleop:
+		case .teleop:
 			defenses = team.defensesAbleToCrossArray
 		}
 		
 		//Remove it if it is there
-		if let index = defenses.indexOf(defense) {
-			defenses.removeAtIndex(index)
+		if let index = defenses.index(of: defense) {
+			defenses.remove(at: index)
 		}
 		
 		//Set the data back
 		switch part {
-		case .Autonomous:
+		case .autonomous:
 			team.autonomousDefensesAbleToCrossArray = defenses
-		case .Teleop:
+		case .teleop:
 			team.defensesAbleToCrossArray = defenses
 		}
 	}
@@ -148,7 +148,7 @@ class TeamDataManager {
         let fetchRequest = NSFetchRequest(entityName: "DraftBoard")
         
         do {
-            let results = try TeamDataManager.managedContext.executeFetchRequest(fetchRequest) as! [DraftBoard]
+            let results = try TeamDataManager.managedContext.fetch(fetchRequest) as! [DraftBoard]
             
             if results.count > 1 {
                 NSLog("Somehow multiple draft boards were created. This could be the result of a sync error.")
@@ -158,34 +158,34 @@ class TeamDataManager {
 				for team in board2Mutable {
 					board1Mutable.append(team)
 				}
-				TeamDataManager.managedContext.deleteObject(results[1])
-				results[0].teams = NSOrderedSet(array: board1Mutable)
+				TeamDataManager.managedContext.delete(results[1])
+				results[0].teams = OrderedSet(array: board1Mutable)
 				return try getRootDraftBoard()
             } else if results.count == 1 {
                 return results.first!
             } else if results.count == 0 {
                 NSLog("Creating new draft board")
                 //Create a new draft board and return it
-                let newDraftBoard = DraftBoard(entity: NSEntityDescription.entityForName("DraftBoard", inManagedObjectContext: TeamDataManager.managedContext)!, insertIntoManagedObjectContext: TeamDataManager.managedContext)
+                let newDraftBoard = DraftBoard(entity: NSEntityDescription.entity(forEntityName: "DraftBoard", in: TeamDataManager.managedContext)!, insertInto: TeamDataManager.managedContext)
                 return newDraftBoard
             }
         } catch let error as NSError {
             NSLog("Could not fetch \(error), \(error.userInfo)")
         }
-        throw DataManagingError.UnableToFetch
+        throw DataManagingError.unableToFetch
     }
     
-    func moveTeam(fromIndex: Int, toIndex: Int) throws {
+    func moveTeam(_ fromIndex: Int, toIndex: Int) throws {
         do {
             let rootDraftBoard = try getRootDraftBoard()
             
             //Move the team in the draft board array
             let mutableArray = rootDraftBoard.teams?.mutableCopy() as! NSMutableOrderedSet
             let movedTeam = mutableArray[fromIndex]
-            mutableArray.removeObjectAtIndex(fromIndex)
-            mutableArray.insertObject(movedTeam, atIndex: toIndex)
+            mutableArray.removeObject(at: fromIndex)
+            mutableArray.insert(movedTeam, at: toIndex)
             
-            rootDraftBoard.teams = mutableArray.copy() as? NSOrderedSet
+            rootDraftBoard.teams = mutableArray.copy() as? OrderedSet
         } catch {
             throw error
         }
@@ -193,7 +193,7 @@ class TeamDataManager {
         save()
     }
     
-    func getTeams(Predicate predicate: NSPredicate?) -> [Team] {
+    func getTeams(Predicate predicate: Predicate?) -> [Team] {
         var teams: [Team] = [Team]()
         
         let fetchRequest = NSFetchRequest(entityName: "Team")
@@ -201,7 +201,7 @@ class TeamDataManager {
         fetchRequest.predicate = predicate
         
         do {
-            let results = try TeamDataManager.managedContext.executeFetchRequest(fetchRequest)
+            let results = try TeamDataManager.managedContext.fetch(fetchRequest)
             
             teams = results as! [Team]
         } catch let error as NSError {
@@ -211,8 +211,8 @@ class TeamDataManager {
         return teams
     }
     
-    func getTeams(numberForSorting: String) -> [Team] {
-        return getTeams(Predicate: NSPredicate(format: "%K like %@", argumentArray: ["teamNumber", "\(numberForSorting)"]))
+    func getTeams(_ numberForSorting: String) -> [Team] {
+        return getTeams(Predicate: Predicate(format: "%K like %@", argumentArray: ["teamNumber", "\(numberForSorting)"]))
     }
     
     func getTeams() -> [Team] {
@@ -239,10 +239,10 @@ class TeamDataManager {
             return previousRegionals[0]
         }
         
-        let newRegional = Regional(entity: NSEntityDescription.entityForName("Regional", inManagedObjectContext: TeamDataManager.managedContext)!, insertIntoManagedObjectContext: TeamDataManager.managedContext)
+        let newRegional = Regional(entity: NSEntityDescription.entity(forEntityName: "Regional", in: TeamDataManager.managedContext)!, insertInto: TeamDataManager.managedContext)
         
         newRegional.name = name
-        newRegional.regionalNumber = num
+        newRegional.regionalNumber = num as NSNumber?
         return newRegional
     }
     
@@ -251,7 +251,7 @@ class TeamDataManager {
         
         var regionals = [Regional]()
         do {
-            let results = try TeamDataManager.managedContext.executeFetchRequest(fetchRequest) as? [Regional]
+            let results = try TeamDataManager.managedContext.fetch(fetchRequest) as? [Regional]
 			if let x = results {
 				regionals = x
 			}
@@ -265,17 +265,17 @@ class TeamDataManager {
 	func getRegional(withNumber num: Int) -> Regional? {
 		let fetchRequest = NSFetchRequest(entityName: "Regional")
 		
-		fetchRequest.predicate = NSPredicate(format: "%k like %@", argumentArray: ["regionalNumber", "\(num)"])
+		fetchRequest.predicate = Predicate(format: "%k like %@", argumentArray: ["regionalNumber", "\(num)"])
 		
 		do {
-			let results = try TeamDataManager.managedContext.executeFetchRequest(fetchRequest)
+			let results = try TeamDataManager.managedContext.fetch(fetchRequest)
 			return results[0] as? Regional
 		} catch {
 			return nil
 		}
 	}
     
-    func addTeamToRegional(team: Team, regional: Regional) -> TeamRegionalPerformance {
+    func addTeamToRegional(_ team: Team, regional: Regional) -> TeamRegionalPerformance {
 		//Check if there is already a regional performance for it
         let previousPerformances = (team.regionalPerformances?.allObjects as! [TeamRegionalPerformance]).filter({$0.regional == regional})
         guard previousPerformances.isEmpty else {
@@ -283,7 +283,7 @@ class TeamDataManager {
         }
 		
 		//If there isn't, then create one
-        let newRegionalPerformance = TeamRegionalPerformance(entity: NSEntityDescription.entityForName("TeamRegionalPerformance", inManagedObjectContext: TeamDataManager.managedContext)!, insertIntoManagedObjectContext: TeamDataManager.managedContext)
+        let newRegionalPerformance = TeamRegionalPerformance(entity: NSEntityDescription.entity(forEntityName: "TeamRegionalPerformance", in: TeamDataManager.managedContext)!, insertInto: TeamDataManager.managedContext)
         
         newRegionalPerformance.regional = regional
         newRegionalPerformance.team = team
@@ -291,30 +291,30 @@ class TeamDataManager {
     }
 	
 	func delete(Regional regional: Regional) {
-		TeamDataManager.managedContext.deleteObject(regional)
+		TeamDataManager.managedContext.delete(regional)
 	}
     
     //MARK: Matches
-    func createNewMatch(matchNumber: Int, inRegional regional: Regional) throws -> Match {
+    func createNewMatch(_ matchNumber: Int, inRegional regional: Regional) throws -> Match {
         //First, check to make sure it doesn't already exist
         guard (regional.regionalMatches?.allObjects as! [Match]).filter({return $0.matchNumber == matchNumber}).isEmpty else {
-            throw DataManagingError.MatchAlreadyExists
+            throw DataManagingError.matchAlreadyExists
         }
         
-        let newMatch = Match(entity: NSEntityDescription.entityForName("Match", inManagedObjectContext: TeamDataManager.managedContext)!, insertIntoManagedObjectContext: TeamDataManager.managedContext)
+        let newMatch = Match(entity: NSEntityDescription.entity(forEntityName: "Match", in: TeamDataManager.managedContext)!, insertInto: TeamDataManager.managedContext)
         
-        newMatch.matchNumber = matchNumber
+        newMatch.matchNumber = matchNumber as NSNumber?
         
         newMatch.regional = regional
 		return newMatch
     }
     
-    func deleteMatch(match: Match) {
-        TeamDataManager.managedContext.deleteObject(match)
+    func deleteMatch(_ match: Match) {
+        TeamDataManager.managedContext.delete(match)
     }
 	
 	//Newer and preferred method for setting teams in a match
-	func setTeamsInMatch(teamsAndPlaces: [TeamAndMatchPlace], inMatch match: Match) {
+	func setTeamsInMatch(_ teamsAndPlaces: [TeamAndMatchPlace], inMatch match: Match) {
 		for teamAndPlace in teamsAndPlaces {
 			let team = teamAndPlace.team
 			
@@ -335,14 +335,14 @@ class TeamDataManager {
 					let matchPerformance = createNewMatchPerformance(withTeam: team, inMatch: match)
 					
 					//Set the alliance color and team
-					matchPerformance.allianceColor = teamAndPlace.allianceColorAndTeam["Color"]
-					matchPerformance.allianceTeam = teamAndPlace.allianceColorAndTeam["Team"]
+					matchPerformance.allianceColor = teamAndPlace.allianceColorAndTeam["Color"] as NSNumber?
+					matchPerformance.allianceTeam = teamAndPlace.allianceColorAndTeam["Team"] as NSNumber?
 					
 					//Add it to the participating teams
 					//participatingTeamPerformances.addObject(matchPerformance)
 				} else {
 					//Check to see if the pre-existent match performance is the same team as the new team
-					if preExistentTeamPerformance?.regionalPerformance?.valueForKey("Team") as! Team == team {
+					if preExistentTeamPerformance?.regionalPerformance?.value(forKey: "Team") as! Team == team {
 						//The team is the same, we're done
 					} else {
 						//The team is different, delete the old one and make a new one
@@ -351,8 +351,8 @@ class TeamDataManager {
 						let matchPerformance = createNewMatchPerformance(withTeam: team, inMatch: match)
 						
 						//Set the alliance color and team
-						matchPerformance.allianceColor = teamAndPlace.allianceColorAndTeam["Color"]
-						matchPerformance.allianceTeam = teamAndPlace.allianceColorAndTeam["Team"]
+						matchPerformance.allianceColor = teamAndPlace.allianceColorAndTeam["Color"] as NSNumber?
+						matchPerformance.allianceTeam = teamAndPlace.allianceColorAndTeam["Team"] as NSNumber?
 						
 						//Add it to the participating teams
 						//participatingTeamPerformances.addObject(matchPerformance)
@@ -367,17 +367,17 @@ class TeamDataManager {
 		}
 	}
 	
-	func deleteMatchPerformance(matchPerformance: TeamMatchPerformance) {
+	func deleteMatchPerformance(_ matchPerformance: TeamMatchPerformance) {
 		//Get the regional performance before deletion
 		let regionalPerformance = matchPerformance.regionalPerformance!
 		
 		//Delete the match performance
-		TeamDataManager.managedContext.deleteObject(matchPerformance)
+		TeamDataManager.managedContext.delete(matchPerformance)
 		
 		//Check if it is the last match performance in the regional performance
 		if regionalPerformance.matchPerformances?.count == 0 {
 			//It was the last match performance, delete the regional performance now, too
-			TeamDataManager.managedContext.deleteObject(regionalPerformance)
+			TeamDataManager.managedContext.delete(regionalPerformance)
 		}
 	}
 	
@@ -386,7 +386,7 @@ class TeamDataManager {
 		let regionalPerformance = addTeamToRegional(team, regional: match.regional!)
 		
 		//Create the new match performance
-		let newMatchPerformance = TeamMatchPerformance(entity: NSEntityDescription.entityForName("TeamMatchPerformance", inManagedObjectContext: TeamDataManager.managedContext)!, insertIntoManagedObjectContext: TeamDataManager.managedContext)
+		let newMatchPerformance = TeamMatchPerformance(entity: NSEntityDescription.entity(forEntityName: "TeamMatchPerformance", in: TeamDataManager.managedContext)!, insertInto: TeamDataManager.managedContext)
 		
 		newMatchPerformance.regionalPerformance = regionalPerformance
 		newMatchPerformance.match = match
@@ -395,54 +395,54 @@ class TeamDataManager {
 	}
 	
 	enum TeamAndMatchPlace {
-		case Blue1(Team?)
-		case Blue2(Team?)
-		case Blue3(Team?)
-		case Red1(Team?)
-		case Red2(Team?)
-		case Red3(Team?)
+		case blue1(Team?)
+		case blue2(Team?)
+		case blue3(Team?)
+		case red1(Team?)
+		case red2(Team?)
+		case red3(Team?)
 		
 		var team: Team? {
 			switch self {
-			case .Blue1(let x):
+			case .blue1(let x):
 				return x
-			case .Blue2(let x):
+			case .blue2(let x):
 				return x
-			case .Blue3(let x):
+			case .blue3(let x):
 				return x
-			case .Red1(let x):
+			case .red1(let x):
 				return x
-			case .Red2(let x):
+			case .red2(let x):
 				return x
-			case .Red3(let x):
+			case .red3(let x):
 				return x
 			}
 		}
 		
 		var allianceColorAndTeam: [String:Int] {
 			switch self {
-			case .Blue1(_):
+			case .blue1(_):
 				return ["Color":0, "Team":1]
-			case .Blue2(_):
+			case .blue2(_):
 				return ["Color":0, "Team":2]
-			case .Blue3(_):
+			case .blue3(_):
 				return ["Color":0, "Team":3]
-			case .Red1(_):
+			case .red1(_):
 				return ["Color":1, "Team":1]
-			case .Red2(_):
+			case .red2(_):
 				return ["Color":1, "Team":2]
-			case .Red3(_):
+			case .red3(_):
 				return ["Color":1, "Team":3]
 			}
 		}
 	}
 	
-	func set(didCaptureTower: Bool, inMatch match: Match, forAlliance alliance: AllianceColor) {
+	func set(_ didCaptureTower: Bool, inMatch match: Match, forAlliance alliance: AllianceColor) {
 		switch alliance {
-		case .Red:
-			match.redCapturedTower = didCaptureTower
-		case .Blue:
-			match.blueCapturedTower = didCaptureTower
+		case .red:
+			match.redCapturedTower = didCaptureTower as NSNumber?
+		case .blue:
+			match.blueCapturedTower = didCaptureTower as NSNumber?
 		}
 	}
 	
@@ -452,15 +452,15 @@ class TeamDataManager {
 		let defenses = [defenseA.defense, defenseB.defense, defenseC.defense, defenseD.defense]
 		
 		switch color {
-		case .Red:
+		case .red:
 			match.redDefensesArray = defenses
-		case .Blue:
+		case .blue:
 			match.blueDefensesArray = defenses
 		}
 	}
 	
 	func setDefenses(inMatch match: Match, redOrBlue color: AllianceColor, withDefenseArray defenses: [Defense]) throws {
-		if !(defenses.count == 4) {throw DataManagingError.InvalidNumberOfDefenses}
+		if !(defenses.count == 4) {throw DataManagingError.invalidNumberOfDefenses}
 		
 		var defenseA: CategoryADefense?
 		var defenseB: CategoryBDefense?
@@ -468,36 +468,36 @@ class TeamDataManager {
 		var defenseD: CategoryDDefense?
 		
 		for defense in defenses {
-			if defense.category == .A {
+			if defense.category == .a {
 				defenseA = CategoryADefense(rawValue: defense.rawValue)
-			} else if defense.category == .B {
+			} else if defense.category == .b {
 				defenseB = CategoryBDefense(rawValue: defense.rawValue)
-			} else if defense.category == .C {
+			} else if defense.category == .c {
 				defenseC = CategoryCDefense(rawValue: defense.rawValue)
-			} else if defense.category == .D {
+			} else if defense.category == .d {
 				defenseD = CategoryDDefense(rawValue: defense.rawValue)
 			}
 		}
 		
 		if defenseA == nil || defenseB == nil || defenseC == nil || defenseD == nil {
-			throw DataManagingError.InvalidDefenseCategoryRepresentation
+			throw DataManagingError.invalidDefenseCategoryRepresentation
 		}
 		
 		setDefenses(inMatch: match, redOrBlue: color, defenseA: defenseA!, defenseB: defenseB!, defenseC: defenseC!, defenseD: defenseD!)
 	}
 	
 	enum AllianceColor: Int {
-		case Blue = 0
-		case Red = 1
+		case blue = 0
+		case red = 1
 	}
     
-    func getTeamsForMatch(match: Match) -> [TeamMatchPerformance] {
+    func getTeamsForMatch(_ match: Match) -> [TeamMatchPerformance] {
         let teamPerformances = match.teamPerformances?.allObjects as! [TeamMatchPerformance]
         return teamPerformances
     }
 	
-    func getTimeOfMatch(match: Match) -> NSDate {
-        return match.time!
+    func getTimeOfMatch(_ match: Match) -> Date {
+        return match.time! as Date
     }
     
 	func getMatches(forRegional regional: Regional) -> [Match]{
@@ -506,39 +506,39 @@ class TeamDataManager {
 	
 	//MARK: Shots
 	func createShot(atPoint location: CGPoint) -> Shot {
-		let newShot = Shot(entity: NSEntityDescription.entityForName("Shot", inManagedObjectContext: TeamDataManager.managedContext)!, insertIntoManagedObjectContext: TeamDataManager.managedContext)
+		let newShot = Shot(entity: NSEntityDescription.entity(forEntityName: "Shot", in: TeamDataManager.managedContext)!, insertInto: TeamDataManager.managedContext)
 		
 		//Set the location
-		newShot.xLocation = location.x
-		newShot.yLocation = location.y
+		newShot.xLocation = location.x as NSNumber?
+		newShot.yLocation = location.y as NSNumber?
 		
 		return newShot
 	}
 	
-	func remove(shot: Shot) {
-		TeamDataManager.managedContext.deleteObject(shot)
+	func remove(_ shot: Shot) {
+		TeamDataManager.managedContext.delete(shot)
 	}
 	
 	enum ShotGoal: Int {
-		case Low
-		case High
-		case Both //Specifically for stats
+		case low
+		case high
+		case both //Specifically for stats
 	}
 	
 	//MARK: AutonomousCycles
 	func createAutonomousCycle(inMatchPerformance matchPerformance: TeamMatchPerformance, atPlace place: Int) -> AutonomousCycle {
-		let newCycle = AutonomousCycle(entity: NSEntityDescription.entityForName("AutonomousCycle", inManagedObjectContext: TeamDataManager.managedContext)!, insertIntoManagedObjectContext: TeamDataManager.managedContext)
+		let newCycle = AutonomousCycle(entity: NSEntityDescription.entity(forEntityName: "AutonomousCycle", in: TeamDataManager.managedContext)!, insertInto: TeamDataManager.managedContext)
 		
 		let mutableSet = matchPerformance.autonomousCycles?.mutableCopy() as! NSMutableOrderedSet
-		mutableSet.insertObject(newCycle, atIndex: place)
-		matchPerformance.autonomousCycles = (mutableSet.copy() as! NSOrderedSet)
+		mutableSet.insert(newCycle, at: place)
+		matchPerformance.autonomousCycles = (mutableSet.copy() as! OrderedSet)
 		
 		return newCycle
 	}
 	
 	//MARK: Defenses
-	func setDefense(defense: Defense, state: DefenseState, inMatchPerformance matchPerformance: TeamMatchPerformance) {
-		let allianceColor = matchPerformance.allianceColor?.integerValue
+	func setDefense(_ defense: Defense, state: DefenseState, inMatchPerformance matchPerformance: TeamMatchPerformance) {
+		let allianceColor = matchPerformance.allianceColor?.intValue
 		var allianceBreachedDefenses: [Defense]
 		
 		if allianceColor == 0 {
@@ -548,13 +548,13 @@ class TeamDataManager {
 		}
 		
 		switch state {
-		case .Breached:
+		case .breached:
 			if !allianceBreachedDefenses.contains(defense) {
 				allianceBreachedDefenses.append(defense)
 			}
-		case .NotBreached:
-			if let index = allianceBreachedDefenses.indexOf(defense) {
-				allianceBreachedDefenses.removeAtIndex(index)
+		case .notBreached:
+			if let index = allianceBreachedDefenses.index(of: defense) {
+				allianceBreachedDefenses.remove(at: index)
 			}
 		}
 		
@@ -566,80 +566,80 @@ class TeamDataManager {
 	}
 	
 	enum DefenseState {
-		case Breached
-		case NotBreached
+		case breached
+		case notBreached
 	}
 	
 	//MARK: Time Markers
-	func addTimeMarker(withEvent event: TimeMarkerEventType, atTime time: NSTimeInterval, inMatchPerformance matchPerformance: TeamMatchPerformance) {
-		let newMarker = TimeMarker(entity: NSEntityDescription.entityForName("TimeMarker", inManagedObjectContext: TeamDataManager.managedContext)!, insertIntoManagedObjectContext: TeamDataManager.managedContext)
+	func addTimeMarker(withEvent event: TimeMarkerEventType, atTime time: TimeInterval, inMatchPerformance matchPerformance: TeamMatchPerformance) {
+		let newMarker = TimeMarker(entity: NSEntityDescription.entity(forEntityName: "TimeMarker", in: TeamDataManager.managedContext)!, insertInto: TeamDataManager.managedContext)
 		
-		newMarker.event = event.rawValue
-		newMarker.time = time
+		newMarker.event = event.rawValue as NSNumber?
+		newMarker.time = time as NSNumber?
 		newMarker.teamMatchPerformance = matchPerformance
 	}
 	
 	enum TimeMarkerEventType: Int, CustomStringConvertible {
-		case BallPickedUp
-		case AttemptedShot
-		case MovedToOffenseCourtyard
-		case MovedToDefenseCourtyard
-		case CrossedDefense
-		case MovedToNeutral
-		case Contact
-		case ContactDisruptingShot
-		case BallPickedUpFromDefense
-		case BallPickedUpFromNeutral
-		case BallPickedUpFromOffense
-		case SuccessfulHighShot
-		case FailedHighShot
-		case SuccessfulLowShot
-		case FailedLowShot
-		case Error
+		case ballPickedUp
+		case attemptedShot
+		case movedToOffenseCourtyard
+		case movedToDefenseCourtyard
+		case crossedDefense
+		case movedToNeutral
+		case contact
+		case contactDisruptingShot
+		case ballPickedUpFromDefense
+		case ballPickedUpFromNeutral
+		case ballPickedUpFromOffense
+		case successfulHighShot
+		case failedHighShot
+		case successfulLowShot
+		case failedLowShot
+		case error
 		
 		var description: String {
 			switch self {
-			case .BallPickedUp:
+			case .ballPickedUp:
 				return "Ball Picked Up"
-			case .AttemptedShot:
+			case .attemptedShot:
 				return "Attempted Shot"
-			case .MovedToOffenseCourtyard:
+			case .movedToOffenseCourtyard:
 				return "Moved to Offense Courtyard"
-			case .MovedToDefenseCourtyard:
+			case .movedToDefenseCourtyard:
 				return "Moved to Defense Courtyard"
-			case .CrossedDefense:
+			case .crossedDefense:
 				return "Crossed Defense"
-			case .MovedToNeutral:
+			case .movedToNeutral:
 				return "Moved to Neutral Zone"
-			case .Contact:
+			case .contact:
 				return "Contact"
-			case .ContactDisruptingShot:
+			case .contactDisruptingShot:
 				return "Contact Disrupting Shot"
-			case .BallPickedUpFromDefense:
+			case .ballPickedUpFromDefense:
 				return "Ball Picked Up From Defense Courtyard"
-			case .BallPickedUpFromNeutral:
+			case .ballPickedUpFromNeutral:
 				return "Ball Picked Up From Neutral Zone"
-			case .BallPickedUpFromOffense:
+			case .ballPickedUpFromOffense:
 				return "Ball Picked Up From Offense Courtyard"
-			case .SuccessfulHighShot:
+			case .successfulHighShot:
 				return "Successful High Goal Shot"
-			case .FailedHighShot:
+			case .failedHighShot:
 				return "Failed High Goal Shot"
-			case .SuccessfulLowShot:
+			case .successfulLowShot:
 				return "Successful Low Goal Shot"
-			case .FailedLowShot:
+			case .failedLowShot:
 				return "Failed Low Goal Shot"
-			case .Error:
+			case .error:
 				return "Error: Unknown Time Marker"
 			}
 		}
 	}
 	
 	struct TimeMarkerEvent {
-		let time: NSTimeInterval
+		let time: TimeInterval
 		let type: TimeMarkerEventType
 		
-		init(type: TimeMarkerEventType, atTime time: NSTimeInterval) {
+		init(type: TimeMarkerEventType, atTime time: TimeInterval) {
 			self.time = time
 			self.type = type
 		}
@@ -650,39 +650,39 @@ class TeamDataManager {
 		for timeMarker in matchPerformance.timeMarkers?.array as! [TimeMarker] {
 			timeOverview.append(TimeMarkerEvent(type: timeMarker.timeMarkerEventType, atTime: timeMarker.time?.doubleValue ?? -1))
 		}
-		return timeOverview.sort() {first, second in
+		return timeOverview.sorted() {first, second in
 			return first.time < second.time
 		}
 	}
 	
 	//MARK: Defense Cross Timing
-	func addDefenseCrossTime(forMatchPerformance matchPerformance: TeamMatchPerformance, inDefense defense: Defense, atTime time: NSTimeInterval) {
-		let newCrossTime = DefenseCrossTime(entity: NSEntityDescription.entityForName("DefenseCrossTime", inManagedObjectContext: TeamDataManager.managedContext)!, insertIntoManagedObjectContext: TeamDataManager.managedContext)
+	func addDefenseCrossTime(forMatchPerformance matchPerformance: TeamMatchPerformance, inDefense defense: Defense, atTime time: TimeInterval) {
+		let newCrossTime = DefenseCrossTime(entity: NSEntityDescription.entity(forEntityName: "DefenseCrossTime", in: TeamDataManager.managedContext)!, insertInto: TeamDataManager.managedContext)
 		
-		newCrossTime.endTime = time
+		newCrossTime.endTime = time as NSNumber?
 		newCrossTime.duration = 0
 		newCrossTime.teamMatchPerformance = matchPerformance
 		newCrossTime.defense = defense.rawValue
 	}
     
-    enum DataManagingError: ErrorType {
-        case DuplicateTeams
-        case DuplicateStatsBoards
-        case DuplicateMatchBoards
-        case UnableToFetch
-        case TypeAlreadyExists
-        case UnableToGetStatsBoard
-        case MatchAlreadyExists
-		case InvalidNumberOfDefenses
-		case InvalidDefenseCategoryRepresentation
+    enum DataManagingError: Error {
+        case duplicateTeams
+        case duplicateStatsBoards
+        case duplicateMatchBoards
+        case unableToFetch
+        case typeAlreadyExists
+        case unableToGetStatsBoard
+        case matchAlreadyExists
+		case invalidNumberOfDefenses
+		case invalidDefenseCategoryRepresentation
         
         var errorDescription: String {
             switch self {
-            case .DuplicateTeams:
+            case .duplicateTeams:
                 return "There are more than one team entities with the specified team number."
-			case .InvalidNumberOfDefenses:
+			case .invalidNumberOfDefenses:
 				return "There are the wrong number of defenses to be set in to a match."
-			case .InvalidDefenseCategoryRepresentation:
+			case .invalidDefenseCategoryRepresentation:
 				return "There was not a defense from every category in the defenses to be set in to the match."
             default:
                 return "A problem occured with data management."
@@ -692,8 +692,8 @@ class TeamDataManager {
 }
 	
 enum GamePart {
-	case Autonomous
-	case Teleop
+	case autonomous
+	case teleop
 }
 	
 	enum Defense: String, CustomStringConvertible, Hashable {
@@ -714,15 +714,15 @@ enum GamePart {
 		var category: DefenseCategory {
 			switch self {
 			case .Portcullis, .ChevalDeFrise:
-				return .A
+				return .a
 			case .Moat, .Ramparts:
-				return .B
+				return .b
 			case .Drawbridge, .SallyPort:
-				return .C
+				return .c
 			case .RockWall, .RoughTerrain:
-				return .D
+				return .d
 			case .LowBar:
-				return .LowBar
+				return .lowBar
 			}
 		}
 		
@@ -732,23 +732,23 @@ enum GamePart {
 	}
 	
 	enum DefenseCategory: Int {
-		case A
-		case B
-		case C
-		case D
-		case LowBar
+		case a
+		case b
+		case c
+		case d
+		case lowBar
 		
 		var defenses: [Defense] {
 			switch self {
-			case .A:
+			case .a:
 				return [.Portcullis, .ChevalDeFrise]
-			case .B:
+			case .b:
 				return [.Moat, .Ramparts]
-			case .C:
+			case .c:
 				return [.Drawbridge, .SallyPort]
-			case .D:
+			case .d:
 				return [.RockWall, .RoughTerrain]
-			case .LowBar:
+			case .lowBar:
 				return [.LowBar]
 			}
 		}
@@ -756,15 +756,15 @@ enum GamePart {
 		init(category: Character) {
 			switch category {
 			case "A":
-				self = .A
+				self = .a
 			case "B":
-				self = .B
+				self = .b
 			case "C":
-				self = .C
+				self = .c
 			case "D":
-				self = .D
+				self = .d
 			default:
-				self = .LowBar
+				self = .lowBar
 			}
 		}
 	}

@@ -145,7 +145,7 @@ class swixTests {
         func solve_test(){
             let A0 = array(1, 2, 3, 4, 2, 1, 4, 6, 7)
             let A = reshape(A0, shape: (3, 3))
-            var b = array(1, 2, 5)
+            let b = array(1, 2, 5)
             var x = solve(A, b: b)
             assert((A !/ b) ~== solve(A, b: b))
             print("solve works, similar to Matlab's \\ operator (and checked by hand). Be careful -- this only works for nxn matrices")

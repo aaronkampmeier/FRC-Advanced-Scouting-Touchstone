@@ -16,29 +16,29 @@ class AdminConfigureDetailVC: UIViewController {
         super.viewDidLoad()
     }
     
-    override func viewWillAppear(animated: Bool) {
+    override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
     }
     
-    override func viewDidAppear(animated: Bool) {
+    override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         
         //Perform segue only works after the view has appeared
     }
     
     func presentMatchDetailView() {
-        performSegueWithIdentifier("configureMatchDetailSegue", sender: nil)
+        performSegue(withIdentifier: "configureMatchDetailSegue", sender: nil)
     }
 	
 	func presentRegionalDetailView() {
-		performSegueWithIdentifier("configureRegionalDetailSegue", sender: nil)
+		performSegue(withIdentifier: "configureRegionalDetailSegue", sender: nil)
 	}
     
-    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
-        super.prepareForSegue(segue, sender: sender)
+    override func prepare(for segue: UIStoryboardSegue, sender: AnyObject?) {
+        super.prepare(for: segue, sender: sender)
         
         if segue.identifier == "configureMatchDetailSegue" || segue.identifier == "configureRegionalDetailSegue" {
-            detailViewController = segue.destinationViewController
+            detailViewController = segue.destination
         }
     }
 }

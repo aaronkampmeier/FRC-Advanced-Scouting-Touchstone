@@ -14,6 +14,6 @@ import CoreData
 
 extension DraftBoard {
 
-    @NSManaged var teams: NSOrderedSet?
+    @NSManaged var teams: OrderedSet?
 
 }

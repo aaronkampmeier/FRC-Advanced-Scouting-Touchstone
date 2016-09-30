@@ -13,6 +13,7 @@
 		1F12CF141C78FD370014200C /* CourtyardViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F12CF131C78FD370014200C /* CourtyardViewController.swift */; };
 		1F12CF181C7A6CD70014200C /* Stopwatch.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F12CF171C7A6CD70014200C /* Stopwatch.swift */; };
 		1F21DF121C66942200C55D0E /* SortVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F21DF111C66942200C55D0E /* SortVC.swift */; };
+		1F2F9A221CE2D6E400B85A72 /* TeamListSearchResultsTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F2F9A211CE2D6E400B85A72 /* TeamListSearchResultsTableViewController.swift */; };
 		1F45340E1C6FC3EA004EDDB9 /* GameStatsCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F45340D1C6FC3EA004EDDB9 /* GameStatsCollectionViewCell.swift */; };
 		1F4534101C6FF916004EDDB9 /* StandsScoutingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F45340F1C6FF916004EDDB9 /* StandsScoutingViewController.swift */; };
 		1F4534151C6FFC38004EDDB9 /* AutonomousViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F4534141C6FFC38004EDDB9 /* AutonomousViewController.swift */; };
@@ -66,7 +67,6 @@
 		1FDC1BCE1CD69EBB00ABE327 /* TeamListSplitViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FDC1BCD1CD69EBB00ABE327 /* TeamListSplitViewController.swift */; };
 		1FDC1BD11CD69F5F00ABE327 /* TeamListTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FDC1BD01CD69F5F00ABE327 /* TeamListTableViewController.swift */; };
 		1FDC1BD31CD6A35F00ABE327 /* TeamListDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FDC1BD21CD6A35F00ABE327 /* TeamListDetailViewController.swift */; };
-		1FDC1BD71CD6EB0800ABE327 /* TeamListSearchController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FDC1BD61CD6EB0800ABE327 /* TeamListSearchController.swift */; };
 		1FDE56B71CCD3C64009042CD /* imshow.py in Resources */ = {isa = PBXBuildFile; fileRef = 1FDE56961CCD3C64009042CD /* imshow.py */; };
 		1FDE56B81CCD3C64009042CD /* io.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FDE56971CCD3C64009042CD /* io.swift */; };
 		1FDE56B91CCD3C64009042CD /* machine_learning.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FDE56991CCD3C64009042CD /* machine_learning.swift */; };
@@ -134,6 +134,7 @@
 		1F12CF171C7A6CD70014200C /* Stopwatch.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Stopwatch.swift; sourceTree = "<group>"; };
 		1F21DF111C66942200C55D0E /* SortVC.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SortVC.swift; sourceTree = "<group>"; };
 		1F2422421C73DF08008A5AFC /* FRC_Advanced_Scouting_Telemetrics CD 7.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "FRC_Advanced_Scouting_Telemetrics CD 7.xcdatamodel"; sourceTree = "<group>"; };
+		1F2F9A211CE2D6E400B85A72 /* TeamListSearchResultsTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TeamListSearchResultsTableViewController.swift; sourceTree = "<group>"; };
 		1F34C74B1CD1A85B005255D5 /* FRC_Advanced_Scouting_Telemetrics Version 11.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "FRC_Advanced_Scouting_Telemetrics Version 11.xcdatamodel"; sourceTree = "<group>"; };
 		1F34C74C1CD2540B005255D5 /* FRC_Advanced_Scouting_Telemetrics Version 12.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "FRC_Advanced_Scouting_Telemetrics Version 12.xcdatamodel"; sourceTree = "<group>"; };
 		1F45340D1C6FC3EA004EDDB9 /* GameStatsCollectionViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GameStatsCollectionViewCell.swift; sourceTree = "<group>"; };
@@ -199,7 +200,6 @@
 		1FDC1BCD1CD69EBB00ABE327 /* TeamListSplitViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TeamListSplitViewController.swift; sourceTree = "<group>"; };
 		1FDC1BD01CD69F5F00ABE327 /* TeamListTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TeamListTableViewController.swift; sourceTree = "<group>"; };
 		1FDC1BD21CD6A35F00ABE327 /* TeamListDetailViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TeamListDetailViewController.swift; sourceTree = "<group>"; };
-		1FDC1BD61CD6EB0800ABE327 /* TeamListSearchController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TeamListSearchController.swift; sourceTree = "<group>"; };
 		1FDE568A1CCC915A009042CD /* FRC_Advanced_Scouting_Telemetrics Version 10.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "FRC_Advanced_Scouting_Telemetrics Version 10.xcdatamodel"; sourceTree = "<group>"; };
 		1FDE56921CCD376B009042CD /* opencv2.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = opencv2.framework; path = "FRC Advanced Scouting Telemetrics/swix/objc/opencv2.framework"; sourceTree = "<group>"; };
 		1FDE56961CCD3C64009042CD /* imshow.py */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.python; path = imshow.py; sourceTree = "<group>"; };
@@ -309,7 +309,7 @@
 				1FDC1BD01CD69F5F00ABE327 /* TeamListTableViewController.swift */,
 				1FDC1BD21CD6A35F00ABE327 /* TeamListDetailViewController.swift */,
 				1FDC1BCD1CD69EBB00ABE327 /* TeamListSplitViewController.swift */,
-				1FDC1BD61CD6EB0800ABE327 /* TeamListSearchController.swift */,
+				1F2F9A211CE2D6E400B85A72 /* TeamListSearchResultsTableViewController.swift */,
 				1FDC1BCF1CD69EDE00ABE327 /* Segments */,
 			);
 			name = "Team List";
@@ -436,8 +436,8 @@
 			children = (
 				1FBE62801CAEF617001FDFB7 /* MatchOverviewViewController.swift */,
 				1F51D1C11C7FB30F00B4D6C5 /* GameStatsController.swift */,
-				1FE2C1281C80136800CECBF1 /* ShotChartViewController.swift */,
 				1F45340D1C6FC3EA004EDDB9 /* GameStatsCollectionViewCell.swift */,
+				1FE2C1281C80136800CECBF1 /* ShotChartViewController.swift */,
 				1FCA7AD91C630BAE004294D1 /* StatsVC.swift */,
 			);
 			name = Segments;
@@ -612,13 +612,16 @@
 					1F78E77E1C3B469300221927 = {
 						CreatedOnToolsVersion = 7.2;
 						DevelopmentTeam = 3T77TK2ECU;
+						LastSwiftMigration = 0800;
 					};
 					1F78E7951C3B469300221927 = {
 						CreatedOnToolsVersion = 7.2;
+						LastSwiftMigration = 0800;
 						TestTargetID = 1F78E77E1C3B469300221927;
 					};
 					1F78E7A01C3B469300221927 = {
 						CreatedOnToolsVersion = 7.2;
+						LastSwiftMigration = 0800;
 						TestTargetID = 1F78E77E1C3B469300221927;
 					};
 				};
@@ -744,6 +747,7 @@
 				1F78E78B1C3B469300221927 /* FRC_Advanced_Scouting_Telemetrics.xcdatamodeld in Sources */,
 				1FF32A281C6E990C00CD028C /* AdminConfigureDetailMatchVC.swift in Sources */,
 				1F4534391C7242B9004EDDB9 /* TimeMarker.swift in Sources */,
+				1F2F9A221CE2D6E400B85A72 /* TeamListSearchResultsTableViewController.swift in Sources */,
 				1FF1F1731C3CC74A0051EE54 /* TeamListController.swift in Sources */,
 				1FE2C12B1C80DFBD00CECBF1 /* NeutralViewController.swift in Sources */,
 				1FF32A211C6D194B00CD028C /* AdminConfigureVC.swift in Sources */,
@@ -811,7 +815,6 @@
 				1FCA7ADA1C630BAE004294D1 /* StatsVC.swift in Sources */,
 				1F45344F1C7242B9004EDDB9 /* Team.swift in Sources */,
 				1FDE56BF1CCD3C64009042CD /* m-operators.swift in Sources */,
-				1FDC1BD71CD6EB0800ABE327 /* TeamListSearchController.swift in Sources */,
 				1FDE56CD1CCD3C64009042CD /* operations-and-indexing.m in Sources */,
 				1F4FEDAC1C4B686000F4016D /* AdminConsoleController.swift in Sources */,
 				1FDE56B81CCD3C64009042CD /* io.swift in Sources */,
@@ -974,13 +977,11 @@
 					"$(PROJECT_DIR)",
 					"$(PROJECT_DIR)/FRC\\ Advanced\\ Scouting\\ Telemetrics/swix/objc",
 					"$(PROJECT_DIR)/build/Debug-iphoneos",
-					"$(PROJECT_DIR)/FRC",
-					Advanced,
-					Scouting,
-					Telemetrics/swix/objc,
 				);
 				INFOPLIST_FILE = "FRC Advanced Scouting Telemetrics/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				MAPC_NO_WARNINGS = NO;
+				MOMC_NO_INVERSE_RELATIONSHIP_WARNINGS = YES;
 				OTHER_CFLAGS = (
 					"$(inherited)",
 					"-iquote",
@@ -994,6 +995,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = "com.kampmeier.FRC-Advanced-Scouting-Touchstone";
 				PRODUCT_NAME = "FRC Advanced Scouting Touchstone";
 				PROVISIONING_PROFILE = "1da15394-14e2-4de2-b834-e3feca4d0125";
+				SWIFT_VERSION = 3.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Debug;
@@ -1011,13 +1013,10 @@
 					"$(PROJECT_DIR)",
 					"$(PROJECT_DIR)/FRC\\ Advanced\\ Scouting\\ Telemetrics/swix/objc",
 					"$(PROJECT_DIR)/build/Debug-iphoneos",
-					"$(PROJECT_DIR)/FRC",
-					Advanced,
-					Scouting,
-					Telemetrics/swix/objc,
 				);
 				INFOPLIST_FILE = "FRC Advanced Scouting Telemetrics/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				MOMC_NO_INVERSE_RELATIONSHIP_WARNINGS = NO;
 				OTHER_CFLAGS = (
 					"$(inherited)",
 					"-iquote",
@@ -1031,6 +1030,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = "com.kampmeier.FRC-Advanced-Scouting-Touchstone";
 				PRODUCT_NAME = "FRC Advanced Scouting Touchstone";
 				PROVISIONING_PROFILE = "a024fa9d-3610-436f-a7c6-08fbb75be7bc";
+				SWIFT_VERSION = 3.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Release;
@@ -1050,6 +1050,7 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = "com.kampmeier.FRC-Advanced-Scouting-TelemetricsTests";
 				PRODUCT_NAME = "FRC Advanced Scouting Touchstone";
+				SWIFT_VERSION = 3.0;
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/FRC Advanced Scouting Touchstone.app/FRC Advanced Scouting Touchstone";
 			};
 			name = Debug;
@@ -1069,6 +1070,7 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = "com.kampmeier.FRC-Advanced-Scouting-TelemetricsTests";
 				PRODUCT_NAME = "FRC Advanced Scouting Touchstone";
+				SWIFT_VERSION = 3.0;
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/FRC Advanced Scouting Touchstone.app/FRC Advanced Scouting Touchstone";
 			};
 			name = Release;
@@ -1080,6 +1082,7 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = "com.kampmeier.FRC-Advanced-Scouting-TelemetricsUITests";
 				PRODUCT_NAME = "FRC Advanced Scouting Touchstone";
+				SWIFT_VERSION = 3.0;
 				TEST_TARGET_NAME = "FRC Advanced Scouting Telemetrics";
 				USES_XCTRUNNER = YES;
 			};
@@ -1092,6 +1095,7 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = "com.kampmeier.FRC-Advanced-Scouting-TelemetricsUITests";
 				PRODUCT_NAME = "FRC Advanced Scouting Touchstone";
+				SWIFT_VERSION = 3.0;
 				TEST_TARGET_NAME = "FRC Advanced Scouting Telemetrics";
 				USES_XCTRUNNER = YES;
 			};

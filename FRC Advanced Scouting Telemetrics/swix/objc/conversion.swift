@@ -9,12 +9,12 @@
 import Foundation
 import Accelerate
 
-func matrixToPointer(x: ndarray)->UnsafeMutablePointer<Double>{
+func matrixToPointer(_ x: ndarray)->UnsafeMutablePointer<Double>{
     // sustains since objc rewrites raw memory!
-    return UnsafeMutablePointer<Double>(x.grid)
+    return UnsafeMutablePointer<Double>(mutating: x.grid)
 }
-func matrixToPointer(x: [Int])->UnsafeMutablePointer<Int>{
-    return UnsafeMutablePointer<Int>(x)
+func matrixToPointer(_ x: [Int])->UnsafeMutablePointer<Int>{
+    return UnsafeMutablePointer<Int>(mutating: x)
 }
 
 /// use !x to get the address. I tried &x but that doesn't work in beta3.

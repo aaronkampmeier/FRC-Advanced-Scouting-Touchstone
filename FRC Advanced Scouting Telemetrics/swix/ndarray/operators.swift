@@ -9,7 +9,7 @@
 import Foundation
 import Accelerate
 
-func make_operator(lhs:ndarray, operation:String, rhs:ndarray) -> ndarray{
+func make_operator(_ lhs:ndarray, operation:String, rhs:ndarray) -> ndarray{
     assert(lhs.n == rhs.n, "Sizes must match!")
     
     // see [1] on how to integrate Swift and accelerate
@@ -42,7 +42,7 @@ func make_operator(lhs:ndarray, operation:String, rhs:ndarray) -> ndarray{
     else {assert(false, "operation not recongized!")}
     return result
 }
-func make_operator(lhs:ndarray, operation:String, rhs:Double) -> ndarray{
+func make_operator(_ lhs:ndarray, operation:String, rhs:Double) -> ndarray{
     var array = zeros(lhs.n)
     var right = [rhs]
     if operation == "%"{
@@ -61,13 +61,13 @@ func make_operator(lhs:ndarray, operation:String, rhs:Double) -> ndarray{
     else if operation=="-"
         {array = make_operator(lhs, operation: "-", rhs: ones(lhs.n)*rhs)}
     else if operation=="<" || operation==">" || operation=="<=" || operation==">="{
-        CVWrapper.compare(!lhs, withDouble:rhs.cdouble, using:operation.nsstring as String, into:!array, ofLength:lhs.n.cint)
+        CVWrapper.compare(!lhs, with:rhs.cdouble, using:operation.nsstring as String, into:!array, ofLength:lhs.n.cint)
         array /= 255
     }
     else {assert(false, "operation not recongnized! Error with the speedup?")}
     return array
 }
-func make_operator(lhs:Double, operation:String, rhs:ndarray) -> ndarray{
+func make_operator(_ lhs:Double, operation:String, rhs:ndarray) -> ndarray{
     var array = zeros(rhs.n) // lhs[i], rhs[i]
     let l = ones(rhs.n) * lhs
     if operation == "*"
@@ -95,14 +95,14 @@ func make_operator(lhs:Double, operation:String, rhs:ndarray) -> ndarray{
 }
 
 // DOUBLE ASSIGNMENT
-infix operator <- {}
-func <- (inout lhs:ndarray, rhs:Double){
+infix operator <-
+func <- (lhs:inout ndarray, rhs:Double){
     let assign = ones(lhs.n) * rhs
     lhs = assign
 }
 
 // EQUALITY
-infix operator ~== {associativity none precedence 140}
+infix operator ~== : MultiplicationPrecedence
 func ~== (lhs: ndarray, rhs: ndarray) -> Bool{
     assert(lhs.n == rhs.n, "`~==` only works on arrays of equal size")
     return max(abs(lhs - rhs)) > 1e-6 ? false : true;
@@ -113,17 +113,17 @@ func !== (lhs: ndarray, rhs: ndarray) -> ndarray{
     return make_operator(lhs, operation: "!==", rhs: rhs)}
 
 // NICE ARITHMETIC
-func += (inout x: ndarray, right: Double){
+func += (x: inout ndarray, right: Double){
     x = x + right}
-func *= (inout x: ndarray, right: Double){
+func *= (x: inout ndarray, right: Double){
     x = x * right}
-func -= (inout x: ndarray, right: Double){
+func -= (x: inout ndarray, right: Double){
     x = x - right}
-func /= (inout x: ndarray, right: Double){
+func /= (x: inout ndarray, right: Double){
     x = x / right}
 
 // MOD
-infix operator % {associativity none precedence 140}
+infix operator % : MultiplicationPrecedence
 func % (lhs: ndarray, rhs: Double) -> ndarray{
     return make_operator(lhs, operation: "%", rhs: rhs)}
 func % (lhs: ndarray, rhs: ndarray) -> ndarray{
@@ -131,7 +131,7 @@ func % (lhs: ndarray, rhs: ndarray) -> ndarray{
 func % (lhs: Double, rhs: ndarray) -> ndarray{
     return make_operator(lhs, operation: "%", rhs: rhs)}
 // POW
-infix operator ^ {associativity none precedence 140}
+infix operator ^ : MultiplicationPrecedence
 func ^ (lhs: ndarray, rhs: Double) -> ndarray{
     return pow(lhs, power: rhs)}
 func ^ (lhs: ndarray, rhs: ndarray) -> ndarray{
@@ -139,7 +139,7 @@ func ^ (lhs: ndarray, rhs: ndarray) -> ndarray{
 func ^ (lhs: Double, rhs: ndarray) -> ndarray{
     return pow(lhs, y: rhs)}
 // PLUS
-infix operator + {associativity none precedence 140}
+infix operator + : MultiplicationPrecedence
 func + (lhs: ndarray, rhs: ndarray) -> ndarray{
     return make_operator(lhs, operation: "+", rhs: rhs)}
 func + (lhs: Double, rhs: ndarray) -> ndarray{
@@ -147,7 +147,7 @@ func + (lhs: Double, rhs: ndarray) -> ndarray{
 func + (lhs: ndarray, rhs: Double) -> ndarray{
     return make_operator(lhs, operation: "+", rhs: rhs)}
 // MINUS
-infix operator - {associativity none precedence 140}
+infix operator - : MultiplicationPrecedence
 func - (lhs: ndarray, rhs: ndarray) -> ndarray{
     return make_operator(lhs, operation: "-", rhs: rhs)}
 func - (lhs: Double, rhs: ndarray) -> ndarray{
@@ -155,7 +155,7 @@ func - (lhs: Double, rhs: ndarray) -> ndarray{
 func - (lhs: ndarray, rhs: Double) -> ndarray{
     return make_operator(lhs, operation: "-", rhs: rhs)}
 // TIMES
-infix operator * {associativity none precedence 140}
+infix operator * : MultiplicationPrecedence
 func * (lhs: ndarray, rhs: ndarray) -> ndarray{
     return make_operator(lhs, operation: "*", rhs: rhs)}
 func * (lhs: Double, rhs: ndarray) -> ndarray{
@@ -163,7 +163,7 @@ func * (lhs: Double, rhs: ndarray) -> ndarray{
 func * (lhs: ndarray, rhs: Double) -> ndarray{
     return make_operator(lhs, operation: "*", rhs: rhs)}
 // DIVIDE
-infix operator / {associativity none precedence 140}
+infix operator / : MultiplicationPrecedence
 func / (lhs: ndarray, rhs: ndarray) -> ndarray{
     return make_operator(lhs, operation: "/", rhs: rhs)
     }
@@ -172,7 +172,7 @@ func / (lhs: Double, rhs: ndarray) -> ndarray{
 func / (lhs: ndarray, rhs: Double) -> ndarray{
     return make_operator(lhs, operation: "/", rhs: rhs)}
 // LESS THAN
-infix operator < {associativity none precedence 140}
+infix operator < : MultiplicationPrecedence
 func < (lhs: ndarray, rhs: Double) -> ndarray{
     return make_operator(lhs, operation: "<", rhs: rhs)}
 func < (lhs: ndarray, rhs: ndarray) -> ndarray{
@@ -180,7 +180,7 @@ func < (lhs: ndarray, rhs: ndarray) -> ndarray{
 func < (lhs: Double, rhs: ndarray) -> ndarray{
     return make_operator(lhs, operation: "<", rhs: rhs)}
 // GREATER THAN
-infix operator > {associativity none precedence 140}
+infix operator > : MultiplicationPrecedence
 func > (lhs: ndarray, rhs: Double) -> ndarray{
     return make_operator(lhs, operation: ">", rhs: rhs)}
 func > (lhs: ndarray, rhs: ndarray) -> ndarray{
@@ -188,7 +188,7 @@ func > (lhs: ndarray, rhs: ndarray) -> ndarray{
 func > (lhs: Double, rhs: ndarray) -> ndarray{
     return make_operator(lhs, operation: ">", rhs: rhs)}
 // GREATER THAN OR EQUAL
-infix operator >= {associativity none precedence 140}
+infix operator >= : MultiplicationPrecedence
 func >= (lhs: ndarray, rhs: Double) -> ndarray{
     return make_operator(lhs, operation: ">=", rhs: rhs)}
 func >= (lhs: ndarray, rhs: ndarray) -> ndarray{
@@ -196,7 +196,7 @@ func >= (lhs: ndarray, rhs: ndarray) -> ndarray{
 func >= (lhs: Double, rhs: ndarray) -> ndarray{
     return make_operator(lhs, operation: ">=", rhs: rhs)}
 // LESS THAN OR EQUAL
-infix operator <= {associativity none precedence 140}
+infix operator <= : MultiplicationPrecedence
 func <= (lhs: ndarray, rhs: Double) -> ndarray{
     return make_operator(lhs, operation: "<=", rhs: rhs)}
 func <= (lhs: ndarray, rhs: ndarray) -> ndarray{
@@ -204,7 +204,7 @@ func <= (lhs: ndarray, rhs: ndarray) -> ndarray{
 func <= (lhs: Double, rhs: ndarray) -> ndarray{
     return make_operator(lhs, operation: "<=", rhs: rhs)}
 // LOGICAL AND
-infix operator && {associativity none precedence 140}
+infix operator && : MultiplicationPrecedence
 func && (lhs: ndarray, rhs: ndarray) -> ndarray{
     return logical_and(lhs, y: rhs)}
 // LOGICAL OR

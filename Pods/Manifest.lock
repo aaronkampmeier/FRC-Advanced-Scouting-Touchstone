@@ -1,5 +1,5 @@
 PODS:
-  - Alamofire (3.2.1)
+  - Alamofire (4.0.0)
   - Ensembles (1.5):
     - Ensembles/Core (= 1.5)
   - Ensembles/Core (1.5)
@@ -17,13 +17,13 @@ PODS:
   - SSZipArchive (1.1)
 
 DEPENDENCIES:
-  - Alamofire (~> 3.0)
+  - Alamofire (~> 4.0)
   - Ensembles (~> 1.0)
   - Ensembles/Multipeer (~> 1.0)
   - NYTPhotoViewer (~> 1.1.0)
 
 SPEC CHECKSUMS:
-  Alamofire: f11d8624a05f5d39e0c99309b3e600a3ba64298a
+  Alamofire: fef59f00388f267e52d9b432aa5d93dc97190f14
   Ensembles: 33c81244812b7d568a7fa76255708327efc66a4a
   FLAnimatedImage: 4a0b56255d9b05f18b6dd7ee06871be5d3b89e31
   NYTPhotoViewer: e80e8767f3780d2df37c6f72cbab15d6c7232911

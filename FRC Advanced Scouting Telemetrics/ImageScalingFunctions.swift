@@ -14,15 +14,15 @@ struct ImageConstants {
 	static let defenseImageStoredSize = CGSize(width: 471, height: 728)
 }
 
-func translatePointCoordinateToStoredCordinate(point: CGPoint, viewSize: CGSize, storedSize: CGSize) -> CGPoint {
+func translatePointCoordinateToStoredCordinate(_ point: CGPoint, viewSize: CGSize, storedSize: CGSize) -> CGPoint {
 	return translatePoint(point, fromSize: viewSize, toSize: storedSize)
 }
 
-func translateStoredCoordinateToPoint(storedCoordinate: CGPoint, storedSize: CGSize, viewSize: CGSize) -> CGPoint {
+func translateStoredCoordinateToPoint(_ storedCoordinate: CGPoint, storedSize: CGSize, viewSize: CGSize) -> CGPoint {
 	return translatePoint(storedCoordinate, fromSize: storedSize, toSize: viewSize)
 }
 
-func translatePoint(point: CGPoint, fromSize oldSize: CGSize, toSize newSize: CGSize) -> CGPoint {
+func translatePoint(_ point: CGPoint, fromSize oldSize: CGSize, toSize newSize: CGSize) -> CGPoint {
 	let xRatio = point.x/oldSize.width
 	let newX = xRatio * newSize.width
 	

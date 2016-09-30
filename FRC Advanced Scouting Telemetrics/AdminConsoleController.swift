@@ -20,16 +20,16 @@ class AdminConsoleController: UIViewController, UITableViewDataSource, UITableVi
         tableView.delegate = self
     }
     
-    func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return 2
     }
     
-    func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCellWithIdentifier("cell")
-        if indexPath.row == 0 {
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        let cell = tableView.dequeueReusableCell(withIdentifier: "cell")
+        if (indexPath as NSIndexPath).row == 0 {
             cell?.textLabel?.text = "Matches"
             cell?.detailTextLabel?.text = "Add, Edit, and Configure Matches"
-        } else if indexPath.row == 1 {
+        } else if (indexPath as NSIndexPath).row == 1 {
 			cell?.textLabel?.text = "Regionals"
 			cell?.detailTextLabel!.text = "Add, Edit, and Configure Regionals"
 		}
@@ -37,35 +37,35 @@ class AdminConsoleController: UIViewController, UITableViewDataSource, UITableVi
         return cell!
     }
     
-    @IBAction func donePressed(sender: UIBarButtonItem) {
+    @IBAction func donePressed(_ sender: UIBarButtonItem) {
 		dataManager.commitChanges()
-        dismissViewControllerAnimated(true, completion: nil)
+        dismiss(animated: true, completion: nil)
     }
 	
-	@IBAction func cancelPressed(sender: UIBarButtonItem) {
+	@IBAction func cancelPressed(_ sender: UIBarButtonItem) {
 		dataManager.discardChanges()
-		dismissViewControllerAnimated(true, completion: nil)
+		dismiss(animated: true, completion: nil)
 	}
     
     func comingBackFromConfigure() {
-        tableView.deselectRowAtIndexPath(tableView.indexPathForSelectedRow!, animated: true)
+        tableView.deselectRow(at: tableView.indexPathForSelectedRow!, animated: true)
     }
     
-    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
-        super.prepareForSegue(segue, sender: sender)
+    override func prepare(for segue: UIStoryboardSegue, sender: AnyObject?) {
+        super.prepare(for: segue, sender: sender)
         
         if segue.identifier == "pushToConfigure" {
-            let configureVC = segue.destinationViewController as! AdminConfigureVC
+            let configureVC = segue.destination as! AdminConfigureVC
             configureVC.previousViewController = self
             
             //Set the setting being configured
-            switch tableView.indexPathForSelectedRow!.row {
+            switch (tableView.indexPathForSelectedRow! as NSIndexPath).row {
             case 0:
-                configureVC.configureSetting = .Matches
+                configureVC.configureSetting = .matches
             case 1:
-				configureVC.configureSetting = .Regionals
+				configureVC.configureSetting = .regionals
             default:
-                configureVC.configureSetting = .Unknown
+                configureVC.configureSetting = .unknown
             }
         }
     }

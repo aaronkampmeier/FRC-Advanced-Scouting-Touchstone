@@ -14,6 +14,9 @@ private let arrayXCache = NSCache()
 
 struct StatContext {
 	var name: String?
+	var matchPerformances: [TeamMatchPerformance]?
+	var team: Team?
+	var regionalPerformance: TeamRegionalPerformance?
 	
 	var matchPerformanceStatistics: [StatCalculation]
 	var regionalPerformanceStatistics: [StatCalculation]
@@ -30,6 +33,7 @@ struct StatContext {
 	}
 	
 	init(context: [TeamMatchPerformance]) {
+		matchPerformances = context
 		matchPerformanceStatistics = []
 		teamStatistics = []
 		regionalPerformanceStatistics = []
@@ -37,6 +41,7 @@ struct StatContext {
 	}
 	
 	init(context: Team) {
+		team = context
 		matchPerformanceStatistics = []
 		teamStatistics = []
 		regionalPerformanceStatistics = []
@@ -44,36 +49,35 @@ struct StatContext {
 	}
 	
 	init(context: TeamRegionalPerformance) {
+		regionalPerformance = context
 		matchPerformanceStatistics = []
 		teamStatistics = []
 		regionalPerformanceStatistics = []
 		setRegionalPerformanceStatistics(context)
 	}
 	
-	mutating func setRegionalPerformanceStatistics(context: TeamRegionalPerformance?) {
+	mutating func setRegionalPerformanceStatistics(_ context: TeamRegionalPerformance?) {
 		if let context = context {
-			regionalPerformanceStatistics = [.OPR(context), .DPR(context), .CCWM(context)]
+			regionalPerformanceStatistics = [.opr(context), .dpr(context), .ccwm(context)]
 		} else {
 			regionalPerformanceStatistics = []
 		}
 	}
 	
-	mutating func setMatchPerformanceStatistics(context: [TeamMatchPerformance]?) {
+	mutating func setMatchPerformanceStatistics(_ context: [TeamMatchPerformance]?) {
 		if let context = context {
-			matchPerformanceStatistics = [.TotalPoints(context), .TotalShots(context), .TotalMadeShots(context), .TotalHighGoals(context), .TotalMadeHighGoals(context), .TotalLowGoals(context), .TotalMadeLowGoals(context), .ShotAccuracy(context, TeamDataManager.ShotGoal.Both), .TotalScales(context), .RankingPoints(context), .DefensesCrossed(context), .AverageTimeInZone(context, .DefenseCourtyard), .AverageTimeInZone(context, .OffenseCourtyard), .AverageTimeInZone(context, .Neutral), .CycleTime(context), .TotalContacts(context), .TotalContactsDisruptingShots(context), .TotalGamesWithTimeInSection(context, .DefenseCourtyard, 30)]
+			matchPerformanceStatistics = [.totalPoints(context), .totalShots(context), .totalMadeShots(context), .totalHighGoals(context), .totalMadeHighGoals(context), .totalLowGoals(context), .totalMadeLowGoals(context), .shotAccuracy(context, TeamDataManager.ShotGoal.both), .totalScales(context), .rankingPoints(context), .defensesCrossed(context), .averageTimeInZone(context, .DefenseCourtyard), .averageTimeInZone(context, .OffenseCourtyard), .averageTimeInZone(context, .Neutral), .cycleTime(context), .totalContacts(context), .totalContactsDisruptingShots(context), .totalGamesWithTimeInSection(context, .DefenseCourtyard, 30)]
 			for defenseType in Defense.allDefenses {
-				matchPerformanceStatistics.append(.TotalCrossingsForDefense(context, defenseType))
+				matchPerformanceStatistics.append(.totalCrossingsForDefense(context, defenseType))
 			}
 		} else {
 			matchPerformanceStatistics = []
 		}
-		
-		
 	}
 	
-	mutating func setTeamStatistics(context: Team?) {
+	mutating func setTeamStatistics(_ context: Team?) {
 		if let context = context {
-			teamStatistics = [.TeamNumber(context), .VisionTracking([context]), .Height([context]), .Weight([context]), .TotalAutonomousDefenses([context])]
+			teamStatistics = [.teamNumber(context), .visionTracking([context]), .height([context]), .weight([context]), .totalAutonomousDefenses([context])]
 		} else {
 			teamStatistics = []
 		}
@@ -81,51 +85,51 @@ struct StatContext {
 }
 
 enum StatCalculation: CustomStringConvertible {
-	case TotalShots([TeamMatchPerformance])
-	case TotalMadeShots([TeamMatchPerformance])
-	case TotalScales([TeamMatchPerformance])
-	case RankingPoints([TeamMatchPerformance])
-	case DefensesCrossed([TeamMatchPerformance])
-	case ShotAccuracy([TeamMatchPerformance], TeamDataManager.ShotGoal)
-	case AverageTimeInZone([TeamMatchPerformance], GameFieldZone)
-	case TotalPoints([TeamMatchPerformance])
-	case VisionTracking([Team])
-	case Height([Team])
-	case Weight([Team])
-	case TotalAutonomousDefenses([Team])
-	case TotalHighGoals([TeamMatchPerformance])
-	case TotalLowGoals([TeamMatchPerformance])
-	case TotalMadeHighGoals([TeamMatchPerformance])
-	case TotalMadeLowGoals([TeamMatchPerformance])
-	case TeamNumber(Team)
-	case TotalCrossingsForDefense([TeamMatchPerformance], Defense)
-	case CycleTime([TeamMatchPerformance])
-	case TotalContacts([TeamMatchPerformance])
-	case TotalContactsDisruptingShots([TeamMatchPerformance])
-	case TotalGamesWithTimeInSection([TeamMatchPerformance], GameFieldZone, NSTimeInterval)
-	case OPR(TeamRegionalPerformance)
-	case DPR(TeamRegionalPerformance)
-	case CCWM(TeamRegionalPerformance)
+	case totalShots([TeamMatchPerformance])
+	case totalMadeShots([TeamMatchPerformance])
+	case totalScales([TeamMatchPerformance])
+	case rankingPoints([TeamMatchPerformance])
+	case defensesCrossed([TeamMatchPerformance])
+	case shotAccuracy([TeamMatchPerformance], TeamDataManager.ShotGoal)
+	case averageTimeInZone([TeamMatchPerformance], GameFieldZone)
+	case totalPoints([TeamMatchPerformance])
+	case visionTracking([Team])
+	case height([Team])
+	case weight([Team])
+	case totalAutonomousDefenses([Team])
+	case totalHighGoals([TeamMatchPerformance])
+	case totalLowGoals([TeamMatchPerformance])
+	case totalMadeHighGoals([TeamMatchPerformance])
+	case totalMadeLowGoals([TeamMatchPerformance])
+	case teamNumber(Team)
+	case totalCrossingsForDefense([TeamMatchPerformance], Defense)
+	case cycleTime([TeamMatchPerformance])
+	case totalContacts([TeamMatchPerformance])
+	case totalContactsDisruptingShots([TeamMatchPerformance])
+	case totalGamesWithTimeInSection([TeamMatchPerformance], GameFieldZone, TimeInterval)
+	case opr(TeamRegionalPerformance)
+	case dpr(TeamRegionalPerformance)
+	case ccwm(TeamRegionalPerformance)
 	
 	//Newbs
-	case LowGoalAccuracy([TeamMatchPerformance])
-	case HighGoalAccuracy([TeamMatchPerformance])
-	case AutonomousPoints([TeamMatchPerformance])
+	case lowGoalAccuracy([TeamMatchPerformance])
+	case highGoalAccuracy([TeamMatchPerformance])
+	case autonomousPoints([TeamMatchPerformance])
 	
 	//Calculations for all the stat types
 	var value: Double {
 		switch self {
-		case .TotalShots(let context):
+		case .totalShots(let context):
 			return Double(context.reduce(0) {
 				$0 + $1.offenseShots!.count
 				})
-		case .TotalMadeShots(let context):
+		case .totalMadeShots(let context):
 			let totalMadeShots = context.reduce(0) {currentCount,performance in
 				let madeShots = ((performance.offenseShots?.allObjects as! [Shot]).filter() {!($0.blocked?.boolValue)!}).count
 				return currentCount + madeShots
 			}
 			return Double(totalMadeShots)
-		case .TotalScales(let context):
+		case .totalScales(let context):
 			let total: Int = context.reduce(0) {
 				if ($1.didScaleTower?.boolValue) ?? false {
 					//They did scale the tower
@@ -135,42 +139,42 @@ enum StatCalculation: CustomStringConvertible {
 				}
 			}
 			return Double(total)
-		case .RankingPoints(let context):
+		case .rankingPoints(let context):
 			let total: Int = context.reduce(0) {cumulative,matchPerformance in
-				let allianceColor = TeamDataManager.AllianceColor(rawValue: matchPerformance.allianceColor!.integerValue)!
+				let allianceColor = TeamDataManager.AllianceColor(rawValue: matchPerformance.allianceColor!.intValue)!
 				switch allianceColor {
-				case .Red:
-					return cumulative + (matchPerformance.match?.redRankingPoints?.integerValue ?? 0)
-				case .Blue:
-					return cumulative + (matchPerformance.match?.blueRankingPoints?.integerValue ?? 0)
+				case .red:
+					return cumulative + (matchPerformance.match?.redRankingPoints?.intValue ?? 0)
+				case .blue:
+					return cumulative + (matchPerformance.match?.blueRankingPoints?.intValue ?? 0)
 				}
 			}
 			
 			return Double(total)
-		case .DefensesCrossed(let context):
+		case .defensesCrossed(let context):
 			let total = context.reduce(0) {
 				$0 + ($1.defenseCrossTimes?.count)!
 			}
 			return Double(total)
-		case .ShotAccuracy(let context, let goal):
-			if goal == .Both {
-				return StatCalculation.TotalMadeShots(context).value / StatCalculation.TotalShots(context).value
-			} else if goal == .High {
-				return StatCalculation.TotalMadeHighGoals(context).value / StatCalculation.TotalHighGoals(context).value
+		case .shotAccuracy(let context, let goal):
+			if goal == .both {
+				return StatCalculation.totalMadeShots(context).value / StatCalculation.totalShots(context).value
+			} else if goal == .high {
+				return StatCalculation.totalMadeHighGoals(context).value / StatCalculation.totalHighGoals(context).value
 			} else {
-				return StatCalculation.TotalMadeLowGoals(context).value / StatCalculation.TotalLowGoals(context).value
+				return StatCalculation.totalMadeLowGoals(context).value / StatCalculation.totalLowGoals(context).value
 			}
-		case .AverageTimeInZone(let performances, let zone):
+		case .averageTimeInZone(let performances, let zone):
 			let times = timesInZone(performances, zone: zone)
-			let averageTime = times.reduce(0, combine: {$0 + $1}) / Double(times.count)
+			let averageTime = times.reduce(0, {$0 + $1}) / Double(times.count)
 			return averageTime
-		case .TotalPoints(let context):
+		case .totalPoints(let context):
 			let total: Double = context.reduce(0) {cumulative,matchPerformance in
 				var performanceTotal = 0.0
-				switch TeamDataManager.AllianceColor(rawValue: (matchPerformance.allianceColor?.integerValue)!)! {
-				case .Red:
+				switch TeamDataManager.AllianceColor(rawValue: (matchPerformance.allianceColor?.intValue)!)! {
+				case .red:
 					performanceTotal += (matchPerformance.match?.redFinalScore?.doubleValue) ?? 0
-				case .Blue:
+				case .blue:
 					performanceTotal += (matchPerformance.match?.blueFinalScore?.doubleValue) ?? 0
 				}
 				
@@ -178,27 +182,27 @@ enum StatCalculation: CustomStringConvertible {
 			}
 			
 			return Double(total)
-		case .VisionTracking(let teams):
+		case .visionTracking(let teams):
 			let total = teams.reduce(0) {cumulative, team in
-				return team.visionTrackingRating?.integerValue ?? 0 + cumulative
+				return team.visionTrackingRating?.intValue ?? 0 + cumulative
 			}
 			return Double(total)
-		case .Height(let teams):
+		case .height(let teams):
 			let total = teams.reduce(0) {cumulative, team in
-				return team.height?.integerValue ?? 0 + cumulative
+				return team.height?.intValue ?? 0 + cumulative
 			}
 			return Double(total)
-		case .Weight(let teams):
+		case .weight(let teams):
 			let total = teams.reduce(0) {cumulative, team in
-				return team.robotWeight?.integerValue ?? 0 + cumulative
+				return team.robotWeight?.intValue ?? 0 + cumulative
 			}
 			return Double(total)
-		case .TotalAutonomousDefenses(let teams):
+		case .totalAutonomousDefenses(let teams):
 			let total = teams.reduce(0) {cumulative, team in
 				return team.autonomousDefensesAbleToCross?.count ?? 0 + cumulative
 			}
 			return Double(total)
-		case .TotalHighGoals(let performances):
+		case .totalHighGoals(let performances):
 			let total = performances.reduce(0) {cumulative, performance in
 				let shots = performance.offenseShots?.filter() {shot in
 					return (shot as! Shot).highGoal?.boolValue ?? false
@@ -206,7 +210,7 @@ enum StatCalculation: CustomStringConvertible {
 				return shots?.count ?? 0 + cumulative
 			}
 			return Double(total)
-		case .TotalLowGoals(let performances):
+		case .totalLowGoals(let performances):
 			let total = performances.reduce(0) {cumulative, performance in
 				let shots = performance.offenseShots?.filter() {shot in
 					let isHighGoalShot = (shot as! Shot).highGoal?.boolValue
@@ -219,7 +223,7 @@ enum StatCalculation: CustomStringConvertible {
 				return shots?.count ?? 0 + cumulative
 			}
 			return Double(total)
-		case .TotalMadeHighGoals(let performances):
+		case .totalMadeHighGoals(let performances):
 			let total = performances.reduce(0) {cumulative, performance in
 				let shots = performance.offenseShots?.filter() {shot in
 					return (shot as! Shot).highGoal?.boolValue ?? false
@@ -230,7 +234,7 @@ enum StatCalculation: CustomStringConvertible {
 				return madeShots?.count ?? 0 + cumulative
 			}
 			return Double(total)
-		case .TotalMadeLowGoals(let performances):
+		case .totalMadeLowGoals(let performances):
 			let total = performances.reduce(0) {cumulative, performance in
 				let shots = performance.offenseShots?.filter() {shot in
 					let isHighGoalShot = (shot as! Shot).highGoal?.boolValue
@@ -246,9 +250,9 @@ enum StatCalculation: CustomStringConvertible {
 				return madeShots?.count ?? 0 + cumulative
 			}
 			return Double(total)
-		case .TeamNumber(let team):
+		case .teamNumber(let team):
 			return Double(team.teamNumber ?? "") ?? 0
-		case .TotalCrossingsForDefense(let performances, let defense):
+		case .totalCrossingsForDefense(let performances, let defense):
 			let total: Int = performances.reduce(0) {cumulative, performance in
 				let defenseCrossTimes = (performance.defenseCrossTimes?.allObjects as! [DefenseCrossTime]).filter() {defenseCrossTime in
 					return defenseCrossTime.getDefense() == defense
@@ -256,15 +260,15 @@ enum StatCalculation: CustomStringConvertible {
 				return defenseCrossTimes.count
 			}
 			return Double(total)
-		case .CycleTime(let performances):
-			var cycleTimes: [NSTimeInterval] = []
+		case .cycleTime(let performances):
+			var cycleTimes: [TimeInterval] = []
 			for performance in performances {
 				let timeOverview = dataManager.timeOverview(forMatchPerformance: performance)
 				
-				var shotBeforeAt: NSTimeInterval?
+				var shotBeforeAt: TimeInterval?
 				var hasCrossedDefenseSinceLastTime = false
 				for event in timeOverview {
-					if event.type == .AttemptedShot || event.type == .SuccessfulHighShot || event.type == .SuccessfulLowShot {
+					if event.type == .attemptedShot || event.type == .successfulHighShot || event.type == .successfulLowShot {
 						if let previousShotTime = shotBeforeAt {
 							if hasCrossedDefenseSinceLastTime {
 								cycleTimes.append(event.time - previousShotTime)
@@ -275,34 +279,34 @@ enum StatCalculation: CustomStringConvertible {
 						} else {
 							shotBeforeAt = event.time
 						}
-					} else if event.type == .CrossedDefense {
+					} else if event.type == .crossedDefense {
 						if shotBeforeAt != nil {
 							hasCrossedDefenseSinceLastTime = true
 						}
 					}
 				}
 			}
-			let averageCycleTime = cycleTimes.reduce(0, combine: {$0 + $1}) / Double(cycleTimes.count)
+			let averageCycleTime = cycleTimes.reduce(0, {$0 + $1}) / Double(cycleTimes.count)
 			return averageCycleTime
-		case .TotalContacts(let performances):
+		case .totalContacts(let performances):
 			let total: Int = performances.reduce(0) {cumulative, performance in
 				let timeOverview = dataManager.timeOverview(forMatchPerformance: performance)
 				let contacts = timeOverview.filter() {marker in
-					return marker.type == .Contact
+					return marker.type == .contact
 				}
 				return contacts.count + cumulative
 			}
 			return Double(total)
-		case .TotalContactsDisruptingShots(let performances):
+		case .totalContactsDisruptingShots(let performances):
 			let total: Int = performances.reduce(0) {cumulative, performance in
 				let timeOverview = dataManager.timeOverview(forMatchPerformance: performance)
 				let contactsDisrupting = timeOverview.filter() {marker in
-					return marker.type == .ContactDisruptingShot
+					return marker.type == .contactDisruptingShot
 				}
 				return contactsDisrupting.count + cumulative
 			}
 			return Double(total)
-		case .TotalGamesWithTimeInSection(let performances, let zone ,let lengthOfTime):
+		case .totalGamesWithTimeInSection(let performances, let zone ,let lengthOfTime):
 			let filtered = performances.filter() {performance in
 				let times = timesInZone([performance], zone: zone)
 				for time in times {
@@ -311,7 +315,7 @@ enum StatCalculation: CustomStringConvertible {
 				return false
 			}
 			return Double(filtered.count)
-		case .OPR(let regionalPerformance):
+		case .opr(let regionalPerformance):
 			//OPR stands for offensive power rating. The main idea: robot1+robot2+robot3 = redScore & robot4+robot5+robot6 = blueScore. It is calculated as follows. First, a N*N matrix (A), where N is the number of teams, is created. Each value in A is the number of matches that the two teams comprising the index play together. Then an array (B) is created where the number of elements is equal to the number of teams, N, and in the same order as A. Each element in B is the sum of all match scores for the team at that index. A third array (x) is also size N and each value in it represents the OPR for the team at that index. A * x = B. Given A and B, one can solve for x. (Alliance color doesn't really matter for this calculation)
 			
 			let regional = regionalPerformance.regional!
@@ -320,7 +324,7 @@ enum StatCalculation: CustomStringConvertible {
 			
 			let arrayx: ndarray
 			//Cache the resulting array because it is an expensive calculation
-			if let cachedArray = arrayXCache.objectForKey("OPR: \(regional.regionalNumber!.integerValue)") as? CachedArray {
+			if let cachedArray = arrayXCache.object(forKey: "OPR: \(regional.regionalNumber!.intValue)") as? CachedArray {
 				arrayx = cachedArray.array
 			} else {
 				//Check to make sure there are multiple teams to perform the calculation
@@ -335,18 +339,18 @@ enum StatCalculation: CustomStringConvertible {
 					let sumOfMatchScores: Double = teamPerformance.matchPerformances!.reduce(0) {cumulative, matchPerformance in
 						return (matchPerformance as! TeamMatchPerformance).finalScore + cumulative
 					}
-					let place = teamPerformances.indexOf(teamPerformance)!
+					let place = teamPerformances.index(of: teamPerformance)!
 					arrayB[place...place] <- sumOfMatchScores
 				}
 				
 				//Now solve for x
 				arrayx = solve(matrixA, b: arrayB)
-				arrayXCache.setObject(CachedArray(array: arrayx), forKey: "OPR: \(regional.regionalNumber!.integerValue)")
+				arrayXCache.setObject(CachedArray(array: arrayx), forKey: "OPR: \(regional.regionalNumber!.intValue)")
 			}
 			
-			let oprForTeam = arrayx[teamPerformances.indexOf(regionalPerformance)!]
+			let oprForTeam = arrayx[teamPerformances.index(of: regionalPerformance)!]
 			return oprForTeam
-		case .CCWM(let regionalPerformance):
+		case .ccwm(let regionalPerformance):
 			//CCWM stands for Calculated Contribution to the Winning Margin. It is calculated the same as OPR except for the elements in array B are the sums of the winning margins for each match.
 			
 			let regional = regionalPerformance.regional!
@@ -355,7 +359,7 @@ enum StatCalculation: CustomStringConvertible {
 			
 			let arrayx: ndarray
 			//Cache the resulting array because it is an expensive calculation
-			if let cachedArray = arrayXCache.objectForKey("CCWM: \(regional.regionalNumber!.integerValue)") as? CachedArray {
+			if let cachedArray = arrayXCache.object(forKey: "CCWM: \(regional.regionalNumber!.intValue)") as? CachedArray {
 				arrayx = cachedArray.array
 			} else {
 				//Check to make sure there are multiple teams to perform the calculation
@@ -370,7 +374,7 @@ enum StatCalculation: CustomStringConvertible {
 					let sumOfMatchScores: Double = teamPerformance.matchPerformances!.reduce(0) {cumulative, matchPerformance in
 						return (matchPerformance as! TeamMatchPerformance).winningMargin + cumulative
 					}
-					let place = teamPerformances.indexOf(teamPerformance)!
+					let place = teamPerformances.index(of: teamPerformance)!
 					arrayB[place...place] <- sumOfMatchScores
 				}
 				
@@ -378,11 +382,11 @@ enum StatCalculation: CustomStringConvertible {
 				arrayx = solve(matrixA, b: arrayB)
 			}
 			
-			let ccwmForTeam = arrayx[teamPerformances.indexOf(regionalPerformance)!]
+			let ccwmForTeam = arrayx[teamPerformances.index(of: regionalPerformance)!]
 			return ccwmForTeam
-		case .DPR(let regionalPerformance):
+		case .dpr(let regionalPerformance):
 			//DPR stands for Defensive Power Rating. It is OPR - CCWM.
-			return StatCalculation.OPR(regionalPerformance).value - StatCalculation.CCWM(regionalPerformance).value
+			return StatCalculation.opr(regionalPerformance).value - StatCalculation.ccwm(regionalPerformance).value
 		default:
 			return 0
 		}
@@ -390,25 +394,25 @@ enum StatCalculation: CustomStringConvertible {
 	
 	private func createMatrixA(withRegional regional: Regional) -> matrix {
 		//Cache the matrix because it is expensive to create
-		if let cachedMatrix = matrixACache.objectForKey(regional) as? CachedMatrix {
+		if let cachedMatrix = matrixACache.object(forKey: regional) as? CachedMatrix {
 			return cachedMatrix.matrixA
 		} else {
 			let teamPerformances = regional.teamRegionalPerformances?.allObjects as! [TeamRegionalPerformance]
 			let numOfTeams = teamPerformances.count
 			var matrixA = zeros((numOfTeams, numOfTeams))
 			for firstTeamPerformance in teamPerformances {
-				let firstPlace = teamPerformances.indexOf(firstTeamPerformance)!.hashValue
+				let firstPlace = teamPerformances.index(of: firstTeamPerformance)!.hashValue
 				let firstMatches: Set<Match> = Set(firstTeamPerformance.matchPerformances!.map() {performance in
 					return (performance as! TeamMatchPerformance).match!
 					})
 				for secondTeamPerformance in teamPerformances {
-					let secondPlace = teamPerformances.indexOf(secondTeamPerformance)!.hashValue
+					let secondPlace = teamPerformances.index(of: secondTeamPerformance)!.hashValue
 					let secondMatches: Set<Match> = Set(secondTeamPerformance.matchPerformances!.map() {performance in
 						return (performance as! TeamMatchPerformance).match!
 						})
 					
 					//Find the matches they have in common
-					let sharedMatches = firstMatches.intersect(secondMatches)
+					let sharedMatches = firstMatches.intersection(secondMatches)
 					
 					//Set the number of shared matches in the matrix
 					matrixA[firstPlace...firstPlace, secondPlace...secondPlace] <- sharedMatches.count.double
@@ -437,55 +441,55 @@ enum StatCalculation: CustomStringConvertible {
 	
 	var description: String {
 		switch self {
-		case .TotalShots(_):
+		case .totalShots(_):
 			return "Total Shots"
-		case .TotalMadeShots(_):
+		case .totalMadeShots(_):
 			return "Total Made Shots"
-		case .TotalScales(_):
+		case .totalScales(_):
 			return "Total Scales"
-		case .RankingPoints(_):
+		case .rankingPoints(_):
 			return "Ranking Points"
-		case .DefensesCrossed(_):
+		case .defensesCrossed(_):
 			return "Defenses Crossed"
-		case .ShotAccuracy(_):
+		case .shotAccuracy(_):
 			return "Shot Accuracy"
-		case .AverageTimeInZone(_, let zone):
+		case .averageTimeInZone(_, let zone):
 			return "Average Time in \(zone.rawValue)"
-		case .TotalPoints(_):
+		case .totalPoints(_):
 			return "Total Points"
-		case .VisionTracking(_):
+		case .visionTracking(_):
 			 return "Vision Tracking Rating"
-		case .Height(_):
+		case .height(_):
 			return "Height"
-		case .Weight(_):
+		case .weight(_):
 			return "Weight"
-		case .TotalAutonomousDefenses(_):
+		case .totalAutonomousDefenses(_):
 			return "Total Autonomous Defenses"
-		case .TotalHighGoals(_):
+		case .totalHighGoals(_):
 			return "Total High Goals"
-		case .TotalMadeHighGoals(_):
+		case .totalMadeHighGoals(_):
 			return "Total Made High Goals"
-		case .TotalLowGoals(_):
+		case .totalLowGoals(_):
 			return "Total Low Goals"
-		case .TotalMadeLowGoals(_):
+		case .totalMadeLowGoals(_):
 			return "Total Made Low Goals"
-		case .TeamNumber(_):
+		case .teamNumber(_):
 			return "Team Number"
-		case .TotalCrossingsForDefense(_, let defenseType):
+		case .totalCrossingsForDefense(_, let defenseType):
 			return "Total \(defenseType) Crossings"
-		case .CycleTime(_):
+		case .cycleTime(_):
 			return "Cycle Time"
-		case .TotalContacts(_):
+		case .totalContacts(_):
 			return "Total Contacts"
-		case .TotalContactsDisruptingShots(_):
+		case .totalContactsDisruptingShots(_):
 			return "Total Contacts Disrupting Shots"
-		case .TotalGamesWithTimeInSection(_, let zone, let time):
+		case .totalGamesWithTimeInSection(_, let zone, let time):
 			return "Games With More Than \(time)sec in \(zone)"
-		case .OPR(_):
+		case .opr(_):
 			return "OPR"
-		case .DPR(_):
+		case .dpr(_):
 			return "DPR"
-		case .CCWM(_):
+		case .ccwm(_):
 			return "CCWM"
 		default:
 			return ""
@@ -493,15 +497,15 @@ enum StatCalculation: CustomStringConvertible {
 	}
 }
 
-private func timesInZone(performances: [TeamMatchPerformance], zone: GameFieldZone) -> [NSTimeInterval] {
-	var timesInZone = [NSTimeInterval]()
+private func timesInZone(_ performances: [TeamMatchPerformance], zone: GameFieldZone) -> [TimeInterval] {
+	var timesInZone = [TimeInterval]()
 	for performance in performances {
 		let timeOverview = dataManager.timeOverview(forMatchPerformance: performance)
 		
-		var enteredTime: NSTimeInterval?
+		var enteredTime: TimeInterval?
 		for marker in timeOverview {
-			if marker.type == .MovedToOffenseCourtyard || marker.type == .MovedToDefenseCourtyard || marker.type == .MovedToNeutral {
-				if (marker.type == .MovedToOffenseCourtyard && zone == .OffenseCourtyard) || (marker.type == .MovedToDefenseCourtyard && zone == .DefenseCourtyard) || (marker.type == .MovedToNeutral && zone == .Neutral) {
+			if marker.type == .movedToOffenseCourtyard || marker.type == .movedToDefenseCourtyard || marker.type == .movedToNeutral {
+				if (marker.type == .movedToOffenseCourtyard && zone == .OffenseCourtyard) || (marker.type == .movedToDefenseCourtyard && zone == .DefenseCourtyard) || (marker.type == .movedToNeutral && zone == .Neutral) {
 					//The marker is for the zone we are measuring
 					enteredTime = marker.time
 				} else {

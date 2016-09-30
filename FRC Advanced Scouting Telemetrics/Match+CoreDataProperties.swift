@@ -21,7 +21,7 @@ extension Match {
     @NSManaged var redCapturedTower: NSNumber?
     @NSManaged var redFinalScore: NSNumber?
     @NSManaged var redRankingPoints: NSNumber?
-    @NSManaged var time: NSDate?
+    @NSManaged var time: Date?
     @NSManaged var blueDefenses: NSArray?
     @NSManaged var blueDefensesBreached: NSArray?
     @NSManaged var redDefenses: NSArray?

@@ -9,16 +9,24 @@
 import Foundation
 import UIKit
 
+protocol SortDelegate {
+	func selectedStat(_ stat: Int?, isAscending: Bool)
+	
+	///Returns an array of all the stats that can be sorted by. Automatically includes the Draft Board.
+	func stats() -> [String]
+}
+
 class SortVC: UIViewController, UIPickerViewDelegate, UIPickerViewDataSource {
     @IBOutlet weak var sortTypePicker: UIPickerView!
     @IBOutlet weak var orderSegementedControl: UISegmentedControl!
 	
-    var selectedStat: Int?
-    let dataManager = TeamDataManager()
-    var successful = false
+    private var selectedStat: Int?
+    private let dataManager = TeamDataManager()
 	
-	var statContext: StatContext?
-    var isAscending = true
+	private var stats = [String]()
+    private var isAscending = true
+	
+	var delegate: SortDelegate?
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -26,54 +34,56 @@ class SortVC: UIViewController, UIPickerViewDelegate, UIPickerViewDataSource {
 		sortTypePicker.dataSource = self
         sortTypePicker.delegate = self
         
-        orderSegementedControl.enabled = false
+        orderSegementedControl.isEnabled = false
+		
+		stats = delegate?.stats() ?? []
     }
+	
+	override func viewWillDisappear(_ animated: Bool) {
+		super.viewWillDisappear(animated)
+		delegate?.selectedStat(selectedStat, isAscending: isAscending)
+    }
+	
+	override func viewDidDisappear(_ animated: Bool) {
+		super.viewDidDisappear(animated)
+	}
     
-    override func viewWillAppear(animated: Bool) {
+    override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
 		sortTypePicker.reloadAllComponents()
     }
     
-    func pickerView(pickerView: UIPickerView, numberOfRowsInComponent component: Int) -> Int {
-		return (statContext?.possibleStats.count) ?? 0
+    func pickerView(_ pickerView: UIPickerView, numberOfRowsInComponent component: Int) -> Int {
+		return stats.count + 1
     }
     
-    func alertActionHandler(alert: UIAlertAction) {
-        
-        dismissViewControllerAnimated(true, completion: nil)
-    }
-    
-    func numberOfComponentsInPickerView(pickerView: UIPickerView) -> Int {
+    func numberOfComponents(in pickerView: UIPickerView) -> Int {
         return 1
     }
     
-    func pickerView(pickerView: UIPickerView, titleForRow row: Int, forComponent component: Int) -> String? {
+    func pickerView(_ pickerView: UIPickerView, titleForRow row: Int, forComponent component: Int) -> String? {
         if row == 0 {
             return "Draft Board (Default)"
         } else {
-            return statContext?.possibleStats[row-1].description ?? ""
+            return stats[row - 1]
         }
     }
     
-    func pickerView(pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {
+    func pickerView(_ pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {
         if row == 0 {
             selectedStat = nil
-            orderSegementedControl.enabled = false
+            orderSegementedControl.isEnabled = false
         } else {
             selectedStat = row - 1
-            orderSegementedControl.enabled = true
+            orderSegementedControl.isEnabled = true
         }
     }
     
-    @IBAction func segmentedControlChanged(sender: UISegmentedControl) {
+    @IBAction func segmentedControlChanged(_ sender: UISegmentedControl) {
         if sender.selectedSegmentIndex == 0 {
             isAscending = true
         } else if sender.selectedSegmentIndex == 1 {
             isAscending = false
         }
-    }
-    
-    override func viewWillDisappear(animated: Bool) {
-        super.viewWillDisappear(animated)
     }
 }

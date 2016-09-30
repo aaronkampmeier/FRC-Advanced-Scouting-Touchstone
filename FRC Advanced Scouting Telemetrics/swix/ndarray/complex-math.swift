@@ -11,29 +11,29 @@ import Accelerate
 
 
 // integration
-func cumtrapz(x:ndarray)->ndarray{
+func cumtrapz(_ x:ndarray)->ndarray{
     // integrate and see the steps at each iteration
     let y = zeros_like(x)
     var dx:CDouble = 1.0
     vDSP_vtrapzD(!x, 1.stride, &dx, !y, 1.stride, x.n.length)
     return y
 }
-func trapz(x:ndarray)->Double{
+func trapz(_ x:ndarray)->Double{
     // integrate and get the final value
     return cumtrapz(x)[-1]
 }
 // basic definitions
-func inner(x:ndarray, y:ndarray)->Double{
+func inner(_ x:ndarray, y:ndarray)->Double{
     // the inner product. aka dot product, but I use dot product as a short for matrix multiplication
     return sum(x * y)
 }
-func outer(x:ndarray, y:ndarray)->matrix{
+func outer(_ x:ndarray, y:ndarray)->matrix{
     // the outer product.
     let (xm, ym) = meshgrid(x, y: y)
     return xm * ym
 }
 // fourier transforms
-func fft(x: ndarray) -> (ndarray, ndarray){
+func fft(_ x: ndarray) -> (ndarray, ndarray){
     let N:CInt = x.n.cint
     var yr = zeros(N.int)
     var yi = zeros(N.int)
@@ -41,7 +41,7 @@ func fft(x: ndarray) -> (ndarray, ndarray){
     // setup for the accelerate calling
     let radix:FFTRadix = FFTRadix(FFT_RADIX2)
     let pass:vDSP_Length = vDSP_Length((log2(N.double)+1.0).int)
-    let setup:FFTSetupD = vDSP_create_fftsetupD(pass, radix)
+    let setup:FFTSetupD = vDSP_create_fftsetupD(pass, radix)!
     let log2n:Int = (log2(N.double)+1.0).int
     let z = zeros(N.int)
     var x2:DSPDoubleSplitComplex = DSPDoubleSplitComplex(realp: !x, imagp:!z)
@@ -60,14 +60,14 @@ func fft(x: ndarray) -> (ndarray, ndarray){
     yi /= 2.0
     return (yr, yi)
 }
-func ifft(yr: ndarray, yi: ndarray) -> ndarray{
+func ifft(_ yr: ndarray, yi: ndarray) -> ndarray{
     let N = yr.n
     var x = zeros(N)
     
     // setup for the accelerate calling
     let radix:FFTRadix = FFTRadix(FFT_RADIX2)
     let pass:vDSP_Length = vDSP_Length((log2(N.double)+1.0).int)
-    let setup:FFTSetupD = vDSP_create_fftsetupD(pass, radix)
+    let setup:FFTSetupD = vDSP_create_fftsetupD(pass, radix)!
     let log2n:Int = (log2(N.double)+1.0).int
     let z = zeros(N)
     var x2:DSPDoubleSplitComplex = DSPDoubleSplitComplex(realp: !yr, imagp:!yi)
@@ -82,7 +82,7 @@ func ifft(yr: ndarray, yi: ndarray) -> ndarray{
     x /= 16.0
     return x
 }
-func fftconvolve(x:ndarray, kernel:ndarray)->ndarray{
+func fftconvolve(_ x:ndarray, kernel:ndarray)->ndarray{
     // convolve two arrays using the fourier transform.
     // zero padding, assuming kernel is smaller than x
     var k_pad = zeros_like(x)

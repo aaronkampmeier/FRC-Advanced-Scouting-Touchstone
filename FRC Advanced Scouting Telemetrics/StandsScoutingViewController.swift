@@ -34,7 +34,7 @@ class StandsScoutingViewController: UIViewController, ProvidesTeam {
 	}
 	var defenses: [Defense]? {
 		get {
-			switch matchPerformance!.allianceColor!.integerValue {
+			switch matchPerformance!.allianceColor!.intValue {
 			case 0:
 				return matchPerformance?.match?.blueDefensesArray
 			case 1:
@@ -50,22 +50,22 @@ class StandsScoutingViewController: UIViewController, ProvidesTeam {
 	var isRunning = false {
 		willSet {
 		if newValue {
-			NSTimer.scheduledTimerWithTimeInterval(0.1, target: self, selector: #selector(StandsScoutingViewController.updateTimeLabel(_:)), userInfo: nil, repeats: true)
+			Timer.scheduledTimer(timeInterval: 0.1, target: self, selector: #selector(StandsScoutingViewController.updateTimeLabel(_:)), userInfo: nil, repeats: true)
 			stopwatch.start()
 			
 			//Reset previous data
 			//dataManager.discardChanges()
 			
 			//Update the button
-			timerButton.setTitle("Stop", forState: .Normal)
-			timerButton.backgroundColor = UIColor.redColor()
+			timerButton.setTitle("Stop", for: UIControlState())
+			timerButton.backgroundColor = UIColor.red
 			
 			//Set appropriate state for elements in the view
-			ballButton.enabled = true
-			closeButton.hidden = true
+			ballButton.isEnabled = true
+			closeButton.isHidden = true
 			
 			//Let the user now select new segments
-			segmentedControl.enabled = true
+			segmentedControl.isEnabled = true
 			
 			//Go to autonomous
 			cycleFromViewController(currentVC!, toViewController: autonomousVC!)
@@ -73,15 +73,15 @@ class StandsScoutingViewController: UIViewController, ProvidesTeam {
 			stopwatch.stop()
 			
 			//Update the button
-			timerButton.setTitle("Start", forState: .Normal)
-			timerButton.backgroundColor = UIColor.greenColor()
+			timerButton.setTitle("Start", for: UIControlState())
+			timerButton.backgroundColor = UIColor.green
 			
 			//Set appropriate state for elements in the view
-			ballButton.enabled = false
-			closeButton.hidden = false
+			ballButton.isEnabled = false
+			closeButton.isHidden = false
 			
 			//Turn off ability to select new segments
-			segmentedControl.enabled = false
+			segmentedControl.isEnabled = false
 			
 			//Go back to the initial screen
 			cycleFromViewController(currentVC!, toViewController: initialChild!)
@@ -89,30 +89,30 @@ class StandsScoutingViewController: UIViewController, ProvidesTeam {
 			
 			//Ask for the final score if it lasted longer than 2:15
 			if stopwatch.elapsedTime >= 135 {
-				finalScorePrompt = UIAlertController(title: "Final Scores", message: "Enter the final score for the alliance your team was on.", preferredStyle: .Alert)
-				finalScorePrompt.addTextFieldWithConfigurationHandler() {
+				finalScorePrompt = UIAlertController(title: "Final Scores", message: "Enter the final score for the alliance your team was on.", preferredStyle: .alert)
+				finalScorePrompt.addTextField() {
 					self.configureTextField($0, label: 0)
 				}
-				finalScorePrompt.addTextFieldWithConfigurationHandler() {
+				finalScorePrompt.addTextField() {
 					self.configureTextField($0, label: 1)
 				}
-				finalScorePrompt.addTextFieldWithConfigurationHandler() {
+				finalScorePrompt.addTextField() {
 					self.configureTextField($0, label: 2)
 				}
-				finalScorePrompt.addTextFieldWithConfigurationHandler() {
+				finalScorePrompt.addTextField() {
 					self.configureTextField($0, label: 3)
 				}
-				finalScorePrompt.addAction(UIAlertAction(title: "Save", style: .Default, handler: getFinalScore))
-				presentViewController(finalScorePrompt, animated: true, completion: nil)
+				finalScorePrompt.addAction(UIAlertAction(title: "Save", style: .default, handler: getFinalScore))
+				present(finalScorePrompt, animated: true, completion: nil)
 			}
 			
-			Answers.logCustomEventWithName("Stopped Stands Scouting Timer", customAttributes: ["At Time":stopwatch.elapsedTimeAsString])
+			Answers.logCustomEvent(withName: "Stopped Stands Scouting Timer", customAttributes: ["At Time":stopwatch.elapsedTimeAsString])
 		}
 		}
 	}
 	var finalScorePrompt: UIAlertController!
-	func configureTextField(textField: UITextField, label: Int) {
-		textField.keyboardType = .NumberPad
+	func configureTextField(_ textField: UITextField, label: Int) {
+		textField.keyboardType = .numberPad
 		
 		switch label {
 		case 0:
@@ -127,21 +127,21 @@ class StandsScoutingViewController: UIViewController, ProvidesTeam {
 			break
 		}
 	}
-	func getFinalScore(action: UIAlertAction) {
+	func getFinalScore(_ action: UIAlertAction) {
 		for textField in finalScorePrompt.textFields! {
 			switch textField {
 			case finalScorePrompt.textFields![0]:
 				//Red Final Score
-				matchPerformance?.match?.redFinalScore = Double(textField.text!)
+				matchPerformance?.match?.redFinalScore = Double(textField.text!) as NSNumber?
 			case finalScorePrompt.textFields![1]:
 				//Red Ranking Points
-				matchPerformance?.match?.redRankingPoints = Double(textField.text!)
+				matchPerformance?.match?.redRankingPoints = Double(textField.text!) as NSNumber?
 			case finalScorePrompt.textFields![2]:
 				//Blue Final Score
-				matchPerformance?.match?.blueFinalScore = Double(textField.text!)
+				matchPerformance?.match?.blueFinalScore = Double(textField.text!) as NSNumber?
 			case finalScorePrompt.textFields![3]:
 				//Blue Ranking Points
-				matchPerformance?.match?.blueRankingPoints = Double(textField.text!)
+				matchPerformance?.match?.blueRankingPoints = Double(textField.text!) as NSNumber?
 			default:
 				break
 			}
@@ -162,30 +162,30 @@ class StandsScoutingViewController: UIViewController, ProvidesTeam {
 		teamLabel.text = "Team \(teamPerformance!.team!.teamNumber!)"
 		
 		//Get all the view controllers
-		autonomousVC = storyboard?.instantiateViewControllerWithIdentifier("standsAutonomous") as? AutonomousViewController
-		defenseVC = storyboard?.instantiateViewControllerWithIdentifier("standsDefense")
-		offenseVC = storyboard?.instantiateViewControllerWithIdentifier("standsCourtyard") as? CourtyardViewController
-		neutralVC = storyboard?.instantiateViewControllerWithIdentifier("standsNeutral") as? NeutralViewController
+		autonomousVC = storyboard?.instantiateViewController(withIdentifier: "standsAutonomous") as? AutonomousViewController
+		defenseVC = storyboard?.instantiateViewController(withIdentifier: "standsDefense")
+		offenseVC = storyboard?.instantiateViewController(withIdentifier: "standsCourtyard") as? CourtyardViewController
+		neutralVC = storyboard?.instantiateViewController(withIdentifier: "standsNeutral") as? NeutralViewController
 		
 		//Make it look nice
 		timerButton.layer.cornerRadius = 10
 		ballView.layer.borderWidth = 4
 		ballView.layer.cornerRadius = 5
-		ballView.layer.borderColor = UIColor.grayColor().CGColor
+		ballView.layer.borderColor = UIColor.gray.cgColor
 		finalTowerView.layer.borderWidth = 4
 		finalTowerView.layer.cornerRadius = 5
-		finalTowerView.layer.borderColor = UIColor.grayColor().CGColor
+		finalTowerView.layer.borderColor = UIColor.gray.cgColor
 		closeButton.layer.cornerRadius = 10
 		notesButton.layer.cornerRadius = 10
     }
 	
-	override func viewWillAppear(animated: Bool) {
+	override func viewWillAppear(_ animated: Bool) {
 		super.viewWillAppear(animated)
 		
 		setUpStandsScouting()
 	}
 	
-	override func viewDidAppear(animated: Bool) {
+	override func viewDidAppear(_ animated: Bool) {
 		super.viewDidAppear(animated)
 		
 		initialChild = childViewControllers.first
@@ -199,33 +199,33 @@ class StandsScoutingViewController: UIViewController, ProvidesTeam {
     }
 	
 	func setUpStandsScouting() {
-		let defenseSelectorVC = storyboard?.instantiateViewControllerWithIdentifier("defenseSelector") as! DefenseSelector
+		let defenseSelectorVC = storyboard?.instantiateViewController(withIdentifier: "defenseSelector") as! DefenseSelector
 		defenseSelectorVC.standsScoutingVC = self
 		
 		if matchPerformance == nil {
 			//Ask for the match to use
-			let askAction = UIAlertController(title: "Select Match", message: "Select the match for Team \(teamPerformance!.team!.teamNumber!) in the regional \(teamPerformance!.regional!.name!) for stands scouting.", preferredStyle: .Alert)
-			for match in (teamPerformance?.matchPerformances?.allObjects as! [TeamMatchPerformance]).sort({Int($0.match!.matchNumber!) < Int($1.match!.matchNumber!)}) {
-				askAction.addAction(UIAlertAction(title: "Match \(match.match!.matchNumber!)", style: .Default, handler: {_ in self.matchPerformance = match; self.presentViewController(defenseSelectorVC, animated: true, completion: nil); defenseSelectorVC.loadDefenses(forMatch: match.match!)}))
+			let askAction = UIAlertController(title: "Select Match", message: "Select the match for Team \(teamPerformance!.team!.teamNumber!) in the regional \(teamPerformance!.regional!.name!) for stands scouting.", preferredStyle: .alert)
+			for match in (teamPerformance?.matchPerformances?.allObjects as! [TeamMatchPerformance]).sorted(by: {Int($0.match!.matchNumber!) < Int($1.match!.matchNumber!)}) {
+				askAction.addAction(UIAlertAction(title: "Match \(match.match!.matchNumber!)", style: .default, handler: {_ in self.matchPerformance = match; self.present(defenseSelectorVC, animated: true, completion: nil); defenseSelectorVC.loadDefenses(forMatch: match.match!)}))
 			}
 			
-			askAction.addAction(UIAlertAction(title: "Cancel", style: .Destructive) {action in
+			askAction.addAction(UIAlertAction(title: "Cancel", style: .destructive) {action in
 				self.close(andSave: false)
 			})
-			presentViewController(askAction, animated: true, completion: nil)
+			present(askAction, animated: true, completion: nil)
 		} else {
 			defenseSelectorVC.loadDefenses(forMatch: matchPerformance!.match!)
-			presentViewController(defenseSelectorVC, animated: true, completion: nil)
+			present(defenseSelectorVC, animated: true, completion: nil)
 		}
 	}
 	
-	@IBAction func closePressed(sender: UIButton) {
+	@IBAction func closePressed(_ sender: UIButton) {
 		if 150 - stopwatch.elapsedTime > 15 {
-			let alert = UIAlertController(title: "Hold On, You're Not Finished", message: "It doesn't look like you've completed a full 2 minute 30 second match. Are you sure you want to close with this partial data?", preferredStyle: .Alert)
-			alert.addAction(UIAlertAction(title: "No, don't close", style: .Cancel, handler: nil))
-			alert.addAction(UIAlertAction(title: "Yes, close and save final data", style: .Default, handler: {_ in self.close(andSave: true)}))
-			alert.addAction(UIAlertAction(title: "Yes, close but don't save final data", style: .Destructive, handler: {_ in self.close(andSave: false)}))
-			presentViewController(alert, animated: true, completion: nil)
+			let alert = UIAlertController(title: "Hold On, You're Not Finished", message: "It doesn't look like you've completed a full 2 minute 30 second match. Are you sure you want to close with this partial data?", preferredStyle: .alert)
+			alert.addAction(UIAlertAction(title: "No, don't close", style: .cancel, handler: nil))
+			alert.addAction(UIAlertAction(title: "Yes, close and save final data", style: .default, handler: {_ in self.close(andSave: true)}))
+			alert.addAction(UIAlertAction(title: "Yes, close but don't save final data", style: .destructive, handler: {_ in self.close(andSave: false)}))
+			present(alert, animated: true, completion: nil)
 		} else {
 			close(andSave: true)
 		}
@@ -238,90 +238,90 @@ class StandsScoutingViewController: UIViewController, ProvidesTeam {
 			dataManager.discardChanges()
 		}
 		
-		dismissViewControllerAnimated(true, completion: nil)
-		Answers.logCustomEventWithName("Closed Stands Scouting", customAttributes: ["With Save":shouldSave.description])
+		dismiss(animated: true, completion: nil)
+		Answers.logCustomEvent(withName: "Closed Stands Scouting", customAttributes: ["With Save":shouldSave.description])
 	}
     
-	@IBAction func selectedNewPart(sender: UISegmentedControl) {
+	@IBAction func selectedNewPart(_ sender: UISegmentedControl) {
 		switch sender.selectedSegmentIndex {
 		case 0:
 			cycleFromViewController(currentVC!, toViewController: autonomousVC!)
 		case 1:
 			cycleFromViewController(currentVC!, toViewController: offenseVC!)
-			dataManager.addTimeMarker(withEvent: TeamDataManager.TimeMarkerEventType.MovedToOffenseCourtyard, atTime: stopwatch.elapsedTime, inMatchPerformance: matchPerformance!)
+			dataManager.addTimeMarker(withEvent: TeamDataManager.TimeMarkerEventType.movedToOffenseCourtyard, atTime: stopwatch.elapsedTime, inMatchPerformance: matchPerformance!)
 		case 2:
 			cycleFromViewController(currentVC!, toViewController: neutralVC!)
-			dataManager.addTimeMarker(withEvent: TeamDataManager.TimeMarkerEventType.MovedToNeutral, atTime: stopwatch.elapsedTime, inMatchPerformance: matchPerformance!)
+			dataManager.addTimeMarker(withEvent: TeamDataManager.TimeMarkerEventType.movedToNeutral, atTime: stopwatch.elapsedTime, inMatchPerformance: matchPerformance!)
 		case 3:
 			cycleFromViewController(currentVC!, toViewController: defenseVC!)
-			dataManager.addTimeMarker(withEvent: TeamDataManager.TimeMarkerEventType.MovedToDefenseCourtyard, atTime: stopwatch.elapsedTime, inMatchPerformance: matchPerformance!)
+			dataManager.addTimeMarker(withEvent: TeamDataManager.TimeMarkerEventType.movedToDefenseCourtyard, atTime: stopwatch.elapsedTime, inMatchPerformance: matchPerformance!)
 		default:
 			break
 		}
 	}
 	
-	override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
-		super.prepareForSegue(segue, sender: sender)
+	override func prepare(for segue: UIStoryboardSegue, sender: AnyObject?) {
+		super.prepare(for: segue, sender: sender)
 	}
 	
-	func cycleFromViewController(oldVC: UIViewController, toViewController newVC: UIViewController) {
-		oldVC.willMoveToParentViewController(nil)
+	func cycleFromViewController(_ oldVC: UIViewController, toViewController newVC: UIViewController) {
+		oldVC.willMove(toParentViewController: nil)
 		addChildViewController(newVC)
 		
 		newVC.view.frame = oldVC.view.frame
 		
-		transitionFromViewController(oldVC, toViewController: newVC, duration: 0, options: .TransitionNone, animations: {}, completion: {_ in oldVC.removeFromParentViewController(); newVC.didMoveToParentViewController(self); self.currentVC = newVC})
+		transition(from: oldVC, to: newVC, duration: 0, options: UIViewAnimationOptions(), animations: {}, completion: {_ in oldVC.removeFromParentViewController(); newVC.didMove(toParentViewController: self); self.currentVC = newVC})
 	}
 	
 	//Timer
-	@IBAction func timerButtonTapped(sender: UIButton) {
+	@IBAction func timerButtonTapped(_ sender: UIButton) {
 		isRunning = !isRunning
 	}
 	
-	func updateTimeLabel(timer: NSTimer) {
+	func updateTimeLabel(_ timer: Timer) {
 		if stopwatch.isRunning {
 			timerLabel.text = stopwatch.elapsedTimeAsString
 			
 			if stopwatch.elapsedTime > 160 {
 				isRunning = false
-				let alert = UIAlertController(title: "Too Long", message: "The match should have ended at 2 minutes 30 seconds; the timer has already passed that and automatically stopped. All data will be saved unless the timer is started again.", preferredStyle: .Alert)
-				alert.addAction(UIAlertAction(title: "OK", style: .Default, handler: nil))
-				presentViewController(alert, animated: true, completion: nil)
+				let alert = UIAlertController(title: "Too Long", message: "The match should have ended at 2 minutes 30 seconds; the timer has already passed that and automatically stopped. All data will be saved unless the timer is started again.", preferredStyle: .alert)
+				alert.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
+				present(alert, animated: true, completion: nil)
 			} else if stopwatch.elapsedTime > 135 {
 				//Show the final tower settings
-				finalTowerView.hidden = false
+				finalTowerView.isHidden = false
 				
 				//Change the color of the start/stop button to be blue signifying it is safe to stop it
-				timerButton.backgroundColor = UIColor.blueColor()
+				timerButton.backgroundColor = UIColor.blue
 			}
 		} else {
 			timer.invalidate()
 		}
 	}
 
-	@IBAction func gotBallPressed(sender: UIButton) {
+	@IBAction func gotBallPressed(_ sender: UIButton) {
 		let pickUpTime = stopwatch.elapsedTime
-		let locationSelector = UIAlertController(title: "Select Pickup Location", message: "Select where the ball was retrieved from.", preferredStyle: .ActionSheet)
+		let locationSelector = UIAlertController(title: "Select Pickup Location", message: "Select where the ball was retrieved from.", preferredStyle: .actionSheet)
 		locationSelector.popoverPresentationController?.sourceView = sender
-		locationSelector.addAction(UIAlertAction(title: "Offense Courtyard", style: .Default) {_ in
-			self.dataManager.addTimeMarker(withEvent: TeamDataManager.TimeMarkerEventType.BallPickedUpFromOffense, atTime: pickUpTime, inMatchPerformance: self.matchPerformance!)
+		locationSelector.addAction(UIAlertAction(title: "Offense Courtyard", style: .default) {_ in
+			self.dataManager.addTimeMarker(withEvent: TeamDataManager.TimeMarkerEventType.ballPickedUpFromOffense, atTime: pickUpTime, inMatchPerformance: self.matchPerformance!)
 			})
-		locationSelector.addAction(UIAlertAction(title: "Neutral Zone", style: .Default) {_ in
-			self.dataManager.addTimeMarker(withEvent: TeamDataManager.TimeMarkerEventType.BallPickedUpFromNeutral, atTime: pickUpTime, inMatchPerformance: self.matchPerformance!)
+		locationSelector.addAction(UIAlertAction(title: "Neutral Zone", style: .default) {_ in
+			self.dataManager.addTimeMarker(withEvent: TeamDataManager.TimeMarkerEventType.ballPickedUpFromNeutral, atTime: pickUpTime, inMatchPerformance: self.matchPerformance!)
 			})
-		locationSelector.addAction(UIAlertAction(title: "Defense Courtyard", style: .Default) {_ in
-			self.dataManager.addTimeMarker(withEvent: TeamDataManager.TimeMarkerEventType.BallPickedUpFromDefense, atTime: pickUpTime, inMatchPerformance: self.matchPerformance!)
+		locationSelector.addAction(UIAlertAction(title: "Defense Courtyard", style: .default) {_ in
+			self.dataManager.addTimeMarker(withEvent: TeamDataManager.TimeMarkerEventType.ballPickedUpFromDefense, atTime: pickUpTime, inMatchPerformance: self.matchPerformance!)
 			})
-		presentViewController(locationSelector, animated: true, completion: nil)
+		present(locationSelector, animated: true, completion: nil)
 	}
 	
 	//FINAL TOWER VIEW
-	@IBAction func challengedTowerSwitched(sender: UISwitch) {
-		matchPerformance?.didChallengeTower = sender.on
+	@IBAction func challengedTowerSwitched(_ sender: UISwitch) {
+		matchPerformance?.didChallengeTower = sender.isOn as NSNumber?
 	}
 	
-	@IBAction func scaledTowerSwitched(sender: UISwitch) {
-		matchPerformance?.didScaleTower = sender.on
+	@IBAction func scaledTowerSwitched(_ sender: UISwitch) {
+		matchPerformance?.didScaleTower = sender.isOn as NSNumber?
 	}
 	
     /*
@@ -334,24 +334,24 @@ class StandsScoutingViewController: UIViewController, ProvidesTeam {
     }
     */
 	
-	@IBAction func returnToStandsScouting(segue: UIStoryboardSegue) {
+	@IBAction func returnToStandsScouting(_ segue: UIStoryboardSegue) {
 		
 	}
 
 	var notesVC: NotesViewController?
-	@IBAction func notesButtonPressed(sender: UIButton) {
+	@IBAction func notesButtonPressed(_ sender: UIButton) {
 		if notesVC == nil {
-			notesVC = (storyboard?.instantiateViewControllerWithIdentifier("notesVC") as! NotesViewController)
+			notesVC = (storyboard?.instantiateViewController(withIdentifier: "notesVC") as! NotesViewController)
 		}
 		
 		notesVC?.originatingView = self
 		
-		notesVC?.modalPresentationStyle = .Popover
+		notesVC?.modalPresentationStyle = .popover
 		let popoverController = notesVC?.popoverPresentationController
-		popoverController?.permittedArrowDirections = .Any
+		popoverController?.permittedArrowDirections = .any
 		popoverController?.sourceView = sender
 		notesVC?.preferredContentSize = CGSize(width: 400, height: 600)
-		presentViewController(notesVC!, animated: true, completion: nil)
+		present(notesVC!, animated: true, completion: nil)
 	}
 }
 
@@ -368,23 +368,23 @@ class NotesViewController: UIViewController {
 		super.viewDidLoad()
 		notesTextView.layer.cornerRadius = 5
 		notesTextView.layer.borderWidth = 3
-		notesTextView.layer.borderColor = UIColor.lightGrayColor().CGColor
+		notesTextView.layer.borderColor = UIColor.lightGray.cgColor
 	}
 	
-	override func viewWillAppear(animated: Bool) {
+	override func viewWillAppear(_ animated: Bool) {
 		super.viewWillAppear(animated)
 		
 		notesTextView.text = originatingView.team.notes
 	}
 	
-	override func viewDidDisappear(animated: Bool) {
+	override func viewDidDisappear(_ animated: Bool) {
 		super.viewDidDisappear(animated)
 		
 		originatingView.team.notes = notesTextView.text
 	}
 	
-	@IBAction func donePressed(sender: UIBarButtonItem) {
-		dismissViewControllerAnimated(true, completion: nil)
+	@IBAction func donePressed(_ sender: UIBarButtonItem) {
+		dismiss(animated: true, completion: nil)
 	}
 }
 
@@ -398,42 +398,42 @@ class DefenseSelector: UIViewController, UICollectionViewDataSource, UICollectio
 	var redDefenses: [DefenseCategory:Defense] = Dictionary<DefenseCategory, Defense>() {
 		didSet {
 			if redDefenses.count == 4 && blueDefenses.count == 4 {
-				doneButton.enabled = true
+				doneButton.isEnabled = true
 			} else {
-				doneButton.enabled = false
+				doneButton.isEnabled = false
 			}
 		}
 	}
 	var blueDefenses: [DefenseCategory:Defense] = Dictionary<DefenseCategory, Defense>() {
 		didSet {
 			if redDefenses.count == 4 && blueDefenses.count == 4 {
-				doneButton.enabled = true
+				doneButton.isEnabled = true
 			} else {
-				doneButton.enabled = false
+				doneButton.isEnabled = false
 			}
 		}
 	}
 	
 	override func viewDidLoad() {
 		super.viewDidLoad()
-		doneButton.enabled = false
+		doneButton.isEnabled = false
 	}
 	
-	override func viewDidAppear(animated: Bool) {
+	override func viewDidAppear(_ animated: Bool) {
 		super.viewDidAppear(animated)
 		
-		for cell in defenseCollectionView.visibleCells() as! [DefenseSelectionCell] {
+		for cell in defenseCollectionView.visibleCells as! [DefenseSelectionCell] {
 			switch cell.color! {
-			case .Red:
+			case .red:
 				cell.defenseSelection = redDefenses[cell.defenseCategory!]
-			case .Blue:
+			case .blue:
 				cell.defenseSelection = blueDefenses[cell.defenseCategory!]
 			}
 		}
 	}
 	
-	@IBAction func cancelPressed(sender: UIBarButtonItem) {
-		dismissViewControllerAnimated(true, completion: nil)
+	@IBAction func cancelPressed(_ sender: UIBarButtonItem) {
+		dismiss(animated: true, completion: nil)
 		standsScoutingVC?.close(andSave: false)
 	}
 	
@@ -447,39 +447,39 @@ class DefenseSelector: UIViewController, UICollectionViewDataSource, UICollectio
 		defenseCollectionView.reloadData()
 	}
 	
-	func numberOfSectionsInCollectionView(collectionView: UICollectionView) -> Int {
+	func numberOfSections(in collectionView: UICollectionView) -> Int {
 		return 2
 	}
 	
-	func collectionView(collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+	func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
 		return 4
 	}
 	
-	func collectionView(collectionView: UICollectionView, cellForItemAtIndexPath indexPath: NSIndexPath) -> UICollectionViewCell {
-		let cell = collectionView.dequeueReusableCellWithReuseIdentifier("cell", forIndexPath: indexPath) as! DefenseSelectionCell
+	func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+		let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "cell", for: indexPath) as! DefenseSelectionCell
 		
 		cell.defenseSelector = self
-		cell.defenseCategory = DefenseCategory(rawValue: indexPath.item)
-		if indexPath.section == 0 {
-			cell.color = TeamDataManager.AllianceColor.Red
+		cell.defenseCategory = DefenseCategory(rawValue: (indexPath as NSIndexPath).item)
+		if (indexPath as NSIndexPath).section == 0 {
+			cell.color = TeamDataManager.AllianceColor.red
 		} else {
-			cell.color = TeamDataManager.AllianceColor.Blue
+			cell.color = TeamDataManager.AllianceColor.blue
 		}
 		
 		return cell
 	}
 	
-	func collectionView(collectionView: UICollectionView, viewForSupplementaryElementOfKind kind: String, atIndexPath indexPath: NSIndexPath) -> UICollectionReusableView {
+	func collectionView(_ collectionView: UICollectionView, viewForSupplementaryElementOfKind kind: String, at indexPath: IndexPath) -> UICollectionReusableView {
 		switch kind {
 		case UICollectionElementKindSectionHeader:
-			let header = collectionView.dequeueReusableSupplementaryViewOfKind(kind, withReuseIdentifier: "header", forIndexPath: indexPath)
+			let header = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: "header", for: indexPath)
 			let titleLabel = header.viewWithTag(1) as! UILabel
-			if indexPath.section == 0 {
+			if (indexPath as NSIndexPath).section == 0 {
 				titleLabel.text = "Red Defenses"
-				titleLabel.textColor = UIColor.redColor()
+				titleLabel.textColor = UIColor.red
 			} else {
 				titleLabel.text = "Blue Defenses"
-				titleLabel.textColor = UIColor.blueColor()
+				titleLabel.textColor = UIColor.blue
 			}
 			return header
 		default:
@@ -488,24 +488,24 @@ class DefenseSelector: UIViewController, UICollectionViewDataSource, UICollectio
 		}
 	}
 	
-	func didSelectDefense(color: TeamDataManager.AllianceColor, defense: Defense) {
+	func didSelectDefense(_ color: TeamDataManager.AllianceColor, defense: Defense) {
 		switch color {
-		case .Red:
+		case .red:
 			redDefenses[defense.category] = defense
-		case .Blue:
+		case .blue:
 			blueDefenses[defense.category] = defense
 		}
 	}
 	
-	@IBAction func donePressed(sender: UIBarButtonItem) {
+	@IBAction func donePressed(_ sender: UIBarButtonItem) {
 		do {
-		try dataManager.setDefenses(inMatch: standsScoutingVC!.matchPerformance!.match!, redOrBlue: TeamDataManager.AllianceColor.Red, withDefenseArray: Array(redDefenses.values))
-		try dataManager.setDefenses(inMatch: standsScoutingVC!.matchPerformance!.match!, redOrBlue: TeamDataManager.AllianceColor.Blue, withDefenseArray: Array(blueDefenses.values))
+		try dataManager.setDefenses(inMatch: standsScoutingVC!.matchPerformance!.match!, redOrBlue: TeamDataManager.AllianceColor.red, withDefenseArray: Array(redDefenses.values))
+		try dataManager.setDefenses(inMatch: standsScoutingVC!.matchPerformance!.match!, redOrBlue: TeamDataManager.AllianceColor.blue, withDefenseArray: Array(blueDefenses.values))
 		} catch {
 			CLSNSLogv("\(error)", getVaList([]))
 		}
 		dataManager.commitChanges()
-		dismissViewControllerAnimated(true, completion: nil)
+		dismiss(animated: true, completion: nil)
 	}
 }
 
@@ -521,10 +521,10 @@ class DefenseSelectionCell: UICollectionViewCell, UITableViewDataSource, UITable
 	var defenseSelection: Defense? {
 		didSet {
 			if let defenseSelection = defenseSelection {
-				tableView.selectRowAtIndexPath(NSIndexPath.init(forRow: defenseCategory!.defenses.indexOf(defenseSelection) ?? 2, inSection: 0), animated: false, scrollPosition: .None)
+				tableView.selectRow(at: IndexPath.init(row: defenseCategory!.defenses.index(of: defenseSelection) ?? 2, section: 0), animated: false, scrollPosition: .none)
 			} else {
 				if let selectedPath = tableView.indexPathForSelectedRow {
-					tableView.deselectRowAtIndexPath(selectedPath, animated: false)
+					tableView.deselectRow(at: selectedPath, animated: false)
 				}
 			}
 		}
@@ -536,20 +536,20 @@ class DefenseSelectionCell: UICollectionViewCell, UITableViewDataSource, UITable
 		tableView.delegate = self
 	}
 	
-	func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+	func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
 		return 2
 	}
 	
-	func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
-		let cell = tableView.dequeueReusableCellWithIdentifier("cell")
+	func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+		let cell = tableView.dequeueReusableCell(withIdentifier: "cell")
 		
-		cell?.textLabel?.text = defenseCategory?.defenses[indexPath.row].description ?? ""
+		cell?.textLabel?.text = defenseCategory?.defenses[(indexPath as NSIndexPath).row].description ?? ""
 		
 		return cell!
 	}
 	
-	func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
-		defenseSelector?.didSelectDefense(color!, defense: defenseCategory!.defenses[indexPath.row])
+	func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+		defenseSelector?.didSelectDefense(color!, defense: defenseCategory!.defenses[(indexPath as NSIndexPath).row])
 	}
 }
 

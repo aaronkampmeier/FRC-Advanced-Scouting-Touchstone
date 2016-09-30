@@ -17,13 +17,13 @@ extension Team {
     @NSManaged var climber: NSNumber?
     @NSManaged var driverExp: NSNumber?
     @NSManaged var driveTrain: String?
-    @NSManaged var frontImage: NSData?
+    @NSManaged var frontImage: Data?
     @NSManaged var height: NSNumber?
     @NSManaged var highGoal: NSNumber?
     @NSManaged var lowGoal: NSNumber?
     @NSManaged var notes: String?
     @NSManaged var robotWeight: NSNumber?
-    @NSManaged var sideImage: NSData?
+    @NSManaged var sideImage: Data?
     @NSManaged var teamNumber: String?
     @NSManaged var visionTrackingRating: NSNumber?
     @NSManaged var autonomousDefensesAbleToCross: NSArray?

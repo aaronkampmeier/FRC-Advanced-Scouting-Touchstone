@@ -11,11 +11,11 @@ import UIKit
 class RegionalPickerViewController: UIViewController, UIPickerViewDelegate, UIPickerViewDataSource {
 	@IBOutlet weak var regionalPicker: UIPickerView!
 	
-	var teamListController: TeamListController?
+	var delegate: RegionalSelection?
 	var dataManager = TeamDataManager()
-	var regionals: [Regional]?
-	var currentRegional: Regional?
-	var chosenRegional: Regional?
+	private var regionals: [Regional]?
+	private var currentRegional: Regional?
+	private var chosenRegional: Regional?
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -33,39 +33,39 @@ class RegionalPickerViewController: UIViewController, UIPickerViewDelegate, UIPi
         // Dispose of any resources that can be recreated.
     }
 	
-	override func viewWillAppear(animated: Bool) {
+	override func viewWillAppear(_ animated: Bool) {
 		super.viewWillAppear(animated)
 		
-		currentRegional = teamListController?.selectedRegional
+		currentRegional = delegate?.currentRegional()
 		
 		if let current = currentRegional {
-			let index = (regionals?.indexOf(current))! + 1
+			let index = (regionals?.index(of: current))! + 1
 			regionalPicker.selectRow(index, inComponent: 0, animated: false)
 			pickerView(regionalPicker, didSelectRow: index, inComponent: 0)
 		}
 	}
 	
-	override func viewDidAppear(animated: Bool) {
+	override func viewDidAppear(_ animated: Bool) {
 		super.viewDidAppear(animated)
 		
 		
 	}
 	
-	override func viewWillDisappear(animated: Bool) {
+	override func viewWillDisappear(_ animated: Bool) {
 		super.viewWillDisappear(animated)
 		
-		teamListController!.didChooseRegional(chosenRegional)
+		delegate?.regionalSelected(chosenRegional)
 	}
 	
-	func numberOfComponentsInPickerView(pickerView: UIPickerView) -> Int {
+	func numberOfComponents(in pickerView: UIPickerView) -> Int {
 		return 1
 	}
 	
-	func pickerView(pickerView: UIPickerView, numberOfRowsInComponent component: Int) -> Int {
+	func pickerView(_ pickerView: UIPickerView, numberOfRowsInComponent component: Int) -> Int {
 		return regionals!.count + 1
 	}
 	
-	func pickerView(pickerView: UIPickerView, titleForRow row: Int, forComponent component: Int) -> String? {
+	func pickerView(_ pickerView: UIPickerView, titleForRow row: Int, forComponent component: Int) -> String? {
 		switch row {
 		case 0:
 			return "All Teams (Default)"
@@ -74,7 +74,7 @@ class RegionalPickerViewController: UIViewController, UIPickerViewDelegate, UIPi
 		}
 	}
 	
-	func pickerView(pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {
+	func pickerView(_ pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {
 		if row == 0 {
 			chosenRegional = nil
 		} else {
@@ -92,4 +92,9 @@ class RegionalPickerViewController: UIViewController, UIPickerViewDelegate, UIPi
     }
     */
 
+}
+
+protocol RegionalSelection {
+	func regionalSelected(_ regional: Regional?)
+	func currentRegional() -> Regional?
 }
