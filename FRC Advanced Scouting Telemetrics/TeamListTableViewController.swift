@@ -21,7 +21,7 @@ class TeamListTableViewController: UITableViewController, UISearchControllerDele
 	var searchController: UISearchController!
 	weak var delegate: TeamSelectionDelegate?
 	let teamManager = TeamDataManager()
-	let teamImagesCache = Cache()
+	let teamImagesCache = NSCache<Team, UIImage>()
 	
 	var isSorted = false {
 		didSet {
@@ -173,7 +173,7 @@ class TeamListTableViewController: UITableViewController, UISearchControllerDele
 		tableView.tableHeaderView = searchController.searchBar
 		
 		//Add responder for notification about a new team
-		NotificationCenter.default.addObserver(forName: "New Team" as NSNotification.Name, object: nil, queue: nil, using: addTeamFromNotification)
+		NotificationCenter.default.addObserver(forName: NSNotification.Name("New Team"), object: nil, queue: nil, using: addTeamFromNotification)
 		
 		tableView.allowsSelectionDuringEditing = true
 		
@@ -230,7 +230,7 @@ class TeamListTableViewController: UITableViewController, UISearchControllerDele
 		cell.rankLabel.text = "\(try! TeamDataManager().getDraftBoard().index(of: teamListTeam.team)! as Int + 1)"
 		
 		if let image = teamImagesCache.object(forKey: teamListTeam.team) {
-			cell.frontImage.image = (image as! UIImage)
+			cell.frontImage.image = image
 		} else {
 			if let imageData = teamListTeam.team.frontImage {
 				guard let uiImage = UIImage(data: imageData as Data) else {
@@ -359,7 +359,8 @@ class TeamListTableViewController: UITableViewController, UISearchControllerDele
     // MARK: - Navigation
 
     // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepare(for segue: UIStoryboardSegue, sender: AnyObject?) {
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+		super.prepare(for: segue, sender: sender)
         // Get the new view controller using segue.destinationViewController.
         // Pass the selected object to the new view controller.
 		if segue.identifier == "regionalSelection" {
@@ -391,7 +392,7 @@ class TeamListTableViewController: UITableViewController, UISearchControllerDele
 			//Sort
 			let currentTeams = currentRegionalTeams
 			currentSortedTeams = currentTeams.sorted() {team1,team2 in
-				let before = team1.statCalculation?.value > team2.statCalculation?.value
+				let before = team1.statCalculation?.value ?? 0 > team2.statCalculation?.value ?? 0
 				statName = team1.statCalculation?.description ?? ""
 				if ascending {
 					return before

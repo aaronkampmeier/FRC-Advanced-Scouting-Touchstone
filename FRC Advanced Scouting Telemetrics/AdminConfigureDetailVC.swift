@@ -34,7 +34,7 @@ class AdminConfigureDetailVC: UIViewController {
 		performSegue(withIdentifier: "configureRegionalDetailSegue", sender: nil)
 	}
     
-    override func prepare(for segue: UIStoryboardSegue, sender: AnyObject?) {
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         super.prepare(for: segue, sender: sender)
         
         if segue.identifier == "configureMatchDetailSegue" || segue.identifier == "configureRegionalDetailSegue" {

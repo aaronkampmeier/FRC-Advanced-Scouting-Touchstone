@@ -14,7 +14,7 @@ class StatsVC: UIViewController, UITableViewDataSource, UITableViewDelegate {
 	
 	var dataSource: TeamListSegmentsDataSource? {
 		didSet {
-			NotificationCenter.default.addObserver(self, selector: #selector(StatsVC.loadStats), name: "TeamSelectedChanged" as NSNotification.Name, object: nil)
+			NotificationCenter.default.addObserver(self, selector: #selector(StatsVC.loadStats), name: NSNotification.Name("TeamSelectedChanged"), object: nil)
 		}
 	}
 	

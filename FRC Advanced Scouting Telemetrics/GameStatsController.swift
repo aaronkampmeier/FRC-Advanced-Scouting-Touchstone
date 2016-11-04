@@ -13,7 +13,7 @@ class GameStatsController: UIViewController, UICollectionViewDataSource, UIColle
 	
 	var dataSource: TeamListSegmentsDataSource? {
 		didSet {
-			NotificationCenter.default.addObserver(self, selector: #selector(GameStatsController.reload), name: "TeamSelectedChanged" as NSNotification.Name, object: nil)
+			NotificationCenter.default.addObserver(self, selector: #selector(GameStatsController.reload), name: NSNotification.Name("TeamSelectedChanged"), object: nil)
 		}
 	}
 	

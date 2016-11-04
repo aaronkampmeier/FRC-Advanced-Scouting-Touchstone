@@ -23,7 +23,7 @@ class DataSyncingViewController: UIViewController, UITableViewDataSource{
 		connectedPeers = DataSyncer.sharedDataSyncer().connectedPeers()
 		connectedDevicesTable.dataSource = self
 		
-		NotificationCenter.default.addObserver(self, selector: #selector(DataSyncingViewController.peerChangedState(_:)), name:"DataSyncing:DidChangeState" as NSNotification.Name, object: nil)
+		NotificationCenter.default.addObserver(self, selector: #selector(DataSyncingViewController.peerChangedState(_:)), name:NSNotification.Name("DataSyncing:DidChangeState"), object: nil)
 		NotificationCenter.default.addObserver(self, selector: #selector(DataSyncingViewController.numberOfTransfersChanged(_:)), name: NSNotification.Name(rawValue: DSTransferNumberChanged), object: nil)
 		
 		transferNumberLabel.text = "\(DataSyncer.sharedDataSyncer().multipeerConnection.currentFileTransfers.count)"

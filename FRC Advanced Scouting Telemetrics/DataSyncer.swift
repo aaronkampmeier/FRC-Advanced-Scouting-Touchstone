@@ -101,9 +101,9 @@ class DataSyncer: NSObject, CDEPersistentStoreEnsembleDelegate {
 		self.multipeerConnection.syncFilesWithAllPeers()
 		
 		//Wait one second before syncing to allow for remote files to download
-		DispatchQueue.main.after(when: DispatchTime.now() + Double(Int64(1 * NSEC_PER_SEC)) / Double(NSEC_PER_SEC)) {
+		DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
 			NSLog("Merging")
-			self.ensemble.mergeWithCompletion() {error in
+			self.ensemble.merge() {error in
 				if let error = error {NSLog("Error merging: \(error)")} else {NSLog("Merging completed")}
 				completion?(error)
 			}
@@ -190,15 +190,15 @@ class DataSyncer: NSObject, CDEPersistentStoreEnsembleDelegate {
 				globalIdentifiers.append("DraftBoard" as NSString)
 				NSLog("Global identifier is DraftBoard")
 			case is Team:
-				globalIdentifiers.append("Team:\(object.value(forKey: "teamNumber")!)")
+				globalIdentifiers.append(NSString(string: "Team:\(object.value(forKey: "teamNumber")!)"))
 			case is Regional:
-				globalIdentifiers.append("Regional:\(object.value(forKey: "regionalNumber")!)")
+				globalIdentifiers.append(NSString(string: "Regional:\(object.value(forKey: "regionalNumber")!)"))
 			case is TeamRegionalPerformance:
-				globalIdentifiers.append("RegionalPerformance:\((object.value(forKey: "team")! as AnyObject).value(forKey: "teamNumber")!):\((object.value(forKey: "regional")! as AnyObject).value(forKey: "regionalNumber")!)")
+				globalIdentifiers.append(NSString(string: "RegionalPerformance:\((object.value(forKey: "team")! as AnyObject).value(forKey: "teamNumber")!):\((object.value(forKey: "regional")! as AnyObject).value(forKey: "regionalNumber")!)"))
 			case is Match:
-				globalIdentifiers.append("Match:\((object.value(forKey: "regional")! as AnyObject).value(forKey: "regionalNumber")!):\(object.value(forKey: "matchNumber")!)")
+				globalIdentifiers.append(NSString(string: "Match:\((object.value(forKey: "regional")! as AnyObject).value(forKey: "regionalNumber")!):\(object.value(forKey: "matchNumber")!)"))
 			case is TeamMatchPerformance:
-				globalIdentifiers.append("MatchPerformance:\(((object.value(forKey: "regionalPerformance")! as AnyObject).value(forKey: "team")! as AnyObject).value(forKey: "teamNumber")!):\(((object.value(forKey: "regionalPerformance")! as AnyObject).value(forKey: "regional")! as AnyObject).value(forKey: "regionalNumber")!):\((object.value(forKey: "match")! as AnyObject).value(forKey: "matchNumber")!)")
+				globalIdentifiers.append(NSString(string: "MatchPerformance:\(((object.value(forKey: "regionalPerformance")! as AnyObject).value(forKey: "team")! as AnyObject).value(forKey: "teamNumber")!):\(((object.value(forKey: "regionalPerformance")! as AnyObject).value(forKey: "regional")! as AnyObject).value(forKey: "regionalNumber")!):\((object.value(forKey: "match")! as AnyObject).value(forKey: "matchNumber")!)"))
 			case is AutonomousCycle:
 				globalIdentifiers.append("\(UUID().uuidString)" as AnyObject)
 			case is Shot:
@@ -223,7 +223,7 @@ class MultipeerConnection: NSObject, CDEMultipeerConnection {
 	let serviceType = "frc-4256-fast"
 	let mySyncSecret: String
 	
-	private let myPeerID = MCPeerID(displayName: UIDevice.current.name)
+	let myPeerID = MCPeerID(displayName: UIDevice.current.name)
 	
 	private let serviceAdvertiser: MCNearbyServiceAdvertiser
 	private let serviceBrowser: MCNearbyServiceBrowser
@@ -311,14 +311,14 @@ class MultipeerConnection: NSObject, CDEMultipeerConnection {
 //MARK: Advertiser Delegate
 /** Advertiser Delegate */
 extension MultipeerConnection: MCNearbyServiceAdvertiserDelegate {
-	func advertiser(_ advertiser: MCNearbyServiceAdvertiser, didNotStartAdvertisingPeer error: NSError) {
+	func advertiser(_ advertiser: MCNearbyServiceAdvertiser, didNotStartAdvertisingPeer error: Error) {
 		NSLog("Did not start advertising peer: \(error)")
 	}
 	
-	func advertiser(_ advertiser: MCNearbyServiceAdvertiser, didReceiveInvitationFromPeer peerID: MCPeerID, withContext context: Data?, invitationHandler: (Bool, MCSession?) -> Void) {
+	func advertiser(_ advertiser: MCNearbyServiceAdvertiser, didReceiveInvitationFromPeer peerID: MCPeerID, withContext context: Data?, invitationHandler: @escaping (Bool, MCSession?) -> Void) {
 		NSLog("Did receive invitation from peer: \(peerID); \(peerID.displayName)")
 		DispatchQueue.main.async {
-			NotificationCenter.default.post(name: Notification.Name(rawValue: "DataSyncing:ReceivedInvitation"), object: self, userInfo: ["peer":peerID.displayName, "context": ??"none"])
+			NotificationCenter.default.post(name: Notification.Name(rawValue: "DataSyncing:ReceivedInvitation"), object: self, userInfo: ["peer":peerID.displayName, "context": context])
 		}
 		
 		if let context = context {
@@ -339,7 +339,7 @@ extension MultipeerConnection: MCNearbyServiceAdvertiserDelegate {
 //MARK: Browser Delegate
 /** Browser Delegate */
 extension MultipeerConnection: MCNearbyServiceBrowserDelegate {
-	func browser(_ browser: MCNearbyServiceBrowser, didNotStartBrowsingForPeers error: NSError) {
+	func browser(_ browser: MCNearbyServiceBrowser, didNotStartBrowsingForPeers error: Error) {
 		NSLog("Didn't start browsing: \(error)")
 	}
 	
@@ -349,7 +349,7 @@ extension MultipeerConnection: MCNearbyServiceBrowserDelegate {
 			NotificationCenter.default.post(name: Notification.Name(rawValue: "DataSyncing:FoundPeer"), object: self, userInfo: ["peer":peerID.displayName, "info":info ?? [:]])
 		}
 		
-		if !peerID.isEqual(myPeerID) && !session.connectedPeers.contains(peerID) {
+		if !peerID.isEqual(self.myPeerID) && !session.connectedPeers.contains(peerID) {
 			//The peer is not me and is not yet connected, check if it has the same sync secret as me
 			if info?["syncSecret"] == mySyncSecret {
 				//Invite them
@@ -390,7 +390,7 @@ extension MultipeerConnection: MCSessionDelegate {
 		NSLog("Received Stream")
 	}
 	
-	func session(_ session: MCSession, didFinishReceivingResourceWithName resourceName: String, fromPeer peerID: MCPeerID, at localURL: URL, withError error: NSError?) {
+	func session(_ session: MCSession, didFinishReceivingResourceWithName resourceName: String, fromPeer peerID: MCPeerID, at localURL: URL, withError error: Error?) {
 		CLSNSLogv("Did finish receiving resource: \(resourceName)", getVaList([]))
 		currentFileTransfers.removeValue(forKey: resourceName)
 		DispatchQueue.main.async {

@@ -13,7 +13,7 @@ class MatchOverviewViewController: UIViewController, UITableViewDataSource {
 	
 	var dataSource: TeamListSegmentsDataSource? {
 		didSet {
-			NotificationCenter.default.addObserver(self, selector: #selector(MatchOverviewViewController.reload), name: "TeamSelectedChanged" as NSNotification.Name, object: nil)
+			NotificationCenter.default.addObserver(self, selector: #selector(MatchOverviewViewController.reload), name: NSNotification.Name("TeamSelectedChanged"), object: nil)
 		}
 	}
 	var matchTimeMarkers: [[TeamDataManager.TimeMarkerEvent]] = Array<Array<TeamDataManager.TimeMarkerEvent>>()

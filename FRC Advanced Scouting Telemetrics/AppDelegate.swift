@@ -92,10 +92,10 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 			UserDefaults.standard.set(0, forKey: skippedVersionKey)
 		}
 		//Check if there is a new version of the app
-		Alamofire.request(.GET, latestVersionStringURL).responseString(completionHandler: didReceiveCurrentVersionResponse)
+		Alamofire.request(latestVersionStringURL).responseString(completionHandler: didReceiveCurrentVersionResponse)
 	}
 	
-	private func didReceiveCurrentVersionResponse(_ response: Response<String, NSError>) {
+	private func didReceiveCurrentVersionResponse(_ response: DataResponse<String>) {
 		let notificationCenter = NotificationCenter.default
 		if response.result.isSuccess {
 			//Get the current version of the app on the device
@@ -112,7 +112,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 						
 						//Check if the user has opted to skip this version
 						let userDefaults = UserDefaults.standard
-						let versionToSkip = userDefaults.double(forKey: skippedVersionKey) ?? 0
+						let versionToSkip = userDefaults.double(forKey: skippedVersionKey)
 						
 						if versionToSkip != latestVersion {
 							//Create an alert and present it to the user
@@ -183,12 +183,12 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 	
 	func processEnsembleChanges() {
 		let backgroundTaskIdentifier = UIApplication.shared.beginBackgroundTask(expirationHandler: nil)
-		DispatchQueue.global(attributes: DispatchQueue.GlobalAttributes(rawValue: UInt64(0))).async {
+		DispatchQueue.global().async {
 			self.managedObjectContext.perform() {
 				self.saveContext()
-				DataSyncer.sharedDataSyncer().ensemble.processPendingChangesWithCompletion() {error in
+				DataSyncer.sharedDataSyncer().ensemble.processPendingChanges() {error in
 					if let error = error {NSLog("Unable to process pending changes in the background with error: \(error)")} else {NSLog("Processing pending changes in the background completed.")}
-					UIApplication.sharedApplication().endBackgroundTask(backgroundTaskIdentifier)
+					UIApplication.shared.endBackgroundTask(backgroundTaskIdentifier)
 				}
 			}
 		}
@@ -204,18 +204,18 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     lazy var applicationDocumentsDirectory: URL = {
         // The directory the application uses to store the Core Data store file. This code uses a directory named "com.kampmeier.FRC_Advanced_Scouting_Telemetrics" in the application's documents Application Support directory.
-        let urls = FileManager.default.urlsForDirectory(.documentDirectory, inDomains: .userDomainMask)
+		let urls = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)
         return urls[urls.count-1]
     }()
 
     lazy var managedObjectModel: NSManagedObjectModel = {
         // The managed object model for the application. This property is not optional. It is a fatal error for the application not to be able to find and load its model.
-        let modelURL = Bundle.main.urlForResource("FRC_Advanced_Scouting_Telemetrics", withExtension: "momd")!
+		let modelURL = Bundle.main.url(forResource: "FRC_Advanced_Scouting_Telemetrics", withExtension: "momd")!
         return NSManagedObjectModel(contentsOf: modelURL)!
     }()
 	
 	var managedObjectModelURL: URL {
-		return Bundle.main.urlForResource("FRC_Advanced_Scouting_Telemetrics", withExtension: "momd")!
+		return Bundle.main.url(forResource: "FRC_Advanced_Scouting_Telemetrics", withExtension: "momd")!
 	}
 
     lazy var persistentStoreCoordinator: NSPersistentStoreCoordinator = {

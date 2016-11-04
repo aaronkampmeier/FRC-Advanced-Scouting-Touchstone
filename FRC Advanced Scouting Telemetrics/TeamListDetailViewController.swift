@@ -44,12 +44,12 @@ class TeamListDetailViewController: UIViewController, TeamSelectionDelegate {
 				
 				//Populate the images, if there are images
 				if let image = team.frontImage {
-					frontImage = TeamImagePhoto(image: UIImage(data: image as Data), attributedCaptionTitle: AttributedString(string: "Team \(team.teamNumber!): Front Image"))
+					frontImage = TeamImagePhoto(image: UIImage(data: image as Data), attributedCaptionTitle: NSAttributedString(string: "Team \(team.teamNumber!): Front Image"))
 				} else {
 					frontImage = nil
 				}
 				if let image = team.sideImage {
-					sideImage = TeamImagePhoto(image: UIImage(data: image as Data), attributedCaptionTitle: AttributedString(string: "Team \(team.teamNumber!): Side Image"))
+					sideImage = TeamImagePhoto(image: UIImage(data: image as Data), attributedCaptionTitle: NSAttributedString(string: "Team \(team.teamNumber!): Side Image"))
 				} else {
 					sideImage = nil
 				}
@@ -145,7 +145,7 @@ class TeamListDetailViewController: UIViewController, TeamSelectionDelegate {
 		}
 	}
 	
-	override func prepare(for segue: UIStoryboardSegue, sender: AnyObject?) {
+	override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
 		super.prepare(for: segue, sender: sender)
 		
 		if segue.identifier == "standsScouting" {
@@ -321,11 +321,11 @@ class TeamImagePhoto: NSObject, NYTPhoto {
 	var image: UIImage?
 	var imageData: Data?
 	var placeholderImage: UIImage?
-	var attributedCaptionTitle: AttributedString?
-	var attributedCaptionCredit: AttributedString?
-	var attributedCaptionSummary: AttributedString?
+	var attributedCaptionTitle: NSAttributedString?
+	var attributedCaptionCredit: NSAttributedString?
+	var attributedCaptionSummary: NSAttributedString?
 	
-	init(image: UIImage?, imageData: Data? = nil, attributedCaptionTitle: AttributedString) {
+	init(image: UIImage?, imageData: Data? = nil, attributedCaptionTitle: NSAttributedString) {
 		self.image = image
 		self.imageData = imageData
 		self.attributedCaptionTitle = attributedCaptionTitle

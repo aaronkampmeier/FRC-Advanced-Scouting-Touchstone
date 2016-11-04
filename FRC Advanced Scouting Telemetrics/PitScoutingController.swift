@@ -109,13 +109,13 @@ class PitScoutingController: UIViewController, UIImagePickerControllerDelegate, 
         }
 		
 		//Set all the fields to their correct values
-		weightField.text = String((selectedTeam.optionalTeam?.robotWeight)! ?? "") ?? ""
-		driverXpField.text = String((selectedTeam.optionalTeam?.driverExp)! ?? "") ?? ""
+		weightField.text = selectedTeam.optionalTeam?.robotWeight?.stringValue ?? ""
+		driverXpField.text = selectedTeam.optionalTeam?.driverExp?.stringValue ?? ""
 		frontImage.image = UIImage(data: ((selectedTeam.optionalTeam?.frontImage) ?? Data()) as Data)
 		sideImage.image = UIImage(data: ((selectedTeam.optionalTeam?.sideImage) ?? Data()) as Data)
 		visionTrackingSlider.setValue((selectedTeam.optionalTeam?.visionTrackingRating?.floatValue) ?? 0, animated: false)
-		driveTrainField.text = String(selectedTeam.optionalTeam?.driveTrain ?? "") ?? ""
-		heightField.text = String((selectedTeam.optionalTeam?.height)! ?? "") ?? ""
+		driveTrainField.text = selectedTeam.optionalTeam?.driveTrain ?? ""
+		heightField.text = selectedTeam.optionalTeam?.height?.stringValue ?? ""
 		climberSwitch.isOn = selectedTeam.optionalTeam?.climber?.boolValue ?? false
 		highGoalSwitch.isOn = selectedTeam.optionalTeam?.highGoal?.boolValue ?? false
 		lowGoalSwitch.isOn = selectedTeam.optionalTeam?.lowGoal?.boolValue ?? false
@@ -244,7 +244,7 @@ class PitScoutingController: UIViewController, UIImagePickerControllerDelegate, 
         dismiss(animated: true, completion: nil)
         
         //Create and post notification of image selected with userInfo of the image
-        let notification = Notification(name: "newImage" as Name, object: self, userInfo: ["image":image])
+        let notification = Notification(name: NSNotification.Name("newImage"), object: self, userInfo: ["image":image])
         
         notificationCenter.post(notification)
     }
@@ -299,7 +299,7 @@ class PitScoutingController: UIViewController, UIImagePickerControllerDelegate, 
 		present(controller, animated: true, completion: nil)
 		
 		//Add observer for the new image notification
-		observer = notificationCenter.addObserver(forName: "newImage" as NSNotification.Name, object: self, queue: nil, using: {(notification: Notification) in self.setPhoto(frontOrSide, image: (((notification as NSNotification).userInfo!) as! [String: UIImage])["image"]!)})
+		observer = notificationCenter.addObserver(forName: NSNotification.Name("newImage"), object: self, queue: nil, using: {(notification: Notification) in self.setPhoto(frontOrSide, image: (((notification as NSNotification).userInfo!) as! [String: UIImage])["image"]!)})
 	}
 	
     func setPhoto(_ frontOrSide: imagePOV, image: UIImage) {
@@ -318,7 +318,7 @@ class PitScoutingController: UIViewController, UIImagePickerControllerDelegate, 
         }
         
         //Remove the observer so we don't get repeated commands
-        notificationCenter.removeObserver(observer!, name: "newImage" as NSNotification.Name, object: self)
+        notificationCenter.removeObserver(observer!, name: NSNotification.Name("newImage"), object: self)
     }
 	
 	enum imagePOV: CustomStringConvertible {
@@ -351,7 +351,7 @@ class PitScoutingController: UIViewController, UIImagePickerControllerDelegate, 
 				
 				dataManager.addDefense(defense!, toTeam: team, forPart: currentGamePart())
 			}
-		} else if ((sender.layer.borderColor?.equalTo(UIColor.green().cgColor)) != nil) {
+		} else if (sender.layer.borderColor == UIColor.green.cgColor) {
 			//Was selected as can cross
 			switch currentGamePart() {
 			case .autonomous:
@@ -369,7 +369,7 @@ class PitScoutingController: UIViewController, UIImagePickerControllerDelegate, 
 					dataManager.removeDefense(defense!, fromTeam: team, forPart: currentGamePart())
 				}
 			}
-		} else if ((sender.layer.borderColor?.equalTo(UIColor.blue().cgColor)) != nil) {
+		} else if (sender.layer.borderColor == UIColor.blue.cgColor) {
 			setDefenseButton(sender, state: .notSelected)
 			if let team = selectedTeam.optionalTeam {
 				let defense = Defense(rawValue: sender.title(for: UIControlState())!)

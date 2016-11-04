@@ -260,7 +260,7 @@ class StandsScoutingViewController: UIViewController, ProvidesTeam {
 		}
 	}
 	
-	override func prepare(for segue: UIStoryboardSegue, sender: AnyObject?) {
+	override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
 		super.prepare(for: segue, sender: sender)
 	}
 	

@@ -51,7 +51,7 @@ class AdminConsoleController: UIViewController, UITableViewDataSource, UITableVi
         tableView.deselectRow(at: tableView.indexPathForSelectedRow!, animated: true)
     }
     
-    override func prepare(for segue: UIStoryboardSegue, sender: AnyObject?) {
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         super.prepare(for: segue, sender: sender)
         
         if segue.identifier == "pushToConfigure" {

@@ -51,7 +51,8 @@
 		1F78E7901C3B469300221927 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 1F78E78E1C3B469300221927 /* LaunchScreen.storyboard */; };
 		1F78E79B1C3B469300221927 /* FRC_Advanced_Scouting_TelemetricsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F78E79A1C3B469300221927 /* FRC_Advanced_Scouting_TelemetricsTests.swift */; };
 		1F78E7A61C3B469300221927 /* FRC_Advanced_Scouting_TelemetricsUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F78E7A51C3B469300221927 /* FRC_Advanced_Scouting_TelemetricsUITests.swift */; };
-		1F9B78271CD07F5700B4E5AE /* opencv2.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1FDE56921CCD376B009042CD /* opencv2.framework */; };
+		1F7AE4DB1DCC2DC80029B420 /* Surge.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1F178BD31D9F042000179D11 /* Surge.framework */; };
+		1F7AE4DC1DCC2DC80029B420 /* Surge.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 1F178BD31D9F042000179D11 /* Surge.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		1F9B782B1CD1A42400B4E5AE /* HiddenDebugViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F9B782A1CD1A42400B4E5AE /* HiddenDebugViewController.swift */; };
 		1FA6A73E1CD3B4DD00772C63 /* TransferInfoTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FA6A73D1CD3B4DD00772C63 /* TransferInfoTableViewController.swift */; };
 		1FB99DB31C741840004BC2C1 /* AdminConfigureDetailRegionalViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FB99DB21C741840004BC2C1 /* AdminConfigureDetailRegionalViewController.swift */; };
@@ -67,32 +68,6 @@
 		1FDC1BCE1CD69EBB00ABE327 /* TeamListSplitViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FDC1BCD1CD69EBB00ABE327 /* TeamListSplitViewController.swift */; };
 		1FDC1BD11CD69F5F00ABE327 /* TeamListTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FDC1BD01CD69F5F00ABE327 /* TeamListTableViewController.swift */; };
 		1FDC1BD31CD6A35F00ABE327 /* TeamListDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FDC1BD21CD6A35F00ABE327 /* TeamListDetailViewController.swift */; };
-		1FDE56B71CCD3C64009042CD /* imshow.py in Resources */ = {isa = PBXBuildFile; fileRef = 1FDE56961CCD3C64009042CD /* imshow.py */; };
-		1FDE56B81CCD3C64009042CD /* io.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FDE56971CCD3C64009042CD /* io.swift */; };
-		1FDE56B91CCD3C64009042CD /* machine_learning.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FDE56991CCD3C64009042CD /* machine_learning.swift */; };
-		1FDE56BA1CCD3C64009042CD /* m-complex-math.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FDE569B1CCD3C64009042CD /* m-complex-math.swift */; };
-		1FDE56BB1CCD3C64009042CD /* m-helper-functions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FDE569C1CCD3C64009042CD /* m-helper-functions.swift */; };
-		1FDE56BC1CCD3C64009042CD /* m-image.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FDE569D1CCD3C64009042CD /* m-image.swift */; };
-		1FDE56BD1CCD3C64009042CD /* m-initing.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FDE569E1CCD3C64009042CD /* m-initing.swift */; };
-		1FDE56BE1CCD3C64009042CD /* m-matrix.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FDE569F1CCD3C64009042CD /* m-matrix.swift */; };
-		1FDE56BF1CCD3C64009042CD /* m-operators.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FDE56A01CCD3C64009042CD /* m-operators.swift */; };
-		1FDE56C01CCD3C64009042CD /* m-simple-math.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FDE56A11CCD3C64009042CD /* m-simple-math.swift */; };
-		1FDE56C11CCD3C64009042CD /* complex-math.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FDE56A31CCD3C64009042CD /* complex-math.swift */; };
-		1FDE56C21CCD3C64009042CD /* helper-functions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FDE56A41CCD3C64009042CD /* helper-functions.swift */; };
-		1FDE56C31CCD3C64009042CD /* initing.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FDE56A51CCD3C64009042CD /* initing.swift */; };
-		1FDE56C41CCD3C64009042CD /* ndarray.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FDE56A61CCD3C64009042CD /* ndarray.swift */; };
-		1FDE56C51CCD3C64009042CD /* operators.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FDE56A71CCD3C64009042CD /* operators.swift */; };
-		1FDE56C61CCD3C64009042CD /* simple-math.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FDE56A81CCD3C64009042CD /* simple-math.swift */; };
-		1FDE56C71CCD3C64009042CD /* numbers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FDE56A91CCD3C64009042CD /* numbers.swift */; };
-		1FDE56C81CCD3C64009042CD /* conversion.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FDE56AB1CCD3C64009042CD /* conversion.swift */; };
-		1FDE56C91CCD3C64009042CD /* machine_learning.mm in Sources */ = {isa = PBXBuildFile; fileRef = 1FDE56AC1CCD3C64009042CD /* machine_learning.mm */; };
-		1FDE56CA1CCD3C64009042CD /* math.m in Sources */ = {isa = PBXBuildFile; fileRef = 1FDE56AD1CCD3C64009042CD /* math.m */; };
-		1FDE56CB1CCD3C64009042CD /* opencv.mm in Sources */ = {isa = PBXBuildFile; fileRef = 1FDE56AF1CCD3C64009042CD /* opencv.mm */; };
-		1FDE56CD1CCD3C64009042CD /* operations-and-indexing.m in Sources */ = {isa = PBXBuildFile; fileRef = 1FDE56B11CCD3C64009042CD /* operations-and-indexing.m */; };
-		1FDE56CE1CCD3C64009042CD /* ScalarArithmetic-bleed.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FDE56B31CCD3C64009042CD /* ScalarArithmetic-bleed.swift */; };
-		1FDE56CF1CCD3C64009042CD /* speed.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FDE56B51CCD3C64009042CD /* speed.swift */; };
-		1FDE56D01CCD3C64009042CD /* tests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FDE56B61CCD3C64009042CD /* tests.swift */; };
-		1FDE56D41CCD40BD009042CD /* opencv2.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1FDE56B01CCD3C64009042CD /* opencv2.framework */; };
 		1FE2C1291C80136800CECBF1 /* ShotChartViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FE2C1281C80136800CECBF1 /* ShotChartViewController.swift */; };
 		1FE2C12B1C80DFBD00CECBF1 /* NeutralViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FE2C12A1C80DFBD00CECBF1 /* NeutralViewController.swift */; };
 		1FE2C12D1C81875A00CECBF1 /* ImageScalingFunctions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FE2C12C1C81875A00CECBF1 /* ImageScalingFunctions.swift */; };
@@ -105,6 +80,20 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
+		1F178BD21D9F042000179D11 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 1F178BCD1D9F041F00179D11 /* Surge.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = F8A1E1AA19917A79009735E2;
+			remoteInfo = Surge;
+		};
+		1F178BD41D9F042000179D11 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 1F178BCD1D9F041F00179D11 /* Surge.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = F84A6AAE19A9A72F007B53E1;
+			remoteInfo = SurgeTests;
+		};
 		1F78E7971C3B469300221927 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 1F78E7771C3B469300221927 /* Project object */;
@@ -119,7 +108,28 @@
 			remoteGlobalIDString = 1F78E77E1C3B469300221927;
 			remoteInfo = "FRC Advanced Scouting Telemetrics";
 		};
+		1F7AE4DD1DCC2DC80029B420 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 1F178BCD1D9F041F00179D11 /* Surge.xcodeproj */;
+			proxyType = 1;
+			remoteGlobalIDString = F8A1E1A919917A79009735E2;
+			remoteInfo = Surge;
+		};
 /* End PBXContainerItemProxy section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		1F7AE4DF1DCC2DC80029B420 /* Embed Frameworks */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
+				1F7AE4DC1DCC2DC80029B420 /* Surge.framework in Embed Frameworks */,
+			);
+			name = "Embed Frameworks";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
 		1C713CB13EB7BA66AC808E54 /* Pods.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -132,6 +142,7 @@
 		1F08B5101CD34D9100C9B7E8 /* MigrationPolicies.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MigrationPolicies.swift; sourceTree = "<group>"; };
 		1F12CF131C78FD370014200C /* CourtyardViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CourtyardViewController.swift; sourceTree = "<group>"; };
 		1F12CF171C7A6CD70014200C /* Stopwatch.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Stopwatch.swift; sourceTree = "<group>"; };
+		1F178BCD1D9F041F00179D11 /* Surge.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = Surge.xcodeproj; path = "../../../Downloads/Surge-master/Surge.xcodeproj"; sourceTree = "<group>"; };
 		1F21DF111C66942200C55D0E /* SortVC.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SortVC.swift; sourceTree = "<group>"; };
 		1F2422421C73DF08008A5AFC /* FRC_Advanced_Scouting_Telemetrics CD 7.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "FRC_Advanced_Scouting_Telemetrics CD 7.xcdatamodel"; sourceTree = "<group>"; };
 		1F2F9A211CE2D6E400B85A72 /* TeamListSearchResultsTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TeamListSearchResultsTableViewController.swift; sourceTree = "<group>"; };
@@ -187,7 +198,7 @@
 		1F9B782A1CD1A42400B4E5AE /* HiddenDebugViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HiddenDebugViewController.swift; sourceTree = "<group>"; };
 		1FA6A73D1CD3B4DD00772C63 /* TransferInfoTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TransferInfoTableViewController.swift; sourceTree = "<group>"; };
 		1FB99DB21C741840004BC2C1 /* AdminConfigureDetailRegionalViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AdminConfigureDetailRegionalViewController.swift; sourceTree = "<group>"; };
-		1FBB426C1C9A29FC0017E36C /* Statistics.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Statistics.swift; sourceTree = "<group>"; };
+		1FBB426C1C9A29FC0017E36C /* Statistics.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Statistics.swift; sourceTree = "<group>"; wrapsLines = 1; };
 		1FBC9E671CC2EE11005DB3F4 /* Fabric.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Fabric.framework; sourceTree = SOURCE_ROOT; };
 		1FBC9E6B1CC2F007005DB3F4 /* Crashlytics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Crashlytics.framework; sourceTree = SOURCE_ROOT; };
 		1FBC9E6D1CC45C63005DB3F4 /* TeamMatchPerformance+CoreDataProperties.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "TeamMatchPerformance+CoreDataProperties.swift"; sourceTree = "<group>"; };
@@ -202,34 +213,6 @@
 		1FDC1BD21CD6A35F00ABE327 /* TeamListDetailViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TeamListDetailViewController.swift; sourceTree = "<group>"; };
 		1FDE568A1CCC915A009042CD /* FRC_Advanced_Scouting_Telemetrics Version 10.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "FRC_Advanced_Scouting_Telemetrics Version 10.xcdatamodel"; sourceTree = "<group>"; };
 		1FDE56921CCD376B009042CD /* opencv2.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = opencv2.framework; path = "FRC Advanced Scouting Telemetrics/swix/objc/opencv2.framework"; sourceTree = "<group>"; };
-		1FDE56961CCD3C64009042CD /* imshow.py */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.python; path = imshow.py; sourceTree = "<group>"; };
-		1FDE56971CCD3C64009042CD /* io.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = io.swift; sourceTree = "<group>"; };
-		1FDE56991CCD3C64009042CD /* machine_learning.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = machine_learning.swift; sourceTree = "<group>"; };
-		1FDE569B1CCD3C64009042CD /* m-complex-math.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "m-complex-math.swift"; sourceTree = "<group>"; };
-		1FDE569C1CCD3C64009042CD /* m-helper-functions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "m-helper-functions.swift"; sourceTree = "<group>"; };
-		1FDE569D1CCD3C64009042CD /* m-image.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "m-image.swift"; sourceTree = "<group>"; };
-		1FDE569E1CCD3C64009042CD /* m-initing.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "m-initing.swift"; sourceTree = "<group>"; };
-		1FDE569F1CCD3C64009042CD /* m-matrix.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "m-matrix.swift"; sourceTree = "<group>"; };
-		1FDE56A01CCD3C64009042CD /* m-operators.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "m-operators.swift"; sourceTree = "<group>"; };
-		1FDE56A11CCD3C64009042CD /* m-simple-math.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "m-simple-math.swift"; sourceTree = "<group>"; };
-		1FDE56A31CCD3C64009042CD /* complex-math.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "complex-math.swift"; sourceTree = "<group>"; };
-		1FDE56A41CCD3C64009042CD /* helper-functions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "helper-functions.swift"; sourceTree = "<group>"; };
-		1FDE56A51CCD3C64009042CD /* initing.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = initing.swift; sourceTree = "<group>"; };
-		1FDE56A61CCD3C64009042CD /* ndarray.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ndarray.swift; sourceTree = "<group>"; };
-		1FDE56A71CCD3C64009042CD /* operators.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = operators.swift; sourceTree = "<group>"; };
-		1FDE56A81CCD3C64009042CD /* simple-math.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "simple-math.swift"; sourceTree = "<group>"; };
-		1FDE56A91CCD3C64009042CD /* numbers.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = numbers.swift; sourceTree = "<group>"; };
-		1FDE56AB1CCD3C64009042CD /* conversion.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = conversion.swift; sourceTree = "<group>"; };
-		1FDE56AC1CCD3C64009042CD /* machine_learning.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = machine_learning.mm; sourceTree = "<group>"; };
-		1FDE56AD1CCD3C64009042CD /* math.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = math.m; sourceTree = "<group>"; };
-		1FDE56AE1CCD3C64009042CD /* OpenCV.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OpenCV.h; sourceTree = "<group>"; };
-		1FDE56AF1CCD3C64009042CD /* opencv.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = opencv.mm; sourceTree = "<group>"; };
-		1FDE56B01CCD3C64009042CD /* opencv2.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = opencv2.framework; sourceTree = "<group>"; };
-		1FDE56B11CCD3C64009042CD /* operations-and-indexing.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "operations-and-indexing.m"; sourceTree = "<group>"; };
-		1FDE56B21CCD3C64009042CD /* swix-Bridging-Header.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "swix-Bridging-Header.h"; sourceTree = "<group>"; };
-		1FDE56B31CCD3C64009042CD /* ScalarArithmetic-bleed.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "ScalarArithmetic-bleed.swift"; sourceTree = "<group>"; };
-		1FDE56B51CCD3C64009042CD /* speed.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = speed.swift; sourceTree = "<group>"; };
-		1FDE56B61CCD3C64009042CD /* tests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = tests.swift; sourceTree = "<group>"; };
 		1FE2C1281C80136800CECBF1 /* ShotChartViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ShotChartViewController.swift; sourceTree = "<group>"; };
 		1FE2C12A1C80DFBD00CECBF1 /* NeutralViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NeutralViewController.swift; sourceTree = "<group>"; };
 		1FE2C12C1C81875A00CECBF1 /* ImageScalingFunctions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ImageScalingFunctions.swift; sourceTree = "<group>"; };
@@ -247,8 +230,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				1F9B78271CD07F5700B4E5AE /* opencv2.framework in Frameworks */,
 				B57D6D43A840A163A005FE54 /* Pods.framework in Frameworks */,
+				1F7AE4DB1DCC2DC80029B420 /* Surge.framework in Frameworks */,
 				1FBC9E6C1CC2F007005DB3F4 /* Crashlytics.framework in Frameworks */,
 				1FBC9E691CC2EE11005DB3F4 /* Fabric.framework in Frameworks */,
 			);
@@ -258,7 +241,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				1FDE56D41CCD40BD009042CD /* opencv2.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -272,6 +254,15 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		1F178BCE1D9F041F00179D11 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				1F178BD31D9F042000179D11 /* Surge.framework */,
+				1F178BD51D9F042000179D11 /* SurgeTests.xctest */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
 		1F21DF101C645D1F00C55D0E /* View Controllers */ = {
 			isa = PBXGroup;
 			children = (
@@ -331,6 +322,7 @@
 		1F78E7761C3B469300221927 = {
 			isa = PBXGroup;
 			children = (
+				1F178BCD1D9F041F00179D11 /* Surge.xcodeproj */,
 				1F78E7811C3B469300221927 /* FRC Advanced Scouting Touchstone */,
 				1F78E7991C3B469300221927 /* FRC Advanced Scouting TouchstoneTests */,
 				1F78E7A41C3B469300221927 /* FRC Advanced Scouting TouchstoneUITests */,
@@ -353,7 +345,6 @@
 		1F78E7811C3B469300221927 /* FRC Advanced Scouting Touchstone */ = {
 			isa = PBXGroup;
 			children = (
-				1FDE56951CCD3C64009042CD /* swix */,
 				1F78E7821C3B469300221927 /* AppDelegate.swift */,
 				1FBB426C1C9A29FC0017E36C /* Statistics.swift */,
 				1FE2C12C1C81875A00CECBF1 /* ImageScalingFunctions.swift */,
@@ -443,81 +434,6 @@
 			name = Segments;
 			sourceTree = "<group>";
 		};
-		1FDE56951CCD3C64009042CD /* swix */ = {
-			isa = PBXGroup;
-			children = (
-				1FDE56961CCD3C64009042CD /* imshow.py */,
-				1FDE56971CCD3C64009042CD /* io.swift */,
-				1FDE56981CCD3C64009042CD /* machine_learning */,
-				1FDE569A1CCD3C64009042CD /* matrix */,
-				1FDE56A21CCD3C64009042CD /* ndarray */,
-				1FDE56A91CCD3C64009042CD /* numbers.swift */,
-				1FDE56AA1CCD3C64009042CD /* objc */,
-				1FDE56B31CCD3C64009042CD /* ScalarArithmetic-bleed.swift */,
-				1FDE56B41CCD3C64009042CD /* tests */,
-			);
-			path = swix;
-			sourceTree = "<group>";
-		};
-		1FDE56981CCD3C64009042CD /* machine_learning */ = {
-			isa = PBXGroup;
-			children = (
-				1FDE56991CCD3C64009042CD /* machine_learning.swift */,
-			);
-			path = machine_learning;
-			sourceTree = "<group>";
-		};
-		1FDE569A1CCD3C64009042CD /* matrix */ = {
-			isa = PBXGroup;
-			children = (
-				1FDE569B1CCD3C64009042CD /* m-complex-math.swift */,
-				1FDE569C1CCD3C64009042CD /* m-helper-functions.swift */,
-				1FDE569D1CCD3C64009042CD /* m-image.swift */,
-				1FDE569E1CCD3C64009042CD /* m-initing.swift */,
-				1FDE569F1CCD3C64009042CD /* m-matrix.swift */,
-				1FDE56A01CCD3C64009042CD /* m-operators.swift */,
-				1FDE56A11CCD3C64009042CD /* m-simple-math.swift */,
-			);
-			path = matrix;
-			sourceTree = "<group>";
-		};
-		1FDE56A21CCD3C64009042CD /* ndarray */ = {
-			isa = PBXGroup;
-			children = (
-				1FDE56A31CCD3C64009042CD /* complex-math.swift */,
-				1FDE56A41CCD3C64009042CD /* helper-functions.swift */,
-				1FDE56A51CCD3C64009042CD /* initing.swift */,
-				1FDE56A61CCD3C64009042CD /* ndarray.swift */,
-				1FDE56A71CCD3C64009042CD /* operators.swift */,
-				1FDE56A81CCD3C64009042CD /* simple-math.swift */,
-			);
-			path = ndarray;
-			sourceTree = "<group>";
-		};
-		1FDE56AA1CCD3C64009042CD /* objc */ = {
-			isa = PBXGroup;
-			children = (
-				1FDE56AB1CCD3C64009042CD /* conversion.swift */,
-				1FDE56AC1CCD3C64009042CD /* machine_learning.mm */,
-				1FDE56AD1CCD3C64009042CD /* math.m */,
-				1FDE56AE1CCD3C64009042CD /* OpenCV.h */,
-				1FDE56AF1CCD3C64009042CD /* opencv.mm */,
-				1FDE56B01CCD3C64009042CD /* opencv2.framework */,
-				1FDE56B11CCD3C64009042CD /* operations-and-indexing.m */,
-				1FDE56B21CCD3C64009042CD /* swix-Bridging-Header.h */,
-			);
-			path = objc;
-			sourceTree = "<group>";
-		};
-		1FDE56B41CCD3C64009042CD /* tests */ = {
-			isa = PBXGroup;
-			children = (
-				1FDE56B51CCD3C64009042CD /* speed.swift */,
-				1FDE56B61CCD3C64009042CD /* tests.swift */,
-			);
-			path = tests;
-			sourceTree = "<group>";
-		};
 		247597E7D320F6FF4FC40A15 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
@@ -553,10 +469,12 @@
 				080BE7A55E0E63E0A69FA71E /* Embed Pods Frameworks */,
 				D94545BACA3465B6C35FB105 /* Copy Pods Resources */,
 				1FBC9E661CC2ED09005DB3F4 /* ShellScript */,
+				1F7AE4DF1DCC2DC80029B420 /* Embed Frameworks */,
 			);
 			buildRules = (
 			);
 			dependencies = (
+				1F7AE4DE1DCC2DC80029B420 /* PBXTargetDependency */,
 			);
 			name = "FRC Advanced Scouting Touchstone";
 			productName = "FRC Advanced Scouting Telemetrics";
@@ -637,6 +555,12 @@
 			mainGroup = 1F78E7761C3B469300221927;
 			productRefGroup = 1F78E7801C3B469300221927 /* Products */;
 			projectDirPath = "";
+			projectReferences = (
+				{
+					ProductGroup = 1F178BCE1D9F041F00179D11 /* Products */;
+					ProjectRef = 1F178BCD1D9F041F00179D11 /* Surge.xcodeproj */;
+				},
+			);
 			projectRoot = "";
 			targets = (
 				1F78E77E1C3B469300221927 /* FRC Advanced Scouting Touchstone */,
@@ -646,6 +570,23 @@
 		};
 /* End PBXProject section */
 
+/* Begin PBXReferenceProxy section */
+		1F178BD31D9F042000179D11 /* Surge.framework */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.framework;
+			path = Surge.framework;
+			remoteRef = 1F178BD21D9F042000179D11 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		1F178BD51D9F042000179D11 /* SurgeTests.xctest */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.cfbundle;
+			path = SurgeTests.xctest;
+			remoteRef = 1F178BD41D9F042000179D11 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+/* End PBXReferenceProxy section */
+
 /* Begin PBXResourcesBuildPhase section */
 		1F78E77D1C3B469300221927 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
@@ -654,7 +595,6 @@
 				1F78E7901C3B469300221927 /* LaunchScreen.storyboard in Resources */,
 				1F78E78D1C3B469300221927 /* Assets.xcassets in Resources */,
 				1F78E7881C3B469300221927 /* Main.storyboard in Resources */,
-				1FDE56B71CCD3C64009042CD /* imshow.py in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -741,7 +681,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				1F45343F1C7242B9004EDDB9 /* DraftBoard.swift in Sources */,
-				1FDE56D01CCD3C64009042CD /* tests.swift in Sources */,
 				1F08B50E1CD32BBA00C9B7E8 /* Model.xcmappingmodel in Sources */,
 				1FB99DB31C741840004BC2C1 /* AdminConfigureDetailRegionalViewController.swift in Sources */,
 				1F78E78B1C3B469300221927 /* FRC_Advanced_Scouting_Telemetrics.xcdatamodeld in Sources */,
@@ -756,7 +695,6 @@
 				1F4534511C7242B9004EDDB9 /* TeamMatchPerformance.swift in Sources */,
 				1F4534421C7242B9004EDDB9 /* Shot+CoreDataProperties.swift in Sources */,
 				1FBE62811CAEF617001FDFB7 /* MatchOverviewViewController.swift in Sources */,
-				1FDE56BD1CCD3C64009042CD /* m-initing.swift in Sources */,
 				1F45343A1C7242B9004EDDB9 /* DefenseCrossTime+CoreDataProperties.swift in Sources */,
 				1F45343C1C7242B9004EDDB9 /* Match+CoreDataProperties.swift in Sources */,
 				1F51D1C21C7FB30F00B4D6C5 /* GameStatsController.swift in Sources */,
@@ -764,66 +702,44 @@
 				1FBE627F1CAEE0FB001FDFB7 /* TeamPickerTableViewController.swift in Sources */,
 				1F45343E1C7242B9004EDDB9 /* DraftBoard+CoreDataProperties.swift in Sources */,
 				1F4534441C7242B9004EDDB9 /* AutonomousCycle+CoreDataProperties.swift in Sources */,
-				1FDE56BA1CCD3C64009042CD /* m-complex-math.swift in Sources */,
-				1FDE56CB1CCD3C64009042CD /* opencv.mm in Sources */,
 				1FF32A231C6E7AAC00CD028C /* AdminConfigureDetailVC.swift in Sources */,
 				1FE2C1291C80136800CECBF1 /* ShotChartViewController.swift in Sources */,
 				1F45340E1C6FC3EA004EDDB9 /* GameStatsCollectionViewCell.swift in Sources */,
-				1FDE56C81CCD3C64009042CD /* conversion.swift in Sources */,
 				1F78E7831C3B469300221927 /* AppDelegate.swift in Sources */,
 				1F4FEDAE1C4C5DEA00F4016D /* AddTeamVC.swift in Sources */,
 				1FD0A09B1C95093600013A18 /* TeamListTableViewCell.swift in Sources */,
-				1FDE56CA1CCD3C64009042CD /* math.m in Sources */,
-				1FDE56CF1CCD3C64009042CD /* speed.swift in Sources */,
 				1F4534471C7242B9004EDDB9 /* Regional.swift in Sources */,
 				1F4534431C7242B9004EDDB9 /* Shot.swift in Sources */,
 				1F08B5111CD34D9100C9B7E8 /* MigrationPolicies.swift in Sources */,
 				1FBB426D1C9A29FC0017E36C /* Statistics.swift in Sources */,
-				1FDE56C71CCD3C64009042CD /* numbers.swift in Sources */,
-				1FDE56CE1CCD3C64009042CD /* ScalarArithmetic-bleed.swift in Sources */,
 				1F45343B1C7242B9004EDDB9 /* DefenseCrossTime.swift in Sources */,
 				1F4534451C7242B9004EDDB9 /* AutonomousCycle.swift in Sources */,
 				1F4534461C7242B9004EDDB9 /* Regional+CoreDataProperties.swift in Sources */,
-				1FDE56C11CCD3C64009042CD /* complex-math.swift in Sources */,
 				1F51D1C61C7FFBC000B4D6C5 /* GameStatsLayout.swift in Sources */,
 				1F4534381C7242B9004EDDB9 /* TimeMarker+CoreDataProperties.swift in Sources */,
-				1FDE56C31CCD3C64009042CD /* initing.swift in Sources */,
-				1FDE56C91CCD3C64009042CD /* machine_learning.mm in Sources */,
-				1FDE56C61CCD3C64009042CD /* simple-math.swift in Sources */,
 				1F4FEDAA1C4AD95C00F4016D /* PitScoutingController.swift in Sources */,
 				1FCEF8F61C9CB231006AC591 /* Globals.swift in Sources */,
-				1FDE56C51CCD3C64009042CD /* operators.swift in Sources */,
 				1F4534171C7002EB004EDDB9 /* PopoverPickerViewController.swift in Sources */,
-				1FDE56C01CCD3C64009042CD /* m-simple-math.swift in Sources */,
-				1FDE56BB1CCD3C64009042CD /* m-helper-functions.swift in Sources */,
 				1FA6A73E1CD3B4DD00772C63 /* TransferInfoTableViewController.swift in Sources */,
 				1F4534521C7242B9004EDDB9 /* TeamRegionalPerformance+CoreDataProperties.swift in Sources */,
 				1F4534531C7242B9004EDDB9 /* TeamRegionalPerformance.swift in Sources */,
 				1F58308F1CB09AF900D6F513 /* DataSyncer.swift in Sources */,
 				1FDC1BD31CD6A35F00ABE327 /* TeamListDetailViewController.swift in Sources */,
 				1F4534561C7276DE004EDDB9 /* RegionalPickerViewController.swift in Sources */,
-				1FDE56C41CCD3C64009042CD /* ndarray.swift in Sources */,
 				1F9B782B1CD1A42400B4E5AE /* HiddenDebugViewController.swift in Sources */,
 				1F4534101C6FF916004EDDB9 /* StandsScoutingViewController.swift in Sources */,
 				1F665D721CB1DA91003CAC1D /* DataSyncingViewController.swift in Sources */,
 				1FDC1BCE1CD69EBB00ABE327 /* TeamListSplitViewController.swift in Sources */,
 				1FBC9E6E1CC45C63005DB3F4 /* TeamMatchPerformance+CoreDataProperties.swift in Sources */,
-				1FDE56C21CCD3C64009042CD /* helper-functions.swift in Sources */,
 				1F21DF121C66942200C55D0E /* SortVC.swift in Sources */,
 				1F08B5081CD2F76100C9B7E8 /* Team+CoreDataProperties.swift in Sources */,
-				1FDE56BC1CCD3C64009042CD /* m-image.swift in Sources */,
 				1FCA7ADA1C630BAE004294D1 /* StatsVC.swift in Sources */,
 				1F45344F1C7242B9004EDDB9 /* Team.swift in Sources */,
-				1FDE56BF1CCD3C64009042CD /* m-operators.swift in Sources */,
-				1FDE56CD1CCD3C64009042CD /* operations-and-indexing.m in Sources */,
 				1F4FEDAC1C4B686000F4016D /* AdminConsoleController.swift in Sources */,
-				1FDE56B81CCD3C64009042CD /* io.swift in Sources */,
-				1FDE56BE1CCD3C64009042CD /* m-matrix.swift in Sources */,
 				1F12CF181C7A6CD70014200C /* Stopwatch.swift in Sources */,
 				1F4534151C6FFC38004EDDB9 /* AutonomousViewController.swift in Sources */,
 				1FE2C12D1C81875A00CECBF1 /* ImageScalingFunctions.swift in Sources */,
 				1F45343D1C7242B9004EDDB9 /* Match.swift in Sources */,
-				1FDE56B91CCD3C64009042CD /* machine_learning.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -855,6 +771,11 @@
 			isa = PBXTargetDependency;
 			target = 1F78E77E1C3B469300221927 /* FRC Advanced Scouting Touchstone */;
 			targetProxy = 1F78E7A21C3B469300221927 /* PBXContainerItemProxy */;
+		};
+		1F7AE4DE1DCC2DC80029B420 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = Surge;
+			targetProxy = 1F7AE4DD1DCC2DC80029B420 /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 
@@ -967,6 +888,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = FB662BA537272C54A0526CB7 /* Pods.debug.xcconfig */;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
@@ -995,6 +917,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = "com.kampmeier.FRC-Advanced-Scouting-Touchstone";
 				PRODUCT_NAME = "FRC Advanced Scouting Touchstone";
 				PROVISIONING_PROFILE = "1da15394-14e2-4de2-b834-e3feca4d0125";
+				SWIFT_OBJC_BRIDGING_HEADER = "";
 				SWIFT_VERSION = 3.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
@@ -1004,9 +927,11 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 7A0B0ED33C5CDE3647C7F796 /* Pods.release.xcconfig */;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_IDENTITY = "iPhone Distribution";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution";
+				DEVELOPMENT_TEAM = 3T77TK2ECU;
 				ENABLE_BITCODE = NO;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
@@ -1029,7 +954,9 @@
 				OTHER_SWIFT_FLAGS = "$(inherited) \"-D\" \"COCOAPODS\"";
 				PRODUCT_BUNDLE_IDENTIFIER = "com.kampmeier.FRC-Advanced-Scouting-Touchstone";
 				PRODUCT_NAME = "FRC Advanced Scouting Touchstone";
-				PROVISIONING_PROFILE = "a024fa9d-3610-436f-a7c6-08fbb75be7bc";
+				PROVISIONING_PROFILE = "c2291a60-5317-4418-8a1d-49bec381d295";
+				PROVISIONING_PROFILE_SPECIFIER = "XC iOS Ad Hoc: *";
+				SWIFT_OBJC_BRIDGING_HEADER = "";
 				SWIFT_VERSION = 3.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};

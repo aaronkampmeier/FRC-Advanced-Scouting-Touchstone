@@ -227,7 +227,7 @@ class AutonomousSegmentCell: UITableViewCell {
 		didSet {
 			if let property = associatedProperty {
 				if let selectedSegment = property.getValue(inCycle: autonomousCycle!) as? Bool {
-					segmentedControl.selectedSegmentIndex = Int(selectedSegment)
+					segmentedControl.selectedSegmentIndex = selectedSegment.hashValue
 				} else {
 					segmentedControl.selectedSegmentIndex = -1
 				}
@@ -248,7 +248,7 @@ class AutonomousSegmentCell: UITableViewCell {
 	}
 	
 	@IBAction func segmentChanged(_ sender: UISegmentedControl) {
-		associatedProperty?.setValue(Bool(sender.selectedSegmentIndex), inCycle: autonomousCycle!)
+		associatedProperty?.setValue(Bool(NSNumber(value: sender.selectedSegmentIndex)), inCycle: autonomousCycle!)
 	}
 }
 

@@ -54,7 +54,7 @@ class TeamDataManager {
 			do {
 				let draftBoard = try getRootDraftBoard().teams?.mutableCopy() as! NSMutableOrderedSet
 				draftBoard.insert(team, at: rank!)
-				try getRootDraftBoard().teams = (draftBoard.copy() as! OrderedSet)
+				try getRootDraftBoard().teams = (draftBoard.copy() as! NSOrderedSet)
 			} catch {
 				NSLog("Could not save team to draft board")
 			}
@@ -145,10 +145,10 @@ class TeamDataManager {
 	
     func getRootDraftBoard() throws -> DraftBoard {
         //Create a fetch request for the draft board
-        let fetchRequest = NSFetchRequest(entityName: "DraftBoard")
+        let fetchRequest = NSFetchRequest<DraftBoard>(entityName: "DraftBoard")
         
         do {
-            let results = try TeamDataManager.managedContext.fetch(fetchRequest) as! [DraftBoard]
+            let results = try TeamDataManager.managedContext.fetch(fetchRequest)
             
             if results.count > 1 {
                 NSLog("Somehow multiple draft boards were created. This could be the result of a sync error.")
@@ -159,7 +159,7 @@ class TeamDataManager {
 					board1Mutable.append(team)
 				}
 				TeamDataManager.managedContext.delete(results[1])
-				results[0].teams = OrderedSet(array: board1Mutable)
+				results[0].teams = NSOrderedSet(array: board1Mutable)
 				return try getRootDraftBoard()
             } else if results.count == 1 {
                 return results.first!
@@ -185,7 +185,7 @@ class TeamDataManager {
             mutableArray.removeObject(at: fromIndex)
             mutableArray.insert(movedTeam, at: toIndex)
             
-            rootDraftBoard.teams = mutableArray.copy() as? OrderedSet
+            rootDraftBoard.teams = mutableArray.copy() as? NSOrderedSet
         } catch {
             throw error
         }
@@ -193,17 +193,15 @@ class TeamDataManager {
         save()
     }
     
-    func getTeams(Predicate predicate: Predicate?) -> [Team] {
+    func getTeams(Predicate predicate: NSPredicate?) -> [Team] {
         var teams: [Team] = [Team]()
         
-        let fetchRequest = NSFetchRequest(entityName: "Team")
+        let fetchRequest = NSFetchRequest<Team>(entityName: "Team")
         
         fetchRequest.predicate = predicate
         
         do {
-            let results = try TeamDataManager.managedContext.fetch(fetchRequest)
-            
-            teams = results as! [Team]
+            teams = try TeamDataManager.managedContext.fetch(fetchRequest)
         } catch let error as NSError {
             NSLog("Could not fetch \(error), \(error.userInfo)")
         }
@@ -212,7 +210,7 @@ class TeamDataManager {
     }
     
     func getTeams(_ numberForSorting: String) -> [Team] {
-        return getTeams(Predicate: Predicate(format: "%K like %@", argumentArray: ["teamNumber", "\(numberForSorting)"]))
+        return getTeams(Predicate: NSPredicate(format: "%K like %@", argumentArray: ["teamNumber", "\(numberForSorting)"]))
     }
     
     func getTeams() -> [Team] {
@@ -234,7 +232,7 @@ class TeamDataManager {
     //MARK: Regionals
     func addRegional(regionalNumber num: Int, withName name: String) -> Regional {
         //Check to make sure that the regional doesn't exist
-        let previousRegionals = getAllRegionals().filter({$0.regionalNumber == num})
+        let previousRegionals = getAllRegionals().filter({$0.regionalNumber!.intValue == num})
         guard previousRegionals.isEmpty else {
             return previousRegionals[0]
         }
@@ -247,14 +245,11 @@ class TeamDataManager {
     }
     
     func getAllRegionals() -> [Regional] {
-        let fetchRequest = NSFetchRequest(entityName: "Regional")
+        let fetchRequest = NSFetchRequest<Regional>(entityName: "Regional")
         
         var regionals = [Regional]()
         do {
-            let results = try TeamDataManager.managedContext.fetch(fetchRequest) as? [Regional]
-			if let x = results {
-				regionals = x
-			}
+            regionals = try TeamDataManager.managedContext.fetch(fetchRequest)
         } catch {
             regionals = []
         }
@@ -263,13 +258,14 @@ class TeamDataManager {
     }
 	
 	func getRegional(withNumber num: Int) -> Regional? {
-		let fetchRequest = NSFetchRequest(entityName: "Regional")
+		let fetchRequest = NSFetchRequest<Regional>(entityName: "Regional")
 		
-		fetchRequest.predicate = Predicate(format: "%k like %@", argumentArray: ["regionalNumber", "\(num)"])
+		fetchRequest.predicate = NSPredicate(format: "%k like %@", argumentArray: ["regionalNumber", "\(num)"])
 		
 		do {
 			let results = try TeamDataManager.managedContext.fetch(fetchRequest)
-			return results[0] as? Regional
+			assert(results.count <= 1)
+			return results[0]
 		} catch {
 			return nil
 		}
@@ -297,7 +293,7 @@ class TeamDataManager {
     //MARK: Matches
     func createNewMatch(_ matchNumber: Int, inRegional regional: Regional) throws -> Match {
         //First, check to make sure it doesn't already exist
-        guard (regional.regionalMatches?.allObjects as! [Match]).filter({return $0.matchNumber == matchNumber}).isEmpty else {
+        guard (regional.regionalMatches?.allObjects as! [Match]).filter({return $0.matchNumber!.intValue == matchNumber}).isEmpty else {
             throw DataManagingError.matchAlreadyExists
         }
         
@@ -322,7 +318,7 @@ class TeamDataManager {
 			var alreadyExists: Bool = false
 			var preExistentTeamPerformance: TeamMatchPerformance?
 			for teamPerformance in match.teamPerformances!.allObjects as! [TeamMatchPerformance] {
-				if teamPerformance.allianceColor == teamAndPlace.allianceColorAndTeam["Color"] && teamPerformance.allianceTeam == teamAndPlace.allianceColorAndTeam["Team"] {
+				if teamPerformance.allianceColor?.intValue == teamAndPlace.allianceColorAndTeam["Color"] && teamPerformance.allianceTeam?.intValue == teamAndPlace.allianceColorAndTeam["Team"] {
 					alreadyExists = true
 					preExistentTeamPerformance = teamPerformance
 				}
@@ -531,7 +527,7 @@ class TeamDataManager {
 		
 		let mutableSet = matchPerformance.autonomousCycles?.mutableCopy() as! NSMutableOrderedSet
 		mutableSet.insert(newCycle, at: place)
-		matchPerformance.autonomousCycles = (mutableSet.copy() as! OrderedSet)
+		matchPerformance.autonomousCycles = (mutableSet.copy() as! NSOrderedSet)
 		
 		return newCycle
 	}
