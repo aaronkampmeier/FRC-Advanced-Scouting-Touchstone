@@ -19,6 +19,7 @@ class TeamListDetailViewController: UIViewController, TeamSelectionDelegate {
 	@IBOutlet weak var driverExpLabel: UILabel!
 	@IBOutlet weak var weightLabel: UILabel!
 	@IBOutlet weak var standsScoutingButton: UIBarButtonItem!
+	@IBOutlet weak var navBar: UINavigationItem!
 	
 	var frontImage: TeamImagePhoto? {
 		didSet {
@@ -36,6 +37,7 @@ class TeamListDetailViewController: UIViewController, TeamSelectionDelegate {
 	var selectedTeam: Team? {
 		didSet {
 			if let team = selectedTeam {
+				navBar.title = "Team \(team.teamNumber ?? "")"
 				teamNumberLabel.text = team.teamNumber
 				
 				weightLabel.text = "Weight: \(team.robotWeight ?? 0) lbs"
@@ -52,6 +54,12 @@ class TeamListDetailViewController: UIViewController, TeamSelectionDelegate {
 					sideImage = TeamImagePhoto(image: UIImage(data: image as Data), attributedCaptionTitle: NSAttributedString(string: "Team \(team.teamNumber!): Side Image"))
 				} else {
 					sideImage = nil
+				}
+				
+				if let _ = selectedRegional {
+					standsScoutingButton.isEnabled = true
+				} else {
+					standsScoutingButton.isEnabled = false
 				}
 			} else {
 				
@@ -118,7 +126,7 @@ class TeamListDetailViewController: UIViewController, TeamSelectionDelegate {
 		sideImageButton.imageView?.contentMode = .scaleAspectFit
 		
 		let displayModeButtonItem = splitViewController!.displayModeButtonItem
-		displayModeButtonItem.title = "Teams"
+//		displayModeButtonItem.title = "Teams"
 		
 		if navigationItem.leftBarButtonItems?.isEmpty ?? true {
 			navigationItem.leftBarButtonItems = [displayModeButtonItem]

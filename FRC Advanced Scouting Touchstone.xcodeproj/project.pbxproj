@@ -51,10 +51,9 @@
 		1F78E7901C3B469300221927 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 1F78E78E1C3B469300221927 /* LaunchScreen.storyboard */; };
 		1F78E79B1C3B469300221927 /* FRC_Advanced_Scouting_TelemetricsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F78E79A1C3B469300221927 /* FRC_Advanced_Scouting_TelemetricsTests.swift */; };
 		1F78E7A61C3B469300221927 /* FRC_Advanced_Scouting_TelemetricsUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F78E7A51C3B469300221927 /* FRC_Advanced_Scouting_TelemetricsUITests.swift */; };
-		1F7AE4DB1DCC2DC80029B420 /* Surge.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1F178BD31D9F042000179D11 /* Surge.framework */; };
-		1F7AE4DC1DCC2DC80029B420 /* Surge.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 1F178BD31D9F042000179D11 /* Surge.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		1F9B782B1CD1A42400B4E5AE /* HiddenDebugViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F9B782A1CD1A42400B4E5AE /* HiddenDebugViewController.swift */; };
 		1FA6A73E1CD3B4DD00772C63 /* TransferInfoTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FA6A73D1CD3B4DD00772C63 /* TransferInfoTableViewController.swift */; };
+		1FAA2A951DFE1F4300514B9E /* Surge.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1FAA2A921DFE1F3500514B9E /* Surge.framework */; };
 		1FB99DB31C741840004BC2C1 /* AdminConfigureDetailRegionalViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FB99DB21C741840004BC2C1 /* AdminConfigureDetailRegionalViewController.swift */; };
 		1FBB426D1C9A29FC0017E36C /* Statistics.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FBB426C1C9A29FC0017E36C /* Statistics.swift */; };
 		1FBC9E691CC2EE11005DB3F4 /* Fabric.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1FBC9E671CC2EE11005DB3F4 /* Fabric.framework */; };
@@ -80,20 +79,6 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
-		1F178BD21D9F042000179D11 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 1F178BCD1D9F041F00179D11 /* Surge.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = F8A1E1AA19917A79009735E2;
-			remoteInfo = Surge;
-		};
-		1F178BD41D9F042000179D11 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 1F178BCD1D9F041F00179D11 /* Surge.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = F84A6AAE19A9A72F007B53E1;
-			remoteInfo = SurgeTests;
-		};
 		1F78E7971C3B469300221927 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 1F78E7771C3B469300221927 /* Project object */;
@@ -108,12 +93,33 @@
 			remoteGlobalIDString = 1F78E77E1C3B469300221927;
 			remoteInfo = "FRC Advanced Scouting Telemetrics";
 		};
-		1F7AE4DD1DCC2DC80029B420 /* PBXContainerItemProxy */ = {
+		1FAA2A7D1DFE1EBE00514B9E /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
-			containerPortal = 1F178BCD1D9F041F00179D11 /* Surge.xcodeproj */;
-			proxyType = 1;
-			remoteGlobalIDString = F8A1E1A919917A79009735E2;
+			containerPortal = 1FAA2A781DFE1EBE00514B9E /* Surge.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = F8A1E1AA19917A79009735E2;
 			remoteInfo = Surge;
+		};
+		1FAA2A7F1DFE1EBE00514B9E /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 1FAA2A781DFE1EBE00514B9E /* Surge.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = F84A6AAE19A9A72F007B53E1;
+			remoteInfo = SurgeTests;
+		};
+		1FAA2A911DFE1F3500514B9E /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 1FAA2A8C1DFE1F3500514B9E /* Surge.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = F8A1E1AA19917A79009735E2;
+			remoteInfo = Surge;
+		};
+		1FAA2A931DFE1F3500514B9E /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 1FAA2A8C1DFE1F3500514B9E /* Surge.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = F84A6AAE19A9A72F007B53E1;
+			remoteInfo = SurgeTests;
 		};
 /* End PBXContainerItemProxy section */
 
@@ -124,7 +130,6 @@
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
-				1F7AE4DC1DCC2DC80029B420 /* Surge.framework in Embed Frameworks */,
 			);
 			name = "Embed Frameworks";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -142,7 +147,6 @@
 		1F08B5101CD34D9100C9B7E8 /* MigrationPolicies.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MigrationPolicies.swift; sourceTree = "<group>"; };
 		1F12CF131C78FD370014200C /* CourtyardViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CourtyardViewController.swift; sourceTree = "<group>"; };
 		1F12CF171C7A6CD70014200C /* Stopwatch.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Stopwatch.swift; sourceTree = "<group>"; };
-		1F178BCD1D9F041F00179D11 /* Surge.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = Surge.xcodeproj; path = "../../../Downloads/Surge-master/Surge.xcodeproj"; sourceTree = "<group>"; };
 		1F21DF111C66942200C55D0E /* SortVC.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SortVC.swift; sourceTree = "<group>"; };
 		1F2422421C73DF08008A5AFC /* FRC_Advanced_Scouting_Telemetrics CD 7.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "FRC_Advanced_Scouting_Telemetrics CD 7.xcdatamodel"; sourceTree = "<group>"; };
 		1F2F9A211CE2D6E400B85A72 /* TeamListSearchResultsTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TeamListSearchResultsTableViewController.swift; sourceTree = "<group>"; };
@@ -193,10 +197,13 @@
 		1F78E7A11C3B469300221927 /* FRC Advanced Scouting Touchstone.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "FRC Advanced Scouting Touchstone.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
 		1F78E7A51C3B469300221927 /* FRC_Advanced_Scouting_TelemetricsUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FRC_Advanced_Scouting_TelemetricsUITests.swift; sourceTree = "<group>"; };
 		1F78E7A71C3B469300221927 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		1F7AE4E01DCFF31F0029B420 /* FRC_Advanced_Scouting_Telemetrics Version 14.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "FRC_Advanced_Scouting_Telemetrics Version 14.xcdatamodel"; sourceTree = "<group>"; };
 		1F9A53861C6AB0F000B0AAE3 /* FRC_Advanced_Scouting_Telemetrics CD 5.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "FRC_Advanced_Scouting_Telemetrics CD 5.xcdatamodel"; sourceTree = "<group>"; };
 		1F9B78241CD07C7000B4E5AE /* NYTPhotoViewer.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = NYTPhotoViewer.framework; path = "Pods/../build/Debug-iphoneos/NYTPhotoViewer.framework"; sourceTree = "<group>"; };
 		1F9B782A1CD1A42400B4E5AE /* HiddenDebugViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HiddenDebugViewController.swift; sourceTree = "<group>"; };
 		1FA6A73D1CD3B4DD00772C63 /* TransferInfoTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TransferInfoTableViewController.swift; sourceTree = "<group>"; };
+		1FAA2A781DFE1EBE00514B9E /* Surge.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = Surge.xcodeproj; path = "Surge-master/Surge.xcodeproj"; sourceTree = "<group>"; };
+		1FAA2A8C1DFE1F3500514B9E /* Surge.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = Surge.xcodeproj; path = "Surge-master/Surge.xcodeproj"; sourceTree = "<group>"; };
 		1FB99DB21C741840004BC2C1 /* AdminConfigureDetailRegionalViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AdminConfigureDetailRegionalViewController.swift; sourceTree = "<group>"; };
 		1FBB426C1C9A29FC0017E36C /* Statistics.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Statistics.swift; sourceTree = "<group>"; wrapsLines = 1; };
 		1FBC9E671CC2EE11005DB3F4 /* Fabric.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Fabric.framework; sourceTree = SOURCE_ROOT; };
@@ -230,8 +237,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				1FAA2A951DFE1F4300514B9E /* Surge.framework in Frameworks */,
 				B57D6D43A840A163A005FE54 /* Pods.framework in Frameworks */,
-				1F7AE4DB1DCC2DC80029B420 /* Surge.framework in Frameworks */,
 				1FBC9E6C1CC2F007005DB3F4 /* Crashlytics.framework in Frameworks */,
 				1FBC9E691CC2EE11005DB3F4 /* Fabric.framework in Frameworks */,
 			);
@@ -254,15 +261,6 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		1F178BCE1D9F041F00179D11 /* Products */ = {
-			isa = PBXGroup;
-			children = (
-				1F178BD31D9F042000179D11 /* Surge.framework */,
-				1F178BD51D9F042000179D11 /* SurgeTests.xctest */,
-			);
-			name = Products;
-			sourceTree = "<group>";
-		};
 		1F21DF101C645D1F00C55D0E /* View Controllers */ = {
 			isa = PBXGroup;
 			children = (
@@ -322,7 +320,7 @@
 		1F78E7761C3B469300221927 = {
 			isa = PBXGroup;
 			children = (
-				1F178BCD1D9F041F00179D11 /* Surge.xcodeproj */,
+				1FAA2A8C1DFE1F3500514B9E /* Surge.xcodeproj */,
 				1F78E7811C3B469300221927 /* FRC Advanced Scouting Touchstone */,
 				1F78E7991C3B469300221927 /* FRC Advanced Scouting TouchstoneTests */,
 				1F78E7A41C3B469300221927 /* FRC Advanced Scouting TouchstoneUITests */,
@@ -394,6 +392,24 @@
 			name = "Data Syncing";
 			sourceTree = "<group>";
 		};
+		1FAA2A791DFE1EBE00514B9E /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				1FAA2A7E1DFE1EBE00514B9E /* Surge.framework */,
+				1FAA2A801DFE1EBE00514B9E /* SurgeTests.xctest */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		1FAA2A8D1DFE1F3500514B9E /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				1FAA2A921DFE1F3500514B9E /* Surge.framework */,
+				1FAA2A941DFE1F3500514B9E /* SurgeTests.xctest */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
 		1FCA7ADB1C6408B2004294D1 /* Core Data */ = {
 			isa = PBXGroup;
 			children = (
@@ -437,6 +453,7 @@
 		247597E7D320F6FF4FC40A15 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				1FAA2A781DFE1EBE00514B9E /* Surge.xcodeproj */,
 				1F9B78241CD07C7000B4E5AE /* NYTPhotoViewer.framework */,
 				1FDE56921CCD376B009042CD /* opencv2.framework */,
 				1FBC9E6B1CC2F007005DB3F4 /* Crashlytics.framework */,
@@ -474,7 +491,6 @@
 			buildRules = (
 			);
 			dependencies = (
-				1F7AE4DE1DCC2DC80029B420 /* PBXTargetDependency */,
 			);
 			name = "FRC Advanced Scouting Touchstone";
 			productName = "FRC Advanced Scouting Telemetrics";
@@ -557,8 +573,12 @@
 			projectDirPath = "";
 			projectReferences = (
 				{
-					ProductGroup = 1F178BCE1D9F041F00179D11 /* Products */;
-					ProjectRef = 1F178BCD1D9F041F00179D11 /* Surge.xcodeproj */;
+					ProductGroup = 1FAA2A8D1DFE1F3500514B9E /* Products */;
+					ProjectRef = 1FAA2A8C1DFE1F3500514B9E /* Surge.xcodeproj */;
+				},
+				{
+					ProductGroup = 1FAA2A791DFE1EBE00514B9E /* Products */;
+					ProjectRef = 1FAA2A781DFE1EBE00514B9E /* Surge.xcodeproj */;
 				},
 			);
 			projectRoot = "";
@@ -571,18 +591,32 @@
 /* End PBXProject section */
 
 /* Begin PBXReferenceProxy section */
-		1F178BD31D9F042000179D11 /* Surge.framework */ = {
+		1FAA2A7E1DFE1EBE00514B9E /* Surge.framework */ = {
 			isa = PBXReferenceProxy;
 			fileType = wrapper.framework;
 			path = Surge.framework;
-			remoteRef = 1F178BD21D9F042000179D11 /* PBXContainerItemProxy */;
+			remoteRef = 1FAA2A7D1DFE1EBE00514B9E /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
-		1F178BD51D9F042000179D11 /* SurgeTests.xctest */ = {
+		1FAA2A801DFE1EBE00514B9E /* SurgeTests.xctest */ = {
 			isa = PBXReferenceProxy;
 			fileType = wrapper.cfbundle;
 			path = SurgeTests.xctest;
-			remoteRef = 1F178BD41D9F042000179D11 /* PBXContainerItemProxy */;
+			remoteRef = 1FAA2A7F1DFE1EBE00514B9E /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		1FAA2A921DFE1F3500514B9E /* Surge.framework */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.framework;
+			path = Surge.framework;
+			remoteRef = 1FAA2A911DFE1F3500514B9E /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		1FAA2A941DFE1F3500514B9E /* SurgeTests.xctest */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.cfbundle;
+			path = SurgeTests.xctest;
+			remoteRef = 1FAA2A931DFE1F3500514B9E /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
 /* End PBXReferenceProxy section */
@@ -772,11 +806,6 @@
 			target = 1F78E77E1C3B469300221927 /* FRC Advanced Scouting Touchstone */;
 			targetProxy = 1F78E7A21C3B469300221927 /* PBXContainerItemProxy */;
 		};
-		1F7AE4DE1DCC2DC80029B420 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			name = Surge;
-			targetProxy = 1F7AE4DD1DCC2DC80029B420 /* PBXContainerItemProxy */;
-		};
 /* End PBXTargetDependency section */
 
 /* Begin PBXVariantGroup section */
@@ -893,6 +922,7 @@
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				DEVELOPMENT_TEAM = 3T77TK2ECU;
 				ENABLE_BITCODE = NO;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
@@ -916,7 +946,8 @@
 				OTHER_SWIFT_FLAGS = "$(inherited) \"-D\" \"COCOAPODS\"";
 				PRODUCT_BUNDLE_IDENTIFIER = "com.kampmeier.FRC-Advanced-Scouting-Touchstone";
 				PRODUCT_NAME = "FRC Advanced Scouting Touchstone";
-				PROVISIONING_PROFILE = "1da15394-14e2-4de2-b834-e3feca4d0125";
+				PROVISIONING_PROFILE = "dc2cc8ac-b258-4781-8777-9eda8ed8eb59";
+				PROVISIONING_PROFILE_SPECIFIER = "Xcode Development";
 				SWIFT_OBJC_BRIDGING_HEADER = "";
 				SWIFT_VERSION = 3.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -1073,6 +1104,7 @@
 		1F78E7891C3B469300221927 /* FRC_Advanced_Scouting_Telemetrics.xcdatamodeld */ = {
 			isa = XCVersionGroup;
 			children = (
+				1F7AE4E01DCFF31F0029B420 /* FRC_Advanced_Scouting_Telemetrics Version 14.xcdatamodel */,
 				1F08B50F1CD33AFD00C9B7E8 /* FRC_Advanced_Scouting_Telemetrics Version 12-5.xcdatamodel */,
 				1F08B5041CD2F2BF00C9B7E8 /* FRC_Advanced_Scouting_Telemetrics Version 13.xcdatamodel */,
 				1F34C74C1CD2540B005255D5 /* FRC_Advanced_Scouting_Telemetrics Version 12.xcdatamodel */,

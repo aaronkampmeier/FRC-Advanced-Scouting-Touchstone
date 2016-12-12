@@ -415,8 +415,34 @@ enum StatCalculation: CustomStringConvertible {
 			let numOfTeams = teamRegionalPerformances.count
 			
 			//In order to make an array, first create an array of arrays representing each row in a matrix filled with zeroes
-			var arrayMatrix = createArrayMatrix(height: numOfTeams, width: numOfTeams, initValue: 0.0)
+			let arrayMatrix = createArrayMatrix(height: numOfTeams, width: numOfTeams, initValue: 0.0)
+			var matrixA = Matrix(arrayMatrix)
 			
+			//Trying a little different way
+			for firstTeamIndex in 0..<teamRegionalPerformances.count {
+				//First grab all the matches that the first team participated in
+				let firstTeamMatchPerformances = Array(teamRegionalPerformances[firstTeamIndex].matchPerformances!) as! [TeamMatchPerformance]
+				
+				for secondTeamIndex in 0..<teamRegionalPerformances.count {
+					//Then grab all the matches the second teams participated in
+					let secondTeamMatchPerformances = Array(teamRegionalPerformances[secondTeamIndex].matchPerformances!) as! [TeamMatchPerformance]
+					
+					//See which matches the teams have in common and are on the same alliance
+					var numOfCommonPlays = 0
+					for firstTeamPerformance in firstTeamMatchPerformances {
+						for secondTeamPerformance in secondTeamMatchPerformances {
+							if firstTeamPerformance.match == secondTeamPerformance.match && (firstTeamPerformance.allianceColor?.isEqual(to: secondTeamPerformance.allianceColor!))! {
+								numOfCommonPlays += 1
+							}
+						}
+					}
+					
+					//Set the number of common plays on an alliance in the matrix
+					matrixA[firstTeamIndex, secondTeamIndex] = Double(numOfCommonPlays)
+				}
+			}
+			
+			/*
 			for firstTeamPerformance in teamRegionalPerformances {
 				let firstPlace = teamRegionalPerformances.index(of: firstTeamPerformance)!.hashValue
 				let firstMatches: Set<Match> = Set(firstTeamPerformance.matchPerformances!.map() {performance in
@@ -432,12 +458,10 @@ enum StatCalculation: CustomStringConvertible {
 					let sharedMatches = firstMatches.intersection(secondMatches)
 					
 					//Set the number of shared matches in the matrix
-					arrayMatrix[firstPlace][secondPlace] = Double(sharedMatches.count)
+					matrixA[firstPlace,secondPlace] = Double(sharedMatches.count)
 				}
 			}
-			
-			//Create the matrix
-			let matrixA = Matrix(arrayMatrix)
+*/
 			
 			matrixACache.setObject(CachedMatrix(matrix: matrixA), forKey: regional)
 			return matrixA

@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="11542" systemVersion="15G1104" minimumToolsVersion="Xcode 7.3" sourceLanguage="Objective-C" userDefinedModelVersionIdentifier="">
+    <entity name="AutonomousCycle" representedClassName=".AutonomousCycle" syncable="YES">
+        <attribute name="moved" optional="YES" attributeType="Boolean" defaultValueString="NO" usesScalarValueType="NO" syncable="YES"/>
+        <relationship name="matchPerformance" maxCount="1" deletionRule="Nullify" destinationEntity="TeamMatchPerformance" inverseName="autonomousCycles" inverseEntity="TeamMatchPerformance" syncable="YES"/>
+    </entity>
+    <entity name="DraftBoard" representedClassName=".DraftBoard" syncable="YES">
+        <relationship name="teams" optional="YES" toMany="YES" deletionRule="Deny" ordered="YES" destinationEntity="Team" inverseName="draftBoard" inverseEntity="Team" syncable="YES"/>
+    </entity>
+    <entity name="Match" representedClassName=".Match" syncable="YES">
+        <attribute name="blueFinalScore" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="NO" syncable="YES"/>
+        <attribute name="blueRankingPoints" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="NO" syncable="YES"/>
+        <attribute name="matchNumber" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="NO" syncable="YES"/>
+        <attribute name="redFinalScore" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="NO" syncable="YES"/>
+        <attribute name="redRankingPoints" optional="YES" attributeType="Integer 64" defaultValueString="0.0" usesScalarValueType="NO" syncable="YES"/>
+        <attribute name="time" optional="YES" attributeType="Date" usesScalarValueType="NO" syncable="YES"/>
+        <relationship name="regional" maxCount="1" deletionRule="Nullify" destinationEntity="Regional" inverseName="regionalMatches" inverseEntity="Regional" syncable="YES"/>
+        <relationship name="teamPerformances" optional="YES" toMany="YES" maxCount="6" deletionRule="Cascade" destinationEntity="TeamMatchPerformance" inverseName="match" inverseEntity="TeamMatchPerformance" syncable="YES"/>
+    </entity>
+    <entity name="Regional" representedClassName=".Regional" syncable="YES">
+        <attribute name="name" attributeType="String" syncable="YES"/>
+        <attribute name="regionalNumber" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="NO" syncable="YES"/>
+        <relationship name="regionalMatches" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="Match" inverseName="regional" inverseEntity="Match" syncable="YES"/>
+        <relationship name="teamRegionalPerformances" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="TeamRegionalPerformance" inverseName="regional" inverseEntity="TeamRegionalPerformance" syncable="YES"/>
+    </entity>
+    <entity name="Team" representedClassName=".Team" syncable="YES">
+        <attribute name="frontImage" optional="YES" attributeType="Binary" allowsExternalBinaryDataStorage="YES" syncable="YES"/>
+        <attribute name="height" optional="YES" attributeType="Double" minValueString="0" defaultValueString="0.0" usesScalarValueType="NO" syncable="YES"/>
+        <attribute name="notes" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="robotWeight" optional="YES" attributeType="Double" defaultValueString="0.0" usesScalarValueType="NO" syncable="YES"/>
+        <attribute name="sideImage" optional="YES" attributeType="Binary" allowsExternalBinaryDataStorage="YES" syncable="YES"/>
+        <attribute name="teamNumber" attributeType="String" syncable="YES"/>
+        <relationship name="draftBoard" maxCount="1" deletionRule="Nullify" destinationEntity="DraftBoard" inverseName="teams" inverseEntity="DraftBoard" syncable="YES"/>
+        <relationship name="regionalPerformances" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="TeamRegionalPerformance" inverseName="team" inverseEntity="TeamRegionalPerformance" syncable="YES"/>
+    </entity>
+    <entity name="TeamMatchPerformance" representedClassName=".TeamMatchPerformance" syncable="YES">
+        <attribute name="allianceColor" attributeType="Integer 64" minValueString="0" maxValueString="1" usesScalarValueType="NO" syncable="YES"/>
+        <attribute name="allianceTeam" attributeType="Integer 64" minValueString="1" maxValueString="3" usesScalarValueType="NO" syncable="YES"/>
+        <attribute name="derievedStats" optional="YES" attributeType="Binary" syncable="YES"/>
+        <relationship name="autonomousCycles" optional="YES" toMany="YES" deletionRule="Cascade" ordered="YES" destinationEntity="AutonomousCycle" inverseName="matchPerformance" inverseEntity="AutonomousCycle" syncable="YES"/>
+        <relationship name="match" maxCount="1" deletionRule="Nullify" destinationEntity="Match" inverseName="teamPerformances" inverseEntity="Match" syncable="YES"/>
+        <relationship name="regionalPerformance" maxCount="1" deletionRule="Nullify" destinationEntity="TeamRegionalPerformance" inverseName="matchPerformances" inverseEntity="TeamRegionalPerformance" syncable="YES"/>
+        <relationship name="timeMarkers" optional="YES" toMany="YES" deletionRule="Cascade" ordered="YES" destinationEntity="TimeMarker" inverseName="teamMatchPerformance" inverseEntity="TimeMarker" syncable="YES"/>
+    </entity>
+    <entity name="TeamRegionalPerformance" representedClassName=".TeamRegionalPerformance" syncable="YES">
+        <relationship name="matchPerformances" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="TeamMatchPerformance" inverseName="regionalPerformance" inverseEntity="TeamMatchPerformance" syncable="YES"/>
+        <relationship name="regional" maxCount="1" deletionRule="Nullify" destinationEntity="Regional" inverseName="teamRegionalPerformances" inverseEntity="Regional" syncable="YES"/>
+        <relationship name="team" maxCount="1" deletionRule="Nullify" destinationEntity="Team" inverseName="regionalPerformances" inverseEntity="Team" syncable="YES"/>
+    </entity>
+    <entity name="TimeMarker" representedClassName=".TimeMarker" syncable="YES">
+        <attribute name="event" attributeType="Integer 64" minValueString="0" usesScalarValueType="NO" syncable="YES"/>
+        <attribute name="time" attributeType="Double" defaultValueString="0.0" usesScalarValueType="NO" syncable="YES"/>
+        <relationship name="teamMatchPerformance" maxCount="1" deletionRule="Nullify" destinationEntity="TeamMatchPerformance" inverseName="timeMarkers" inverseEntity="TeamMatchPerformance" syncable="YES"/>
+    </entity>
+    <elements>
+        <element name="AutonomousCycle" positionX="178" positionY="224" width="128" height="73"/>
+        <element name="DraftBoard" positionX="-351" positionY="-27" width="128" height="60"/>
+        <element name="Match" positionX="-99" positionY="468" width="128" height="163"/>
+        <element name="Regional" positionX="-333" positionY="309" width="128" height="105"/>
+        <element name="Team" positionX="-92" positionY="-70" width="128" height="163"/>
+        <element name="TeamMatchPerformance" positionX="-99" positionY="302" width="128" height="148"/>
+        <element name="TeamRegionalPerformance" positionX="-92" positionY="144" width="128" height="90"/>
+        <element name="TimeMarker" positionX="180" positionY="360" width="126" height="88"/>
+    </elements>
+</model>
