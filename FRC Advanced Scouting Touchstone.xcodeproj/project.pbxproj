@@ -54,7 +54,6 @@
 		1F9B782B1CD1A42400B4E5AE /* HiddenDebugViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F9B782A1CD1A42400B4E5AE /* HiddenDebugViewController.swift */; };
 		1FA6A73E1CD3B4DD00772C63 /* TransferInfoTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FA6A73D1CD3B4DD00772C63 /* TransferInfoTableViewController.swift */; };
 		1FAA2A951DFE1F4300514B9E /* Surge.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1FAA2A921DFE1F3500514B9E /* Surge.framework */; };
-		1FB99DB31C741840004BC2C1 /* AdminConfigureDetailRegionalViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FB99DB21C741840004BC2C1 /* AdminConfigureDetailRegionalViewController.swift */; };
 		1FBB426D1C9A29FC0017E36C /* Statistics.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FBB426C1C9A29FC0017E36C /* Statistics.swift */; };
 		1FBC9E691CC2EE11005DB3F4 /* Fabric.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1FBC9E671CC2EE11005DB3F4 /* Fabric.framework */; };
 		1FBC9E6C1CC2F007005DB3F4 /* Crashlytics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1FBC9E6B1CC2F007005DB3F4 /* Crashlytics.framework */; };
@@ -72,9 +71,6 @@
 		1FE2C12D1C81875A00CECBF1 /* ImageScalingFunctions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FE2C12C1C81875A00CECBF1 /* ImageScalingFunctions.swift */; };
 		1FF1F1731C3CC74A0051EE54 /* TeamListController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FF1F1721C3CC74A0051EE54 /* TeamListController.swift */; };
 		1FF1F1791C4604370051EE54 /* TeamDataManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FF1F1781C4604370051EE54 /* TeamDataManager.swift */; };
-		1FF32A211C6D194B00CD028C /* AdminConfigureVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FF32A201C6D194B00CD028C /* AdminConfigureVC.swift */; };
-		1FF32A231C6E7AAC00CD028C /* AdminConfigureDetailVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FF32A221C6E7AAC00CD028C /* AdminConfigureDetailVC.swift */; };
-		1FF32A281C6E990C00CD028C /* AdminConfigureDetailMatchVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FF32A271C6E990C00CD028C /* AdminConfigureDetailMatchVC.swift */; };
 		B57D6D43A840A163A005FE54 /* Pods.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1C713CB13EB7BA66AC808E54 /* Pods.framework */; };
 /* End PBXBuildFile section */
 
@@ -204,7 +200,7 @@
 		1FA6A73D1CD3B4DD00772C63 /* TransferInfoTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TransferInfoTableViewController.swift; sourceTree = "<group>"; };
 		1FAA2A781DFE1EBE00514B9E /* Surge.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = Surge.xcodeproj; path = "Surge-master/Surge.xcodeproj"; sourceTree = "<group>"; };
 		1FAA2A8C1DFE1F3500514B9E /* Surge.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = Surge.xcodeproj; path = "Surge-master/Surge.xcodeproj"; sourceTree = "<group>"; };
-		1FB99DB21C741840004BC2C1 /* AdminConfigureDetailRegionalViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AdminConfigureDetailRegionalViewController.swift; sourceTree = "<group>"; };
+		1FB1E88D1E061E340038D6D8 /* FAST 2.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "FAST 2.xcdatamodel"; sourceTree = "<group>"; };
 		1FBB426C1C9A29FC0017E36C /* Statistics.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Statistics.swift; sourceTree = "<group>"; wrapsLines = 1; };
 		1FBC9E671CC2EE11005DB3F4 /* Fabric.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Fabric.framework; sourceTree = SOURCE_ROOT; };
 		1FBC9E6B1CC2F007005DB3F4 /* Crashlytics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Crashlytics.framework; sourceTree = SOURCE_ROOT; };
@@ -225,9 +221,6 @@
 		1FE2C12C1C81875A00CECBF1 /* ImageScalingFunctions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ImageScalingFunctions.swift; sourceTree = "<group>"; };
 		1FF1F1721C3CC74A0051EE54 /* TeamListController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TeamListController.swift; sourceTree = "<group>"; };
 		1FF1F1781C4604370051EE54 /* TeamDataManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TeamDataManager.swift; sourceTree = "<group>"; };
-		1FF32A201C6D194B00CD028C /* AdminConfigureVC.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AdminConfigureVC.swift; sourceTree = "<group>"; };
-		1FF32A221C6E7AAC00CD028C /* AdminConfigureDetailVC.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AdminConfigureDetailVC.swift; sourceTree = "<group>"; };
-		1FF32A271C6E990C00CD028C /* AdminConfigureDetailMatchVC.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AdminConfigureDetailMatchVC.swift; sourceTree = "<group>"; };
 		7A0B0ED33C5CDE3647C7F796 /* Pods.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.release.xcconfig; path = "Pods/Target Support Files/Pods/Pods.release.xcconfig"; sourceTree = "<group>"; };
 		FB662BA537272C54A0526CB7 /* Pods.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.debug.xcconfig; path = "Pods/Target Support Files/Pods/Pods.debug.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -281,10 +274,6 @@
 		1F30CFC91C7E510100A4EFCA /* Admin Console */ = {
 			isa = PBXGroup;
 			children = (
-				1FF32A271C6E990C00CD028C /* AdminConfigureDetailMatchVC.swift */,
-				1FB99DB21C741840004BC2C1 /* AdminConfigureDetailRegionalViewController.swift */,
-				1FF32A221C6E7AAC00CD028C /* AdminConfigureDetailVC.swift */,
-				1FF32A201C6D194B00CD028C /* AdminConfigureVC.swift */,
 				1F4FEDAB1C4B686000F4016D /* AdminConsoleController.swift */,
 			);
 			name = "Admin Console";
@@ -716,14 +705,11 @@
 			files = (
 				1F45343F1C7242B9004EDDB9 /* DraftBoard.swift in Sources */,
 				1F08B50E1CD32BBA00C9B7E8 /* Model.xcmappingmodel in Sources */,
-				1FB99DB31C741840004BC2C1 /* AdminConfigureDetailRegionalViewController.swift in Sources */,
 				1F78E78B1C3B469300221927 /* FRC_Advanced_Scouting_Telemetrics.xcdatamodeld in Sources */,
-				1FF32A281C6E990C00CD028C /* AdminConfigureDetailMatchVC.swift in Sources */,
 				1F4534391C7242B9004EDDB9 /* TimeMarker.swift in Sources */,
 				1F2F9A221CE2D6E400B85A72 /* TeamListSearchResultsTableViewController.swift in Sources */,
 				1FF1F1731C3CC74A0051EE54 /* TeamListController.swift in Sources */,
 				1FE2C12B1C80DFBD00CECBF1 /* NeutralViewController.swift in Sources */,
-				1FF32A211C6D194B00CD028C /* AdminConfigureVC.swift in Sources */,
 				1FDC1BD11CD69F5F00ABE327 /* TeamListTableViewController.swift in Sources */,
 				1F12CF141C78FD370014200C /* CourtyardViewController.swift in Sources */,
 				1F4534511C7242B9004EDDB9 /* TeamMatchPerformance.swift in Sources */,
@@ -736,7 +722,6 @@
 				1FBE627F1CAEE0FB001FDFB7 /* TeamPickerTableViewController.swift in Sources */,
 				1F45343E1C7242B9004EDDB9 /* DraftBoard+CoreDataProperties.swift in Sources */,
 				1F4534441C7242B9004EDDB9 /* AutonomousCycle+CoreDataProperties.swift in Sources */,
-				1FF32A231C6E7AAC00CD028C /* AdminConfigureDetailVC.swift in Sources */,
 				1FE2C1291C80136800CECBF1 /* ShotChartViewController.swift in Sources */,
 				1F45340E1C6FC3EA004EDDB9 /* GameStatsCollectionViewCell.swift in Sources */,
 				1F78E7831C3B469300221927 /* AppDelegate.swift in Sources */,
@@ -1104,6 +1089,7 @@
 		1F78E7891C3B469300221927 /* FRC_Advanced_Scouting_Telemetrics.xcdatamodeld */ = {
 			isa = XCVersionGroup;
 			children = (
+				1FB1E88D1E061E340038D6D8 /* FAST 2.xcdatamodel */,
 				1F7AE4E01DCFF31F0029B420 /* FRC_Advanced_Scouting_Telemetrics Version 14.xcdatamodel */,
 				1F08B50F1CD33AFD00C9B7E8 /* FRC_Advanced_Scouting_Telemetrics Version 12-5.xcdatamodel */,
 				1F08B5041CD2F2BF00C9B7E8 /* FRC_Advanced_Scouting_Telemetrics Version 13.xcdatamodel */,

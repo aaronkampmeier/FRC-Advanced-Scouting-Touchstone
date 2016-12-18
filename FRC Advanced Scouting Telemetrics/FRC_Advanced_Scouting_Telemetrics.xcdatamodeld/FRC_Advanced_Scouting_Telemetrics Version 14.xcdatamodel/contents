@@ -59,7 +59,7 @@
         <element name="Regional" positionX="-333" positionY="309" width="128" height="105"/>
         <element name="Team" positionX="-92" positionY="-70" width="128" height="163"/>
         <element name="TeamMatchPerformance" positionX="-99" positionY="302" width="128" height="148"/>
-        <element name="TeamRegionalPerformance" positionX="-92" positionY="144" width="128" height="90"/>
+        <element name="TeamRegionalPerformance" positionX="-92" positionY="144" width="128" height="88"/>
         <element name="TimeMarker" positionX="180" positionY="360" width="126" height="88"/>
     </elements>
 </model>
