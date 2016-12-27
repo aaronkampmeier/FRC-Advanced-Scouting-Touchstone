@@ -2,20 +2,22 @@
 //  TimeMarker+CoreDataProperties.swift
 //  FRC Advanced Scouting Touchstone
 //
-//  Created by Aaron Kampmeier on 2/15/16.
+//  Created by Aaron Kampmeier on 12/18/16.
 //  Copyright © 2016 Kampfire Technologies. All rights reserved.
-//
-//  Choose "Create NSManagedObject Subclass…" from the Core Data editor menu
-//  to delete and recreate this implementation file for your updated model.
 //
 
 import Foundation
 import CoreData
 
+
 extension TimeMarker {
 
-    @NSManaged var time: NSNumber?
-    @NSManaged var event: NSNumber?
-    @NSManaged var teamMatchPerformance: NSManagedObject?
+    @nonobjc public class func fetchRequest() -> NSFetchRequest<TimeMarker> {
+        return NSFetchRequest<TimeMarker>(entityName: "TimeMarker");
+    }
+
+    @NSManaged public var event: NSNumber?
+    @NSManaged public var time: NSNumber?
+    @NSManaged public var localMatchPerformance: LocalMatchPerformance?
 
 }

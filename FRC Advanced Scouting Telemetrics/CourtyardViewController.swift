@@ -9,6 +9,12 @@
 import UIKit
 import AVFoundation
 
+struct Shot {
+    //Empty just a placeholder; Don't use
+    var xLocation: NSNumber
+    var yLocation: NSNumber
+}
+
 class CourtyardViewController: UIViewController, UITableViewDataSource, UITableViewDelegate, UIPopoverPresentationControllerDelegate {
 	@IBOutlet weak var courtyardImage: UIImageView!
 	
@@ -22,15 +28,15 @@ class CourtyardViewController: UIViewController, UITableViewDataSource, UITableV
 	var storedSizeOfImage: CGSize!
 	
 	struct CourtyardShot {
-		let shot: Shot?
+        var shot: Shot?
 		var storedCoordinate: CGPoint {
 			get {
-				return CGPoint(x: (shot?.xLocation?.doubleValue)!, y: (shot?.yLocation?.doubleValue)!)
+				return CGPoint(x: (shot?.xLocation.doubleValue)!, y: (shot?.yLocation.doubleValue)!)
 			}
 			
 			set {
-				shot?.xLocation = newValue.x as NSNumber?
-				shot?.yLocation = newValue.y as NSNumber?
+				shot?.xLocation = (newValue.x as NSNumber?)!
+				shot?.yLocation = (newValue.y as NSNumber?)!
 			}
 		}
 		
@@ -39,7 +45,7 @@ class CourtyardViewController: UIViewController, UITableViewDataSource, UITableV
 		init(shot: Shot) {
 			self.shot = shot
 			
-			storedCoordinate = CGPoint(x: (shot.xLocation?.doubleValue)!, y: (shot.yLocation?.doubleValue)!)
+			storedCoordinate = CGPoint(x: (shot.xLocation.doubleValue), y: (shot.yLocation.doubleValue))
 		}
 	}
 	
@@ -108,8 +114,7 @@ class CourtyardViewController: UIViewController, UITableViewDataSource, UITableV
 	func tappedOnImage(_ sender: UITapGestureRecognizer) {
 		let location = sender.location(in: invisibleView)
 		//Create a new shot
-		selectedShot = CourtyardShot(shot: dataManager.createShot(atPoint: translatePointCoordinateToStoredCordinate(location, viewSize: invisibleView.frame.size, storedSize: storedSizeOfImage)))
-		selectedShot?.shot?.shootingTeam = standsScoutingVC?.matchPerformance
+//		selectedShot = CourtyardShot(shot: dataManager.createShot(atPoint: translatePointCoordinateToStoredCordinate(location, viewSize: invisibleView.frame.size, storedSize: storedSizeOfImage)))
 		
 		//Make a view for the shot
 		let point = location
@@ -163,25 +168,8 @@ class CourtyardViewController: UIViewController, UITableViewDataSource, UITableV
 		if finishedEditingShot {
 			//Update the dot (rect) on the screen and save a time marker
 			
-			if selectedShot!.shot?.blocked == true {
-				selectedShot?.pointView.backgroundColor = UIColor.red
-			} else {
-				selectedShot?.pointView.backgroundColor = UIColor.green
-			}
-			
-			if let highGoal = selectedShot?.shot?.highGoal?.boolValue {
-				if highGoal && selectedShot!.shot?.blocked == true {
-					dataManager.addTimeMarker(withEvent: TeamDataManager.TimeMarkerEventType.failedHighShot, atTime: standsScoutingVC!.stopwatch.elapsedTime, inMatchPerformance: standsScoutingVC!.matchPerformance!)
-				} else if highGoal && selectedShot!.shot?.blocked == false {
-					dataManager.addTimeMarker(withEvent: TeamDataManager.TimeMarkerEventType.successfulHighShot, atTime: standsScoutingVC!.stopwatch.elapsedTime, inMatchPerformance: standsScoutingVC!.matchPerformance!)
-				} else if !highGoal && selectedShot!.shot?.blocked == true {
-					dataManager.addTimeMarker(withEvent: TeamDataManager.TimeMarkerEventType.failedLowShot, atTime: standsScoutingVC!.stopwatch.elapsedTime, inMatchPerformance: standsScoutingVC!.matchPerformance!)
-				} else if !highGoal && selectedShot!.shot?.blocked == false {
-					dataManager.addTimeMarker(withEvent: TeamDataManager.TimeMarkerEventType.successfulLowShot, atTime: standsScoutingVC!.stopwatch.elapsedTime, inMatchPerformance: standsScoutingVC!.matchPerformance!)
-				}
-			}
 		} else {
-			dataManager.remove(selectedShot!.shot!)
+//			dataManager.remove(selectedShot!.shot!)
 			selectedShot?.pointView.removeFromSuperview()
 			selectedShot = nil
 		}
@@ -232,19 +220,7 @@ class CourtyardViewController: UIViewController, UITableViewDataSource, UITableV
 	}
 	
 	func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-		switch tableView.tag {
-		case 7:
-			//Save if it was the high goal or not
-			selectedShot?.shot?.highGoal = (indexPath as NSIndexPath).row as NSNumber?
-		case 2:
-			if (indexPath as NSIndexPath).row == 0 {
-				selectedShot?.shot?.blocked = true
-			} else {
-				selectedShot?.shot?.blocked = false
-			}
-		default:
-			break
-		}
+		
 	}
 
     /*

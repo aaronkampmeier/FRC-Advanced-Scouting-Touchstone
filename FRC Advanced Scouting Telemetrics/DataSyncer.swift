@@ -16,7 +16,11 @@ let DSTransferNumberChanged = "DSTransferNumberChanged"
 
 class DataSyncer: NSObject, CDEPersistentStoreEnsembleDelegate {
 	private static var sharedInstance: DataSyncer = DataSyncer()
-	
+    
+	static func sharedDataSyncer() -> DataSyncer {
+		return sharedInstance
+	}
+    
 	let fileSystem: CDECloudFileSystem
 	let ensemble: CDEPersistentStoreEnsemble
 	let multipeerConnection: MultipeerConnection
@@ -33,11 +37,11 @@ class DataSyncer: NSObject, CDEPersistentStoreEnsembleDelegate {
 		}
 		
 		multipeerConnection = MultipeerConnection(syncSecret: syncSecret)
-		let rootDir = try! appDelegate.applicationDocumentsDirectory.appendingPathComponent("EnsembleMultipeerSync", isDirectory: true).path
-		1
+		let rootDir = appDelegate.applicationDocumentsDirectory.appendingPathComponent("EnsembleMultipeerSyncV2", isDirectory: true).path
+		
 		fileSystem = CDEMultipeerCloudFileSystem(rootDirectory: rootDir, multipeerConnection: multipeerConnection)
 		multipeerConnection.fileSystem = (fileSystem as! CDEMultipeerCloudFileSystem)
-		ensemble = CDEPersistentStoreEnsemble(ensembleIdentifier: "FASTStore", persistentStore: appDelegate.coreDataURL, managedObjectModelURL: appDelegate.managedObjectModelURL, cloudFileSystem: fileSystem)
+		ensemble = CDEPersistentStoreEnsemble(ensembleIdentifier: "FASTStore", persistentStore: appDelegate.localPersistentStoreURL, managedObjectModelURL: appDelegate.managedObjectModelURL, cloudFileSystem: fileSystem)
 		
 		super.init()
 		
@@ -50,10 +54,6 @@ class DataSyncer: NSObject, CDEPersistentStoreEnsembleDelegate {
 			}
 		}
 		Timer.scheduledTimer(timeInterval: 5 * 60, target: self, selector: #selector(DataSyncer.autoSync(_:)), userInfo: nil, repeats: true)
-	}
-	
-	static func sharedDataSyncer() -> DataSyncer {
-		return sharedInstance
 	}
 	
 	///Attaches local ensemble object to the cloud (shared data store).
@@ -186,25 +186,32 @@ class DataSyncer: NSObject, CDEPersistentStoreEnsembleDelegate {
 		var globalIdentifiers = [AnyObject]()
 		for object in objects {
 			switch object {
-			case is DraftBoard:
-				globalIdentifiers.append("DraftBoard" as NSString)
-				NSLog("Global identifier is DraftBoard")
+			case is LocalTeamRanking:
+				globalIdentifiers.append("LocalTeamRanking" as NSString)
+				NSLog("Global identifier is LocalTeamRanking")
+				
+			//Universals
 			case is Team:
-				globalIdentifiers.append(NSString(string: "Team:\(object.value(forKey: "teamNumber")!)"))
-			case is Regional:
-				globalIdentifiers.append(NSString(string: "Regional:\(object.value(forKey: "regionalNumber")!)"))
-			case is TeamRegionalPerformance:
-				globalIdentifiers.append(NSString(string: "RegionalPerformance:\((object.value(forKey: "team")! as AnyObject).value(forKey: "teamNumber")!):\((object.value(forKey: "regional")! as AnyObject).value(forKey: "regionalNumber")!)"))
+				globalIdentifiers.append(NSString(string: "Universal:\(object.value(forKey: "key")!)"))
+			case is Event:
+				globalIdentifiers.append(NSString(string: "Universal:\(object.value(forKey: "key")!)"))
+			case is TeamEventPerformance:
+				globalIdentifiers.append(NSString(string: "EventPerformance:\((object.value(forKey: "team")! as AnyObject).value(forKey: "key")!):\((object.value(forKey: "event")! as AnyObject).value(forKey: "key")!)"))
 			case is Match:
-				globalIdentifiers.append(NSString(string: "Match:\((object.value(forKey: "regional")! as AnyObject).value(forKey: "regionalNumber")!):\(object.value(forKey: "matchNumber")!)"))
+				globalIdentifiers.append(NSString(string: "Universal:\(object.value(forKey: "key")!)"))
 			case is TeamMatchPerformance:
-				globalIdentifiers.append(NSString(string: "MatchPerformance:\(((object.value(forKey: "regionalPerformance")! as AnyObject).value(forKey: "team")! as AnyObject).value(forKey: "teamNumber")!):\(((object.value(forKey: "regionalPerformance")! as AnyObject).value(forKey: "regional")! as AnyObject).value(forKey: "regionalNumber")!):\((object.value(forKey: "match")! as AnyObject).value(forKey: "matchNumber")!)"))
+				globalIdentifiers.append(NSString(string: "Universal:\(object.value(forKey: "key"))"))
+				
+			//Locals
+			case is LocalTeam:
+				globalIdentifiers.append(NSString(string: "Local:\(object.value(forKey: "key")!)"))
+			case is LocalEvent:
+				globalIdentifiers.append(NSString(string: "Local:\(object.value(forKey: "key")!)"))
+			case is LocalMatchPerformance:
+				globalIdentifiers.append(NSString(string: "Local:\(object.value(forKey: "key")!)"))
+			case is LocalMatch:
+				globalIdentifiers.append(NSString(string: "Local:\(object.value(forKey: "key")!)"))
 			case is AutonomousCycle:
-				globalIdentifiers.append("\(UUID().uuidString)" as AnyObject)
-			case is Shot:
-				//Use a unique identifier for the shots because two inserted seperately will never be logically equivalent
-				globalIdentifiers.append("\(UUID().uuidString)" as AnyObject)
-			case is DefenseCrossTime:
 				globalIdentifiers.append("\(UUID().uuidString)" as AnyObject)
 			case is TimeMarker:
 				globalIdentifiers.append("\(UUID().uuidString)" as AnyObject)
@@ -216,7 +223,7 @@ class DataSyncer: NSObject, CDEPersistentStoreEnsembleDelegate {
 	}
 }
 
-///For other files to access MCPeerIDs without importing MultipeerConnectivity
+//For other files to access MCPeerIDs without importing MultipeerConnectivity
 typealias FASTPeer = MCPeerID
 
 class MultipeerConnection: NSObject, CDEMultipeerConnection {

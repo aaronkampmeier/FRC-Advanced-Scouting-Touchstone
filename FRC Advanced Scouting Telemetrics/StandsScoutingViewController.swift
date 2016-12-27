@@ -10,41 +10,24 @@ import UIKit
 import Crashlytics
 
 class StandsScoutingViewController: UIViewController, ProvidesTeam {
-	@IBOutlet weak var ballButton: UIButton!
-	@IBOutlet weak var ballView: UIView!
 	@IBOutlet weak var timerButton: UIButton!
 	@IBOutlet weak var timerLabel: UILabel!
 	@IBOutlet weak var teamLabel: UILabel!
-	@IBOutlet weak var matchAndRegionalLabel: UILabel!
+	@IBOutlet weak var matchAndEventLabel: UILabel!
 	@IBOutlet weak var segmentedControl: UISegmentedControl!
 	@IBOutlet weak var closeButton: UIButton!
-	@IBOutlet weak var finalTowerView: UIView!
-	@IBOutlet weak var challengedTowerSwitch: UISwitch!
-	@IBOutlet weak var scaledTowerSwitch: UISwitch!
-	@IBOutlet weak var notesButton: UIButton!
+    @IBOutlet weak var notesButton: UIButton!
 	
-	var teamPerformance: TeamRegionalPerformance?
+	var teamPerformance: TeamEventPerformance?
 	var matchPerformance: TeamMatchPerformance? {
 		willSet {
-		matchAndRegionalLabel.text = "Regional: \(teamPerformance!.regional!.name!)  Match: \(newValue!.match!.matchNumber!)"
+		matchAndEventLabel.text = "Event: \(teamPerformance!.event!.name!)  Match: \(newValue!.match!.matchNumber!)"
 		}
 	}
 	var team: Team {
 		return teamPerformance!.team!
 	}
-	var defenses: [Defense]? {
-		get {
-			switch matchPerformance!.allianceColor!.intValue {
-			case 0:
-				return matchPerformance?.match?.blueDefensesArray
-			case 1:
-				return matchPerformance?.match?.redDefensesArray
-			default:
-				return []
-			}
-		}
-	}
-	let dataManager = TeamDataManager()
+	let dataManager = DataManager()
 	
 	let stopwatch = Stopwatch()
 	var isRunning = false {
@@ -61,14 +44,10 @@ class StandsScoutingViewController: UIViewController, ProvidesTeam {
 			timerButton.backgroundColor = UIColor.red
 			
 			//Set appropriate state for elements in the view
-			ballButton.isEnabled = true
 			closeButton.isHidden = true
 			
 			//Let the user now select new segments
 			segmentedControl.isEnabled = true
-			
-			//Go to autonomous
-			cycleFromViewController(currentVC!, toViewController: autonomousVC!)
 		} else {
 			stopwatch.stop()
 			
@@ -77,7 +56,6 @@ class StandsScoutingViewController: UIViewController, ProvidesTeam {
 			timerButton.backgroundColor = UIColor.green
 			
 			//Set appropriate state for elements in the view
-			ballButton.isEnabled = false
 			closeButton.isHidden = false
 			
 			//Turn off ability to select new segments
@@ -89,7 +67,7 @@ class StandsScoutingViewController: UIViewController, ProvidesTeam {
 			
 			//Ask for the final score if it lasted longer than 2:15
 			if stopwatch.elapsedTime >= 135 {
-				finalScorePrompt = UIAlertController(title: "Final Scores", message: "Enter the final score for the alliance your team was on.", preferredStyle: .alert)
+				finalScorePrompt = UIAlertController(title: "Final Scores", message: "Enter the final score for the alliances.", preferredStyle: .alert)
 				finalScorePrompt.addTextField() {
 					self.configureTextField($0, label: 0)
 				}
@@ -114,7 +92,7 @@ class StandsScoutingViewController: UIViewController, ProvidesTeam {
 	func configureTextField(_ textField: UITextField, label: Int) {
 		textField.keyboardType = .numberPad
 		
-		switch label {
+        switch label {
 		case 0:
 			textField.placeholder = "Red Final Score"
 		case 1:
@@ -132,16 +110,20 @@ class StandsScoutingViewController: UIViewController, ProvidesTeam {
 			switch textField {
 			case finalScorePrompt.textFields![0]:
 				//Red Final Score
-				matchPerformance?.match?.redFinalScore = Double(textField.text!) as NSNumber?
+//				matchPerformance?.match?.redFinalScore = Double(textField.text!) as NSNumber?
+                break
 			case finalScorePrompt.textFields![1]:
 				//Red Ranking Points
-				matchPerformance?.match?.redRankingPoints = Double(textField.text!) as NSNumber?
+//				matchPerformance?.match?.redRankingPoints = Double(textField.text!) as NSNumber?
+                break
 			case finalScorePrompt.textFields![2]:
 				//Blue Final Score
-				matchPerformance?.match?.blueFinalScore = Double(textField.text!) as NSNumber?
+//				matchPerformance?.match?.blueFinalScore = Double(textField.text!) as NSNumber?
+                break
 			case finalScorePrompt.textFields![3]:
 				//Blue Ranking Points
-				matchPerformance?.match?.blueRankingPoints = Double(textField.text!) as NSNumber?
+//				matchPerformance?.match?.blueRankingPoints = Double(textField.text!) as NSNumber?
+                break
 			default:
 				break
 			}
@@ -150,10 +132,8 @@ class StandsScoutingViewController: UIViewController, ProvidesTeam {
 	
 	var currentVC: UIViewController?
 	var initialChild: UIViewController?
-	var autonomousVC: AutonomousViewController?
 	var defenseVC: UIViewController?
 	var offenseVC: CourtyardViewController?
-	var neutralVC: NeutralViewController?
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -162,19 +142,11 @@ class StandsScoutingViewController: UIViewController, ProvidesTeam {
 		teamLabel.text = "Team \(teamPerformance!.team!.teamNumber!)"
 		
 		//Get all the view controllers
-		autonomousVC = storyboard?.instantiateViewController(withIdentifier: "standsAutonomous") as? AutonomousViewController
 		defenseVC = storyboard?.instantiateViewController(withIdentifier: "standsDefense")
 		offenseVC = storyboard?.instantiateViewController(withIdentifier: "standsCourtyard") as? CourtyardViewController
-		neutralVC = storyboard?.instantiateViewController(withIdentifier: "standsNeutral") as? NeutralViewController
 		
 		//Make it look nice
 		timerButton.layer.cornerRadius = 10
-		ballView.layer.borderWidth = 4
-		ballView.layer.cornerRadius = 5
-		ballView.layer.borderColor = UIColor.gray.cgColor
-		finalTowerView.layer.borderWidth = 4
-		finalTowerView.layer.cornerRadius = 5
-		finalTowerView.layer.borderColor = UIColor.gray.cgColor
 		closeButton.layer.cornerRadius = 10
 		notesButton.layer.cornerRadius = 10
     }
@@ -204,9 +176,9 @@ class StandsScoutingViewController: UIViewController, ProvidesTeam {
 		
 		if matchPerformance == nil {
 			//Ask for the match to use
-			let askAction = UIAlertController(title: "Select Match", message: "Select the match for Team \(teamPerformance!.team!.teamNumber!) in the regional \(teamPerformance!.regional!.name!) for stands scouting.", preferredStyle: .alert)
+			let askAction = UIAlertController(title: "Select Match", message: "Select the match for Team \(teamPerformance!.team!.teamNumber!) in the event \(teamPerformance!.event!.name!) for stands scouting.", preferredStyle: .alert)
 			for match in (teamPerformance?.matchPerformances?.allObjects as! [TeamMatchPerformance]).sorted(by: {Int($0.match!.matchNumber!) < Int($1.match!.matchNumber!)}) {
-				askAction.addAction(UIAlertAction(title: "Match \(match.match!.matchNumber!)", style: .default, handler: {_ in self.matchPerformance = match; self.present(defenseSelectorVC, animated: true, completion: nil); defenseSelectorVC.loadDefenses(forMatch: match.match!)}))
+				askAction.addAction(UIAlertAction(title: "Match \(match.match!.matchNumber!)", style: .default, handler: {_ in self.matchPerformance = match; self.present(defenseSelectorVC, animated: true, completion: nil)}))
 			}
 			
 			askAction.addAction(UIAlertAction(title: "Cancel", style: .destructive) {action in
@@ -214,7 +186,6 @@ class StandsScoutingViewController: UIViewController, ProvidesTeam {
 			})
 			present(askAction, animated: true, completion: nil)
 		} else {
-			defenseSelectorVC.loadDefenses(forMatch: matchPerformance!.match!)
 			present(defenseSelectorVC, animated: true, completion: nil)
 		}
 	}
@@ -243,21 +214,21 @@ class StandsScoutingViewController: UIViewController, ProvidesTeam {
 	}
     
 	@IBAction func selectedNewPart(_ sender: UISegmentedControl) {
-		switch sender.selectedSegmentIndex {
-		case 0:
-			cycleFromViewController(currentVC!, toViewController: autonomousVC!)
-		case 1:
-			cycleFromViewController(currentVC!, toViewController: offenseVC!)
-			dataManager.addTimeMarker(withEvent: TeamDataManager.TimeMarkerEventType.movedToOffenseCourtyard, atTime: stopwatch.elapsedTime, inMatchPerformance: matchPerformance!)
-		case 2:
-			cycleFromViewController(currentVC!, toViewController: neutralVC!)
-			dataManager.addTimeMarker(withEvent: TeamDataManager.TimeMarkerEventType.movedToNeutral, atTime: stopwatch.elapsedTime, inMatchPerformance: matchPerformance!)
-		case 3:
-			cycleFromViewController(currentVC!, toViewController: defenseVC!)
-			dataManager.addTimeMarker(withEvent: TeamDataManager.TimeMarkerEventType.movedToDefenseCourtyard, atTime: stopwatch.elapsedTime, inMatchPerformance: matchPerformance!)
-		default:
-			break
-		}
+//		switch sender.selectedSegmentIndex {
+//		case 0:
+//			cycleFromViewController(currentVC!, toViewController: autonomousVC!)
+//		case 1:
+//			cycleFromViewController(currentVC!, toViewController: offenseVC!)
+////			dataManager.addTimeMarker(withEvent: TeamDataManager.TimeMarkerEventType.movedToOffenseCourtyard, atTime: stopwatch.elapsedTime, inMatchPerformance: matchPerformance!)
+//		case 2:
+//			cycleFromViewController(currentVC!, toViewController: neutralVC!)
+////			dataManager.addTimeMarker(withEvent: TeamDataManager.TimeMarkerEventType.movedToNeutral, atTime: stopwatch.elapsedTime, inMatchPerformance: matchPerformance!)
+//		case 3:
+//			cycleFromViewController(currentVC!, toViewController: defenseVC!)
+////			dataManager.addTimeMarker(withEvent: TeamDataManager.TimeMarkerEventType.movedToDefenseCourtyard, atTime: stopwatch.elapsedTime, inMatchPerformance: matchPerformance!)
+//		default:
+//			break
+//		}
 	}
 	
 	override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
@@ -288,9 +259,6 @@ class StandsScoutingViewController: UIViewController, ProvidesTeam {
 				alert.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
 				present(alert, animated: true, completion: nil)
 			} else if stopwatch.elapsedTime > 135 {
-				//Show the final tower settings
-				finalTowerView.isHidden = false
-				
 				//Change the color of the start/stop button to be blue signifying it is safe to stop it
 				timerButton.backgroundColor = UIColor.blue
 			}
@@ -304,24 +272,15 @@ class StandsScoutingViewController: UIViewController, ProvidesTeam {
 		let locationSelector = UIAlertController(title: "Select Pickup Location", message: "Select where the ball was retrieved from.", preferredStyle: .actionSheet)
 		locationSelector.popoverPresentationController?.sourceView = sender
 		locationSelector.addAction(UIAlertAction(title: "Offense Courtyard", style: .default) {_ in
-			self.dataManager.addTimeMarker(withEvent: TeamDataManager.TimeMarkerEventType.ballPickedUpFromOffense, atTime: pickUpTime, inMatchPerformance: self.matchPerformance!)
+//			self.dataManager.addTimeMarker(withEvent: TeamDataManager.TimeMarkerEventType.ballPickedUpFromOffense, atTime: pickUpTime, inMatchPerformance: self.matchPerformance!)
 			})
 		locationSelector.addAction(UIAlertAction(title: "Neutral Zone", style: .default) {_ in
-			self.dataManager.addTimeMarker(withEvent: TeamDataManager.TimeMarkerEventType.ballPickedUpFromNeutral, atTime: pickUpTime, inMatchPerformance: self.matchPerformance!)
+//			self.dataManager.addTimeMarker(withEvent: TeamDataManager.TimeMarkerEventType.ballPickedUpFromNeutral, atTime: pickUpTime, inMatchPerformance: self.matchPerformance!)
 			})
 		locationSelector.addAction(UIAlertAction(title: "Defense Courtyard", style: .default) {_ in
-			self.dataManager.addTimeMarker(withEvent: TeamDataManager.TimeMarkerEventType.ballPickedUpFromDefense, atTime: pickUpTime, inMatchPerformance: self.matchPerformance!)
+//			self.dataManager.addTimeMarker(withEvent: TeamDataManager.TimeMarkerEventType.ballPickedUpFromDefense, atTime: pickUpTime, inMatchPerformance: self.matchPerformance!)
 			})
 		present(locationSelector, animated: true, completion: nil)
-	}
-	
-	//FINAL TOWER VIEW
-	@IBAction func challengedTowerSwitched(_ sender: UISwitch) {
-		matchPerformance?.didChallengeTower = sender.isOn as NSNumber?
-	}
-	
-	@IBAction func scaledTowerSwitched(_ sender: UISwitch) {
-		matchPerformance?.didScaleTower = sender.isOn as NSNumber?
 	}
 	
     /*
@@ -374,13 +333,13 @@ class NotesViewController: UIViewController {
 	override func viewWillAppear(_ animated: Bool) {
 		super.viewWillAppear(animated)
 		
-		notesTextView.text = originatingView.team.notes
+//		notesTextView.text = originatingView.team.notes
 	}
 	
 	override func viewDidDisappear(_ animated: Bool) {
 		super.viewDidDisappear(animated)
 		
-		originatingView.team.notes = notesTextView.text
+//		originatingView.team.notes = notesTextView.text
 	}
 	
 	@IBAction func donePressed(_ sender: UIBarButtonItem) {
@@ -437,16 +396,6 @@ class DefenseSelector: UIViewController, UICollectionViewDataSource, UICollectio
 		standsScoutingVC?.close(andSave: false)
 	}
 	
-	func loadDefenses(forMatch match: Match) {
-		for defense in match.redDefensesArray {
-			redDefenses[defense.category] = defense
-		}
-		for defense in match.blueDefensesArray {
-			blueDefenses[defense.category] = defense
-		}
-		defenseCollectionView.reloadData()
-	}
-	
 	func numberOfSections(in collectionView: UICollectionView) -> Int {
 		return 2
 	}
@@ -498,12 +447,12 @@ class DefenseSelector: UIViewController, UICollectionViewDataSource, UICollectio
 	}
 	
 	@IBAction func donePressed(_ sender: UIBarButtonItem) {
-		do {
-		try dataManager.setDefenses(inMatch: standsScoutingVC!.matchPerformance!.match!, redOrBlue: TeamDataManager.AllianceColor.red, withDefenseArray: Array(redDefenses.values))
-		try dataManager.setDefenses(inMatch: standsScoutingVC!.matchPerformance!.match!, redOrBlue: TeamDataManager.AllianceColor.blue, withDefenseArray: Array(blueDefenses.values))
-		} catch {
-			CLSNSLogv("\(error)", getVaList([]))
-		}
+//		do {
+//		try dataManager.setDefenses(inMatch: standsScoutingVC!.matchPerformance!.match!, redOrBlue: TeamDataManager.AllianceColor.red, withDefenseArray: Array(redDefenses.values))
+//		try dataManager.setDefenses(inMatch: standsScoutingVC!.matchPerformance!.match!, redOrBlue: TeamDataManager.AllianceColor.blue, withDefenseArray: Array(blueDefenses.values))
+//		} catch {
+//			CLSNSLogv("\(error)", getVaList([]))
+//		}
 		dataManager.commitChanges()
 		dismiss(animated: true, completion: nil)
 	}

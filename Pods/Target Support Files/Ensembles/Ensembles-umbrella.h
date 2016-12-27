@@ -1,16 +1,18 @@
+#ifdef __OBJC__
 #import <UIKit/UIKit.h>
+#endif
 
 #import "CDEBaselineConsolidator.h"
 #import "CDERebaser.h"
+#import "CDEFileDownloadOperation.h"
+#import "CDEFileUploadOperation.h"
+#import "CDEICloudFileSystem.h"
+#import "CDELocalCloudFileSystem.h"
 #import "CDECloudDirectory.h"
 #import "CDECloudFile.h"
 #import "CDECloudFileSystem.h"
 #import "CDECloudManager.h"
 #import "CDEEventFile.h"
-#import "CDEFileDownloadOperation.h"
-#import "CDEFileUploadOperation.h"
-#import "CDEICloudFileSystem.h"
-#import "CDELocalCloudFileSystem.h"
 #import "CDEPersistentStoreEnsemble.h"
 #import "CDEPersistentStoreImporter.h"
 #import "CDEEventBuilder.h"

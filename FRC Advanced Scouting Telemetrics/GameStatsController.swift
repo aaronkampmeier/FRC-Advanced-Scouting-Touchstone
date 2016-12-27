@@ -43,14 +43,15 @@ class GameStatsController: UIViewController, UICollectionViewDataSource, UIColle
 	
 	//---FUNCTIONS FOR GAME STATS---
 	func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-		if let performance = dataSource?.currentRegionalPerformance() {
-			return (performance.matchPerformances?.count)! * 6 + (performance.matchPerformances?.count)!
-		}
+//		if let performance = dataSource?.currentRegionalPerformance() {
+//			return (performance.matchPerformances?.count)! * 6 + (performance.matchPerformances?.count)!
+//		}
 		
 		return 0
 	}
 	
 	func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+		/*
 		//Get the matches for selected team
 		let matches: [Match] = dataSource?.currentMatchPerformances().map({$0.match!}).sorted(by: {($0.matchNumber?.int32Value)! < ($1.matchNumber?.int32Value)!}) ?? []
 		
@@ -99,8 +100,8 @@ class GameStatsController: UIViewController, UICollectionViewDataSource, UIColle
 			cell.label.text = nil
 			cell.contentView.backgroundColor = nil
 		}
-		
-		return cell
+		*/
+		return UICollectionViewCell()
 	}
 	
 	func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {

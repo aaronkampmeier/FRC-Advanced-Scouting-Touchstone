@@ -1,8 +1,8 @@
 //
-//  TimeMarker.swift
+//  TimeMarker+CoreDataClass.swift
 //  FRC Advanced Scouting Touchstone
 //
-//  Created by Aaron Kampmeier on 2/15/16.
+//  Created by Aaron Kampmeier on 12/18/16.
 //  Copyright © 2016 Kampfire Technologies. All rights reserved.
 //
 
@@ -10,9 +10,7 @@ import Foundation
 import CoreData
 
 
-class TimeMarker: NSManagedObject {
-
-// Insert code here to add functionality to your managed object subclass
+public class TimeMarker: NSManagedObject {
 
 	var timeMarkerEventType: TeamDataManager.TimeMarkerEventType {
 		return TeamDataManager.TimeMarkerEventType(rawValue: event!.intValue) ?? .error

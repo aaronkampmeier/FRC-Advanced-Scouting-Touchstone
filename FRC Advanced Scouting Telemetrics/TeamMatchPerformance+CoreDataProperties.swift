@@ -2,31 +2,29 @@
 //  TeamMatchPerformance+CoreDataProperties.swift
 //  FRC Advanced Scouting Touchstone
 //
-//  Created by Aaron Kampmeier on 4/17/16.
+//  Created by Aaron Kampmeier on 12/18/16.
 //  Copyright © 2016 Kampfire Technologies. All rights reserved.
-//
-//  Choose "Create NSManagedObject Subclass…" from the Core Data editor menu
-//  to delete and recreate this implementation file for your updated model.
 //
 
 import Foundation
 import CoreData
 
-extension TeamMatchPerformance {
 
-    @NSManaged var allianceColor: NSNumber?
-    @NSManaged var allianceTeam: NSNumber?
-    @NSManaged var didChallengeTower: NSNumber?
-    @NSManaged var didScaleTower: NSNumber?
-    @NSManaged var autoSpy: NSNumber?
-    @NSManaged var autoSpyDidShoot: NSNumber?
-    @NSManaged var autoSpyDidMakeShot: NSNumber?
-    @NSManaged var autoSpyShotHighGoal: NSNumber?
-    @NSManaged var autonomousCycles: NSOrderedSet?
-    @NSManaged var defenseCrossTimes: NSSet?
-    @NSManaged var match: Match?
-    @NSManaged var offenseShots: NSSet?
-    @NSManaged var regionalPerformance: TeamRegionalPerformance?
-    @NSManaged var timeMarkers: NSOrderedSet?
+extension TeamMatchPerformance: HasLocalEquivalent {
+    static let genericName = "MatchPerformance"
+
+    @nonobjc public class func fetchRequest() -> NSFetchRequest<TeamMatchPerformance> {
+        return NSFetchRequest<TeamMatchPerformance>(entityName: "TeamMatchPerformance");
+    }
+    
+    static func genericFetchRequest() -> NSFetchRequest<NSManagedObject> {
+        return NSFetchRequest<NSManagedObject>(entityName: "TeamMatchPerformance")
+    }
+
+    @NSManaged public var allianceColor: NSNumber?
+    @NSManaged public var allianceTeam: NSNumber?
+    @NSManaged public var key: String?
+    @NSManaged public var match: Match?
+    @NSManaged public var eventPerformances: TeamEventPerformance?
 
 }

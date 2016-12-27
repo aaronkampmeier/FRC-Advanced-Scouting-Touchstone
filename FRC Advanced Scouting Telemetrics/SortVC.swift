@@ -31,12 +31,14 @@ class SortVC: UIViewController, UIPickerViewDelegate, UIPickerViewDataSource {
     override func viewDidLoad() {
         super.viewDidLoad()
 
+		/*
 		sortTypePicker.dataSource = self
         sortTypePicker.delegate = self
         
         orderSegementedControl.isEnabled = false
 		
 		stats = delegate?.stats() ?? []
+*/
     }
 	
 	override func viewWillDisappear(_ animated: Bool) {

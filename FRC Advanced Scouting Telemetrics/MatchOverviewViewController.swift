@@ -19,14 +19,16 @@ class MatchOverviewViewController: UIViewController, UITableViewDataSource {
 	var matchTimeMarkers: [[TeamDataManager.TimeMarkerEvent]] = Array<Array<TeamDataManager.TimeMarkerEvent>>()
 	var matchPerformances: [TeamMatchPerformance] = [] {
 		didSet {
+			/*
 			matchTimeMarkers.removeAll()
 			for performance in matchPerformances {
 				matchTimeMarkers.append(dataManager.timeOverview(forMatchPerformance: performance))
 			}
+*/
 		}
 	}
 	
-	let dataManager = TeamDataManager()
+	let dataManager = DataManager()
 	
     override func viewDidLoad() {
         super.viewDidLoad()

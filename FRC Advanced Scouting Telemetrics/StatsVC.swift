@@ -12,12 +12,14 @@ import UIKit
 class StatsVC: UIViewController, UITableViewDataSource, UITableViewDelegate {
 	@IBOutlet weak var statsTable: UITableView!
 	
+	
 	var dataSource: TeamListSegmentsDataSource? {
 		didSet {
 			NotificationCenter.default.addObserver(self, selector: #selector(StatsVC.loadStats), name: NSNotification.Name("TeamSelectedChanged"), object: nil)
 		}
 	}
 	
+	/*
 	var statContexts: [StatContext] = [StatContext]()
 	
 	var matchPerformances: [TeamMatchPerformance]? {
@@ -33,6 +35,7 @@ class StatsVC: UIViewController, UITableViewDataSource, UITableViewDelegate {
 		}
 	}
     
+*/
 	override func viewDidLoad() {
 		super.viewDidLoad()
 		
@@ -48,6 +51,7 @@ class StatsVC: UIViewController, UITableViewDataSource, UITableViewDelegate {
 	}
 	
 	func loadStats() {
+		/*
 		statContexts.removeAll()
 		if let selectedTeam = currentTeam {
 			statContexts.append(StatContext(context: selectedTeam))
@@ -65,25 +69,28 @@ class StatsVC: UIViewController, UITableViewDataSource, UITableViewDelegate {
 			}
 		}
 		statsTable?.reloadData()
+*/
 	}
 	
 	func numberOfSections(in tableView: UITableView) -> Int {
-		return statContexts.count
+		return  0//statContexts.count
 	}
 	
 	func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-		return (statContexts[section].possibleStats.count)
+		return 0 //(statContexts[section].possibleStats.count)
 	}
 	
 	func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
-		return statContexts[section].name ?? "Statistics"
+		return "" //statContexts[section].name ?? "Statistics"
 	}
 	
 	func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
 		let cell = tableView.dequeueReusableCell(withIdentifier: "cell")!
 		
+		/*
 		cell.textLabel?.text = statContexts[(indexPath as NSIndexPath).section].possibleStats[(indexPath as NSIndexPath).row].description
 		cell.detailTextLabel?.text = "\(statContexts[(indexPath as NSIndexPath).section].possibleStats[(indexPath as NSIndexPath).row].value)"
+*/
 		
 		return cell
 	}

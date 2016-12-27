@@ -17,7 +17,7 @@ class TeamPickerTableViewController: UITableViewController {
 	}
 	var shownTeams = [Team]()
 	
-	let dataManager = TeamDataManager()
+	let dataManager = DataManager()
     override func viewDidLoad() {
         super.viewDidLoad()
 
@@ -27,7 +27,7 @@ class TeamPickerTableViewController: UITableViewController {
         // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
         // self.navigationItem.rightBarButtonItem = self.editButtonItem()
 		
-		teams = try! dataManager.getDraftBoard()
+		teams = dataManager.localTeamRanking()
 		
 		Answers.logCustomEvent(withName: "Opened Team Pick List", customAttributes: nil)
     }

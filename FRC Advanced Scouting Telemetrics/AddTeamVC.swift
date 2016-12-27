@@ -14,7 +14,7 @@ class AddTeamVC: UIViewController {
     @IBOutlet weak var teamField: UITextField!
 	@IBOutlet weak var addedTeamLabelView: UIView!
 	@IBOutlet weak var addedTeamLabel: UILabel!
-    let dataManager = TeamDataManager()
+    let dataManager = DataManager()
 	
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -34,6 +34,7 @@ class AddTeamVC: UIViewController {
 	}
     
     @IBAction func addButtonPressed(_ sender: AnyObject) {
+		/*
         //Check if the team already exists
         if dataManager.getTeams(teamField.text!).count == 0 {
             //Check to make sure it is actually a number
@@ -77,6 +78,7 @@ class AddTeamVC: UIViewController {
             //Present the Alert
             present(myAlert, animated: true, completion: nil)
         }
+*/
         
     }
 	

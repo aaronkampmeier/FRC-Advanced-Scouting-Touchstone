@@ -36,6 +36,7 @@ class TeamListDetailViewController: UIViewController, TeamSelectionDelegate {
 	let teamManager = TeamDataManager()
 	var selectedTeam: Team? {
 		didSet {
+			/*
 			if let team = selectedTeam {
 				navBar.title = "Team \(team.teamNumber ?? "")"
 				teamNumberLabel.text = team.teamNumber
@@ -56,7 +57,7 @@ class TeamListDetailViewController: UIViewController, TeamSelectionDelegate {
 					sideImage = nil
 				}
 				
-				if let _ = selectedRegional {
+				if let _ = selectedEvent {
 					standsScoutingButton.isEnabled = true
 				} else {
 					standsScoutingButton.isEnabled = false
@@ -64,23 +65,24 @@ class TeamListDetailViewController: UIViewController, TeamSelectionDelegate {
 			} else {
 				
 			}
+*/
 			
 			NotificationCenter.default.post(name: Notification.Name(rawValue: "TeamSelectedChanged"), object: self)
 		}
 	}
-	var selectedRegional: Regional?
-	var teamRegionalPerformance: TeamRegionalPerformance? {
+	var selectedEvent: Event?
+	var teamEventPerformance: TeamEventPerformance? {
 		get {
 			if let team = selectedTeam {
-				if let regional = selectedRegional {
+				if let event = selectedEvent {
 					//Get two sets
-					let regionalPerformances: Set<TeamRegionalPerformance> = Set(regional.teamRegionalPerformances?.allObjects as! [TeamRegionalPerformance])
-					let teamPerformances = Set(team.regionalPerformances?.allObjects as! [TeamRegionalPerformance])
+					let eventPerformances: Set<TeamEventPerformance> = Set(event.teamEventPerformances?.allObjects as! [TeamEventPerformance])
+					let teamPerformances = Set(team.eventPerformances?.allObjects as! [TeamEventPerformance])
 					
 					//Combine the two sets to find the one in both
-					let teamRegionalPerformance = Array(regionalPerformances.intersection(teamPerformances)).first!
+					let teamEventPerformance = Array(eventPerformances.intersection(teamPerformances)).first!
 					
-					return teamRegionalPerformance
+					return teamEventPerformance
 				}
 			}
 			return nil
@@ -90,7 +92,6 @@ class TeamListDetailViewController: UIViewController, TeamSelectionDelegate {
 	//Child View Controllers
 	var currentChildVC: UIViewController?
 	var gameStatsController: GameStatsController?
-	var shotChartController: ShotChartViewController?
 	var statsViewController: StatsVC?
 	var teamDetailVC: UIViewController?
 	var matchOverviewVC: MatchOverviewViewController?
@@ -114,7 +115,6 @@ class TeamListDetailViewController: UIViewController, TeamSelectionDelegate {
 		//Get the child view controllers
 		gameStatsController = (storyboard?.instantiateViewController(withIdentifier: "gameStatsCollection") as! GameStatsController)
 		gameStatsController?.dataSource = self
-		shotChartController = (storyboard?.instantiateViewController(withIdentifier: "shotChart") as! ShotChartViewController)
 		statsViewController = (storyboard?.instantiateViewController(withIdentifier: "statsView") as! StatsVC)
 		statsViewController?.dataSource = self
 		teamDetailVC = storyboard?.instantiateViewController(withIdentifier: "teamDetail")
@@ -158,7 +158,7 @@ class TeamListDetailViewController: UIViewController, TeamSelectionDelegate {
 		
 		if segue.identifier == "standsScouting" {
 			let destinationVC = segue.destination as! StandsScoutingViewController
-			destinationVC.teamPerformance = teamRegionalPerformance
+			destinationVC.teamPerformance = teamEventPerformance
 		}
 	}
 	
@@ -182,8 +182,8 @@ class TeamListDetailViewController: UIViewController, TeamSelectionDelegate {
 		selectedTeam = team
 	}
 	
-	func selectedRegional(_ regional: Regional?) {
-		selectedRegional = regional
+	func selectedEvent(_ event: Event?) {
+		selectedEvent = event
 	}
 	
 	//MARK: Segmented Control
@@ -211,25 +211,7 @@ class TeamListDetailViewController: UIViewController, TeamSelectionDelegate {
 				cycleFromViewController(currentChildVC!, toViewController: gameStatsController!)
 			}
 		case 1:
-			if selectedRegional == nil {
-				//Haha, nope. You aren't in a regional
-				setSelectedSegment(0)
-				segmentSelected(0, sender: sender)
-			} else {
-				//Check to see if the current view controller is the same as the shot chart controller. If it is different, than switch to it.
-				if currentChildVC != shotChartController {
-					cycleFromViewController(currentChildVC!, toViewController: shotChartController!)
-				}
-				
-				//Present Alert asking for the match the user would like to view
-				let alert = UIAlertController(title: "Select Match", message: "Select a match to see its shots.", preferredStyle: .alert)
-				alert.addAction(UIAlertAction(title: "Overall", style: .default, handler: {_ in self.shotChartController?.loadForMatchPerformance(nil)}))
-				let sortedMatchPerformances = (teamRegionalPerformance?.matchPerformances?.allObjects as? [TeamMatchPerformance] ?? [TeamMatchPerformance]()).sorted() {($0.0.match?.matchNumber?.intValue)! < ($0.1.match?.matchNumber?.intValue)!}
-				for matchPerformance in sortedMatchPerformances {
-					alert.addAction(UIAlertAction(title: String(describing: matchPerformance.match!.matchNumber!), style: .default, handler: {_ in self.shotChartController?.loadForMatchPerformance(matchPerformance)}))
-				}
-				present(alert, animated: true, completion: nil)
-			}
+			break
 		case 2:
 			cycleFromViewController(currentChildVC!, toViewController: statsViewController!)
 		case 3:
@@ -263,6 +245,7 @@ class TeamListDetailViewController: UIViewController, TeamSelectionDelegate {
 		//
 		//		dataAndDelegate.setUpWithTeam(team)
 		
+		/*
 		let detailsLabel = detailController.view.viewWithTag(2) as! UILabel
 		var detailString = ""
 		detailString.append("Height: \((selectedTeam?.height) ?? 0)")
@@ -293,6 +276,7 @@ class TeamListDetailViewController: UIViewController, TeamSelectionDelegate {
 		notesView.layer.borderColor = UIColor.lightGray.cgColor
 		
 		notesView.delegate = self
+*/
 	}
 	
 	//MARK: Displaying full screen photos
@@ -342,7 +326,7 @@ class TeamImagePhoto: NSObject, NYTPhoto {
 
 extension TeamListDetailViewController: UITextViewDelegate {
 	func textViewDidEndEditing(_ textView: UITextView) {
-		selectedTeam?.notes = textView.text
+//		selectedTeam?.notes = textView.text
 		teamManager.commitChanges()
 	}
 }
@@ -382,21 +366,21 @@ extension TeamListDetailViewController: NYTPhotosViewControllerDelegate {
 
 extension TeamListDetailViewController: TeamListSegmentsDataSource {
 	func currentMatchPerformances() -> [TeamMatchPerformance] {
-		return teamRegionalPerformance?.matchPerformances?.allObjects as? [TeamMatchPerformance] ?? []
+		return teamEventPerformance?.matchPerformances?.allObjects as? [TeamMatchPerformance] ?? []
 	}
 	
 	func currentTeam() -> Team? {
 		return selectedTeam
 	}
 	
-	func currentRegionalPerformance() -> TeamRegionalPerformance? {
-		return teamRegionalPerformance
+	func currentEventPerformance() -> TeamEventPerformance? {
+		return teamEventPerformance
 	}
 }
 
 protocol TeamListSegmentsDataSource {
 	func currentMatchPerformances() -> [TeamMatchPerformance]
-	func currentRegionalPerformance() -> TeamRegionalPerformance?
+	func currentEventPerformance() -> TeamEventPerformance?
 	func currentTeam() -> Team?
 }
 

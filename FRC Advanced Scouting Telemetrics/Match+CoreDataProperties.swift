@@ -2,31 +2,46 @@
 //  Match+CoreDataProperties.swift
 //  FRC Advanced Scouting Touchstone
 //
-//  Created by Aaron Kampmeier on 4/28/16.
+//  Created by Aaron Kampmeier on 12/18/16.
 //  Copyright © 2016 Kampfire Technologies. All rights reserved.
-//
-//  Choose "Create NSManagedObject Subclass…" from the Core Data editor menu
-//  to delete and recreate this implementation file for your updated model.
 //
 
 import Foundation
 import CoreData
 
+
+extension Match: HasLocalEquivalent {
+    static let genericName = "Match"
+
+    @nonobjc public class func fetchRequest() -> NSFetchRequest<Match> {
+        return NSFetchRequest<Match>(entityName: "Match");
+    }
+    
+    static func genericFetchRequest() -> NSFetchRequest<NSManagedObject> {
+        return NSFetchRequest<NSManagedObject>(entityName: "Match")
+    }
+
+    @NSManaged public var key: String?
+    @NSManaged public var matchNumber: NSNumber?
+    @NSManaged public var time: NSDate?
+    @NSManaged public var event: Event?
+    @NSManaged public var teamPerformances: NSSet?
+
+}
+
+// MARK: Generated accessors for teamPerformances
 extension Match {
 
-    @NSManaged var blueCapturedTower: NSNumber?
-    @NSManaged var blueFinalScore: NSNumber?
-    @NSManaged var blueRankingPoints: NSNumber?
-    @NSManaged var matchNumber: NSNumber?
-    @NSManaged var redCapturedTower: NSNumber?
-    @NSManaged var redFinalScore: NSNumber?
-    @NSManaged var redRankingPoints: NSNumber?
-    @NSManaged var time: Date?
-    @NSManaged var blueDefenses: NSArray?
-    @NSManaged var blueDefensesBreached: NSArray?
-    @NSManaged var redDefenses: NSArray?
-    @NSManaged var redDefensesBreached: NSArray?
-    @NSManaged var regional: Regional?
-    @NSManaged var teamPerformances: NSSet?
+    @objc(addTeamPerformancesObject:)
+    @NSManaged public func addToTeamPerformances(_ value: TeamMatchPerformance)
+
+    @objc(removeTeamPerformancesObject:)
+    @NSManaged public func removeFromTeamPerformances(_ value: TeamMatchPerformance)
+
+    @objc(addTeamPerformances:)
+    @NSManaged public func addToTeamPerformances(_ values: NSSet)
+
+    @objc(removeTeamPerformances:)
+    @NSManaged public func removeFromTeamPerformances(_ values: NSSet)
 
 }

@@ -2,34 +2,49 @@
 //  Team+CoreDataProperties.swift
 //  FRC Advanced Scouting Touchstone
 //
-//  Created by Aaron Kampmeier on 4/28/16.
+//  Created by Aaron Kampmeier on 12/18/16.
 //  Copyright © 2016 Kampfire Technologies. All rights reserved.
-//
-//  Choose "Create NSManagedObject Subclass…" from the Core Data editor menu
-//  to delete and recreate this implementation file for your updated model.
 //
 
 import Foundation
 import CoreData
 
+
+extension Team: HasLocalEquivalent {
+    static let genericName = "Team"
+
+    @nonobjc public class func fetchRequest() -> NSFetchRequest<Team> {
+        return NSFetchRequest<Team>(entityName: "Team");
+    }
+    
+    static func genericFetchRequest() -> NSFetchRequest<NSManagedObject> {
+        return NSFetchRequest<NSManagedObject>(entityName: "Team")
+    }
+
+    @NSManaged public var key: String?
+    @NSManaged public var location: String?
+    @NSManaged public var name: String?
+    @NSManaged public var nickname: String?
+    @NSManaged public var rookieYear: NSNumber?
+    @NSManaged public var teamNumber: String?
+    @NSManaged public var website: String?
+    @NSManaged public var eventPerformances: NSSet?
+
+}
+
+// MARK: Generated accessors for eventPerformances
 extension Team {
 
-    @NSManaged var climber: NSNumber?
-    @NSManaged var driverExp: NSNumber?
-    @NSManaged var driveTrain: String?
-    @NSManaged var frontImage: Data?
-    @NSManaged var height: NSNumber?
-    @NSManaged var highGoal: NSNumber?
-    @NSManaged var lowGoal: NSNumber?
-    @NSManaged var notes: String?
-    @NSManaged var robotWeight: NSNumber?
-    @NSManaged var sideImage: Data?
-    @NSManaged var teamNumber: String?
-    @NSManaged var visionTrackingRating: NSNumber?
-    @NSManaged var autonomousDefensesAbleToCross: NSArray?
-    @NSManaged var autonomousDefensesAbleToShoot: NSArray?
-    @NSManaged var defensesAbleToCross: NSArray?
-    @NSManaged var draftBoard: DraftBoard?
-    @NSManaged var regionalPerformances: NSSet?
+    @objc(addEventPerformancesObject:)
+    @NSManaged public func addToEventPerformances(_ value: TeamEventPerformance)
+
+    @objc(removeEventPerformancesObject:)
+    @NSManaged public func removeFromEventPerformances(_ value: TeamEventPerformance)
+
+    @objc(addEventPerformances:)
+    @NSManaged public func addToEventPerformances(_ values: NSSet)
+
+    @objc(removeEventPerformances:)
+    @NSManaged public func removeFromEventPerformances(_ values: NSSet)
 
 }

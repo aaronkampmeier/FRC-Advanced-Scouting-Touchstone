@@ -229,10 +229,15 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         // The persistent store coordinator for the application. This implementation creates and returns a coordinator, having added the store for the application to it. This property is optional since there are legitimate error conditions that could cause the creation of the store to fail.
         // Create the coordinator and store
         let coordinator = NSPersistentStoreCoordinator(managedObjectModel: self.managedObjectModel)
-        let url = try! self.applicationDocumentsDirectory.appendingPathComponent("SingleViewCoreData.sqlite")
+		
+		//Get the url for both persistent stores
+        let url = self.applicationDocumentsDirectory.appendingPathComponent("UniversalData.sqlite")
+		let localDataURL = self.applicationDocumentsDirectory.appendingPathComponent("LocalData.sqlite")
         var failureReason = "There was an error creating or loading the application's saved data."
         do {
-            try coordinator.addPersistentStore(ofType: NSSQLiteStoreType, configurationName: nil, at: url, options: options)
+			//Add both persistent tores
+            try coordinator.addPersistentStore(ofType: NSSQLiteStoreType, configurationName: "Default", at: url, options: options)
+			try coordinator.addPersistentStore(ofType: NSSQLiteStoreType, configurationName: "Local", at: localDataURL, options: options)
         } catch {
             // Report any error we got.
             var dict = [String: AnyObject]()
@@ -259,8 +264,12 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         return managedObjectContext
     }()
 	
-	lazy var coreDataURL: URL = {
-		return try! self.applicationDocumentsDirectory.appendingPathComponent("SingleViewCoreData.sqlite")
+	lazy var localPersistentStoreURL: URL = {
+		return self.applicationDocumentsDirectory.appendingPathComponent("LocalData.sqlite")
+	}()
+	
+	lazy var universalPersistentStoreURL: URL = {
+		return self.applicationDocumentsDirectory.appendingPathComponent("UniversalData.sqlite")
 	}()
 
     // MARK: - Core Data Saving support
@@ -281,6 +290,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
 }
 
+//Adds a function to UIViewController to allow presenting views (i.e. alerts) on the top view controller from lower view controllers
 extension UIViewController {
 	func presentViewControllerFromVisibleViewController(_ viewControllerToPresent: UIViewController, animated flag: Bool, completion: (() -> Void)? = nil) {
 		if let navigationController = self as? UINavigationController, let topViewController = navigationController.topViewController {
