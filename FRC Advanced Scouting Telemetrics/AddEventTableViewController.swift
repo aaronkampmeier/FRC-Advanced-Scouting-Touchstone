@@ -9,11 +9,19 @@
 import UIKit
 
 class AddEventTableViewController: UITableViewController {
+    var loadingView: UIView!
 	
 	let cloudConnection = CloudData()
     var events = [FRCEvent]() {
         didSet {
+            loadingView.isHidden = true
             tableView.reloadData()
+        }
+    }
+    
+    var selectedEvent: FRCEvent? {
+        didSet {
+            performSegue(withIdentifier: "eventInfo", sender: tableView)
         }
     }
 
@@ -21,10 +29,26 @@ class AddEventTableViewController: UITableViewController {
         super.viewDidLoad()
 
         // Uncomment the following line to preserve selection between presentations
-        // self.clearsSelectionOnViewWillAppear = false
+        self.clearsSelectionOnViewWillAppear = true
 
         // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
         // self.navigationItem.rightBarButtonItem = self.editButtonItem()
+        
+        //Create a loading view and add it to the table view to indicate loading of the events
+        loadingView = UIView()
+        let width: CGFloat = 30
+        let height: CGFloat = 30
+        let x = (tableView.frame.width / 2) - (width/2)
+        let y = (tableView.frame.height / 2) - (height/2) - (self.navigationController?.navigationBar.frame.height)!
+        loadingView.frame = CGRect(x: x, y: y, width: width, height: height)
+        
+        let spinnerView = UIActivityIndicatorView(activityIndicatorStyle: .gray)
+        spinnerView.frame = CGRect(x: 0, y: 0, width: 30, height: 30)
+        spinnerView.startAnimating()
+        
+        loadingView.addSubview(spinnerView)
+        
+        self.tableView.addSubview(loadingView)
         
         cloudConnection.events {
             if let events = $0 {
@@ -65,6 +89,11 @@ class AddEventTableViewController: UITableViewController {
 
         return cell
     }
+    
+    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        
+        selectedEvent = events[indexPath.row]
+    }
 	
 
     /*
@@ -102,14 +131,19 @@ class AddEventTableViewController: UITableViewController {
     }
     */
 
-    /*
+    
     // MARK: - Navigation
 
     // In a storyboard-based application, you will often want to do a little preparation before navigation
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         // Get the new view controller using segue.destinationViewController.
         // Pass the selected object to the new view controller.
+        
+        if segue.identifier == "eventInfo" {
+            let eventInfoVC = segue.destination as! EventInfoVC
+            eventInfoVC.selectedEvent = selectedEvent
+        }
     }
-    */
+ 
 
 }

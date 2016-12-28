@@ -12,6 +12,11 @@ import CoreData
 
 extension TeamMatchPerformance: HasLocalEquivalent {
     static let genericName = "MatchPerformance"
+    typealias SelfObject = TeamMatchPerformance
+    
+    static func specificFR() -> NSFetchRequest<TeamMatchPerformance> {
+        return NSFetchRequest<TeamMatchPerformance>(entityName: "TeamMatchPerformance")
+    }
 
     @nonobjc public class func fetchRequest() -> NSFetchRequest<TeamMatchPerformance> {
         return NSFetchRequest<TeamMatchPerformance>(entityName: "TeamMatchPerformance");
@@ -21,10 +26,10 @@ extension TeamMatchPerformance: HasLocalEquivalent {
         return NSFetchRequest<NSManagedObject>(entityName: "TeamMatchPerformance")
     }
 
-    @NSManaged public var allianceColor: NSNumber?
+    @NSManaged public var allianceColor: String?
     @NSManaged public var allianceTeam: NSNumber?
     @NSManaged public var key: String?
     @NSManaged public var match: Match?
-    @NSManaged public var eventPerformances: TeamEventPerformance?
+    @NSManaged public var eventPerformance: TeamEventPerformance?
 
 }

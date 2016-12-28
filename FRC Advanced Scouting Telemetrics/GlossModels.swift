@@ -12,15 +12,6 @@ import Gloss
 //These models are simply modeled after the ones described on The Blue Alliance's API Docs
 //To distinguish these JSON models from the core data subclass objects, all of these models begin with "FRC" deliniating officially FIRST FRC data
 
-struct FRCEventArray: Decodable {
-    
-    let events: [FRCEvent]?
-    
-    init?(json: JSON) {
-        self.events = "" <~~ json
-    }
-}
-
 struct FRCEvent: Decodable {
 	
 	let key: String
@@ -43,8 +34,8 @@ struct FRCEvent: Decodable {
 //	let matches: [FRCMatch]?
 //	let awards: String?
 	
-	let webcast: String? //Not implemented correctly, yet
-	let alliances: String? //""
+//	let webcast: String? //Not implemented correctly, yet
+//	let alliances: String? //""
 //	let districtPoints: String? //""
 	
 	init?(json: JSON) {
@@ -53,8 +44,13 @@ struct FRCEvent: Decodable {
 		self.week = "week" <~~ json
 		self.venueAddress = "venue_address" <~~ json
 		self.website = "website" <~~ json
-		self.webcast = "webcats" <~~ json
-		self.alliances = "alliances" <~~ json
+        if let official: Bool = "official" <~~ json {
+            self.official = official
+        } else {
+            self.official = false
+        }
+//		self.webcast = "webcast" <~~ json
+//		self.alliances = "alliances" <~~ json
 //		self.districtPoints = "district_points" <~~ json
 		
 		guard let key: String = "key" <~~ json else {
@@ -101,11 +97,6 @@ struct FRCEvent: Decodable {
 			return nil
 		}
 		self.timezone = timezone
-		
-		guard let official: Bool = "official" <~~ json else {
-			return nil
-		}
-		self.official = official
 	}
 }
 

@@ -12,6 +12,11 @@ import CoreData
 
 extension LocalEvent: HasUniversalEquivalent {
     static let genericName = "Event"
+    typealias SelfObject = LocalEvent
+    
+    static func specificFR() -> NSFetchRequest<LocalEvent> {
+        return NSFetchRequest<LocalEvent>(entityName: "LocalEvent")
+    }
 
     @nonobjc public class func fetchRequest() -> NSFetchRequest<LocalEvent> {
         return NSFetchRequest<LocalEvent>(entityName: "LocalEvent");

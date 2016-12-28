@@ -21,11 +21,11 @@ class StandsScoutingViewController: UIViewController, ProvidesTeam {
 	var teamPerformance: TeamEventPerformance?
 	var matchPerformance: TeamMatchPerformance? {
 		willSet {
-		matchAndEventLabel.text = "Event: \(teamPerformance!.event!.name!)  Match: \(newValue!.match!.matchNumber!)"
+		matchAndEventLabel.text = "Event: \(teamPerformance!.event.name!)  Match: \(newValue!.match!.matchNumber!)"
 		}
 	}
 	var team: Team {
-		return teamPerformance!.team!
+		return teamPerformance!.team
 	}
 	let dataManager = DataManager()
 	
@@ -139,7 +139,7 @@ class StandsScoutingViewController: UIViewController, ProvidesTeam {
         super.viewDidLoad()
 
         // Do any additional setup after loading the view.
-		teamLabel.text = "Team \(teamPerformance!.team!.teamNumber!)"
+		teamLabel.text = "Team \(teamPerformance!.team.teamNumber!)"
 		
 		//Get all the view controllers
 		defenseVC = storyboard?.instantiateViewController(withIdentifier: "standsDefense")
@@ -176,7 +176,7 @@ class StandsScoutingViewController: UIViewController, ProvidesTeam {
 		
 		if matchPerformance == nil {
 			//Ask for the match to use
-			let askAction = UIAlertController(title: "Select Match", message: "Select the match for Team \(teamPerformance!.team!.teamNumber!) in the event \(teamPerformance!.event!.name!) for stands scouting.", preferredStyle: .alert)
+			let askAction = UIAlertController(title: "Select Match", message: "Select the match for Team \(teamPerformance!.team.teamNumber!) in the event \(teamPerformance!.event.name!) for stands scouting.", preferredStyle: .alert)
 			for match in (teamPerformance?.matchPerformances?.allObjects as! [TeamMatchPerformance]).sorted(by: {Int($0.match!.matchNumber!) < Int($1.match!.matchNumber!)}) {
 				askAction.addAction(UIAlertAction(title: "Match \(match.match!.matchNumber!)", style: .default, handler: {_ in self.matchPerformance = match; self.present(defenseSelectorVC, animated: true, completion: nil)}))
 			}

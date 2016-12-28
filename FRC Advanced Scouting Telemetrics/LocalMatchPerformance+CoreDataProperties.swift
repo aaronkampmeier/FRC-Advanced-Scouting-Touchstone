@@ -12,6 +12,11 @@ import CoreData
 
 extension LocalMatchPerformance: HasUniversalEquivalent {
     static let genericName = "MatchPerformance"
+    typealias SelfObject = LocalMatchPerformance
+    
+    static func specificFR() -> NSFetchRequest<LocalMatchPerformance> {
+        return NSFetchRequest<LocalMatchPerformance>(entityName: "LocalMatchPerformance")
+    }
 
     @nonobjc public class func fetchRequest() -> NSFetchRequest<LocalMatchPerformance> {
         return NSFetchRequest<LocalMatchPerformance>(entityName: "LocalMatchPerformance");

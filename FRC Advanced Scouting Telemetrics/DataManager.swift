@@ -43,7 +43,7 @@ class DataManager {
     
 	
 	//MARK: - Team Ranking
-	private func getLocalTeamRankingObject() -> LocalTeamRanking {
+	func getLocalTeamRankingObject() -> LocalTeamRanking {
         let fetchedObjects: [LocalTeamRanking]
         do {
             fetchedObjects = try DataManager.managedContext.fetch(LocalTeamRanking.fetchRequest())
@@ -51,23 +51,6 @@ class DataManager {
             fetchedObjects = []
             NSLog("Problem fetching LocalTeamRanking object")
         }
-        
-//        if #available(iOS 10.0, *) {
-//            do {
-//                fetchedObjects = try DataManager.managedContext.fetch(LocalTeamRanking.fetchRequest())
-//            } catch {
-//                fetchedObjects = []
-//                NSLog("Problem fetching LocalTeamRanking object")
-//            }
-//        } else {
-//            // Fallback on earlier versions
-//            let fetchRequest = NSFetchRequest<LocalTeamRanking>(entityName: "LocalTeamRanking")
-//            do {
-//                fetchedObjects = try DataManager.managedContext.fetch(fetchRequest)
-//            } catch {
-//                
-//            }
-//        }
 		
 		if fetchedObjects.count == 1 {
 			return fetchedObjects[0]
@@ -93,7 +76,7 @@ class DataManager {
 	private func simpleLocalTeamRanking() -> [Team] {
 		let orderedLocalTeams = getLocalTeamRankingObject().localTeams?.array as! [LocalTeam]
 		
-        return LocalToUniversalConversion<LocalTeam,Team>(localObjects: orderedLocalTeams).convertToUniversal()
+        return LocalToUniversalConversion<LocalTeam,Team>(localObjects: orderedLocalTeams).convertToUniversal()!
 	}
 	
     //Use this function when getting local team rankings, not the simpleLocalTeamRanking
@@ -106,7 +89,7 @@ class DataManager {
     func localTeamRanking(forLocalEvent localEvent: LocalEvent) -> [Team] {
 		let orderedLocalTeams = localEvent.rankedTeams?.array as! [LocalTeam]
 		
-		return LocalToUniversalConversion<LocalTeam,Team>(localObjects: orderedLocalTeams).convertToUniversal()
+		return LocalToUniversalConversion<LocalTeam,Team>(localObjects: orderedLocalTeams).convertToUniversal()!
 	}
     
     //Reorder the team ranking
@@ -118,6 +101,23 @@ class DataManager {
     }
     
     //MARK: - Teams
+    ///Fetches one team with the specified number. Only use if fetching one team do not use sequentially.
+    func team(withTeamNumber teamNumber: String) -> Team? {
+        let fetchRequest: NSFetchRequest<Team> = Team.fetchRequest()
+        fetchRequest.predicate = NSPredicate(format: "teamNumber like %@", argumentArray: [teamNumber])
+        
+        let teams: [Team]
+        do {
+            teams = try DataManager.managedContext.fetch(fetchRequest)
+        } catch {
+            NSLog("Unable to fetch team with error: \(error)")
+            teams = []
+        }
+        
+        assert(teams.count <= 1)
+        return teams.first
+    }
+    
     func teamEventPerformances(inEvent event: Event) -> [TeamEventPerformance] {
         return event.teamEventPerformances?.allObjects as! [TeamEventPerformance]
     }
@@ -158,6 +158,18 @@ class DataManager {
     func matches(inEvent event: Event) -> [Match] {
         return event.matches?.allObjects as! [Match]
     }
+    
+    func matches() -> [Match] {
+        let fetchRequest: NSFetchRequest<Match> = Match.fetchRequest()
+        let matches: [Match]
+        do {
+            matches = try DataManager.managedContext.fetch(fetchRequest)
+        } catch {
+            matches = []
+            NSLog("Unable to fetch all matches")
+        }
+        return matches
+    }
 	
 	enum Alliance: String {
 		case Red = "Red"
@@ -167,34 +179,38 @@ class DataManager {
 
 extension NSManagedObject {
 	func local<T:NSManagedObject>() -> T {
-		let localObject = (self.value(forKey: "local") as! NSSet).allObjects.first as! T
+		let localObject = (self.value(forKey: "localFP") as! [T]).first!
 		
 		return localObject
 	}
 	
 	func universal<T:NSManagedObject>() -> T? {
-		let universalObject = (self.value(forKey: "universal") as? NSSet)?.allObjects.first as? T
+		let universalObject = (self.value(forKey: "universalFP") as? NSSet)?.allObjects.first as? T
 		
 		return universalObject
 	}
 }
 
 protocol HasLocalEquivalent {
+    associatedtype SelfObject: NSManagedObject
     static var genericName: String {get}
     var key: String? {get set}
     static func genericFetchRequest() -> NSFetchRequest<NSManagedObject>
+    static func specificFR() -> NSFetchRequest<SelfObject>
 }
 
 protocol HasUniversalEquivalent {
+    associatedtype SelfObject: NSManagedObject
     static var genericName: String {get}
     var key: String? {get set}
     static func genericFetchRequest() -> NSFetchRequest<NSManagedObject>
+    static func specificFR() -> NSFetchRequest<SelfObject>
 }
 
 //MARK: - Universal-Local Translations
 //When using fetched properties it is not a good idea to individually access many objects' fetched properties together because then numerous fetch requests will be queued at the same time which can be really slow. Instead this method uses one fetch request to grab all the wanted objects.
 ///Returns the local objects for the universal objects given (and in the same order). Use this instead of accessing multiple fetched properties back-to-back.
-class UniversalToLocalConversion<U:HasLocalEquivalent, L:HasUniversalEquivalent> where L:NSManagedObject {
+class UniversalToLocalConversion<U:HasLocalEquivalent, L:HasUniversalEquivalent> where L:NSManagedObject, L.SelfObject == L {
     private let universalObjects: [U]
     
     init(universalObjects: [U]) {
@@ -202,7 +218,7 @@ class UniversalToLocalConversion<U:HasLocalEquivalent, L:HasUniversalEquivalent>
     }
     
     func convertToLocal() -> [L] {
-        let fetchRequest: NSFetchRequest<NSManagedObject> = L.genericFetchRequest()
+        let fetchRequest: NSFetchRequest<L> = L.specificFR() 
         
         //Create the array of predicates to compare local key values with universal key values
         var predicates: [NSPredicate] = []
@@ -216,7 +232,7 @@ class UniversalToLocalConversion<U:HasLocalEquivalent, L:HasUniversalEquivalent>
         
         let fetchedLocals: [L]
         do {
-            fetchedLocals = try DataManager.managedContext.fetch(fetchRequest) as! [L]
+            fetchedLocals = try DataManager.managedContext.fetch(fetchRequest)
         } catch {
             NSLog("Unable to fetch local objects for multiple universal objects")
             return []
@@ -233,15 +249,15 @@ class UniversalToLocalConversion<U:HasLocalEquivalent, L:HasUniversalEquivalent>
     }
 }
 
-class LocalToUniversalConversion<L: HasUniversalEquivalent, U:HasLocalEquivalent> where U:NSManagedObject {
+class LocalToUniversalConversion<L: HasUniversalEquivalent, U:HasLocalEquivalent> where U:NSManagedObject, U.SelfObject == U {
     private let localObjects: [L]
     
     init(localObjects: [L]) {
         self.localObjects = localObjects
     }
     
-    func convertToUniversal() -> [U] {
-        let fetchRequest: NSFetchRequest<NSManagedObject> = U.genericFetchRequest()
+    func convertToUniversal() -> [U]? {
+        let fetchRequest: NSFetchRequest<U> = U.specificFR()
         
         //Create the array of predicates to compare local key values with universal key values
         var predicates: [NSPredicate] = []
@@ -255,10 +271,15 @@ class LocalToUniversalConversion<L: HasUniversalEquivalent, U:HasLocalEquivalent
         
         let fetchedUniversals: [U]
         do {
-            fetchedUniversals = try DataManager.managedContext.fetch(fetchRequest) as! [U]
+            fetchedUniversals = try DataManager.managedContext.fetch(fetchRequest)
         } catch {
             NSLog("Unable to fetch local objects for multiple universal objects")
             return []
+        }
+        
+        if fetchedUniversals.count != localObjects.count {
+            NSLog("Amount of Fetched Universals not equal to the given objects")
+            return nil
         }
         
         //Sort the fetched locals to be in the same order as their universal counterparts

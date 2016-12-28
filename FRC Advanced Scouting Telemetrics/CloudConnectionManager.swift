@@ -15,14 +15,13 @@ private let baseApiUrl = try! baseApi.asURL()
 private let apiKey = "c67378f6984026e97ca5abdc343f7f7ff77b5135576aed64c3fcce034d3e55e8"
 
 class CloudData {
+    private let headers = [
+        "X-Dreamfactory-API-Key":apiKey,
+        "Accept": "application/json"
+    ]
 	
     func events(withCompletionHandler completionHandler: @escaping ([FRCEvent]?) -> Void) {
-        let headers = [
-            "X-Dreamfactory-API-Key":apiKey,
-            "Accept": "application/json"
-        ]
-        
-        Alamofire.request(baseApi + "tbadb/events/2017", method: .get, headers: headers)
+        Alamofire.request(baseApi + "tbadb/events/2016", method: .get, headers: headers)
             .validate(statusCode: 200...200)
             .responseJSON() {response in
                 switch response.result {
@@ -41,5 +40,42 @@ class CloudData {
                 }
         }
     }
+    
+    func matches(forEventKey eventKey: String, withCompletionHandler completionHandler: @escaping ([FRCMatch]?) -> Void) {
+        Alamofire.request(baseApi + "tbadb/event/\(eventKey)/matches", method: .get, headers: headers)
+        .validate(statusCode: 200...200)
+            .responseJSON() {response in
+                switch response.result{
+                case .success(let responseData):
+                    if let json = responseData as? [[String:Any]] {
+                        let matches = [FRCMatch].from(jsonArray: json)
+                        completionHandler(matches)
+                    }
+                case .failure(let error):
+                    NSLog("Failed to retrieve matches from cloud with error: \(error)")
+                    completionHandler(nil)
+                }
+        }
+    }
+    
+    func teams(forEventKey eventKey: String, withCompletionHandler completionHandler: @escaping ([FRCTeam]?) -> Void) {
+        Alamofire.request(baseApi + "tbadb/event/\(eventKey)/teams", method: .get, headers: headers)
+        .validate(statusCode: 200...200)
+            .responseJSON {response in
+                switch response.result {
+                case .success(let responseData):
+                    if let json = responseData as? [[String:Any]] {
+                        let teams = [FRCTeam].from(jsonArray: json)
+                        completionHandler(teams)
+                    }
+                case .failure(let error):
+                    NSLog("Failed to get teams for event with error: \(error)")
+                    completionHandler(nil)
+                }
+        }
+    }
 	
+    func preloadEventMatches() {
+        
+    }
 }

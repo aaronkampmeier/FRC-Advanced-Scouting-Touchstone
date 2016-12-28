@@ -11,15 +11,22 @@ import UIKit
 
 class AdminConsoleController: UIViewController, UITableViewDataSource, UITableViewDelegate {
     @IBOutlet weak var tableView: UITableView!
-	@IBOutlet weak var navigationBar: UINavigationItem!
     
     let dataManager = DataManager()
 	
 	var events = [Event]()
     
     override func viewDidLoad() {
+        super.viewDidLoad()
 		events = dataManager.getEvents()
 	}
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        if let selectedIndexPath = tableView.indexPathForSelectedRow {
+            tableView.deselectRow(at: selectedIndexPath, animated: true)
+        }
+    }
 	
 	enum adminConsoleSections: Int {
 		case Events
@@ -89,6 +96,13 @@ class AdminConsoleController: UIViewController, UITableViewDataSource, UITableVi
             break
 		}
 	}
+    
+    @IBAction func rewindToAdminConsole(withSegue segue: UIStoryboardSegue) {
+        if segue.identifier == "unwindToAdminConsoleFromEventAdd" {
+            events = dataManager.events()
+            tableView.reloadData()
+        }
+    }
 	
     @IBAction func donePressed(_ sender: UIBarButtonItem) {
 		dataManager.commitChanges()
@@ -100,12 +114,7 @@ class AdminConsoleController: UIViewController, UITableViewDataSource, UITableVi
 		dismiss(animated: true, completion: nil)
 	}
     
-    func comingBackFromConfigure() {
-        tableView.deselectRow(at: tableView.indexPathForSelectedRow!, animated: true)
-    }
-    
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         super.prepare(for: segue, sender: sender)
-		
     }
 }

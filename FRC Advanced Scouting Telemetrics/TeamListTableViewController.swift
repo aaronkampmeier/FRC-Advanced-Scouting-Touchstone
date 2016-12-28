@@ -109,7 +109,7 @@ class TeamListTableViewController: UITableViewController, UISearchControllerDele
 			if let event = selectedEvent {
 				//Set to nil, because the selected team might not be in the new event
 				selectedTeam = nil
-				currentEventTeams = (event.teamEventPerformances?.allObjects as! [TeamEventPerformance]).map({$0.team!})
+				currentEventTeams = (event.teamEventPerformances?.allObjects as! [TeamEventPerformance]).map({$0.team})
 				eventSelectionButton.setTitle(event.name, for: UIControlState())
 			} else {
 				currentEventTeams = teams
@@ -214,7 +214,7 @@ class TeamListTableViewController: UITableViewController, UISearchControllerDele
 			}
 		}
 		
-		cell.rankLabel.text = "\(dataManager.localTeamRanking().index(of: team)! as Int + 1)"
+		cell.rankLabel.text = "\(teams.index(of: team)! as Int + 1)"
 		
 		if let image = teamImagesCache.object(forKey: team) {
 			cell.frontImage.image = image

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="11759" systemVersion="15G1104" minimumToolsVersion="Xcode 7.3" sourceLanguage="Swift" userDefinedModelVersionIdentifier="">
+<model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="11759" systemVersion="16C67" minimumToolsVersion="Xcode 7.3" sourceLanguage="Swift" userDefinedModelVersionIdentifier="">
     <entity name="AutonomousCycle" representedClassName=".AutonomousCycle" syncable="YES">
         <attribute name="moved" optional="YES" attributeType="Boolean" defaultValueString="NO" usesScalarValueType="NO" syncable="YES"/>
         <relationship name="localMatchPerformance" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="LocalMatchPerformance" inverseName="autonomousCycles" inverseEntity="LocalMatchPerformance" syncable="YES"/>
@@ -13,14 +13,14 @@
         <attribute name="year" attributeType="Integer 64" usesScalarValueType="NO" syncable="YES"/>
         <relationship name="matches" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="Match" inverseName="event" inverseEntity="Match" syncable="YES"/>
         <relationship name="teamEventPerformances" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="TeamEventPerformance" inverseName="event" inverseEntity="TeamEventPerformance" syncable="YES"/>
-        <fetchedProperty name="local" optional="YES" syncable="YES">
+        <fetchedProperty name="localFP" optional="YES" syncable="YES">
             <fetchRequest name="fetchedPropertyFetchRequest" entity="LocalEvent" predicateString="key LIKE $FETCH_SOURCE.key"/>
         </fetchedProperty>
     </entity>
     <entity name="LocalEvent" representedClassName=".LocalEvent" syncable="YES">
         <attribute name="key" attributeType="String" syncable="YES"/>
         <relationship name="rankedTeams" optional="YES" toMany="YES" deletionRule="Nullify" ordered="YES" destinationEntity="LocalTeam" inverseName="localEvents" inverseEntity="LocalTeam" syncable="YES"/>
-        <fetchedProperty name="universal" optional="YES" syncable="YES">
+        <fetchedProperty name="universalFP" optional="YES" syncable="YES">
             <fetchRequest name="fetchedPropertyFetchRequest" entity="Event" predicateString="key LIKE $FETCH_SOURCE.key"/>
         </fetchedProperty>
     </entity>
@@ -30,7 +30,7 @@
         <attribute name="key" attributeType="String" syncable="YES"/>
         <attribute name="redFinalScore" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="NO" syncable="YES"/>
         <attribute name="redRankingPoints" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="NO" syncable="YES"/>
-        <fetchedProperty name="universal" optional="YES" syncable="YES">
+        <fetchedProperty name="universalFP" optional="YES" syncable="YES">
             <fetchRequest name="fetchedPropertyFetchRequest" entity="Match" predicateString="key LIKE $FETCH_SOURCE.key"/>
         </fetchedProperty>
     </entity>
@@ -38,7 +38,7 @@
         <attribute name="key" attributeType="String" syncable="YES"/>
         <relationship name="autonomousCycles" optional="YES" toMany="YES" deletionRule="Cascade" ordered="YES" destinationEntity="AutonomousCycle" inverseName="localMatchPerformance" inverseEntity="AutonomousCycle" syncable="YES"/>
         <relationship name="timeMarkers" optional="YES" toMany="YES" deletionRule="Cascade" ordered="YES" destinationEntity="TimeMarker" inverseName="localMatchPerformance" inverseEntity="TimeMarker" syncable="YES"/>
-        <fetchedProperty name="universal" optional="YES" syncable="YES">
+        <fetchedProperty name="universalFP" optional="YES" syncable="YES">
             <fetchRequest name="fetchedPropertyFetchRequest" entity="TeamMatchPerformance" predicateString="key LIKE $FETCH_SOURCE.key"/>
         </fetchedProperty>
     </entity>
@@ -51,7 +51,7 @@
         <attribute name="sideImage" optional="YES" attributeType="Binary" allowsExternalBinaryDataStorage="YES" syncable="YES"/>
         <relationship name="localEvents" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="LocalEvent" inverseName="rankedTeams" inverseEntity="LocalEvent" syncable="YES"/>
         <relationship name="ranker" maxCount="1" deletionRule="Nullify" destinationEntity="LocalTeamRanking" inverseName="localTeams" inverseEntity="LocalTeamRanking" syncable="YES"/>
-        <fetchedProperty name="universal" optional="YES" syncable="YES">
+        <fetchedProperty name="universalFP" optional="YES" syncable="YES">
             <fetchRequest name="fetchedPropertyFetchRequest" entity="Team" predicateString="key LIKE $FETCH_SOURCE.key"/>
         </fetchedProperty>
     </entity>
@@ -64,7 +64,7 @@
         <attribute name="time" optional="YES" attributeType="Date" minDateTimeInterval="-284058000" usesScalarValueType="NO" syncable="YES"/>
         <relationship name="event" maxCount="1" deletionRule="Nullify" destinationEntity="Event" inverseName="matches" inverseEntity="Event" syncable="YES"/>
         <relationship name="teamPerformances" optional="YES" toMany="YES" maxCount="6" deletionRule="Cascade" destinationEntity="TeamMatchPerformance" inverseName="match" inverseEntity="TeamMatchPerformance" syncable="YES"/>
-        <fetchedProperty name="local" optional="YES" syncable="YES">
+        <fetchedProperty name="localFP" optional="YES" syncable="YES">
             <fetchRequest name="fetchedPropertyFetchRequest" entity="LocalMatch" predicateString="key LIKE $FETCH_SOURCE.key"/>
         </fetchedProperty>
     </entity>
@@ -77,22 +77,22 @@
         <attribute name="teamNumber" attributeType="String" syncable="YES"/>
         <attribute name="website" optional="YES" attributeType="String" syncable="YES"/>
         <relationship name="eventPerformances" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="TeamEventPerformance" inverseName="team" inverseEntity="TeamEventPerformance" syncable="YES"/>
-        <fetchedProperty name="local" optional="YES" syncable="YES">
+        <fetchedProperty name="localFP" optional="YES" syncable="YES">
             <fetchRequest name="fetchedPropertyFetchRequest" entity="LocalTeam" predicateString="key LIKE $FETCH_SOURCE.key"/>
         </fetchedProperty>
     </entity>
     <entity name="TeamEventPerformance" representedClassName=".TeamEventPerformance" syncable="YES">
         <relationship name="event" maxCount="1" deletionRule="Nullify" destinationEntity="Event" inverseName="teamEventPerformances" inverseEntity="Event" syncable="YES"/>
-        <relationship name="matchPerformances" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="TeamMatchPerformance" inverseName="eventPerformances" inverseEntity="TeamMatchPerformance" syncable="YES"/>
+        <relationship name="matchPerformances" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="TeamMatchPerformance" inverseName="eventPerformance" inverseEntity="TeamMatchPerformance" syncable="YES"/>
         <relationship name="team" maxCount="1" deletionRule="Nullify" destinationEntity="Team" inverseName="eventPerformances" inverseEntity="Team" syncable="YES"/>
     </entity>
     <entity name="TeamMatchPerformance" representedClassName=".TeamMatchPerformance" syncable="YES">
         <attribute name="allianceColor" attributeType="String" minValueString="3" maxValueString="4" syncable="YES"/>
         <attribute name="allianceTeam" attributeType="Integer 64" minValueString="1" maxValueString="3" usesScalarValueType="NO" syncable="YES"/>
         <attribute name="key" attributeType="String" syncable="YES"/>
-        <relationship name="eventPerformances" maxCount="1" deletionRule="Nullify" destinationEntity="TeamEventPerformance" inverseName="matchPerformances" inverseEntity="TeamEventPerformance" syncable="YES"/>
+        <relationship name="eventPerformance" maxCount="1" deletionRule="Nullify" destinationEntity="TeamEventPerformance" inverseName="matchPerformances" inverseEntity="TeamEventPerformance" syncable="YES"/>
         <relationship name="match" maxCount="1" deletionRule="Nullify" destinationEntity="Match" inverseName="teamPerformances" inverseEntity="Match" syncable="YES"/>
-        <fetchedProperty name="local" optional="YES" syncable="YES">
+        <fetchedProperty name="localFP" optional="YES" syncable="YES">
             <fetchRequest name="fetchedPropertyFetchRequest" entity="LocalMatchPerformance" predicateString="key LIKE $FETCH_SOURCE.key"/>
         </fetchedProperty>
     </entity>

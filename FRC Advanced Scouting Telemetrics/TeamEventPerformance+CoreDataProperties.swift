@@ -16,9 +16,9 @@ extension TeamEventPerformance {
         return NSFetchRequest<TeamEventPerformance>(entityName: "TeamEventPerformance");
     }
 
-    @NSManaged public var event: Event?
+    @NSManaged public var event: Event
     @NSManaged public var matchPerformances: NSSet?
-    @NSManaged public var team: Team?
+    @NSManaged public var team: Team
 
 }
 
