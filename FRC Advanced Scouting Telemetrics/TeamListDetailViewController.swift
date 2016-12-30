@@ -16,8 +16,6 @@ class TeamListDetailViewController: UIViewController, TeamSelectionDelegate {
 	@IBOutlet weak var segmentControl: UISegmentedControl!
 	@IBOutlet weak var segmentControl2: UISegmentedControl!
 	@IBOutlet weak var teamNumberLabel: UILabel!
-	@IBOutlet weak var driverExpLabel: UILabel!
-	@IBOutlet weak var weightLabel: UILabel!
 	@IBOutlet weak var standsScoutingButton: UIBarButtonItem!
 	@IBOutlet weak var navBar: UINavigationItem!
 	
@@ -34,25 +32,20 @@ class TeamListDetailViewController: UIViewController, TeamSelectionDelegate {
 	}
 
 	let teamManager = TeamDataManager()
-	var selectedTeam: Team? {
+	var selectedTeam: ObjectPair<Team,LocalTeam>? {
 		didSet {
-			/*
 			if let team = selectedTeam {
-				navBar.title = "Team \(team.teamNumber ?? "")"
-				teamNumberLabel.text = team.teamNumber
-				
-				weightLabel.text = "Weight: \(team.robotWeight ?? 0) lbs"
-				
-				driverExpLabel.text = "Driver Exp: \(team.driverExp ?? 0) yrs"
+				navBar.title = team.universal.nickname
+				teamNumberLabel.text = team.universal.teamNumber
 				
 				//Populate the images, if there are images
-				if let image = team.frontImage {
-					frontImage = TeamImagePhoto(image: UIImage(data: image as Data), attributedCaptionTitle: NSAttributedString(string: "Team \(team.teamNumber!): Front Image"))
+				if let image = team.local.frontImage {
+					frontImage = TeamImagePhoto(image: UIImage(data: image as Data), attributedCaptionTitle: NSAttributedString(string: "Team \(team.universal.teamNumber!): Front Image"))
 				} else {
 					frontImage = nil
 				}
-				if let image = team.sideImage {
-					sideImage = TeamImagePhoto(image: UIImage(data: image as Data), attributedCaptionTitle: NSAttributedString(string: "Team \(team.teamNumber!): Side Image"))
+				if let image = team.local.sideImage {
+					sideImage = TeamImagePhoto(image: UIImage(data: image as Data), attributedCaptionTitle: NSAttributedString(string: "Team \(team.universal.teamNumber!): Side Image"))
 				} else {
 					sideImage = nil
 				}
@@ -65,7 +58,6 @@ class TeamListDetailViewController: UIViewController, TeamSelectionDelegate {
 			} else {
 				
 			}
-*/
 			
 			NotificationCenter.default.post(name: Notification.Name(rawValue: "TeamSelectedChanged"), object: self)
 		}
@@ -77,7 +69,7 @@ class TeamListDetailViewController: UIViewController, TeamSelectionDelegate {
 				if let event = selectedEvent {
 					//Get two sets
 					let eventPerformances: Set<TeamEventPerformance> = Set(event.teamEventPerformances?.allObjects as! [TeamEventPerformance])
-					let teamPerformances = Set(team.eventPerformances?.allObjects as! [TeamEventPerformance])
+					let teamPerformances = Set(team.universal.eventPerformances?.allObjects as! [TeamEventPerformance])
 					
 					//Combine the two sets to find the one in both
 					let teamEventPerformance = Array(eventPerformances.intersection(teamPerformances)).first!
@@ -104,10 +96,6 @@ class TeamListDetailViewController: UIViewController, TeamSelectionDelegate {
 		(UIApplication.shared.delegate as! AppDelegate).teamListDetailVC = self
 		
 		navigationItem.leftItemsSupplementBackButton = true
-		
-		//Set the labels' default text
-		weightLabel.text = ""
-		driverExpLabel.text = ""
 		
 		//Set the stands scouting button to not selectable since there is no team selected
 		standsScoutingButton.isEnabled = false
@@ -178,7 +166,7 @@ class TeamListDetailViewController: UIViewController, TeamSelectionDelegate {
 	
 	
 	//MARK: - Master View Delegate
-	func selectedTeam(_ team: Team?) {
+	func selectedTeam(_ team: ObjectPair<Team,LocalTeam>?) {
 		selectedTeam = team
 	}
 	
@@ -206,7 +194,7 @@ class TeamListDetailViewController: UIViewController, TeamSelectionDelegate {
 	func segmentSelected(_ segment: Int, sender: UISegmentedControl?) {
 		switch segment {
 		case 0, -1:
-			//Check to see if the current view controller is the same as the game stats controller. If it is different, than switch to it.
+			//Check to see if the current view controller is the same as the game stats controller. If it is different, then switch to it.
 			if currentChildVC != gameStatsController {
 				cycleFromViewController(currentChildVC!, toViewController: gameStatsController!)
 			}
@@ -305,7 +293,7 @@ class TeamListDetailViewController: UIViewController, TeamSelectionDelegate {
 		
 		let photoVC = NYTPhotosViewController(photos: photosArray, initialPhoto: photo, delegate: self)
 		present(photoVC, animated: true, completion: nil)
-		Answers.logContentView(withName: "Team Robot Images", contentType: "Photo", contentId: nil, customAttributes: ["Team":"\(selectedTeam?.teamNumber ?? "")"])
+		Answers.logContentView(withName: "Team Robot Images", contentType: "Photo", contentId: nil, customAttributes: ["Team":"\(selectedTeam?.universal.teamNumber ?? "")"])
 	}
 }
 
@@ -365,11 +353,11 @@ extension TeamListDetailViewController: NYTPhotosViewControllerDelegate {
 }
 
 extension TeamListDetailViewController: TeamListSegmentsDataSource {
-	func currentMatchPerformances() -> [TeamMatchPerformance] {
-		return teamEventPerformance?.matchPerformances?.allObjects as? [TeamMatchPerformance] ?? []
+	func currentMatchPerformances() -> [ObjectPair<TeamMatchPerformance,LocalMatchPerformance>] {
+        return ObjectPair<TeamMatchPerformance,LocalMatchPerformance>.fromArray(universals: teamEventPerformance?.matchPerformances?.allObjects as? [TeamMatchPerformance] ?? []) ?? []
 	}
 	
-	func currentTeam() -> Team? {
+	func currentTeam() -> ObjectPair<Team,LocalTeam>? {
 		return selectedTeam
 	}
 	
@@ -379,8 +367,8 @@ extension TeamListDetailViewController: TeamListSegmentsDataSource {
 }
 
 protocol TeamListSegmentsDataSource {
-	func currentMatchPerformances() -> [TeamMatchPerformance]
+	func currentMatchPerformances() -> [ObjectPair<TeamMatchPerformance,LocalMatchPerformance>]
 	func currentEventPerformance() -> TeamEventPerformance?
-	func currentTeam() -> Team?
+	func currentTeam() -> ObjectPair<Team,LocalTeam>?
 }
 

@@ -9,9 +9,9 @@
 import UIKit
 import Crashlytics
 
-@objc protocol TeamSelectionDelegate {
-	func selectedTeam(_ team: Team?)
-	@objc optional func selectedEvent(_ event: Event?)
+protocol TeamSelectionDelegate: class {
+	func selectedTeam(_ team: ObjectPair<Team, LocalTeam>?)
+	func selectedEvent(_ event: Event?)
 }
 
 class TeamListTableViewController: UITableViewController, UISearchControllerDelegate {
@@ -35,7 +35,7 @@ class TeamListTableViewController: UITableViewController, UISearchControllerDele
 		return sortNavVC.topViewController as! SortVC
 	}
 	var sortNavVC: UINavigationController!
-	var currentSortedTeams: [Team]? {
+	var currentSortedTeams: [ObjectPair<Team, LocalTeam>]? {
 		didSet {
 			if let teams = currentSortedTeams {
 				currentTeamsToDisplay = teams
@@ -45,55 +45,25 @@ class TeamListTableViewController: UITableViewController, UISearchControllerDele
 		}
 	}
 	
-    var teams: [Team] = [] {
-        didSet {
-            localTeams = UniversalToLocalConversion<Team,LocalTeam>(universalObjects: teams).convertToLocal()
-        }
-    }
-    var localTeams = [LocalTeam]()
+    var teams: [ObjectPair<Team, LocalTeam>] = []
 	
-	var currentEventTeams: [Team] = [Team]() {
+	var currentEventTeams: [ObjectPair<Team,LocalTeam>] = [ObjectPair<Team,LocalTeam>]() {
 		didSet {
 			currentTeamsToDisplay = currentEventTeams
 		}
-		
-		willSet {
-			//Update the stat contexts
-//			for team in newValue {
-//				if let event = selectedEvent {
-//					let eventPerformances = Set(event.teamEventPerformances?.allObjects as! [TeamEventPerformance])
-//					let teamPerformances = Set(team.team.eventPerformances?.allObjects as! [TeamEventPerformance])
-//					
-//					let eventPerformance = Array(eventPerformances.intersection(teamPerformances)).first!
-//					
-//					team.statContext.setEventPerformanceStatistics(eventPerformance)
-//					team.statContext.setMatchPerformanceStatistics((eventPerformance.matchPerformances!.allObjects as! [TeamMatchPerformance]))
-//				} else {
-//					let combinedMatchPerformances = team.team.eventPerformances?.reduce([TeamMatchPerformance]()) {matchPerformances,eventPerformance in
-//						let newMatchPerformances = (eventPerformance as AnyObject).matchPerformances!?.allObjects as![TeamMatchPerformance]
-//						var mutableMatchPerformances = matchPerformances
-//						mutableMatchPerformances.append(contentsOf: newMatchPerformances)
-//						return mutableMatchPerformances
-//					}
-//					
-//					team.statContext.setEventPerformanceStatistics(nil)
-//					team.statContext.setMatchPerformanceStatistics(combinedMatchPerformances)
-//				}
-//			}
-		}
 	}
-	var currentTeamsToDisplay = [Team]() {
+	var currentTeamsToDisplay = [ObjectPair<Team,LocalTeam>]() {
 		didSet {
 			tableView.reloadData()
 		}
 	}
-	var selectedTeam: Team? {
+	var selectedTeam: ObjectPair<Team, LocalTeam>? {
 		didSet {
 			delegate?.selectedTeam(selectedTeam)
 			NotificationCenter.default.post(name: Notification.Name(rawValue: "Different Team Selected"), object: self)
 			if let sTeam = selectedTeam {
 				if let index = currentTeamsToDisplay.index(where: {team in
-					return team == sTeam
+					return team.universal == sTeam.universal
 				}) {
 					tableView.selectRow(at: IndexPath.init(row: index, section: 0), animated: false, scrollPosition: .none)
 				}
@@ -104,12 +74,12 @@ class TeamListTableViewController: UITableViewController, UISearchControllerDele
 	}
 	var selectedEvent: Event? {
 		didSet {
-			delegate?.selectedEvent?(selectedEvent)
+			delegate?.selectedEvent(selectedEvent)
 			
 			if let event = selectedEvent {
 				//Set to nil, because the selected team might not be in the new event
 				selectedTeam = nil
-				currentEventTeams = (event.teamEventPerformances?.allObjects as! [TeamEventPerformance]).map({$0.team})
+                currentEventTeams = ObjectPair<Team,LocalTeam>.fromArray(locals: dataManager.localTeamRanking(forEvent: event))!
 				eventSelectionButton.setTitle(event.name, for: UIControlState())
 			} else {
 				currentEventTeams = teams
@@ -122,7 +92,7 @@ class TeamListTableViewController: UITableViewController, UISearchControllerDele
 	}
 	var teamEventPerformance: TeamEventPerformance? {
 		get {
-			if let team = selectedTeam {
+			if let team = selectedTeam?.universal {
 				if let event = selectedEvent {
 					//Get two sets
 					let eventPerformances: Set<TeamEventPerformance> = Set(event.teamEventPerformances?.allObjects as! [TeamEventPerformance])
@@ -141,7 +111,7 @@ class TeamListTableViewController: UITableViewController, UISearchControllerDele
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        teams = dataManager.localTeamRanking()
+        loadTeams()
 
         // Uncomment the following line to preserve selection between presentations
         self.clearsSelectionOnViewWillAppear = false
@@ -153,12 +123,13 @@ class TeamListTableViewController: UITableViewController, UISearchControllerDele
 		
 		//Set up the searching capabilities and the search bar. At the time of coding, Storyboards do not support the new UISearchController, so this is done programatically.
 		let searchResultsVC = storyboard?.instantiateViewController(withIdentifier: "teamListSearchResults") as! TeamListSearchResultsTableViewController
+        searchResultsVC.teamListTableVC = self
 		searchController = UISearchController(searchResultsController: searchResultsVC)
 		searchController.searchResultsUpdater = searchResultsVC
 		tableView.tableHeaderView = searchController.searchBar
 		
 		//Add responder for notification about a new team
-		NotificationCenter.default.addObserver(forName: NSNotification.Name("New Team"), object: nil, queue: nil, using: addTeamFromNotification)
+		NotificationCenter.default.addObserver(forName: NSNotification.Name("UpdatedTeams"), object: nil, queue: nil, using: updateForImport)
 		
 		tableView.allowsSelectionDuringEditing = true
 		
@@ -166,6 +137,12 @@ class TeamListTableViewController: UITableViewController, UISearchControllerDele
 		
 		//Load in the beginning data
 		selectedEvent = nil
+    }
+    
+    func loadTeams() {
+        let universalTeams = dataManager.localTeamRanking()
+        let localTeams = UniversalToLocalConversion<Team, LocalTeam>(universalObjects: universalTeams).convertToLocal()
+        teams = ObjectPair<Team,LocalTeam>.fromArrays(universals: universalTeams, locals: localTeams)!
     }
 	
 	override func viewWillAppear(_ animated: Bool) {
@@ -200,13 +177,12 @@ class TeamListTableViewController: UITableViewController, UISearchControllerDele
         let cell = self.tableView.dequeueReusableCell(withIdentifier: "rankedCell", for: indexPath) as! TeamListTableViewCell
 
         let team = currentTeamsToDisplay[(indexPath as NSIndexPath).row]
-        let localTeam = localTeams[localTeams.index(where: {$0.key == team.key})!]
 		
 		if isEditing {
-			cell.teamLabel.text = "\(team.teamNumber!)"
+			cell.teamLabel.text = "\(team.universal.teamNumber!)"
 			cell.statLabel.text = ""
 		} else {
-			cell.teamLabel.text = "Team \(team.teamNumber!)"
+			cell.teamLabel.text = "Team \(team.universal.teamNumber!)"
 			if isSorted {
 //				cell.statLabel.text = "\(teamListTeam.statCalculation!.value)"
 			} else {
@@ -214,17 +190,17 @@ class TeamListTableViewController: UITableViewController, UISearchControllerDele
 			}
 		}
 		
-		cell.rankLabel.text = "\(teams.index(of: team)! as Int + 1)"
+        cell.rankLabel.text = "\(teams.index(where: {$0.universal == team.universal})! as Int + 1)"
 		
-		if let image = teamImagesCache.object(forKey: team) {
+		if let image = teamImagesCache.object(forKey: team.universal) {
 			cell.frontImage.image = image
 		} else {
-			if let imageData = localTeam.frontImage {
+			if let imageData = team.local.frontImage {
 				guard let uiImage = UIImage(data: imageData as Data) else {
 					fatalError("Image Data Corrupted")
 				}
 				cell.frontImage.image = uiImage
-				teamImagesCache.setObject(uiImage, forKey: team)
+				teamImagesCache.setObject(uiImage, forKey: team.universal)
 			} else {
 				cell.frontImage.image = UIImage(named: "FRC-Logo")
 			}
@@ -321,9 +297,10 @@ class TeamListTableViewController: UITableViewController, UISearchControllerDele
 	}
 	
 	//MARK: -
-	func addTeamFromNotification(_ notification: Notification) {
-		isSorted = false
-		selectedEvent = nil
+	func updateForImport(_ notification: Notification) {
+        self.loadTeams()
+        self.isSorted = false
+        self.selectedEvent = nil
 	}
 	
 	//MARK: - Searching

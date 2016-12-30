@@ -11,7 +11,7 @@ import CoreData
 
 
 extension LocalEvent: HasUniversalEquivalent {
-    static let genericName = "Event"
+    typealias UniversalType = Event
     typealias SelfObject = LocalEvent
     
     static func specificFR() -> NSFetchRequest<LocalEvent> {

@@ -18,7 +18,9 @@ class CloudEventImportManager {
     private let completionHandler: (Bool, ImportError?) -> Void
     
     //Pre-existing objects
+    private let currentEvents: [Event]
     private let currentTeams: [Team]
+    private let currentLocalTeams: [LocalTeam]
     private let currentMatches: [Match]
     private let currentLocalMatchPerformances: [LocalMatchPerformance]
     private let currentLocalMatches: [LocalMatch]
@@ -38,7 +40,14 @@ class CloudEventImportManager {
         }
         
         self.completionHandler = completionHandler
+        currentEvents = dataManager.events()
         currentTeams = dataManager.localTeamRanking()
+        do {
+            currentLocalTeams = try managedContext.fetch(LocalTeam.fetchRequest())
+        } catch {
+            NSLog("Unable to fetch local teams")
+            currentLocalTeams = []
+        }
         currentMatches = dataManager.matches()
         do {
             currentLocalMatchPerformances = try managedContext.fetch(LocalMatchPerformance.fetchRequest())
@@ -57,6 +66,14 @@ class CloudEventImportManager {
     
     ///Takes an FRCEvent and creates core data objects in the database
     func `import`() {
+        //First make sure the event being added is not already in the database
+        if currentEvents.contains(where: {event in
+            return event.key == frcEvent.key
+        }) {
+            completionHandler(false, .EventAlreadyInDatabase)
+            return
+        }
+        
         CLSNSLogv("Beginning import of event: %@", getVaList([frcEvent.key]))
         //Create an event object
         let event: Event
@@ -76,6 +93,7 @@ class CloudEventImportManager {
         event.key = frcEvent.key
         event.name = frcEvent.name
         event.year = frcEvent.year as NSNumber
+        event.location = frcEvent.location
         
         //Create the local one
         if (event.value(forKey: "localFP") as? [LocalEvent])?.count ?? 0 == 0 {
@@ -124,18 +142,16 @@ class CloudEventImportManager {
                 
                 //Check if it already has a local equivalent
                 let localTeam: LocalTeam
-                if (team.value(forKey: "localFP") as? NSSet)?.allObjects.count ?? 0 > 0 {
-                    localTeam = team.local()
+                if let index = currentLocalTeams.index(where: {localTeam in
+                    return localTeam.key == team.key
+                }) {
+                    localTeam = currentLocalTeams[index]
                 } else {
                     //Doesn't have a local equivalent, make one
                     localTeam = LocalTeam(entity: NSEntityDescription.entity(forEntityName: "LocalTeam", in: managedContext)!, insertInto: managedContext)
-                    //                    if #available(iOS 10.0, *) {
-                    //                        localTeam = LocalTeam(entity: LocalTeam.entity(), insertInto: managedContext)
-                    //                    } else {
-                    //                        localTeam = LocalTeam(entity: NSEntityDescription.entity(forEntityName: "LocalTeam", in: managedContext)!, insertInto: managedContext)
-                    //                    }
                     localTeam.key = team.key
                 }
+                
                 //Add the local team to the local event object's ranked teams
                 if !(localTeam.localEvents?.contains(where: {lEvent in
                     return (lEvent as! LocalEvent) == localEventObject
@@ -265,13 +281,15 @@ class CloudEventImportManager {
         CLSNSLogv("Finalizing event import", getVaList([]))
         //Do any last cleanup
         dataManager.commitChanges()
+        
+        NotificationCenter.default.post(Notification(name: Notification.Name(rawValue: "UpdatedTeams"), object: self))
+        
         completionHandler(true, nil)
     }
     
     enum ImportError: Error {
         case ErrorLoadingTeams
         case ErrorLoadingMatches
-        
-        
+        case EventAlreadyInDatabase
     }
 }

@@ -10,14 +10,18 @@ import UIKit
 
 class AddEventTableViewController: UITableViewController {
     var loadingView: UIView!
+    var searchController: UISearchController?
 	
 	let cloudConnection = CloudData()
     var events = [FRCEvent]() {
         didSet {
             loadingView.isHidden = true
+            filteredEvents = events
             tableView.reloadData()
         }
     }
+    
+    var filteredEvents = [FRCEvent]()
     
     var selectedEvent: FRCEvent? {
         didSet {
@@ -58,6 +62,13 @@ class AddEventTableViewController: UITableViewController {
                 NSLog("Events returned nil")
             }
         }
+        
+        //Add search functionality
+        searchController = UISearchController(searchResultsController: nil)
+        searchController?.searchResultsUpdater = self
+        searchController?.dimsBackgroundDuringPresentation = false
+        definesPresentationContext = true
+        tableView.tableHeaderView = searchController?.searchBar
     }
 
     override func didReceiveMemoryWarning() {
@@ -77,22 +88,22 @@ class AddEventTableViewController: UITableViewController {
 
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         // #warning Incomplete implementation, return the number of rows
-        return events.count
+        return filteredEvents.count
     }
 
 	
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "event", for: indexPath)
 
-        cell.textLabel?.text = events[indexPath.row].name
-        cell.detailTextLabel?.text = events[indexPath.row].location
+        cell.textLabel?.text = filteredEvents[indexPath.row].name
+        cell.detailTextLabel?.text = filteredEvents[indexPath.row].location
 
         return cell
     }
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         
-        selectedEvent = events[indexPath.row]
+        selectedEvent = filteredEvents[indexPath.row]
     }
 	
 
@@ -146,4 +157,22 @@ class AddEventTableViewController: UITableViewController {
     }
  
 
+}
+
+extension AddEventTableViewController: UISearchResultsUpdating {
+    func updateSearchResults(for searchController: UISearchController) {
+        let searchText = searchController.searchBar.text!.lowercased()
+        
+        if searchController.isActive {
+            filteredEvents = events.filter {frcEvent in
+                return frcEvent.name.lowercased().contains(searchText)
+                    || frcEvent.eventDistrictString?.lowercased().contains(searchText) ?? false
+                    || frcEvent.eventTypeString.lowercased().contains(searchText)
+                    || frcEvent.location.lowercased().contains(searchText)
+            }
+        } else {
+            filteredEvents = events
+        }
+        tableView.reloadData()
+    }
 }

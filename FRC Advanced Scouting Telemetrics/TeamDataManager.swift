@@ -10,6 +10,8 @@ import Foundation
 import UIKit
 import CoreData
 
+///DEPRECATED Use DataManager instead
+
 class TeamDataManager {
     
     static let managedContext = (UIApplication.shared.delegate as! AppDelegate).managedObjectContext

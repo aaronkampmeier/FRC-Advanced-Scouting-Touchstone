@@ -24,10 +24,8 @@ class EventPickerViewController: UIViewController, UIPickerViewDelegate, UIPicke
 		eventPicker.dataSource = self
 		eventPicker.delegate = self
 		
-		//Load all the events 
-		/*
-		events = dataManager.getAllEvents()
-*/
+		//Load all the events
+		events = dataManager.events()
     }
 
     override func didReceiveMemoryWarning() {

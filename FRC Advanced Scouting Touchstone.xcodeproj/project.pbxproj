@@ -78,6 +78,9 @@
 		932C344A1E1193C500A23203 /* SearchEngine.swift in Sources */ = {isa = PBXBuildFile; fileRef = 932C34491E1193C500A23203 /* SearchEngine.swift */; };
 		932C344C1E12DC2600A23203 /* EventInfoVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 932C344B1E12DC2600A23203 /* EventInfoVC.swift */; };
 		932C344E1E12F7C400A23203 /* CloudImportManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 932C344D1E12F7C400A23203 /* CloudImportManager.swift */; };
+		936572D91E14E52100439728 /* CloudRemovalManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 936572D81E14E52100439728 /* CloudRemovalManager.swift */; };
+		936572DF1E160EBB00439728 /* AboutViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 936572DE1E160EBB00439728 /* AboutViewController.swift */; };
+		936572E11E1610CA00439728 /* About.rtf in Resources */ = {isa = PBXBuildFile; fileRef = 936572E01E1610CA00439728 /* About.rtf */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -233,6 +236,9 @@
 		932C34491E1193C500A23203 /* SearchEngine.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SearchEngine.swift; sourceTree = "<group>"; };
 		932C344B1E12DC2600A23203 /* EventInfoVC.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EventInfoVC.swift; sourceTree = "<group>"; };
 		932C344D1E12F7C400A23203 /* CloudImportManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CloudImportManager.swift; sourceTree = "<group>"; };
+		936572D81E14E52100439728 /* CloudRemovalManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CloudRemovalManager.swift; sourceTree = "<group>"; };
+		936572DE1E160EBB00439728 /* AboutViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AboutViewController.swift; sourceTree = "<group>"; };
+		936572E01E1610CA00439728 /* About.rtf */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.rtf; path = About.rtf; sourceTree = "<group>"; };
 		D5E09D382B48C9148EBC98C8 /* Pods-FRC Advanced Scouting Touchstone.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-FRC Advanced Scouting Touchstone.release.xcconfig"; path = "Pods/Target Support Files/Pods-FRC Advanced Scouting Touchstone/Pods-FRC Advanced Scouting Touchstone.release.xcconfig"; sourceTree = "<group>"; };
 		E41AD9671774068A9E097A14 /* Pods-FRC Advanced Scouting Touchstone.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-FRC Advanced Scouting Touchstone.debug.xcconfig"; path = "Pods/Target Support Files/Pods-FRC Advanced Scouting Touchstone/Pods-FRC Advanced Scouting Touchstone.debug.xcconfig"; sourceTree = "<group>"; };
 		FF590BD6742CA543F314D9DB /* Pods_FRC_Advanced_Scouting_Touchstone.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_FRC_Advanced_Scouting_Touchstone.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -289,6 +295,8 @@
 				1F1C23D91E07673E008885A1 /* AddEventTableViewController.swift */,
 				932C344B1E12DC2600A23203 /* EventInfoVC.swift */,
 				1F4FEDAB1C4B686000F4016D /* AdminConsoleController.swift */,
+				936572DE1E160EBB00439728 /* AboutViewController.swift */,
+				936572E01E1610CA00439728 /* About.rtf */,
 			);
 			name = "Admin Console";
 			sourceTree = "<group>";
@@ -356,6 +364,7 @@
 				932C34491E1193C500A23203 /* SearchEngine.swift */,
 				1F718F791E085BD900BD1951 /* CloudConnectionManager.swift */,
 				932C344D1E12F7C400A23203 /* CloudImportManager.swift */,
+				936572D81E14E52100439728 /* CloudRemovalManager.swift */,
 				1F718F7F1E0862FA00BD1951 /* GlossModels.swift */,
 				1F21DF101C645D1F00C55D0E /* View Controllers */,
 				1F78E7861C3B469300221927 /* Main.storyboard */,
@@ -637,6 +646,7 @@
 			files = (
 				1F78E7901C3B469300221927 /* LaunchScreen.storyboard in Resources */,
 				1F78E78D1C3B469300221927 /* Assets.xcassets in Resources */,
+				936572E11E1610CA00439728 /* About.rtf in Resources */,
 				1F78E7881C3B469300221927 /* Main.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -742,6 +752,7 @@
 				1FBE627F1CAEE0FB001FDFB7 /* TeamPickerTableViewController.swift in Sources */,
 				1F1C23DA1E07673E008885A1 /* AddEventTableViewController.swift in Sources */,
 				1F1C23D01E07487C008885A1 /* LocalEvent+CoreDataProperties.swift in Sources */,
+				936572D91E14E52100439728 /* CloudRemovalManager.swift in Sources */,
 				1F1C23CE1E07487C008885A1 /* TeamEventPerformance+CoreDataProperties.swift in Sources */,
 				1F45340E1C6FC3EA004EDDB9 /* GameStatsCollectionViewCell.swift in Sources */,
 				1F78E7831C3B469300221927 /* AppDelegate.swift in Sources */,
@@ -768,6 +779,7 @@
 				1F1C23C31E07487C008885A1 /* TeamMatchPerformance+CoreDataClass.swift in Sources */,
 				1F4534561C7276DE004EDDB9 /* EventPickerViewController.swift in Sources */,
 				1F9B782B1CD1A42400B4E5AE /* HiddenDebugViewController.swift in Sources */,
+				936572DF1E160EBB00439728 /* AboutViewController.swift in Sources */,
 				1F1C23D81E07487C008885A1 /* LocalTeamRanking+CoreDataProperties.swift in Sources */,
 				1F4534101C6FF916004EDDB9 /* StandsScoutingViewController.swift in Sources */,
 				932C344A1E1193C500A23203 /* SearchEngine.swift in Sources */,

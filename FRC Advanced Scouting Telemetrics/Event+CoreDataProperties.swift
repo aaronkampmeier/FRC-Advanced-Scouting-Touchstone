@@ -30,6 +30,7 @@ extension Event: HasLocalEquivalent {
     @NSManaged public var eventType: NSNumber?
     @NSManaged public var eventTypeString: String?
     @NSManaged public var key: String?
+    @NSManaged public var location: String
     @NSManaged public var name: String?
     @NSManaged public var year: NSNumber?
     @NSManaged public var matches: NSSet?

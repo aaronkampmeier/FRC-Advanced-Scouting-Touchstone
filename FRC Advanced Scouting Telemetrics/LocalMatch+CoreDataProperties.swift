@@ -11,7 +11,7 @@ import CoreData
 
 
 extension LocalMatch: HasUniversalEquivalent {
-    static let genericName = "Match"
+    typealias UniversalType = Match
     typealias SelfObject = LocalMatch
     
     static func specificFR() -> NSFetchRequest<LocalMatch> {

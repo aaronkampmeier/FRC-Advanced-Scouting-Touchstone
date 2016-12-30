@@ -61,7 +61,7 @@ class AdminConsoleController: UIViewController, UITableViewDataSource, UITableVi
 				//Return the event cell with event name and type
 				let cell = tableView.dequeueReusableCell(withIdentifier: "event")!
 				cell.textLabel?.text = "\(events[indexPath.row].name ?? "")"
-				cell.detailTextLabel?.text = "\(events[indexPath.row].eventTypeString ?? "")"
+				cell.detailTextLabel?.text = "\(events[indexPath.row].location)"
 				return cell
 			}
 		case tableView.numberOfSections - 1:
@@ -92,10 +92,71 @@ class AdminConsoleController: UIViewController, UITableViewDataSource, UITableVi
 				//Did select event info
 				// TODO: Display event info
 			}
+        case tableView.numberOfSections - 1:
+            performSegue(withIdentifier: "about", sender: self)
         default:
             break
 		}
 	}
+    
+    func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
+        switch indexPath.section {
+        case 0:
+            //Events
+            if indexPath.row == tableView.numberOfRows(inSection: 0) - 1 {
+                return false
+            } else {
+                return true
+            }
+        default:
+            return false
+        }
+    }
+    
+    func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCellEditingStyle, forRowAt indexPath: IndexPath) {
+        switch editingStyle {
+        case .delete:
+            switch indexPath.section {
+            case 0:
+                //Events
+                if indexPath.row == tableView.numberOfRows(inSection: 0) - 1 {
+                    
+                } else {
+                    //Remove the event
+                    let removalManager = CloudEventRemovalManager(eventToRemove: events[indexPath.row]) {finished in
+                        if !finished {
+                            let alert = UIAlertController(title: "Problem Removing Event", message: "An error occured when removing the event.", preferredStyle: .alert)
+                            alert.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
+                            self.present(alert, animated: true, completion: nil)
+                        } else {
+                            tableView.beginUpdates()
+                            tableView.deleteRows(at: [indexPath], with: .left)
+                            tableView.endUpdates()
+                        }
+                    }
+                    removalManager.remove()
+                }
+            default:
+                break
+            }
+        default:
+            break
+        }
+    }
+    
+    func tableView(_ tableView: UITableView, willSelectRowAt indexPath: IndexPath) -> IndexPath? {
+        switch indexPath.section {
+        case 0:
+            //Matches
+            if indexPath.row == tableView.numberOfRows(inSection: 0) - 1 {
+                return indexPath
+            } else {
+                return nil
+            }
+        default:
+            return indexPath
+        }
+    }
     
     @IBAction func rewindToAdminConsole(withSegue segue: UIStoryboardSegue) {
         if segue.identifier == "unwindToAdminConsoleFromEventAdd" {
@@ -103,16 +164,11 @@ class AdminConsoleController: UIViewController, UITableViewDataSource, UITableVi
             tableView.reloadData()
         }
     }
-	
+    
     @IBAction func donePressed(_ sender: UIBarButtonItem) {
-		dataManager.commitChanges()
+        dataManager.commitChanges()
         dismiss(animated: true, completion: nil)
     }
-	
-	@IBAction func cancelPressed(_ sender: UIBarButtonItem) {
-		dataManager.discardChanges()
-		dismiss(animated: true, completion: nil)
-	}
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         super.prepare(for: segue, sender: sender)

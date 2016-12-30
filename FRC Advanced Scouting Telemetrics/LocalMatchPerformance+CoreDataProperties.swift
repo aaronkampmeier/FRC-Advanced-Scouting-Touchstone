@@ -11,7 +11,7 @@ import CoreData
 
 
 extension LocalMatchPerformance: HasUniversalEquivalent {
-    static let genericName = "MatchPerformance"
+    typealias UniversalType = TeamMatchPerformance
     typealias SelfObject = LocalMatchPerformance
     
     static func specificFR() -> NSFetchRequest<LocalMatchPerformance> {

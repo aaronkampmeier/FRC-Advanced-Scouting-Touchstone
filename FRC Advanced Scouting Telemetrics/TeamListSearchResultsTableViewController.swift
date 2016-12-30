@@ -9,6 +9,10 @@
 import UIKit
 
 class TeamListSearchResultsTableViewController: UITableViewController, UISearchResultsUpdating {
+    var teamListTableVC: TeamListTableViewController!
+    var eventTeams = [ObjectPair<Team,LocalTeam>]()
+    
+    var filteredTeams = [ObjectPair<Team,LocalTeam>]()
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -18,6 +22,11 @@ class TeamListSearchResultsTableViewController: UITableViewController, UISearchR
 
         // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
         // self.navigationItem.rightBarButtonItem = self.editButtonItem()
+        let inset = UIEdgeInsetsMake(teamListTableVC.searchController.searchBar.frame.height + (UIApplication.shared.statusBarFrame.height), 0, 0, 0)
+        tableView.contentInset = inset
+        tableView.scrollIndicatorInsets = inset
+        
+        eventTeams = teamListTableVC.currentEventTeams
     }
 
     override func didReceiveMemoryWarning() {
@@ -26,30 +35,53 @@ class TeamListSearchResultsTableViewController: UITableViewController, UISearchR
     }
 	
 	func updateSearchResults(for searchController: UISearchController) {
-		
+        if let searchText = searchController.searchBar.text {
+            var universalPredicates: [NSPredicate] = []
+            universalPredicates.append(NSPredicate(format: "location CONTAINS[cd] %@", argumentArray: [searchText]))
+            universalPredicates.append(NSPredicate(format: "name CONTAINS[cd] %@", argumentArray: [searchText]))
+            universalPredicates.append(NSPredicate(format: "nickname CONTAINS[cd] %@", argumentArray: [searchText]))
+            universalPredicates.append(NSPredicate(format: "teamNumber LIKE %@", argumentArray: [searchText]))
+            universalPredicates.append(NSPredicate(format: "website CONTAINS[cd] %@", argumentArray: [searchText]))
+            let universalPredicate = NSCompoundPredicate(orPredicateWithSubpredicates: universalPredicates)
+            
+            var localPredicates = [NSPredicate]()
+            localPredicates.append(NSPredicate(format: "notes CONTAINS[cd] %@", argumentArray: [searchText]))
+            let localPredicate = NSCompoundPredicate(orPredicateWithSubpredicates: localPredicates)
+            
+            
+            filteredTeams = eventTeams.filter() {objectPair in
+                    return universalPredicate.evaluate(with: objectPair.universal) || localPredicate.evaluate(with: objectPair.local)
+            }
+            
+            tableView.reloadData()
+        }
 	}
 
     // MARK: - Table view data source
 
     override func numberOfSections(in tableView: UITableView) -> Int {
         // #warning Incomplete implementation, return the number of sections
-        return 0
+        return 1
     }
 
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         // #warning Incomplete implementation, return the number of rows
-        return 0
+        return filteredTeams.count
     }
 
-    /*
-    override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCellWithIdentifier("reuseIdentifier", forIndexPath: indexPath)
+    
+    override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        let cell = tableView.dequeueReusableCell(withIdentifier: "basic", for: indexPath)
 
-        // Configure the cell...
+        cell.textLabel?.text = "Team " + filteredTeams[indexPath.row].universal.teamNumber!
 
         return cell
     }
-    */
+    
+    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        let selectedTeam = filteredTeams[indexPath.row]
+        teamListTableVC.selectedTeam = selectedTeam
+    }
 
     /*
     // Override to support conditional editing of the table view.

@@ -37,9 +37,15 @@ class DataManager {
 	
 	func delete(_ objectsToDelete: NSManagedObject...) {
 		for object in objectsToDelete {
-			TeamDataManager.managedContext.delete(object)
+			DataManager.managedContext.delete(object)
 		}
 	}
+    
+    func delete(_ objectsToDelete: [NSManagedObject]) {
+        for object in objectsToDelete {
+            DataManager.managedContext.delete(object)
+        }
+    }
     
 	
 	//MARK: - Team Ranking
@@ -84,13 +90,21 @@ class DataManager {
 	func localTeamRanking(forEvent event: Event? = nil) -> [Team] {
         return event != nil ? localTeamRanking(forLocalEvent: event!.local()) : simpleLocalTeamRanking()
 	}
+    
+    func localTeamRanking(forEvent event: Event) -> [LocalTeam] {
+        return localTeamRanking(forLocalEvent: event.local())
+    }
 	
 	///Returns an array of Team objects ordered by their local ranking for specified event
     func localTeamRanking(forLocalEvent localEvent: LocalEvent) -> [Team] {
-		let orderedLocalTeams = localEvent.rankedTeams?.array as! [LocalTeam]
+        let orderedLocalTeams: [LocalTeam] = localTeamRanking(forLocalEvent: localEvent)
 		
 		return LocalToUniversalConversion<LocalTeam,Team>(localObjects: orderedLocalTeams).convertToUniversal()!
 	}
+    
+    func localTeamRanking(forLocalEvent localEvent: LocalEvent) -> [LocalTeam] {
+        return localEvent.rankedTeams?.array as! [LocalTeam]
+    }
     
     //Reorder the team ranking
     func move(from fromIndex: Int, to toIndex: Int) {
@@ -193,7 +207,6 @@ extension NSManagedObject {
 
 protocol HasLocalEquivalent {
     associatedtype SelfObject: NSManagedObject
-    static var genericName: String {get}
     var key: String? {get set}
     static func genericFetchRequest() -> NSFetchRequest<NSManagedObject>
     static func specificFR() -> NSFetchRequest<SelfObject>
@@ -201,16 +214,56 @@ protocol HasLocalEquivalent {
 
 protocol HasUniversalEquivalent {
     associatedtype SelfObject: NSManagedObject
-    static var genericName: String {get}
+    associatedtype UniversalType: HasLocalEquivalent
     var key: String? {get set}
     static func genericFetchRequest() -> NSFetchRequest<NSManagedObject>
     static func specificFR() -> NSFetchRequest<SelfObject>
 }
 
+//Used for grouping a universal and its local object together
+struct ObjectPair<U:HasLocalEquivalent, L:HasUniversalEquivalent> where L.UniversalType == U, L:NSManagedObject, U:NSManagedObject, L.SelfObject == L, U.SelfObject == U {
+    let universal: U
+    let local: L
+    
+    var key: String {
+        return universal.key!
+    }
+    
+    init(universal: U, local: L) {
+        self.universal = universal
+        self.local = local
+    }
+    
+    //Init an array of ObjectPairs from an array of universals and locals. The two arrays must be the same size.
+    static func fromArrays(universals: [U], locals: [L]) -> [ObjectPair<U,L>]? {
+        if universals.count != locals.count {
+            return nil
+        }
+        
+        var objectPairs = [ObjectPair<U,L>]()
+        for (index, universal) in universals.enumerated() {
+            objectPairs.append(ObjectPair<U,L>(universal: universal, local: locals[index]))
+        }
+        return objectPairs
+    }
+    
+    static func fromArray(universals: [U]) -> [ObjectPair<U,L>]? {
+        let locals = UniversalToLocalConversion<U,L>(universalObjects: universals).convertToLocal()
+        
+        return fromArrays(universals: universals, locals: locals)
+    }
+    
+    static func fromArray(locals: [L]) -> [ObjectPair<U,L>]? {
+        let universals = LocalToUniversalConversion<L,U>(localObjects: locals).convertToUniversal()!
+        
+        return fromArrays(universals: universals, locals: locals)
+    }
+}
+
 //MARK: - Universal-Local Translations
 //When using fetched properties it is not a good idea to individually access many objects' fetched properties together because then numerous fetch requests will be queued at the same time which can be really slow. Instead this method uses one fetch request to grab all the wanted objects.
 ///Returns the local objects for the universal objects given (and in the same order). Use this instead of accessing multiple fetched properties back-to-back.
-class UniversalToLocalConversion<U:HasLocalEquivalent, L:HasUniversalEquivalent> where L:NSManagedObject, L.SelfObject == L {
+class UniversalToLocalConversion<U:HasLocalEquivalent, L:HasUniversalEquivalent> where L:NSManagedObject, L.SelfObject == L, L.UniversalType == U {
     private let universalObjects: [U]
     
     init(universalObjects: [U]) {
@@ -237,6 +290,8 @@ class UniversalToLocalConversion<U:HasLocalEquivalent, L:HasUniversalEquivalent>
             NSLog("Unable to fetch local objects for multiple universal objects")
             return []
         }
+        
+        assert(fetchedLocals.count == universalObjects.count)
         
         //Sort the fetched locals to be in the same order as their universal counterparts
         let sortedFetchedLocals = fetchedLocals.sorted() {localFirst, localSecond in

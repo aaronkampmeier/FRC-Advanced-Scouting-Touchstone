@@ -11,7 +11,7 @@ import CoreData
 
 
 extension LocalTeam: HasUniversalEquivalent {
-    static let genericName = "Team"
+    typealias UniversalType = Team
     typealias SelfObject = LocalTeam
     
     static func specificFR() -> NSFetchRequest<LocalTeam> {

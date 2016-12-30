@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import Crashlytics
 
 class EventInfoVC: UIViewController {
     var selectedEvent: FRCEvent?
@@ -58,11 +59,18 @@ class EventInfoVC: UIViewController {
             
             performSegue(withIdentifier: "unwindToAdminConsoleFromEventAdd", sender: self)
         } else {
+            let errorMessage: String?
             if let error = error {
-                NSLog("Didn't complete event import with error: \(error)")
+                CLSNSLogv("Didn't complete event import with error: \(error)", getVaList([]))
+                errorMessage = error.localizedDescription
             } else {
-                NSLog("Didn't complete event import")
+                CLSNSLogv("Didn't complete event import", getVaList([]))
+                errorMessage = nil
             }
+            
+            let alert = UIAlertController(title: "Unable to Add", message: "An error occurred when adding the event \(errorMessage)", preferredStyle: .alert)
+            alert.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
+            present(alert, animated: true, completion: nil)
         }
     }
 

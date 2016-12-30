@@ -17,7 +17,7 @@ class MatchOverviewViewController: UIViewController, UITableViewDataSource {
 		}
 	}
 	var matchTimeMarkers: [[TeamDataManager.TimeMarkerEvent]] = Array<Array<TeamDataManager.TimeMarkerEvent>>()
-	var matchPerformances: [TeamMatchPerformance] = [] {
+	var matchPerformances: [ObjectPair<TeamMatchPerformance,LocalMatchPerformance>] = [] {
 		didSet {
 			/*
 			matchTimeMarkers.removeAll()
@@ -48,7 +48,7 @@ class MatchOverviewViewController: UIViewController, UITableViewDataSource {
 	
 	func reload() {
 		matchPerformances = (dataSource?.currentMatchPerformances() ?? []).sorted() {
-			return $0.0.match!.matchNumber!.doubleValue < $0.1.match!.matchNumber!.doubleValue
+			return $0.0.universal.match!.matchNumber!.doubleValue < $0.1.universal.match!.matchNumber!.doubleValue
 		}
 		
 		if let table = matchOverviewTable {
@@ -58,7 +58,7 @@ class MatchOverviewViewController: UIViewController, UITableViewDataSource {
 	
 	func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
 		let matchPerformance = matchPerformances[section]
-		let match = matchPerformance.match!
+		let match = matchPerformance.universal.match!
 		return "Match \(match.matchNumber!)"
 	}
 	

@@ -9,6 +9,7 @@
         <attribute name="eventType" attributeType="Integer 64" usesScalarValueType="NO" syncable="YES"/>
         <attribute name="eventTypeString" attributeType="String" syncable="YES"/>
         <attribute name="key" attributeType="String" syncable="YES"/>
+        <attribute name="location" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="name" attributeType="String" syncable="YES"/>
         <attribute name="year" attributeType="Integer 64" usesScalarValueType="NO" syncable="YES"/>
         <relationship name="matches" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="Match" inverseName="event" inverseEntity="Match" syncable="YES"/>
@@ -50,7 +51,7 @@
         <attribute name="robotWeight" optional="YES" attributeType="Double" minValueString="0" defaultValueString="0.0" usesScalarValueType="NO" syncable="YES"/>
         <attribute name="sideImage" optional="YES" attributeType="Binary" allowsExternalBinaryDataStorage="YES" syncable="YES"/>
         <relationship name="localEvents" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="LocalEvent" inverseName="rankedTeams" inverseEntity="LocalEvent" syncable="YES"/>
-        <relationship name="ranker" maxCount="1" deletionRule="Nullify" destinationEntity="LocalTeamRanking" inverseName="localTeams" inverseEntity="LocalTeamRanking" syncable="YES"/>
+        <relationship name="ranker" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="LocalTeamRanking" inverseName="localTeams" inverseEntity="LocalTeamRanking" syncable="YES"/>
         <fetchedProperty name="universalFP" optional="YES" syncable="YES">
             <fetchRequest name="fetchedPropertyFetchRequest" entity="Team" predicateString="key LIKE $FETCH_SOURCE.key"/>
         </fetchedProperty>
@@ -113,7 +114,7 @@
     <configuration name="Universal"/>
     <elements>
         <element name="AutonomousCycle" positionX="342" positionY="324" width="128" height="73"/>
-        <element name="Event" positionX="-333" positionY="309" width="128" height="191"/>
+        <element name="Event" positionX="-333" positionY="309" width="128" height="206"/>
         <element name="LocalEvent" positionX="378" positionY="89" width="128" height="101"/>
         <element name="LocalMatch" positionX="180" positionY="468" width="128" height="146"/>
         <element name="LocalMatchPerformance" positionX="180" positionY="261" width="128" height="116"/>
