@@ -39,6 +39,26 @@ extension Event: HasLocalEquivalent {
 
 }
 
+extension Event: HasStats {
+    var stats: [StatName:()->StatValue?] {
+        get {
+            return [
+                StatName.NumberOfTeams:{self.teamEventPerformances?.count}
+            ]
+        }
+    }
+    
+    enum StatName: String, CustomStringConvertible {
+        case NumberOfTeams = "Number Of Teams"
+        
+        var description: String {
+            get {
+                return self.rawValue
+            }
+        }
+    }
+}
+
 // MARK: Generated accessors for matches
 extension Event {
 

@@ -37,6 +37,32 @@ extension Team: HasLocalEquivalent {
 
 }
 
+extension Team: HasStats {
+    var stats: [StatName:()->StatValue?] {
+        get {
+            return [
+                StatName.TeamNumber: {Int(self.teamNumber!)!},
+                StatName.RookieYear: {self.rookieYear?.intValue},
+                StatName.RobotHeight: {self.cachedLocal.robotHeight?.doubleValue},
+                StatName.RobotWeight: {self.cachedLocal.robotWeight?.doubleValue}
+            ]
+        }
+    }
+    
+    enum StatName: String, CustomStringConvertible {
+        case TeamNumber = "Team Number"
+        case RookieYear = "Rookie Year"
+        case RobotHeight = "Robot Height"
+        case RobotWeight = "Robot Weight"
+        
+        var description: String {
+            get {
+                return self.rawValue
+            }
+        }
+    }
+}
+
 // MARK: Generated accessors for eventPerformances
 extension Team {
 

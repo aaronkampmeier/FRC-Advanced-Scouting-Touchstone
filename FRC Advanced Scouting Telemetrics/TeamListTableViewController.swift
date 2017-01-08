@@ -16,6 +16,7 @@ protocol TeamSelectionDelegate: class {
 
 class TeamListTableViewController: UITableViewController, UISearchControllerDelegate {
 	@IBOutlet weak var eventSelectionButton: UIButton!
+    @IBOutlet weak var editButton: UIBarButtonItem!
 	
 	var searchController: UISearchController!
 	weak var delegate: TeamSelectionDelegate?
@@ -25,7 +26,7 @@ class TeamListTableViewController: UITableViewController, UISearchControllerDele
 	var isSorted = false {
 		didSet {
 			if isSorted {
-				
+				setEditing(false, animated: true)
 			} else {
 				currentSortedTeams = nil
 			}
@@ -178,19 +179,14 @@ class TeamListTableViewController: UITableViewController, UISearchControllerDele
 
         let team = currentTeamsToDisplay[(indexPath as NSIndexPath).row]
 		
-		if isEditing {
-			cell.teamLabel.text = "\(team.universal.teamNumber!)"
-			cell.statLabel.text = ""
-		} else {
-			cell.teamLabel.text = "Team \(team.universal.teamNumber!)"
-			if isSorted {
-//				cell.statLabel.text = "\(teamListTeam.statCalculation!.value)"
-			} else {
-				cell.statLabel.text = ""
-			}
-		}
+        cell.teamLabel.text = "Team \(team.universal.teamNumber!)"
+        if isSorted {
+//            cell.statLabel.text = "\(teamListTeam.statCalculation!.value)"
+        } else {
+            cell.statLabel.text = ""
+        }
 		
-        cell.rankLabel.text = "\(teams.index(where: {$0.universal == team.universal})! as Int + 1)"
+        cell.rankLabel.text = "\(currentEventTeams.index(where: {$0.universal == team.universal})! as Int + 1)"
 		
 		if let image = teamImagesCache.object(forKey: team.universal) {
 			cell.frontImage.image = image
@@ -225,40 +221,32 @@ class TeamListTableViewController: UITableViewController, UISearchControllerDele
     // Override to support conditional editing of the table view.
     override func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
         // Return false if you do not want the specified item to be editable.
-		return false
+		return true
     }
-
-    // Override to support editing the table view.
-    override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCellEditingStyle, forRowAt indexPath: IndexPath) {
-		
+    
+    override func tableView(_ tableView: UITableView, editingStyleForRowAt indexPath: IndexPath) -> UITableViewCellEditingStyle {
+        return .none
     }
-	
-	override func tableView(_ tableView: UITableView, editActionsForRowAt indexPath: IndexPath) -> [UITableViewRowAction]? {
-		return .none
-	}
 
     // Override to support rearranging the table view.
     override func tableView(_ tableView: UITableView, moveRowAt fromIndexPath: IndexPath, to toIndexPath: IndexPath) {
 		//Move the team in the array and in Core Data
-//		let movedTeamListTeam = currentEventTeams[(fromIndexPath as NSIndexPath).row]
-//		currentEventTeams.remove(at: (fromIndexPath as NSIndexPath).row)
-//		currentEventTeams.insert(movedTeamListTeam, at: (toIndexPath as NSIndexPath).row)
-//		
-//		do {
-//			try dataManager.moveTeam((fromIndexPath as NSIndexPath).row, toIndex: (toIndexPath as NSIndexPath).row)
-//		} catch {
-//			NSLog("Unable to save team move: \(error)")
-//		}
+        //TODO: Move a team in the ranking when the user moves it
+        dataManager.moveTeam(from: fromIndexPath.row, to: toIndexPath.row, inEvent: selectedEvent)
+        
+        let movedTeam = currentEventTeams[fromIndexPath.row]
+        if selectedEvent == nil {
+            teams.remove(at: fromIndexPath.row)
+            teams.insert(movedTeam, at: toIndexPath.row)
+        }
+        currentEventTeams.remove(at: fromIndexPath.row)
+        currentEventTeams.insert(movedTeam, at: toIndexPath.row)
     }
 
     // Override to support conditional rearranging of the table view.
     override func tableView(_ tableView: UITableView, canMoveRowAt indexPath: IndexPath) -> Bool {
         // Return false if you do not want the item to be re-orderable.
-		if selectedEvent == nil {
-			return true
-		} else {
-			return false
-		}
+		return true
     }
 	
 	override func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
@@ -294,7 +282,21 @@ class TeamListTableViewController: UITableViewController, UISearchControllerDele
 		super.setEditing(editing, animated: animated)
 		
 		tableView.setEditing(editing, animated: animated)
+        
+        if editing {
+            editButton.image = UIImage(named: "Edit Filled")
+        } else {
+            editButton.image = UIImage(named: "Edit")
+        }
 	}
+    
+    @IBAction func editPressed(_ sender: UIBarButtonItem) {
+        if isEditing {
+            setEditing(false, animated: true)
+        } else {
+            setEditing(true, animated: true)
+        }
+    }
 	
 	//MARK: -
 	func updateForImport(_ notification: Notification) {
@@ -302,7 +304,7 @@ class TeamListTableViewController: UITableViewController, UISearchControllerDele
         self.isSorted = false
         self.selectedEvent = nil
 	}
-	
+    
 	//MARK: - Searching
 
     // MARK: - Navigation

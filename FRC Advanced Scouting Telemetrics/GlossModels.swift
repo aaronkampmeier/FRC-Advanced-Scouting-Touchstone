@@ -161,7 +161,7 @@ struct FRCMatch: Decodable {
 	let competitionLevel: String?
 	let setNumber: Int?
 	let matchNumber: Int
-	let alliances: [DataManager.Alliance:FRCAlliance]?
+	let alliances: [String:FRCAlliance]?
 	let scoreBreakdown: String?
 	let eventKey: String
 	let videos: String? //Not implemented

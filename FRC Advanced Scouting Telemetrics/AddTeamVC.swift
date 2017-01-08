@@ -9,6 +9,8 @@
 import Foundation
 import UIKit
 
+///DEPRECATED. Users no longer enter teams themselves.
+
 class AddTeamVC: UIViewController {
 	@IBOutlet weak var addButton: UIBarButtonItem!
     @IBOutlet weak var teamField: UITextField!

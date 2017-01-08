@@ -64,6 +64,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 	weak private var teamListSecondaryVC: TeamListDetailViewController?
 	
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [NSObject: AnyObject]?) -> Bool {
+        print("App Dir: \(FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).last!)")
+        
         // Override point for customization after application launch.
 		Fabric.with([Answers.self, Crashlytics.self])
 		Crashlytics.sharedInstance().setUserIdentifier(UIDevice.current.identifierForVendor?.uuidString ?? "Unknown")
@@ -73,8 +75,30 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 		checkForUpdate()
 		
 		clearTMPFolder()
+        
+        
+        //TEMPORARY FOR TESTING OPR
+        let dataManager = DataManager()
+        let matches = dataManager.matches()
+        
+//        for match in matches {
+//            match.cachedLocal.blueFinalScore = randRange(lower: 50, upper: 350) as NSNumber
+//            match.cachedLocal.redFinalScore = randRange(lower: 50, upper: 350) as NSNumber
+//        }
+        
+//        let teamEventPerformance = (dataManager.localTeamRanking().first!.eventPerformances?.allObjects as! [TeamEventPerformance]).first!
+////        let matchPerformances = (teamEventPerformance.matchPerformances?.allObjects as! [TeamMatchPerformance])
+////        print(matchPerformances.map({ (matchPerformance) -> String in
+////            return "Match: \(matchPerformance.match!.key!) Alliance: \(matchPerformance.allianceColor) Score: \(matchPerformance.finalScore)"
+////        }))
+//        let opr = teamEventPerformance.value(forStat: TeamEventPerformance.StatName.OPR)
+//        print("OPR for \(teamEventPerformance.team.teamNumber!): \(opr)")
 		
         return true
+    }
+    
+    func randRange (lower: Int , upper: Int) -> Int {
+        return lower + Int(arc4random_uniform(UInt32(upper - lower + 1)))
     }
 	
 	func clearTMPFolder() {
@@ -84,6 +108,14 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 //		} catch {
 //			CLSNSLogv("Unable to clear temporary directory.", getVaList([]))
 //		}
+        
+        //Clear the old database file in case the user had a 1.0 version of the app
+        do {
+            let oldDatabaseUrl = self.applicationDocumentsDirectory.appendingPathComponent("SingleViewCoreData.sqlite")
+            try FileManager.default.removeItem(at: oldDatabaseUrl)
+        } catch {
+            NSLog("Unable to remove old database")
+        }
 	}
 	
 	func checkForUpdate(forceful: Bool = false) {
@@ -236,7 +268,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         var failureReason = "There was an error creating or loading the application's saved data."
         do {
 			//Add both persistent tores
-            try coordinator.addPersistentStore(ofType: NSSQLiteStoreType, configurationName: "Default", at: url, options: options)
+            try coordinator.addPersistentStore(ofType: NSSQLiteStoreType, configurationName: "Universal", at: url, options: options)
 			try coordinator.addPersistentStore(ofType: NSSQLiteStoreType, configurationName: "Local", at: localDataURL, options: options)
         } catch {
             // Report any error we got.

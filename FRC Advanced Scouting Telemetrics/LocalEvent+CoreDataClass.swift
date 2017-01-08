@@ -2,8 +2,8 @@
 //  LocalEvent+CoreDataClass.swift
 //  FRC Advanced Scouting Touchstone
 //
-//  Created by Aaron Kampmeier on 12/18/16.
-//  Copyright © 2016 Kampfire Technologies. All rights reserved.
+//  Created by Aaron Kampmeier on 1/1/17.
+//  Copyright © 2017 Kampfire Technologies. All rights reserved.
 //
 
 import Foundation

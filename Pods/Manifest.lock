@@ -8,6 +8,7 @@ PODS:
     - SSZipArchive
   - FLAnimatedImage (1.0.12)
   - Gloss (1.1.1)
+  - GMStepper (2.0.0)
   - NYTPhotoViewer (1.1.0):
     - NYTPhotoViewer/AnimatedGifSupport (= 1.1.0)
     - NYTPhotoViewer/Core (= 1.1.0)
@@ -22,6 +23,7 @@ DEPENDENCIES:
   - Ensembles (~> 1.0)
   - Ensembles/Multipeer (~> 1.0)
   - Gloss (~> 1.1)
+  - GMStepper
   - NYTPhotoViewer (~> 1.1.0)
 
 SPEC CHECKSUMS:
@@ -29,9 +31,10 @@ SPEC CHECKSUMS:
   Ensembles: 33c81244812b7d568a7fa76255708327efc66a4a
   FLAnimatedImage: 4a0b56255d9b05f18b6dd7ee06871be5d3b89e31
   Gloss: 4a892694cba7387efa4102a51f86110651366b18
+  GMStepper: 6aff0c881afac2f432e5c9b0df71e44e14110a06
   NYTPhotoViewer: e80e8767f3780d2df37c6f72cbab15d6c7232911
   SSZipArchive: de3d215ab73f87db627f81f2ce24f1731e3886c3
 
-PODFILE CHECKSUM: e1ab59385d7bec7fcec58d8dc086b7ffa77825f8
+PODFILE CHECKSUM: 857a6a5b905177a272900ab0ffe9c5cad9942668
 
 COCOAPODS: 1.1.1

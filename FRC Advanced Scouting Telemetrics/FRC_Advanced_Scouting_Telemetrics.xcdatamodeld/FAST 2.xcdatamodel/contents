@@ -111,7 +111,14 @@
         <memberEntity name="LocalTeamRanking"/>
         <memberEntity name="LocalEvent"/>
     </configuration>
-    <configuration name="Universal"/>
+    <configuration name="Universal">
+        <memberEntity name="Event"/>
+        <memberEntity name="Match"/>
+        <memberEntity name="Team"/>
+        <memberEntity name="TeamEventPerformance"/>
+        <memberEntity name="TeamMatchPerformance"/>
+        <memberEntity name="TimeMarker"/>
+    </configuration>
     <elements>
         <element name="AutonomousCycle" positionX="342" positionY="324" width="128" height="73"/>
         <element name="Event" positionX="-333" positionY="309" width="128" height="206"/>

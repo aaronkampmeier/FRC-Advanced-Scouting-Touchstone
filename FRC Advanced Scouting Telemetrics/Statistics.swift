@@ -14,7 +14,66 @@ import Surge
 //Then another option to specify a stat that you would like calculated on an object (to be used for easy sorting without calculating all stats)
 //Or instead just add the stats as properties into the NSManagedObject Subclasses to call them directly and have them manage their own caching
 
+protocol StatValue: CustomStringConvertible {
+    
+}
 
+extension Int: StatValue {
+    
+}
+
+extension Double: StatValue {
+    
+}
+
+extension Bool: StatValue {
+    
+}
+
+extension String: StatValue {
+    
+}
+
+struct NoStatValue: StatValue, CustomStringConvertible {
+    var description: String = "No Data"
+}
+let StatNoData = NoStatValue()
+
+//Grabbed off of http://stackoverflow.com/questions/24116271/whats-the-cleanest-way-of-applying-map-to-a-dictionary-in-swift
+//Provides a way to map the values in a dictionary with a single function
+extension Dictionary {
+    init(_ pairs: [Element]) {
+        self.init()
+        for (k, v) in pairs {
+            self[k] = v
+        }
+    }
+    
+    ///Map through the values in a dictionary and return a dictionary with the same keys and new values
+    func map<OutValue>( transform: (Value) throws -> OutValue) rethrows -> [Key: OutValue] {
+        return Dictionary<Key, OutValue>(try map { (k, v) in (k, try transform(v)) })
+    }
+}
+
+protocol HasStats {
+    associatedtype StatName: Hashable
+    var stats: [StatName:()->StatValue?] {get} //A list of all the stats a class has and a function to compute it
+}
+
+//This provides the basic stat functions to all stat-able classes using their stats property
+extension HasStats {
+    func allStats() -> [StatName] {
+        return Array(stats.keys)
+    }
+    
+    func statsAndValues() -> [StatName : StatValue?] {
+        return stats.map {$0()}
+    }
+    
+    func value(forStat stat: StatName) -> StatValue? {
+        return stats[stat]?() ?? Double.nan
+    }
+}
 
 //private let dataManager = TeamDataManager()
 //private let matrixACache = NSCache<Event, StatCalculation.CachedMatrix>()
@@ -448,7 +507,7 @@ import Surge
 //					matrixA[firstTeamIndex, secondTeamIndex] = Double(numOfCommonPlays)
 //				}
 //			}
-//			
+//
 //			/*
 //			for firstTeamPerformance in teamEventPerformances {
 //				let firstPlace = teamEventPerformances.index(of: firstTeamPerformance)!.hashValue

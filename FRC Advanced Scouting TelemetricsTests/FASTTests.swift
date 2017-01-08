@@ -1,15 +1,16 @@
 //
-//  FRC_Advanced_Scouting_TelemetricsTests.swift
-//  FRC Advanced Scouting TelemetricsTests
+//  FASTTests.swift
+//  FRC Advanced Scouting Touchstone
 //
-//  Created by Aaron Kampmeier on 1/4/16.
-//  Copyright © 2016 Kampfire Technologies. All rights reserved.
+//  Created by Aaron Kampmeier on 1/2/17.
+//  Copyright © 2017 Kampfire Technologies. All rights reserved.
 //
 
 import XCTest
 @testable import FRC_Advanced_Scouting_Touchstone
 
-class FRC_Advanced_Scouting_TelemetricsTests: XCTestCase {
+class FASTTests: XCTestCase {
+    
     override func setUp() {
         super.setUp()
         // Put setup code here. This method is called before the invocation of each test method in the class.

@@ -33,6 +33,8 @@ class EventInfoVC: UIViewController {
         address.text = selectedEvent?.venueAddress
         website.text = selectedEvent?.website
         firstFMS.text = selectedEvent?.official.description.capitalized
+        
+        NotificationCenter.default.addObserver(forName: NSNotification.Name(rawValue: "CloudImportNoAllianceData"), object: nil, queue: nil, using: receivedNoAllianceData)
     }
 
     override func didReceiveMemoryWarning() {
@@ -72,6 +74,12 @@ class EventInfoVC: UIViewController {
             alert.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
             present(alert, animated: true, completion: nil)
         }
+    }
+    
+    func receivedNoAllianceData(notification: Notification) {
+        let alert = UIAlertController(title: "Too Early", message: "The cloud system has no data on the match schedule and alliances at this event. This is most likely due to the event being too far away date-wise for them to have finalized a schedule. Please reload data at a later date.", preferredStyle: .alert)
+        alert.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
+        present(alert, animated: true, completion: nil)
     }
 
     /*

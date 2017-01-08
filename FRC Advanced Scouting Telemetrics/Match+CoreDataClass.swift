@@ -11,5 +11,12 @@ import CoreData
 
 
 public class Match: NSManagedObject {
-
+    lazy var cachedLocal: LocalMatch = {
+        NotificationCenter.default.addObserver(forName: NSNotification.Name(rawValue: "UpdatedTeams"), object: nil, queue: nil) {_ in
+            
+            self.cachedLocal = self.local()
+        
+        }
+        return self.local()
+    }()
 }

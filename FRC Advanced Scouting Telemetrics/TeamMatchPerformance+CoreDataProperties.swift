@@ -26,10 +26,32 @@ extension TeamMatchPerformance: HasLocalEquivalent {
         return NSFetchRequest<NSManagedObject>(entityName: "TeamMatchPerformance")
     }
 
-    @NSManaged public var allianceColor: String?
+    @NSManaged public var allianceColor: String
     @NSManaged public var allianceTeam: NSNumber?
     @NSManaged public var key: String?
     @NSManaged public var match: Match?
     @NSManaged public var eventPerformance: TeamEventPerformance?
 
+}
+
+extension TeamMatchPerformance: HasStats {
+    var stats: [StatName:()->StatValue?] {
+        get {
+            return [
+                StatName.TotalPoints:{self.finalScore},
+                StatName.TotalRankingPoints:{self.rankingPoints}
+            ]
+        }
+    }
+    
+    enum StatName: String, CustomStringConvertible {
+        case TotalPoints = "Total Points"
+        case TotalRankingPoints = "Total Ranking Points"
+        
+        var description: String {
+            get {
+                return self.rawValue
+            }
+        }
+    }
 }

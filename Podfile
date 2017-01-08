@@ -8,4 +8,5 @@ pod "Ensembles", "~> 1.0"
 pod "Ensembles/Multipeer", "~> 1.0"
 pod 'NYTPhotoViewer', '~> 1.1.0'
 pod 'Gloss', '~> 1.1'
+pod "GMStepper"
 end

@@ -107,11 +107,22 @@ class DataManager {
     }
     
     //Reorder the team ranking
-    func move(from fromIndex: Int, to toIndex: Int) {
-        let teamRankingObject = getLocalTeamRankingObject()
-        let movedTeam = teamRankingObject.localTeams?.array[fromIndex] as! LocalTeam
-        teamRankingObject.removeFromLocalTeams(at: fromIndex)
-        teamRankingObject.insertIntoLocalTeams(movedTeam, at: toIndex)
+    func moveTeam(from fromIndex: Int, to toIndex: Int, inEvent event: LocalEvent? = nil) {
+        if let localEvent = event {
+            let movedTeam = localEvent.rankedTeams?.array[fromIndex] as! LocalTeam
+            localEvent.removeFromRankedTeams(at: fromIndex)
+            localEvent.insertIntoRankedTeams(movedTeam, at: toIndex)
+        } else {
+            let teamRankingObject = getLocalTeamRankingObject()
+            let movedTeam = teamRankingObject.localTeams?.array[fromIndex] as! LocalTeam
+            teamRankingObject.removeFromLocalTeams(at: fromIndex)
+            teamRankingObject.insertIntoLocalTeams(movedTeam, at: toIndex)
+        }
+        commitChanges()
+    }
+    
+    func moveTeam(from fromIndex: Int, to toIndex: Int, inEvent event: Event? = nil) {
+        moveTeam(from: fromIndex, to: toIndex, inEvent: event?.local() as? LocalEvent)
     }
     
     //MARK: - Teams

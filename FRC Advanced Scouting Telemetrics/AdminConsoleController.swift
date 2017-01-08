@@ -131,6 +131,7 @@ class AdminConsoleController: UIViewController, UITableViewDataSource, UITableVi
                         } else {
                             tableView.beginUpdates()
                             tableView.deleteRows(at: [indexPath], with: .left)
+                            self.events.remove(at: indexPath.row)
                             tableView.endUpdates()
                         }
                     }
