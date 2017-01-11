@@ -7,13 +7,21 @@
 //
 
 import UIKit
+import GMStepper
 
 class OffenseSSViewController: UIViewController {
+    @IBOutlet weak var highLoaderFuelStepper: GMStepper!
+    @IBOutlet weak var lowLoaderFuelStepper: GMStepper!
+    @IBOutlet weak var airShipGearsLoaded: GMStepper!
 
     override func viewDidLoad() {
         super.viewDidLoad()
 
         // Do any additional setup after loading the view.
+        
+        highLoaderFuelStepper.layer.cornerRadius = 7
+        lowLoaderFuelStepper.layer.cornerRadius = 7
+        airShipGearsLoaded.layer.cornerRadius = 7
     }
 
     override func didReceiveMemoryWarning() {

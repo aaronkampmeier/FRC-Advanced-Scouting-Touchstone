@@ -11,8 +11,13 @@ import CoreData
 
 
 extension TeamMatchPerformance: HasLocalEquivalent {
-    static let genericName = "MatchPerformance"
+    var localEntityName: String {
+        get {
+            return "LocalMatchPerformance"
+        }
+    }
     typealias SelfObject = TeamMatchPerformance
+    typealias LocalType = LocalMatchPerformance
     
     static func specificFR() -> NSFetchRequest<TeamMatchPerformance> {
         return NSFetchRequest<TeamMatchPerformance>(entityName: "TeamMatchPerformance")
@@ -31,6 +36,7 @@ extension TeamMatchPerformance: HasLocalEquivalent {
     @NSManaged public var key: String?
     @NSManaged public var match: Match?
     @NSManaged public var eventPerformance: TeamEventPerformance?
+    @NSManaged public var transientLocal: LocalMatchPerformance?
 
 }
 

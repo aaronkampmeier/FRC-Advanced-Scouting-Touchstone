@@ -95,8 +95,8 @@ class CloudEventImportManager {
         event.year = frcEvent.year as NSNumber
         event.location = frcEvent.location
         
-        //Create the local one
-        if (event.value(forKey: "localFP") as? [LocalEvent])?.count ?? 0 == 0 {
+        //Create the local one if there is no local object already
+        if event.fetchLocalObject() == nil {
             let localEvent: LocalEvent
             localEvent = LocalEvent(entity: NSEntityDescription.entity(forEntityName: "LocalEvent", in: managedContext)!, insertInto: managedContext)
 //            if #available(iOS 10.0, *) {

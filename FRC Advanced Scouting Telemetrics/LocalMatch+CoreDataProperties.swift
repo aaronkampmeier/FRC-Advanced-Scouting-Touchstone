@@ -11,6 +11,11 @@ import CoreData
 
 
 extension LocalMatch: HasUniversalEquivalent {
+    var universalEntityName: String {
+        get {
+            return "Match"
+        }
+    }
     typealias UniversalType = Match
     typealias SelfObject = LocalMatch
     
@@ -31,5 +36,6 @@ extension LocalMatch: HasUniversalEquivalent {
     @NSManaged public var key: String?
     @NSManaged public var redFinalScore: NSNumber?
     @NSManaged public var redRankingPoints: NSNumber?
+    @NSManaged public var transientUniversal: Match?
 
 }

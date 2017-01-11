@@ -11,6 +11,11 @@ import CoreData
 
 
 extension LocalMatchPerformance: HasUniversalEquivalent {
+    var universalEntityName: String {
+        get {
+            return "TeamMatchPerformance"
+        }
+    }
     typealias UniversalType = TeamMatchPerformance
     typealias SelfObject = LocalMatchPerformance
     
@@ -29,6 +34,7 @@ extension LocalMatchPerformance: HasUniversalEquivalent {
     @NSManaged public var key: String?
     @NSManaged public var autonomousCycles: NSOrderedSet?
     @NSManaged public var timeMarkers: NSOrderedSet?
+    @NSManaged public var transientUniversal: TeamMatchPerformance?
 
 }
 

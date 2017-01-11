@@ -14,6 +14,12 @@ extension LocalEvent {
     typealias UniversalType = Event
     typealias SelfObject = LocalEvent
     
+    var universalEntityName: String {
+        get {
+            return "Event"
+        }
+    }
+    
     static func specificFR() -> NSFetchRequest<LocalEvent> {
         return NSFetchRequest<LocalEvent>(entityName: "LocalEvent")
     }
@@ -28,6 +34,7 @@ extension LocalEvent {
 
     @NSManaged public var key: String?
     @NSManaged public var rankedTeams: NSOrderedSet?
+    @NSManaged public var transientUniversal: Event?
 
 }
 

@@ -88,11 +88,11 @@ class DataManager {
     //Use this function when getting local team rankings, not the simpleLocalTeamRanking
 	///Returns an array of Team objects ordered by their local ranking for specified event
 	func localTeamRanking(forEvent event: Event? = nil) -> [Team] {
-        return event != nil ? localTeamRanking(forLocalEvent: event!.local()) : simpleLocalTeamRanking()
+        return event != nil ? localTeamRanking(forLocalEvent: event!.local) : simpleLocalTeamRanking()
 	}
     
     func localTeamRanking(forEvent event: Event) -> [LocalTeam] {
-        return localTeamRanking(forLocalEvent: event.local())
+        return localTeamRanking(forLocalEvent: event.local)
     }
 	
 	///Returns an array of Team objects ordered by their local ranking for specified event
@@ -122,7 +122,7 @@ class DataManager {
     }
     
     func moveTeam(from fromIndex: Int, to toIndex: Int, inEvent event: Event? = nil) {
-        moveTeam(from: fromIndex, to: toIndex, inEvent: event?.local() as? LocalEvent)
+        moveTeam(from: fromIndex, to: toIndex, inEvent: event?.local)
     }
     
     //MARK: - Teams
@@ -202,33 +202,83 @@ class DataManager {
 	}
 }
 
-extension NSManagedObject {
-	func local<T:NSManagedObject>() -> T {
-		let localObject = (self.value(forKey: "localFP") as! [T]).first!
-		
-		return localObject
-	}
-	
-	func universal<T:NSManagedObject>() -> T? {
-		let universalObject = (self.value(forKey: "universalFP") as? NSSet)?.allObjects.first as? T
-		
-		return universalObject
-	}
-}
-
-protocol HasLocalEquivalent {
+//For the NSManagedObject Subclasses to inherit
+protocol HasLocalEquivalent: class {
     associatedtype SelfObject: NSManagedObject
+    associatedtype LocalType: NSManagedObject
+    var localEntityName: String {get}
     var key: String? {get set}
     static func genericFetchRequest() -> NSFetchRequest<NSManagedObject>
     static func specificFR() -> NSFetchRequest<SelfObject>
+    var transientLocal: LocalType? {get set}
 }
 
-protocol HasUniversalEquivalent {
+protocol HasUniversalEquivalent: class {
     associatedtype SelfObject: NSManagedObject
     associatedtype UniversalType: HasLocalEquivalent
+    var universalEntityName: String {get}
     var key: String? {get set}
     static func genericFetchRequest() -> NSFetchRequest<NSManagedObject>
     static func specificFR() -> NSFetchRequest<SelfObject>
+    var transientUniversal: UniversalType.SelfObject? {get set}
+}
+
+extension HasUniversalEquivalent {
+    ///Returns the universal object and sets the transient property for quick future fetching
+    var universal: UniversalType.SelfObject? {
+        get {
+            if let universalObject = transientUniversal {
+                return universalObject
+            } else {
+                let universalObject = fetchUniversalObject()
+                self.transientUniversal = universalObject
+                return universalObject
+            }
+        }
+    }
+    
+    ///Fetches the universal object, does not set it into the transient property
+    func fetchUniversalObject() -> UniversalType.SelfObject? {
+        let fetchRequest = NSFetchRequest<UniversalType.SelfObject>(entityName: universalEntityName)
+        fetchRequest.predicate = NSPredicate(format: "key LIKE %@", argumentArray: [self.key!])
+        do {
+            let objects = try DataManager.managedContext.fetch(fetchRequest)
+            assert(objects.count <= 1)
+            return objects.first
+        } catch {
+            NSLog("Unable to fetch Universal Objects")
+            assertionFailure()
+            return nil
+        }
+    }
+}
+
+extension HasLocalEquivalent {
+    ///Returns the local object and sets the transient property for quick future fetching
+    var local: LocalType {
+        get {
+            if let localObject = transientLocal {
+                return localObject
+            } else {
+                let localObject = fetchLocalObject()!
+                self.transientLocal = localObject
+                return localObject
+            }
+        }
+    }
+    
+    ///Fetches the local object, does not set it into the transient property
+    func fetchLocalObject() -> LocalType? {
+        let fetchRequest = NSFetchRequest<LocalType>(entityName: localEntityName)
+        fetchRequest.predicate = NSPredicate(format: "key LIKE %@", argumentArray: [self.key!])
+        do {
+            let objects = try DataManager.managedContext.fetch(fetchRequest)
+            return objects.first
+        } catch {
+            NSLog("Unable to fetch Local Objects")
+            exit(EXIT_FAILURE)
+        }
+    }
 }
 
 //Used for grouping a universal and its local object together

@@ -13,6 +13,11 @@ import CoreData
 extension LocalTeam: HasUniversalEquivalent {
     typealias UniversalType = Team
     typealias SelfObject = LocalTeam
+    var universalEntityName: String {
+        get {
+            return "Team"
+        }
+    }
     
     static func specificFR() -> NSFetchRequest<LocalTeam> {
         return NSFetchRequest<LocalTeam>(entityName: "LocalTeam")
@@ -34,6 +39,7 @@ extension LocalTeam: HasUniversalEquivalent {
     @NSManaged public var sideImage: NSData?
     @NSManaged public var localEvents: NSSet?
     @NSManaged public var ranker: LocalTeamRanking?
+    @NSManaged public var transientUniversal: Team?
 
 }
 

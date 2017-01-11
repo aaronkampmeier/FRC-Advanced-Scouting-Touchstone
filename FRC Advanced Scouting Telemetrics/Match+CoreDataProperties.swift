@@ -11,8 +11,13 @@ import CoreData
 
 
 extension Match: HasLocalEquivalent {
-    static let genericName = "Match"
+    var localEntityName: String {
+        get {
+            return "LocalMatch"
+        }
+    }
     typealias SelfObject = Match
+    typealias LocalType = LocalMatch
     
     static func specificFR() -> NSFetchRequest<Match> {
         return NSFetchRequest<Match>(entityName: "Match")
@@ -31,6 +36,7 @@ extension Match: HasLocalEquivalent {
     @NSManaged public var time: NSDate?
     @NSManaged public var event: Event?
     @NSManaged public var teamPerformances: NSSet?
+    @NSManaged public var transientLocal: LocalMatch?
 
 }
 

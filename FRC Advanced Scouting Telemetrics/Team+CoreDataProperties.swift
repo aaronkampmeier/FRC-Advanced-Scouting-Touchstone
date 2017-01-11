@@ -11,8 +11,13 @@ import CoreData
 
 
 extension Team: HasLocalEquivalent {
-    static let genericName = "Team"
+    var localEntityName: String {
+        get {
+            return "LocalTeam"
+        }
+    }
     typealias SelfObject = Team
+    typealias LocalType = LocalTeam
     
     static func specificFR() -> NSFetchRequest<Team> {
         return NSFetchRequest<Team>(entityName: "Team")
@@ -34,6 +39,7 @@ extension Team: HasLocalEquivalent {
     @NSManaged public var teamNumber: String?
     @NSManaged public var website: String?
     @NSManaged public var eventPerformances: NSSet?
+    @NSManaged public var transientLocal: LocalTeam?
 
 }
 
@@ -43,8 +49,8 @@ extension Team: HasStats {
             return [
                 StatName.TeamNumber: {Int(self.teamNumber!)!},
                 StatName.RookieYear: {self.rookieYear?.intValue},
-                StatName.RobotHeight: {self.cachedLocal.robotHeight?.doubleValue},
-                StatName.RobotWeight: {self.cachedLocal.robotWeight?.doubleValue}
+                StatName.RobotHeight: {self.local.robotHeight?.doubleValue},
+                StatName.RobotWeight: {self.local.robotWeight?.doubleValue}
             ]
         }
     }
