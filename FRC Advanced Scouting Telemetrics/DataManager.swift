@@ -166,6 +166,17 @@ class DataManager {
 		return events
 	}
     
+    func eventPerformance(forTeam team: Team, inEvent event: Event) -> TeamEventPerformance {
+        //Get two sets
+        let eventPerformances: Set<TeamEventPerformance> = Set(event.teamEventPerformances?.allObjects as! [TeamEventPerformance])
+        
+        let teamPerformances = Set(team.eventPerformances?.allObjects as! [TeamEventPerformance])
+        
+        //Combine the two sets to find the one in both
+        let teamEventPerformance = Array(eventPerformances.intersection(teamPerformances)).first!
+        return teamEventPerformance
+    }
+    
     //MARK: - Events
     func events() -> [Event] {
         let events: [Event]

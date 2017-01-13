@@ -47,6 +47,7 @@ extension Team: HasStats {
     var stats: [StatName:()->StatValue?] {
         get {
             return [
+                StatName.LocalRank: {DataManager().localTeamRanking().index(of: self)},
                 StatName.TeamNumber: {Int(self.teamNumber!)!},
                 StatName.RookieYear: {self.rookieYear?.intValue},
                 StatName.RobotHeight: {self.local.robotHeight?.doubleValue},
@@ -55,7 +56,8 @@ extension Team: HasStats {
         }
     }
     
-    enum StatName: String, CustomStringConvertible {
+    enum StatName: String, CustomStringConvertible, StatNameable {
+        case LocalRank = "Local Rank"
         case TeamNumber = "Team Number"
         case RookieYear = "Rookie Year"
         case RobotHeight = "Robot Height"
@@ -66,6 +68,8 @@ extension Team: HasStats {
                 return self.rawValue
             }
         }
+        
+        static let allValues: [StatName] = [.LocalRank, .TeamNumber, .RookieYear, .RobotHeight, .RobotWeight]
     }
 }
 

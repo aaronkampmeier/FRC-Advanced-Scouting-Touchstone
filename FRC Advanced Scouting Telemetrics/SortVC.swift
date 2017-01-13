@@ -10,20 +10,20 @@ import Foundation
 import UIKit
 
 protocol SortDelegate {
-	func selectedStat(_ stat: Int?, isAscending: Bool)
-	
-	///Returns an array of all the stats that can be sorted by. Automatically includes the Draft Board.
-	func stats() -> [String]
+	func selectedStat(_ stat: String, isAscending: Bool)
+    func statsToDisplay() -> [String]
+    func currentStat() -> String
 }
 
+//T is the type to be sorted
 class SortVC: UIViewController, UIPickerViewDelegate, UIPickerViewDataSource {
     @IBOutlet weak var sortTypePicker: UIPickerView!
     @IBOutlet weak var orderSegementedControl: UISegmentedControl!
 	
-    private var selectedStat: Int?
-    private let dataManager = TeamDataManager()
+    var statsToDisplay = [String]()
+    private var selectedStat: String?
+    private let dataManager = DataManager()
 	
-	private var stats = [String]()
     private var isAscending = true
 	
 	var delegate: SortDelegate?
@@ -31,19 +31,17 @@ class SortVC: UIViewController, UIPickerViewDelegate, UIPickerViewDataSource {
     override func viewDidLoad() {
         super.viewDidLoad()
 
-		/*
 		sortTypePicker.dataSource = self
         sortTypePicker.delegate = self
-        
-        orderSegementedControl.isEnabled = false
 		
-		stats = delegate?.stats() ?? []
-*/
+		statsToDisplay = delegate?.statsToDisplay() ?? []
+        selectedStat = delegate?.currentStat()
+        sortTypePicker.selectRow(statsToDisplay.index(of: selectedStat!)!, inComponent: 0, animated: false)
     }
 	
 	override func viewWillDisappear(_ animated: Bool) {
 		super.viewWillDisappear(animated)
-		delegate?.selectedStat(selectedStat, isAscending: isAscending)
+		delegate?.selectedStat(selectedStat!, isAscending: isAscending)
     }
 	
 	override func viewDidDisappear(_ animated: Bool) {
@@ -56,7 +54,7 @@ class SortVC: UIViewController, UIPickerViewDelegate, UIPickerViewDataSource {
     }
     
     func pickerView(_ pickerView: UIPickerView, numberOfRowsInComponent component: Int) -> Int {
-		return stats.count + 1
+		return statsToDisplay.count
     }
     
     func numberOfComponents(in pickerView: UIPickerView) -> Int {
@@ -64,21 +62,11 @@ class SortVC: UIViewController, UIPickerViewDelegate, UIPickerViewDataSource {
     }
     
     func pickerView(_ pickerView: UIPickerView, titleForRow row: Int, forComponent component: Int) -> String? {
-        if row == 0 {
-            return "Draft Board (Default)"
-        } else {
-            return stats[row - 1]
-        }
+        return statsToDisplay[row]
     }
     
     func pickerView(_ pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {
-        if row == 0 {
-            selectedStat = nil
-            orderSegementedControl.isEnabled = false
-        } else {
-            selectedStat = row - 1
-            orderSegementedControl.isEnabled = true
-        }
+        selectedStat = statsToDisplay[row]
     }
     
     @IBAction func segmentedControlChanged(_ sender: UISegmentedControl) {

@@ -98,7 +98,7 @@ extension TeamEventPerformance: HasStats {
     }
     
     //Stat Name Defition
-    enum StatName: String, CustomStringConvertible {
+    enum StatName: String, CustomStringConvertible, StatNameable {
         case TotalMatchPoints = "Total Match Points"
         case TotalRankingPoints = "Total Ranking Points"
         case OPR = "OPR"
@@ -110,6 +110,8 @@ extension TeamEventPerformance: HasStats {
                 return self.rawValue
             }
         }
+        
+        static let allValues: [StatName] = [.TotalMatchPoints, .TotalRankingPoints, .OPR, .DPR, .CCWM]
     }
 }
 

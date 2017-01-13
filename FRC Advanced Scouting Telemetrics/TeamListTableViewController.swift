@@ -23,19 +23,19 @@ class TeamListTableViewController: UITableViewController, UISearchControllerDele
 	let dataManager = DataManager()
 	let teamImagesCache = NSCache<Team, UIImage>()
 	
+    //Local Rank is not considered sorted
+    var statToSortBy: String = Team.StatName.LocalRank.rawValue
 	var isSorted = false {
 		didSet {
 			if isSorted {
 				setEditing(false, animated: true)
+                editButton.isEnabled = false
 			} else {
 				currentSortedTeams = nil
+                editButton.isEnabled = true
 			}
 		}
 	}
-	var sortVC: SortVC {
-		return sortNavVC.topViewController as! SortVC
-	}
-	var sortNavVC: UINavigationController!
 	var currentSortedTeams: [ObjectPair<Team, LocalTeam>]? {
 		didSet {
 			if let teams = currentSortedTeams {
@@ -58,6 +58,8 @@ class TeamListTableViewController: UITableViewController, UISearchControllerDele
 			tableView.reloadData()
 		}
 	}
+    
+    
 	var selectedTeam: ObjectPair<Team, LocalTeam>? {
 		didSet {
 			delegate?.selectedTeam(selectedTeam)
@@ -79,10 +81,16 @@ class TeamListTableViewController: UITableViewController, UISearchControllerDele
 			
 			if let event = selectedEvent {
 				//Set to nil, because the selected team might not be in the new event
+                isSorted = false
+                statToSortBy = Team.StatName.LocalRank.rawValue
+                
 				selectedTeam = nil
                 currentEventTeams = ObjectPair<Team,LocalTeam>.fromArray(locals: dataManager.localTeamRanking(forEvent: event))!
 				eventSelectionButton.setTitle(event.name, for: UIControlState())
 			} else {
+                isSorted = false
+                statToSortBy = Team.StatName.LocalRank.rawValue
+                
 				currentEventTeams = teams
 				eventSelectionButton.setTitle("All Teams", for: UIControlState())
 				
@@ -95,14 +103,7 @@ class TeamListTableViewController: UITableViewController, UISearchControllerDele
 		get {
 			if let team = selectedTeam?.universal {
 				if let event = selectedEvent {
-					//Get two sets
-					let eventPerformances: Set<TeamEventPerformance> = Set(event.teamEventPerformances?.allObjects as! [TeamEventPerformance])
-					let teamPerformances = Set(team.eventPerformances?.allObjects as! [TeamEventPerformance])
-					
-					//Combine the two sets to find the one in both
-					let teamEventPerformance = Array(eventPerformances.intersection(teamPerformances)).first ?? nil
-					
-					return teamEventPerformance
+					return dataManager.eventPerformance(forTeam: team, inEvent: event)
 				}
 			}
 			return nil
@@ -134,7 +135,6 @@ class TeamListTableViewController: UITableViewController, UISearchControllerDele
 		
 		tableView.allowsSelectionDuringEditing = true
 		
-		sortNavVC = storyboard?.instantiateViewController(withIdentifier: "sortNav") as! UINavigationController
 		
 		//Load in the beginning data
 		selectedEvent = nil
@@ -181,7 +181,11 @@ class TeamListTableViewController: UITableViewController, UISearchControllerDele
 		
         cell.teamLabel.text = "Team \(team.universal.teamNumber!)"
         if isSorted {
-//            cell.statLabel.text = "\(teamListTeam.statCalculation!.value)"
+            if let stat = Team.StatName(rawValue: statToSortBy) {
+                cell.statLabel.text = "\(team.universal.statValue(forStat: stat))"
+            } else if let stat = TeamEventPerformance.StatName(rawValue: statToSortBy) {
+                cell.statLabel.text = "\(dataManager.eventPerformance(forTeam: team.universal, inEvent: selectedEvent!).statValue(forStat: stat))"
+            }
         } else {
             cell.statLabel.text = ""
         }
@@ -322,49 +326,64 @@ class TeamListTableViewController: UITableViewController, UISearchControllerDele
 	
 	//MARK: - Sorting
 	@IBAction func sortPressed(_ sender: UIBarButtonItem) {
-//		sortVC.delegate = self
-//		sortNavVC.modalPresentationStyle = .popover
-//		sortNavVC.preferredContentSize = CGSize(width: 350, height: 300)
-//		
-//		let popoverVC = sortNavVC.popoverPresentationController
-//		
-//		popoverVC?.barButtonItem = sender
-//		present(sortNavVC, animated: true, completion: nil)
+        let sortNavVC = storyboard?.instantiateViewController(withIdentifier: "sortNav") as! UINavigationController
+        let sortVC = sortNavVC.topViewController as! SortVC
+		sortVC.delegate = self
+		sortNavVC.modalPresentationStyle = .popover
+		sortNavVC.preferredContentSize = CGSize(width: 350, height: 300)
+		
+		let popoverVC = sortNavVC.popoverPresentationController
+		
+		popoverVC?.barButtonItem = sender
+		present(sortNavVC, animated: true, completion: nil)
 	}
 	
-	func sortList(withStat stat: Int?, isAscending ascending: Bool) {
-//		var statName = ""
-//		if let stat = stat {
-//			//Update stats in cache
-//			for index in 0..<currentEventTeams.count {
-//				currentEventTeams[index].statCalculation = currentEventTeams[index].statContext.possibleStats[stat]
-//			}
-//			
-//			//Sort
-//			let currentTeams = currentEventTeams
-//			currentSortedTeams = currentTeams.sorted() {team1,team2 in
-//				let before = team1.statCalculation?.value ?? 0 > team2.statCalculation?.value ?? 0
-//				statName = team1.statCalculation?.description ?? ""
-//				if ascending {
-//					return before
-//				} else {
-//					return !before
-//				}
-//			}
-//			
-//			isSorted = true
-//		} else {
-//			//Update stats in cache
-//			for index in 0..<currentEventTeams.count {
-//				currentEventTeams[index].statCalculation = nil
-//			}
-//			
-//			statName = "Draft Board (Default)"
-//			
-//			isSorted = false
-//		}
-//		
-//		Answers.logCustomEvent(withName: "Sort Team List", customAttributes: ["Stat":statName, "Ascending":ascending.description])
+	func sortList(withStat statName: String, isAscending ascending: Bool) {
+        let teamStat = Team.StatName(rawValue: statName)
+        let eventPerformanceStat = TeamEventPerformance.StatName(rawValue: statName)
+        
+        if let stat = teamStat {
+            statToSortBy = stat.rawValue
+            switch stat {
+            case Team.StatName.LocalRank:
+                isSorted = false
+            default:
+                let currentTeams = currentEventTeams
+                currentSortedTeams = currentTeams.sorted {objectPair1, objectPair2 in
+                    let isBefore = objectPair1.universal.statValue(forStat: stat).numericValue > objectPair2.universal.statValue(forStat: stat).numericValue
+                    if ascending {
+                        return isBefore
+                    } else {
+                        return !isBefore
+                    }
+                }
+                
+                isSorted = true
+            }
+        } else if let stat = eventPerformanceStat {
+            statToSortBy = stat.rawValue
+            
+            let currentTeams = currentEventTeams
+            currentSortedTeams = currentTeams.sorted {objectPair1, objectPair2 in
+                let firstTeamEventPerformance: TeamEventPerformance = dataManager.eventPerformance(forTeam: objectPair1.universal, inEvent: selectedEvent!)
+                let secondTeamEventPerformance: TeamEventPerformance = dataManager.eventPerformance(forTeam: objectPair2.universal, inEvent: selectedEvent!)
+                
+                let isBefore = firstTeamEventPerformance.statValue(forStat: stat).numericValue > secondTeamEventPerformance.statValue(forStat: stat).numericValue
+                if ascending {
+                    return isBefore
+                } else {
+                    return !isBefore
+                }
+            }
+            
+            isSorted = true
+        } else {
+            assertionFailure()
+        }
+        
+        
+        
+		Answers.logCustomEvent(withName: "Sort Team List", customAttributes: ["Stat":statName, "Ascending":ascending.description])
 	}
 	
 	@IBAction func returnToTeamList(_ segue: UIStoryboardSegue) {
@@ -387,11 +406,16 @@ extension TeamListTableViewController: EventSelection {
 }
 
 extension TeamListTableViewController: SortDelegate {
-	func selectedStat(_ stat: Int?, isAscending: Bool) {
+	func selectedStat(_ stat: String, isAscending: Bool) {
 		sortList(withStat: stat, isAscending: isAscending)
 	}
 	
-	func stats() -> [String] {
-		return []
+    ///Returns all the stats to be potentially sorted by. If there is a selected event, then also return stats for TeamEventPerformances.
+	func statsToDisplay() -> [String] {
+        return Team.StatName.allValues.map {$0.rawValue} + (selectedEvent != nil ? TeamEventPerformance.StatName.allValues.map {$0.rawValue} : [])
 	}
+    
+    func currentStat() -> String {
+        return statToSortBy
+    }
 }

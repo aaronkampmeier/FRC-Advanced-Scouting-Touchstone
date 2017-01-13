@@ -50,7 +50,7 @@ extension TeamMatchPerformance: HasStats {
         }
     }
     
-    enum StatName: String, CustomStringConvertible {
+    enum StatName: String, CustomStringConvertible, StatNameable {
         case TotalPoints = "Total Points"
         case TotalRankingPoints = "Total Ranking Points"
         
@@ -59,5 +59,7 @@ extension TeamMatchPerformance: HasStats {
                 return self.rawValue
             }
         }
+        
+        static let allValues: [StatName] = [.TotalPoints, .TotalRankingPoints]
     }
 }

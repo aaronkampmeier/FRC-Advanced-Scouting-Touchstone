@@ -15,27 +15,48 @@ import Surge
 //Or instead just add the stats as properties into the NSManagedObject Subclasses to call them directly and have them manage their own caching
 
 protocol StatValue: CustomStringConvertible {
-    
+    var numericValue: Double {get}
 }
 
 extension Int: StatValue {
-    
+    var numericValue: Double {
+        get {
+            return Double(self)
+        }
+    }
 }
 
 extension Double: StatValue {
-    
+    var numericValue: Double {
+        get {
+            return self
+        }
+    }
 }
 
 extension Bool: StatValue {
-    
+    var numericValue: Double {
+        get {
+            return Double(self.hashValue)
+        }
+    }
 }
 
 extension String: StatValue {
-    
+    var numericValue: Double {
+        get {
+            return 0
+        }
+    }
 }
 
 struct NoStatValue: StatValue, CustomStringConvertible {
     var description: String = "No Data"
+    var numericValue: Double {
+        get {
+            return Double.nan
+        }
+    }
 }
 let StatNoData = NoStatValue()
 
@@ -56,8 +77,13 @@ extension Dictionary {
 }
 
 protocol HasStats {
-    associatedtype StatName: Hashable
+    associatedtype StatName: StatNameable, Hashable
     var stats: [StatName:()->StatValue?] {get} //A list of all the stats a class has and a function to compute it
+}
+
+protocol StatNameable {
+    associatedtype StatName: Hashable
+    static var allValues: [StatName] {get}
 }
 
 //This provides the basic stat functions to all stat-able classes using their stats property
@@ -70,7 +96,7 @@ extension HasStats {
         return stats.map {$0()}
     }
     
-    func value(forStat stat: StatName) -> StatValue? {
+    func statValue(forStat stat: StatName) -> StatValue {
         return stats[stat]?() ?? Double.nan
     }
 }

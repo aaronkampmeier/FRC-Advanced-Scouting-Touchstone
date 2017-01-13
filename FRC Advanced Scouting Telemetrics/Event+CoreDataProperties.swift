@@ -54,7 +54,7 @@ extension Event: HasStats {
         }
     }
     
-    enum StatName: String, CustomStringConvertible {
+    enum StatName: String, CustomStringConvertible, StatNameable {
         case NumberOfTeams = "Number Of Teams"
         
         var description: String {
@@ -62,6 +62,8 @@ extension Event: HasStats {
                 return self.rawValue
             }
         }
+        
+        static let allValues: [StatName] = [.NumberOfTeams]
     }
 }
 
