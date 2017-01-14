@@ -106,6 +106,8 @@ class CloudEventImportManager {
 //            }
             localEvent.key = event.key
             localEventObject = localEvent
+        } else {
+            localEventObject = event.fetchLocalObject()
         }
         
         eventObject = event

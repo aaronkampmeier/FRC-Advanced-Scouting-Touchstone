@@ -181,11 +181,15 @@ class TeamListTableViewController: UITableViewController, UISearchControllerDele
 		
         cell.teamLabel.text = "Team \(team.universal.teamNumber!)"
         if isSorted {
+            let statDouble: Double
             if let stat = Team.StatName(rawValue: statToSortBy) {
-                cell.statLabel.text = "\(team.universal.statValue(forStat: stat))"
+                statDouble = team.universal.statValue(forStat: stat).numericValue
             } else if let stat = TeamEventPerformance.StatName(rawValue: statToSortBy) {
-                cell.statLabel.text = "\(dataManager.eventPerformance(forTeam: team.universal, inEvent: selectedEvent!).statValue(forStat: stat))"
+                statDouble = dataManager.eventPerformance(forTeam: team.universal, inEvent: selectedEvent!).statValue(forStat: stat).numericValue
+            } else {
+                statDouble = 0.0
             }
+            cell.statLabel.text = "\(Double(round(statDouble*100)/100))"
         } else {
             cell.statLabel.text = ""
         }
@@ -305,8 +309,8 @@ class TeamListTableViewController: UITableViewController, UISearchControllerDele
 	//MARK: -
 	func updateForImport(_ notification: Notification) {
         self.loadTeams()
-        self.isSorted = false
         self.selectedEvent = nil
+        self.isSorted = false
 	}
     
 	//MARK: - Searching
