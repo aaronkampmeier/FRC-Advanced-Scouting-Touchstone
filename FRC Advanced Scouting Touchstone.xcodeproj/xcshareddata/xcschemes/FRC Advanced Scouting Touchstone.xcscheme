@@ -33,7 +33,7 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "1F78E7951C3B469300221927"
-               BuildableName = "FRC Advanced Scouting Touchstone.xctest"
+               BuildableName = "FRC Advanced Scouting Touchstone Tests.xctest"
                BlueprintName = "FRC Advanced Scouting TouchstoneTests"
                ReferencedContainer = "container:FRC Advanced Scouting Touchstone.xcodeproj">
             </BuildableReference>

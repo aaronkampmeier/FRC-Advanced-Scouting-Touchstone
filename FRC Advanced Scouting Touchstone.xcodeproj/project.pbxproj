@@ -81,9 +81,9 @@
 		936572E11E1610CA00439728 /* About.rtf in Resources */ = {isa = PBXBuildFile; fileRef = 936572E01E1610CA00439728 /* About.rtf */; };
 		938D9CAE1E19A1B700A5E522 /* LocalEvent+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = 938D9CAC1E19A1B700A5E522 /* LocalEvent+CoreDataClass.swift */; };
 		938D9CAF1E19A1B700A5E522 /* LocalEvent+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 938D9CAD1E19A1B700A5E522 /* LocalEvent+CoreDataProperties.swift */; };
-		938D9CB11E1B05BA00A5E522 /* FASTTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 938D9CB01E1B05BA00A5E522 /* FASTTests.swift */; };
 		938D9CB41E1DD99B00A5E522 /* Surge.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1FAA2A921DFE1F3500514B9E /* Surge.framework */; };
 		938D9CB51E1DD99B00A5E522 /* Surge.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 1FAA2A921DFE1F3500514B9E /* Surge.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		93BA599E1E2C95F200171D72 /* FASTTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 938D9CB01E1B05BA00A5E522 /* FASTTests.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -233,9 +233,9 @@
 		1F78E78C1C3B469300221927 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		1F78E78F1C3B469300221927 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		1F78E7911C3B469300221927 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		1F78E7961C3B469300221927 /* FRC Advanced Scouting Touchstone.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "FRC Advanced Scouting Touchstone.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
+		1F78E7961C3B469300221927 /* FRC Advanced Scouting Touchstone Tests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "FRC Advanced Scouting Touchstone Tests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
 		1F78E79C1C3B469300221927 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		1F78E7A11C3B469300221927 /* FRC Advanced Scouting Touchstone.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "FRC Advanced Scouting Touchstone.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
+		1F78E7A11C3B469300221927 /* FRC Advanced Scouting Touchstone UI Tests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "FRC Advanced Scouting Touchstone UI Tests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
 		1F78E7A51C3B469300221927 /* FRC_Advanced_Scouting_TelemetricsUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FRC_Advanced_Scouting_TelemetricsUITests.swift; sourceTree = "<group>"; };
 		1F78E7A71C3B469300221927 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		1F7AE4E01DCFF31F0029B420 /* FRC_Advanced_Scouting_Telemetrics Version 14.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "FRC_Advanced_Scouting_Telemetrics Version 14.xcdatamodel"; sourceTree = "<group>"; };
@@ -268,7 +268,7 @@
 		9332F2821E216E2100AB3EA6 /* OffenseSSViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OffenseSSViewController.swift; sourceTree = "<group>"; };
 		9332F2931E22BB6E00AB3EA6 /* FAST 2-1.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "FAST 2-1.xcdatamodel"; sourceTree = "<group>"; };
 		935C06601E2C02D2000AA574 /* YCMatrix.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = YCMatrix.xcodeproj; path = "YCMatrix-master/YCMatrix.xcodeproj"; sourceTree = SOURCE_ROOT; };
-		935C066D1E2C0605000AA574 /* MyPlayground.playground */ = {isa = PBXFileReference; lastKnownFileType = file.playground; path = MyPlayground.playground; sourceTree = "<group>"; };
+		935C066D1E2C0605000AA574 /* MyPlayground.playground */ = {isa = PBXFileReference; lastKnownFileType = file.playground; name = MyPlayground.playground; path = ../MyPlayground.playground; sourceTree = "<group>"; };
 		936572D81E14E52100439728 /* CloudRemovalManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CloudRemovalManager.swift; sourceTree = "<group>"; };
 		936572DE1E160EBB00439728 /* AboutViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AboutViewController.swift; sourceTree = "<group>"; };
 		936572E01E1610CA00439728 /* About.rtf */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.rtf; path = About.rtf; sourceTree = "<group>"; };
@@ -368,7 +368,6 @@
 		1F78E7761C3B469300221927 = {
 			isa = PBXGroup;
 			children = (
-				935C066D1E2C0605000AA574 /* MyPlayground.playground */,
 				935C06601E2C02D2000AA574 /* YCMatrix.xcodeproj */,
 				1FAA2A8C1DFE1F3500514B9E /* Surge.xcodeproj */,
 				1F78E7811C3B469300221927 /* FRC Advanced Scouting Touchstone */,
@@ -384,8 +383,8 @@
 			isa = PBXGroup;
 			children = (
 				1F78E77F1C3B469300221927 /* FRC Advanced Scouting Touchstone.app */,
-				1F78E7961C3B469300221927 /* FRC Advanced Scouting Touchstone.xctest */,
-				1F78E7A11C3B469300221927 /* FRC Advanced Scouting Touchstone.xctest */,
+				1F78E7961C3B469300221927 /* FRC Advanced Scouting Touchstone Tests.xctest */,
+				1F78E7A11C3B469300221927 /* FRC Advanced Scouting Touchstone UI Tests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -393,6 +392,7 @@
 		1F78E7811C3B469300221927 /* FRC Advanced Scouting Touchstone */ = {
 			isa = PBXGroup;
 			children = (
+				935C066D1E2C0605000AA574 /* MyPlayground.playground */,
 				1F78E7821C3B469300221927 /* AppDelegate.swift */,
 				1FCEF8F51C9CB231006AC591 /* Globals.swift */,
 				1FBB426C1C9A29FC0017E36C /* Statistics.swift */,
@@ -417,8 +417,8 @@
 		1F78E7991C3B469300221927 /* FRC Advanced Scouting TouchstoneTests */ = {
 			isa = PBXGroup;
 			children = (
-				938D9CB01E1B05BA00A5E522 /* FASTTests.swift */,
 				1F78E79C1C3B469300221927 /* Info.plist */,
+				938D9CB01E1B05BA00A5E522 /* FASTTests.swift */,
 			);
 			name = "FRC Advanced Scouting TouchstoneTests";
 			path = "FRC Advanced Scouting TelemetricsTests";
@@ -588,7 +588,7 @@
 			);
 			name = "FRC Advanced Scouting TouchstoneTests";
 			productName = "FRC Advanced Scouting TelemetricsTests";
-			productReference = 1F78E7961C3B469300221927 /* FRC Advanced Scouting Touchstone.xctest */;
+			productReference = 1F78E7961C3B469300221927 /* FRC Advanced Scouting Touchstone Tests.xctest */;
 			productType = "com.apple.product-type.bundle.unit-test";
 		};
 		1F78E7A01C3B469300221927 /* FRC Advanced Scouting TouchstoneUITests */ = {
@@ -606,7 +606,7 @@
 			);
 			name = "FRC Advanced Scouting TouchstoneUITests";
 			productName = "FRC Advanced Scouting TelemetricsUITests";
-			productReference = 1F78E7A11C3B469300221927 /* FRC Advanced Scouting Touchstone.xctest */;
+			productReference = 1F78E7A11C3B469300221927 /* FRC Advanced Scouting Touchstone UI Tests.xctest */;
 			productType = "com.apple.product-type.bundle.ui-testing";
 		};
 /* End PBXNativeTarget section */
@@ -666,8 +666,8 @@
 			projectRoot = "";
 			targets = (
 				1F78E77E1C3B469300221927 /* FRC Advanced Scouting Touchstone */,
-				1F78E7951C3B469300221927 /* FRC Advanced Scouting TouchstoneTests */,
 				1F78E7A01C3B469300221927 /* FRC Advanced Scouting TouchstoneUITests */,
+				1F78E7951C3B469300221927 /* FRC Advanced Scouting TouchstoneTests */,
 			);
 		};
 /* End PBXProject section */
@@ -882,7 +882,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				938D9CB11E1B05BA00A5E522 /* FASTTests.swift in Sources */,
+				93BA599E1E2C95F200171D72 /* FASTTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1120,8 +1120,8 @@
 				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
 				INFOPLIST_FILE = "FRC Advanced Scouting TelemetricsTests/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = "com.kampmeier.FRC-Advanced-Scouting-TelemetricsTests";
-				PRODUCT_NAME = "FRC Advanced Scouting Touchstone";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.kampmeier.FRC-Advanced-Scouting-TouchstoneTests";
+				PRODUCT_NAME = "FRC Advanced Scouting Touchstone Tests";
 				SWIFT_OBJC_BRIDGING_HEADER = "";
 				SWIFT_VERSION = 3.0;
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/FRC Advanced Scouting Touchstone.app/FRC Advanced Scouting Touchstone";
@@ -1137,8 +1137,8 @@
 				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
 				INFOPLIST_FILE = "FRC Advanced Scouting TelemetricsTests/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = "com.kampmeier.FRC-Advanced-Scouting-TelemetricsTests";
-				PRODUCT_NAME = "FRC Advanced Scouting Touchstone";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.kampmeier.FRC-Advanced-Scouting-TouchstoneTests";
+				PRODUCT_NAME = "FRC Advanced Scouting Touchstone Tests";
 				SWIFT_OBJC_BRIDGING_HEADER = "";
 				SWIFT_VERSION = 3.0;
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/FRC Advanced Scouting Touchstone.app/FRC Advanced Scouting Touchstone";
@@ -1150,8 +1150,8 @@
 			buildSettings = {
 				INFOPLIST_FILE = "FRC Advanced Scouting TelemetricsUITests/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = "com.kampmeier.FRC-Advanced-Scouting-TelemetricsUITests";
-				PRODUCT_NAME = "FRC Advanced Scouting Touchstone";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.kampmeier.FRC-Advanced-Scouting-TouchstoneUITests";
+				PRODUCT_NAME = "FRC Advanced Scouting Touchstone UI Tests";
 				SWIFT_OBJC_BRIDGING_HEADER = "";
 				SWIFT_VERSION = 3.0;
 				TEST_TARGET_NAME = "FRC Advanced Scouting Telemetrics";
@@ -1164,8 +1164,8 @@
 			buildSettings = {
 				INFOPLIST_FILE = "FRC Advanced Scouting TelemetricsUITests/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = "com.kampmeier.FRC-Advanced-Scouting-TelemetricsUITests";
-				PRODUCT_NAME = "FRC Advanced Scouting Touchstone";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.kampmeier.FRC-Advanced-Scouting-TouchstoneUITests";
+				PRODUCT_NAME = "FRC Advanced Scouting Touchstone UI Tests";
 				SWIFT_OBJC_BRIDGING_HEADER = "";
 				SWIFT_VERSION = 3.0;
 				TEST_TARGET_NAME = "FRC Advanced Scouting Telemetrics";

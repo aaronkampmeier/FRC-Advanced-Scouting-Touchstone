@@ -140,7 +140,7 @@ func evaluateOPRUsingYCMatrix(teamPerformance: TeamEventPerformance) -> Double {
         
         assert((matrixL?.transposingAndMultiplying(withLeft: matrixL).isEqual(to: matrixP, tolerance: 1))!)
         
-        let matrixY = forwardSubstitue(matrixA: matrixL, matrixB: matrixS)
+        let matrixY = forwardSubstitute(matrixA: matrixL, matrixB: matrixS)
         
         let oprMatrix = backwardSubstitute(matrixA: matrixL?.transposing(), matrixB: matrixY)
         
@@ -152,13 +152,10 @@ func evaluateOPRUsingYCMatrix(teamPerformance: TeamEventPerformance) -> Double {
 }
 
 ///Forward and Backwards matrix substitution formulas drawn from http://mathfaculty.fullerton.edu/mathews/n2003/BackSubstitutionMod.html
-func forwardSubstitue(matrixA: Matrix!, matrixB: Matrix!) -> Matrix? {
+func forwardSubstitute(matrixA: Matrix!, matrixB: Matrix!) -> Matrix? {
     let matrixX = Matrix(ofRows: matrixA.rows, columns: 1, value: 0)
     
-    //For initial x value at (0,0)
-    matrixX?.setValue(matrixB.i(0, j: 0) / matrixA.i(0, j: 0), row: 0, column: 0)
-    
-    for i in 1..<matrixA.rows {
+    for i in 0..<matrixA.rows {
         let sigmaValue = sigma(initialIncrementerValue: 0, topIncrementValue: Int(i)-1, function: {matrixA.i(i, j: Int32($0)) * (matrixX?.i(Int32($0), j: 0))!})
         let bValue = matrixB.i(i, j: 0)
         let xValueAtI = (bValue - sigmaValue) / matrixA.i(i, j: i)
@@ -172,13 +169,10 @@ func forwardSubstitue(matrixA: Matrix!, matrixB: Matrix!) -> Matrix? {
 func backwardSubstitute(matrixA: Matrix!, matrixB: Matrix!) -> Matrix? {
     let matrixX = Matrix(ofRows: matrixA.rows, columns: 1, value: 0)
     
-    //For initial x value at (0,0)
-    matrixX?.setValue(matrixB.i(0, j: 0) / matrixA.i(0, j: 0), row: 0, column: 0)
-    
     let backwardsArray = (Int(matrixA.rows)-1) ..= 0
     
     for i in backwardsArray {
-        let sigmaValue = sigma(initialIncrementerValue: Int(i), topIncrementValue: Int(matrixA.rows) - 1, function: {matrixA.i(Int32(i), j: Int32($0)) * (matrixX?.i(Int32($0), j: 0))!})
+        let sigmaValue = sigma(initialIncrementerValue: Int(i) + 1, topIncrementValue: Int(matrixA.rows) - 1, function: {matrixA.i(Int32(i), j: Int32($0)) * (matrixX?.i(Int32($0), j: 0))!})
         let xValueAtI = (matrixB.i(Int32(i), j: 0) - sigmaValue) / matrixA.i(Int32(i), j: Int32(i))
         matrixX?.setValue(xValueAtI, row: Int32(i), column: 0)
     }
