@@ -394,6 +394,7 @@ class LocalToUniversalConversion<L: HasUniversalEquivalent, U:HasLocalEquivalent
         //Add them all to the compound predicate
         let compoundPredicate = NSCompoundPredicate(orPredicateWithSubpredicates: predicates)
         
+        
         fetchRequest.predicate = compoundPredicate
         
         let fetchedUniversals: [U]
@@ -404,9 +405,14 @@ class LocalToUniversalConversion<L: HasUniversalEquivalent, U:HasLocalEquivalent
             return []
         }
         
+        print("Predicates: \(predicates.count)")
+        print("Fetched Universals: \(fetchedUniversals.count)")
+        print("Local objects: \(localObjects.count)")
+        
         if fetchedUniversals.count != localObjects.count {
-            NSLog("Amount of Fetched Universals not equal to the given objects")
-            return nil
+            NSLog("Amount of Fetched Universals not equal to the given objects, caused by syncing with someone who has added different events than you")
+            //But actually this could happen because it is being synced with other devices that might have different events added
+//            return nil
         }
         
         //Sort the fetched locals to be in the same order as their universal counterparts

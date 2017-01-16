@@ -45,8 +45,8 @@ NSString * const CDEManagedObjectContextSaveNotificationKey = @"managedObjectCon
 @property (nonatomic, strong, readwrite) NSURL *storeURL;
 @property (nonatomic, strong, readwrite) NSManagedObjectModel *managedObjectModel;
 @property (nonatomic, strong, readwrite) NSURL *managedObjectModelURL;
-@property (nonatomic, assign, readwrite, getter = isLeeched) BOOL leeched;
-@property (nonatomic, assign, readwrite, getter = isMerging) BOOL merging;
+@property (atomic, assign, readwrite, getter = isLeeched) BOOL leeched;
+@property (atomic, assign, readwrite, getter = isMerging) BOOL merging;
 @property (nonatomic, strong, readwrite) CDEEventStore *eventStore;
 @property (nonatomic, strong, readwrite) CDESaveMonitor *saveMonitor;
 @property (nonatomic, strong, readwrite) CDEEventIntegrator *eventIntegrator;
@@ -189,9 +189,15 @@ NSString * const CDEManagedObjectContextSaveNotificationKey = @"managedObjectCon
 
 - (void)dealloc
 {
+    [self dismantle];
+}
+
+- (void)dismantle
+{
     if (observingIdentityToken) [(id)self.cloudFileSystem removeObserver:self forKeyPath:@"identityToken"];
     [[NSNotificationCenter defaultCenter] removeObserver:self];
     [saveMonitor stopMonitoring];
+    [eventStore dismantle];
 }
 
 #pragma mark - Discovering and Managing Ensembles
@@ -374,7 +380,9 @@ NSString * const CDEManagedObjectContextSaveNotificationKey = @"managedObjectCon
             }
             
             // Reset the event store
-            [eventStore.managedObjectContext reset];
+            [eventStore.managedObjectContext performBlockAndWait:^{
+                [eventStore.managedObjectContext reset];
+            }];
             
             next(error, NO);
         }];
@@ -405,7 +413,9 @@ NSString * const CDEManagedObjectContextSaveNotificationKey = @"managedObjectCon
     
     CDEAsynchronousTaskBlock completeLeechTask = ^(CDEAsynchronousTaskCallbackBlock next) {
         // Reset the event store
-        [eventStore.managedObjectContext reset];
+        [self.eventStore.managedObjectContext performBlockAndWait:^{
+            [eventStore.managedObjectContext reset];
+        }];
         
         // Deleech if a save occurred during import
         if (saveOccurredDuringImport) {

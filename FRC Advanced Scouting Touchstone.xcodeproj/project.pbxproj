@@ -268,7 +268,6 @@
 		9332F2821E216E2100AB3EA6 /* OffenseSSViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OffenseSSViewController.swift; sourceTree = "<group>"; };
 		9332F2931E22BB6E00AB3EA6 /* FAST 2-1.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "FAST 2-1.xcdatamodel"; sourceTree = "<group>"; };
 		935C06601E2C02D2000AA574 /* YCMatrix.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = YCMatrix.xcodeproj; path = "YCMatrix-master/YCMatrix.xcodeproj"; sourceTree = SOURCE_ROOT; };
-		935C066D1E2C0605000AA574 /* MyPlayground.playground */ = {isa = PBXFileReference; lastKnownFileType = file.playground; name = MyPlayground.playground; path = ../MyPlayground.playground; sourceTree = "<group>"; };
 		936572D81E14E52100439728 /* CloudRemovalManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CloudRemovalManager.swift; sourceTree = "<group>"; };
 		936572DE1E160EBB00439728 /* AboutViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AboutViewController.swift; sourceTree = "<group>"; };
 		936572E01E1610CA00439728 /* About.rtf */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.rtf; path = About.rtf; sourceTree = "<group>"; };
@@ -391,7 +390,6 @@
 		1F78E7811C3B469300221927 /* FRC Advanced Scouting Touchstone */ = {
 			isa = PBXGroup;
 			children = (
-				935C066D1E2C0605000AA574 /* MyPlayground.playground */,
 				1F78E7821C3B469300221927 /* AppDelegate.swift */,
 				1FCEF8F51C9CB231006AC591 /* Globals.swift */,
 				1FBB426C1C9A29FC0017E36C /* Statistics.swift */,

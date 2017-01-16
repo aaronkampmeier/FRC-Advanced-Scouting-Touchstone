@@ -154,7 +154,7 @@
     // Integrate on background queue
     dispatch_async(queue,^{
         @try {
-            __block NSError *error;
+            __block NSError *error = nil;
             
             // Apply changes
             BOOL integrationSucceeded = [self integrate:&error];
@@ -200,15 +200,17 @@
             // Save changes event context
             __block BOOL eventSaveSucceeded = NO;
             [eventStoreContext performBlockAndWait:^{
+                NSError *blockError = nil;
                 BOOL isUnique = [self checkUniquenessOfEventWithRevision:revision];
                 if (isUnique) {
                     [eventBuilder finalizeNewEvent];
-                    eventSaveSucceeded = [eventStoreContext save:&error];
+                    eventSaveSucceeded = [eventStoreContext save:&blockError];
                 }
                 else {
-                    error = [NSError errorWithDomain:CDEErrorDomain code:CDEErrorCodeSaveOccurredDuringMerge userInfo:nil];
+                    blockError = [NSError errorWithDomain:CDEErrorDomain code:CDEErrorCodeSaveOccurredDuringMerge userInfo:nil];
                 }
                 [eventStoreContext reset];
+                error = blockError;
             }];
             if (!eventSaveSucceeded) {
                 [self failWithCompletion:completion error:error];
@@ -253,12 +255,12 @@
     NSManagedObjectContext *eventContext = self.eventStore.managedObjectContext;
     if (newEventUniqueId) {
         [eventContext performBlockAndWait:^{
+            NSError *innerError = nil;
             CDEStoreModificationEvent *event = [CDEStoreModificationEvent fetchStoreModificationEventWithUniqueIdentifier:newEventUniqueId inManagedObjectContext:eventContext];
             if (event) {
-                NSError *error = nil;
                 [eventContext deleteObject:event];
-                if (![eventContext save:&error]) {
-                    CDELog(CDELoggingLevelError, @"Could not save after deleting partially merged event from a failed merge. Will reset context: %@", error);
+                if (![eventContext save:&innerError]) {
+                    CDELog(CDELoggingLevelError, @"Could not save after deleting partially merged event from a failed merge. Will reset context: %@", innerError);
                     [eventContext reset];
                 }
             }
@@ -317,9 +319,11 @@
     __block BOOL success = YES;
     BOOL needFullIntegration = [self needsFullIntegration];
     NSManagedObjectContext *eventStoreContext = self.eventStore.managedObjectContext;
+    __block NSError *methodError = nil;
     [eventStoreContext performBlockAndWait:^{
         // Get events
         NSArray *storeModEvents = nil;
+        NSError *blockError = nil;
         if (needFullIntegration) {
             // All events, including baseline
             NSMutableArray *events = [[CDEStoreModificationEvent fetchNonBaselineEventsInManagedObjectContext:eventStoreContext] mutableCopy];
@@ -330,8 +334,9 @@
         }
         else {
             // Get all modification events added since the last merge
-            storeModEvents = [revisionManager fetchUncommittedStoreModificationEvents:error];
+            storeModEvents = [revisionManager fetchUncommittedStoreModificationEvents:&blockError];
             if (!storeModEvents) {
+                methodError = blockError;
                 success = NO;
                 return;
             }
@@ -340,14 +345,18 @@
             // Add any modification events concurrent with the new events. Results are ordered.
             // We repeat this until there is no change in the set. This will be when there are
             // no events existing outside the set that are concurrent with the events in the set.
-            storeModEvents = [revisionManager recursivelyFetchStoreModificationEventsConcurrentWithEvents:storeModEvents error:error];
+            storeModEvents = [revisionManager recursivelyFetchStoreModificationEventsConcurrentWithEvents:storeModEvents error:&blockError];
         }
-        if (storeModEvents == nil) success = NO;
+        if (storeModEvents == nil) {
+            success = NO;
+            methodError = blockError;
+        }
         if (storeModEvents.count == 0) return;
         
         // Check prerequisites
-        BOOL canIntegrate = [revisionManager checkIntegrationPrequisitesForEvents:storeModEvents error:error];
+        BOOL canIntegrate = [revisionManager checkIntegrationPrequisitesForEvents:storeModEvents error:&blockError];
         if (!canIntegrate) {
+            methodError = blockError;
             success = NO;
             return;
         }
@@ -362,52 +371,67 @@
         
         // Apply changes in the events, in order.
         NSMutableDictionary *insertedObjectIDsByEntity = needFullIntegration ? [[NSMutableDictionary alloc] init] : nil;
-        for (CDEStoreModificationEvent *storeModEvent in storeModEvents) {
-            @autoreleasepool {
-                // Determine which entities have changes
-                NSSet *changedEntityNames = [storeModEvent.objectChanges valueForKeyPath:@"nameOfEntity"];
-                NSMutableArray *changedEntities = [[changedEntityNames.allObjects cde_arrayByTransformingObjectsWithBlock:^(NSString *name) {
-                    return managedObjectModel.entitiesByName[name];
-                }] mutableCopy];
-                [changedEntities removeObject:[NSNull null]];
-                
-                // Insertions are split into two parts: first, we perform an insert without applying property changes,
-                // and later, we do an update to set the properties.
-                // This is because the object inserts must be carried out before trying to set relationships,
-                // otherwise related objects may not exist. So we create objects first, and only
-                // set relationships in the next phase.
-                NSMutableDictionary *appliedInsertsByEntity = [NSMutableDictionary dictionary];
-                for (NSEntityDescription *entity in changedEntities) {
-                    NSArray *appliedInsertChanges = [self insertObjectsForStoreModificationEvents:@[storeModEvent] entity:entity error:error];
-                    if (!appliedInsertChanges) {
-                        success = NO;
-                        return;
-                    }
-                    appliedInsertsByEntity[entity.name] = appliedInsertChanges;
+        @try {
+            for (CDEStoreModificationEvent *storeModEvent in storeModEvents) {
+                @autoreleasepool {
+                    // Determine which entities have changes
+                    NSSet *changedEntityNames = [storeModEvent.objectChanges valueForKeyPath:@"nameOfEntity"];
+                    NSMutableArray *changedEntities = [[changedEntityNames.allObjects cde_arrayByTransformingObjectsWithBlock:^(NSString *name) {
+                        return managedObjectModel.entitiesByName[name];
+                    }] mutableCopy];
+                    [changedEntities removeObject:[NSNull null]];
                     
-                    // If full integration, track all inserted object ids, so we can delete unreferenced objects
-                    if (needFullIntegration) [self updateObjectIDsByEntity:insertedObjectIDsByEntity forEntity:entity insertChanges:appliedInsertChanges];
-                }
-                
-                // Now that all objects exist, we can apply property changes.
-                // We treat insertions on a par with updates here.
-                for (NSEntityDescription *entity in changedEntities) {
-                    NSArray *inserts = appliedInsertsByEntity[entity.name];
-                    success = [self updateObjectsForStoreModificationEvents:@[storeModEvent] entity:entity includingInsertedObjects:inserts error:error];
-                    if (!success) return;
-                }
-                
-                // Finally deletions
-                for (NSEntityDescription *entity in changedEntities) {
-                    success = [self deleteObjectsForStoreModificationEvents:@[storeModEvent] entity:entity error:error];
-                    if (!success) return;
+                    // Insertions are split into two parts: first, we perform an insert without applying property changes,
+                    // and later, we do an update to set the properties.
+                    // This is because the object inserts must be carried out before trying to set relationships,
+                    // otherwise related objects may not exist. So we create objects first, and only
+                    // set relationships in the next phase.
+                    NSMutableDictionary *appliedInsertsByEntity = [NSMutableDictionary dictionary];
+                    NSError *innerPoolError = nil;
+                    for (NSEntityDescription *entity in changedEntities) {
+                        NSArray *appliedInsertChanges = [self insertObjectsForStoreModificationEvents:@[storeModEvent] entity:entity error:&innerPoolError];
+                        if (!appliedInsertChanges) {
+                            blockError = innerPoolError;
+                            @throw [NSException exceptionWithName:CDEException reason:@"" userInfo:nil];
+                        }
+                        appliedInsertsByEntity[entity.name] = appliedInsertChanges;
+                        
+                        // If full integration, track all inserted object ids, so we can delete unreferenced objects
+                        if (needFullIntegration) [self updateObjectIDsByEntity:insertedObjectIDsByEntity forEntity:entity insertChanges:appliedInsertChanges];
+                    }
+                    
+                    // Now that all objects exist, we can apply property changes.
+                    // We treat insertions on a par with updates here.
+                    for (NSEntityDescription *entity in changedEntities) {
+                        NSArray *inserts = appliedInsertsByEntity[entity.name];
+                        success = [self updateObjectsForStoreModificationEvents:@[storeModEvent] entity:entity includingInsertedObjects:inserts error:&innerPoolError];
+                        if (!success) {
+                            blockError = innerPoolError;
+                            @throw [NSException exceptionWithName:CDEException reason:@"" userInfo:nil];
+                        }
+                    }
+                    
+                    // Finally deletions
+                    for (NSEntityDescription *entity in changedEntities) {
+                        success = [self deleteObjectsForStoreModificationEvents:@[storeModEvent] entity:entity error:&innerPoolError];
+                        if (!success) {
+                            blockError = innerPoolError;
+                            @throw [NSException exceptionWithName:CDEException reason:@"" userInfo:nil];
+                        }
+                    }
                 }
             }
         }
+        @catch (NSException *e) {
+            success = NO;
+            methodError = blockError;
+        }
         
         // In a full integration, remove any objects that didn't get inserted
-        if (needFullIntegration) [self deleteUnreferencedObjectsInObjectIDsByEntity:insertedObjectIDsByEntity];
+        if (success && needFullIntegration) [self deleteUnreferencedObjectsInObjectIDsByEntity:insertedObjectIDsByEntity];
     }];
+    
+    if (error) *error = methodError;
     
     return success;
 }
@@ -535,27 +559,36 @@
     // Only now actually create objects, on the main context queue
     NSMutableArray *newObjects = [[NSMutableArray alloc] initWithCapacity:changesNeedingNewObjects.count];
     __block BOOL success = YES;
+    __block NSError *methodError = nil;
     NSUInteger numberOfNewObjects = changesNeedingNewObjects.count;
     [managedObjectContext performBlockAndWait:^{
         for (NSUInteger i = 0; i < numberOfNewObjects; i++) {
             id newObject = [NSEntityDescription insertNewObjectForEntityForName:entity.name inManagedObjectContext:managedObjectContext];
             if (!newObject) {
+                NSError *localError = [NSError errorWithDomain:CDEErrorDomain code:CDEErrorCodeUnknown userInfo:nil];
+                methodError = localError;
                 success = NO;
                 return;
             }
             [newObjects addObject:newObject];
         }
     }];
+    if (error) *error = methodError;
     if (!success) return NO;
     
     // Get permanent store object ids, and then URIs
     __block NSArray *uris;
     [managedObjectContext performBlockAndWait:^{
-        success = [managedObjectContext obtainPermanentIDsForObjects:newObjects error:error];
-        if (!success) return;
+        NSError *localError = nil;
+        success = [managedObjectContext obtainPermanentIDsForObjects:newObjects error:&localError];
+        if (!success) {
+            methodError = localError;
+            return;
+        }
         
         uris = [newObjects valueForKeyPath:@"objectID.URIRepresentation.absoluteString"];
     }];
+    if (error) *error = methodError;
     if (!success) return NO;
     
     // Update the global ids with the store object ids
@@ -668,7 +701,7 @@
         }
     }
     @catch (NSException *exception) {
-        *error = [NSError errorWithDomain:CDEErrorDomain code:CDEErrorCodeUnknown userInfo:@{NSLocalizedFailureReasonErrorKey:exception.reason}];
+        if (error) *error = [[NSError alloc] initWithDomain:CDEErrorDomain code:CDEErrorCodeUnknown userInfo:@{NSLocalizedFailureReasonErrorKey:exception.reason}];
         return NO;
     }
     
@@ -814,6 +847,7 @@
     // We can then retrieve the changes and generate a new store mod event to represent the merge.
     __block BOOL merged = YES;
     __block BOOL contextHasChanges = NO;
+    __block NSError *methodError;
     
     [managedObjectContext performBlockAndWait:^{
         contextHasChanges = managedObjectContext.hasChanges;
@@ -829,7 +863,7 @@
         // Call block on the saving context queue
         BOOL shouldSave = shouldSaveBlock(managedObjectContext, reparationContext);
         if (!shouldSave) {
-            if (error) *error = [NSError errorWithDomain:CDEErrorDomain code:CDEErrorCodeCancelled userInfo:nil];
+            if (error) *error = [[NSError alloc] initWithDomain:CDEErrorDomain code:CDEErrorCodeCancelled userInfo:nil];
             return NO;
         }
         
@@ -837,17 +871,22 @@
         // Save any changes made in the reparation context.
         [reparationContext performBlockAndWait:^{
             if (reparationContext.hasChanges) {
-                BOOL success = [eventBuilder addChangesForUnsavedManagedObjectContext:reparationContext error:error];
+                NSError *localError = nil;
+                BOOL success = [eventBuilder addChangesForUnsavedManagedObjectContext:reparationContext error:&localError];
                 if (!success) {
+                    methodError = localError;
                     merged = NO;
                     return;
                 }
 
-                merged = [reparationContext save:error];
+                merged = [reparationContext save:&localError];
+                methodError = localError;
                 if (!merged) CDELog(CDELoggingLevelError, @"Saving merge context after willSave changes failed: %@", *error);
             }
         }];
     }
+    
+    if (error) *error = methodError;
     
     return merged;
 }
@@ -856,13 +895,17 @@
 - (NSArray *)fetchObjectChangesOfType:(CDEObjectChangeType)type fromStoreModificationEvents:(id <NSFastEnumeration>)events forEntity:(NSEntityDescription *)entity error:(NSError * __autoreleasing *)error;
 {
     NSArray *result = nil;
+    NSError *methodError = nil;
     @autoreleasepool {
+        NSError *localError = nil;
         NSFetchRequest *fetch = [NSFetchRequest fetchRequestWithEntityName:@"CDEObjectChange"];
         fetch.predicate = [NSPredicate predicateWithFormat:@"nameOfEntity = %@ && type = %d && storeModificationEvent in %@", entity.name, type, events];
         fetch.sortDescriptors = [self objectChangeSortDescriptors];
         fetch.relationshipKeyPathsForPrefetching = @[@"globalIdentifier"];
-        result = [self.eventStore.managedObjectContext executeFetchRequest:fetch error:error];
+        result = [self.eventStore.managedObjectContext executeFetchRequest:fetch error:&localError];
+        methodError = localError;
     }
+    if (error) *error = methodError;
     return result;
 }
 
@@ -889,13 +932,17 @@
     // Fetch objects
     __block NSArray *objects = nil;
     __block NSArray *objectIDsOfFetched = nil;
+    __block NSError *methodError = nil;
     [managedObjectContext performBlockAndWait:^{
         NSFetchRequest *fetch = [NSFetchRequest fetchRequestWithEntityName:entityName];
         fetch.predicate = [NSPredicate predicateWithFormat:@"SELF IN %@", objectIDs];
         fetch.includesSubentities = NO;
-        objects = [managedObjectContext executeFetchRequest:fetch error:error];
+        NSError *localError = nil;
+        objects = [managedObjectContext executeFetchRequest:fetch error:&localError];
         objectIDsOfFetched = [objects valueForKeyPath:@"objectID"];
+        methodError = localError;
     }];
+    if (error) *error = methodError;
     if (!objects) return nil;
     
     // ObjectID to object mapping
@@ -1048,6 +1095,7 @@
     CDELog(CDELoggingLevelVerbose, @"Committing merge changes to store");
 
     __block BOOL saved = [self saveContext:error];
+    __block NSError *methodError = nil;
     if (!saved && !saveOccurredDuringMerge) {
         if ((*error).code != NSManagedObjectMergeError && failedSaveBlock) {
             // Setup a child reparation context
@@ -1062,18 +1110,28 @@
             // If repairs were carried out, add changes to the merge event, and save
             // reparation context
             __block BOOL needExtraSave = NO;
+            __block BOOL success = YES;
             [reparationContext performBlockAndWait:^{
                 if (retry && reparationContext.hasChanges) {
-                    BOOL success = [eventBuilder addChangesForUnsavedManagedObjectContext:reparationContext error:error];
-                    success = success && [reparationContext save:error];
+                    NSError *localError = nil;
+                    success = [eventBuilder addChangesForUnsavedManagedObjectContext:reparationContext error:&localError];
+                    success = success && [reparationContext save:&localError];
+                    methodError = localError;
                     if (success) needExtraSave = YES;
                 }
             }];
             
             // Retry save if necessary
-            if (needExtraSave) saved = [self saveContext:error];
+            if (success) {
+                NSError *localError = nil;
+                if (needExtraSave) saved = [self saveContext:&localError];
+                methodError = localError;
+            }
         }
     }
+    
+    if (error) *error = methodError;
+    
     return saved;
 }
 
@@ -1081,18 +1139,30 @@
 - (BOOL)saveContext:(NSError * __autoreleasing *)error
 {
     __block BOOL saved = NO;
+    __block NSError *localError;
+    
     [managedObjectContext performBlockAndWait:^{
+        NSError *blockError;
         if (saveOccurredDuringMerge) {
-            *error = [NSError errorWithDomain:CDEErrorDomain code:CDEErrorCodeSaveOccurredDuringMerge userInfo:nil];
+            blockError = [NSError errorWithDomain:CDEErrorDomain code:CDEErrorCodeSaveOccurredDuringMerge userInfo:nil];
+            localError = blockError;
             return;
         }
         
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(storeChangesFromContextDidSaveNotification:) name:NSManagedObjectContextDidSaveNotification object:managedObjectContext];
-        saved = [managedObjectContext save:error];
+        saved = [managedObjectContext save:&blockError];
         [[NSNotificationCenter defaultCenter] removeObserver:self name:NSManagedObjectContextDidSaveNotification object:managedObjectContext];
+        
+        if (!saved) {
+            localError = blockError;
+        }
     }];
+    
+    if (error) *error = localError;
+    
     return saved;
 }
+
 
 - (void)storeChangesFromContextDidSaveNotification:(NSNotification *)notif
 {

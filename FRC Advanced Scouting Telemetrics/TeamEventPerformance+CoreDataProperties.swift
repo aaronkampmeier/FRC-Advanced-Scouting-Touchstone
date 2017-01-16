@@ -8,7 +8,6 @@
 
 import Foundation
 import CoreData
-//import Surge
 import YCMatrix
 
 extension TeamEventPerformance {
@@ -36,13 +35,13 @@ extension TeamEventPerformance: HasStats {
                     }
                 },
                 StatName.OPR: {
-                    if false {
-                        return evaluateOPRUsingMatrices(teamPerformance: self)
-                    } else if false {
-                        return evaluateOPRUsingRecursiveVector(teamPerformance: self)
-                    } else {
-                        return evaluateOPRUsingYCMatrix(teamPerformance: self)
-                    }
+                    return evaluateOPR(forTeamPerformance: self)
+                },
+                StatName.CCWM: {
+                    return evaluateCCWM(forTeamPerformance: self)
+                },
+                StatName.DPR: {
+                    return evaluateOPR(forTeamPerformance: self) - evaluateCCWM(forTeamPerformance: self)
                 }
             ]
         }
@@ -84,8 +83,8 @@ extension TeamEventPerformance {
 }
 
 ///Evaluates OPR using YCMatrix and the algorithm published by Ether located here: https://www.chiefdelphi.com/forums/showpost.php?p=1119150&postcount=36
-let oprCache = NSCache<Event, Matrix>()
-func evaluateOPRUsingYCMatrix(teamPerformance: TeamEventPerformance) -> Double {
+private let oprCache = NSCache<Event, Matrix>()
+private func evaluateOPR(forTeamPerformance teamPerformance: TeamEventPerformance) -> Double {
     let eventPerformances = teamPerformance.event.teamEventPerformances?.allObjects as! [TeamEventPerformance]
     let numOfTeams = eventPerformances.count
     
@@ -93,32 +92,7 @@ func evaluateOPRUsingYCMatrix(teamPerformance: TeamEventPerformance) -> Double {
         return cachedOPR.i(Int32(eventPerformances.index(of: teamPerformance)!), j: 0)
     } else {
         
-        var rowsA = [Double]()
-        for (firstIndex, firstEventPerformance) in eventPerformances.enumerated() {
-            var row = [Double]()
-            let firstTeamMatchPerformances = firstEventPerformance.matchPerformances?.allObjects as! [TeamMatchPerformance]
-            
-            for (secondIndex, secondEventPerformance) in eventPerformances.enumerated() {
-                if firstIndex == secondIndex {
-                    assert(firstEventPerformance == secondEventPerformance)
-                }
-                let secondTeamMatchPerformances = secondEventPerformance.matchPerformances?.allObjects as! [TeamMatchPerformance]
-                
-                var numOfCommonMatches = 0.0
-                for firstTeamMatchPerformance in firstTeamMatchPerformances {
-                    for secondTeamMatchPerformance in secondTeamMatchPerformances {
-                        if firstTeamMatchPerformance.match == secondTeamMatchPerformance.match && firstTeamMatchPerformance.allianceColor == secondTeamMatchPerformance.allianceColor {
-                            numOfCommonMatches += 1
-                        }
-                    }
-                }
-                
-                row.append(numOfCommonMatches)
-            }
-            rowsA += row
-        }
-        
-        let matrixA = Matrix(from: rowsA, rows: Int32(numOfTeams), columns: Int32(numOfTeams))
+        let matrixA = createMatrixA(forEvent: teamPerformance.event)
         
         
         var rowsB = [Double]() //Should only be one element per row
@@ -132,23 +106,90 @@ func evaluateOPRUsingYCMatrix(teamPerformance: TeamEventPerformance) -> Double {
         let matrixB = Matrix(from: rowsB, rows: Int32(numOfTeams), columns: 1)
         
         
-        
-        let matrixP = matrixA?.transposingAndMultiplying(withRight: matrixA)
-        let matrixS = matrixA?.transposingAndMultiplying(withRight: matrixB)
-        
-        let matrixL = matrixP?.byCholesky()
-        
-        assert((matrixL?.transposingAndMultiplying(withLeft: matrixL).isEqual(to: matrixP, tolerance: 1))!)
-        
-        let matrixY = forwardSubstitute(matrixA: matrixL, matrixB: matrixS)
-        
-        let oprMatrix = backwardSubstitute(matrixA: matrixL?.transposing(), matrixB: matrixY)
+        let oprMatrix = solveForX(matrixA: matrixA, matrixB: matrixB)
         
         //Cache it because these calculations are expensive
         oprCache.setObject(oprMatrix!, forKey: teamPerformance.event)
         
         return (oprMatrix?.i(Int32(eventPerformances.index(of: teamPerformance)!), j: 0))!
     }
+}
+
+private let ccwmCache = NSCache<Event, Matrix>()
+private func evaluateCCWM(forTeamPerformance teamPerformance: TeamEventPerformance) -> Double {
+    let eventPerformances = teamPerformance.event.teamEventPerformances?.allObjects as! [TeamEventPerformance]
+    let numOfTeams = eventPerformances.count
+    
+    if let cachedCCWM = ccwmCache.object(forKey: teamPerformance.event) {
+        return cachedCCWM.i(Int32(eventPerformances.index(of: teamPerformance)!), j: 0)
+    } else {
+        let matrixA = createMatrixA(forEvent: teamPerformance.event)
+        
+        //Matrix B for CCWM is the same as DPR's Matrix B except for the values are your alliances' scores the opposing alliances' scores (the winning margin)
+        var rowsB = [Double]() //Should only be one element for year
+        for eventPerformance in eventPerformances {
+            let matchPerformances = eventPerformance.matchPerformances?.allObjects as! [TeamMatchPerformance]
+            let sumOfWinningMargins = matchPerformances.reduce(0.0) {(partialResult, matchPerformance) in
+                return partialResult + matchPerformance.winningMargin
+            }
+            rowsB.append(sumOfWinningMargins)
+        }
+        let matrixB = Matrix(from: rowsB, rows: Int32(numOfTeams), columns: 1)
+        
+        let ccwmMatrix = solveForX(matrixA: matrixA, matrixB: matrixB)
+        
+        ccwmCache.setObject(ccwmMatrix!, forKey: teamPerformance.event)
+        
+        return ccwmMatrix!.i(Int32(eventPerformances.index(of: teamPerformance)!), j: 0)
+    }
+}
+
+//Solves Ax=B
+func solveForX(matrixA: Matrix!, matrixB: Matrix!) -> Matrix? {
+    let matrixP = matrixA?.transposingAndMultiplying(withRight: matrixA)
+    let matrixS = matrixA?.transposingAndMultiplying(withRight: matrixB)
+    
+    let matrixL = matrixP?.byCholesky()
+    
+    assert((matrixL?.transposingAndMultiplying(withLeft: matrixL).isEqual(to: matrixP, tolerance: 1))!)
+    
+    let matrixY = forwardSubstitute(matrixA: matrixL, matrixB: matrixS)
+    
+    let matrixX = backwardSubstitute(matrixA: matrixL?.transposing(), matrixB: matrixY)
+    
+    return matrixX
+}
+
+func createMatrixA(forEvent event: Event) -> Matrix {
+    let eventPerformances = event.teamEventPerformances?.allObjects as! [TeamEventPerformance]
+    let numOfTeams = eventPerformances.count
+    
+    var rowsA = [Double]()
+    for (firstIndex, firstEventPerformance) in eventPerformances.enumerated() {
+        var row = [Double]()
+        let firstTeamMatchPerformances = firstEventPerformance.matchPerformances?.allObjects as! [TeamMatchPerformance]
+        
+        for (secondIndex, secondEventPerformance) in eventPerformances.enumerated() {
+            if firstIndex == secondIndex {
+                assert(firstEventPerformance == secondEventPerformance)
+            }
+            let secondTeamMatchPerformances = secondEventPerformance.matchPerformances?.allObjects as! [TeamMatchPerformance]
+            
+            var numOfCommonMatches = 0.0
+            for firstTeamMatchPerformance in firstTeamMatchPerformances {
+                for secondTeamMatchPerformance in secondTeamMatchPerformances {
+                    if firstTeamMatchPerformance.match == secondTeamMatchPerformance.match && firstTeamMatchPerformance.allianceColor == secondTeamMatchPerformance.allianceColor {
+                        numOfCommonMatches += 1
+                    }
+                }
+            }
+            
+            row.append(numOfCommonMatches)
+        }
+        rowsA += row
+    }
+    
+    return Matrix(from: rowsA, rows: Int32(numOfTeams), columns: Int32(numOfTeams))
 }
 
 ///Forward and Backwards matrix substitution formulas drawn from http://mathfaculty.fullerton.edu/mathews/n2003/BackSubstitutionMod.html
@@ -180,7 +221,7 @@ func backwardSubstitute(matrixA: Matrix!, matrixB: Matrix!) -> Matrix? {
     return matrixX
 }
 
-//An operator that takes an upper bound and a lower bound and returns an array with all the values from the upper bound to the lower bound. It's the inverse of ... operator
+//An operator that takes an upper bound and a lower bound and returns an array with all the values from the upper bound to the lower bound. It's the inverse of the ... operator
 infix operator ..=
 func ..=(lhs: Int, rhs: Int) -> [Int] {
     if lhs == rhs {
@@ -198,82 +239,4 @@ func sigma(initialIncrementerValue: Int, topIncrementValue: Int, function: (Int)
     } else {
         return function(initialIncrementerValue) + sigma(initialIncrementerValue: initialIncrementerValue + 1, topIncrementValue: topIncrementValue, function: function)
     }
-}
-
-
-
-func evaluateOPRUsingRecursiveVector(teamPerformance: TeamEventPerformance) -> Double {
-    let matchPerformances = teamPerformance.matchPerformances?.allObjects as! [TeamMatchPerformance]
-    let averageMatchScore = matchPerformances.map {$0.finalScore}.reduce(0.0) {(partialResult, nextElement) in
-        return partialResult + nextElement
-    } / Double(matchPerformances.count)
-    
-    
-    
-    return estimatedTeamContribution(averageMatchScore: averageMatchScore, timesToRecurse: 0)
-}
-
-func estimatedTeamContribution(averageMatchScore: Double, timesToRecurse: Int) -> Double {
-    if timesToRecurse == 0 {
-        return averageMatchScore / 3
-    } else {
-        return averageMatchScore - 2*estimatedTeamContribution(averageMatchScore: averageMatchScore, timesToRecurse: timesToRecurse - 1)
-    }
-}
-
-func evaluateOPRUsingMatrices(teamPerformance: TeamEventPerformance) -> Double {
-    //OPR stands for offensive power rating. The main idea: robot1+robot2+robot3 = redScore & robot4+robot5+robot6 = blueScore. It is calculated as follows. First, a N*N matrix (A), where N is the number of teams, is created. Each value in A is the number of matches that the two teams comprising the index play together. Then an array (B) is created where the number of elements is equal to the number of teams, N, and in the same order as A. Each element in B is the sum of all match scores for the team at that index. A third array (x) is also size N and each value in it represents the OPR for the team at that index. A * x = B. Given A and B, one can solve for x. (Alliance color doesn't really matter for this calculation)
-//    let eventPerformances = teamPerformance.event.teamEventPerformances?.allObjects as! [TeamEventPerformance]
-//    let numOfTeams = eventPerformances.count
-//    
-//    if numOfTeams <= 1 {
-//        //Has to be multiple teams to perform calculation
-//        return 0
-//    }
-//    
-//    //First create matrix A
-//    var rowsA = [[Double]]()
-//    for (firstIndex, firstEventPerformance) in eventPerformances.enumerated() {
-//        var row = [Double]()
-//        let firstTeamMatchPerformances = firstEventPerformance.matchPerformances?.allObjects as! [TeamMatchPerformance]
-//        
-//        for (secondIndex, secondEventPerformance) in eventPerformances.enumerated() {
-//            if firstIndex == secondIndex {
-//                assert(firstEventPerformance == secondEventPerformance)
-//            }
-//            let secondTeamMatchPerformances = secondEventPerformance.matchPerformances?.allObjects as! [TeamMatchPerformance]
-//            
-//            var numOfCommonMatches = 0.0
-//            for firstTeamMatchPerformance in firstTeamMatchPerformances {
-//                for secondTeamMatchPerformance in secondTeamMatchPerformances {
-//                    if firstTeamMatchPerformance.match == secondTeamMatchPerformance.match && firstTeamMatchPerformance.allianceColor == secondTeamMatchPerformance.allianceColor {
-//                        numOfCommonMatches += 1
-//                    }
-//                }
-//            }
-//            
-//            row.append(numOfCommonMatches)
-//        }
-//        rowsA.append(row)
-//    }
-//    
-//    let matrixA = Matrix(rowsA)
-//    print("Event: \(DataManager().events().first?.name) Year: \(DataManager().events().first?.year?.intValue)")
-//    print("Matrix A: \n" + matrixA.description)
-//    
-//    //Now create Array B
-//    var rowsB = [[Double]]() //Should only be one element per row
-//    for eventPerformance in eventPerformances {
-//        let matchPerformances = eventPerformance.matchPerformances?.allObjects as! [TeamMatchPerformance]
-//        let sumOfAllScores = matchPerformances.reduce(0) {scoreSum, matchPerformance in
-//            return scoreSum + matchPerformance.finalScore
-//        }
-//        rowsB.append([sumOfAllScores])
-//    }
-//    let matrixB = Matrix(rowsB)
-//    print("Matrix B: \n" + matrixB.description)
-//    
-//    let matrixX = Matrix([[0]]) //inv(matrixA) * matrixB
-//    return matrixX[0,0] //matrixX[eventPerformances.index(of: self)!,0]
-    return 0
 }

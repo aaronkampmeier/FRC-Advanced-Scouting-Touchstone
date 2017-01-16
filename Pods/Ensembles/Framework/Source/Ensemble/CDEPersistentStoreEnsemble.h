@@ -299,7 +299,7 @@ extern NSString * const CDEManagedObjectContextSaveNotificationKey;
  
  @param identifier The global identifier for the ensemble. This must be the same for all syncing ensemble objects across devices.
  @param storeURL The file URL for the persistent store that is to be synced.
- @param managedObjectModelURL A file URL for the location of the compiled (momd, mom) model file used in the persistent store.
+ @param modelURL A file URL for the location of the compiled (momd, mom) model file used in the persistent store.
  @param cloudFileSystem The cloud file system object used to transfer files between devices.
  */
 - (instancetype)initWithEnsembleIdentifier:(NSString *)identifier persistentStoreURL:(NSURL *)storeURL managedObjectModelURL:(NSURL *)modelURL cloudFileSystem:(id <CDECloudFileSystem>)cloudFileSystem;
@@ -312,7 +312,7 @@ extern NSString * const CDEManagedObjectContextSaveNotificationKey;
  @param identifier The global identifier for the ensemble. This must be the same for all syncing ensemble objects across devices.
  @param storeURL The file URL to the persistent store that is to be synced.
  @param options Options to use when the framework is adding an `NSPersistentStore` instance for your main persistent store. This could be useful if you need to include SQLite pragmas.
- @param managedObjectModelURL A file URL for the location of the compiled (momd, mom) model file used in the persistent store.
+ @param modelURL A file URL for the location of the compiled (momd, mom) model file used in the persistent store.
  @param cloudFileSystem The cloud file system object used to transfer files between devices.
  @param dataRootURL The file URL to the root directory used by the ensemble to store transaction logs and other metadata. Passing nil will cause the default directory to be used.
  */
@@ -414,9 +414,21 @@ extern NSString * const CDEManagedObjectContextSaveNotificationKey;
  
  You can use this method if you want to be sure ensembles has completed any backed-up tasks.
  
- @param completion A block that is executed upon completion. The block is passed nil upon success, and an `NSError` otherwise.
+ @param block A block that is executed upon completion. The block is passed nil upon success, and an `NSError` otherwise.
  */
 - (void)processPendingChangesWithCompletion:(CDECompletionBlock)block;
+
+
+///
+/// @name Dismantling an Ensemble
+///
+
+/**
+ Force the ensemble to dismantle. Normally this happens when it deallocs, but sometimes you may want to force it to happen early,
+ such as when you want to create a new ensemble that replaces an existing ensemble. In order to prevent the two ensembles accessing the same
+ data at the same time, you can tell one to dismantle, after which it will no longer use or access the disk, or monitor saves.
+ */
+- (void)dismantle;
 
 @end
 

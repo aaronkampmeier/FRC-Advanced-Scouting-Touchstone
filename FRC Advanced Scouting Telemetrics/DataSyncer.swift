@@ -250,9 +250,9 @@ class MultipeerConnection: NSObject, CDEMultipeerConnection {
 	
 	init(syncSecret: String) {
 		mySyncSecret = syncSecret
+		session = MCSession(peer: myPeerID, securityIdentity: nil, encryptionPreference: .none)
 		serviceAdvertiser = MCNearbyServiceAdvertiser(peer: myPeerID, discoveryInfo: ["syncSecret":mySyncSecret], serviceType: serviceType)
 		serviceBrowser = MCNearbyServiceBrowser(peer: myPeerID, serviceType: serviceType)
-		session = MCSession(peer: myPeerID, securityIdentity: nil, encryptionPreference: .none)
 		
 		super.init()
 		

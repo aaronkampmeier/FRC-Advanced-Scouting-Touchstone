@@ -11,8 +11,10 @@
 
 extern NSString * const CDEMultipeerCloudFileSystemDidImportFilesNotification;
 
-
 @protocol CDEMultipeerConnection <NSObject>
+
+@optional
+- (void)newDataWasAddedOnPeerWithID:(id <NSObject, NSCopying, NSCoding>)peerID;
 
 @required
 - (BOOL)sendData:(NSData *)data toPeerWithID:(id <NSObject, NSCopying, NSCoding>)peerID;
@@ -29,6 +31,8 @@ extern NSString * const CDEMultipeerCloudFileSystemDidImportFilesNotification;
 - (instancetype)initWithRootDirectory:(NSString *)rootDir multipeerConnection:(id <CDEMultipeerConnection>)connection;
 
 - (void)retrieveFilesFromPeersWithIDs:(NSArray *)peerIDs;
+
+- (void)sendNotificationOfNewlyAvailableDataToPeersWithIDs:(NSArray *)peerIDs;
 
 - (void)removeAllFiles;
 

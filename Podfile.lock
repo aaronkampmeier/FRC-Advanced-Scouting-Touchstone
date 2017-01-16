@@ -1,13 +1,13 @@
 PODS:
-  - Alamofire (4.0.0)
-  - Ensembles (1.5):
-    - Ensembles/Core (= 1.5)
-  - Ensembles/Core (1.5)
-  - Ensembles/Multipeer (1.5):
+  - Alamofire (4.3.0)
+  - Ensembles (1.6.1):
+    - Ensembles/Core (= 1.6.1)
+  - Ensembles/Core (1.6.1)
+  - Ensembles/Multipeer (1.6.1):
     - Ensembles/Core
     - SSZipArchive
   - FLAnimatedImage (1.0.12)
-  - Gloss (1.1.1)
+  - Gloss (1.2.0)
   - GMStepper (2.0.0)
   - NYTPhotoViewer (1.1.0):
     - NYTPhotoViewer/AnimatedGifSupport (= 1.1.0)
@@ -16,7 +16,7 @@ PODS:
     - FLAnimatedImage (~> 1.0.8)
     - NYTPhotoViewer/Core
   - NYTPhotoViewer/Core (1.1.0)
-  - SSZipArchive (1.1)
+  - SSZipArchive (1.6.2)
 
 DEPENDENCIES:
   - Alamofire (~> 4.0)
@@ -27,13 +27,13 @@ DEPENDENCIES:
   - NYTPhotoViewer (~> 1.1.0)
 
 SPEC CHECKSUMS:
-  Alamofire: fef59f00388f267e52d9b432aa5d93dc97190f14
-  Ensembles: 33c81244812b7d568a7fa76255708327efc66a4a
+  Alamofire: 856a113053a7bc9cbe5d6367a555d773fc5cfef7
+  Ensembles: 3725562044c8d4c518b4287d10076e5a28c96d0d
   FLAnimatedImage: 4a0b56255d9b05f18b6dd7ee06871be5d3b89e31
-  Gloss: 4a892694cba7387efa4102a51f86110651366b18
+  Gloss: ec49584b2e8144e39810b6db6285433316e0c1c7
   GMStepper: 6aff0c881afac2f432e5c9b0df71e44e14110a06
   NYTPhotoViewer: e80e8767f3780d2df37c6f72cbab15d6c7232911
-  SSZipArchive: de3d215ab73f87db627f81f2ce24f1731e3886c3
+  SSZipArchive: 428eb1ac8d37dd133404d30f422b23958c1f9acc
 
 PODFILE CHECKSUM: 857a6a5b905177a272900ab0ffe9c5cad9942668
 

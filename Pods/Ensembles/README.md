@@ -3,7 +3,7 @@ Core Data Ensembles
 
 _Author:_ Drew McCormack<br>
 _Created:_ 29th September, 2013<br>
-_Last Updated:_ 1st June, 2015
+_Last Updated:_ 23rd September, 2016
 
 *Ensembles 2 is now available for purchase at [ensembles.io](http://www.ensembles.io). It has performance improvements, extra backends (eg CloudKit, Dropbox Sync), and other features. This version of Ensembles continues to be maintained and supported.*
 
@@ -34,7 +34,7 @@ To add Ensembles to your App's Xcode Project with CocoaPods...
 		platform :ios, '7.0'
 		pod "Ensembles", "~> 1.0"
 
-To manually add Ensembles to your App's Xcode Project...
+To manually add the Ensembles static library to your App's Xcode Project...
 
 1. In Finder, drag the `Ensembles iOS.xcodeproj` project from the `Framework` directory into your Xcode project.
 2. Select your App's project root in the source list on the left, and then select the App's target.
@@ -48,6 +48,22 @@ To manually add Ensembles to your App's Xcode Project...
 10. Add the following import in your precompiled header file, or in any files using Ensembles.
 
         #import <Ensembles/Ensembles.h>
+
+If you would like to use the Ensembles module instead of the static library, try this...
+
+1. In Finder, drag the `Ensembles iOS.xcodeproj` project from the `Framework` directory into your Xcode project.
+2. Select your App's project root in the source list on the left, and then select the App's target.
+3. In the General tab, click the + button in the _Embedded Binaries_ section.
+4. Choose `Ensembles.framework` in the iOS section. (Don't accidentally choose the Mac framework.)
+5. Import Ensembles in your source.
+
+For Objective-C
+
+        #import <Ensembles/Ensembles.h>
+
+For Swift
+
+        import Ensembles
         
 #### Incorporating Ensembles in an OS X Project
    
@@ -80,11 +96,11 @@ To manually add Ensembles to your App's Xcode Project...
 
 By default, Ensembles only includes support for iCloud. To use other cloud services, such as Dropbox, you may need to add a few steps to the procedure above. 
 
-If you are using Cocoapods, add the optional subspec to the Podfile. For example, to include Dropbox, include
+If you are using CocoaPods, add the optional subspec to the Podfile. For example, to include Dropbox, include
 
 		pod "Ensembles/Dropbox", "~> 1.0"
 
-If you are installing Ensembles manually, rather than with Cocoapods, you need to locate the source files and frameworks relevant to the service you want to support. You can find frameworks in the `Vendor` folder, and source files in `Framework/Extensions`.
+If you are installing Ensembles manually, rather than with CocoaPods, you need to locate the source files and frameworks relevant to the service you want to support. You can find frameworks in the `Vendor` folder, and source files in `Framework/Extensions`.
 
 By way of example, if you want to support Dropbox, you need to add the DropboxSDK Xcode project as a dependency, link to the appropriate product library, and include the files `CDEDropboxCloudFileSystem.h` and `CDEDropboxCloudFileSystem.m` in your project.
 
@@ -191,6 +207,12 @@ This method is also invoked on a background thread. Care should be taken to only
 It is not compulsory to provide global identifiers, but if you do, the framework will automatically ensure that no objects get duplicated due to multiple imports on different devices. If you don't provide global identifiers, the framework has no way to identify a new object, and will assign it a new unique identifier.
 
 If you do decide to provide global identifiers, it is up to you how you generate them, and where you store them. A common choice is to add an extra attribute to entities in your data model, and set that to a uuid on insertion into the store.
+
+#### Troubleshooting
+
+Ensembles has a built-in logging system, but by default only logs errors. It is often useful during development to see what the framework is doing, using the verbose logging setting. Simply make this call somewhere early in the launch process:
+
+    CDESetCurrentLoggingLevel(CDELoggingLevelVerbose);
 
 #### Unit Tests
 

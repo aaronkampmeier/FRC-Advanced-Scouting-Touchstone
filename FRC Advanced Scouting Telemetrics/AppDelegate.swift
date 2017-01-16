@@ -75,24 +75,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 		checkForUpdate()
 		
 		clearTMPFolder()
-        
-        
-        //TEMPORARY FOR TESTING OPR
-        let dataManager = DataManager()
-        let matches = dataManager.matches()
-        
-//        for match in matches {
-//            match.cachedLocal.blueFinalScore = randRange(lower: 50, upper: 350) as NSNumber
-//            match.cachedLocal.redFinalScore = randRange(lower: 50, upper: 350) as NSNumber
-//        }
-        
-//        let teamEventPerformance = (dataManager.localTeamRanking().first!.eventPerformances?.allObjects as! [TeamEventPerformance]).first!
-////        let matchPerformances = (teamEventPerformance.matchPerformances?.allObjects as! [TeamMatchPerformance])
-////        print(matchPerformances.map({ (matchPerformance) -> String in
-////            return "Match: \(matchPerformance.match!.key!) Alliance: \(matchPerformance.allianceColor) Score: \(matchPerformance.finalScore)"
-////        }))
-//        let opr = teamEventPerformance.value(forStat: TeamEventPerformance.StatName.OPR)
-//        print("OPR for \(teamEventPerformance.team.teamNumber!): \(opr)")
 		
         return true
     }
