@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import Crashlytics
 
 class AboutViewController: UIViewController {
     @IBOutlet weak var aboutTextView: UITextView!
@@ -24,6 +25,8 @@ class AboutViewController: UIViewController {
                 NSLog("Unable to read About.rtf file")
             }
         }
+        
+        Answers.logContentView(withName: "FAST About Page", contentType: nil, contentId: nil, customAttributes: nil)
     }
 
     override func didReceiveMemoryWarning() {

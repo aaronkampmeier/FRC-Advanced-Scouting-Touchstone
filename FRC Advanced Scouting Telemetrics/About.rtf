@@ -8,6 +8,14 @@
 \f0\fs24 \cf0 FRC Advanced Scouting Touchstone was developed by Aaron Kampmeier in conjunction with FRC Team 4256 (The Cyborg Cats). To contact with a feature request or bug report, email aaron.kampmeier@gmail.com.\
 \
 
+\b Note on OPR (and DPR and CCWM)\
+
+\b0 OPR stands for offensive power rating. Basically it's a rating of how much a team contributes to offense of the alliances they were on (how much they contributed to their alliances' scores). There have been many proposed calculation algorithms for OPR, many (if not all) being correct. That is because when one tries to solve for a team's OPR mathematically, one ends up with an 
+\i overdetermined 
+\i0 matrix system. This means there is more than one answer (OPR) to satisfy the set-up equation (one can only find an approximate). Therefore, different calculation strategies and computational power can yield slightly different results. Do not be alarmed is the OPR shown in FAST is slightly different than the OPR shown elsewhere, both can and probably are right; take each with a grain of salt. FAST uses Cholesky Factorization to solve the overdetermined system and find the least squares solution (as outlined {\field{\*\fldinst{HYPERLINK "https://www.chiefdelphi.com/forums/showpost.php?p=1119150&postcount=36"}}{\fldrslt here}}).\
+DPR stands for Defensive Power Rating. CCWM stands for Calculated Contribution to the Winning Margin. Both are calculated very similarly to OPR and again can vary slightly depending on calculation strategy. For more info, there are an abundance of resources describing them online.\
+\
+
 \b Note on Syncing
 \b0 \
 We know your scouted data is important to you which is why FAST offers local data syncing between all devices belonging to your team without requiring an internet connection. This works by using a combination of WiFi and Bluetooth to a-synchronously send data files between devices. Due to the a-synchronous nature and in order to ensure all files are transferred and successfully imported by an given device, it is sometimes necessary to initiate a sync (press the sync button) more than once. While syncing should work with only one of WiFi or Bluetooth enabled on a given device, having both enabled on all syncing devices will ensure your data syncs the fastest. Local data syncing only syncs scouted data, it does not sync event or match schedule information (an event must be manually added on each device separately).\
@@ -15,8 +23,14 @@ We know your scouted data is important to you which is why FAST offers local dat
 FAST connects to The Blue Alliance's public database (https://www.thebluealliance.com/apidocs) to gather FRC team, event, and match data.\
 \
 
-\b Legal
-\b0 \
+\b Legal\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural\partightenfactor0
+
+\b0 \cf0 OPR calculation is performed using {\field{\*\fldinst{HYPERLINK "https://github.com/yconst/YCMatrix"}}{\fldrslt YCMatrix}}: Copyright (c) 2013 - 2016 Ioannis (Yannis) Chatzikonstantinou. All rights reserved. {\field{\*\fldinst{HYPERLINK "http://yconst.com/"}}{\fldrslt http://yconst.com}}
+\b \
+\pard\tx720\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\pardirnatural\partightenfactor0
+
+\b0 \cf0 \
 \pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural\partightenfactor0
 \cf0 All icons are done in-house or are from Icons8: https://icons8.com (
 \f1 CC BY-ND 3.0)\
