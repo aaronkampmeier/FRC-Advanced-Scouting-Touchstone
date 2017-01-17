@@ -74,8 +74,6 @@
 		932C344C1E12DC2600A23203 /* EventInfoVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 932C344B1E12DC2600A23203 /* EventInfoVC.swift */; };
 		932C344E1E12F7C400A23203 /* CloudImportManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 932C344D1E12F7C400A23203 /* CloudImportManager.swift */; };
 		9332F2831E216E2100AB3EA6 /* OffenseSSViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9332F2821E216E2100AB3EA6 /* OffenseSSViewController.swift */; };
-		935C06691E2C02FF000AA574 /* YCMatrix.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 935C06661E2C02D2000AA574 /* YCMatrix.framework */; };
-		935C066A1E2C02FF000AA574 /* YCMatrix.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 935C06661E2C02D2000AA574 /* YCMatrix.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		936572D91E14E52100439728 /* CloudRemovalManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 936572D81E14E52100439728 /* CloudRemovalManager.swift */; };
 		936572DF1E160EBB00439728 /* AboutViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 936572DE1E160EBB00439728 /* AboutViewController.swift */; };
 		936572E11E1610CA00439728 /* About.rtf in Resources */ = {isa = PBXBuildFile; fileRef = 936572E01E1610CA00439728 /* About.rtf */; };
@@ -84,6 +82,8 @@
 		938D9CB41E1DD99B00A5E522 /* Surge.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1FAA2A921DFE1F3500514B9E /* Surge.framework */; };
 		938D9CB51E1DD99B00A5E522 /* Surge.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 1FAA2A921DFE1F3500514B9E /* Surge.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		93BA599E1E2C95F200171D72 /* FASTTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 938D9CB01E1B05BA00A5E522 /* FASTTests.swift */; };
+		93BA59CE1E2EE2E300171D72 /* YCMatrix.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 93BA59CB1E2EE2CE00171D72 /* YCMatrix.framework */; };
+		93BA59CF1E2EE2E300171D72 /* YCMatrix.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 93BA59CB1E2EE2CE00171D72 /* YCMatrix.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -129,33 +129,33 @@
 			remoteGlobalIDString = F84A6AAE19A9A72F007B53E1;
 			remoteInfo = SurgeTests;
 		};
-		935C06651E2C02D2000AA574 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 935C06601E2C02D2000AA574 /* YCMatrix.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = CBBE02AC178F215000744F77;
-			remoteInfo = YCMatrix;
-		};
-		935C06671E2C02D2000AA574 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 935C06601E2C02D2000AA574 /* YCMatrix.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = CBBE02C4178F215100744F77;
-			remoteInfo = YCMatrixTests;
-		};
-		935C066B1E2C02FF000AA574 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 935C06601E2C02D2000AA574 /* YCMatrix.xcodeproj */;
-			proxyType = 1;
-			remoteGlobalIDString = CBBE02AB178F215000744F77;
-			remoteInfo = YCMatrix;
-		};
 		938D9CB61E1DD99B00A5E522 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 1FAA2A8C1DFE1F3500514B9E /* Surge.xcodeproj */;
 			proxyType = 1;
 			remoteGlobalIDString = F8A1E1A919917A79009735E2;
 			remoteInfo = Surge;
+		};
+		93BA59CA1E2EE2CE00171D72 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 93BA59C51E2EE2CE00171D72 /* YCMatrix.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = CBBE02AC178F215000744F77;
+			remoteInfo = YCMatrix;
+		};
+		93BA59CC1E2EE2CE00171D72 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 93BA59C51E2EE2CE00171D72 /* YCMatrix.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = CBBE02C4178F215100744F77;
+			remoteInfo = YCMatrixTests;
+		};
+		93BA59D01E2EE2E300171D72 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 93BA59C51E2EE2CE00171D72 /* YCMatrix.xcodeproj */;
+			proxyType = 1;
+			remoteGlobalIDString = CBBE02AB178F215000744F77;
+			remoteInfo = YCMatrix;
 		};
 /* End PBXContainerItemProxy section */
 
@@ -167,7 +167,7 @@
 			dstSubfolderSpec = 10;
 			files = (
 				938D9CB51E1DD99B00A5E522 /* Surge.framework in Embed Frameworks */,
-				935C066A1E2C02FF000AA574 /* YCMatrix.framework in Embed Frameworks */,
+				93BA59CF1E2EE2E300171D72 /* YCMatrix.framework in Embed Frameworks */,
 			);
 			name = "Embed Frameworks";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -267,13 +267,13 @@
 		932C344D1E12F7C400A23203 /* CloudImportManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CloudImportManager.swift; sourceTree = "<group>"; };
 		9332F2821E216E2100AB3EA6 /* OffenseSSViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OffenseSSViewController.swift; sourceTree = "<group>"; };
 		9332F2931E22BB6E00AB3EA6 /* FAST 2-1.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "FAST 2-1.xcdatamodel"; sourceTree = "<group>"; };
-		935C06601E2C02D2000AA574 /* YCMatrix.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = YCMatrix.xcodeproj; path = "YCMatrix-master/YCMatrix.xcodeproj"; sourceTree = SOURCE_ROOT; };
 		936572D81E14E52100439728 /* CloudRemovalManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CloudRemovalManager.swift; sourceTree = "<group>"; };
 		936572DE1E160EBB00439728 /* AboutViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AboutViewController.swift; sourceTree = "<group>"; };
 		936572E01E1610CA00439728 /* About.rtf */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.rtf; path = About.rtf; sourceTree = "<group>"; };
 		938D9CAC1E19A1B700A5E522 /* LocalEvent+CoreDataClass.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "LocalEvent+CoreDataClass.swift"; sourceTree = "<group>"; };
 		938D9CAD1E19A1B700A5E522 /* LocalEvent+CoreDataProperties.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "LocalEvent+CoreDataProperties.swift"; sourceTree = "<group>"; };
 		938D9CB01E1B05BA00A5E522 /* FASTTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FASTTests.swift; sourceTree = "<group>"; };
+		93BA59C51E2EE2CE00171D72 /* YCMatrix.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = YCMatrix.xcodeproj; path = "YCMatrix-master/YCMatrix.xcodeproj"; sourceTree = "<group>"; };
 		D5E09D382B48C9148EBC98C8 /* Pods-FRC Advanced Scouting Touchstone.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-FRC Advanced Scouting Touchstone.release.xcconfig"; path = "Pods/Target Support Files/Pods-FRC Advanced Scouting Touchstone/Pods-FRC Advanced Scouting Touchstone.release.xcconfig"; sourceTree = "<group>"; };
 		E41AD9671774068A9E097A14 /* Pods-FRC Advanced Scouting Touchstone.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-FRC Advanced Scouting Touchstone.debug.xcconfig"; path = "Pods/Target Support Files/Pods-FRC Advanced Scouting Touchstone/Pods-FRC Advanced Scouting Touchstone.debug.xcconfig"; sourceTree = "<group>"; };
 		FF590BD6742CA543F314D9DB /* Pods_FRC_Advanced_Scouting_Touchstone.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_FRC_Advanced_Scouting_Touchstone.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -285,7 +285,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				1FBC9E6C1CC2F007005DB3F4 /* Crashlytics.framework in Frameworks */,
-				935C06691E2C02FF000AA574 /* YCMatrix.framework in Frameworks */,
+				93BA59CE1E2EE2E300171D72 /* YCMatrix.framework in Frameworks */,
 				938D9CB41E1DD99B00A5E522 /* Surge.framework in Frameworks */,
 				1FBC9E691CC2EE11005DB3F4 /* Fabric.framework in Frameworks */,
 				17B23A7C19409D43514119DF /* Pods_FRC_Advanced_Scouting_Touchstone.framework in Frameworks */,
@@ -366,7 +366,7 @@
 		1F78E7761C3B469300221927 = {
 			isa = PBXGroup;
 			children = (
-				935C06601E2C02D2000AA574 /* YCMatrix.xcodeproj */,
+				93BA59C51E2EE2CE00171D72 /* YCMatrix.xcodeproj */,
 				1FAA2A8C1DFE1F3500514B9E /* Surge.xcodeproj */,
 				1F78E7811C3B469300221927 /* FRC Advanced Scouting Touchstone */,
 				1F78E7991C3B469300221927 /* FRC Advanced Scouting TouchstoneTests */,
@@ -526,11 +526,11 @@
 			name = "Cloud Data";
 			sourceTree = "<group>";
 		};
-		935C06611E2C02D2000AA574 /* Products */ = {
+		93BA59C61E2EE2CE00171D72 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				935C06661E2C02D2000AA574 /* YCMatrix.framework */,
-				935C06681E2C02D2000AA574 /* YCMatrixTests.xctest */,
+				93BA59CB1E2EE2CE00171D72 /* YCMatrix.framework */,
+				93BA59CD1E2EE2CE00171D72 /* YCMatrixTests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -564,7 +564,7 @@
 			);
 			dependencies = (
 				938D9CB71E1DD99B00A5E522 /* PBXTargetDependency */,
-				935C066C1E2C02FF000AA574 /* PBXTargetDependency */,
+				93BA59D11E2EE2E300171D72 /* PBXTargetDependency */,
 			);
 			name = "FRC Advanced Scouting Touchstone";
 			productName = "FRC Advanced Scouting Telemetrics";
@@ -657,8 +657,8 @@
 					ProjectRef = 1FAA2A781DFE1EBE00514B9E /* Surge.xcodeproj */;
 				},
 				{
-					ProductGroup = 935C06611E2C02D2000AA574 /* Products */;
-					ProjectRef = 935C06601E2C02D2000AA574 /* YCMatrix.xcodeproj */;
+					ProductGroup = 93BA59C61E2EE2CE00171D72 /* Products */;
+					ProjectRef = 93BA59C51E2EE2CE00171D72 /* YCMatrix.xcodeproj */;
 				},
 			);
 			projectRoot = "";
@@ -699,18 +699,18 @@
 			remoteRef = 1FAA2A931DFE1F3500514B9E /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
-		935C06661E2C02D2000AA574 /* YCMatrix.framework */ = {
+		93BA59CB1E2EE2CE00171D72 /* YCMatrix.framework */ = {
 			isa = PBXReferenceProxy;
 			fileType = wrapper.framework;
 			path = YCMatrix.framework;
-			remoteRef = 935C06651E2C02D2000AA574 /* PBXContainerItemProxy */;
+			remoteRef = 93BA59CA1E2EE2CE00171D72 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
-		935C06681E2C02D2000AA574 /* YCMatrixTests.xctest */ = {
+		93BA59CD1E2EE2CE00171D72 /* YCMatrixTests.xctest */ = {
 			isa = PBXReferenceProxy;
 			fileType = wrapper.cfbundle;
 			path = YCMatrixTests.xctest;
-			remoteRef = 935C06671E2C02D2000AA574 /* PBXContainerItemProxy */;
+			remoteRef = 93BA59CC1E2EE2CE00171D72 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
 /* End PBXReferenceProxy section */
@@ -905,15 +905,15 @@
 			target = 1F78E77E1C3B469300221927 /* FRC Advanced Scouting Touchstone */;
 			targetProxy = 1F78E7A21C3B469300221927 /* PBXContainerItemProxy */;
 		};
-		935C066C1E2C02FF000AA574 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			name = YCMatrix;
-			targetProxy = 935C066B1E2C02FF000AA574 /* PBXContainerItemProxy */;
-		};
 		938D9CB71E1DD99B00A5E522 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			name = Surge;
 			targetProxy = 938D9CB61E1DD99B00A5E522 /* PBXContainerItemProxy */;
+		};
+		93BA59D11E2EE2E300171D72 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = YCMatrix;
+			targetProxy = 93BA59D01E2EE2E300171D72 /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 
