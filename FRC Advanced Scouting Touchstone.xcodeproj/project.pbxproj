@@ -73,7 +73,9 @@
 		1FF1F1791C4604370051EE54 /* TeamDataManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FF1F1781C4604370051EE54 /* TeamDataManager.swift */; };
 		932C344C1E12DC2600A23203 /* EventInfoVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 932C344B1E12DC2600A23203 /* EventInfoVC.swift */; };
 		932C344E1E12F7C400A23203 /* CloudImportManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 932C344D1E12F7C400A23203 /* CloudImportManager.swift */; };
-		9332F2831E216E2100AB3EA6 /* OffenseSSViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9332F2821E216E2100AB3EA6 /* OffenseSSViewController.swift */; };
+		932CB3EA1E305B9000712725 /* SSOffenseFuelViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 932CB3E91E305B9000712725 /* SSOffenseFuelViewController.swift */; };
+		932CB3F01E305E6C00712725 /* SSOffenseGearViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 932CB3EF1E305E6C00712725 /* SSOffenseGearViewController.swift */; };
+		932CB3F21E305E8200712725 /* SSOffenseWhereViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 932CB3F11E305E8200712725 /* SSOffenseWhereViewController.swift */; };
 		936572D91E14E52100439728 /* CloudRemovalManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 936572D81E14E52100439728 /* CloudRemovalManager.swift */; };
 		936572DF1E160EBB00439728 /* AboutViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 936572DE1E160EBB00439728 /* AboutViewController.swift */; };
 		936572E11E1610CA00439728 /* About.rtf in Resources */ = {isa = PBXBuildFile; fileRef = 936572E01E1610CA00439728 /* About.rtf */; };
@@ -82,6 +84,9 @@
 		938D9CB41E1DD99B00A5E522 /* Surge.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1FAA2A921DFE1F3500514B9E /* Surge.framework */; };
 		938D9CB51E1DD99B00A5E522 /* Surge.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 1FAA2A921DFE1F3500514B9E /* Surge.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		93BA599E1E2C95F200171D72 /* FASTTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 938D9CB01E1B05BA00A5E522 /* FASTTests.swift */; };
+		93BA59FB1E2EFCAF00171D72 /* SSOffenseViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93BA59FA1E2EFCAF00171D72 /* SSOffenseViewController.swift */; };
+		93BA5A0C1E2F1EA200171D72 /* YCMatrix.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 93BA59F21E2EE7EF00171D72 /* YCMatrix.framework */; };
+		93BA5A0D1E2F1EA200171D72 /* YCMatrix.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 93BA59F21E2EE7EF00171D72 /* YCMatrix.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -148,6 +153,13 @@
 			remoteGlobalIDString = CBBE02C4178F215100744F77;
 			remoteInfo = YCMatrixTests;
 		};
+		93BA5A0E1E2F1EA200171D72 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 93BA59EC1E2EE7EE00171D72 /* YCMatrix.xcodeproj */;
+			proxyType = 1;
+			remoteGlobalIDString = CBBE02AB178F215000744F77;
+			remoteInfo = YCMatrix;
+		};
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -158,6 +170,7 @@
 			dstSubfolderSpec = 10;
 			files = (
 				938D9CB51E1DD99B00A5E522 /* Surge.framework in Embed Frameworks */,
+				93BA5A0D1E2F1EA200171D72 /* YCMatrix.framework in Embed Frameworks */,
 			);
 			name = "Embed Frameworks";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -255,7 +268,9 @@
 		1FF1F1781C4604370051EE54 /* TeamDataManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TeamDataManager.swift; sourceTree = "<group>"; };
 		932C344B1E12DC2600A23203 /* EventInfoVC.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EventInfoVC.swift; sourceTree = "<group>"; };
 		932C344D1E12F7C400A23203 /* CloudImportManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CloudImportManager.swift; sourceTree = "<group>"; };
-		9332F2821E216E2100AB3EA6 /* OffenseSSViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OffenseSSViewController.swift; sourceTree = "<group>"; };
+		932CB3E91E305B9000712725 /* SSOffenseFuelViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SSOffenseFuelViewController.swift; sourceTree = "<group>"; };
+		932CB3EF1E305E6C00712725 /* SSOffenseGearViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SSOffenseGearViewController.swift; sourceTree = "<group>"; };
+		932CB3F11E305E8200712725 /* SSOffenseWhereViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SSOffenseWhereViewController.swift; sourceTree = "<group>"; };
 		9332F2931E22BB6E00AB3EA6 /* FAST 2-1.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "FAST 2-1.xcdatamodel"; sourceTree = "<group>"; };
 		936572D81E14E52100439728 /* CloudRemovalManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CloudRemovalManager.swift; sourceTree = "<group>"; };
 		936572DE1E160EBB00439728 /* AboutViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AboutViewController.swift; sourceTree = "<group>"; };
@@ -264,6 +279,7 @@
 		938D9CAD1E19A1B700A5E522 /* LocalEvent+CoreDataProperties.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "LocalEvent+CoreDataProperties.swift"; sourceTree = "<group>"; };
 		938D9CB01E1B05BA00A5E522 /* FASTTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FASTTests.swift; sourceTree = "<group>"; };
 		93BA59EC1E2EE7EE00171D72 /* YCMatrix.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = YCMatrix.xcodeproj; path = "YCMatrix-master/YCMatrix.xcodeproj"; sourceTree = "<group>"; };
+		93BA59FA1E2EFCAF00171D72 /* SSOffenseViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SSOffenseViewController.swift; sourceTree = "<group>"; };
 		D5E09D382B48C9148EBC98C8 /* Pods-FRC Advanced Scouting Touchstone.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-FRC Advanced Scouting Touchstone.release.xcconfig"; path = "Pods/Target Support Files/Pods-FRC Advanced Scouting Touchstone/Pods-FRC Advanced Scouting Touchstone.release.xcconfig"; sourceTree = "<group>"; };
 		E41AD9671774068A9E097A14 /* Pods-FRC Advanced Scouting Touchstone.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-FRC Advanced Scouting Touchstone.debug.xcconfig"; path = "Pods/Target Support Files/Pods-FRC Advanced Scouting Touchstone/Pods-FRC Advanced Scouting Touchstone.debug.xcconfig"; sourceTree = "<group>"; };
 		FF590BD6742CA543F314D9DB /* Pods_FRC_Advanced_Scouting_Touchstone.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_FRC_Advanced_Scouting_Touchstone.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -275,6 +291,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				1FBC9E6C1CC2F007005DB3F4 /* Crashlytics.framework in Frameworks */,
+				93BA5A0C1E2F1EA200171D72 /* YCMatrix.framework in Frameworks */,
 				938D9CB41E1DD99B00A5E522 /* Surge.framework in Frameworks */,
 				1FBC9E691CC2EE11005DB3F4 /* Fabric.framework in Frameworks */,
 				17B23A7C19409D43514119DF /* Pods_FRC_Advanced_Scouting_Touchstone.framework in Frameworks */,
@@ -344,8 +361,11 @@
 		1F4534131C6FFC13004EDDB9 /* Stands Scouting */ = {
 			isa = PBXGroup;
 			children = (
+				932CB3E91E305B9000712725 /* SSOffenseFuelViewController.swift */,
+				932CB3EF1E305E6C00712725 /* SSOffenseGearViewController.swift */,
+				932CB3F11E305E8200712725 /* SSOffenseWhereViewController.swift */,
 				1F45340F1C6FF916004EDDB9 /* StandsScoutingViewController.swift */,
-				9332F2821E216E2100AB3EA6 /* OffenseSSViewController.swift */,
+				93BA59FA1E2EFCAF00171D72 /* SSOffenseViewController.swift */,
 				1F12CF171C7A6CD70014200C /* Stopwatch.swift */,
 				1F12CF131C78FD370014200C /* CourtyardViewController.swift */,
 			);
@@ -553,6 +573,7 @@
 			);
 			dependencies = (
 				938D9CB71E1DD99B00A5E522 /* PBXTargetDependency */,
+				93BA5A0F1E2F1EA200171D72 /* PBXTargetDependency */,
 			);
 			name = "FRC Advanced Scouting Touchstone";
 			productName = "FRC Advanced Scouting Telemetrics";
@@ -812,6 +833,7 @@
 				932C344C1E12DC2600A23203 /* EventInfoVC.swift in Sources */,
 				1F1C23CB1E07487C008885A1 /* LocalTeam+CoreDataClass.swift in Sources */,
 				1F51D1C21C7FB30F00B4D6C5 /* GameStatsController.swift in Sources */,
+				932CB3F21E305E8200712725 /* SSOffenseWhereViewController.swift in Sources */,
 				1FF1F1791C4604370051EE54 /* TeamDataManager.swift in Sources */,
 				1FBE627F1CAEE0FB001FDFB7 /* TeamPickerTableViewController.swift in Sources */,
 				1F1C23DA1E07673E008885A1 /* AddEventTableViewController.swift in Sources */,
@@ -819,7 +841,6 @@
 				1F1C23CE1E07487C008885A1 /* TeamEventPerformance+CoreDataProperties.swift in Sources */,
 				1F45340E1C6FC3EA004EDDB9 /* GameStatsCollectionViewCell.swift in Sources */,
 				1F78E7831C3B469300221927 /* AppDelegate.swift in Sources */,
-				9332F2831E216E2100AB3EA6 /* OffenseSSViewController.swift in Sources */,
 				932C344E1E12F7C400A23203 /* CloudImportManager.swift in Sources */,
 				1F1C23D31E07487C008885A1 /* Match+CoreDataClass.swift in Sources */,
 				1F718F7A1E085BD900BD1951 /* CloudConnectionManager.swift in Sources */,
@@ -827,6 +848,8 @@
 				938D9CAE1E19A1B700A5E522 /* LocalEvent+CoreDataClass.swift in Sources */,
 				1FD0A09B1C95093600013A18 /* TeamListTableViewCell.swift in Sources */,
 				1F1C23CC1E07487C008885A1 /* LocalTeam+CoreDataProperties.swift in Sources */,
+				93BA59FB1E2EFCAF00171D72 /* SSOffenseViewController.swift in Sources */,
+				932CB3EA1E305B9000712725 /* SSOffenseFuelViewController.swift in Sources */,
 				1F1C23D61E07487C008885A1 /* AutonomousCycle+CoreDataProperties.swift in Sources */,
 				1F1C23C81E07487C008885A1 /* LocalMatch+CoreDataProperties.swift in Sources */,
 				1F1C23D41E07487C008885A1 /* Match+CoreDataProperties.swift in Sources */,
@@ -860,6 +883,7 @@
 				1F4FEDAC1C4B686000F4016D /* AdminConsoleController.swift in Sources */,
 				1F1C23841E072ECA008885A1 /* DataManager.swift in Sources */,
 				1F12CF181C7A6CD70014200C /* Stopwatch.swift in Sources */,
+				932CB3F01E305E6C00712725 /* SSOffenseGearViewController.swift in Sources */,
 				1FE2C12D1C81875A00CECBF1 /* ImageScalingFunctions.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -897,6 +921,11 @@
 			isa = PBXTargetDependency;
 			name = Surge;
 			targetProxy = 938D9CB61E1DD99B00A5E522 /* PBXContainerItemProxy */;
+		};
+		93BA5A0F1E2F1EA200171D72 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = YCMatrix;
+			targetProxy = 93BA5A0E1E2F1EA200171D72 /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 

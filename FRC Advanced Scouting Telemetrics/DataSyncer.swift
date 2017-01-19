@@ -134,7 +134,7 @@ class DataSyncer: NSObject, CDEPersistentStoreEnsembleDelegate {
 	
 	func persistentStoreEnsemble(_ ensemble: CDEPersistentStoreEnsemble!, didFailToSaveMergedChangesInManagedObjectContext savingContext: NSManagedObjectContext!, error: NSError!, reparationManagedObjectContext reparationContext: NSManagedObjectContext!) -> Bool {
 		CLSNSLogv("Ensemble did fail to save merged changes. Error: \(error)", getVaList([]))
-		let alert = UIAlertController(title: "Save Failed", message: "The save and sync failed. Ask your admin for help with this issue.", preferredStyle: .alert)
+		let alert = UIAlertController(title: "Save Failed", message: "The save and sync failed.", preferredStyle: .alert)
 		alert.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
 		(UIApplication.shared.delegate as! AppDelegate).presentViewControllerOnTop(alert, animated: true)
 		
@@ -172,7 +172,7 @@ class DataSyncer: NSObject, CDEPersistentStoreEnsembleDelegate {
 	}
 	
 	func persistentStoreEnsemble(_ ensemble: CDEPersistentStoreEnsemble!, didDeleechWithError error: NSError!) {
-		let alert = UIAlertController(title: "Sync Error: Deleech", message: "There was an internal data integrity error which forced your app to disconnect from the shared cloud of data. Ask your admin for help with fixing this.", preferredStyle: .alert)
+		let alert = UIAlertController(title: "Sync Error: Deleech", message: "There was an internal data integrity error which forced your app to disconnect from the shared cloud of data.", preferredStyle: .alert)
 		alert.addAction(UIAlertAction(title: "Attempt to Fix", style: .default, handler: {_ in self.attemptToFixDeelechError()}))
 		alert.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
 		(UIApplication.shared.delegate as! AppDelegate).presentViewControllerOnTop(alert, animated: true)

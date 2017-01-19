@@ -135,7 +135,7 @@ class StandsScoutingViewController: UIViewController, ProvidesTeam {
     //Child view controllers
 	var currentVC: UIViewController?
 	var initialChild: UIViewController?
-    var offenseVC: OffenseSSViewController?
+    var offenseVC: SSOffenseViewController?
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -144,7 +144,7 @@ class StandsScoutingViewController: UIViewController, ProvidesTeam {
 		teamLabel.text = "Team \(teamPerformance!.team.teamNumber!)"
 		
 		//Get all the view controllers
-        offenseVC = storyboard?.instantiateViewController(withIdentifier: "offenseSS") as! OffenseSSViewController
+        offenseVC = storyboard?.instantiateViewController(withIdentifier: "SSOffense") as! SSOffenseViewController
 		
 		//Make it look nice
 		timerButton.layer.cornerRadius = 10

@@ -1,27 +1,22 @@
 //
-//  OffenseSSViewController.swift
+//  SSOffenseGearViewController.swift
 //  FRC Advanced Scouting Touchstone
 //
-//  Created by Aaron Kampmeier on 1/7/17.
+//  Created by Aaron Kampmeier on 1/18/17.
 //  Copyright © 2017 Kampfire Technologies. All rights reserved.
 //
 
 import UIKit
-import GMStepper
 
-class OffenseSSViewController: UIViewController {
-    @IBOutlet weak var highLoaderFuelStepper: GMStepper!
-    @IBOutlet weak var lowLoaderFuelStepper: GMStepper!
-    @IBOutlet weak var airShipGearsLoaded: GMStepper!
+class SSOffenseGearViewController: UIViewController {
+    @IBOutlet weak var addGearButton: UIButton!
+    @IBOutlet weak var loadingWhereView: UIView!
+    @IBOutlet weak var mountingWhereView: UIView!
 
     override func viewDidLoad() {
         super.viewDidLoad()
 
         // Do any additional setup after loading the view.
-        
-        highLoaderFuelStepper.layer.cornerRadius = 7
-        lowLoaderFuelStepper.layer.cornerRadius = 7
-        airShipGearsLoaded.layer.cornerRadius = 7
     }
 
     override func didReceiveMemoryWarning() {
@@ -29,6 +24,9 @@ class OffenseSSViewController: UIViewController {
         // Dispose of any resources that can be recreated.
     }
     
+    @IBAction func addGearPressed(_ sender: UIButton) {
+        
+    }
 
     /*
     // MARK: - Navigation
