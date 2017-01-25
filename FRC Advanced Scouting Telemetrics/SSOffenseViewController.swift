@@ -7,7 +7,6 @@
 //
 
 import UIKit
-import VerticalSlider
 import SSBouncyButton
 
 class SSOffenseViewController: UIViewController {

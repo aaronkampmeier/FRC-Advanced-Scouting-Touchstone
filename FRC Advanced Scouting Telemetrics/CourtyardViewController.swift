@@ -248,11 +248,11 @@ class DefenseVC: UIViewController {
 		standsScoutingVC = (parent as! StandsScoutingViewController)
 	}
 	
-	@IBAction func contact(_ sender: UIButton) {
-		dataManager.addTimeMarker(withEvent: .contact, atTime: (standsScoutingVC?.stopwatch.elapsedTime)!, inMatchPerformance: (standsScoutingVC?.matchPerformance)!)
-	}
-	
-	@IBAction func contactDisruptingShot(_ sender: UIButton) {
-		dataManager.addTimeMarker(withEvent: .contactDisruptingShot, atTime: (standsScoutingVC?.stopwatch.elapsedTime)!, inMatchPerformance: (standsScoutingVC?.matchPerformance)!)
-	}
+//	@IBAction func contact(_ sender: UIButton) {
+//		dataManager.addTimeMarker(withEvent: .contact, atTime: (standsScoutingVC?.stopwatch.elapsedTime)!, inMatchPerformance: (standsScoutingVC?.matchPerformance)!)
+//	}
+//	
+//	@IBAction func contactDisruptingShot(_ sender: UIButton) {
+//		dataManager.addTimeMarker(withEvent: .contactDisruptingShot, atTime: (standsScoutingVC?.stopwatch.elapsedTime)!, inMatchPerformance: (standsScoutingVC?.matchPerformance)!)
+//	}
 }

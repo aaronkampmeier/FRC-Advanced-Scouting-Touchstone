@@ -10,7 +10,17 @@ import UIKit
 import SSBouncyButton
 
 protocol WhereDelegate {
-    func selected(_ whereVC: SSOffenseWhereViewController, id: Int)
+    func selected(_ whereVC: SSOffenseWhereViewController, id: String)
+}
+
+protocol FASTSSButtonable: CustomStringConvertible {
+    var rawValue: String {get}
+}
+
+extension FASTSSButtonable {
+    func button(color: UIColor) -> SSOffenseWhereViewController.Button {
+        return SSOffenseWhereViewController.Button(title: self.description, color: color, id: self.rawValue)
+    }
 }
 
 class SSOffenseWhereViewController: UIViewController {
@@ -18,6 +28,7 @@ class SSOffenseWhereViewController: UIViewController {
     
     private var buttons: [Button] = [] {
         didSet {
+            ssBouncyButtons.removeAll()
             for subview in stackView?.arrangedSubviews ?? [UIView]() {
                 stackView?.removeArrangedSubview(subview)
             }
@@ -26,6 +37,9 @@ class SSOffenseWhereViewController: UIViewController {
                 bouncyButton.tintColor = button.color
                 bouncyButton.setTitle(button.title, for: .normal)
                 bouncyButton.addTarget(self, action: #selector(didSelectButton(_:)), for: .touchUpInside)
+                
+                ssBouncyButtons.append(bouncyButton)
+                
                 stackView?.insertArrangedSubview(bouncyButton, at: index)
             }
         }
@@ -71,24 +85,34 @@ class SSOffenseWhereViewController: UIViewController {
         self.view.isHidden = true
     }
     
+    var currentScheduledTask: DispatchWorkItem?
     func didSelectButton(_ sender: SSBouncyButton) {
+        for button in ssBouncyButtons {
+            button.isSelected = false
+        }
+        
         sender.isSelected = !sender.isSelected
         let index = buttons.index() {button in
             return button.title == sender.title(for: .normal)
         }
         let selectedButton = buttons[index!]
-        delegate?.selected(self, id: selectedButton.id)
-        DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + 3) {
+        
+        currentScheduledTask?.cancel()
+        
+        currentScheduledTask = DispatchWorkItem {
             self.hide()
+            self.delegate?.selected(self, id: selectedButton.id)
         }
+        
+        DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + cushionTime, execute: currentScheduledTask!)
     }
     
     struct Button {
         var color: UIColor
         var title: String
-        var id: Int
+        var id: String
         
-        init(title: String, color: UIColor, id: Int) {
+        init(title: String, color: UIColor, id: String) {
             self.title = title
             self.color = color
             self.id = id

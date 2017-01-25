@@ -211,7 +211,50 @@ class DataManager {
 		case Red = "Red"
 		case Blue = "Blue"
 	}
+    
+    enum TimeMarkerEvent: String, CustomStringConvertible {
+        case LoadedFuel
+        case Error
+        
+        var description: String {
+            get {
+                return self.rawValue
+            }
+        }
+    }
 }
+
+//MARK: - Game-Specific Properties
+enum StartingPosition: String, CustomStringConvertible {
+    case LoadingStation = "Loading Station"
+    
+    var description: String {
+        get {
+            return self.rawValue
+        }
+    }
+    
+    static var allPositions: [StartingPosition] {
+        get {
+            return [.LoadingStation]
+        }
+    }
+}
+
+enum RopeClimbStatus: String, CustomStringConvertible {
+    case Successful
+    case Attempted
+    case NotAttempted = "Not Attempted"
+    
+    var description: String {
+        get {
+            return self.rawValue
+        }
+    }
+}
+
+
+//MARK: - Universal-Local Translations
 
 //For the NSManagedObject Subclasses to inherit
 protocol HasLocalEquivalent: class {
@@ -332,7 +375,6 @@ struct ObjectPair<U:HasLocalEquivalent, L:HasUniversalEquivalent> where L.Univer
     }
 }
 
-//MARK: - Universal-Local Translations
 //When using fetched properties it is not a good idea to individually access many objects' fetched properties together because then numerous fetch requests will be queued at the same time which can be really slow. Instead this method uses one fetch request to grab all the wanted objects.
 ///Returns the local objects for the universal objects given (and in the same order). Use this instead of accessing multiple fetched properties back-to-back.
 class UniversalToLocalConversion<U:HasLocalEquivalent, L:HasUniversalEquivalent> where L:NSManagedObject, L.SelfObject == L, L.UniversalType == U {

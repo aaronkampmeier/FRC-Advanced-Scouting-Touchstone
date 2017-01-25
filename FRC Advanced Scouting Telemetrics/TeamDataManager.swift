@@ -576,13 +576,13 @@ class TeamDataManager {
 //	}
 	
 	//MARK: Time Markers
-	func addTimeMarker(withEvent event: TimeMarkerEventType, atTime time: TimeInterval, inMatchPerformance matchPerformance: TeamMatchPerformance) {
-		let newMarker = TimeMarker(entity: NSEntityDescription.entity(forEntityName: "TimeMarker", in: TeamDataManager.managedContext)!, insertInto: TeamDataManager.managedContext)
-		
-		newMarker.event = event.rawValue as NSNumber?
-		newMarker.time = time as NSNumber?
-//		newMarker.teamMatchPerformance = matchPerformance
-	}
+//	func addTimeMarker(withEvent event: TimeMarkerEventType, atTime time: TimeInterval, inMatchPerformance matchPerformance: TeamMatchPerformance) {
+//		let newMarker = TimeMarker(entity: NSEntityDescription.entity(forEntityName: "TimeMarker", in: TeamDataManager.managedContext)!, insertInto: TeamDataManager.managedContext)
+//		
+//		newMarker.event = event.rawValue as NSNumber?
+//		newMarker.time = time as NSNumber?
+////		newMarker.teamMatchPerformance = matchPerformance
+//	}
 	
 	enum TimeMarkerEventType: Int, CustomStringConvertible {
 		case ballPickedUp

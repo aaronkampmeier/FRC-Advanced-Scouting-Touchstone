@@ -146,7 +146,7 @@ class TeamListDetailViewController: UIViewController, TeamSelectionDelegate {
 		
 		if segue.identifier == "standsScouting" {
 			let destinationVC = segue.destination as! StandsScoutingViewController
-			destinationVC.teamPerformance = teamEventPerformance
+			destinationVC.teamEventPerformance = teamEventPerformance
 		}
 	}
 	

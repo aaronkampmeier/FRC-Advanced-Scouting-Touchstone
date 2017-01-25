@@ -12,24 +12,56 @@ import VerticalSlider
 class SSOffenseFuelViewController: UIViewController {
     @IBOutlet weak var addFuelButton: UIButton!
     @IBOutlet weak var fuelTankSlider: VerticalSlider!
+    @IBOutlet weak var setFuelIncreaseLabel: UILabel!
+    
+    let ssDataManager = SSDataManager.currentSSDataManager()!
     
     var loadingWhereVC: SSOffenseWhereViewController! {
         didSet {
             loadingWhereVC.delegate = self
-            loadingWhereVC.setUpWithButtons(buttons: [FuelLoadingLocations.Hopper.button, FuelLoadingLocations.LoadingStation.button, FuelLoadingLocations.Floor.button], time: 0)
+            loadingWhereVC.setUpWithButtons(buttons: [FuelLoadingLocations.Hopper.button(color: .orange), FuelLoadingLocations.LoadingStation.button(color: .orange), FuelLoadingLocations.Floor.button(color: .orange)], time: 3)
         }
     }
     var scoringWhereVC: SSOffenseWhereViewController! {
         didSet {
             scoringWhereVC.delegate = self
-            scoringWhereVC.setUpWithButtons(buttons: [FuelScoringLocations.HighGoal.button, FuelScoringLocations.LowGoal.button], time: 0)
+            scoringWhereVC.setUpWithButtons(buttons: [FuelScoringLocations.HighGoal.button(color: .orange), FuelScoringLocations.LowGoal.button(color: .orange)], time: 3)
         }
     }
+    
+    var hasLoadedFuel: Bool = false {
+        didSet {
+            if hasLoadedFuel {
+                scoringWhereVC.show()
+            } else {
+                scoringWhereVC.hide()
+                setFuelIncreaseLabel.isHidden = true
+                fuelTankSlider.slider.isEnabled = false
+                fuelTankSlider.slider.value = 0
+            }
+        }
+    }
+    
+    var currentFuelTankLevel = 0.0
 
     override func viewDidLoad() {
         super.viewDidLoad()
 
         // Do any additional setup after loading the view.
+        setFuelIncreaseLabel.isHidden = true
+        fuelTankSlider.slider.addTarget(self, action: #selector(fuelSliderChanged(_:)), for: .touchUpInside)
+        fuelTankSlider.slider.isEnabled = false
+        
+        //Account for preloaded fuel
+        let preloadedFuel = ssDataManager.preloadedFuel
+        if preloadedFuel == 0 {
+            hasLoadedFuel = false
+        } else {
+            hasLoadedFuel = true
+        }
+        
+        fuelTankSlider.slider.value = Float(preloadedFuel)
+        currentFuelTankLevel = preloadedFuel
     }
 
     override func didReceiveMemoryWarning() {
@@ -39,8 +71,15 @@ class SSOffenseFuelViewController: UIViewController {
     
     @IBAction func addFuelButtonPressed(_ sender: UIButton) {
         loadingWhereVC.show()
+        setFuelIncreaseLabel.isHidden = false
+        fuelTankSlider.slider.isEnabled = true
     }
 
+    func fuelSliderChanged(_ sender: UISlider) {
+        ssDataManager.setAssociatedFuelIncrease(withFuelIncrease: currentFuelTankLevel - Double(sender.value))
+        currentFuelTankLevel = Double(sender.value)
+        fuelTankSlider.slider.isEnabled = false
+    }
     
     // MARK: - Navigation
 
@@ -59,54 +98,39 @@ class SSOffenseFuelViewController: UIViewController {
         }
     }
     
-    enum FuelLoadingLocations: Int, CustomStringConvertible {
+    enum FuelLoadingLocations: String, CustomStringConvertible, FASTSSButtonable {
         case Hopper
-        case LoadingStation
+        case LoadingStation = "Loading Station"
         case Floor
         
         var description: String {
             get {
-                switch self {
-                case .Hopper:
-                    return "Hopper"
-                case .LoadingStation:
-                    return "Loading Station"
-                case .Floor:
-                    return "Floor"
-                }
-            }
-        }
-        
-        var button: SSOffenseWhereViewController.Button {
-            get {
-                return SSOffenseWhereViewController.Button(title: self.description, color: .orange, id: self.rawValue)
+                return self.rawValue
             }
         }
     }
     
-    enum FuelScoringLocations: Int, CustomStringConvertible {
-        case LowGoal
-        case HighGoal
+    enum FuelScoringLocations: String, CustomStringConvertible, FASTSSButtonable {
+        case LowGoal = "Low Goal"
+        case HighGoal = "High Goal"
         
         var description: String {
-            switch self {
-            case .LowGoal:
-                return "Low Goal"
-            case .HighGoal:
-                return "High Goal"
-            }
-        }
-        
-        var button: SSOffenseWhereViewController.Button {
-            get {
-                return SSOffenseWhereViewController.Button(title: self.description, color: .orange, id: self.rawValue)
-            }
+            return self.rawValue
         }
     }
 }
 
 extension SSOffenseFuelViewController: WhereDelegate {
-    func selected(_ whereVC: SSOffenseWhereViewController, id: Int) {
-        
+    func selected(_ whereVC: SSOffenseWhereViewController, id: String) {
+        switch whereVC {
+        case loadingWhereVC:
+            ssDataManager.recordFuelLoading(location: id, atTime: ssDataManager.stopwatch.elapsedTime)
+            hasLoadedFuel = true
+        case scoringWhereVC:
+            ssDataManager.recordFuelScoring(inGoal: id, atTime: ssDataManager.stopwatch.elapsedTime, scoredFrom: CGPoint(x: 8, y: 8))
+            hasLoadedFuel = false
+        default:
+            break
+        }
     }
 }

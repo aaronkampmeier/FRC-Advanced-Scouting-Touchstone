@@ -8,7 +8,6 @@
 
 /* Begin PBXBuildFile section */
 		17B23A7C19409D43514119DF /* Pods_FRC_Advanced_Scouting_Touchstone.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FF590BD6742CA543F314D9DB /* Pods_FRC_Advanced_Scouting_Touchstone.framework */; };
-		1F08B50E1CD32BBA00C9B7E8 /* Model.xcmappingmodel in Sources */ = {isa = PBXBuildFile; fileRef = 1F08B50D1CD32BBA00C9B7E8 /* Model.xcmappingmodel */; };
 		1F12CF141C78FD370014200C /* CourtyardViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F12CF131C78FD370014200C /* CourtyardViewController.swift */; };
 		1F12CF181C7A6CD70014200C /* Stopwatch.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F12CF171C7A6CD70014200C /* Stopwatch.swift */; };
 		1F1C23841E072ECA008885A1 /* DataManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F1C23831E072ECA008885A1 /* DataManager.swift */; };
@@ -76,13 +75,27 @@
 		932CB3EA1E305B9000712725 /* SSOffenseFuelViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 932CB3E91E305B9000712725 /* SSOffenseFuelViewController.swift */; };
 		932CB3F01E305E6C00712725 /* SSOffenseGearViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 932CB3EF1E305E6C00712725 /* SSOffenseGearViewController.swift */; };
 		932CB3F21E305E8200712725 /* SSOffenseWhereViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 932CB3F11E305E8200712725 /* SSOffenseWhereViewController.swift */; };
+		933E794F1E385BB20033563B /* SSPreloadingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 933E794E1E385BB20033563B /* SSPreloadingViewController.swift */; };
+		934647FC1E3188D800DC96D2 /* SSDefenseViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 934647FB1E3188D800DC96D2 /* SSDefenseViewController.swift */; };
 		936572D91E14E52100439728 /* CloudRemovalManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 936572D81E14E52100439728 /* CloudRemovalManager.swift */; };
 		936572DF1E160EBB00439728 /* AboutViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 936572DE1E160EBB00439728 /* AboutViewController.swift */; };
 		936572E11E1610CA00439728 /* About.rtf in Resources */ = {isa = PBXBuildFile; fileRef = 936572E01E1610CA00439728 /* About.rtf */; };
+		938BEB2B1E352159003F2F74 /* FuelLoading+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 938BEB261E352159003F2F74 /* FuelLoading+CoreDataProperties.swift */; };
+		938BEB2C1E352159003F2F74 /* FuelScoring+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 938BEB271E352159003F2F74 /* FuelScoring+CoreDataProperties.swift */; };
+		938BEB2D1E352159003F2F74 /* Defending+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 938BEB281E352159003F2F74 /* Defending+CoreDataProperties.swift */; };
+		938BEB2E1E352159003F2F74 /* GearLoading+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 938BEB291E352159003F2F74 /* GearLoading+CoreDataProperties.swift */; };
+		938BEB2F1E352159003F2F74 /* GearMounting+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 938BEB2A1E352159003F2F74 /* GearMounting+CoreDataProperties.swift */; };
+		938BEB391E35228E003F2F74 /* Defending+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = 938BEB341E35228E003F2F74 /* Defending+CoreDataClass.swift */; };
+		938BEB3A1E35228E003F2F74 /* FuelLoading+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = 938BEB351E35228E003F2F74 /* FuelLoading+CoreDataClass.swift */; };
+		938BEB3B1E35228E003F2F74 /* FuelScoring+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = 938BEB361E35228E003F2F74 /* FuelScoring+CoreDataClass.swift */; };
+		938BEB3C1E35228E003F2F74 /* GearLoading+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = 938BEB371E35228E003F2F74 /* GearLoading+CoreDataClass.swift */; };
+		938BEB3D1E35228E003F2F74 /* GearMounting+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = 938BEB381E35228E003F2F74 /* GearMounting+CoreDataClass.swift */; };
+		938BEB3F1E354393003F2F74 /* CoreData.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 938BEB3E1E354393003F2F74 /* CoreData.framework */; };
 		938D9CAE1E19A1B700A5E522 /* LocalEvent+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = 938D9CAC1E19A1B700A5E522 /* LocalEvent+CoreDataClass.swift */; };
 		938D9CAF1E19A1B700A5E522 /* LocalEvent+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 938D9CAD1E19A1B700A5E522 /* LocalEvent+CoreDataProperties.swift */; };
 		938D9CB41E1DD99B00A5E522 /* Surge.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1FAA2A921DFE1F3500514B9E /* Surge.framework */; };
 		938D9CB51E1DD99B00A5E522 /* Surge.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 1FAA2A921DFE1F3500514B9E /* Surge.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		93AE99801E3407A00000FB7C /* SSDataManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93AE997F1E3407A00000FB7C /* SSDataManager.swift */; };
 		93BA599E1E2C95F200171D72 /* FASTTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 938D9CB01E1B05BA00A5E522 /* FASTTests.swift */; };
 		93BA59FB1E2EFCAF00171D72 /* SSOffenseViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93BA59FA1E2EFCAF00171D72 /* SSOffenseViewController.swift */; };
 		93BA5A0C1E2F1EA200171D72 /* YCMatrix.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 93BA59F21E2EE7EF00171D72 /* YCMatrix.framework */; };
@@ -182,7 +195,6 @@
 		1F0296661C5C6E42008CA8C2 /* FRC_Advanced_Scouting_Telemetrics CD 2.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "FRC_Advanced_Scouting_Telemetrics CD 2.xcdatamodel"; sourceTree = "<group>"; };
 		1F0296691C5D5439008CA8C2 /* FRC_Advanced_Scouting_Telemetrics CD 3.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "FRC_Advanced_Scouting_Telemetrics CD 3.xcdatamodel"; sourceTree = "<group>"; };
 		1F08B5041CD2F2BF00C9B7E8 /* FRC_Advanced_Scouting_Telemetrics Version 13.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "FRC_Advanced_Scouting_Telemetrics Version 13.xcdatamodel"; sourceTree = "<group>"; };
-		1F08B50D1CD32BBA00C9B7E8 /* Model.xcmappingmodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcmappingmodel; path = Model.xcmappingmodel; sourceTree = "<group>"; };
 		1F08B50F1CD33AFD00C9B7E8 /* FRC_Advanced_Scouting_Telemetrics Version 12-5.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "FRC_Advanced_Scouting_Telemetrics Version 12-5.xcdatamodel"; sourceTree = "<group>"; };
 		1F12CF131C78FD370014200C /* CourtyardViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CourtyardViewController.swift; sourceTree = "<group>"; };
 		1F12CF171C7A6CD70014200C /* Stopwatch.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Stopwatch.swift; sourceTree = "<group>"; };
@@ -272,12 +284,29 @@
 		932CB3EF1E305E6C00712725 /* SSOffenseGearViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SSOffenseGearViewController.swift; sourceTree = "<group>"; };
 		932CB3F11E305E8200712725 /* SSOffenseWhereViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SSOffenseWhereViewController.swift; sourceTree = "<group>"; };
 		9332F2931E22BB6E00AB3EA6 /* FAST 2-1.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "FAST 2-1.xcdatamodel"; sourceTree = "<group>"; };
+		933E794E1E385BB20033563B /* SSPreloadingViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SSPreloadingViewController.swift; sourceTree = "<group>"; };
+		933E79501E3864370033563B /* FAST 2-2-2.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "FAST 2-2-2.xcdatamodel"; sourceTree = "<group>"; };
+		934647FB1E3188D800DC96D2 /* SSDefenseViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SSDefenseViewController.swift; sourceTree = "<group>"; };
 		936572D81E14E52100439728 /* CloudRemovalManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CloudRemovalManager.swift; sourceTree = "<group>"; };
 		936572DE1E160EBB00439728 /* AboutViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AboutViewController.swift; sourceTree = "<group>"; };
 		936572E01E1610CA00439728 /* About.rtf */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.rtf; path = About.rtf; sourceTree = "<group>"; };
+		938BEB261E352159003F2F74 /* FuelLoading+CoreDataProperties.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "FuelLoading+CoreDataProperties.swift"; sourceTree = "<group>"; };
+		938BEB271E352159003F2F74 /* FuelScoring+CoreDataProperties.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "FuelScoring+CoreDataProperties.swift"; sourceTree = "<group>"; };
+		938BEB281E352159003F2F74 /* Defending+CoreDataProperties.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Defending+CoreDataProperties.swift"; sourceTree = "<group>"; };
+		938BEB291E352159003F2F74 /* GearLoading+CoreDataProperties.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "GearLoading+CoreDataProperties.swift"; sourceTree = "<group>"; };
+		938BEB2A1E352159003F2F74 /* GearMounting+CoreDataProperties.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "GearMounting+CoreDataProperties.swift"; sourceTree = "<group>"; };
+		938BEB341E35228E003F2F74 /* Defending+CoreDataClass.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Defending+CoreDataClass.swift"; sourceTree = "<group>"; };
+		938BEB351E35228E003F2F74 /* FuelLoading+CoreDataClass.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "FuelLoading+CoreDataClass.swift"; sourceTree = "<group>"; };
+		938BEB361E35228E003F2F74 /* FuelScoring+CoreDataClass.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "FuelScoring+CoreDataClass.swift"; sourceTree = "<group>"; };
+		938BEB371E35228E003F2F74 /* GearLoading+CoreDataClass.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "GearLoading+CoreDataClass.swift"; sourceTree = "<group>"; };
+		938BEB381E35228E003F2F74 /* GearMounting+CoreDataClass.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "GearMounting+CoreDataClass.swift"; sourceTree = "<group>"; };
+		938BEB3E1E354393003F2F74 /* CoreData.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreData.framework; path = System/Library/Frameworks/CoreData.framework; sourceTree = SDKROOT; };
+		938BEB441E35AD82003F2F74 /* FAST 2-2-1.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "FAST 2-2-1.xcdatamodel"; sourceTree = "<group>"; };
 		938D9CAC1E19A1B700A5E522 /* LocalEvent+CoreDataClass.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "LocalEvent+CoreDataClass.swift"; sourceTree = "<group>"; };
 		938D9CAD1E19A1B700A5E522 /* LocalEvent+CoreDataProperties.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "LocalEvent+CoreDataProperties.swift"; sourceTree = "<group>"; };
 		938D9CB01E1B05BA00A5E522 /* FASTTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FASTTests.swift; sourceTree = "<group>"; };
+		93AE997F1E3407A00000FB7C /* SSDataManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SSDataManager.swift; sourceTree = "<group>"; };
+		93AE99851E3516EF0000FB7C /* FAST 2- 2.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "FAST 2- 2.xcdatamodel"; sourceTree = "<group>"; };
 		93BA59EC1E2EE7EE00171D72 /* YCMatrix.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = YCMatrix.xcodeproj; path = "YCMatrix-master/YCMatrix.xcodeproj"; sourceTree = "<group>"; };
 		93BA59FA1E2EFCAF00171D72 /* SSOffenseViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SSOffenseViewController.swift; sourceTree = "<group>"; };
 		D5E09D382B48C9148EBC98C8 /* Pods-FRC Advanced Scouting Touchstone.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-FRC Advanced Scouting Touchstone.release.xcconfig"; path = "Pods/Target Support Files/Pods-FRC Advanced Scouting Touchstone/Pods-FRC Advanced Scouting Touchstone.release.xcconfig"; sourceTree = "<group>"; };
@@ -290,6 +319,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				938BEB3F1E354393003F2F74 /* CoreData.framework in Frameworks */,
 				1FBC9E6C1CC2F007005DB3F4 /* Crashlytics.framework in Frameworks */,
 				93BA5A0C1E2F1EA200171D72 /* YCMatrix.framework in Frameworks */,
 				938D9CB41E1DD99B00A5E522 /* Surge.framework in Frameworks */,
@@ -361,11 +391,14 @@
 		1F4534131C6FFC13004EDDB9 /* Stands Scouting */ = {
 			isa = PBXGroup;
 			children = (
+				93AE997F1E3407A00000FB7C /* SSDataManager.swift */,
+				1F45340F1C6FF916004EDDB9 /* StandsScoutingViewController.swift */,
+				933E794E1E385BB20033563B /* SSPreloadingViewController.swift */,
+				93BA59FA1E2EFCAF00171D72 /* SSOffenseViewController.swift */,
 				932CB3E91E305B9000712725 /* SSOffenseFuelViewController.swift */,
 				932CB3EF1E305E6C00712725 /* SSOffenseGearViewController.swift */,
 				932CB3F11E305E8200712725 /* SSOffenseWhereViewController.swift */,
-				1F45340F1C6FF916004EDDB9 /* StandsScoutingViewController.swift */,
-				93BA59FA1E2EFCAF00171D72 /* SSOffenseViewController.swift */,
+				934647FB1E3188D800DC96D2 /* SSDefenseViewController.swift */,
 				1F12CF171C7A6CD70014200C /* Stopwatch.swift */,
 				1F12CF131C78FD370014200C /* CourtyardViewController.swift */,
 			);
@@ -414,7 +447,6 @@
 				1F78E78C1C3B469300221927 /* Assets.xcassets */,
 				1F78E78E1C3B469300221927 /* LaunchScreen.storyboard */,
 				1F78E7911C3B469300221927 /* Info.plist */,
-				1F08B50D1CD32BBA00C9B7E8 /* Model.xcmappingmodel */,
 				1F78E7891C3B469300221927 /* FRC_Advanced_Scouting_Telemetrics.xcdatamodeld */,
 			);
 			name = "FRC Advanced Scouting Touchstone";
@@ -471,6 +503,16 @@
 		1FCA7ADB1C6408B2004294D1 /* Core Data */ = {
 			isa = PBXGroup;
 			children = (
+				938BEB341E35228E003F2F74 /* Defending+CoreDataClass.swift */,
+				938BEB281E352159003F2F74 /* Defending+CoreDataProperties.swift */,
+				938BEB351E35228E003F2F74 /* FuelLoading+CoreDataClass.swift */,
+				938BEB261E352159003F2F74 /* FuelLoading+CoreDataProperties.swift */,
+				938BEB361E35228E003F2F74 /* FuelScoring+CoreDataClass.swift */,
+				938BEB271E352159003F2F74 /* FuelScoring+CoreDataProperties.swift */,
+				938BEB371E35228E003F2F74 /* GearLoading+CoreDataClass.swift */,
+				938BEB291E352159003F2F74 /* GearLoading+CoreDataProperties.swift */,
+				938BEB381E35228E003F2F74 /* GearMounting+CoreDataClass.swift */,
+				938BEB2A1E352159003F2F74 /* GearMounting+CoreDataProperties.swift */,
 				938D9CAC1E19A1B700A5E522 /* LocalEvent+CoreDataClass.swift */,
 				938D9CAD1E19A1B700A5E522 /* LocalEvent+CoreDataProperties.swift */,
 				1F1C23A91E07487C008885A1 /* Team+CoreDataClass.swift */,
@@ -513,6 +555,7 @@
 		247597E7D320F6FF4FC40A15 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				938BEB3E1E354393003F2F74 /* CoreData.framework */,
 				1FAA2A781DFE1EBE00514B9E /* Surge.xcodeproj */,
 				1F9B78241CD07C7000B4E5AE /* NYTPhotoViewer.framework */,
 				1FDE56921CCD376B009042CD /* opencv2.framework */,
@@ -818,16 +861,17 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				1F08B50E1CD32BBA00C9B7E8 /* Model.xcmappingmodel in Sources */,
 				1F718F801E0862FA00BD1951 /* GlossModels.swift in Sources */,
 				1F78E78B1C3B469300221927 /* FRC_Advanced_Scouting_Telemetrics.xcdatamodeld in Sources */,
 				1F2F9A221CE2D6E400B85A72 /* TeamListSearchResultsTableViewController.swift in Sources */,
+				938BEB2B1E352159003F2F74 /* FuelLoading+CoreDataProperties.swift in Sources */,
 				1FF1F1731C3CC74A0051EE54 /* TeamListController.swift in Sources */,
 				1F1C23C51E07487C008885A1 /* Event+CoreDataClass.swift in Sources */,
 				1F1C23D21E07487C008885A1 /* TimeMarker+CoreDataProperties.swift in Sources */,
 				1F1C23CD1E07487C008885A1 /* TeamEventPerformance+CoreDataClass.swift in Sources */,
 				1FDC1BD11CD69F5F00ABE327 /* TeamListTableViewController.swift in Sources */,
 				1F1C23D71E07487C008885A1 /* LocalTeamRanking+CoreDataClass.swift in Sources */,
+				933E794F1E385BB20033563B /* SSPreloadingViewController.swift in Sources */,
 				1F12CF141C78FD370014200C /* CourtyardViewController.swift in Sources */,
 				1FBE62811CAEF617001FDFB7 /* MatchOverviewViewController.swift in Sources */,
 				932C344C1E12DC2600A23203 /* EventInfoVC.swift in Sources */,
@@ -838,21 +882,26 @@
 				1FBE627F1CAEE0FB001FDFB7 /* TeamPickerTableViewController.swift in Sources */,
 				1F1C23DA1E07673E008885A1 /* AddEventTableViewController.swift in Sources */,
 				936572D91E14E52100439728 /* CloudRemovalManager.swift in Sources */,
+				938BEB3C1E35228E003F2F74 /* GearLoading+CoreDataClass.swift in Sources */,
 				1F1C23CE1E07487C008885A1 /* TeamEventPerformance+CoreDataProperties.swift in Sources */,
 				1F45340E1C6FC3EA004EDDB9 /* GameStatsCollectionViewCell.swift in Sources */,
 				1F78E7831C3B469300221927 /* AppDelegate.swift in Sources */,
+				938BEB2D1E352159003F2F74 /* Defending+CoreDataProperties.swift in Sources */,
 				932C344E1E12F7C400A23203 /* CloudImportManager.swift in Sources */,
 				1F1C23D31E07487C008885A1 /* Match+CoreDataClass.swift in Sources */,
 				1F718F7A1E085BD900BD1951 /* CloudConnectionManager.swift in Sources */,
+				938BEB3A1E35228E003F2F74 /* FuelLoading+CoreDataClass.swift in Sources */,
 				1F4FEDAE1C4C5DEA00F4016D /* AddTeamVC.swift in Sources */,
 				938D9CAE1E19A1B700A5E522 /* LocalEvent+CoreDataClass.swift in Sources */,
 				1FD0A09B1C95093600013A18 /* TeamListTableViewCell.swift in Sources */,
 				1F1C23CC1E07487C008885A1 /* LocalTeam+CoreDataProperties.swift in Sources */,
+				938BEB391E35228E003F2F74 /* Defending+CoreDataClass.swift in Sources */,
 				93BA59FB1E2EFCAF00171D72 /* SSOffenseViewController.swift in Sources */,
 				932CB3EA1E305B9000712725 /* SSOffenseFuelViewController.swift in Sources */,
 				1F1C23D61E07487C008885A1 /* AutonomousCycle+CoreDataProperties.swift in Sources */,
 				1F1C23C81E07487C008885A1 /* LocalMatch+CoreDataProperties.swift in Sources */,
 				1F1C23D41E07487C008885A1 /* Match+CoreDataProperties.swift in Sources */,
+				938BEB2F1E352159003F2F74 /* GearMounting+CoreDataProperties.swift in Sources */,
 				1F1C23C21E07487C008885A1 /* Team+CoreDataProperties.swift in Sources */,
 				1FBB426D1C9A29FC0017E36C /* Statistics.swift in Sources */,
 				1F51D1C61C7FFBC000B4D6C5 /* GameStatsLayout.swift in Sources */,
@@ -873,18 +922,24 @@
 				1F665D721CB1DA91003CAC1D /* DataSyncingViewController.swift in Sources */,
 				1F1C23CA1E07487C008885A1 /* LocalMatchPerformance+CoreDataProperties.swift in Sources */,
 				1F1C23D51E07487C008885A1 /* AutonomousCycle+CoreDataClass.swift in Sources */,
+				934647FC1E3188D800DC96D2 /* SSDefenseViewController.swift in Sources */,
 				1FDC1BCE1CD69EBB00ABE327 /* TeamListSplitViewController.swift in Sources */,
 				938D9CAF1E19A1B700A5E522 /* LocalEvent+CoreDataProperties.swift in Sources */,
 				1F21DF121C66942200C55D0E /* SortVC.swift in Sources */,
 				1F1C23C71E07487C008885A1 /* LocalMatch+CoreDataClass.swift in Sources */,
+				938BEB2E1E352159003F2F74 /* GearLoading+CoreDataProperties.swift in Sources */,
 				1F1C23C11E07487C008885A1 /* Team+CoreDataClass.swift in Sources */,
 				1F1C23C91E07487C008885A1 /* LocalMatchPerformance+CoreDataClass.swift in Sources */,
 				1FCA7ADA1C630BAE004294D1 /* StatsVC.swift in Sources */,
 				1F4FEDAC1C4B686000F4016D /* AdminConsoleController.swift in Sources */,
 				1F1C23841E072ECA008885A1 /* DataManager.swift in Sources */,
+				938BEB2C1E352159003F2F74 /* FuelScoring+CoreDataProperties.swift in Sources */,
 				1F12CF181C7A6CD70014200C /* Stopwatch.swift in Sources */,
 				932CB3F01E305E6C00712725 /* SSOffenseGearViewController.swift in Sources */,
+				938BEB3D1E35228E003F2F74 /* GearMounting+CoreDataClass.swift in Sources */,
+				93AE99801E3407A00000FB7C /* SSDataManager.swift in Sources */,
 				1FE2C12D1C81875A00CECBF1 /* ImageScalingFunctions.swift in Sources */,
+				938BEB3B1E35228E003F2F74 /* FuelScoring+CoreDataClass.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1228,6 +1283,9 @@
 		1F78E7891C3B469300221927 /* FRC_Advanced_Scouting_Telemetrics.xcdatamodeld */ = {
 			isa = XCVersionGroup;
 			children = (
+				933E79501E3864370033563B /* FAST 2-2-2.xcdatamodel */,
+				938BEB441E35AD82003F2F74 /* FAST 2-2-1.xcdatamodel */,
+				93AE99851E3516EF0000FB7C /* FAST 2- 2.xcdatamodel */,
 				9332F2931E22BB6E00AB3EA6 /* FAST 2-1.xcdatamodel */,
 				1FB1E88D1E061E340038D6D8 /* FAST 2.xcdatamodel */,
 				1F7AE4E01DCFF31F0029B420 /* FRC_Advanced_Scouting_Telemetrics Version 14.xcdatamodel */,
@@ -1245,7 +1303,7 @@
 				1F0296661C5C6E42008CA8C2 /* FRC_Advanced_Scouting_Telemetrics CD 2.xcdatamodel */,
 				1F78E78A1C3B469300221927 /* FRC_Advanced_Scouting_Telemetrics.xcdatamodel */,
 			);
-			currentVersion = 9332F2931E22BB6E00AB3EA6 /* FAST 2-1.xcdatamodel */;
+			currentVersion = 933E79501E3864370033563B /* FAST 2-2-2.xcdatamodel */;
 			path = FRC_Advanced_Scouting_Telemetrics.xcdatamodeld;
 			sourceTree = "<group>";
 			versionGroupType = wrapper.xcdatamodel;

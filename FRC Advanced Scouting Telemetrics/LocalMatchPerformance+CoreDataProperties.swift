@@ -2,8 +2,8 @@
 //  LocalMatchPerformance+CoreDataProperties.swift
 //  FRC Advanced Scouting Touchstone
 //
-//  Created by Aaron Kampmeier on 12/18/16.
-//  Copyright © 2016 Kampfire Technologies. All rights reserved.
+//  Created by Aaron Kampmeier on 1/24/17.
+//  Copyright © 2017 Kampfire Technologies. All rights reserved.
 //
 
 import Foundation
@@ -11,6 +11,7 @@ import CoreData
 
 
 extension LocalMatchPerformance: HasUniversalEquivalent {
+
     var universalEntityName: String {
         get {
             return "TeamMatchPerformance"
@@ -22,7 +23,7 @@ extension LocalMatchPerformance: HasUniversalEquivalent {
     static func specificFR() -> NSFetchRequest<LocalMatchPerformance> {
         return NSFetchRequest<LocalMatchPerformance>(entityName: "LocalMatchPerformance")
     }
-
+    
     @nonobjc public class func fetchRequest() -> NSFetchRequest<LocalMatchPerformance> {
         return NSFetchRequest<LocalMatchPerformance>(entityName: "LocalMatchPerformance");
     }
@@ -32,44 +33,117 @@ extension LocalMatchPerformance: HasUniversalEquivalent {
     }
 
     @NSManaged public var key: String?
-    @NSManaged public var autonomousCycles: NSOrderedSet?
+    @NSManaged public var ropeClimbStatus: String?
+    @NSManaged public var defendings: NSSet?
+    @NSManaged public var fuelLoadings: NSSet?
+    @NSManaged public var fuelScorings: NSSet?
+    @NSManaged public var gearLoadings: NSSet?
+    @NSManaged public var gearMountings: NSSet?
+    @NSManaged public var offendings: NSSet?
     @NSManaged public var timeMarkers: NSOrderedSet?
     @NSManaged public var transientUniversal: TeamMatchPerformance?
 
 }
 
-// MARK: Generated accessors for autonomousCycles
+// MARK: Generated accessors for defendings
 extension LocalMatchPerformance {
 
-    @objc(insertObject:inAutonomousCyclesAtIndex:)
-    @NSManaged public func insertIntoAutonomousCycles(_ value: AutonomousCycle, at idx: Int)
+    @objc(addDefendingsObject:)
+    @NSManaged public func addToDefendings(_ value: Defending)
 
-    @objc(removeObjectFromAutonomousCyclesAtIndex:)
-    @NSManaged public func removeFromAutonomousCycles(at idx: Int)
+    @objc(removeDefendingsObject:)
+    @NSManaged public func removeFromDefendings(_ value: Defending)
 
-    @objc(insertAutonomousCycles:atIndexes:)
-    @NSManaged public func insertIntoAutonomousCycles(_ values: [AutonomousCycle], at indexes: NSIndexSet)
+    @objc(addDefendings:)
+    @NSManaged public func addToDefendings(_ values: NSSet)
 
-    @objc(removeAutonomousCyclesAtIndexes:)
-    @NSManaged public func removeFromAutonomousCycles(at indexes: NSIndexSet)
+    @objc(removeDefendings:)
+    @NSManaged public func removeFromDefendings(_ values: NSSet)
 
-    @objc(replaceObjectInAutonomousCyclesAtIndex:withObject:)
-    @NSManaged public func replaceAutonomousCycles(at idx: Int, with value: AutonomousCycle)
+}
 
-    @objc(replaceAutonomousCyclesAtIndexes:withAutonomousCycles:)
-    @NSManaged public func replaceAutonomousCycles(at indexes: NSIndexSet, with values: [AutonomousCycle])
+// MARK: Generated accessors for fuelLoadings
+extension LocalMatchPerformance {
 
-    @objc(addAutonomousCyclesObject:)
-    @NSManaged public func addToAutonomousCycles(_ value: AutonomousCycle)
+    @objc(addFuelLoadingsObject:)
+    @NSManaged public func addToFuelLoadings(_ value: FuelLoading)
 
-    @objc(removeAutonomousCyclesObject:)
-    @NSManaged public func removeFromAutonomousCycles(_ value: AutonomousCycle)
+    @objc(removeFuelLoadingsObject:)
+    @NSManaged public func removeFromFuelLoadings(_ value: FuelLoading)
 
-    @objc(addAutonomousCycles:)
-    @NSManaged public func addToAutonomousCycles(_ values: NSOrderedSet)
+    @objc(addFuelLoadings:)
+    @NSManaged public func addToFuelLoadings(_ values: NSSet)
 
-    @objc(removeAutonomousCycles:)
-    @NSManaged public func removeFromAutonomousCycles(_ values: NSOrderedSet)
+    @objc(removeFuelLoadings:)
+    @NSManaged public func removeFromFuelLoadings(_ values: NSSet)
+
+}
+
+// MARK: Generated accessors for fuelScorings
+extension LocalMatchPerformance {
+
+    @objc(addFuelScoringsObject:)
+    @NSManaged public func addToFuelScorings(_ value: FuelScoring)
+
+    @objc(removeFuelScoringsObject:)
+    @NSManaged public func removeFromFuelScorings(_ value: FuelScoring)
+
+    @objc(addFuelScorings:)
+    @NSManaged public func addToFuelScorings(_ values: NSSet)
+
+    @objc(removeFuelScorings:)
+    @NSManaged public func removeFromFuelScorings(_ values: NSSet)
+
+}
+
+// MARK: Generated accessors for gearLoadings
+extension LocalMatchPerformance {
+
+    @objc(addGearLoadingsObject:)
+    @NSManaged public func addToGearLoadings(_ value: GearLoading)
+
+    @objc(removeGearLoadingsObject:)
+    @NSManaged public func removeFromGearLoadings(_ value: GearLoading)
+
+    @objc(addGearLoadings:)
+    @NSManaged public func addToGearLoadings(_ values: NSSet)
+
+    @objc(removeGearLoadings:)
+    @NSManaged public func removeFromGearLoadings(_ values: NSSet)
+
+}
+
+// MARK: Generated accessors for gearMountings
+extension LocalMatchPerformance {
+
+    @objc(addGearMountingsObject:)
+    @NSManaged public func addToGearMountings(_ value: GearMounting)
+
+    @objc(removeGearMountingsObject:)
+    @NSManaged public func removeFromGearMountings(_ value: GearMounting)
+
+    @objc(addGearMountings:)
+    @NSManaged public func addToGearMountings(_ values: NSSet)
+
+    @objc(removeGearMountings:)
+    @NSManaged public func removeFromGearMountings(_ values: NSSet)
+
+}
+
+// MARK: Generated accessors for offendings
+extension LocalMatchPerformance {
+
+    @objc(addOffendingsObject:)
+    @NSManaged public func addToOffendings(_ value: Defending)
+
+    @objc(removeOffendingsObject:)
+    @NSManaged public func removeFromOffendings(_ value: Defending)
+
+    @objc(addOffendings:)
+    @NSManaged public func addToOffendings(_ values: NSSet)
+
+    @objc(removeOffendings:)
+    @NSManaged public func removeFromOffendings(_ values: NSSet)
 
 }
 

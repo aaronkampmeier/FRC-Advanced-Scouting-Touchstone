@@ -17,17 +17,33 @@ class StandsScoutingViewController: UIViewController, ProvidesTeam {
 	@IBOutlet weak var segmentedControl: UISegmentedControl!
 	@IBOutlet weak var closeButton: UIButton!
     @IBOutlet weak var notesButton: UIButton!
+    @IBOutlet weak var endAutonomousButton: UIButton!
+    @IBOutlet weak var autonomousLabel: UILabel!
 	
-	var teamPerformance: TeamEventPerformance?
+	var teamEventPerformance: TeamEventPerformance?
 	var matchPerformance: TeamMatchPerformance? {
 		willSet {
-		matchAndEventLabel.text = "Event: \(teamPerformance!.event.name!)  Match: \(newValue!.match!.matchNumber!)"
+            matchAndEventLabel.text = "Event: \(teamEventPerformance!.event.name!)  Match: \(newValue!.match!.matchNumber!)"
+            ssDataManager = SSDataManager(teamBeingScouted: team, matchBeingScouted: newValue!.match!, stopwatch: stopwatch)
+            
+            //Ask for where the robot is starting
+            let startingPositionHandler: (UIAlertAction) -> Void = {alertAction in
+                let position = StartingPosition(rawValue: alertAction.title!)
+                self.ssDataManager.startingPosition = position
+            }
+            
+            let alert = UIAlertController(title: "Starting Location", message: "In what position is the robot starting?", preferredStyle: .alert)
+            for position in StartingPosition.allPositions {
+                alert.addAction(UIAlertAction(title: position.description, style: .default, handler: startingPositionHandler))
+            }
+            present(alert, animated: true, completion: nil)
 		}
 	}
 	var team: Team {
-		return teamPerformance!.team
+		return teamEventPerformance!.team
 	}
 	let dataManager = DataManager()
+    var ssDataManager: SSDataManager!
 	
 	let stopwatch = Stopwatch()
 	var isRunning = false {
@@ -37,7 +53,7 @@ class StandsScoutingViewController: UIViewController, ProvidesTeam {
 			stopwatch.start()
 			
 			//Reset previous data
-			//dataManager.discardChanges()
+			ssDataManager.rollback()
 			
 			//Update the button
 			timerButton.setTitle("Stop", for: UIControlState())
@@ -50,45 +66,52 @@ class StandsScoutingViewController: UIViewController, ProvidesTeam {
 			segmentedControl.isEnabled = true
             
             cycleFromViewController(currentVC!, toViewController: offenseVC!)
+            
+            endAutonomousButton.isHidden = false
+            autonomousLabel.isHidden = false
 		} else {
-			stopwatch.stop()
-			
-			//Update the button
-			timerButton.setTitle("Start", for: UIControlState())
-			timerButton.backgroundColor = UIColor.green
-			
-			//Set appropriate state for elements in the view
-			closeButton.isHidden = false
-			
-			//Turn off ability to select new segments
-			segmentedControl.isEnabled = false
-			
-			//Go back to the initial screen
-			cycleFromViewController(currentVC!, toViewController: initialChild!)
-			segmentedControl.selectedSegmentIndex = 0
-			
-			//Ask for the final score if it lasted longer than 2:15
-			if stopwatch.elapsedTime >= 135 {
-				finalScorePrompt = UIAlertController(title: "Final Scores", message: "Enter the final score for the alliances.", preferredStyle: .alert)
-				finalScorePrompt.addTextField() {
-					self.configureTextField($0, label: 0)
-				}
-				finalScorePrompt.addTextField() {
-					self.configureTextField($0, label: 1)
-				}
-				finalScorePrompt.addTextField() {
-					self.configureTextField($0, label: 2)
-				}
-				finalScorePrompt.addTextField() {
-					self.configureTextField($0, label: 3)
-				}
-				finalScorePrompt.addAction(UIAlertAction(title: "Save", style: .default, handler: getFinalScore))
-				present(finalScorePrompt, animated: true, completion: nil)
-			}
-			
-			Answers.logCustomEvent(withName: "Stopped Stands Scouting Timer", customAttributes: ["At Time":stopwatch.elapsedTimeAsString])
-		}
-		}
+            stopwatch.stop()
+            
+            //Update the button
+            timerButton.setTitle("Ended", for: UIControlState())
+            timerButton.backgroundColor = UIColor.gray
+            timerButton.isEnabled = false
+            
+            //Set appropriate state for elements in the view
+            closeButton.isHidden = false
+            
+            //Turn off ability to select new segments
+            segmentedControl.isEnabled = false
+            
+            //Go back to the initial screen
+            cycleFromViewController(currentVC!, toViewController: initialChild!)
+            segmentedControl.selectedSegmentIndex = 0
+            
+            //Ask for the final score if it lasted longer than 2:15
+            if stopwatch.elapsedTime >= 135 {
+                finalScorePrompt = UIAlertController(title: "Final Scores", message: "Enter the final score for the alliances.", preferredStyle: .alert)
+                finalScorePrompt.addTextField() {
+                    self.configureTextField($0, label: 0)
+                }
+                finalScorePrompt.addTextField() {
+                    self.configureTextField($0, label: 1)
+                }
+                finalScorePrompt.addTextField() {
+                    self.configureTextField($0, label: 2)
+                }
+                finalScorePrompt.addTextField() {
+                    self.configureTextField($0, label: 3)
+                }
+                finalScorePrompt.addAction(UIAlertAction(title: "Save", style: .default, handler: getFinalScore))
+                present(finalScorePrompt, animated: true, completion: nil)
+            }
+            
+            Answers.logCustomEvent(withName: "Stopped Stands Scouting Timer", customAttributes: ["At Time":stopwatch.elapsedTimeAsString])
+            
+            endAutonomousButton.isHidden = true
+            autonomousLabel.isHidden = true
+        }
+        }
 	}
 	var finalScorePrompt: UIAlertController!
 	func configureTextField(_ textField: UITextField, label: Int) {
@@ -136,20 +159,25 @@ class StandsScoutingViewController: UIViewController, ProvidesTeam {
 	var currentVC: UIViewController?
 	var initialChild: UIViewController?
     var offenseVC: SSOffenseViewController?
+    var defenseVC: SSDefenseViewController?
 
     override func viewDidLoad() {
         super.viewDidLoad()
 
         // Do any additional setup after loading the view.
-		teamLabel.text = "Team \(teamPerformance!.team.teamNumber!)"
+		teamLabel.text = "Team \(teamEventPerformance!.team.teamNumber!)"
 		
 		//Get all the view controllers
-        offenseVC = storyboard?.instantiateViewController(withIdentifier: "SSOffense") as! SSOffenseViewController
+        offenseVC = (storyboard?.instantiateViewController(withIdentifier: "SSOffense") as! SSOffenseViewController)
+        defenseVC = (storyboard?.instantiateViewController(withIdentifier: "ssDefense") as! SSDefenseViewController)
 		
 		//Make it look nice
 		timerButton.layer.cornerRadius = 10
 		closeButton.layer.cornerRadius = 10
 		notesButton.layer.cornerRadius = 10
+        
+        autonomousLabel.layer.cornerRadius = 5
+        endAutonomousButton.layer.cornerRadius = 10
     }
 	
 	override func viewWillAppear(_ animated: Bool) {
@@ -174,9 +202,11 @@ class StandsScoutingViewController: UIViewController, ProvidesTeam {
 	func setUpStandsScouting() {
 		if matchPerformance == nil {
 			//Ask for the match to use
-			let askAction = UIAlertController(title: "Select Match", message: "Select the match for Team \(teamPerformance!.team.teamNumber!) in the event \(teamPerformance!.event.name!) for stands scouting.", preferredStyle: .alert)
-			for match in (teamPerformance?.matchPerformances?.allObjects as! [TeamMatchPerformance]).sorted(by: {Int($0.match!.matchNumber!) < Int($1.match!.matchNumber!)}) {
-				askAction.addAction(UIAlertAction(title: "Match \(match.match!.matchNumber!)", style: .default, handler: {_ in self.matchPerformance = match}))
+			let askAction = UIAlertController(title: "Select Match", message: "Select the match for Team \(teamEventPerformance!.team.teamNumber!) in the event \(teamEventPerformance!.event.name!) for stands scouting.", preferredStyle: .alert)
+			for match in (teamEventPerformance?.matchPerformances?.allObjects as! [TeamMatchPerformance]).sorted(by: {Int($0.match!.matchNumber!) < Int($1.match!.matchNumber!)}) {
+				askAction.addAction(UIAlertAction(title: "Match \(match.match!.matchNumber!)", style: .default, handler: {_ in
+                    self.matchPerformance = match
+                }))
 			}
 			
 			askAction.addAction(UIAlertAction(title: "Cancel", style: .destructive) {action in
@@ -200,9 +230,13 @@ class StandsScoutingViewController: UIViewController, ProvidesTeam {
 	
 	func close(andSave shouldSave: Bool) {
 		if shouldSave {
-			dataManager.commitChanges()
+            if !ssDataManager.save() {
+                //There was a problem saving
+                let alert = UIAlertController(title: "Unable to save", message: "There was a problem saving the scouted data. This is problematic and rare; please file a bug report.", preferredStyle: .alert)
+                alert.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
+            }
 		} else {
-			dataManager.discardChanges()
+			ssDataManager.rollback()
 		}
 		
 		dismiss(animated: true, completion: nil)
@@ -210,21 +244,14 @@ class StandsScoutingViewController: UIViewController, ProvidesTeam {
 	}
     
 	@IBAction func selectedNewPart(_ sender: UISegmentedControl) {
-//		switch sender.selectedSegmentIndex {
-//		case 0:
-//			cycleFromViewController(currentVC!, toViewController: autonomousVC!)
-//		case 1:
-//			cycleFromViewController(currentVC!, toViewController: offenseVC!)
-////			dataManager.addTimeMarker(withEvent: TeamDataManager.TimeMarkerEventType.movedToOffenseCourtyard, atTime: stopwatch.elapsedTime, inMatchPerformance: matchPerformance!)
-//		case 2:
-//			cycleFromViewController(currentVC!, toViewController: neutralVC!)
-////			dataManager.addTimeMarker(withEvent: TeamDataManager.TimeMarkerEventType.movedToNeutral, atTime: stopwatch.elapsedTime, inMatchPerformance: matchPerformance!)
-//		case 3:
-//			cycleFromViewController(currentVC!, toViewController: defenseVC!)
-////			dataManager.addTimeMarker(withEvent: TeamDataManager.TimeMarkerEventType.movedToDefenseCourtyard, atTime: stopwatch.elapsedTime, inMatchPerformance: matchPerformance!)
-//		default:
-//			break
-//		}
+		switch sender.selectedSegmentIndex {
+		case 0:
+			cycleFromViewController(currentVC!, toViewController: offenseVC!)
+		case 1:
+            cycleFromViewController(currentVC!, toViewController: defenseVC!)
+		default:
+			break
+		}
 	}
 	
 	override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
@@ -255,13 +282,19 @@ class StandsScoutingViewController: UIViewController, ProvidesTeam {
 				alert.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
 				present(alert, animated: true, completion: nil)
 			} else if stopwatch.elapsedTime > 135 {
-				//Change the color of the start/stop button to be blue signifying it is safe to stop it
+				//Change the color of the start/stop button to blue signifying that it is safe to stop it.
 				timerButton.backgroundColor = UIColor.blue
-			}
+            }
 		} else {
 			timer.invalidate()
 		}
 	}
+    
+    @IBAction func endAutonomousPressed(_ sender: UIButton) {
+        ssDataManager.isAutonomous = false
+        endAutonomousButton.isHidden = true
+        autonomousLabel.isHidden = true
+    }
 	
     /*
     // MARK: - Navigation

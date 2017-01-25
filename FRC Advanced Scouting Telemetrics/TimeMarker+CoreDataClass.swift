@@ -12,7 +12,7 @@ import CoreData
 
 public class TimeMarker: NSManagedObject {
 
-	var timeMarkerEventType: TeamDataManager.TimeMarkerEventType {
-		return TeamDataManager.TimeMarkerEventType(rawValue: event!.intValue) ?? .error
+	var timeMarkerEventType: DataManager.TimeMarkerEvent {
+		return DataManager.TimeMarkerEvent(rawValue: event!) ?? .Error
 	}
 }
