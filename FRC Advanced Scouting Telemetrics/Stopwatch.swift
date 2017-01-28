@@ -30,6 +30,7 @@ class Stopwatch {
 	
 	func start() {
 		startTime = Date()
+        furthestTime = 0
 	}
 	
 	func stop() {

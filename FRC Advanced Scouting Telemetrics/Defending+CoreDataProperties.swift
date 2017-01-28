@@ -17,8 +17,9 @@ extension Defending {
     }
 
     @NSManaged public var duration: NSNumber?
-    @NSManaged public var successful: NSNumber?
+    @NSManaged public var successful: String?
     @NSManaged public var time: NSNumber?
+    @NSManaged public var type: String?
     @NSManaged public var defendingTeam: LocalMatchPerformance?
     @NSManaged public var offendingTeam: LocalMatchPerformance?
 

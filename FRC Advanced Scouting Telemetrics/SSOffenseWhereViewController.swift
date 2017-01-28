@@ -25,6 +25,9 @@ extension FASTSSButtonable {
 
 class SSOffenseWhereViewController: UIViewController {
     @IBOutlet weak var stackView: UIStackView?
+    @IBOutlet weak var prompt: UILabel!
+    
+    var promptText: String?
     
     private var buttons: [Button] = [] {
         didSet {
@@ -58,6 +61,10 @@ class SSOffenseWhereViewController: UIViewController {
         //Reload the views in the stack view
         let buttons = self.buttons
         self.buttons = buttons
+        
+        if let text = promptText {
+            self.prompt.text = text
+        }
     }
 
     override func didReceiveMemoryWarning() {
@@ -68,6 +75,10 @@ class SSOffenseWhereViewController: UIViewController {
     func setUpWithButtons(buttons: [Button], time: TimeInterval) {
         self.buttons = buttons
         self.cushionTime = time
+    }
+    
+    func setPrompt(to prompt: String) {
+        promptText = prompt
     }
     
     func reset() {

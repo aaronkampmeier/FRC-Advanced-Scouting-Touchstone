@@ -79,6 +79,7 @@ class SSOffenseFuelViewController: UIViewController {
         ssDataManager.setAssociatedFuelIncrease(withFuelIncrease: currentFuelTankLevel - Double(sender.value))
         currentFuelTankLevel = Double(sender.value)
         fuelTankSlider.slider.isEnabled = false
+        setFuelIncreaseLabel.isHidden = true
     }
     
     // MARK: - Navigation

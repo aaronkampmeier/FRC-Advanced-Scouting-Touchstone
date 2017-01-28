@@ -131,14 +131,15 @@ class SSDataManager {
     }
     
     //MARK: - Defendings
-    func recordDefending(defendingTeam: TeamMatchPerformance, didDefendOffensiveTeam offendingTeam: TeamMatchPerformance, atTime time: TimeInterval, forDuration duration: TimeInterval, successfully successful: Bool) {
+    func recordDefending(didDefendOffensiveTeam offendingTeam: TeamMatchPerformance, withType type: String, atTime time: TimeInterval, forDuration duration: TimeInterval, successfully successful: String) {
         let defendingObject = Defending(entity: NSEntityDescription.entity(forEntityName: "Defending", in: managedContext)!, insertInto: managedContext)
         
-        defendingObject.defendingTeam = defendingTeam.local
+        defendingObject.defendingTeam = scoutedMatchPerformance.local
         defendingObject.offendingTeam = offendingTeam.local
         
+        defendingObject.type = type
         defendingObject.time = time as NSNumber
         defendingObject.duration = duration as NSNumber
-        defendingObject.successful = successful as NSNumber
+        defendingObject.successful = successful
     }
 }

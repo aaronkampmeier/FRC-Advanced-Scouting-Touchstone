@@ -253,6 +253,17 @@ enum RopeClimbStatus: String, CustomStringConvertible {
     }
 }
 
+enum DefenseType: String, CustomStringConvertible {
+    case Shooting
+    case Moving
+    
+    var description: String {
+        get {
+            return self.rawValue
+        }
+    }
+}
+
 
 //MARK: - Universal-Local Translations
 

@@ -27,16 +27,16 @@ class StandsScoutingViewController: UIViewController, ProvidesTeam {
             ssDataManager = SSDataManager(teamBeingScouted: team, matchBeingScouted: newValue!.match!, stopwatch: stopwatch)
             
             //Ask for where the robot is starting
-            let startingPositionHandler: (UIAlertAction) -> Void = {alertAction in
-                let position = StartingPosition(rawValue: alertAction.title!)
-                self.ssDataManager.startingPosition = position
-            }
-            
-            let alert = UIAlertController(title: "Starting Location", message: "In what position is the robot starting?", preferredStyle: .alert)
-            for position in StartingPosition.allPositions {
-                alert.addAction(UIAlertAction(title: position.description, style: .default, handler: startingPositionHandler))
-            }
-            present(alert, animated: true, completion: nil)
+//            let startingPositionHandler: (UIAlertAction) -> Void = {alertAction in
+//                let position = StartingPosition(rawValue: alertAction.title!)
+//                self.ssDataManager.startingPosition = position
+//            }
+//            
+//            let alert = UIAlertController(title: "Starting Location", message: "In what position is the robot starting?", preferredStyle: .alert)
+//            for position in StartingPosition.allPositions {
+//                alert.addAction(UIAlertAction(title: position.description, style: .default, handler: startingPositionHandler))
+//            }
+//            present(alert, animated: true, completion: nil)
 		}
 	}
 	var team: Team {
