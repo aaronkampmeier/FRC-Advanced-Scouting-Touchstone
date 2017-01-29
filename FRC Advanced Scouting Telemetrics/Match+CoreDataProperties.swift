@@ -34,6 +34,8 @@ extension Match: HasLocalEquivalent {
     @NSManaged public var key: String?
     @NSManaged public var matchNumber: NSNumber?
     @NSManaged public var time: NSDate?
+    @NSManaged public var competitionLevel: String?
+    @NSManaged public var setNumber: NSNumber?
     @NSManaged public var event: Event?
     @NSManaged public var teamPerformances: NSSet?
     @NSManaged public var transientLocal: LocalMatch?

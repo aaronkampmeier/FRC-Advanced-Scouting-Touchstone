@@ -209,6 +209,22 @@ class CloudEventImportManager {
                 
                 match.key = frcMatch.key
                 match.matchNumber = frcMatch.matchNumber as NSNumber
+                switch frcMatch.competitionLevel {
+                case "qm":
+                    match.competitionLevel = Match.CompetitionLevel.Qualifier.rawValue
+                case "ef":
+                    match.competitionLevel = Match.CompetitionLevel.Eliminator.rawValue
+                case "sf":
+                    match.competitionLevel = Match.CompetitionLevel.SemiFinal.rawValue
+                case "qf":
+                    match.competitionLevel = Match.CompetitionLevel.QuarterFinal.rawValue
+                case "f":
+                    match.competitionLevel = Match.CompetitionLevel.Final.rawValue
+                default:
+                    self.completionHandler(false, ImportError.InvalidCompetitionLevel)
+                    return
+                }
+                match.setNumber = frcMatch.setNumber as? NSNumber
                 match.time = frcMatch.time
                 
                 match.event = eventObject
@@ -309,5 +325,6 @@ class CloudEventImportManager {
         case ErrorLoadingMatches
         case EventAlreadyInDatabase
         case MatchTeamNotInRoster
+        case InvalidCompetitionLevel
     }
 }

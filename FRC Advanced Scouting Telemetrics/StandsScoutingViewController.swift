@@ -23,7 +23,7 @@ class StandsScoutingViewController: UIViewController, ProvidesTeam {
 	var teamEventPerformance: TeamEventPerformance?
 	var matchPerformance: TeamMatchPerformance? {
 		willSet {
-            matchAndEventLabel.text = "Event: \(teamEventPerformance!.event.name!)  Match: \(newValue!.match!.matchNumber!)"
+            matchAndEventLabel.text = "\(teamEventPerformance!.event.name!)  \(newValue!.match!.competitionLevel!) \(newValue!.match!.matchNumber!)"
             ssDataManager = SSDataManager(teamBeingScouted: team, matchBeingScouted: newValue!.match!, stopwatch: stopwatch)
             
             //Ask for where the robot is starting
@@ -203,8 +203,17 @@ class StandsScoutingViewController: UIViewController, ProvidesTeam {
 		if matchPerformance == nil {
 			//Ask for the match to use
 			let askAction = UIAlertController(title: "Select Match", message: "Select the match for Team \(teamEventPerformance!.team.teamNumber!) in the event \(teamEventPerformance!.event.name!) for stands scouting.", preferredStyle: .alert)
-			for match in (teamEventPerformance?.matchPerformances?.allObjects as! [TeamMatchPerformance]).sorted(by: {Int($0.match!.matchNumber!) < Int($1.match!.matchNumber!)}) {
-				askAction.addAction(UIAlertAction(title: "Match \(match.match!.matchNumber!)", style: .default, handler: {_ in
+            let sortedMatchPerformances = (teamEventPerformance?.matchPerformances?.allObjects as! [TeamMatchPerformance]).sorted() {(firstMatchPerformance, secondMatchPerformance) in
+                if firstMatchPerformance.match!.competitionLevelEnum.rankedPosition > secondMatchPerformance.match!.competitionLevelEnum.rankedPosition {
+                    return true
+                } else if firstMatchPerformance.match!.competitionLevelEnum.rankedPosition == secondMatchPerformance.match!.competitionLevelEnum.rankedPosition {
+                    return firstMatchPerformance.match!.matchNumber!.intValue < secondMatchPerformance.match!.matchNumber!.intValue
+                } else {
+                    return false
+                }
+            }
+			for match in sortedMatchPerformances {
+				askAction.addAction(UIAlertAction(title: "\(match.match!.competitionLevel!) \(match.match!.matchNumber!)", style: .default, handler: {_ in
                     self.matchPerformance = match
                 }))
 			}

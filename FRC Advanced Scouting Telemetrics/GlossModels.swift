@@ -158,7 +158,7 @@ struct FRCTeam: Decodable {
 struct FRCMatch: Decodable {
 	
 	let key: String
-	let competitionLevel: String?
+	let competitionLevel: String
 	let setNumber: Int?
 	let matchNumber: Int
 	let alliances: [String:FRCAlliance]?
@@ -169,13 +169,17 @@ struct FRCMatch: Decodable {
 	let time: NSDate?
 	
 	init?(json: JSON) {
-		self.competitionLevel = "competitionLevel" <~~ json
 		self.setNumber = "set_number" <~~ json
 		self.alliances = "alliances" <~~ json
 		self.scoreBreakdown = "score_breakdown" <~~ json
 		self.videos = "videos" <~~ json
 		self.timeString = "time_string" <~~ json
 		
+        guard let competitionLevel: String = "comp_level" <~~ json else {
+            return nil
+        }
+        self.competitionLevel = competitionLevel
+        
 		if let time: TimeInterval = "time" <~~ json {
 			self.time = NSDate(timeIntervalSince1970: time)
 		} else {
