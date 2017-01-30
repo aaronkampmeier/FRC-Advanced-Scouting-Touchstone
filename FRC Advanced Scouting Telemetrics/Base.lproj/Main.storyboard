@@ -1501,7 +1501,7 @@
                 <placeholder placeholderIdentifier="IBFirstResponder" id="zmc-do-lhb" userLabel="First Responder" sceneMemberID="firstResponder"/>
                 <exit id="v9l-x2-2jm" userLabel="Exit" sceneMemberID="exit"/>
             </objects>
-            <point key="canvasLocation" x="2860" y="-1870"/>
+            <point key="canvasLocation" x="3584.1796874999995" y="-1870.3125"/>
         </scene>
         <!--Admin Console-->
         <scene sceneID="Yzd-UE-rvJ">
@@ -1623,6 +1623,72 @@
                 <placeholder placeholderIdentifier="IBFirstResponder" id="gC4-aX-KMf" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="2954.6875" y="-1211.1328125"/>
+        </scene>
+        <!--Game Field Location Selector-->
+        <scene sceneID="TOc-ah-3BF">
+            <objects>
+                <viewController modalPresentationStyle="formSheet" id="Snc-Mq-ApJ" customClass="GameFieldLocationViewController" customModule="FRC_Advanced_Scouting_Touchstone" customModuleProvider="target" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="M4r-rv-3Lu"/>
+                        <viewControllerLayoutGuide type="bottom" id="Sfe-Dw-VhZ"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="Iij-Dl-kZ4">
+                        <rect key="frame" x="0.0" y="0.0" width="700" height="400"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="FmJ-Ad-uMX">
+                                <rect key="frame" x="20" y="89" width="660" height="311"/>
+                                <gestureRecognizers/>
+                            </imageView>
+                            <view contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="lJB-Dv-nLT">
+                                <rect key="frame" x="481" y="74" width="140" height="72"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <gestureRecognizers/>
+                                <connections>
+                                    <outletCollection property="gestureRecognizers" destination="m7c-My-c5U" appends="YES" id="SbE-uD-wh0"/>
+                                </connections>
+                            </view>
+                        </subviews>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <constraints>
+                            <constraint firstItem="FmJ-Ad-uMX" firstAttribute="leading" secondItem="Iij-Dl-kZ4" secondAttribute="leadingMargin" id="Y9W-br-nDQ"/>
+                            <constraint firstItem="Sfe-Dw-VhZ" firstAttribute="top" secondItem="FmJ-Ad-uMX" secondAttribute="bottom" id="bXp-Am-f00"/>
+                            <constraint firstItem="FmJ-Ad-uMX" firstAttribute="top" secondItem="M4r-rv-3Lu" secondAttribute="bottom" constant="15" id="sUK-mX-KvI"/>
+                            <constraint firstAttribute="trailingMargin" secondItem="FmJ-Ad-uMX" secondAttribute="trailing" id="zFc-H5-TZd"/>
+                        </constraints>
+                    </view>
+                    <navigationItem key="navigationItem" title="Game Field Location Selector" prompt="Tap to select a location" id="unP-cr-DZ3">
+                        <barButtonItem key="leftBarButtonItem" systemItem="cancel" id="jC1-eT-PK3">
+                            <connections>
+                                <action selector="cancelButtonPressed:" destination="Snc-Mq-ApJ" id="EAF-ii-9EL"/>
+                            </connections>
+                        </barButtonItem>
+                        <barButtonItem key="rightBarButtonItem" enabled="NO" systemItem="done" id="lPR-kY-OR3">
+                            <connections>
+                                <action selector="doneButtonPressed:" destination="Snc-Mq-ApJ" id="eJI-cR-U9v"/>
+                            </connections>
+                        </barButtonItem>
+                    </navigationItem>
+                    <nil key="simulatedStatusBarMetrics"/>
+                    <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
+                    <size key="freeformSize" width="700" height="400"/>
+                    <connections>
+                        <outlet property="doneButton" destination="lPR-kY-OR3" id="TVT-vm-uSK"/>
+                        <outlet property="imageView" destination="FmJ-Ad-uMX" id="edg-Jw-HXW"/>
+                        <outlet property="invisibleView" destination="lJB-Dv-nLT" id="ffJ-FB-CDw"/>
+                        <outlet property="tapGestureRecognizer" destination="m7c-My-c5U" id="jWM-lR-maE"/>
+                        <segue destination="pvt-AN-B87" kind="unwind" identifier="rewindToFuel" unwindAction="rewindToSSOffenseFuelWithSegue:" id="Ex8-OL-8un"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="10c-11-H82" userLabel="First Responder" sceneMemberID="firstResponder"/>
+                <exit id="pvt-AN-B87" userLabel="Exit" sceneMemberID="exit"/>
+                <tapGestureRecognizer id="m7c-My-c5U">
+                    <connections>
+                        <action selector="tappedOnImage:" destination="Snc-Mq-ApJ" id="eFE-Hw-3p8"/>
+                    </connections>
+                </tapGestureRecognizer>
+            </objects>
+            <point key="canvasLocation" x="545.5078125" y="-1677.34375"/>
         </scene>
         <!--Defense View Controller-->
         <scene sceneID="YvW-9h-rrI">
@@ -1953,7 +2019,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="TkO-Qx-8tL" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="882" y="-1845"/>
+            <point key="canvasLocation" x="974" y="-1832"/>
         </scene>
         <!--Offense Where View Controller-->
         <scene sceneID="e4x-dO-vBk">
@@ -2012,7 +2078,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="GSh-h5-j66" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1159" y="-1933"/>
+            <point key="canvasLocation" x="1252" y="-1920"/>
         </scene>
         <!--Offense Gear View Controller-->
         <scene sceneID="0J8-ff-7Ar">
@@ -2108,7 +2174,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="zQn-xs-Jdv" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1433" y="-1845"/>
+            <point key="canvasLocation" x="1525" y="-1832"/>
         </scene>
         <!--Offense View Controller-->
         <scene sceneID="M4u-ZV-L3t">
@@ -2395,6 +2461,42 @@
                 <placeholder placeholderIdentifier="IBFirstResponder" id="iHX-y4-ITb" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="629" y="-116"/>
+        </scene>
+        <!--Rope Climb View Controller-->
+        <scene sceneID="COb-Fl-QZt">
+            <objects>
+                <viewController storyboardIdentifier="ssRopeVC" id="yse-mn-CbX" customClass="SSRopeClimbViewController" customModule="FRC_Advanced_Scouting_Touchstone" customModuleProvider="target" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="0tG-qh-luZ"/>
+                        <viewControllerLayoutGuide type="bottom" id="5Tp-p0-cv8"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="TYq-JO-fU2">
+                        <rect key="frame" x="0.0" y="0.0" width="500" height="500"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <containerView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="mu7-8H-gSn">
+                                <rect key="frame" x="138" y="150" width="250" height="200"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="200" id="9Nx-Q7-ayr"/>
+                                    <constraint firstAttribute="width" constant="250" id="aLw-jK-8XH"/>
+                                </constraints>
+                                <connections>
+                                    <segue destination="sZF-O6-HBB" kind="embed" identifier="ropeClimbSuccessful" id="FVi-Lv-0Ps"/>
+                                </connections>
+                            </containerView>
+                        </subviews>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <constraints>
+                            <constraint firstItem="mu7-8H-gSn" firstAttribute="centerY" secondItem="TYq-JO-fU2" secondAttribute="centerY" id="VuV-uV-TnZ"/>
+                            <constraint firstItem="mu7-8H-gSn" firstAttribute="centerX" secondItem="TYq-JO-fU2" secondAttribute="centerX" constant="13" id="w2w-pu-kVm"/>
+                        </constraints>
+                    </view>
+                    <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
+                    <size key="freeformSize" width="500" height="500"/>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="Rsa-W2-LYI" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="908" y="24"/>
         </scene>
         <!--Preloading View Controller-->
         <scene sceneID="Tzo-tk-2m4">
@@ -2875,7 +2977,7 @@
                             </connections>
                         </barButtonItem>
                         <button key="titleView" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" id="bD3-zr-aia">
-                            <rect key="frame" x="75" y="6" width="170" height="33"/>
+                            <rect key="frame" x="75" y="5.5" width="170" height="33"/>
                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                             <fontDescription key="fontDescription" style="UICTFontTextStyleHeadline"/>
                             <state key="normal" title="Select Event"/>
@@ -3427,7 +3529,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="gJa-hc-bbI" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="3362" y="-1546"/>
+            <point key="canvasLocation" x="4085.7421874999995" y="-1546.09375"/>
         </scene>
         <!--Navigation Controller-->
         <scene sceneID="xcf-9e-ZQ4">
@@ -3446,6 +3548,26 @@
                 <placeholder placeholderIdentifier="IBFirstResponder" id="h2a-lG-ejY" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="3344" y="-1034"/>
+        </scene>
+        <!--Navigation Controller-->
+        <scene sceneID="Qlv-5H-GZu">
+            <objects>
+                <navigationController storyboardIdentifier="gameFieldLocationNav" automaticallyAdjustsScrollViewInsets="NO" modalPresentationStyle="formSheet" id="zWi-tL-Ysb" sceneMemberID="viewController">
+                    <toolbarItems/>
+                    <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
+                    <size key="freeformSize" width="200" height="200"/>
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="0h5-RI-Zq7">
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="44"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                    </navigationBar>
+                    <nil name="viewControllers"/>
+                    <connections>
+                        <segue destination="Snc-Mq-ApJ" kind="relationship" relationship="rootViewController" id="ULW-3P-NEs"/>
+                    </connections>
+                </navigationController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="Zf4-9J-dqo" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="244" y="-1673"/>
         </scene>
     </scenes>
     <resources>
@@ -3469,6 +3591,6 @@
         <image name="Team Picker" width="27" height="27"/>
     </resources>
     <inferredMetricsTieBreakers>
-        <segue reference="Bvp-ac-LRh"/>
+        <segue reference="FVi-Lv-0Ps"/>
     </inferredMetricsTieBreakers>
 </document>

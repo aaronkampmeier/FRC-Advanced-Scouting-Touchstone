@@ -10,6 +10,7 @@ import UIKit
 import SSBouncyButton
 
 protocol WhereDelegate {
+    func shouldSelect(_ whereVC: SSOffenseWhereViewController, id: String, handler: @escaping (Bool)->Void)
     func selected(_ whereVC: SSOffenseWhereViewController, id: String)
 }
 
@@ -108,14 +109,28 @@ class SSOffenseWhereViewController: UIViewController {
         }
         let selectedButton = buttons[index!]
         
-        currentScheduledTask?.cancel()
-        
-        currentScheduledTask = DispatchWorkItem {
-            self.hide()
-            self.delegate?.selected(self, id: selectedButton.id)
+        delegate?.shouldSelect(self, id: selectedButton.id) {self.select(buttonToSelect: sender, shouldSelect: $0)}
+    }
+    
+    func select(buttonToSelect: SSBouncyButton, shouldSelect: Bool) {
+        let index = buttons.index() {button in
+            return button.title == buttonToSelect.title(for: .normal)
         }
+        let selectedButton = buttons[index!]
         
-        DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + cushionTime, execute: currentScheduledTask!)
+        if shouldSelect {
+            buttonToSelect.isSelected = true
+            
+            currentScheduledTask?.cancel()
+            
+            currentScheduledTask = DispatchWorkItem {
+                self.hide()
+                self.delegate?.selected(self, id: selectedButton.id)
+            }
+            DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + cushionTime, execute: currentScheduledTask!)
+        } else {
+            buttonToSelect.isSelected = false
+        }
     }
     
     struct Button {

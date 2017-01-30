@@ -175,4 +175,8 @@ extension SSDefenseViewController: WhereDelegate {
             ssDataManager.recordDefending(didDefendOffensiveTeam: selectedOpposingTeam!, withType: lastDefendingType!.description, atTime: ssDataManager.stopwatch.elapsedTime, forDuration: stopwatch.elapsedTime, successfully: id)
         }
     }
+    
+    func shouldSelect(_ whereVC: SSOffenseWhereViewController, id: String, handler: @escaping (Bool) -> Void) {
+        handler(true)
+    }
 }

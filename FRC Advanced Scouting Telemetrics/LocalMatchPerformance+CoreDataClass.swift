@@ -11,5 +11,15 @@ import CoreData
 
 
 public class LocalMatchPerformance: NSManagedObject {
-    
+    enum RopeClimbSuccess: String, CustomStringConvertible {
+        case Yes
+        case Somewhat
+        case No
+        
+        var description: String {
+            get {
+                return self.rawValue
+            }
+        }
+    }
 }

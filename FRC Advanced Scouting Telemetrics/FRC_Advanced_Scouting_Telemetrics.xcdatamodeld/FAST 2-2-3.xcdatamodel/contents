@@ -32,8 +32,8 @@
         <attribute name="goal" attributeType="String" syncable="YES"/>
         <attribute name="isAutonomous" attributeType="Boolean" defaultValueString="NO" usesScalarValueType="NO" syncable="YES"/>
         <attribute name="time" attributeType="Double" defaultValueString="0.0" usesScalarValueType="NO" syncable="YES"/>
-        <attribute name="xLocation" attributeType="Double" defaultValueString="0.0" usesScalarValueType="NO" syncable="YES"/>
-        <attribute name="yLocation" attributeType="Double" defaultValueString="0.0" usesScalarValueType="NO" syncable="YES"/>
+        <attribute name="xLocation" attributeType="Double" minValueString="0" maxValueString="1" defaultValueString="0.0" usesScalarValueType="NO" syncable="YES"/>
+        <attribute name="yLocation" attributeType="Double" minValueString="0" maxValueString="1" defaultValueString="0.0" usesScalarValueType="NO" syncable="YES"/>
         <relationship name="localMatchPerformance" maxCount="1" deletionRule="Nullify" destinationEntity="LocalMatchPerformance" inverseName="fuelScorings" inverseEntity="LocalMatchPerformance" syncable="YES"/>
     </entity>
     <entity name="GearLoading" representedClassName=".GearLoading" syncable="YES">
@@ -63,7 +63,7 @@
     </entity>
     <entity name="LocalMatchPerformance" representedClassName=".LocalMatchPerformance" syncable="YES">
         <attribute name="key" attributeType="String" syncable="YES"/>
-        <attribute name="ropeClimbStatus" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="ropeClimbStatus" attributeType="String" defaultValueString="No" syncable="YES"/>
         <relationship name="defendings" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="Defending" inverseName="defendingTeam" inverseEntity="Defending" syncable="YES"/>
         <relationship name="fuelLoadings" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="FuelLoading" inverseName="localMatchPerformance" inverseEntity="FuelLoading" syncable="YES"/>
         <relationship name="fuelScorings" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="FuelScoring" inverseName="localMatchPerformance" inverseEntity="FuelScoring" syncable="YES"/>

@@ -83,8 +83,8 @@ class StandsScoutingViewController: UIViewController, ProvidesTeam {
             //Turn off ability to select new segments
             segmentedControl.isEnabled = false
             
-            //Go back to the initial screen
-            cycleFromViewController(currentVC!, toViewController: initialChild!)
+            //Cycle to the rope view controller
+            cycleFromViewController(currentVC!, toViewController: ropeVC!)
             segmentedControl.selectedSegmentIndex = 0
             
             //Ask for the final score if it lasted longer than 2:15
@@ -110,6 +110,9 @@ class StandsScoutingViewController: UIViewController, ProvidesTeam {
             
             endAutonomousButton.isHidden = true
             autonomousLabel.isHidden = true
+            
+            //Notify Others
+            NotificationCenter.default.post(name: NSNotification.Name(rawValue: "StandsScoutingEnded"), object: self)
         }
         }
 	}
@@ -160,6 +163,7 @@ class StandsScoutingViewController: UIViewController, ProvidesTeam {
 	var initialChild: UIViewController?
     var offenseVC: SSOffenseViewController?
     var defenseVC: SSDefenseViewController?
+    var ropeVC: SSRopeClimbViewController?
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -170,6 +174,7 @@ class StandsScoutingViewController: UIViewController, ProvidesTeam {
 		//Get all the view controllers
         offenseVC = (storyboard?.instantiateViewController(withIdentifier: "SSOffense") as! SSOffenseViewController)
         defenseVC = (storyboard?.instantiateViewController(withIdentifier: "ssDefense") as! SSDefenseViewController)
+        ropeVC = (storyboard?.instantiateViewController(withIdentifier: "ssRopeVC") as! SSRopeClimbViewController)
 		
 		//Make it look nice
 		timerButton.layer.cornerRadius = 10
@@ -287,7 +292,7 @@ class StandsScoutingViewController: UIViewController, ProvidesTeam {
 			
 			if stopwatch.elapsedTime > 160 {
 				isRunning = false
-				let alert = UIAlertController(title: "Too Long", message: "The match should have ended at 2 minutes 30 seconds; the timer has already passed that and automatically stopped. All data will be saved unless the timer is started again.", preferredStyle: .alert)
+				let alert = UIAlertController(title: "Timer Exceeded Limit", message: "The match should have ended at 2 minutes 30 seconds; the timer has already passed that and automatically stopped. All data will be saved.", preferredStyle: .alert)
 				alert.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
 				present(alert, animated: true, completion: nil)
 			} else if stopwatch.elapsedTime > 135 {

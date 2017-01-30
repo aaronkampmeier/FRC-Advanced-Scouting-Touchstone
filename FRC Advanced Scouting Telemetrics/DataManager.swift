@@ -206,11 +206,6 @@ class DataManager {
         }
         return matches
     }
-	
-	enum Alliance: String {
-		case Red = "Red"
-		case Blue = "Blue"
-	}
     
     enum TimeMarkerEvent: String, CustomStringConvertible {
         case LoadedFuel

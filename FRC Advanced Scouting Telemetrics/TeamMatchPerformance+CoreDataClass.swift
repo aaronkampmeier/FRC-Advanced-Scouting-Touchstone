@@ -12,6 +12,11 @@ import Crashlytics
 
 public class TeamMatchPerformance: NSManagedObject {
     
+    enum Alliance: String {
+        case Red = "Red"
+        case Blue = "Blue"
+    }
+    
     var rankingPoints: Int {
         switch allianceColor {
         case "Blue":

@@ -118,4 +118,8 @@ extension SSOffenseGearViewController: WhereDelegate {
             break
         }
     }
+    
+    func shouldSelect(_ whereVC: SSOffenseWhereViewController, id: String, handler: @escaping (Bool) -> Void) {
+        handler(true)
+    }
 }

@@ -142,4 +142,9 @@ class SSDataManager {
         defendingObject.duration = duration as NSNumber
         defendingObject.successful = successful
     }
+    
+    //MARK: - Rope
+    func recordRopeClimb(successful: LocalMatchPerformance.RopeClimbSuccess.RawValue) {
+        scoutedMatchPerformance.local.ropeClimbStatus = successful
+    }
 }

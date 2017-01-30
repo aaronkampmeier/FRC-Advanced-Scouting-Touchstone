@@ -9,25 +9,20 @@
 import Foundation
 import CoreGraphics
 
-struct ImageConstants {
-	static let offenseImageStoredSize = CGSize(width: 454, height: 698)
-	static let defenseImageStoredSize = CGSize(width: 471, height: 728)
+func translatePointToRelativePoint(point: CGPoint, withCurrentSize currentSize: CGSize) -> CGPoint {
+    let newX = point.x / currentSize.width
+    let newY = point.y / currentSize.height
+    
+    return CGPoint(x: newX, y: newY)
 }
 
-func translatePointCoordinateToStoredCordinate(_ point: CGPoint, viewSize: CGSize, storedSize: CGSize) -> CGPoint {
-	return translatePoint(point, fromSize: viewSize, toSize: storedSize)
+func translateRelativePointToPoint(relativePoint: CGPoint, toSize newSize: CGSize) -> CGPoint {
+    let newX = relativePoint.x * newSize.width
+    let newY = relativePoint.y * newSize.height
+    
+    return CGPoint(x: newX, y: newY)
 }
 
-func translateStoredCoordinateToPoint(_ storedCoordinate: CGPoint, storedSize: CGSize, viewSize: CGSize) -> CGPoint {
-	return translatePoint(storedCoordinate, fromSize: storedSize, toSize: viewSize)
-}
-
-func translatePoint(_ point: CGPoint, fromSize oldSize: CGSize, toSize newSize: CGSize) -> CGPoint {
-	let xRatio = point.x/oldSize.width
-	let newX = xRatio * newSize.width
-	
-	let yRatio = point.y/oldSize.height
-	let newY = yRatio * newSize.height
-	
-	return CGPoint(x: newX, y: newY)
+func translatePoint(point: CGPoint, fromSize oldSize: CGSize, toSize newSize: CGSize) -> CGPoint {
+    return translateRelativePointToPoint(relativePoint: translatePointToRelativePoint(point: point, withCurrentSize: oldSize), toSize: newSize)
 }

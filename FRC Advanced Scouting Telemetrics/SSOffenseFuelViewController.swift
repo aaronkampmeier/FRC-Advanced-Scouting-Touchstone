@@ -42,6 +42,9 @@ class SSOffenseFuelViewController: UIViewController {
         }
     }
     
+    var lastSelectedShotLocation: CGPoint?
+    var lastScoringShouldSelectHandler: ((Bool)->Void)?
+    
     var currentFuelTankLevel = 0.0
 
     override func viewDidLoad() {
@@ -119,6 +122,10 @@ class SSOffenseFuelViewController: UIViewController {
             return self.rawValue
         }
     }
+    
+    @IBAction func rewindToSSOffenseFuel(withSegue segue: UIStoryboardSegue) {
+        
+    }
 }
 
 extension SSOffenseFuelViewController: WhereDelegate {
@@ -128,10 +135,40 @@ extension SSOffenseFuelViewController: WhereDelegate {
             ssDataManager.recordFuelLoading(location: id, atTime: ssDataManager.stopwatch.elapsedTime)
             hasLoadedFuel = true
         case scoringWhereVC:
-            ssDataManager.recordFuelScoring(inGoal: id, atTime: ssDataManager.stopwatch.elapsedTime, scoredFrom: CGPoint(x: 8, y: 8))
+            ssDataManager.recordFuelScoring(inGoal: id, atTime: ssDataManager.stopwatch.elapsedTime, scoredFrom: lastSelectedShotLocation ?? CGPoint(x: 0, y: 0))
             hasLoadedFuel = false
         default:
             break
         }
+    }
+    
+    func shouldSelect(_ whereVC: SSOffenseWhereViewController, id: String, handler: @escaping (Bool) -> Void) {
+        switch whereVC {
+        case loadingWhereVC:
+            handler(true)
+        case scoringWhereVC:
+            if id == FuelScoringLocations.HighGoal.rawValue {
+                lastScoringShouldSelectHandler = handler
+                let gameFieldLocationNav = storyboard?.instantiateViewController(withIdentifier: "gameFieldLocationNav") as! UINavigationController
+                let gameFieldLocation = gameFieldLocationNav.topViewController as! GameFieldLocationViewController
+                gameFieldLocation.delegate = self
+                present(gameFieldLocationNav, animated: true, completion: nil)
+            } else {
+                handler(true)
+            }
+        default:
+            break
+        }
+    }
+}
+
+extension SSOffenseFuelViewController: GameFieldLocationDelegate {
+    func selectedRelativePoint(point: CGPoint) {
+        lastSelectedShotLocation = point
+        lastScoringShouldSelectHandler?(true)
+    }
+    
+    func canceled() {
+        lastScoringShouldSelectHandler?(false)
     }
 }
