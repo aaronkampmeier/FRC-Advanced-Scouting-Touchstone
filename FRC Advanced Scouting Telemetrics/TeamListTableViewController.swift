@@ -36,6 +36,7 @@ class TeamListTableViewController: UITableViewController, UISearchControllerDele
 			}
 		}
 	}
+    var isSortingAscending: Bool = false
 	var currentSortedTeams: [ObjectPair<Team, LocalTeam>]? {
 		didSet {
 			if let teams = currentSortedTeams {
@@ -343,6 +344,8 @@ class TeamListTableViewController: UITableViewController, UISearchControllerDele
 	}
 	
 	func sortList(withStat statName: String, isAscending ascending: Bool) {
+        self.isSortingAscending = ascending
+        
         let teamStat = Team.StatName(rawValue: statName)
         let eventPerformanceStat = TeamEventPerformance.StatName(rawValue: statName)
         
@@ -356,9 +359,9 @@ class TeamListTableViewController: UITableViewController, UISearchControllerDele
                 currentSortedTeams = currentTeams.sorted {objectPair1, objectPair2 in
                     let isBefore = objectPair1.universal.statValue(forStat: stat).numericValue > objectPair2.universal.statValue(forStat: stat).numericValue
                     if ascending {
-                        return isBefore
-                    } else {
                         return !isBefore
+                    } else {
+                        return isBefore
                     }
                 }
                 
@@ -372,11 +375,20 @@ class TeamListTableViewController: UITableViewController, UISearchControllerDele
                 let firstTeamEventPerformance: TeamEventPerformance = dataManager.eventPerformance(forTeam: objectPair1.universal, inEvent: selectedEvent!)
                 let secondTeamEventPerformance: TeamEventPerformance = dataManager.eventPerformance(forTeam: objectPair2.universal, inEvent: selectedEvent!)
                 
-                let isBefore = firstTeamEventPerformance.statValue(forStat: stat).numericValue > secondTeamEventPerformance.statValue(forStat: stat).numericValue
+                let firstStatValue = firstTeamEventPerformance.statValue(forStat: stat).numericValue
+                let secondStatValue = secondTeamEventPerformance.statValue(forStat: stat).numericValue
+                
+                if firstStatValue.isNaN {
+                    return false
+                } else if secondStatValue.isNaN {
+                    return true
+                }
+                
+                let isBefore = firstStatValue > secondStatValue
                 if ascending {
-                    return isBefore
-                } else {
                     return !isBefore
+                } else {
+                    return isBefore
                 }
             }
             
@@ -421,5 +433,9 @@ extension TeamListTableViewController: SortDelegate {
     
     func currentStat() -> String {
         return statToSortBy
+    }
+    
+    func isAscending() -> Bool {
+        return isSortingAscending
     }
 }

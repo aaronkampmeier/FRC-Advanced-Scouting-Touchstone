@@ -85,11 +85,15 @@ extension TeamEventPerformance {
 ///Evaluates OPR using YCMatrix and the algorithm published by Ether located here: https://www.chiefdelphi.com/forums/showpost.php?p=1119150&postcount=36
 private let oprCache = NSCache<Event, Matrix>()
 private func evaluateOPR(forTeamPerformance teamPerformance: TeamEventPerformance) -> Double {
-    let eventPerformances = teamPerformance.event.teamEventPerformances?.allObjects as! [TeamEventPerformance]
+    let eventPerformances = suitableEventPerformances(forEvent: teamPerformance.event)
     let numOfTeams = eventPerformances.count
     
     if let cachedOPR = oprCache.object(forKey: teamPerformance.event) {
-        return cachedOPR.i(Int32(eventPerformances.index(of: teamPerformance)!), j: 0)
+        if let index = eventPerformances.index(of: teamPerformance) {
+            return (cachedOPR.i(Int32(index), j: 0))
+        } else {
+            return Double.nan
+        }
     } else {
         
         let matrixA = createMatrixA(forEvent: teamPerformance.event)
@@ -111,17 +115,25 @@ private func evaluateOPR(forTeamPerformance teamPerformance: TeamEventPerformanc
         //Cache it because these calculations are expensive
         oprCache.setObject(oprMatrix!, forKey: teamPerformance.event)
         
-        return (oprMatrix?.i(Int32(eventPerformances.index(of: teamPerformance)!), j: 0))!
+        if let index = eventPerformances.index(of: teamPerformance) {
+            return (oprMatrix?.i(Int32(index), j: 0))!
+        } else {
+            return Double.nan
+        }
     }
 }
 
 private let ccwmCache = NSCache<Event, Matrix>()
 private func evaluateCCWM(forTeamPerformance teamPerformance: TeamEventPerformance) -> Double {
-    let eventPerformances = teamPerformance.event.teamEventPerformances?.allObjects as! [TeamEventPerformance]
+    let eventPerformances = suitableEventPerformances(forEvent: teamPerformance.event)
     let numOfTeams = eventPerformances.count
     
     if let cachedCCWM = ccwmCache.object(forKey: teamPerformance.event) {
-        return cachedCCWM.i(Int32(eventPerformances.index(of: teamPerformance)!), j: 0)
+        if let index = eventPerformances.index(of: teamPerformance) {
+            return (cachedCCWM.i(Int32(index), j: 0))
+        } else {
+            return Double.nan
+        }
     } else {
         let matrixA = createMatrixA(forEvent: teamPerformance.event)
         
@@ -140,8 +152,27 @@ private func evaluateCCWM(forTeamPerformance teamPerformance: TeamEventPerforman
         
         ccwmCache.setObject(ccwmMatrix!, forKey: teamPerformance.event)
         
-        return ccwmMatrix!.i(Int32(eventPerformances.index(of: teamPerformance)!), j: 0)
+        if let index = eventPerformances.index(of: teamPerformance) {
+            return (ccwmMatrix?.i(Int32(index), j: 0))!
+        } else {
+            return Double.nan
+        }
     }
+}
+
+///Returns all the team event performances in an event that actually participate in an event.
+private func suitableEventPerformances(forEvent event: Event) -> [TeamEventPerformance] {
+    let allEventPerformances = event.teamEventPerformances?.allObjects as! [TeamEventPerformance]
+    
+    let eventPerformances = allEventPerformances.filter() {teamEventPerformance in
+        if (teamEventPerformance.matchPerformances?.count ?? 0) == 0 {
+            return false
+        } else {
+            return true
+        }
+    }
+    
+    return eventPerformances
 }
 
 //Solves Ax=B
@@ -161,7 +192,7 @@ func solveForX(matrixA: Matrix!, matrixB: Matrix!) -> Matrix? {
 }
 
 func createMatrixA(forEvent event: Event) -> Matrix {
-    let eventPerformances = event.teamEventPerformances?.allObjects as! [TeamEventPerformance]
+    let eventPerformances = suitableEventPerformances(forEvent: event)
     let numOfTeams = eventPerformances.count
     
     var rowsA = [Double]()

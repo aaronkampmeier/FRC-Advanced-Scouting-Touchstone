@@ -318,6 +318,8 @@ class CloudEventImportManager {
         NotificationCenter.default.post(Notification(name: Notification.Name(rawValue: "UpdatedTeams"), object: self))
         
         completionHandler(true, nil)
+        
+        Answers.logCustomEvent(withName: "Imported Event", customAttributes: ["Event Key":frcEvent.key])
     }
     
     enum ImportError: Error {
