@@ -3580,25 +3580,25 @@
             <objects>
                 <collectionViewController id="By8-S6-UnX" customClass="SuperNotesCollectionViewController" customModule="FRC_Advanced_Scouting_Touchstone" customModuleProvider="target" sceneMemberID="viewController">
                     <collectionView key="view" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" dataMode="prototypes" id="MKV-PN-Zhh">
-                        <rect key="frame" x="0.0" y="0.0" width="1095" height="798"/>
+                        <rect key="frame" x="0.0" y="0.0" width="768" height="748"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <collectionViewFlowLayout key="collectionViewLayout" minimumLineSpacing="10" minimumInteritemSpacing="10" id="ijJ-Ig-Zti">
-                            <size key="itemSize" width="293" height="268"/>
+                            <size key="itemSize" width="220" height="268"/>
                             <size key="headerReferenceSize" width="0.0" height="0.0"/>
                             <size key="footerReferenceSize" width="0.0" height="0.0"/>
                             <inset key="sectionInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
                         </collectionViewFlowLayout>
                         <cells>
                             <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="notesCell" id="pwf-oa-k5F" customClass="SuperNotesCollectionViewCell" customModule="FRC_Advanced_Scouting_Touchstone" customModuleProvider="target">
-                                <rect key="frame" x="0.0" y="0.0" width="293" height="268"/>
+                                <rect key="frame" x="0.0" y="0.0" width="220" height="268"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
-                                    <rect key="frame" x="0.0" y="0.0" width="293" height="268"/>
+                                    <rect key="frame" x="0.0" y="0.0" width="220" height="268"/>
                                     <autoresizingMask key="autoresizingMask"/>
                                     <subviews>
                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Team" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="kuj-ah-lcH">
-                                            <rect key="frame" x="119.5" y="18" width="54" height="27"/>
+                                            <rect key="frame" x="83" y="18" width="54" height="27"/>
                                             <constraints>
                                                 <constraint firstAttribute="height" constant="27" id="eXg-z9-yA0"/>
                                             </constraints>
@@ -3612,6 +3612,7 @@
                                     <constraint firstItem="kuj-ah-lcH" firstAttribute="top" secondItem="pwf-oa-k5F" secondAttribute="topMargin" constant="10" id="AL7-d1-rSu"/>
                                     <constraint firstItem="kuj-ah-lcH" firstAttribute="centerX" secondItem="pwf-oa-k5F" secondAttribute="centerX" id="zG3-6p-Krc"/>
                                 </constraints>
+                                <size key="customSize" width="220" height="268"/>
                                 <connections>
                                     <outlet property="teamLabel" destination="kuj-ah-lcH" id="f2w-P0-W7j"/>
                                 </connections>
@@ -3630,11 +3631,11 @@
                         </barButtonItem>
                     </navigationItem>
                     <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
-                    <size key="freeformSize" width="1095" height="798"/>
+                    <size key="freeformSize" width="768" height="748"/>
                 </collectionViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="SjP-TY-HAB" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="556.93359375" y="72.65625"/>
+            <point key="canvasLocation" x="556.640625" y="72.65625"/>
         </scene>
         <!--Navigation Controller-->
         <scene sceneID="Ji3-zG-vEe">

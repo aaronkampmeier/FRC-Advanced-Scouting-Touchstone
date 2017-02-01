@@ -686,6 +686,11 @@
 						CreatedOnToolsVersion = 7.2;
 						DevelopmentTeam = 3T77TK2ECU;
 						LastSwiftMigration = 0800;
+						SystemCapabilities = {
+							com.apple.Siri = {
+								enabled = 0;
+							};
+						};
 					};
 					1F78E7951C3B469300221927 = {
 						CreatedOnToolsVersion = 7.2;
@@ -1185,8 +1190,8 @@
 				OTHER_SWIFT_FLAGS = "$(inherited) \"-D\" \"COCOAPODS\"";
 				PRODUCT_BUNDLE_IDENTIFIER = "com.kampmeier.FRC-Advanced-Scouting-Touchstone";
 				PRODUCT_NAME = "FRC Advanced Scouting Touchstone";
-				PROVISIONING_PROFILE = "5176b89a-2540-4e1c-b2c3-bf69f32d68f4";
-				PROVISIONING_PROFILE_SPECIFIER = "XC iOS Ad Hoc: *";
+				PROVISIONING_PROFILE = "0c86391e-bfde-4295-b7a4-f8209187a9e3";
+				PROVISIONING_PROFILE_SPECIFIER = "FAST Distribution";
 				SWIFT_OBJC_BRIDGING_HEADER = "";
 				SWIFT_VERSION = 3.0;
 				TARGETED_DEVICE_FAMILY = "1,2";

@@ -13,6 +13,7 @@ protocol SortDelegate {
 	func selectedStat(_ stat: String, isAscending: Bool)
     func statsToDisplay() -> [String]
     func currentStat() -> String
+    func isAscending() -> Bool
 }
 
 //T is the type to be sorted
@@ -24,7 +25,7 @@ class SortVC: UIViewController, UIPickerViewDelegate, UIPickerViewDataSource {
     private var selectedStat: String?
     private let dataManager = DataManager()
 	
-    private var isAscending = true
+    private var isAscending = false
 	
 	var delegate: SortDelegate?
     
@@ -37,6 +38,12 @@ class SortVC: UIViewController, UIPickerViewDelegate, UIPickerViewDataSource {
 		statsToDisplay = delegate?.statsToDisplay() ?? []
         selectedStat = delegate?.currentStat()
         sortTypePicker.selectRow(statsToDisplay.index(of: selectedStat!)!, inComponent: 0, animated: false)
+        
+        if delegate?.isAscending() ?? false {
+            orderSegementedControl.selectedSegmentIndex = 1
+        } else {
+            orderSegementedControl.selectedSegmentIndex = 0
+        }
     }
 	
 	override func viewWillDisappear(_ animated: Bool) {
@@ -71,9 +78,9 @@ class SortVC: UIViewController, UIPickerViewDelegate, UIPickerViewDataSource {
     
     @IBAction func segmentedControlChanged(_ sender: UISegmentedControl) {
         if sender.selectedSegmentIndex == 0 {
-            isAscending = true
-        } else if sender.selectedSegmentIndex == 1 {
             isAscending = false
+        } else if sender.selectedSegmentIndex == 1 {
+            isAscending = true
         }
     }
 }

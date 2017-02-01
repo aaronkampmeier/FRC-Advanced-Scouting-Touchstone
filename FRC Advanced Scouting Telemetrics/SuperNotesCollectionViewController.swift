@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import Crashlytics
 
 protocol SuperNotesDataSource {
     func superNotesForMatch() -> Match?
@@ -36,6 +37,8 @@ class SuperNotesCollectionViewController: UICollectionViewController {
         } else {
             teams = dataSource?.superNotesForTeams() ?? []
         }
+        
+        Answers.logContentView(withName: "Super Notes", contentType: "Notes", contentId: nil, customAttributes: nil)
     }
 
     override func didReceiveMemoryWarning() {
@@ -75,16 +78,22 @@ class SuperNotesCollectionViewController: UICollectionViewController {
     override func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: reuseIdentifier, for: indexPath) as! SuperNotesCollectionViewCell
     
+        //It is not possible to add a container view into a collection view cell from storyboard, so it has to be done manually
+        //1. Create a notes viewcontroller and put it into the cell's variable to hold it
         cell.notesVC = self.storyboard?.instantiateViewController(withIdentifier: "notesVC") as! NotesViewController
         
+        //Set up the cell and notes vc for the team
         cell.setUp(forTeam: teams[indexPath.item])
         
+        //2. Add the notesvc's view to the cell
         cell.notesVC.willMove(toParentViewController: self)
         addChildViewController(cell.notesVC)
         
+        // 2.1. Have to turn off translates Autoresizing Mask Into Constraints to be able to add all the constraints programaticallly
         cell.notesVC.view.translatesAutoresizingMaskIntoConstraints = false
         cell.contentView.addSubview(cell.notesVC.view)
         
+        //3. Constrain the view
         NSLayoutConstraint.activate([
             cell.notesVC.view.leadingAnchor.constraint(equalTo: cell.contentView.leadingAnchor),
             cell.notesVC.view.topAnchor.constraint(equalTo: cell.teamLabel.bottomAnchor, constant: 10),
