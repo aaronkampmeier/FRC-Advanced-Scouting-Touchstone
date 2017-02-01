@@ -9,7 +9,7 @@
 import UIKit
 import Crashlytics
 
-class StandsScoutingViewController: UIViewController, ProvidesTeam {
+class StandsScoutingViewController: UIViewController {
 	@IBOutlet weak var timerButton: UIButton!
 	@IBOutlet weak var timerLabel: UILabel!
 	@IBOutlet weak var teamLabel: UILabel!
@@ -323,54 +323,52 @@ class StandsScoutingViewController: UIViewController, ProvidesTeam {
 	@IBAction func returnToStandsScouting(_ segue: UIStoryboardSegue) {
 		
 	}
-
-	var notesVC: NotesViewController?
-	@IBAction func notesButtonPressed(_ sender: UIButton) {
-		if notesVC == nil {
-			notesVC = (storyboard?.instantiateViewController(withIdentifier: "notesVC") as! NotesViewController)
-		}
+    
+    @IBAction func shortPressOnNotesButton(_ sender: UITapGestureRecognizer) {
+        let notesNavVC = storyboard?.instantiateViewController(withIdentifier: "notesNavVC") as! UINavigationController
+        let notesVC = notesNavVC.topViewController as! NotesViewController
+        notesVC.dataSource = self
 		
-		notesVC?.originatingView = self
-		
-		notesVC?.modalPresentationStyle = .popover
-		let popoverController = notesVC?.popoverPresentationController
+		notesNavVC.modalPresentationStyle = .popover
+		let popoverController = notesNavVC.popoverPresentationController
 		popoverController?.permittedArrowDirections = .any
-		popoverController?.sourceView = sender
-		notesVC?.preferredContentSize = CGSize(width: 400, height: 600)
-		present(notesVC!, animated: true, completion: nil)
-	}
+        popoverController?.sourceView = notesButton
+//		popoverController?.sourceRect = CGRect(x: notesButton.frame.maxX, y: notesButton.frame.midY, width: 5, height: 5)
+		notesNavVC.preferredContentSize = CGSize(width: 400, height: 600)
+		present(notesNavVC, animated: true, completion: nil)
+        
+        NotificationCenter.default.addObserver(forName: NSNotification.Name(rawValue: "StandsScoutingEnded"), object: self, queue: nil) {notification in
+            notesNavVC.dismiss(animated: true, completion: nil)
+        }
+    }
+    
+    @IBAction func longPressOnNotesButton(_ sender: UILongPressGestureRecognizer) {
+        let superNotesNavVC = storyboard?.instantiateViewController(withIdentifier: "superNotesNavVC") as! UINavigationController
+        let superNotesVC = superNotesNavVC.topViewController as! SuperNotesCollectionViewController
+        
+        superNotesVC.dataSource = self
+        
+        present(superNotesNavVC, animated: true, completion: nil)
+    }
 }
 
-protocol ProvidesTeam {
-	var team: Team {get}
+extension StandsScoutingViewController: NotesDataSource {
+    func currentTeamContext() -> Team {
+        return team
+    }
+    
+    func notesShouldSave() -> Bool {
+        return false
+    }
 }
 
-class NotesViewController: UIViewController {
-	@IBOutlet weak var notesTextView: UITextView!
-	
-	var originatingView: ProvidesTeam!
-	
-	override func viewDidLoad() {
-		super.viewDidLoad()
-		notesTextView.layer.cornerRadius = 5
-		notesTextView.layer.borderWidth = 3
-		notesTextView.layer.borderColor = UIColor.lightGray.cgColor
-	}
-	
-	override func viewWillAppear(_ animated: Bool) {
-		super.viewWillAppear(animated)
-		
-//		notesTextView.text = originatingView.team.notes
-	}
-	
-	override func viewDidDisappear(_ animated: Bool) {
-		super.viewDidDisappear(animated)
-		
-//		originatingView.team.notes = notesTextView.text
-	}
-	
-	@IBAction func donePressed(_ sender: UIBarButtonItem) {
-		dismiss(animated: true, completion: nil)
-	}
+extension StandsScoutingViewController: SuperNotesDataSource {
+    func superNotesForMatch() -> Match? {
+        return ssDataManager.scoutedMatch
+    }
+    
+    func superNotesForTeams() -> [Team]? {
+        return nil
+    }
 }
 

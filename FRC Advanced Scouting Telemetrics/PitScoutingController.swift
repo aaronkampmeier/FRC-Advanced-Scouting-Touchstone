@@ -11,7 +11,7 @@ import UIKit
 import AVFoundation
 import Crashlytics
 
-class PitScoutingController: UIViewController, UIImagePickerControllerDelegate, UINavigationControllerDelegate, ProvidesTeam {
+class PitScoutingController: UIViewController, UIImagePickerControllerDelegate, UINavigationControllerDelegate {
     /*
     @IBOutlet weak var frontImage: UIImageView!
     @IBOutlet weak var sideImage: UIImageView!
