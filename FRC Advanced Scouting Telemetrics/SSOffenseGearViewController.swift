@@ -30,8 +30,10 @@ class SSOffenseGearViewController: UIViewController {
         didSet {
             if hasLoadedGear {
                 mountingWhereVC.show()
+                addGearButton.isEnabled = false
             } else {
                 mountingWhereVC.hide()
+                addGearButton.isEnabled = true
             }
         }
     }

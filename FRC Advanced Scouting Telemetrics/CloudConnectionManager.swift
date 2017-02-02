@@ -14,7 +14,7 @@ import Gloss
 private let baseApi = "https://fast.kampmeier.com/api/v2/"
 private let baseApiUrl = try! baseApi.asURL()
 private let apiKey = "c67378f6984026e97ca5abdc343f7f7ff77b5135576aed64c3fcce034d3e55e8"
-private let yearToDrawDataFrom = "2015"
+private let yearToDrawDataFrom = "2016"
 
 private class TBAResponseCache<T> {
     let json: T

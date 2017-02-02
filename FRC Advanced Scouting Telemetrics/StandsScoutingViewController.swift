@@ -43,7 +43,7 @@ class StandsScoutingViewController: UIViewController {
 		return teamEventPerformance!.team
 	}
 	let dataManager = DataManager()
-    var ssDataManager: SSDataManager!
+    var ssDataManager: SSDataManager?
 	
 	let stopwatch = Stopwatch()
 	var isRunning = false {
@@ -53,7 +53,7 @@ class StandsScoutingViewController: UIViewController {
 			stopwatch.start()
 			
 			//Reset previous data
-			ssDataManager.rollback()
+			ssDataManager?.rollback()
 			
 			//Update the button
 			timerButton.setTitle("Stop", for: UIControlState())
@@ -244,13 +244,13 @@ class StandsScoutingViewController: UIViewController {
 	
 	func close(andSave shouldSave: Bool) {
 		if shouldSave {
-            if !ssDataManager.save() {
+            if !(ssDataManager?.save() ?? true) {
                 //There was a problem saving
                 let alert = UIAlertController(title: "Unable to save", message: "There was a problem saving the scouted data. This is problematic and rare; please file a bug report.", preferredStyle: .alert)
                 alert.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
             }
 		} else {
-			ssDataManager.rollback()
+			ssDataManager?.rollback()
 		}
 		
 		dismiss(animated: true, completion: nil)
@@ -305,7 +305,7 @@ class StandsScoutingViewController: UIViewController {
 	}
     
     @IBAction func endAutonomousPressed(_ sender: UIButton) {
-        ssDataManager.isAutonomous = false
+        ssDataManager?.isAutonomous = false
         endAutonomousButton.isHidden = true
         autonomousLabel.isHidden = true
     }
@@ -364,7 +364,7 @@ extension StandsScoutingViewController: NotesDataSource {
 
 extension StandsScoutingViewController: SuperNotesDataSource {
     func superNotesForMatch() -> Match? {
-        return ssDataManager.scoutedMatch
+        return ssDataManager!.scoutedMatch
     }
     
     func superNotesForTeams() -> [Team]? {

@@ -2791,7 +2791,7 @@
                                 </connections>
                             </segmentedControl>
                             <containerView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="U9e-jY-Q6B">
-                                <rect key="frame" x="20" y="299" width="663" height="469"/>
+                                <rect key="frame" x="20" y="299" width="662.5" height="469"/>
                                 <connections>
                                     <segue destination="BTA-WY-eEX" kind="embed" id="nYI-16-aUH"/>
                                 </connections>
@@ -2807,7 +2807,7 @@
                                 </connections>
                             </segmentedControl>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="8Z6-kE-sqn">
-                                <rect key="frame" x="452" y="64" width="231" height="215"/>
+                                <rect key="frame" x="452" y="64" width="230.5" height="215"/>
                                 <connections>
                                     <action selector="selectedImage:" destination="ipN-iW-fVz" eventType="touchUpInside" id="S6V-pd-mnv"/>
                                 </connections>
@@ -2858,6 +2858,7 @@
                     <connections>
                         <outlet property="frontImageButton" destination="R0d-e9-pel" id="Jzh-nW-zXN"/>
                         <outlet property="navBar" destination="Zkc-q4-xJn" id="E4B-Rz-kdD"/>
+                        <outlet property="pitScoutingButton" destination="fNv-Fo-KX3" id="Idb-NB-Kfp"/>
                         <outlet property="segmentControl" destination="lVD-8g-FFz" id="PJT-Qz-f6J"/>
                         <outlet property="segmentControl2" destination="8NW-OA-3Gf" id="xIT-Yi-qHG"/>
                         <outlet property="sideImageButton" destination="8Z6-kE-sqn" id="aax-nO-KWE"/>
@@ -2867,7 +2868,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="0kw-vM-D96" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="2939.6484375" y="-342.1875"/>
+            <point key="canvasLocation" x="2628" y="-346"/>
         </scene>
         <!--View Controller-->
         <scene sceneID="zE1-t2-8NE">

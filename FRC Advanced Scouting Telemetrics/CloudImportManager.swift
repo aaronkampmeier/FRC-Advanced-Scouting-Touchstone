@@ -238,13 +238,12 @@ class CloudEventImportManager {
                     localMatch.key = match.key
                     
                     
-                    ///TEMP
                     let frcAlliances = frcMatch.alliances!
                     let blueScore = frcAlliances["blue"]?.score
                     let redScore = frcAlliances["red"]?.score
                     
-                    localMatch.blueFinalScore = blueScore! as NSNumber
-                    localMatch.redFinalScore = redScore! as NSNumber
+                    localMatch.blueFinalScore = (blueScore ?? nil) as? NSNumber
+                    localMatch.redFinalScore = (redScore ?? nil) as? NSNumber
                 }
                 
                 //Set up all the teams in the match

@@ -17,6 +17,7 @@ class TeamListDetailViewController: UIViewController, TeamSelectionDelegate {
 	@IBOutlet weak var segmentControl2: UISegmentedControl!
 	@IBOutlet weak var teamNumberLabel: UILabel!
 	@IBOutlet weak var standsScoutingButton: UIBarButtonItem!
+    @IBOutlet weak var pitScoutingButton: UIBarButtonItem!
 	@IBOutlet weak var navBar: UINavigationItem!
 	
 	var frontImage: TeamImagePhoto? {
@@ -55,8 +56,18 @@ class TeamListDetailViewController: UIViewController, TeamSelectionDelegate {
 				} else {
 					standsScoutingButton.isEnabled = false
 				}
+                
+                pitScoutingButton.isEnabled = true
 			} else {
-				
+                navBar.title = "Select Team"
+                teamNumberLabel.text = "Select Team"
+                
+                frontImage = nil
+                sideImage = nil
+                
+                standsScoutingButton.isEnabled = false
+                
+                pitScoutingButton.isEnabled = false
 			}
 			
 			NotificationCenter.default.post(name: Notification.Name(rawValue: "TeamSelectedChanged"), object: self)
