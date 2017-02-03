@@ -38,7 +38,7 @@
 		1F45340E1C6FC3EA004EDDB9 /* GameStatsCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F45340D1C6FC3EA004EDDB9 /* GameStatsCollectionViewCell.swift */; };
 		1F4534101C6FF916004EDDB9 /* StandsScoutingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F45340F1C6FF916004EDDB9 /* StandsScoutingViewController.swift */; };
 		1F4534561C7276DE004EDDB9 /* EventPickerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F4534551C7276DE004EDDB9 /* EventPickerViewController.swift */; };
-		1F4FEDAA1C4AD95C00F4016D /* PitScoutingController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F4FEDA91C4AD95C00F4016D /* PitScoutingController.swift */; };
+		1F4FEDAA1C4AD95C00F4016D /* OldPitScoutingController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F4FEDA91C4AD95C00F4016D /* OldPitScoutingController.swift */; };
 		1F4FEDAC1C4B686000F4016D /* AdminConsoleController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F4FEDAB1C4B686000F4016D /* AdminConsoleController.swift */; };
 		1F4FEDAE1C4C5DEA00F4016D /* AddTeamVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F4FEDAD1C4C5DEA00F4016D /* AddTeamVC.swift */; };
 		1F51D1C21C7FB30F00B4D6C5 /* GameStatsController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F51D1C11C7FB30F00B4D6C5 /* GameStatsController.swift */; };
@@ -77,9 +77,11 @@
 		932CB3F21E305E8200712725 /* SSOffenseWhereViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 932CB3F11E305E8200712725 /* SSOffenseWhereViewController.swift */; };
 		933E794F1E385BB20033563B /* SSPreloadingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 933E794E1E385BB20033563B /* SSPreloadingViewController.swift */; };
 		934647FC1E3188D800DC96D2 /* SSDefenseViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 934647FB1E3188D800DC96D2 /* SSDefenseViewController.swift */; };
+		93610E3D1E42F8D400856BE2 /* PitScoutingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93610E3C1E42F8D400856BE2 /* PitScoutingViewController.swift */; };
 		936572D91E14E52100439728 /* CloudRemovalManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 936572D81E14E52100439728 /* CloudRemovalManager.swift */; };
 		936572DF1E160EBB00439728 /* AboutViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 936572DE1E160EBB00439728 /* AboutViewController.swift */; };
 		936572E11E1610CA00439728 /* About.rtf in Resources */ = {isa = PBXBuildFile; fileRef = 936572E01E1610CA00439728 /* About.rtf */; };
+		9365947B1E441981008FF324 /* PitTextFieldCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9365947A1E441981008FF324 /* PitTextFieldCollectionViewCell.swift */; };
 		937E9C961E40468300D0ED76 /* SuperNotesCollectionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 937E9C951E40468300D0ED76 /* SuperNotesCollectionViewController.swift */; };
 		938BEB2B1E352159003F2F74 /* FuelLoading+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 938BEB261E352159003F2F74 /* FuelLoading+CoreDataProperties.swift */; };
 		938BEB2C1E352159003F2F74 /* FuelScoring+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 938BEB271E352159003F2F74 /* FuelScoring+CoreDataProperties.swift */; };
@@ -235,7 +237,7 @@
 		1F4534541C7242FB004EDDB9 /* FRC_Advanced_Scouting_Telemetrics CD 6.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "FRC_Advanced_Scouting_Telemetrics CD 6.xcdatamodel"; sourceTree = "<group>"; };
 		1F4534551C7276DE004EDDB9 /* EventPickerViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EventPickerViewController.swift; sourceTree = "<group>"; };
 		1F4F79E61CBF3FDF00239216 /* FRC_Advanced_Scouting_Telemetrics Version 9.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "FRC_Advanced_Scouting_Telemetrics Version 9.xcdatamodel"; sourceTree = "<group>"; };
-		1F4FEDA91C4AD95C00F4016D /* PitScoutingController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PitScoutingController.swift; sourceTree = "<group>"; };
+		1F4FEDA91C4AD95C00F4016D /* OldPitScoutingController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OldPitScoutingController.swift; sourceTree = "<group>"; };
 		1F4FEDAB1C4B686000F4016D /* AdminConsoleController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AdminConsoleController.swift; sourceTree = "<group>"; };
 		1F4FEDAD1C4C5DEA00F4016D /* AddTeamVC.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AddTeamVC.swift; sourceTree = "<group>"; };
 		1F51D1C11C7FB30F00B4D6C5 /* GameStatsController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GameStatsController.swift; sourceTree = "<group>"; };
@@ -291,9 +293,12 @@
 		933E794E1E385BB20033563B /* SSPreloadingViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SSPreloadingViewController.swift; sourceTree = "<group>"; };
 		933E79501E3864370033563B /* FAST 2-2-2.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "FAST 2-2-2.xcdatamodel"; sourceTree = "<group>"; };
 		934647FB1E3188D800DC96D2 /* SSDefenseViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SSDefenseViewController.swift; sourceTree = "<group>"; };
+		93610E371E42F0C800856BE2 /* FAST 2-3.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "FAST 2-3.xcdatamodel"; sourceTree = "<group>"; };
+		93610E3C1E42F8D400856BE2 /* PitScoutingViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PitScoutingViewController.swift; sourceTree = "<group>"; };
 		936572D81E14E52100439728 /* CloudRemovalManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CloudRemovalManager.swift; sourceTree = "<group>"; };
 		936572DE1E160EBB00439728 /* AboutViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AboutViewController.swift; sourceTree = "<group>"; };
 		936572E01E1610CA00439728 /* About.rtf */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.rtf; path = About.rtf; sourceTree = "<group>"; };
+		9365947A1E441981008FF324 /* PitTextFieldCollectionViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PitTextFieldCollectionViewCell.swift; sourceTree = "<group>"; };
 		937E9C951E40468300D0ED76 /* SuperNotesCollectionViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SuperNotesCollectionViewController.swift; sourceTree = "<group>"; };
 		938BEB261E352159003F2F74 /* FuelLoading+CoreDataProperties.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "FuelLoading+CoreDataProperties.swift"; sourceTree = "<group>"; };
 		938BEB271E352159003F2F74 /* FuelScoring+CoreDataProperties.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "FuelScoring+CoreDataProperties.swift"; sourceTree = "<group>"; };
@@ -368,7 +373,7 @@
 				1F30CFC91C7E510100A4EFCA /* Admin Console */,
 				1F4534131C6FFC13004EDDB9 /* Stands Scouting */,
 				1F4FEDAD1C4C5DEA00F4016D /* AddTeamVC.swift */,
-				1F4FEDA91C4AD95C00F4016D /* PitScoutingController.swift */,
+				936594801E44198D008FF324 /* Pit Scouting */,
 			);
 			name = "View Controllers";
 			sourceTree = "<group>";
@@ -589,6 +594,24 @@
 				1F718F7F1E0862FA00BD1951 /* GlossModels.swift */,
 			);
 			name = "Cloud Data";
+			sourceTree = "<group>";
+		};
+		936594801E44198D008FF324 /* Pit Scouting */ = {
+			isa = PBXGroup;
+			children = (
+				93610E3C1E42F8D400856BE2 /* PitScoutingViewController.swift */,
+				936594811E441A7A008FF324 /* Collection Cells */,
+				1F4FEDA91C4AD95C00F4016D /* OldPitScoutingController.swift */,
+			);
+			name = "Pit Scouting";
+			sourceTree = "<group>";
+		};
+		936594811E441A7A008FF324 /* Collection Cells */ = {
+			isa = PBXGroup;
+			children = (
+				9365947A1E441981008FF324 /* PitTextFieldCollectionViewCell.swift */,
+			);
+			name = "Collection Cells";
 			sourceTree = "<group>";
 		};
 		93BA59ED1E2EE7EE00171D72 /* Products */ = {
@@ -895,6 +918,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				9365947B1E441981008FF324 /* PitTextFieldCollectionViewCell.swift in Sources */,
 				1F718F801E0862FA00BD1951 /* GlossModels.swift in Sources */,
 				1F78E78B1C3B469300221927 /* FRC_Advanced_Scouting_Telemetrics.xcdatamodeld in Sources */,
 				1F2F9A221CE2D6E400B85A72 /* TeamListSearchResultsTableViewController.swift in Sources */,
@@ -913,6 +937,7 @@
 				1F1C23CB1E07487C008885A1 /* LocalTeam+CoreDataClass.swift in Sources */,
 				1F51D1C21C7FB30F00B4D6C5 /* GameStatsController.swift in Sources */,
 				932CB3F21E305E8200712725 /* SSOffenseWhereViewController.swift in Sources */,
+				93610E3D1E42F8D400856BE2 /* PitScoutingViewController.swift in Sources */,
 				1FF1F1791C4604370051EE54 /* TeamDataManager.swift in Sources */,
 				1FBE627F1CAEE0FB001FDFB7 /* TeamPickerTableViewController.swift in Sources */,
 				1F1C23DA1E07673E008885A1 /* AddEventTableViewController.swift in Sources */,
@@ -942,7 +967,7 @@
 				1F1C23C21E07487C008885A1 /* Team+CoreDataProperties.swift in Sources */,
 				1FBB426D1C9A29FC0017E36C /* Statistics.swift in Sources */,
 				1F51D1C61C7FFBC000B4D6C5 /* GameStatsLayout.swift in Sources */,
-				1F4FEDAA1C4AD95C00F4016D /* PitScoutingController.swift in Sources */,
+				1F4FEDAA1C4AD95C00F4016D /* OldPitScoutingController.swift in Sources */,
 				1FCEF8F61C9CB231006AC591 /* Globals.swift in Sources */,
 				1F1C23D11E07487C008885A1 /* TimeMarker+CoreDataClass.swift in Sources */,
 				1FA6A73E1CD3B4DD00772C63 /* TransferInfoTableViewController.swift in Sources */,
@@ -1323,6 +1348,7 @@
 		1F78E7891C3B469300221927 /* FRC_Advanced_Scouting_Telemetrics.xcdatamodeld */ = {
 			isa = XCVersionGroup;
 			children = (
+				93610E371E42F0C800856BE2 /* FAST 2-3.xcdatamodel */,
 				93FBC3901E3DAE5300FEB328 /* FAST 2-2-3.xcdatamodel */,
 				933E79501E3864370033563B /* FAST 2-2-2.xcdatamodel */,
 				938BEB441E35AD82003F2F74 /* FAST 2-2-1.xcdatamodel */,
@@ -1344,7 +1370,7 @@
 				1F0296661C5C6E42008CA8C2 /* FRC_Advanced_Scouting_Telemetrics CD 2.xcdatamodel */,
 				1F78E78A1C3B469300221927 /* FRC_Advanced_Scouting_Telemetrics.xcdatamodel */,
 			);
-			currentVersion = 93FBC3901E3DAE5300FEB328 /* FAST 2-2-3.xcdatamodel */;
+			currentVersion = 93610E371E42F0C800856BE2 /* FAST 2-3.xcdatamodel */;
 			path = FRC_Advanced_Scouting_Telemetrics.xcdatamodeld;
 			sourceTree = "<group>";
 			versionGroupType = wrapper.xcdatamodel;

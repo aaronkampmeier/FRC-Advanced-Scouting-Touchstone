@@ -158,7 +158,10 @@ class TeamListDetailViewController: UIViewController, TeamSelectionDelegate {
 		if segue.identifier == "standsScouting" {
 			let destinationVC = segue.destination as! StandsScoutingViewController
 			destinationVC.teamEventPerformance = teamEventPerformance
-		}
+        } else if segue.identifier == "pitScouting" {
+            let pitScoutingVC = segue.destination as! PitScoutingViewController
+            pitScoutingVC.scoutedTeam = selectedTeam?.universal
+        }
 	}
 	
 	func cycleFromViewController(_ oldVC: UIViewController, toViewController newVC: UIViewController) {

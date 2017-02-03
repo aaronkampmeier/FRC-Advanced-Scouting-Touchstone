@@ -11,8 +11,9 @@ import UIKit
 import AVFoundation
 import Crashlytics
 
+/*
 class PitScoutingController: UIViewController, UIImagePickerControllerDelegate, UINavigationControllerDelegate {
-    /*
+    
     @IBOutlet weak var frontImage: UIImageView!
     @IBOutlet weak var sideImage: UIImageView!
     @IBOutlet weak var driverXpField: UITextField!
@@ -46,7 +47,7 @@ class PitScoutingController: UIViewController, UIImagePickerControllerDelegate, 
 			}
 		}
 	}
-    */
+ 
 	var team: Team {
 //		switch selectedTeam {
 //		case .invalid:
@@ -58,7 +59,7 @@ class PitScoutingController: UIViewController, UIImagePickerControllerDelegate, 
         
         return Team()
 	}
-    /*
+ 
 	
 	enum TeamSelection {
 		case invalid
@@ -407,5 +408,6 @@ class PitScoutingController: UIViewController, UIImagePickerControllerDelegate, 
         alert.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
         present(alert, animated: true, completion: nil)
     }
- */
+
 }
+ */
