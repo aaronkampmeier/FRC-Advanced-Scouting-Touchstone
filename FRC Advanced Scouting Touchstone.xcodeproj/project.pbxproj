@@ -69,6 +69,10 @@
 		1FE2C12D1C81875A00CECBF1 /* ImageScalingFunctions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FE2C12C1C81875A00CECBF1 /* ImageScalingFunctions.swift */; };
 		1FF1F1731C3CC74A0051EE54 /* TeamListController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FF1F1721C3CC74A0051EE54 /* TeamListController.swift */; };
 		1FF1F1791C4604370051EE54 /* TeamDataManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FF1F1781C4604370051EE54 /* TeamDataManager.swift */; };
+		930B965C1E4548F700E385D3 /* PitSegmentedSelectorCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 930B965B1E4548F700E385D3 /* PitSegmentedSelectorCollectionViewCell.swift */; };
+		930B96621E456D3000E385D3 /* PitTableViewSelectorCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 930B96611E456D3000E385D3 /* PitTableViewSelectorCollectionViewCell.swift */; };
+		930B96641E456D6C00E385D3 /* PitImageSelectorCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 930B96631E456D6C00E385D3 /* PitImageSelectorCollectionViewCell.swift */; };
+		930B96671E45A91A00E385D3 /* PitButtonCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 930B96661E45A91A00E385D3 /* PitButtonCollectionViewCell.swift */; };
 		932354461E41686B0039386A /* SuperNotesCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 932354451E41686B0039386A /* SuperNotesCollectionViewCell.swift */; };
 		932C344C1E12DC2600A23203 /* EventInfoVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 932C344B1E12DC2600A23203 /* EventInfoVC.swift */; };
 		932C344E1E12F7C400A23203 /* CloudImportManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 932C344D1E12F7C400A23203 /* CloudImportManager.swift */; };
@@ -283,6 +287,11 @@
 		1FE2C12C1C81875A00CECBF1 /* ImageScalingFunctions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ImageScalingFunctions.swift; sourceTree = "<group>"; };
 		1FF1F1721C3CC74A0051EE54 /* TeamListController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TeamListController.swift; sourceTree = "<group>"; };
 		1FF1F1781C4604370051EE54 /* TeamDataManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TeamDataManager.swift; sourceTree = "<group>"; };
+		930B965B1E4548F700E385D3 /* PitSegmentedSelectorCollectionViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PitSegmentedSelectorCollectionViewCell.swift; sourceTree = "<group>"; };
+		930B96611E456D3000E385D3 /* PitTableViewSelectorCollectionViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PitTableViewSelectorCollectionViewCell.swift; sourceTree = "<group>"; };
+		930B96631E456D6C00E385D3 /* PitImageSelectorCollectionViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PitImageSelectorCollectionViewCell.swift; sourceTree = "<group>"; };
+		930B96651E45A52700E385D3 /* FAST 2-3-1.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "FAST 2-3-1.xcdatamodel"; sourceTree = "<group>"; };
+		930B96661E45A91A00E385D3 /* PitButtonCollectionViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PitButtonCollectionViewCell.swift; sourceTree = "<group>"; };
 		932354451E41686B0039386A /* SuperNotesCollectionViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SuperNotesCollectionViewCell.swift; sourceTree = "<group>"; };
 		932C344B1E12DC2600A23203 /* EventInfoVC.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EventInfoVC.swift; sourceTree = "<group>"; };
 		932C344D1E12F7C400A23203 /* CloudImportManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CloudImportManager.swift; sourceTree = "<group>"; };
@@ -610,6 +619,10 @@
 			isa = PBXGroup;
 			children = (
 				9365947A1E441981008FF324 /* PitTextFieldCollectionViewCell.swift */,
+				930B965B1E4548F700E385D3 /* PitSegmentedSelectorCollectionViewCell.swift */,
+				930B96611E456D3000E385D3 /* PitTableViewSelectorCollectionViewCell.swift */,
+				930B96631E456D6C00E385D3 /* PitImageSelectorCollectionViewCell.swift */,
+				930B96661E45A91A00E385D3 /* PitButtonCollectionViewCell.swift */,
 			);
 			name = "Collection Cells";
 			sourceTree = "<group>";
@@ -921,10 +934,13 @@
 				9365947B1E441981008FF324 /* PitTextFieldCollectionViewCell.swift in Sources */,
 				1F718F801E0862FA00BD1951 /* GlossModels.swift in Sources */,
 				1F78E78B1C3B469300221927 /* FRC_Advanced_Scouting_Telemetrics.xcdatamodeld in Sources */,
+				930B96641E456D6C00E385D3 /* PitImageSelectorCollectionViewCell.swift in Sources */,
 				1F2F9A221CE2D6E400B85A72 /* TeamListSearchResultsTableViewController.swift in Sources */,
 				938BEB2B1E352159003F2F74 /* FuelLoading+CoreDataProperties.swift in Sources */,
 				1FF1F1731C3CC74A0051EE54 /* TeamListController.swift in Sources */,
+				930B965C1E4548F700E385D3 /* PitSegmentedSelectorCollectionViewCell.swift in Sources */,
 				1F1C23C51E07487C008885A1 /* Event+CoreDataClass.swift in Sources */,
+				930B96671E45A91A00E385D3 /* PitButtonCollectionViewCell.swift in Sources */,
 				932354461E41686B0039386A /* SuperNotesCollectionViewCell.swift in Sources */,
 				1F1C23D21E07487C008885A1 /* TimeMarker+CoreDataProperties.swift in Sources */,
 				1F1C23CD1E07487C008885A1 /* TeamEventPerformance+CoreDataClass.swift in Sources */,
@@ -964,6 +980,7 @@
 				1F1C23D41E07487C008885A1 /* Match+CoreDataProperties.swift in Sources */,
 				93CE1BF71E403A97004165BE /* NotesViewController.swift in Sources */,
 				938BEB2F1E352159003F2F74 /* GearMounting+CoreDataProperties.swift in Sources */,
+				930B96621E456D3000E385D3 /* PitTableViewSelectorCollectionViewCell.swift in Sources */,
 				1F1C23C21E07487C008885A1 /* Team+CoreDataProperties.swift in Sources */,
 				1FBB426D1C9A29FC0017E36C /* Statistics.swift in Sources */,
 				1F51D1C61C7FFBC000B4D6C5 /* GameStatsLayout.swift in Sources */,
@@ -1348,6 +1365,7 @@
 		1F78E7891C3B469300221927 /* FRC_Advanced_Scouting_Telemetrics.xcdatamodeld */ = {
 			isa = XCVersionGroup;
 			children = (
+				930B96651E45A52700E385D3 /* FAST 2-3-1.xcdatamodel */,
 				93610E371E42F0C800856BE2 /* FAST 2-3.xcdatamodel */,
 				93FBC3901E3DAE5300FEB328 /* FAST 2-2-3.xcdatamodel */,
 				933E79501E3864370033563B /* FAST 2-2-2.xcdatamodel */,
@@ -1370,7 +1388,7 @@
 				1F0296661C5C6E42008CA8C2 /* FRC_Advanced_Scouting_Telemetrics CD 2.xcdatamodel */,
 				1F78E78A1C3B469300221927 /* FRC_Advanced_Scouting_Telemetrics.xcdatamodel */,
 			);
-			currentVersion = 93610E371E42F0C800856BE2 /* FAST 2-3.xcdatamodel */;
+			currentVersion = 930B96651E45A52700E385D3 /* FAST 2-3-1.xcdatamodel */;
 			path = FRC_Advanced_Scouting_Telemetrics.xcdatamodeld;
 			sourceTree = "<group>";
 			versionGroupType = wrapper.xcdatamodel;

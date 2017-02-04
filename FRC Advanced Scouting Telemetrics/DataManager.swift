@@ -219,6 +219,31 @@ class DataManager {
     }
 }
 
+
+enum ProgrammingLanguage: String, CustomStringConvertible {
+    case Java
+    case CPlusPlus = "C++"
+    case LabView = "Lab View"
+    
+    var description: String {
+        get {
+            return self.rawValue
+        }
+    }
+    
+    static var allValues: [ProgrammingLanguage] {
+        get {
+            return [.Java, .CPlusPlus, .LabView]
+        }
+    }
+    
+    static var allStringValues: [String] {
+        get {
+            return ProgrammingLanguage.allValues.map({$0.description})
+        }
+    }
+}
+
 //MARK: - Game-Specific Properties
 enum StartingPosition: String, CustomStringConvertible {
     case LoadingStation = "Loading Station"
@@ -232,6 +257,30 @@ enum StartingPosition: String, CustomStringConvertible {
     static var allPositions: [StartingPosition] {
         get {
             return [.LoadingStation]
+        }
+    }
+}
+
+enum Capability: String, CustomStringConvertible {
+    case Yes
+    case Somewhat
+    case No
+    
+    var description: String {
+        get {
+            return self.rawValue
+        }
+    }
+    
+    static var allValues: [Capability] {
+        get {
+            return [.Yes, .Somewhat, .No]
+        }
+    }
+    
+    static var allStringValues: [String] {
+        get {
+            return Capability.allValues.map({$0.description})
         }
     }
 }

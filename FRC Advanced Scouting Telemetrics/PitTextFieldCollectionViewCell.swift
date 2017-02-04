@@ -14,20 +14,17 @@ class PitTextFieldCollectionViewCell: PitScoutingCell {
     
     var updateHandler: ((Any?)->Void)?
     
-    override func setUp(label: String, options: [String]?, updateHandler: @escaping PitScoutingUpdateHandler) {
-        self.label.text = label
-        self.updateHandler = updateHandler
-    }
-    
-    override func setValue(value: Any?) {
-        if let value = value as? Int {
+    override func setUp(parameter: PitScoutingViewController.PitScoutingParameter) {
+        self.label.text = parameter.label
+        self.updateHandler = parameter.updateHandler
+        
+        if let value = parameter.currentValue() as? Double {
             textField.text = value.description
         }
-        NSLog("")
     }
     
     @IBAction func textFieldEditingEnded(_ sender: UITextField) {
         //TODO: Sanitize the data
-        updateHandler?(Int(sender.text ?? ""))
+        updateHandler?(Double(sender.text ?? ""))
     }
 }

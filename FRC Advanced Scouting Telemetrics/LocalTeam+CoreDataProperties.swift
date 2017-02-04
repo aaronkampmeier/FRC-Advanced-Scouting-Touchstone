@@ -32,6 +32,7 @@ extension LocalTeam: HasUniversalEquivalent {
         return NSFetchRequest<NSManagedObject>(entityName: "TeamMatchPerformance")
     }
 
+    @NSManaged public var visionTrackingCapability: String?
     @NSManaged public var canBanana: NSNumber?
     @NSManaged public var climberCapability: String?
     @NSManaged public var driverXP: NSNumber?
