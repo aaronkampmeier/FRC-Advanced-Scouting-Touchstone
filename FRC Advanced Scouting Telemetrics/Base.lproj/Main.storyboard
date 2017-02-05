@@ -1031,7 +1031,7 @@
                                 <nil key="highlightedColor"/>
                             </label>
                             <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="57M-yC-eIi">
-                                <rect key="frame" x="5" y="152" width="688" height="616"/>
+                                <rect key="frame" x="5" y="152" width="687.5" height="616"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <collectionViewFlowLayout key="collectionViewLayout" minimumLineSpacing="10" minimumInteritemSpacing="10" id="hoM-6m-MxG">
                                     <size key="itemSize" width="215" height="164"/>
@@ -3131,7 +3131,7 @@
                                 </connections>
                             </segmentedControl>
                             <containerView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="U9e-jY-Q6B">
-                                <rect key="frame" x="20" y="299" width="663" height="469"/>
+                                <rect key="frame" x="20" y="299" width="662.5" height="469"/>
                                 <connections>
                                     <segue destination="BTA-WY-eEX" kind="embed" id="nYI-16-aUH"/>
                                 </connections>
@@ -3147,7 +3147,7 @@
                                 </connections>
                             </segmentedControl>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="8Z6-kE-sqn">
-                                <rect key="frame" x="452" y="64" width="231" height="215"/>
+                                <rect key="frame" x="452" y="64" width="230.5" height="215"/>
                                 <connections>
                                     <action selector="selectedImage:" destination="ipN-iW-fVz" eventType="touchUpInside" id="S6V-pd-mnv"/>
                                 </connections>

@@ -59,7 +59,7 @@ class CloudData {
                     }
                     NSLog("Successfully retrieved events from cloud")
                 case .failure(let error):
-                    NSLog("Failed to retrieve events from cloud with error: \(error)")
+                    CLSNSLogv("Failed to retrieve events from cloud with error: \(error)")
                     completionHandler(nil)
                     Crashlytics.sharedInstance().recordError(error)
                 }
@@ -85,7 +85,7 @@ class CloudData {
                         completionHandler(self.handleMatchesResponse(withData: responseData))
                     }
                 case .failure(let error):
-                    NSLog("Failed to retrieve matches from cloud with error: \(error)")
+                    CLSNSLogv("Failed to retrieve matches from cloud with error: \(error)")
                     completionHandler(nil)
                 }
         }
@@ -111,7 +111,7 @@ class CloudData {
                         completionHandler(teams)
                     }
                 case .failure(let error):
-                    NSLog("Failed to get teams for event with error: \(error)")
+                    CLSNSLogv("Failed to get teams for event with error: \(error)")
                     completionHandler(nil)
                 }
         }
@@ -128,7 +128,7 @@ class CloudData {
                         completionHandler(team)
                     }
                 case .failure(let error):
-                    NSLog("Failed to grab team \(teamKey) with error: \(error)")
+                    CLSNSLogv("Failed to grab team \(teamKey) with error: \(error)")
                     completionHandler(nil)
                 }
         }
