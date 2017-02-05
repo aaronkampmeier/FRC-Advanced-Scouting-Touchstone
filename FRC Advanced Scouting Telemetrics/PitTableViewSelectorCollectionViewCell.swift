@@ -31,12 +31,17 @@ class PitTableViewSelectorCollectionViewCell: PitScoutingCell, UITableViewDataSo
         tableView.reloadData()
         tableView.allowsMultipleSelection = true
         
+        for indexPath in tableView.indexPathsForSelectedRows ?? [] {
+            tableView.deselectRow(at: indexPath, animated: false)
+            tableView.cellForRow(at: indexPath)?.accessoryType = .none
+        }
+        
         //Set current values
         if let currentValues = parameter.currentValue() as? [String] {
             for value in currentValues {
                 if let index = options.index(of: value) {
-                    tableView.selectRow(at: IndexPath.init(row: index, section: 0), animated: true, scrollPosition: .none)
-                    tableView(tableView, didSelectRowAt: IndexPath.init(row: index, section: 0))
+                    tableView.selectRow(at: IndexPath.init(row: index, section: 0), animated: false, scrollPosition: .none)
+                    tableView.cellForRow(at: IndexPath.init(row: index, section: 0))?.accessoryType = .checkmark
                 }
             }
             selectedOptions = currentValues
@@ -55,6 +60,11 @@ class PitTableViewSelectorCollectionViewCell: PitScoutingCell, UITableViewDataSo
         let cell = tableView.dequeueReusableCell(withIdentifier: "cell")
         
         cell?.textLabel?.text = options[indexPath.row]
+        if selectedOptions.contains(options[indexPath.row]) {
+            cell?.accessoryType = .checkmark
+        } else {
+            cell?.accessoryType = .none
+        }
         
         return cell!
     }
