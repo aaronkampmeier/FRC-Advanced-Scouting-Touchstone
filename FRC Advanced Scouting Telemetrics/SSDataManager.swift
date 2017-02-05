@@ -26,7 +26,7 @@ class SSDataManager {
     var preloadedFuel: Double = 0.0
     var preloadedGear = false
     
-    private weak static var mostRecentSSDataManager: SSDataManager?
+    fileprivate weak static var mostRecentSSDataManager: SSDataManager?
     class func currentSSDataManager() -> SSDataManager? {
         return mostRecentSSDataManager
     }
@@ -74,7 +74,7 @@ class SSDataManager {
     //MARK: - Fuel
     //For recording that the team loaded fuel from somewhere
     var lastFuelLoading: FuelLoading?
-    func recordFuelLoading(location: SSOffenseFuelViewController.FuelLoadingLocations.RawValue, atTime time: TimeInterval) {
+    func recordFuelLoading(_ location: SSOffenseFuelViewController.FuelLoadingLocations.RawValue, atTime time: TimeInterval) {
         
         let fuelLoading = FuelLoading(entity: NSEntityDescription.entity(forEntityName: "FuelLoading", in: managedContext)!, insertInto: managedContext)
         
@@ -93,13 +93,14 @@ class SSDataManager {
         lastFuelLoading?.associatedFuelIncrease = fuelIncrease as NSNumber
     }
     
-    func recordFuelScoring(inGoal goal: SSOffenseFuelViewController.FuelScoringLocations.RawValue, atTime time: TimeInterval, scoredFrom location: CGPoint) {
+    func recordFuelScoring(inGoal goal: SSOffenseFuelViewController.FuelScoringLocations.RawValue, atTime time: TimeInterval, scoredFrom location: CGPoint, withAccuracy accuracy: Double) {
         let fuelScoring = FuelScoring(entity: NSEntityDescription.entity(forEntityName: "FuelScoring", in: managedContext)!, insertInto: managedContext)
         
         fuelScoring.localMatchPerformance = scoutedMatchPerformance.local
         
         fuelScoring.goal = goal
         fuelScoring.time = time as NSNumber
+        fuelScoring.accuracy = accuracy as NSNumber
         fuelScoring.xLocation = location.x as NSNumber
         fuelScoring.yLocation = location.y as NSNumber
         
@@ -144,7 +145,7 @@ class SSDataManager {
     }
     
     //MARK: - Rope
-    func recordRopeClimb(successful: LocalMatchPerformance.RopeClimbSuccess.RawValue) {
+    func recordRopeClimb(_ successful: LocalMatchPerformance.RopeClimbSuccess.RawValue) {
         scoutedMatchPerformance.local.ropeClimbStatus = successful
     }
 }

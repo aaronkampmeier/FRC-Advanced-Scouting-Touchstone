@@ -23,8 +23,8 @@ extension Team: HasLocalEquivalent {
         return NSFetchRequest<Team>(entityName: "Team")
     }
 
-    @nonobjc public class func fetchRequest() -> NSFetchRequest<Team> {
-        return NSFetchRequest<Team>(entityName: "Team");
+    @nonobjc open override class func fetchRequest() -> NSFetchRequest<NSFetchRequestResult> {
+        return NSFetchRequest<Team>(entityName: "Team") as! NSFetchRequest<NSFetchRequestResult>;
     }
     
     static func genericFetchRequest() -> NSFetchRequest<NSManagedObject> {

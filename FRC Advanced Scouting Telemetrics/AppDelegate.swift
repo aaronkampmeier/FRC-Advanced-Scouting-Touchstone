@@ -39,7 +39,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 			teamListMasterVC?.delegate = teamListSecondaryVC
 		}
 	}
-	weak private var teamListMasterVC: TeamListTableViewController?
+	weak fileprivate var teamListMasterVC: TeamListTableViewController?
 	
 	var teamListDetailVC: TeamListDetailViewController? {
 		get {
@@ -61,9 +61,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 			teamListMasterVC?.delegate = teamListSecondaryVC
 		}
 	}
-	weak private var teamListSecondaryVC: TeamListDetailViewController?
+	weak fileprivate var teamListSecondaryVC: TeamListDetailViewController?
 	
-    func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [NSObject: AnyObject]?) -> Bool {
+    func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
         print("App Dir: \(FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).last!)")
         
         // Override point for customization after application launch.
@@ -79,7 +79,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         return true
     }
     
-    func randRange (lower: Int , upper: Int) -> Int {
+    func randRange (_ lower: Int , upper: Int) -> Int {
         return lower + Int(arc4random_uniform(UInt32(upper - lower + 1)))
     }
 	

@@ -12,8 +12,8 @@ import YCMatrix
 
 extension TeamEventPerformance {
 
-    @nonobjc public class func fetchRequest() -> NSFetchRequest<TeamEventPerformance> {
-        return NSFetchRequest<TeamEventPerformance>(entityName: "TeamEventPerformance");
+    @nonobjc open override class func fetchRequest() -> NSFetchRequest<NSFetchRequestResult> {
+        return NSFetchRequest<TeamEventPerformance>(entityName: "TeamEventPerformance") as! NSFetchRequest<NSFetchRequestResult>;
     }
 
     @NSManaged public var event: Event
@@ -110,7 +110,7 @@ private func evaluateOPR(forTeamPerformance teamPerformance: TeamEventPerformanc
         let matrixB = Matrix(from: rowsB, rows: Int32(numOfTeams), columns: 1)
         
         
-        let oprMatrix = solveForX(matrixA: matrixA, matrixB: matrixB)
+        let oprMatrix = solveForX(matrixA, matrixB: matrixB)
         
         //Cache it because these calculations are expensive
         oprCache.setObject(oprMatrix!, forKey: teamPerformance.event)
@@ -148,7 +148,7 @@ private func evaluateCCWM(forTeamPerformance teamPerformance: TeamEventPerforman
         }
         let matrixB = Matrix(from: rowsB, rows: Int32(numOfTeams), columns: 1)
         
-        let ccwmMatrix = solveForX(matrixA: matrixA, matrixB: matrixB)
+        let ccwmMatrix = solveForX(matrixA, matrixB: matrixB)
         
         ccwmCache.setObject(ccwmMatrix!, forKey: teamPerformance.event)
         
@@ -176,7 +176,7 @@ private func suitableEventPerformances(forEvent event: Event) -> [TeamEventPerfo
 }
 
 //Solves Ax=B
-func solveForX(matrixA: Matrix!, matrixB: Matrix!) -> Matrix? {
+func solveForX(_ matrixA: Matrix!, matrixB: Matrix!) -> Matrix? {
     let matrixP = matrixA?.transposingAndMultiplying(withRight: matrixA)
     let matrixS = matrixA?.transposingAndMultiplying(withRight: matrixB)
     
@@ -184,9 +184,9 @@ func solveForX(matrixA: Matrix!, matrixB: Matrix!) -> Matrix? {
     
     assert((matrixL?.transposingAndMultiplying(withLeft: matrixL).isEqual(to: matrixP, tolerance: 1))!)
     
-    let matrixY = forwardSubstitute(matrixA: matrixL, matrixB: matrixS)
+    let matrixY = forwardSubstitute(matrixL, matrixB: matrixS)
     
-    let matrixX = backwardSubstitute(matrixA: matrixL?.transposing(), matrixB: matrixY)
+    let matrixX = backwardSubstitute(matrixL?.transposing(), matrixB: matrixY)
     
     return matrixX
 }
@@ -224,11 +224,11 @@ func createMatrixA(forEvent event: Event) -> Matrix {
 }
 
 ///Forward and Backwards matrix substitution formulas drawn from http://mathfaculty.fullerton.edu/mathews/n2003/BackSubstitutionMod.html
-func forwardSubstitute(matrixA: Matrix!, matrixB: Matrix!) -> Matrix? {
+func forwardSubstitute(_ matrixA: Matrix!, matrixB: Matrix!) -> Matrix? {
     let matrixX = Matrix(ofRows: matrixA.rows, columns: 1, value: 0)
     
     for i in 0..<matrixA.rows {
-        let sigmaValue = sigma(initialIncrementerValue: 0, topIncrementValue: Int(i)-1, function: {matrixA.i(i, j: Int32($0)) * (matrixX?.i(Int32($0), j: 0))!})
+        let sigmaValue = sigma(0, topIncrementValue: Int(i)-1, function: {matrixA.i(i, j: Int32($0)) * (matrixX?.i(Int32($0), j: 0))!})
         let bValue = matrixB.i(i, j: 0)
         let xValueAtI = (bValue - sigmaValue) / matrixA.i(i, j: i)
         
@@ -238,13 +238,13 @@ func forwardSubstitute(matrixA: Matrix!, matrixB: Matrix!) -> Matrix? {
     return matrixX
 }
 
-func backwardSubstitute(matrixA: Matrix!, matrixB: Matrix!) -> Matrix? {
+func backwardSubstitute(_ matrixA: Matrix!, matrixB: Matrix!) -> Matrix? {
     let matrixX = Matrix(ofRows: matrixA.rows, columns: 1, value: 0)
     
     let backwardsArray = (Int(matrixA.rows)-1) ..= 0
     
     for i in backwardsArray {
-        let sigmaValue = sigma(initialIncrementerValue: Int(i) + 1, topIncrementValue: Int(matrixA.rows) - 1, function: {matrixA.i(Int32(i), j: Int32($0)) * (matrixX?.i(Int32($0), j: 0))!})
+        let sigmaValue = sigma(Int(i) + 1, topIncrementValue: Int(matrixA.rows) - 1, function: {matrixA.i(Int32(i), j: Int32($0)) * (matrixX?.i(Int32($0), j: 0))!})
         let xValueAtI = (matrixB.i(Int32(i), j: 0) - sigmaValue) / matrixA.i(Int32(i), j: Int32(i))
         matrixX?.setValue(xValueAtI, row: Int32(i), column: 0)
     }
@@ -262,12 +262,12 @@ func ..=(lhs: Int, rhs: Int) -> [Int] {
     }
 }
 
-func sigma(initialIncrementerValue: Int, topIncrementValue: Int, function: (Int) -> Double) -> Double {
+func sigma(_ initialIncrementerValue: Int, topIncrementValue: Int, function: (Int) -> Double) -> Double {
     if initialIncrementerValue == topIncrementValue {
         return function(initialIncrementerValue)
     } else if initialIncrementerValue > topIncrementValue {
         return 0
     } else {
-        return function(initialIncrementerValue) + sigma(initialIncrementerValue: initialIncrementerValue + 1, topIncrementValue: topIncrementValue, function: function)
+        return function(initialIncrementerValue) + sigma(initialIncrementerValue + 1, topIncrementValue: topIncrementValue, function: function)
     }
 }

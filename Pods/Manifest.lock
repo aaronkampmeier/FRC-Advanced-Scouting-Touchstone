@@ -22,6 +22,7 @@ PODS:
     - UIColor-Hex (~> 0.1)
     - UIImage+BetterAdditions (~> 2.0)
   - SSZipArchive (1.6.2)
+  - UICircularProgressRing (1.1.7)
   - UIColor-Hex (0.1.1)
   - UIImage+BetterAdditions (2.0.3)
   - VerticalSlider (1.0.0)
@@ -34,6 +35,7 @@ DEPENDENCIES:
   - GMStepper
   - NYTPhotoViewer (~> 1.1.0)
   - SSBouncyButton (~> 1.0)
+  - UICircularProgressRing
   - VerticalSlider
 
 SPEC CHECKSUMS:
@@ -46,10 +48,11 @@ SPEC CHECKSUMS:
   NYTPhotoViewer: e80e8767f3780d2df37c6f72cbab15d6c7232911
   SSBouncyButton: 90f6da63da6c6d32f9dab4928b80632b427d871a
   SSZipArchive: 428eb1ac8d37dd133404d30f422b23958c1f9acc
+  UICircularProgressRing: aa42aecd035658bd7212fab6e2feabc8dcc72fae
   UIColor-Hex: 77e80f383c6b3a63c5e95a9a4a7f4a71976e38a5
   UIImage+BetterAdditions: 185cbe06059747dd4a65562c1b0c560e761d030c
   VerticalSlider: d0e269208ce7aa98e0273c0d244e9625d603b75e
 
-PODFILE CHECKSUM: 9a2f253c1fedaabfe09f927360fb564618a6ace3
+PODFILE CHECKSUM: 35989548f1b557355e70b87a823812fbdaa1e5a5
 
 COCOAPODS: 1.1.1

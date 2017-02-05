@@ -10,6 +10,6 @@ import Foundation
 import CoreData
 
 
-public class LocalMatch: NSManagedObject {
+open class LocalMatch: NSManagedObject {
 
 }

@@ -10,6 +10,6 @@ import Foundation
 import CoreData
 
 
-public class TeamEventPerformance: NSManagedObject {
+open class TeamEventPerformance: NSManagedObject {
     
 }

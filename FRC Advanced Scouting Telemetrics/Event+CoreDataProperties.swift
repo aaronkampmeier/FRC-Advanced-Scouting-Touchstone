@@ -23,8 +23,8 @@ extension Event: HasLocalEquivalent {
         return NSFetchRequest<Event>(entityName: "Event")
     }
 
-    @nonobjc public class func fetchRequest() -> NSFetchRequest<Event> {
-        return NSFetchRequest<Event>(entityName: "Event");
+    @nonobjc open override class func fetchRequest() -> NSFetchRequest<NSFetchRequestResult> {
+        return NSFetchRequest<Event>(entityName: "Event") as! NSFetchRequest<NSFetchRequestResult>;
     }
     
     static func genericFetchRequest() -> NSFetchRequest<NSManagedObject> {
@@ -94,16 +94,16 @@ extension Event {
     @NSManaged public func removeFromTeamEventPerformances(at idx: Int)
 
     @objc(insertTeamEventPerformances:atIndexes:)
-    @NSManaged public func insertIntoTeamEventPerformances(_ values: [TeamEventPerformance], at indexes: NSIndexSet)
+    @NSManaged public func insertIntoTeamEventPerformances(_ values: [TeamEventPerformance], at indexes: IndexSet)
 
     @objc(removeTeamEventPerformancesAtIndexes:)
-    @NSManaged public func removeFromTeamEventPerformances(at indexes: NSIndexSet)
+    @NSManaged public func removeFromTeamEventPerformances(at indexes: IndexSet)
 
     @objc(replaceObjectInTeamEventPerformancesAtIndex:withObject:)
     @NSManaged public func replaceTeamEventPerformances(at idx: Int, with value: TeamEventPerformance)
 
     @objc(replaceTeamEventPerformancesAtIndexes:withTeamEventPerformances:)
-    @NSManaged public func replaceTeamEventPerformances(at indexes: NSIndexSet, with values: [TeamEventPerformance])
+    @NSManaged public func replaceTeamEventPerformances(at indexes: IndexSet, with values: [TeamEventPerformance])
 
     @objc(addTeamEventPerformancesObject:)
     @NSManaged public func addToTeamEventPerformances(_ value: TeamEventPerformance)

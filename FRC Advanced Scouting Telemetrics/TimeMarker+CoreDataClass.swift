@@ -10,7 +10,7 @@ import Foundation
 import CoreData
 
 
-public class TimeMarker: NSManagedObject {
+open class TimeMarker: NSManagedObject {
 
 	var timeMarkerEventType: DataManager.TimeMarkerEvent {
 		return DataManager.TimeMarkerEvent(rawValue: event!) ?? .Error

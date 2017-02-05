@@ -24,8 +24,8 @@ extension LocalMatchPerformance: HasUniversalEquivalent {
         return NSFetchRequest<LocalMatchPerformance>(entityName: "LocalMatchPerformance")
     }
     
-    @nonobjc public class func fetchRequest() -> NSFetchRequest<LocalMatchPerformance> {
-        return NSFetchRequest<LocalMatchPerformance>(entityName: "LocalMatchPerformance");
+    @nonobjc open override class func fetchRequest() -> NSFetchRequest<NSFetchRequestResult> {
+        return NSFetchRequest<LocalMatchPerformance>(entityName: "LocalMatchPerformance") as! NSFetchRequest<NSFetchRequestResult>;
     }
     
     static func genericFetchRequest() -> NSFetchRequest<NSManagedObject> {
@@ -157,16 +157,16 @@ extension LocalMatchPerformance {
     @NSManaged public func removeFromTimeMarkers(at idx: Int)
 
     @objc(insertTimeMarkers:atIndexes:)
-    @NSManaged public func insertIntoTimeMarkers(_ values: [TimeMarker], at indexes: NSIndexSet)
+    @NSManaged public func insertIntoTimeMarkers(_ values: [TimeMarker], at indexes: IndexSet)
 
     @objc(removeTimeMarkersAtIndexes:)
-    @NSManaged public func removeFromTimeMarkers(at indexes: NSIndexSet)
+    @NSManaged public func removeFromTimeMarkers(at indexes: IndexSet)
 
     @objc(replaceObjectInTimeMarkersAtIndex:withObject:)
     @NSManaged public func replaceTimeMarkers(at idx: Int, with value: TimeMarker)
 
     @objc(replaceTimeMarkersAtIndexes:withTimeMarkers:)
-    @NSManaged public func replaceTimeMarkers(at indexes: NSIndexSet, with values: [TimeMarker])
+    @NSManaged public func replaceTimeMarkers(at indexes: IndexSet, with values: [TimeMarker])
 
     @objc(addTimeMarkersObject:)
     @NSManaged public func addToTimeMarkers(_ value: TimeMarker)

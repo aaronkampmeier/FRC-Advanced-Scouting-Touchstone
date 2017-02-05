@@ -29,8 +29,8 @@ class AdminConsoleController: UIViewController, UITableViewDataSource, UITableVi
     }
 	
 	enum adminConsoleSections: Int {
-		case Events
-		case About
+		case events
+		case about
 	}
 	
 	func numberOfSections(in tableView: UITableView) -> Int {

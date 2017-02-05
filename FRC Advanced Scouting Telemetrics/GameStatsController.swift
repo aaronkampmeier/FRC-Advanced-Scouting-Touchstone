@@ -21,7 +21,7 @@ class GameStatsController: UIViewController, UICollectionViewDataSource, UIColle
 		let insets = collectionView!.contentInset
 		return collectionView!.bounds.width - (insets.left + insets.right)
 	}
-	private var padding = 6
+	fileprivate var padding = 6
 	
 	override func viewDidLoad() {
 		super.viewDidLoad()

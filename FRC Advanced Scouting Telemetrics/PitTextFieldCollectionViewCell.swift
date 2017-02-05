@@ -14,7 +14,7 @@ class PitTextFieldCollectionViewCell: PitScoutingCell {
     
     var updateHandler: ((Any?)->Void)?
     
-    override func setUp(parameter: PitScoutingViewController.PitScoutingParameter) {
+    override func setUp(_ parameter: PitScoutingViewController.PitScoutingParameter) {
         self.label.text = parameter.label
         self.updateHandler = parameter.updateHandler
         

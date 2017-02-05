@@ -11,4 +11,5 @@ pod 'Gloss', '~> 1.1'
 pod "GMStepper"
 pod 'VerticalSlider'
 pod 'SSBouncyButton', '~> 1.0'
+pod 'UICircularProgressRing'
 end

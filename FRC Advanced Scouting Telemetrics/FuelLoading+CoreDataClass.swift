@@ -10,6 +10,6 @@ import Foundation
 import CoreData
 
 
-public class FuelLoading: NSManagedObject {
+open class FuelLoading: NSManagedObject {
 
 }

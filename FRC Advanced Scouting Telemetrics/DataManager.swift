@@ -17,7 +17,7 @@ class DataManager {
 	static let managedContext = (UIApplication.shared.delegate as! AppDelegate).managedObjectContext
 	
 	//MARK: Saving and deleting
-	private func save() {
+	fileprivate func save() {
 		do {
 			try TeamDataManager.managedContext.save()
 		} catch let error as NSError {
@@ -79,7 +79,7 @@ class DataManager {
 	}
 	
 	///Returns an array of Team objects ordered by their local general ranking
-	private func simpleLocalTeamRanking() -> [Team] {
+	fileprivate func simpleLocalTeamRanking() -> [Team] {
 		let orderedLocalTeams = getLocalTeamRankingObject().localTeams?.array as! [LocalTeam]
 		
         return LocalToUniversalConversion<LocalTeam,Team>(localObjects: orderedLocalTeams).convertToUniversal()!
@@ -128,7 +128,7 @@ class DataManager {
     //MARK: - Teams
     ///Fetches one team with the specified number. Only use if fetching one team do not use sequentially.
     func team(withTeamNumber teamNumber: String) -> Team? {
-        let fetchRequest: NSFetchRequest<Team> = Team.fetchRequest()
+        let fetchRequest: NSFetchRequest<Team> = Team.specificFR()
         fetchRequest.predicate = NSPredicate(format: "teamNumber like %@", argumentArray: [teamNumber])
         
         let teams: [Team]
@@ -151,14 +151,14 @@ class DataManager {
 		var events = [Event]()
 		if #available(iOS 10.0, *) {
 			do {
-				events = try DataManager.managedContext.fetch(Event.fetchRequest())
+				events = try DataManager.managedContext.fetch(Event.specificFR())
 			} catch {
 				
 			}
 		} else {
 			// Fallback on earlier versions
 			do {
-				events = try DataManager.managedContext.fetch(Event.fetchRequest())
+				events = try DataManager.managedContext.fetch(Event.specificFR())
 			} catch {
 				
 			}
@@ -181,7 +181,7 @@ class DataManager {
     func events() -> [Event] {
         let events: [Event]
         do {
-            events = try DataManager.managedContext.fetch(Event.fetchRequest())
+            events = try DataManager.managedContext.fetch(Event.specificFR())
         } catch {
             NSLog("Unable to fetch events")
             events = []
@@ -196,7 +196,7 @@ class DataManager {
     }
     
     func matches() -> [Match] {
-        let fetchRequest: NSFetchRequest<Match> = Match.fetchRequest()
+        let fetchRequest: NSFetchRequest<Match> = Match.specificFR()
         let matches: [Match]
         do {
             matches = try DataManager.managedContext.fetch(fetchRequest)
@@ -335,6 +335,29 @@ enum Capability: String, CustomStringConvertible {
     }
 }
 
+enum SimpleCapability: String, CustomStringConvertible {
+    case Yes
+    case No
+    
+    var description: String {
+        get {
+            return self.rawValue
+        }
+    }
+    
+    static var allValues: [SimpleCapability] {
+        get {
+            return [.Yes, .No]
+        }
+    }
+    
+    static var allStringValues: [String] {
+        get {
+            return SimpleCapability.allValues.map({$0.description})
+        }
+    }
+}
+
 enum RopeClimbStatus: String, CustomStringConvertible {
     case Successful
     case Attempted
@@ -455,7 +478,7 @@ struct ObjectPair<U:HasLocalEquivalent, L:HasUniversalEquivalent> where L.Univer
     }
     
     //Init an array of ObjectPairs from an array of universals and locals. The two arrays must be the same size.
-    static func fromArrays(universals: [U], locals: [L]) -> [ObjectPair<U,L>]? {
+    static func fromArrays(_ universals: [U], locals: [L]) -> [ObjectPair<U,L>]? {
         if universals.count != locals.count {
             return nil
         }
@@ -467,23 +490,23 @@ struct ObjectPair<U:HasLocalEquivalent, L:HasUniversalEquivalent> where L.Univer
         return objectPairs
     }
     
-    static func fromArray(universals: [U]) -> [ObjectPair<U,L>]? {
+    static func fromArray(_ universals: [U]) -> [ObjectPair<U,L>]? {
         let locals = UniversalToLocalConversion<U,L>(universalObjects: universals).convertToLocal()
         
-        return fromArrays(universals: universals, locals: locals)
+        return fromArrays(universals, locals: locals)
     }
     
-    static func fromArray(locals: [L]) -> [ObjectPair<U,L>]? {
+    static func fromArray(_ locals: [L]) -> [ObjectPair<U,L>]? {
         let universals = LocalToUniversalConversion<L,U>(localObjects: locals).convertToUniversal()!
         
-        return fromArrays(universals: universals, locals: locals)
+        return fromArrays(universals, locals: locals)
     }
 }
 
 //When using fetched properties it is not a good idea to individually access many objects' fetched properties together because then numerous fetch requests will be queued at the same time which can be really slow. Instead this method uses one fetch request to grab all the wanted objects.
 ///Returns the local objects for the universal objects given (and in the same order). Use this instead of accessing multiple fetched properties back-to-back.
 class UniversalToLocalConversion<U:HasLocalEquivalent, L:HasUniversalEquivalent> where L:NSManagedObject, L.SelfObject == L, L.UniversalType == U {
-    private let universalObjects: [U]
+    fileprivate let universalObjects: [U]
     
     init(universalObjects: [U]) {
         self.universalObjects = universalObjects
@@ -524,7 +547,7 @@ class UniversalToLocalConversion<U:HasLocalEquivalent, L:HasUniversalEquivalent>
 }
 
 class LocalToUniversalConversion<L: HasUniversalEquivalent, U:HasLocalEquivalent> where U:NSManagedObject, U.SelfObject == U {
-    private let localObjects: [L]
+    fileprivate let localObjects: [L]
     
     init(localObjects: [L]) {
         self.localObjects = localObjects

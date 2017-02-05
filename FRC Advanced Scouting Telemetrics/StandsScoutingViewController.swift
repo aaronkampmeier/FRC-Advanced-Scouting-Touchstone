@@ -212,7 +212,7 @@ class StandsScoutingViewController: UIViewController {
                 if firstMatchPerformance.match!.competitionLevelEnum.rankedPosition > secondMatchPerformance.match!.competitionLevelEnum.rankedPosition {
                     return true
                 } else if firstMatchPerformance.match!.competitionLevelEnum.rankedPosition == secondMatchPerformance.match!.competitionLevelEnum.rankedPosition {
-                    return firstMatchPerformance.match!.matchNumber!.intValue < secondMatchPerformance.match!.matchNumber!.intValue
+                    return firstMatchPerformance.match!.matchNumber!.int32Value < secondMatchPerformance.match!.matchNumber!.int32Value
                 } else {
                     return false
                 }

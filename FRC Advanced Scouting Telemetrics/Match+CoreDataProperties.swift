@@ -23,8 +23,8 @@ extension Match: HasLocalEquivalent {
         return NSFetchRequest<Match>(entityName: "Match")
     }
 
-    @nonobjc public class func fetchRequest() -> NSFetchRequest<Match> {
-        return NSFetchRequest<Match>(entityName: "Match");
+    @nonobjc open override class func fetchRequest() -> NSFetchRequest<NSFetchRequestResult> {
+        return NSFetchRequest<Match>(entityName: "Match") as! NSFetchRequest<NSFetchRequestResult>;
     }
     
     static func genericFetchRequest() -> NSFetchRequest<NSManagedObject> {
@@ -33,7 +33,7 @@ extension Match: HasLocalEquivalent {
 
     @NSManaged public var key: String?
     @NSManaged public var matchNumber: NSNumber?
-    @NSManaged public var time: NSDate?
+    @NSManaged public var time: Date?
     @NSManaged public var competitionLevel: String?
     @NSManaged public var setNumber: NSNumber?
     @NSManaged public var event: Event?

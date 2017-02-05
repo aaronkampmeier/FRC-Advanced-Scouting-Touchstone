@@ -12,8 +12,8 @@ import CoreData
 
 extension GearLoading {
 
-    @nonobjc public class func fetchRequest() -> NSFetchRequest<GearLoading> {
-        return NSFetchRequest<GearLoading>(entityName: "GearLoading");
+    @nonobjc open override class func fetchRequest() -> NSFetchRequest<NSFetchRequestResult> {
+        return NSFetchRequest<GearLoading>(entityName: "GearLoading") as! NSFetchRequest<NSFetchRequestResult>;
     }
 
     @NSManaged public var location: String?

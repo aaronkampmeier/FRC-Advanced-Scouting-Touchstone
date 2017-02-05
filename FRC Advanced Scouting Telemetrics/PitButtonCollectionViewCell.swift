@@ -14,7 +14,7 @@ class PitButtonCollectionViewCell: PitScoutingCell {
     
     var updateHandler: PitScoutingUpdateHandler?
     
-    override func setUp(parameter: PitScoutingViewController.PitScoutingParameter) {
+    override func setUp(_ parameter: PitScoutingViewController.PitScoutingParameter) {
         button.imageView?.contentMode = .scaleAspectFit
         label.text = parameter.label
         updateHandler = parameter.updateHandler

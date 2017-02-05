@@ -10,6 +10,6 @@ import Foundation
 import CoreData
 
 
-public class LocalTeam: NSManagedObject {
+open class LocalTeam: NSManagedObject {
 
 }

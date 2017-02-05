@@ -22,10 +22,10 @@ class SortVC: UIViewController, UIPickerViewDelegate, UIPickerViewDataSource {
     @IBOutlet weak var orderSegementedControl: UISegmentedControl!
 	
     var statsToDisplay = [String]()
-    private var selectedStat: String?
-    private let dataManager = DataManager()
+    fileprivate var selectedStat: String?
+    fileprivate let dataManager = DataManager()
 	
-    private var isAscending = false
+    fileprivate var isAscending = false
 	
 	var delegate: SortDelegate?
     

@@ -10,7 +10,7 @@ import Foundation
 import CoreData
 
 
-public class LocalMatchPerformance: NSManagedObject {
+open class LocalMatchPerformance: NSManagedObject {
     enum RopeClimbSuccess: String, CustomStringConvertible {
         case Yes
         case Somewhat

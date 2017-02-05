@@ -12,8 +12,8 @@ import CoreData
 
 extension GearMounting {
 
-    @nonobjc public class func fetchRequest() -> NSFetchRequest<GearMounting> {
-        return NSFetchRequest<GearMounting>(entityName: "GearMounting");
+    @nonobjc open override class func fetchRequest() -> NSFetchRequest<NSFetchRequestResult> {
+        return NSFetchRequest<GearMounting>(entityName: "GearMounting") as! NSFetchRequest<NSFetchRequestResult>;
     }
 
     @NSManaged public var pegNumber: NSNumber?

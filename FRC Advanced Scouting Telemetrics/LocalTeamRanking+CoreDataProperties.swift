@@ -12,8 +12,8 @@ import CoreData
 
 extension LocalTeamRanking {
 
-    @nonobjc public class func fetchRequest() -> NSFetchRequest<LocalTeamRanking> {
-        return NSFetchRequest<LocalTeamRanking>(entityName: "LocalTeamRanking");
+    @nonobjc open class func fetchRequest() -> NSFetchRequest<LocalTeamRanking> {
+        return NSFetchRequest<LocalTeamRanking>(entityName: "LocalTeamRanking")
     }
 
     @NSManaged public var localTeams: NSOrderedSet?
@@ -30,16 +30,16 @@ extension LocalTeamRanking {
     @NSManaged public func removeFromLocalTeams(at idx: Int)
 
     @objc(insertLocalTeams:atIndexes:)
-    @NSManaged public func insertIntoLocalTeams(_ values: [LocalTeam], at indexes: NSIndexSet)
+    @NSManaged public func insertIntoLocalTeams(_ values: [LocalTeam], at indexes: IndexSet)
 
     @objc(removeLocalTeamsAtIndexes:)
-    @NSManaged public func removeFromLocalTeams(at indexes: NSIndexSet)
+    @NSManaged public func removeFromLocalTeams(at indexes: IndexSet)
 
     @objc(replaceObjectInLocalTeamsAtIndex:withObject:)
     @NSManaged public func replaceLocalTeams(at idx: Int, with value: LocalTeam)
 
     @objc(replaceLocalTeamsAtIndexes:withLocalTeams:)
-    @NSManaged public func replaceLocalTeams(at indexes: NSIndexSet, with values: [LocalTeam])
+    @NSManaged public func replaceLocalTeams(at indexes: IndexSet, with values: [LocalTeam])
 
     @objc(addLocalTeamsObject:)
     @NSManaged public func addToLocalTeams(_ value: LocalTeam)

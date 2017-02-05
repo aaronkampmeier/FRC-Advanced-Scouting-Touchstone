@@ -16,7 +16,7 @@ class TeamDataManager {
     
     static let managedContext = (UIApplication.shared.delegate as! AppDelegate).managedObjectContext
 	
-	private func save() {
+	fileprivate func save() {
         do {
             try TeamDataManager.managedContext.save()
         } catch let error as NSError {
@@ -652,7 +652,7 @@ class TeamDataManager {
 	}
 	
 	func timeOverview(forMatchPerformance matchPerformance: TeamMatchPerformance) -> [TimeMarkerEvent] {
-		var timeOverview = [TimeMarkerEvent]()
+		let timeOverview = [TimeMarkerEvent]()
 //		for timeMarker in matchPerformance.timeMarkers?.array as! [TimeMarker] {
 //			timeOverview.append(TimeMarkerEvent(type: timeMarker.timeMarkerEventType, atTime: timeMarker.time?.doubleValue ?? -1))
 //		}

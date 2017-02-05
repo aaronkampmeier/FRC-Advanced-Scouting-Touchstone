@@ -48,7 +48,7 @@ class SSDefenseViewController: UIViewController {
         didSet {
             successfulChooser.delegate = self
             successfulChooser.setPrompt(to: "Successful?")
-            successfulChooser.setUpWithButtons(buttons: [SSOffenseWhereViewController.Button.init(title: "Yes", color: .brown, id: "Yes"), SSOffenseWhereViewController.Button.init(title: "Somewhat", color: .brown, id: "Somewhat"), SSOffenseWhereViewController.Button.init(title: "No", color: .brown, id: "No")], time: 3)
+            successfulChooser.setUpWithButtons([SSOffenseWhereViewController.Button.init(title: "Yes", color: .brown, id: "Yes"), SSOffenseWhereViewController.Button.init(title: "Somewhat", color: .brown, id: "Somewhat"), SSOffenseWhereViewController.Button.init(title: "No", color: .brown, id: "No")], time: 3)
         }
     }
     

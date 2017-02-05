@@ -9,8 +9,8 @@
 import Foundation
 
 class Stopwatch {
-	private var startTime: Date?
-	private var furthestTime: TimeInterval = 0
+	fileprivate var startTime: Date?
+	fileprivate var furthestTime: TimeInterval = 0
 	
 	var elapsedTime: TimeInterval {
 		if let start = startTime {

@@ -10,6 +10,6 @@ import Foundation
 import CoreData
 
 
-public class GearLoading: NSManagedObject {
+open class GearLoading: NSManagedObject {
 
 }

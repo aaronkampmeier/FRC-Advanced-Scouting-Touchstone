@@ -332,6 +332,7 @@
 		93CE1BF61E403A97004165BE /* NotesViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NotesViewController.swift; sourceTree = "<group>"; };
 		93EA7FE41E467224002EC8C7 /* FAST 2-3-2.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "FAST 2-3-2.xcdatamodel"; sourceTree = "<group>"; };
 		93EA7FE91E4693C6002EC8C7 /* PitSwitchCollectionViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PitSwitchCollectionViewCell.swift; sourceTree = "<group>"; };
+		93EA7FF61E46A849002EC8C7 /* FAST 2-3-3.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "FAST 2-3-3.xcdatamodel"; sourceTree = "<group>"; };
 		93FBC3901E3DAE5300FEB328 /* FAST 2-2-3.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "FAST 2-2-3.xcdatamodel"; sourceTree = "<group>"; };
 		93FBC3951E3E624500FEB328 /* GameFieldLocationViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GameFieldLocationViewController.swift; sourceTree = "<group>"; };
 		93FBC3991E3EEDEC00FEB328 /* SSRopeClimbViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SSRopeClimbViewController.swift; sourceTree = "<group>"; };
@@ -374,9 +375,7 @@
 		1F21DF101C645D1F00C55D0E /* View Controllers */ = {
 			isa = PBXGroup;
 			children = (
-				93CE1BF61E403A97004165BE /* NotesViewController.swift */,
-				937E9C951E40468300D0ED76 /* SuperNotesCollectionViewController.swift */,
-				932354451E41686B0039386A /* SuperNotesCollectionViewCell.swift */,
+				93EA7FF11E46A36E002EC8C7 /* Notes */,
 				1F9B782A1CD1A42400B4E5AE /* HiddenDebugViewController.swift */,
 				1FA6A73F1CD3B4E800772C63 /* Data Syncing */,
 				1F4178BF1CD02E4200801D5B /* Team List */,
@@ -640,6 +639,16 @@
 			name = Products;
 			sourceTree = "<group>";
 		};
+		93EA7FF11E46A36E002EC8C7 /* Notes */ = {
+			isa = PBXGroup;
+			children = (
+				93CE1BF61E403A97004165BE /* NotesViewController.swift */,
+				937E9C951E40468300D0ED76 /* SuperNotesCollectionViewController.swift */,
+				932354451E41686B0039386A /* SuperNotesCollectionViewCell.swift */,
+			);
+			name = Notes;
+			sourceTree = "<group>";
+		};
 		F57B032A41CFE9D404B09C72 /* Pods */ = {
 			isa = PBXGroup;
 			children = (
@@ -726,7 +735,7 @@
 					1F78E77E1C3B469300221927 = {
 						CreatedOnToolsVersion = 7.2;
 						DevelopmentTeam = 3T77TK2ECU;
-						LastSwiftMigration = 0800;
+						LastSwiftMigration = 0820;
 						SystemCapabilities = {
 							com.apple.Siri = {
 								enabled = 0;
@@ -1370,6 +1379,7 @@
 		1F78E7891C3B469300221927 /* FRC_Advanced_Scouting_Telemetrics.xcdatamodeld */ = {
 			isa = XCVersionGroup;
 			children = (
+				93EA7FF61E46A849002EC8C7 /* FAST 2-3-3.xcdatamodel */,
 				93EA7FE41E467224002EC8C7 /* FAST 2-3-2.xcdatamodel */,
 				930B96651E45A52700E385D3 /* FAST 2-3-1.xcdatamodel */,
 				93610E371E42F0C800856BE2 /* FAST 2-3.xcdatamodel */,

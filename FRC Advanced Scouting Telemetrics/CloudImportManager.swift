@@ -11,28 +11,28 @@ import CoreData
 import Crashlytics
 
 class CloudEventImportManager {
-    private let dataManager = DataManager()
-    private let managedContext = DataManager.managedContext
-    private let cloudConnection = CloudData()
+    fileprivate let dataManager = DataManager()
+    fileprivate let managedContext = DataManager.managedContext
+    fileprivate let cloudConnection = CloudData()
     
-    private let completionHandler: (Bool, ImportError?) -> Void
+    fileprivate let completionHandler: (Bool, ImportError?) -> Void
     
     //Pre-existing objects
-    private let currentEvents: [Event]
-    private let currentTeams: [Team]
-    private let currentLocalTeams: [LocalTeam]
-    private let currentMatches: [Match]
-    private let currentLocalMatchPerformances: [LocalMatchPerformance]
-    private let currentLocalMatches: [LocalMatch]
-    private let frcEvent: FRCEvent
+    fileprivate let currentEvents: [Event]
+    fileprivate let currentTeams: [Team]
+    fileprivate let currentLocalTeams: [LocalTeam]
+    fileprivate let currentMatches: [Match]
+    fileprivate let currentLocalMatchPerformances: [LocalMatchPerformance]
+    fileprivate let currentLocalMatches: [LocalMatch]
+    fileprivate let frcEvent: FRCEvent
     
     //Created objects (Including objects that were pre-existing but still would have been created were they not)
-    private var eventObject: Event?
-    private var localEventObject: LocalEvent?
-    private var teamObjects: [Team] = []
-    private var teamEventPerformanceObjects: [TeamEventPerformance] = []
-    private var matchObjects: [Match] = []
-    private var teamMatchPerformanceObjects: [TeamMatchPerformance] = []
+    fileprivate var eventObject: Event?
+    fileprivate var localEventObject: LocalEvent?
+    fileprivate var teamObjects: [Team] = []
+    fileprivate var teamEventPerformanceObjects: [TeamEventPerformance] = []
+    fileprivate var matchObjects: [Match] = []
+    fileprivate var teamMatchPerformanceObjects: [TeamMatchPerformance] = []
     
     init(shouldPreload: Bool, forEvent frcEvent: FRCEvent, withCompletionHandler completionHandler: @escaping (Bool, ImportError?) -> Void) {
         if shouldPreload {
@@ -43,20 +43,20 @@ class CloudEventImportManager {
         currentEvents = dataManager.events()
         currentTeams = dataManager.localTeamRanking()
         do {
-            currentLocalTeams = try managedContext.fetch(LocalTeam.fetchRequest())
+            currentLocalTeams = try managedContext.fetch(LocalTeam.specificFR())
         } catch {
             NSLog("Unable to fetch local teams")
             currentLocalTeams = []
         }
         currentMatches = dataManager.matches()
         do {
-            currentLocalMatchPerformances = try managedContext.fetch(LocalMatchPerformance.fetchRequest())
+            currentLocalMatchPerformances = try managedContext.fetch(LocalMatchPerformance.specificFR())
         } catch {
             NSLog("Unable to fetch local match performances")
             currentLocalMatchPerformances = []
         }
         do {
-            currentLocalMatches = try managedContext.fetch(LocalMatch.fetchRequest())
+            currentLocalMatches = try managedContext.fetch(LocalMatch.specificFR())
         } catch {
             NSLog("Unable to fetch current local matches")
             currentLocalMatches = []
@@ -113,7 +113,7 @@ class CloudEventImportManager {
         eventObject = event
     }
     
-    private func importTeams(fromTeams teams: [FRCTeam]?) {
+    fileprivate func importTeams(fromTeams teams: [FRCTeam]?) {
         CLSNSLogv("Beginning import of teams from event", getVaList([]))
         if let frcTeams = teams {
             for frcTeam in frcTeams {
@@ -188,7 +188,7 @@ class CloudEventImportManager {
         }
     }
     
-    private func importMatches(fromMatches matches: [FRCMatch]?) {
+    fileprivate func importMatches(fromMatches matches: [FRCMatch]?) {
         CLSNSLogv("Beginning import of matches from event", getVaList([]))
         if let frcMatches = matches {
             for frcMatch in frcMatches {

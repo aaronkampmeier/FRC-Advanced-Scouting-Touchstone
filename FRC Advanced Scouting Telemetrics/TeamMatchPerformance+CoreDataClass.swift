@@ -10,7 +10,7 @@ import Foundation
 import CoreData
 import Crashlytics
 
-public class TeamMatchPerformance: NSManagedObject {
+open class TeamMatchPerformance: NSManagedObject {
     
     enum Alliance: String {
         case Red = "Red"

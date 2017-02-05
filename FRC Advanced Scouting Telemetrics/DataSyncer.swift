@@ -15,7 +15,7 @@ let CDEMultipeerCloudFileSystemDidImportFilesNotification = "CDEMultipeerCloudFi
 let DSTransferNumberChanged = "DSTransferNumberChanged"
 
 class DataSyncer: NSObject, CDEPersistentStoreEnsembleDelegate {
-	private static var sharedInstance: DataSyncer = DataSyncer()
+	fileprivate static var sharedInstance: DataSyncer = DataSyncer()
     
 	static func sharedDataSyncer() -> DataSyncer {
 		return sharedInstance
@@ -232,8 +232,8 @@ class MultipeerConnection: NSObject, CDEMultipeerConnection {
 	
 	let myPeerID = MCPeerID(displayName: UIDevice.current.name)
 	
-	private let serviceAdvertiser: MCNearbyServiceAdvertiser
-	private let serviceBrowser: MCNearbyServiceBrowser
+	fileprivate let serviceAdvertiser: MCNearbyServiceAdvertiser
+	fileprivate let serviceBrowser: MCNearbyServiceBrowser
 	
 	let session: MCSession
 	

@@ -24,7 +24,7 @@ class PitSegmentedSelectorCollectionViewCell: PitScoutingCell {
         }
     }
     
-    override func setUp(parameter: PitScoutingViewController.PitScoutingParameter) {
+    override func setUp(_ parameter: PitScoutingViewController.PitScoutingParameter) {
         label.text = parameter.label
         updateHandler = parameter.updateHandler
         options = parameter.options!

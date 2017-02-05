@@ -19,10 +19,10 @@ class GameStatsLayout: UICollectionViewLayout {
 	var numberOfMatches: Int!
 	var cellPadding = 6
 	
-	private var cache = [UICollectionViewLayoutAttributes]()
+	fileprivate var cache = [UICollectionViewLayoutAttributes]()
 	
-	private var contentHeight: CGFloat  = 0.0
-	private var contentWidth: CGFloat {
+	fileprivate var contentHeight: CGFloat  = 0.0
+	fileprivate var contentWidth: CGFloat {
 		let insets = collectionView!.contentInset
 		return collectionView!.bounds.width - (insets.left + insets.right)
 	}

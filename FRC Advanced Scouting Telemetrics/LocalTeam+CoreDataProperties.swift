@@ -24,8 +24,8 @@ extension LocalTeam: HasUniversalEquivalent {
         return NSFetchRequest<LocalTeam>(entityName: "LocalTeam")
     }
     
-    @nonobjc public class func fetchRequest() -> NSFetchRequest<LocalTeam> {
-        return NSFetchRequest<LocalTeam>(entityName: "LocalTeam");
+    @nonobjc open override class func fetchRequest() -> NSFetchRequest<NSFetchRequestResult> {
+        return NSFetchRequest<LocalTeam>(entityName: "LocalTeam") as! NSFetchRequest<NSFetchRequestResult>;
     }
     
     static func genericFetchRequest() -> NSFetchRequest<NSManagedObject> {
@@ -35,7 +35,7 @@ extension LocalTeam: HasUniversalEquivalent {
     @NSManaged public var canBanana: NSNumber?
     @NSManaged public var climberCapability: String?
     @NSManaged public var driverXP: NSNumber?
-    @NSManaged public var frontImage: NSData?
+    @NSManaged public var frontImage: Data?
     @NSManaged public var gearsCapability: String?
     @NSManaged public var highGoalCapability: String?
     @NSManaged public var key: String?
@@ -44,7 +44,7 @@ extension LocalTeam: HasUniversalEquivalent {
     @NSManaged public var programmingLanguage: String?
     @NSManaged public var robotHeight: NSNumber?
     @NSManaged public var robotWeight: NSNumber?
-    @NSManaged public var sideImage: NSData?
+    @NSManaged public var sideImage: Data?
     @NSManaged public var tankSize: NSNumber?
     @NSManaged public var visionTrackingCapability: String?
     @NSManaged public var autoPegs: [Int]?

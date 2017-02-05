@@ -27,7 +27,7 @@ private class TBAResponseCache<T> {
 }
 
 class CloudData {
-    private let headers = [
+    fileprivate let headers = [
         "X-Dreamfactory-API-Key":apiKey,
         "Accept": "application/json"
     ]
@@ -42,7 +42,7 @@ class CloudData {
         }
     }
     
-    private let dataCache = NSCache<NSString, TBAResponseCache<Any>>()
+    fileprivate let dataCache = NSCache<NSString, TBAResponseCache<Any>>()
     
 	
     func events(withCompletionHandler completionHandler: @escaping ([FRCEvent]?) -> Void) {
@@ -91,7 +91,7 @@ class CloudData {
         }
     }
     
-    private func handleMatchesResponse(withData responseData: Any) -> [FRCMatch]? {
+    fileprivate func handleMatchesResponse(withData responseData: Any) -> [FRCMatch]? {
         if let json = responseData as? [[String:Any]] {
             let matches = [FRCMatch].from(jsonArray: json)!
             return matches

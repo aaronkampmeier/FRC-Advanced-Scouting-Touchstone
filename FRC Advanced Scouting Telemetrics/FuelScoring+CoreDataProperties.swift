@@ -12,8 +12,8 @@ import CoreData
 
 extension FuelScoring {
 
-    @nonobjc public class func fetchRequest() -> NSFetchRequest<FuelScoring> {
-        return NSFetchRequest<FuelScoring>(entityName: "FuelScoring");
+    @nonobjc open override class func fetchRequest() -> NSFetchRequest<NSFetchRequestResult> {
+        return NSFetchRequest<FuelScoring>(entityName: "FuelScoring") as! NSFetchRequest<NSFetchRequestResult>;
     }
 
     @NSManaged public var accuracy: NSNumber?

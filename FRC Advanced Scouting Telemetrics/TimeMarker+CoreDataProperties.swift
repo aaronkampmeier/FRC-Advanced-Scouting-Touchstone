@@ -12,8 +12,8 @@ import CoreData
 
 extension TimeMarker {
 
-    @nonobjc public class func fetchRequest() -> NSFetchRequest<TimeMarker> {
-        return NSFetchRequest<TimeMarker>(entityName: "TimeMarker");
+    @nonobjc open override class func fetchRequest() -> NSFetchRequest<NSFetchRequestResult> {
+        return NSFetchRequest<TimeMarker>(entityName: "TimeMarker") as! NSFetchRequest<NSFetchRequestResult>;
     }
 
     @NSManaged public var event: String?

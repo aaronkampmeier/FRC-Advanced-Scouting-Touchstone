@@ -10,7 +10,7 @@ import Foundation
 import CoreData
 
 
-public class Match: NSManagedObject {
+open class Match: NSManagedObject {
     var competitionLevelEnum: CompetitionLevel {
         return CompetitionLevel(rawValue: self.competitionLevel!)!
     }

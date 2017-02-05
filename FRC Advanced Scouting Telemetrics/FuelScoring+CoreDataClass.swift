@@ -10,6 +10,6 @@ import Foundation
 import CoreData
 
 
-public class FuelScoring: NSManagedObject {
+open class FuelScoring: NSManagedObject {
 
 }

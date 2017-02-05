@@ -110,6 +110,7 @@ class TeamListDetailViewController: UIViewController, TeamSelectionDelegate {
 		
 		//Set the stands scouting button to not selectable since there is no team selected
 		standsScoutingButton.isEnabled = false
+        pitScoutingButton.isEnabled = false
 		
 		//Get the child view controllers
 		gameStatsController = (storyboard?.instantiateViewController(withIdentifier: "gameStatsCollection") as! GameStatsController)
@@ -368,7 +369,7 @@ extension TeamListDetailViewController: NYTPhotosViewControllerDelegate {
 
 extension TeamListDetailViewController: TeamListSegmentsDataSource {
 	func currentMatchPerformances() -> [ObjectPair<TeamMatchPerformance,LocalMatchPerformance>] {
-        return ObjectPair<TeamMatchPerformance,LocalMatchPerformance>.fromArray(universals: teamEventPerformance?.matchPerformances?.allObjects as? [TeamMatchPerformance] ?? []) ?? []
+        return ObjectPair<TeamMatchPerformance,LocalMatchPerformance>.fromArray(teamEventPerformance?.matchPerformances?.allObjects as? [TeamMatchPerformance] ?? []) ?? []
 	}
 	
 	func currentTeam() -> ObjectPair<Team,LocalTeam>? {

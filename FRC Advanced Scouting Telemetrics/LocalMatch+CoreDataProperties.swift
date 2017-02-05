@@ -23,8 +23,8 @@ extension LocalMatch: HasUniversalEquivalent {
         return NSFetchRequest<LocalMatch>(entityName: "LocalMatch")
     }
 
-    @nonobjc public class func fetchRequest() -> NSFetchRequest<LocalMatch> {
-        return NSFetchRequest<LocalMatch>(entityName: "LocalMatch");
+    @nonobjc open override class func fetchRequest() -> NSFetchRequest<NSFetchRequestResult> {
+        return NSFetchRequest<LocalMatch>(entityName: "LocalMatch") as! NSFetchRequest<NSFetchRequestResult>;
     }
     
     static func genericFetchRequest() -> NSFetchRequest<NSManagedObject> {

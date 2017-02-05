@@ -8,6 +8,8 @@
 
 import UIKit
 import SSBouncyButton
+import SpriteKit
+import UICircularProgressRing
 
 protocol WhereDelegate {
     func shouldSelect(_ whereVC: SSOffenseWhereViewController, id: String, handler: @escaping (Bool)->Void)
@@ -19,7 +21,7 @@ protocol FASTSSButtonable: CustomStringConvertible {
 }
 
 extension FASTSSButtonable {
-    func button(color: UIColor) -> SSOffenseWhereViewController.Button {
+    func button(_ color: UIColor) -> SSOffenseWhereViewController.Button {
         return SSOffenseWhereViewController.Button(title: self.description, color: color, id: self.rawValue)
     }
 }
@@ -27,10 +29,11 @@ extension FASTSSButtonable {
 class SSOffenseWhereViewController: UIViewController {
     @IBOutlet weak var stackView: UIStackView?
     @IBOutlet weak var prompt: UILabel!
+    @IBOutlet weak var timerView: UICircularProgressRingView!
     
     var promptText: String?
     
-    private var buttons: [Button] = [] {
+    fileprivate var buttons: [Button] = [] {
         didSet {
             ssBouncyButtons.removeAll()
             for subview in stackView?.arrangedSubviews ?? [UIView]() {
@@ -48,10 +51,11 @@ class SSOffenseWhereViewController: UIViewController {
             }
         }
     }
-    private var ssBouncyButtons = [SSBouncyButton]()
-    private var cushionTime: TimeInterval = 0
+    fileprivate var ssBouncyButtons = [SSBouncyButton]()
+    fileprivate var cushionTime: TimeInterval = 0
     
     var delegate: WhereDelegate?
+    var selectedButton: Button?
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -66,6 +70,14 @@ class SSOffenseWhereViewController: UIViewController {
         if let text = promptText {
             self.prompt.text = text
         }
+        
+        timerView.maxValue = 3
+        timerView.innerRingColor = UIColor.blue
+        timerView.outerRingColor = buttons.first?.color ?? UIColor.blue
+        timerView.outerRingWidth = 2
+        timerView.innerRingWidth = 1
+        
+        timerView.isHidden = true
     }
 
     override func didReceiveMemoryWarning() {
@@ -73,7 +85,13 @@ class SSOffenseWhereViewController: UIViewController {
         // Dispose of any resources that can be recreated.
     }
     
-    func setUpWithButtons(buttons: [Button], time: TimeInterval) {
+    @IBAction func tappedTimer(_ sender: UITapGestureRecognizer) {
+        self.hide()
+        delegate?.selected(self, id: selectedButton!.id)
+        currentScheduledTask?.cancel()
+    }
+    
+    func setUpWithButtons(_ buttons: [Button], time: TimeInterval) {
         self.buttons = buttons
         self.cushionTime = time
     }
@@ -86,6 +104,8 @@ class SSOffenseWhereViewController: UIViewController {
         for button in ssBouncyButtons {
             button.isSelected = false
         }
+        timerView.setProgress(value: 0, animationDuration: 0)
+        timerView.isHidden = true
     }
     
     func show() {
@@ -109,23 +129,27 @@ class SSOffenseWhereViewController: UIViewController {
         }
         let selectedButton = buttons[index!]
         
-        delegate?.shouldSelect(self, id: selectedButton.id) {self.select(buttonToSelect: sender, shouldSelect: $0)}
+        delegate?.shouldSelect(self, id: selectedButton.id) {self.select(sender, shouldSelect: $0)}
     }
     
-    func select(buttonToSelect: SSBouncyButton, shouldSelect: Bool) {
+    func select(_ buttonToSelect: SSBouncyButton, shouldSelect: Bool) {
         let index = buttons.index() {button in
             return button.title == buttonToSelect.title(for: .normal)
         }
-        let selectedButton = buttons[index!]
+        selectedButton = buttons[index!]
         
         if shouldSelect {
             buttonToSelect.isSelected = true
+            
+            timerView.isHidden = false
+            timerView.setProgress(value: 0, animationDuration: 0)
+            timerView.setProgress(value: 3, animationDuration: 3)
             
             currentScheduledTask?.cancel()
             
             currentScheduledTask = DispatchWorkItem {
                 self.hide()
-                self.delegate?.selected(self, id: selectedButton.id)
+                self.delegate?.selected(self, id: self.selectedButton!.id)
             }
             DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + cushionTime, execute: currentScheduledTask!)
         } else {

@@ -10,6 +10,6 @@ import Foundation
 import CoreData
 
 
-public class LocalTeamRanking: NSManagedObject {
+open class LocalTeamRanking: NSManagedObject {
 
 }

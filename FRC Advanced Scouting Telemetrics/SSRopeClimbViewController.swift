@@ -16,7 +16,7 @@ class SSRopeClimbViewController: UIViewController {
         didSet {
             if let ropeClimbSuccessfulVC = ropeClimbSuccessfulVC {
                 ropeClimbSuccessfulVC.delegate = self
-                ropeClimbSuccessfulVC.setUpWithButtons(buttons: [SSOffenseWhereViewController.Button.init(title: "Yes", color: .blue, id: LocalMatchPerformance.RopeClimbSuccess.Yes.rawValue), SSOffenseWhereViewController.Button.init(title: "Somewhat", color: .blue, id: LocalMatchPerformance.RopeClimbSuccess.Somewhat.rawValue), SSOffenseWhereViewController.Button.init(title: "No", color: .blue, id: LocalMatchPerformance.RopeClimbSuccess.No.rawValue)], time: 3)
+                ropeClimbSuccessfulVC.setUpWithButtons([SSOffenseWhereViewController.Button.init(title: "Yes", color: .blue, id: LocalMatchPerformance.RopeClimbSuccess.Yes.rawValue), SSOffenseWhereViewController.Button.init(title: "Somewhat", color: .blue, id: LocalMatchPerformance.RopeClimbSuccess.Somewhat.rawValue), SSOffenseWhereViewController.Button.init(title: "No", color: .blue, id: LocalMatchPerformance.RopeClimbSuccess.No.rawValue)], time: 3)
                 ropeClimbSuccessfulVC.setPrompt(to: "Rope Climb Successful")
             }
         }
@@ -55,7 +55,7 @@ class SSRopeClimbViewController: UIViewController {
 
 extension SSRopeClimbViewController: WhereDelegate {
     func selected(_ whereVC: SSOffenseWhereViewController, id: String) {
-        ssDataManager.recordRopeClimb(successful: id)
+        ssDataManager.recordRopeClimb(id)
     }
     
     func shouldSelect(_ whereVC: SSOffenseWhereViewController, id: String, handler: @escaping (Bool) -> Void) {

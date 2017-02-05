@@ -13,9 +13,9 @@ class EventPickerViewController: UIViewController, UIPickerViewDelegate, UIPicke
 	
 	var delegate: EventSelection?
 	var dataManager = DataManager()
-	private var events: [Event]?
-	private var currentEvent: Event?
-	private var chosenEvent: Event?
+	fileprivate var events: [Event]?
+	fileprivate var currentEvent: Event?
+	fileprivate var chosenEvent: Event?
 
     override func viewDidLoad() {
         super.viewDidLoad()

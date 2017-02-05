@@ -24,8 +24,8 @@ extension LocalEvent {
         return NSFetchRequest<LocalEvent>(entityName: "LocalEvent")
     }
     
-    @nonobjc public class func fetchRequest() -> NSFetchRequest<LocalEvent> {
-        return NSFetchRequest<LocalEvent>(entityName: "LocalEvent");
+    @nonobjc open override class func fetchRequest() -> NSFetchRequest<NSFetchRequestResult> {
+        return NSFetchRequest<LocalEvent>(entityName: "LocalEvent") as! NSFetchRequest<NSFetchRequestResult>;
     }
     
     static func genericFetchRequest() -> NSFetchRequest<NSManagedObject> {
@@ -48,16 +48,16 @@ extension LocalEvent {
     @NSManaged public func removeFromRankedTeams(at idx: Int)
 
     @objc(insertRankedTeams:atIndexes:)
-    @NSManaged public func insertIntoRankedTeams(_ values: [LocalTeam], at indexes: NSIndexSet)
+    @NSManaged public func insertIntoRankedTeams(_ values: [LocalTeam], at indexes: IndexSet)
 
     @objc(removeRankedTeamsAtIndexes:)
-    @NSManaged public func removeFromRankedTeams(at indexes: NSIndexSet)
+    @NSManaged public func removeFromRankedTeams(at indexes: IndexSet)
 
     @objc(replaceObjectInRankedTeamsAtIndex:withObject:)
     @NSManaged public func replaceRankedTeams(at idx: Int, with value: LocalTeam)
 
     @objc(replaceRankedTeamsAtIndexes:withRankedTeams:)
-    @NSManaged public func replaceRankedTeams(at indexes: NSIndexSet, with values: [LocalTeam])
+    @NSManaged public func replaceRankedTeams(at indexes: IndexSet, with values: [LocalTeam])
 
     @objc(addRankedTeamsObject:)
     @NSManaged public func addToRankedTeams(_ value: LocalTeam)

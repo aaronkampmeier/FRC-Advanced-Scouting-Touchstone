@@ -12,8 +12,8 @@ import CoreData
 
 extension Defending {
 
-    @nonobjc public class func fetchRequest() -> NSFetchRequest<Defending> {
-        return NSFetchRequest<Defending>(entityName: "Defending");
+    @nonobjc open override class func fetchRequest() -> NSFetchRequest<NSFetchRequestResult> {
+        return NSFetchRequest<Defending>(entityName: "Defending") as! NSFetchRequest<NSFetchRequestResult>;
     }
 
     @NSManaged public var duration: NSNumber?

@@ -71,7 +71,7 @@ extension Dictionary {
     }
     
     ///Map through the values in a dictionary and return a dictionary with the same keys and new values
-    func map<OutValue>( transform: (Value) throws -> OutValue) rethrows -> [Key: OutValue] {
+    func map<OutValue>( _ transform: (Value) throws -> OutValue) rethrows -> [Key: OutValue] {
         return Dictionary<Key, OutValue>(try map { (k, v) in (k, try transform(v)) })
     }
 }

@@ -10,11 +10,11 @@ import UIKit
 
 typealias PitScoutingUpdateHandler = ((Any?)->Void)
 typealias PitScoutingCurrentValue = ()->Any?
-let PitScoutingNewImageNotification = NSNotification.Name("PitScoutingNewImageNotification")
+let PitScoutingNewImageNotification = Notification.Name("PitScoutingNewImageNotification")
 
 //A class that all the pit scouting cells subclass and override the default methods
 class PitScoutingCell: UICollectionViewCell {
-    func setUp(parameter: PitScoutingViewController.PitScoutingParameter) {
+    func setUp(_ parameter: PitScoutingViewController.PitScoutingParameter) {
         
     }
 }
@@ -85,7 +85,7 @@ class PitScoutingViewController: UIViewController, UICollectionViewDataSource, U
             }, updateHandler: {newValue in
                 if let image = newValue as? UIImage {
                     let imageData = UIImageJPEGRepresentation(image, 1)
-                    self.scoutedTeam?.local.frontImage = imageData as NSData?
+                    self.scoutedTeam?.local.frontImage = imageData as Data?
                 } else {
                     self.scoutedTeam?.local.frontImage = nil
                 }
@@ -103,7 +103,7 @@ class PitScoutingViewController: UIViewController, UICollectionViewDataSource, U
             }, updateHandler: {newValue in
                 if let image = newValue as? UIImage {
                     let imageData = UIImageJPEGRepresentation(image, 1)
-                    self.scoutedTeam?.local.sideImage = imageData as NSData?
+                    self.scoutedTeam?.local.sideImage = imageData
                 } else {
                     self.scoutedTeam?.local.sideImage = nil
                 }
@@ -123,6 +123,12 @@ class PitScoutingViewController: UIViewController, UICollectionViewDataSource, U
                     self.scoutedTeam?.local.robotHeight = NSNumber(value: doubleValue)
                 } else {
                     self.scoutedTeam?.local.robotHeight = nil
+                }
+            }),
+            
+            PitScoutingParameter(type: .SegmentedSelector, label: "Gears Capability", options: SimpleCapability.allStringValues, currentValue: {self.scoutedTeam?.local.gearsCapability}, updateHandler: {newValue in
+                if let capability = newValue as? String {
+                    self.scoutedTeam?.local.gearsCapability = capability
                 }
             }),
             
@@ -245,7 +251,7 @@ class PitScoutingViewController: UIViewController, UICollectionViewDataSource, U
         let parameter = pitScoutingParameters[indexPath.item]
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: parameter.type.cellID, for: indexPath) as! PitScoutingCell
         
-        cell.setUp(parameter: parameter)
+        cell.setUp(parameter)
         
         return cell
     }

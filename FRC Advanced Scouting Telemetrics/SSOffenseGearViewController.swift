@@ -16,13 +16,13 @@ class SSOffenseGearViewController: UIViewController {
     var loadingWhereVC: SSOffenseWhereViewController! {
         didSet {
             loadingWhereVC.delegate = self
-            loadingWhereVC.setUpWithButtons(buttons: [GearLoadingLocations.LoadingStation.button(color: .purple), GearLoadingLocations.Floor.button(color: .purple)], time: 3)
+            loadingWhereVC.setUpWithButtons([GearLoadingLocations.LoadingStation.button(.purple), GearLoadingLocations.Floor.button(.purple)], time: 3)
         }
     }
     var mountingWhereVC: SSOffenseWhereViewController! {
         didSet {
             mountingWhereVC.delegate = self
-            mountingWhereVC.setUpWithButtons(buttons: [GearMountingLocations.Peg1.button(color: .purple), GearMountingLocations.Peg2.button(color: .purple), GearMountingLocations.Peg3.button(color: .purple)], time: 3)
+            mountingWhereVC.setUpWithButtons([GearMountingLocations.Peg1.button(.purple), GearMountingLocations.Peg2.button(.purple), GearMountingLocations.Peg3.button(.purple)], time: 3)
         }
     }
     

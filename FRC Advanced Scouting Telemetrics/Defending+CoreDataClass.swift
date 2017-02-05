@@ -10,6 +10,6 @@ import Foundation
 import CoreData
 
 
-public class Defending: NSManagedObject {
+open class Defending: NSManagedObject {
 
 }

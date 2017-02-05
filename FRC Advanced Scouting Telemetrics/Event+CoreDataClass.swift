@@ -10,6 +10,6 @@ import Foundation
 import CoreData
 
 
-public class Event: NSManagedObject {
+open class Event: NSManagedObject {
 
 }

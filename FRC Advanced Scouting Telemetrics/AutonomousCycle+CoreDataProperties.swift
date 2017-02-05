@@ -12,8 +12,8 @@ import CoreData
 
 extension AutonomousCycle {
 
-    @nonobjc public class func fetchRequest() -> NSFetchRequest<AutonomousCycle> {
-        return NSFetchRequest<AutonomousCycle>(entityName: "AutonomousCycle");
+    @nonobjc open override class func fetchRequest() -> NSFetchRequest<NSFetchRequestResult> {
+        return NSFetchRequest<AutonomousCycle>(entityName: "AutonomousCycle") as! NSFetchRequest<NSFetchRequestResult>;
     }
 
     @NSManaged public var moved: NSNumber?

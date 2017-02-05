@@ -86,7 +86,7 @@ class TeamListTableViewController: UITableViewController, UISearchControllerDele
                 statToSortBy = Team.StatName.LocalRank.rawValue
                 
 				selectedTeam = nil
-                currentEventTeams = ObjectPair<Team,LocalTeam>.fromArray(locals: dataManager.localTeamRanking(forEvent: event))!
+                currentEventTeams = ObjectPair<Team,LocalTeam>.fromArray(dataManager.localTeamRanking(forEvent: event))!
 				eventSelectionButton.setTitle(event.name, for: UIControlState())
 			} else {
                 isSorted = false
@@ -142,7 +142,7 @@ class TeamListTableViewController: UITableViewController, UISearchControllerDele
         //Add an observer for whenever a team's image is changed
         NotificationCenter.default.addObserver(forName: PitScoutingNewImageNotification, object: nil, queue: nil) {notification in
             if let team = notification.userInfo?["ForTeam"] as? Team {
-                self.teamImagesCache.setObject(UIImage(data: team.local.frontImage as! Data)!, forKey: team)
+                self.teamImagesCache.setObject(UIImage(data: team.local.frontImage!)!, forKey: team)
                 
                 if let index = self.currentTeamsToDisplay.index(where: {$0.universal == team}) {
                     self.tableView.reloadRows(at: [IndexPath.init(row: index, section: 0)], with: .automatic)
@@ -156,7 +156,7 @@ class TeamListTableViewController: UITableViewController, UISearchControllerDele
     func loadTeams() {
         let universalTeams = dataManager.localTeamRanking()
         let localTeams = UniversalToLocalConversion<Team, LocalTeam>(universalObjects: universalTeams).convertToLocal()
-        teams = ObjectPair<Team,LocalTeam>.fromArrays(universals: universalTeams, locals: localTeams)!
+        teams = ObjectPair<Team,LocalTeam>.fromArrays(universalTeams, locals: localTeams)!
     }
 	
 	override func viewWillAppear(_ animated: Bool) {

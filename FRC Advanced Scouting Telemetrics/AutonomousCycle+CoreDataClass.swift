@@ -10,6 +10,6 @@ import Foundation
 import CoreData
 
 
-public class AutonomousCycle: NSManagedObject {
+open class AutonomousCycle: NSManagedObject {
 
 }

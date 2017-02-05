@@ -19,13 +19,13 @@ class SSOffenseFuelViewController: UIViewController {
     var loadingWhereVC: SSOffenseWhereViewController! {
         didSet {
             loadingWhereVC.delegate = self
-            loadingWhereVC.setUpWithButtons(buttons: [FuelLoadingLocations.Hopper.button(color: .orange), FuelLoadingLocations.LoadingStation.button(color: .orange), FuelLoadingLocations.Floor.button(color: .orange)], time: 3)
+            loadingWhereVC.setUpWithButtons([FuelLoadingLocations.Hopper.button(.orange), FuelLoadingLocations.LoadingStation.button(.orange), FuelLoadingLocations.Floor.button(.orange)], time: 3)
         }
     }
     var scoringWhereVC: SSOffenseWhereViewController! {
         didSet {
             scoringWhereVC.delegate = self
-            scoringWhereVC.setUpWithButtons(buttons: [FuelScoringLocations.HighGoal.button(color: .orange), FuelScoringLocations.LowGoal.button(color: .orange)], time: 3)
+            scoringWhereVC.setUpWithButtons([FuelScoringLocations.HighGoal.button(.orange), FuelScoringLocations.LowGoal.button(.orange)], time: 3)
         }
     }
     
@@ -44,6 +44,7 @@ class SSOffenseFuelViewController: UIViewController {
     
     var lastSelectedShotLocation: CGPoint?
     var lastScoringShouldSelectHandler: ((Bool)->Void)?
+    var lastAccuracy: Float?
     
     var currentFuelTankLevel = 0.0
 
@@ -132,10 +133,10 @@ extension SSOffenseFuelViewController: WhereDelegate {
     func selected(_ whereVC: SSOffenseWhereViewController, id: String) {
         switch whereVC {
         case loadingWhereVC:
-            ssDataManager.recordFuelLoading(location: id, atTime: ssDataManager.stopwatch.elapsedTime)
+            ssDataManager.recordFuelLoading(id, atTime: ssDataManager.stopwatch.elapsedTime)
             hasLoadedFuel = true
         case scoringWhereVC:
-            ssDataManager.recordFuelScoring(inGoal: id, atTime: ssDataManager.stopwatch.elapsedTime, scoredFrom: lastSelectedShotLocation ?? CGPoint(x: 0, y: 0))
+            ssDataManager.recordFuelScoring(inGoal: id, atTime: ssDataManager.stopwatch.elapsedTime, scoredFrom: lastSelectedShotLocation ?? CGPoint(x: 0, y: 0), withAccuracy: Double(lastAccuracy ?? 0.5))
             hasLoadedFuel = false
         default:
             break
@@ -163,8 +164,9 @@ extension SSOffenseFuelViewController: WhereDelegate {
 }
 
 extension SSOffenseFuelViewController: GameFieldLocationDelegate {
-    func selectedRelativePoint(point: CGPoint) {
+    func selectedRelativePoint(_ point: CGPoint, withShotAccuracy accuracy: Float) {
         lastSelectedShotLocation = point
+        lastAccuracy = accuracy
         lastScoringShouldSelectHandler?(true)
     }
     

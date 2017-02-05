@@ -10,7 +10,7 @@ import UIKit
 import AVFoundation
 
 protocol GameFieldLocationDelegate {
-    func selectedRelativePoint(point: CGPoint)
+    func selectedRelativePoint(_ point: CGPoint, withShotAccuracy accuracy: Float)
     func canceled()
 }
 
@@ -19,6 +19,7 @@ class GameFieldLocationViewController: UIViewController {
     @IBOutlet weak var doneButton: UIBarButtonItem!
     @IBOutlet var tapGestureRecognizer: UITapGestureRecognizer!
     @IBOutlet weak var invisibleView: UIView!
+    @IBOutlet weak var accuracySlider: UISlider!
     
     var delegate: GameFieldLocationDelegate?
     var selectedRelativePoint: CGPoint? {
@@ -67,6 +68,7 @@ class GameFieldLocationViewController: UIViewController {
         reloadInvisibleView()
     }
     
+    
     override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
         super.viewWillTransition(to: size, with: coordinator)
         
@@ -80,7 +82,7 @@ class GameFieldLocationViewController: UIViewController {
     
     func reloadPointView() {
         if let relativePoint = selectedRelativePoint {
-            let point = translateRelativePointToPoint(relativePoint: relativePoint, toSize: invisibleView.frame.size)
+            let point = translateRelativePointToPoint(relativePoint, toSize: invisibleView.frame.size)
             let newPointView = UIView(frame: CGRect(x: point.x - 5, y: point.y - 5, width: 10, height: 10))
             newPointView.layer.cornerRadius = 5
             newPointView.backgroundColor = UIColor.blue
@@ -89,7 +91,7 @@ class GameFieldLocationViewController: UIViewController {
     }
     
     @IBAction func doneButtonPressed(_ sender: UIBarButtonItem) {
-        delegate?.selectedRelativePoint(point: selectedRelativePoint!)
+        delegate?.selectedRelativePoint(selectedRelativePoint!, withShotAccuracy: accuracySlider.value)
         performSegue(withIdentifier: "rewindToFuel", sender: self)
     }
     @IBAction func cancelButtonPressed(_ sender: UIBarButtonItem) {
@@ -101,7 +103,7 @@ class GameFieldLocationViewController: UIViewController {
         let location = sender.location(in: invisibleView)
         
         //Record the point
-        selectedRelativePoint = translatePointToRelativePoint(point: location, withCurrentSize: invisibleView.frame.size)
+        selectedRelativePoint = translatePointToRelativePoint(location, withCurrentSize: invisibleView.frame.size)
         
         //Create a point and place it on the screen
         reloadPointView()

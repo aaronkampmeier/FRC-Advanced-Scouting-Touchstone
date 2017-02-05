@@ -9,20 +9,20 @@
 import Foundation
 import CoreGraphics
 
-func translatePointToRelativePoint(point: CGPoint, withCurrentSize currentSize: CGSize) -> CGPoint {
+func translatePointToRelativePoint(_ point: CGPoint, withCurrentSize currentSize: CGSize) -> CGPoint {
     let newX = point.x / currentSize.width
     let newY = point.y / currentSize.height
     
     return CGPoint(x: newX, y: newY)
 }
 
-func translateRelativePointToPoint(relativePoint: CGPoint, toSize newSize: CGSize) -> CGPoint {
+func translateRelativePointToPoint(_ relativePoint: CGPoint, toSize newSize: CGSize) -> CGPoint {
     let newX = relativePoint.x * newSize.width
     let newY = relativePoint.y * newSize.height
     
     return CGPoint(x: newX, y: newY)
 }
 
-func translatePoint(point: CGPoint, fromSize oldSize: CGSize, toSize newSize: CGSize) -> CGPoint {
-    return translateRelativePointToPoint(relativePoint: translatePointToRelativePoint(point: point, withCurrentSize: oldSize), toSize: newSize)
+func translatePoint(_ point: CGPoint, fromSize oldSize: CGSize, toSize newSize: CGSize) -> CGPoint {
+    return translateRelativePointToPoint(translatePointToRelativePoint(point, withCurrentSize: oldSize), toSize: newSize)
 }

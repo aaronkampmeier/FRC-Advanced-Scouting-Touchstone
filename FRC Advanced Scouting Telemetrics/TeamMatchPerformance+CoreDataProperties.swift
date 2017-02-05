@@ -23,8 +23,8 @@ extension TeamMatchPerformance: HasLocalEquivalent {
         return NSFetchRequest<TeamMatchPerformance>(entityName: "TeamMatchPerformance")
     }
 
-    @nonobjc public class func fetchRequest() -> NSFetchRequest<TeamMatchPerformance> {
-        return NSFetchRequest<TeamMatchPerformance>(entityName: "TeamMatchPerformance");
+    @nonobjc open override class func fetchRequest() -> NSFetchRequest<NSFetchRequestResult> {
+        return NSFetchRequest<TeamMatchPerformance>(entityName: "TeamMatchPerformance") as! NSFetchRequest<NSFetchRequestResult>;
     }
     
     static func genericFetchRequest() -> NSFetchRequest<NSManagedObject> {

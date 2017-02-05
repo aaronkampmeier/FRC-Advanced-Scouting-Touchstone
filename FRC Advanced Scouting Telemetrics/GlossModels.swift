@@ -166,7 +166,7 @@ struct FRCMatch: Decodable {
 	let eventKey: String
 	let videos: String? //Not implemented
 	let timeString: String?
-	let time: NSDate?
+	let time: Date?
 	
 	init?(json: JSON) {
 		self.setNumber = "set_number" <~~ json
@@ -181,7 +181,7 @@ struct FRCMatch: Decodable {
         self.competitionLevel = competitionLevel
         
 		if let time: TimeInterval = "time" <~~ json {
-			self.time = NSDate(timeIntervalSince1970: time)
+			self.time = NSDate(timeIntervalSince1970: time) as Date
 		} else {
 			self.time = nil
 		}

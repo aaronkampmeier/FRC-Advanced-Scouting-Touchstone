@@ -11,9 +11,9 @@ import CoreData
 import Crashlytics
 
 class CloudEventRemovalManager {
-    private let eventToRemove: Event
+    fileprivate let eventToRemove: Event
     let dataManager = DataManager()
-    private let managedContext = DataManager.managedContext
+    fileprivate let managedContext = DataManager.managedContext
     
     let completionHandler: (Bool) -> Void
     
