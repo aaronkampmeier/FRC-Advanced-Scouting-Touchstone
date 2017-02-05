@@ -2,7 +2,7 @@
 //  LocalTeam+CoreDataProperties.swift
 //  FRC Advanced Scouting Touchstone
 //
-//  Created by Aaron Kampmeier on 2/1/17.
+//  Created by Aaron Kampmeier on 2/4/17.
 //  Copyright © 2017 Kampfire Technologies. All rights reserved.
 //
 
@@ -32,7 +32,6 @@ extension LocalTeam: HasUniversalEquivalent {
         return NSFetchRequest<NSManagedObject>(entityName: "TeamMatchPerformance")
     }
 
-    @NSManaged public var visionTrackingCapability: String?
     @NSManaged public var canBanana: NSNumber?
     @NSManaged public var climberCapability: String?
     @NSManaged public var driverXP: NSNumber?
@@ -47,6 +46,11 @@ extension LocalTeam: HasUniversalEquivalent {
     @NSManaged public var robotWeight: NSNumber?
     @NSManaged public var sideImage: NSData?
     @NSManaged public var tankSize: NSNumber?
+    @NSManaged public var visionTrackingCapability: String?
+    @NSManaged public var autoPegs: [Int]?
+    @NSManaged public var autoDoesLoadFuel: NSNumber?
+    @NSManaged public var autoDoesShootPreloaded: NSNumber?
+    @NSManaged public var autoDoesShootMoreFuel: NSNumber?
     @NSManaged public var localEvents: NSSet?
     @NSManaged public var ranker: LocalTeamRanking?
     @NSManaged public var transientUniversal: Team?

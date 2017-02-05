@@ -261,6 +261,56 @@ enum StartingPosition: String, CustomStringConvertible {
     }
 }
 
+enum Peg: String, CustomStringConvertible {
+    case Peg1 = "Peg 1"
+    case Peg2 = "Peg 2"
+    case Peg3 = "Peg 3"
+    
+    var description: String {
+        get {
+            return rawValue
+        }
+    }
+    
+    var pegNumber: Int {
+        get {
+            switch self {
+            case .Peg1:
+                return 1
+            case .Peg2:
+                return 2
+            case .Peg3:
+                return 3
+            }
+        }
+    }
+    
+    static func peg(forNumber number: Int) -> Peg? {
+        switch number {
+        case 1:
+            return .Peg1
+        case 2:
+            return .Peg2
+        case 3:
+            return .Peg3
+        default:
+            return nil
+        }
+    }
+    
+    static var allValues: [Peg] {
+        get {
+            return [.Peg1, .Peg2, .Peg3]
+        }
+    }
+    
+    static var allStringValues: [String] {
+        get {
+            return Peg.allValues.map({$0.description})
+        }
+    }
+}
+
 enum Capability: String, CustomStringConvertible {
     case Yes
     case Somewhat

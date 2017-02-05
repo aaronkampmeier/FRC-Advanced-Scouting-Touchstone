@@ -27,6 +27,8 @@ class PitImageSelectorCollectionViewCell: PitScoutingCell {
         imageButton.imageView?.contentMode = .scaleAspectFit
         if let currentImage = parameter.currentValue() as? UIImage {
             imageButton.setImage(currentImage, for: .normal)
+        } else {
+            imageButton.setImage(UIImage.init(named: "Camera"), for: .normal)
         }
     }
     
@@ -58,6 +60,7 @@ class PitImageSelectorCollectionViewCell: PitScoutingCell {
                         self.presentImageController(self.imageController, withSource: .photoLibrary)
                         Answers.logCustomEvent(withName: "Added Team Photo", customAttributes: ["Label":self.label.text ?? "Unknown", "Source":"Photo Library"])
                     })
+                    sourceSelector.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
                     sourceSelector.popoverPresentationController?.sourceView = sender
                     appDelegate.presentViewControllerOnTop(sourceSelector, animated: true)
                 }

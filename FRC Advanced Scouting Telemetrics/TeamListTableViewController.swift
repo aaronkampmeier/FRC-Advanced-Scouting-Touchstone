@@ -136,9 +136,21 @@ class TeamListTableViewController: UITableViewController, UISearchControllerDele
 		
 		tableView.allowsSelectionDuringEditing = true
 		
-		
 		//Load in the beginning data
 		selectedEvent = nil
+        
+        //Add an observer for whenever a team's image is changed
+        NotificationCenter.default.addObserver(forName: PitScoutingNewImageNotification, object: nil, queue: nil) {notification in
+            if let team = notification.userInfo?["ForTeam"] as? Team {
+                self.teamImagesCache.setObject(UIImage(data: team.local.frontImage as! Data)!, forKey: team)
+                
+                if let index = self.currentTeamsToDisplay.index(where: {$0.universal == team}) {
+                    self.tableView.reloadRows(at: [IndexPath.init(row: index, section: 0)], with: .automatic)
+                }
+            } else {
+                
+            }
+        }
     }
     
     func loadTeams() {

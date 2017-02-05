@@ -10,6 +10,7 @@ import UIKit
 
 typealias PitScoutingUpdateHandler = ((Any?)->Void)
 typealias PitScoutingCurrentValue = ()->Any?
+let PitScoutingNewImageNotification = NSNotification.Name("PitScoutingNewImageNotification")
 
 //A class that all the pit scouting cells subclass and override the default methods
 class PitScoutingCell: UICollectionViewCell {
@@ -41,6 +42,7 @@ class PitScoutingViewController: UIViewController, UICollectionViewDataSource, U
         case TableViewSelector = "pitTableViewCell"
         case ImageSelector = "pitImageSelectorCell"
         case Button = "pitButtonCell"
+        case Switch = "pitSwitchCell"
         
         var cellID: String {
             return self.rawValue
@@ -50,7 +52,7 @@ class PitScoutingViewController: UIViewController, UICollectionViewDataSource, U
     struct PitScoutingParameter {
         let type: PitScoutingParameterType
         let label: String
-        //Options should be left nil for all types except Segmented Selector
+        //Options should be left nil for all types except Segmented Selector and Table View Multi Selector
         let options: [String]?
         let currentValue: PitScoutingCurrentValue
         let updateHandler: PitScoutingUpdateHandler
@@ -70,7 +72,42 @@ class PitScoutingViewController: UIViewController, UICollectionViewDataSource, U
 
         // Do any additional setup after loading the view.
         
+        do {
         pitScoutingParameters = [
+            
+            PitScoutingParameter(type: .ImageSelector, label: "Front Image", options: nil, currentValue: {
+                if let imageData = self.scoutedTeam?.local.frontImage {
+                    let image = UIImage(data: imageData as Data)
+                    return image
+                } else {
+                    return nil
+                }
+            }, updateHandler: {newValue in
+                if let image = newValue as? UIImage {
+                    let imageData = UIImageJPEGRepresentation(image, 1)
+                    self.scoutedTeam?.local.frontImage = imageData as NSData?
+                } else {
+                    self.scoutedTeam?.local.frontImage = nil
+                }
+                
+                NotificationCenter.default.post(name: PitScoutingNewImageNotification, object: self, userInfo: ["ForTeam":self.scoutedTeam])
+            }),
+            
+            PitScoutingParameter(type: .ImageSelector, label: "Side Image", options: nil, currentValue: {
+                if let imageData = self.scoutedTeam?.local.sideImage {
+                    let image = UIImage(data: imageData as Data)
+                    return image
+                } else {
+                    return nil
+                }
+            }, updateHandler: {newValue in
+                if let image = newValue as? UIImage {
+                    let imageData = UIImageJPEGRepresentation(image, 1)
+                    self.scoutedTeam?.local.sideImage = imageData as NSData?
+                } else {
+                    self.scoutedTeam?.local.sideImage = nil
+                }
+            }),
             
             PitScoutingParameter(type: .TextField, label: "Weight", options: nil, currentValue: {self.scoutedTeam?.local.robotWeight?.doubleValue}, updateHandler: {newValue in
                 if let doubleValue = newValue as? Double {
@@ -94,6 +131,14 @@ class PitScoutingViewController: UIViewController, UICollectionViewDataSource, U
                     self.scoutedTeam?.local.driverXP = NSNumber(value: doubleValue)
                 } else {
                     self.scoutedTeam?.local.driverXP = nil
+                }
+            }),
+            
+            PitScoutingParameter(type: .TextField, label: "Tank Size", options: nil, currentValue: {self.scoutedTeam?.local.tankSize?.doubleValue}, updateHandler: {newValue in
+                if let doubleValue = newValue as? Double {
+                    self.scoutedTeam?.local.tankSize = NSNumber(value: doubleValue)
+                } else {
+                    self.scoutedTeam?.local.tankSize = nil
                 }
             }),
             
@@ -129,14 +174,6 @@ class PitScoutingViewController: UIViewController, UICollectionViewDataSource, U
                 }
             }),
             
-            PitScoutingParameter(type: .TextField, label: "Tank Size", options: nil, currentValue: {self.scoutedTeam?.local.tankSize?.doubleValue}, updateHandler: {newValue in
-                if let doubleValue = newValue as? Double {
-                    self.scoutedTeam?.local.tankSize = NSNumber(value: doubleValue)
-                } else {
-                    self.scoutedTeam?.local.tankSize = nil
-                }
-            }),
-            
             PitScoutingParameter(type: .SegmentedSelector, label: "Programming Language", options: ProgrammingLanguage.allStringValues, currentValue: {self.scoutedTeam?.local.programmingLanguage}, updateHandler: {newValue in
                 if let stringValue = newValue as? String {
                     self.scoutedTeam?.local.programmingLanguage = stringValue
@@ -145,31 +182,41 @@ class PitScoutingViewController: UIViewController, UICollectionViewDataSource, U
                 }
             }),
             
-            PitScoutingParameter(type: .Button, label: "", options: nil, currentValue: {self.scoutedTeam?.local.canBanana?.boolValue}, updateHandler: {newValue in
-                if let boolValue = newValue as? Bool {
-                    self.scoutedTeam?.local.canBanana = NSNumber(value: boolValue)
-                } else {
-                    self.scoutedTeam?.local.canBanana = nil
+            ///Autonomous
+            PitScoutingParameter(type: .TableViewSelector, label: "Auto Peg Capability", options: Peg.allStringValues, currentValue: {self.scoutedTeam?.local.autoPegs?.map({Peg.peg(forNumber: $0)!.description})}, updateHandler: {newValue in
+                if let newValues = (newValue as? [String]) {
+                    let newPegs = newValues.map({Peg(rawValue: $0)!})
+                    self.scoutedTeam?.local.autoPegs = newPegs.map({$0.pegNumber})
+                }
+            }),
+            
+            PitScoutingParameter(type: .Switch, label: "Auto Does Load Fuel", options: nil, currentValue: {self.scoutedTeam?.local.autoDoesLoadFuel?.boolValue}, updateHandler: {newValue in
+                if let newBool = newValue as? Bool {
+                    self.scoutedTeam?.local.autoDoesLoadFuel = NSNumber(value: newBool)
+                }
+            }),
+            
+            PitScoutingParameter(type: .Switch, label: "Auto Shoots Preloaded Fuel", options: nil, currentValue: {self.scoutedTeam?.local.autoDoesShootPreloaded?.boolValue}, updateHandler: {newValue in
+                if let newBool = newValue as? Bool {
+                    self.scoutedTeam?.local.autoDoesShootPreloaded = NSNumber(value: newBool)
+                }
+            }),
+            
+            PitScoutingParameter(type: .Switch, label: "Auto Shoots More Loaded Fuel", options: nil, currentValue: {self.scoutedTeam?.local.autoDoesShootMoreFuel?.boolValue}, updateHandler: {newValue in
+                if let newBool = newValue as? Bool {
+                    self.scoutedTeam?.local.autoDoesShootMoreFuel = NSNumber(value: newBool)
                 }
                 
             }),
             
-            PitScoutingParameter(type: .ImageSelector, label: "Front Image", options: nil, currentValue: {
-                if let imageData = self.scoutedTeam?.local.frontImage {
-                    let image = UIImage(data: imageData as Data)
-                    return image
-                } else {
-                    return nil
-                }
-            }, updateHandler: {newValue in
-                if let image = newValue as? UIImage {
-                    let imageData = UIImageJPEGRepresentation(image, 1)
-                    self.scoutedTeam?.local.frontImage = imageData as NSData?
-                } else {
-                    self.scoutedTeam?.local.frontImage = nil
+            ///Banana
+            PitScoutingParameter(type: .Button, label: "", options: nil, currentValue: {self.scoutedTeam?.local.canBanana?.boolValue}, updateHandler: {newValue in
+                if let boolValue = newValue as? Bool {
+                    self.scoutedTeam?.local.canBanana = NSNumber(value: boolValue)
                 }
             })
         ]
+        }
         
         collectionView?.dataSource = self
         collectionView?.delegate = self
@@ -204,20 +251,40 @@ class PitScoutingViewController: UIViewController, UICollectionViewDataSource, U
     }
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-        switch pitScoutingParameters[indexPath.item].type {
+        let parameter = pitScoutingParameters[indexPath.item]
+        switch parameter.type {
         case .TextField:
             return CGSize(width: 230, height: 50)
         case .SegmentedSelector:
             return CGSize(width: 290, height: 80)
         case .TableViewSelector:
-            return CGSize(width: 250, height: 130)
+            return CGSize(width: 250, height: 180)
         case .ImageSelector:
-            return CGSize(width: 120, height: 120)
+            return CGSize(width: 110, height: 100)
         case .Button:
             return CGSize(width: 180, height: 50)
+        case .Switch:
+            if parameter.label.characters.count > 20 {
+                return CGSize(width: 240, height: 80)
+            } else {
+                return CGSize(width: 180, height: 80)
+            }
         }
     }
 
+    @IBAction func notes(_ sender: UIBarButtonItem) {
+        let notesNavVC = storyboard?.instantiateViewController(withIdentifier: "notesNavVC") as! UINavigationController
+        let notesVC = notesNavVC.topViewController as! NotesViewController
+        notesVC.dataSource = self
+        
+        notesNavVC.modalPresentationStyle = .popover
+        
+        let popoverPresController = notesNavVC.popoverPresentationController
+        popoverPresController?.permittedArrowDirections = .up
+        popoverPresController?.barButtonItem = sender
+        
+        present(notesNavVC, animated: true, completion: nil)
+    }
     /*
     // MARK: - Navigation
 
@@ -228,6 +295,16 @@ class PitScoutingViewController: UIViewController, UICollectionViewDataSource, U
     }
     */
 
+}
+
+extension PitScoutingViewController: NotesDataSource {
+    func currentTeamContext() -> Team {
+        return scoutedTeam!
+    }
+    
+    func notesShouldSave() -> Bool {
+        return true
+    }
 }
 
 extension PitScoutingViewController: UICollectionViewDelegateFlowLayout {

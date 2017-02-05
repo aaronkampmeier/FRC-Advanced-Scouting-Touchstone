@@ -1031,7 +1031,7 @@
                                 <nil key="highlightedColor"/>
                             </label>
                             <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="57M-yC-eIi">
-                                <rect key="frame" x="20" y="152" width="662.5" height="616"/>
+                                <rect key="frame" x="5" y="152" width="697.5" height="616"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <collectionViewFlowLayout key="collectionViewLayout" minimumLineSpacing="10" minimumInteritemSpacing="10" id="hoM-6m-MxG">
                                     <size key="itemSize" width="215" height="164"/>
@@ -1051,7 +1051,7 @@
                                                     <rect key="frame" x="87" y="10" width="124" height="30"/>
                                                     <nil key="textColor"/>
                                                     <fontDescription key="fontDescription" type="system" pointSize="14"/>
-                                                    <textInputTraits key="textInputTraits"/>
+                                                    <textInputTraits key="textInputTraits" keyboardType="numberPad"/>
                                                     <connections>
                                                         <action selector="textFieldEditingEnded:" destination="PUd-A0-JNj" eventType="editingDidEnd" id="19x-Lx-GPL"/>
                                                     </connections>
@@ -1078,7 +1078,7 @@
                                         </connections>
                                     </collectionViewCell>
                                     <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="pitSegmentSelectorCell" id="qyA-fS-NsS" customClass="PitSegmentedSelectorCollectionViewCell" customModule="FRC_Advanced_Scouting_Touchstone" customModuleProvider="target">
-                                        <rect key="frame" x="378" y="0.0" width="285" height="79"/>
+                                        <rect key="frame" x="413" y="0.0" width="285" height="79"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
                                             <rect key="frame" x="0.0" y="0.0" width="285" height="79"/>
@@ -1117,7 +1117,7 @@
                                             <outlet property="segmentedControl" destination="3oy-LH-2tw" id="DRZ-hQ-Zfj"/>
                                         </connections>
                                     </collectionViewCell>
-                                    <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="pitTableViewCell" id="hcR-pA-pL6">
+                                    <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="pitTableViewCell" id="hcR-pA-pL6" customClass="PitTableViewSelectorCollectionViewCell" customModule="FRC_Advanced_Scouting_Touchstone" customModuleProvider="target">
                                         <rect key="frame" x="0.0" y="89" width="227" height="134"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
@@ -1133,6 +1133,25 @@
                                                 <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="PtK-U7-caj">
                                                     <rect key="frame" x="8" y="39" width="211" height="87"/>
                                                     <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                                    <prototypes>
+                                                        <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="none" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="cell" textLabel="cFk-Oc-KWh" style="IBUITableViewCellStyleDefault" id="cRh-p9-K4G">
+                                                            <rect key="frame" x="0.0" y="28" width="211" height="44"/>
+                                                            <autoresizingMask key="autoresizingMask"/>
+                                                            <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="cRh-p9-K4G" id="pw1-OQ-Gd7">
+                                                                <rect key="frame" x="0.0" y="0.0" width="211" height="43"/>
+                                                                <autoresizingMask key="autoresizingMask"/>
+                                                                <subviews>
+                                                                    <label opaque="NO" multipleTouchEnabled="YES" contentMode="left" text="Title" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="cFk-Oc-KWh">
+                                                                        <rect key="frame" x="15" y="0.0" width="181" height="43"/>
+                                                                        <autoresizingMask key="autoresizingMask"/>
+                                                                        <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                                                        <nil key="textColor"/>
+                                                                        <nil key="highlightedColor"/>
+                                                                    </label>
+                                                                </subviews>
+                                                            </tableViewCellContentView>
+                                                        </tableViewCell>
+                                                    </prototypes>
                                                 </tableView>
                                             </subviews>
                                         </view>
@@ -1145,22 +1164,26 @@
                                             <constraint firstItem="PtK-U7-caj" firstAttribute="top" secondItem="lhr-og-COt" secondAttribute="bottom" constant="10" id="tkg-d3-p9B"/>
                                         </constraints>
                                         <size key="customSize" width="227" height="134"/>
+                                        <connections>
+                                            <outlet property="label" destination="lhr-og-COt" id="4Qf-tg-pNx"/>
+                                            <outlet property="tableView" destination="PtK-U7-caj" id="sOg-6H-yA7"/>
+                                        </connections>
                                     </collectionViewCell>
                                     <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="pitImageSelectorCell" id="BRM-js-3rw" customClass="PitImageSelectorCollectionViewCell" customModule="FRC_Advanced_Scouting_Touchstone" customModuleProvider="target">
-                                        <rect key="frame" x="237" y="92" width="121" height="129"/>
+                                        <rect key="frame" x="237" y="92" width="115" height="129"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
-                                            <rect key="frame" x="0.0" y="0.0" width="121" height="129"/>
+                                            <rect key="frame" x="0.0" y="0.0" width="115" height="129"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="wzD-Ln-sH7">
-                                                    <rect key="frame" x="39.5" y="8" width="42" height="21"/>
+                                                    <rect key="frame" x="36.5" y="8" width="42" height="21"/>
                                                     <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                                     <nil key="textColor"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
                                                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="zRI-Vv-BVy">
-                                                    <rect key="frame" x="25" y="31" width="70" height="70"/>
+                                                    <rect key="frame" x="22.5" y="31" width="70" height="70"/>
                                                     <constraints>
                                                         <constraint firstAttribute="height" constant="70" id="HpS-ox-hT0"/>
                                                         <constraint firstAttribute="width" constant="70" id="lCk-WY-tG1"/>
@@ -1178,14 +1201,14 @@
                                             <constraint firstItem="zRI-Vv-BVy" firstAttribute="top" secondItem="wzD-Ln-sH7" secondAttribute="bottom" constant="2" id="XUk-4f-fyB"/>
                                             <constraint firstItem="zRI-Vv-BVy" firstAttribute="centerX" secondItem="BRM-js-3rw" secondAttribute="centerX" id="bhD-5Q-YHC"/>
                                         </constraints>
-                                        <size key="customSize" width="121" height="129"/>
+                                        <size key="customSize" width="115" height="129"/>
                                         <connections>
                                             <outlet property="imageButton" destination="zRI-Vv-BVy" id="OPG-5t-rxQ"/>
                                             <outlet property="label" destination="wzD-Ln-sH7" id="1K6-f9-SdP"/>
                                         </connections>
                                     </collectionViewCell>
                                     <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="pitButtonCell" id="sdE-eI-kfr" customClass="PitButtonCollectionViewCell" customModule="FRC_Advanced_Scouting_Touchstone" customModuleProvider="target">
-                                        <rect key="frame" x="368" y="112" width="139" height="88"/>
+                                        <rect key="frame" x="362" y="112" width="139" height="88"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
                                             <rect key="frame" x="0.0" y="0.0" width="139" height="88"/>
@@ -1223,6 +1246,39 @@
                                             <outlet property="label" destination="Vkr-7P-dZG" id="JZ8-4D-cWR"/>
                                         </connections>
                                     </collectionViewCell>
+                                    <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="pitSwitchCell" id="5tc-bD-k4s" customClass="PitSwitchCollectionViewCell" customModule="FRC_Advanced_Scouting_Touchstone" customModuleProvider="target">
+                                        <rect key="frame" x="511" y="112" width="139" height="88"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                        <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
+                                            <rect key="frame" x="0.0" y="0.0" width="139" height="88"/>
+                                            <autoresizingMask key="autoresizingMask"/>
+                                            <subviews>
+                                                <switch opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" translatesAutoresizingMaskIntoConstraints="NO" id="3DH-RH-tOg">
+                                                    <rect key="frame" x="45" y="37" width="51" height="31"/>
+                                                    <connections>
+                                                        <action selector="switchValueChanged:" destination="5tc-bD-k4s" eventType="valueChanged" id="DcF-aq-BqO"/>
+                                                    </connections>
+                                                </switch>
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Z39-aS-Y05">
+                                                    <rect key="frame" x="48" y="8" width="42" height="21"/>
+                                                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                                    <nil key="textColor"/>
+                                                    <nil key="highlightedColor"/>
+                                                </label>
+                                            </subviews>
+                                        </view>
+                                        <constraints>
+                                            <constraint firstItem="Z39-aS-Y05" firstAttribute="top" secondItem="5tc-bD-k4s" secondAttribute="topMargin" id="0rg-cd-vEU"/>
+                                            <constraint firstItem="3DH-RH-tOg" firstAttribute="centerX" secondItem="5tc-bD-k4s" secondAttribute="centerX" id="8Wi-Cv-K8D"/>
+                                            <constraint firstItem="3DH-RH-tOg" firstAttribute="top" secondItem="Z39-aS-Y05" secondAttribute="bottom" constant="8" id="HMO-qM-A1O"/>
+                                            <constraint firstItem="Z39-aS-Y05" firstAttribute="centerX" secondItem="5tc-bD-k4s" secondAttribute="centerX" id="Mfd-7M-QrU"/>
+                                        </constraints>
+                                        <size key="customSize" width="139" height="88"/>
+                                        <connections>
+                                            <outlet property="label" destination="Z39-aS-Y05" id="H6I-QN-dte"/>
+                                            <outlet property="switch" destination="3DH-RH-tOg" id="Fv7-3p-fVY"/>
+                                        </connections>
+                                    </collectionViewCell>
                                 </cells>
                             </collectionView>
                         </subviews>
@@ -1230,15 +1286,21 @@
                         <constraints>
                             <constraint firstItem="eKK-pG-yVK" firstAttribute="top" secondItem="zoH-Cy-bxK" secondAttribute="bottom" constant="6" id="4i4-Gp-1wb"/>
                             <constraint firstItem="zoH-Cy-bxK" firstAttribute="centerX" secondItem="xzy-95-a9h" secondAttribute="centerX" id="9bk-Mq-M92"/>
-                            <constraint firstItem="57M-yC-eIi" firstAttribute="leading" secondItem="xzy-95-a9h" secondAttribute="leadingMargin" id="AXd-7a-S8H"/>
-                            <constraint firstAttribute="trailingMargin" secondItem="57M-yC-eIi" secondAttribute="trailing" id="Ckg-Qw-mma"/>
+                            <constraint firstItem="57M-yC-eIi" firstAttribute="leading" secondItem="xzy-95-a9h" secondAttribute="leading" constant="5" id="AXd-7a-S8H"/>
+                            <constraint firstAttribute="trailing" secondItem="57M-yC-eIi" secondAttribute="trailing" id="Ckg-Qw-mma"/>
                             <constraint firstItem="N6u-H5-5FW" firstAttribute="top" secondItem="57M-yC-eIi" secondAttribute="bottom" id="JtG-X8-dcA"/>
                             <constraint firstItem="eKK-pG-yVK" firstAttribute="centerX" secondItem="xzy-95-a9h" secondAttribute="centerX" id="bMw-Jl-dcH"/>
                             <constraint firstItem="zoH-Cy-bxK" firstAttribute="top" secondItem="LKI-I7-8Ej" secondAttribute="bottom" constant="15" id="vLb-5z-3HD"/>
                             <constraint firstItem="57M-yC-eIi" firstAttribute="top" secondItem="eKK-pG-yVK" secondAttribute="bottom" constant="15" id="woO-Mh-C8R"/>
                         </constraints>
                     </view>
-                    <navigationItem key="navigationItem" title="Pit Scouting" id="Jyv-fm-V7H"/>
+                    <navigationItem key="navigationItem" title="Pit Scouting" id="Jyv-fm-V7H">
+                        <barButtonItem key="rightBarButtonItem" title="Notes" id="8ds-yJ-lPt">
+                            <connections>
+                                <action selector="notes:" destination="cOC-Uw-kvx" id="8FE-fD-JUn"/>
+                            </connections>
+                        </barButtonItem>
+                    </navigationItem>
                     <connections>
                         <outlet property="collectionView" destination="57M-yC-eIi" id="ivf-PA-LlF"/>
                         <outlet property="teamLabel" destination="zoH-Cy-bxK" id="aV4-xf-lrm"/>
@@ -3015,7 +3077,7 @@
                                 </connections>
                             </segmentedControl>
                             <containerView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="U9e-jY-Q6B">
-                                <rect key="frame" x="20" y="299" width="663" height="469"/>
+                                <rect key="frame" x="20" y="299" width="662.5" height="469"/>
                                 <connections>
                                     <segue destination="BTA-WY-eEX" kind="embed" id="nYI-16-aUH"/>
                                 </connections>
@@ -3031,7 +3093,7 @@
                                 </connections>
                             </segmentedControl>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="8Z6-kE-sqn">
-                                <rect key="frame" x="452" y="64" width="231" height="215"/>
+                                <rect key="frame" x="452" y="64" width="230.5" height="215"/>
                                 <connections>
                                     <action selector="selectedImage:" destination="ipN-iW-fVz" eventType="touchUpInside" id="S6V-pd-mnv"/>
                                 </connections>
@@ -3117,17 +3179,17 @@
         <!--Team List Table View Controller-->
         <scene sceneID="8W7-88-PdG">
             <objects>
-                <tableViewController clearsSelectionOnViewWillAppear="NO" id="has-i4-dJU" customClass="TeamListTableViewController" customModule="FRC_Advanced_Scouting_Touchstone" customModuleProvider="target" sceneMemberID="viewController">
+                <tableViewController hidesBottomBarWhenPushed="YES" clearsSelectionOnViewWillAppear="NO" id="has-i4-dJU" customClass="TeamListTableViewController" customModule="FRC_Advanced_Scouting_Touchstone" customModuleProvider="target" sceneMemberID="viewController">
                     <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="28" sectionFooterHeight="28" id="eVf-gb-e6M">
                         <rect key="frame" x="0.0" y="0.0" width="320" height="600"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <prototypes>
-                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="rankedCell" id="VD9-zW-9Kd" customClass="TeamListTableViewCell" customModule="FRC_Advanced_Scouting_Touchstone" customModuleProvider="target">
+                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" shouldIndentWhileEditing="NO" reuseIdentifier="rankedCell" id="VD9-zW-9Kd" customClass="TeamListTableViewCell" customModule="FRC_Advanced_Scouting_Touchstone" customModuleProvider="target">
                                 <rect key="frame" x="0.0" y="28" width="320" height="44"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="VD9-zW-9Kd" id="ECb-cw-os9">
-                                    <rect key="frame" x="0.0" y="0.0" width="320" height="43.5"/>
+                                    <rect key="frame" x="0.0" y="0.0" width="320" height="43"/>
                                     <autoresizingMask key="autoresizingMask"/>
                                     <subviews>
                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Stat" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="KHZ-yj-ObQ">
