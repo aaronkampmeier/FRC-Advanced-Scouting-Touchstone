@@ -41,11 +41,23 @@ extension TeamMatchPerformance: HasLocalEquivalent {
 }
 
 extension TeamMatchPerformance: HasStats {
-    var stats: [StatName:()->StatValue?] {
+    var stats: [StatName:()->StatValue] {
         get {
             return [
-                StatName.TotalPoints:{self.finalScore},
-                StatName.TotalRankingPoints:{self.rankingPoints}
+                StatName.TotalPoints:{
+                    if let val = self.finalScore {
+                        return StatValue.Double(val)
+                    } else {
+                        return StatValue.NoValue
+                    }
+                },
+                StatName.TotalRankingPoints:{
+                    if let val = self.rankingPoints {
+                        return StatValue.Integer(val)
+                    } else {
+                        return StatValue.NoValue
+                    }
+                }
             ]
         }
     }
@@ -53,6 +65,12 @@ extension TeamMatchPerformance: HasStats {
     enum StatName: String, CustomStringConvertible, StatNameable {
         case TotalPoints = "Total Points"
         case TotalRankingPoints = "Total Ranking Points"
+        
+        case TotalPointsFromFuel = "Total Fuel Points"
+        case TotalGearsScored = "Total Gears Scored"
+        case AverageCycleTime = "Average Cycle Time"
+        case OverallAccuracy = "Overall Accuracy"
+        case ClimbingStatus = "Climbing Status"
         
         var description: String {
             get {

@@ -43,6 +43,7 @@ class PitScoutingViewController: UIViewController, UICollectionViewDataSource, U
         case ImageSelector = "pitImageSelectorCell"
         case Button = "pitButtonCell"
         case Switch = "pitSwitchCell"
+        case StringField = "pitStringCell"
         
         var cellID: String {
             return self.rawValue
@@ -118,21 +119,27 @@ class PitScoutingViewController: UIViewController, UICollectionViewDataSource, U
                 }
             }),
             
-            PitScoutingParameter(type: .SegmentedSelector, label: "Gears Capability", options: SimpleCapability.allStringValues, currentValue: {self.scoutedTeam?.local.gearsCapability}, updateHandler: {newValue in
-                if let capability = newValue as? String {
-                    self.scoutedTeam?.local.gearsCapability = capability
-                }
-            }),
-            
             PitScoutingParameter(type: .TextField, label: "Driver XP", options: nil, currentValue: {self.scoutedTeam?.local.driverXP?.doubleValue}, updateHandler: {newValue in
                 if let doubleValue = newValue as? Double {
                     self.scoutedTeam?.local.driverXP = NSNumber(value: doubleValue)
                 }
             }),
             
+            PitScoutingParameter(type: .StringField, label: "Drive Train", options: nil, currentValue: {self.scoutedTeam?.local.driveTrain}, updateHandler: {newValue in
+                if let stringValue = newValue as? String {
+                    self.scoutedTeam?.local.driveTrain = stringValue
+                }
+            }),
+            
             PitScoutingParameter(type: .TextField, label: "Tank Size", options: nil, currentValue: {self.scoutedTeam?.local.tankSize?.doubleValue}, updateHandler: {newValue in
                 if let doubleValue = newValue as? Double {
                     self.scoutedTeam?.local.tankSize = NSNumber(value: doubleValue)
+                }
+            }),
+            
+            PitScoutingParameter(type: .SegmentedSelector, label: "Gears Capability", options: SimpleCapability.allStringValues, currentValue: {self.scoutedTeam?.local.gearsCapability}, updateHandler: {newValue in
+                if let capability = newValue as? String {
+                    self.scoutedTeam?.local.gearsCapability = capability
                 }
             }),
             
@@ -237,7 +244,7 @@ class PitScoutingViewController: UIViewController, UICollectionViewDataSource, U
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
         let parameter = pitScoutingParameters[indexPath.item]
         switch parameter.type {
-        case .TextField:
+        case .TextField, .StringField:
             return CGSize(width: 230, height: 50)
         case .SegmentedSelector:
             return CGSize(width: 290, height: 80)

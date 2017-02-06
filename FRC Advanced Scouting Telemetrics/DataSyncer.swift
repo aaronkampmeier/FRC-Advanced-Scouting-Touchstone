@@ -188,8 +188,7 @@ class DataSyncer: NSObject, CDEPersistentStoreEnsembleDelegate {
 			switch object {
 			case is LocalTeamRanking:
 				globalIdentifiers.append("LocalTeamRanking" as NSString)
-				NSLog("Global identifier is LocalTeamRanking")
-				
+                
 			//Universals
 			case is Team:
 				globalIdentifiers.append(NSString(string: "Universal:\(object.value(forKey: "key")!)"))

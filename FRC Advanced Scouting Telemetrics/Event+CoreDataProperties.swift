@@ -46,10 +46,16 @@ extension Event: HasLocalEquivalent {
 }
 
 extension Event: HasStats {
-    var stats: [StatName:()->StatValue?] {
+    var stats: [StatName:()->StatValue] {
         get {
             return [
-                StatName.NumberOfTeams:{self.teamEventPerformances?.count}
+                StatName.NumberOfTeams:{
+                    if let val = self.teamEventPerformances?.count {
+                        return StatValue.Integer(val)
+                    } else {
+                        return StatValue.NoValue
+                    }
+                }
             ]
         }
     }

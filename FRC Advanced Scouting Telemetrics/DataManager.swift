@@ -206,15 +206,20 @@ class DataManager {
         }
         return matches
     }
+}
+
+enum TimeMarkerEvent: String, CustomStringConvertible {
+    case LoadedFuel = "Loaded Fuel"
+    case ScoredFuel = "Scored Fuel"
+    case LoadedGear = "Loaded Gear"
+    case ScoredGear = "Scored Gear"
+    case Defended
     
-    enum TimeMarkerEvent: String, CustomStringConvertible {
-        case LoadedFuel
-        case Error
-        
-        var description: String {
-            get {
-                return self.rawValue
-            }
+    case Error
+    
+    var description: String {
+        get {
+            return self.rawValue
         }
     }
 }

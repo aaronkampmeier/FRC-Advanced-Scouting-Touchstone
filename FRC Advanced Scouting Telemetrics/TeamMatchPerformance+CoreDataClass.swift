@@ -17,24 +17,24 @@ open class TeamMatchPerformance: NSManagedObject {
         case Blue = "Blue"
     }
     
-    var rankingPoints: Int {
+    var rankingPoints: Int? {
         switch allianceColor {
         case "Blue":
-            return match?.local.blueRankingPoints?.intValue ?? 0
+            return match?.local.blueRankingPoints?.intValue
         case "Red":
-            return match?.local.redRankingPoints?.intValue ?? 0
+            return match?.local.redRankingPoints?.intValue
         default:
             assertionFailure()
             return -1
         }
     }
     
-    var finalScore: Double {
+    var finalScore: Double? {
         switch allianceColor {
         case "Blue":
-            return match?.local.blueFinalScore?.doubleValue ?? 0
+            return match?.local.blueFinalScore?.doubleValue
         case "Red":
-            return match?.local.redFinalScore?.doubleValue ?? 0
+            return match?.local.redFinalScore?.doubleValue
         default:
             assertionFailure()
             return -1
@@ -42,7 +42,7 @@ open class TeamMatchPerformance: NSManagedObject {
     }
     
     var winningMargin: Double {
-        let selfFinalScore = finalScore
+        let selfFinalScore = finalScore ?? 0
         switch allianceColor {
         case "Blue":
             return selfFinalScore - (match?.local.redFinalScore?.doubleValue ?? 0)

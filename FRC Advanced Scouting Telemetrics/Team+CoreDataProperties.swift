@@ -44,14 +44,82 @@ extension Team: HasLocalEquivalent {
 }
 
 extension Team: HasStats {
-    var stats: [StatName:()->StatValue?] {
+    var stats: [StatName:()->StatValue] {
         get {
             return [
-                StatName.LocalRank: {DataManager().localTeamRanking().index(of: self)},
-                StatName.TeamNumber: {Int(self.teamNumber!)!},
-                StatName.RookieYear: {self.rookieYear?.intValue},
-                StatName.RobotHeight: {self.local.robotHeight?.doubleValue},
-                StatName.RobotWeight: {self.local.robotWeight?.doubleValue}
+                StatName.LocalRank: {
+                    let teamRanking = DataManager().localTeamRanking()
+                    if let index = teamRanking.index(of: self) {
+                        return StatValue.Integer(index)
+                    } else {
+                        return StatValue.NoValue
+                    }
+                },
+                StatName.TeamNumber: {
+                    if let intNumber = Int(self.teamNumber!) {
+                        return StatValue.Integer(intNumber)
+                    } else {
+                        return StatValue.NoValue
+                    }
+                },
+                StatName.RookieYear: {
+                    if let intNumber = self.rookieYear?.intValue {
+                        return StatValue.Integer(intNumber)
+                    } else {
+                        return StatValue.NoValue
+                    }
+                },
+                StatName.RobotHeight: {
+                    if let doubleValue = self.local.robotHeight?.doubleValue {
+                        return StatValue.Double(doubleValue)
+                    } else {
+                        return StatValue.NoValue
+                    }
+                },
+                StatName.RobotWeight: {
+                    if let doubleVal = self.local.robotWeight?.doubleValue {
+                        return StatValue.Double(doubleVal)
+                    } else {
+                        return StatValue.NoValue
+                    }
+                },
+                StatName.ScoringStrategy: {
+                    var doesGears: Bool
+                    var doesFuel: Bool
+                    
+                    doesGears = (SimpleCapability(rawValue: self.local.gearsCapability ?? "") ?? .No) == .Yes
+                    
+                    let highGoalCapability = Capability(rawValue: self.local.highGoalCapability ?? "") ?? .No
+                    let lowGoalCapability = Capability(rawValue: self.local.lowGoalCapability ?? "") ?? .No
+                    if highGoalCapability == .Yes || highGoalCapability == .Somewhat || lowGoalCapability == .Yes || lowGoalCapability == .Somewhat {
+                        doesFuel = true
+                    } else {
+                        doesFuel = false
+                    }
+                    
+                    switch (doesGears, doesFuel) {
+                    case (true, true):
+                        return StatValue.String("Both")
+                    case (false, true):
+                        return StatValue.String("Fuel")
+                    case (true, false):
+                        return StatValue.String("Gears")
+                    case (false, false):
+                        return StatValue.NoValue
+                    }
+                },
+                StatName.DriveTrain: {
+                    StatValue.initWithOptional(value: self.local.driveTrain)
+                },
+                StatName.LowGoalCapability: {
+                    StatValue.initWithOptional(value: self.local.lowGoalCapability)
+                },
+                StatName.HighGoalCapability: {
+                    StatValue.initWithOptional(value: self.local.highGoalCapability)
+                },
+                StatName.ClimberCapability: {
+                    StatValue.initWithOptional(value: self.local.climberCapability)
+                }
             ]
         }
     }
@@ -62,6 +130,12 @@ extension Team: HasStats {
         case RookieYear = "Rookie Year"
         case RobotHeight = "Robot Height"
         case RobotWeight = "Robot Weight"
+        case ScoringStrategy = "Scoring Strategy"
+        case DriveTrain = "Drive Train"
+        case LowGoalCapability = "Low Goal Capability"
+        case HighGoalCapability = "High Goal Capability"
+        case ClimberCapability = "Climber Capability"
+        
         
         var description: String {
             get {
@@ -69,7 +143,7 @@ extension Team: HasStats {
             }
         }
         
-        static let allValues: [StatName] = [.LocalRank, .TeamNumber, .RookieYear, .RobotHeight, .RobotWeight]
+        static let allValues: [StatName] = [.LocalRank, .TeamNumber, .RookieYear, .RobotHeight, .RobotWeight, .ScoringStrategy, .DriveTrain, .LowGoalCapability, .HighGoalCapability, .ClimberCapability]
     }
 }
 

@@ -23,25 +23,31 @@ extension TeamEventPerformance {
 }
 
 extension TeamEventPerformance: HasStats {
-    var stats: [StatName:()->StatValue?] {
+    var stats: [StatName:()->StatValue] {
         get {
             return [
-                StatName.TotalMatchPoints:{return (self.matchPerformances?.allObjects as! [TeamMatchPerformance]).reduce(0) {(result, matchPerformance) in
-                    return result + matchPerformance.finalScore
-                    }
+                StatName.TotalMatchPoints:{return StatValue.initWithOptional(value: (self.matchPerformances?.allObjects as! [TeamMatchPerformance]).reduce(0.0) {(result, matchPerformance) in
+                    return result + (matchPerformance.finalScore ?? 0)
+                    })
                 },
-                StatName.TotalRankingPoints:{return (self.matchPerformances?.allObjects as! [TeamMatchPerformance]).reduce(0) {(result, matchPerformance) in
-                    return result + matchPerformance.rankingPoints
-                    }
+                StatName.TotalRankingPoints:{return StatValue.initWithOptional(value: (self.matchPerformances?.allObjects as! [TeamMatchPerformance]).reduce(0) {(result, matchPerformance) in
+                    return result + (matchPerformance.rankingPoints ?? 0)
+                    })
                 },
                 StatName.OPR: {
-                    return evaluateOPR(forTeamPerformance: self)
+                    return StatValue.initWithOptional(value: evaluateOPR(forTeamPerformance: self))
                 },
                 StatName.CCWM: {
-                    return evaluateCCWM(forTeamPerformance: self)
+                    return StatValue.initWithOptional(value: evaluateCCWM(forTeamPerformance: self))
                 },
                 StatName.DPR: {
-                    return evaluateOPR(forTeamPerformance: self) - evaluateCCWM(forTeamPerformance: self)
+                    if let opr = evaluateOPR(forTeamPerformance: self){
+                        if let ccwm = evaluateCCWM(forTeamPerformance: self) {
+                            return StatValue.Double(opr - ccwm)
+                        }
+                    }
+                    
+                    return StatValue.NoValue
                 }
             ]
         }
@@ -84,7 +90,7 @@ extension TeamEventPerformance {
 
 ///Evaluates OPR using YCMatrix and the algorithm published by Ether located here: https://www.chiefdelphi.com/forums/showpost.php?p=1119150&postcount=36
 private let oprCache = NSCache<Event, Matrix>()
-private func evaluateOPR(forTeamPerformance teamPerformance: TeamEventPerformance) -> Double {
+private func evaluateOPR(forTeamPerformance teamPerformance: TeamEventPerformance) -> Double? {
     let eventPerformances = suitableEventPerformances(forEvent: teamPerformance.event)
     let numOfTeams = eventPerformances.count
     
@@ -92,7 +98,7 @@ private func evaluateOPR(forTeamPerformance teamPerformance: TeamEventPerformanc
         if let index = eventPerformances.index(of: teamPerformance) {
             return (cachedOPR.i(Int32(index), j: 0))
         } else {
-            return Double.nan
+            return nil
         }
     } else {
         
@@ -103,7 +109,7 @@ private func evaluateOPR(forTeamPerformance teamPerformance: TeamEventPerformanc
         for eventPerformance in eventPerformances {
             let matchPerformances = eventPerformance.matchPerformances?.allObjects as! [TeamMatchPerformance]
             let sumOfAllScores = matchPerformances.reduce(0) {scoreSum, matchPerformance in
-                return scoreSum + matchPerformance.finalScore
+                return scoreSum + (matchPerformance.finalScore ?? 0)
             }
             rowsB.append(sumOfAllScores)
         }
@@ -118,13 +124,13 @@ private func evaluateOPR(forTeamPerformance teamPerformance: TeamEventPerformanc
         if let index = eventPerformances.index(of: teamPerformance) {
             return (oprMatrix?.i(Int32(index), j: 0))!
         } else {
-            return Double.nan
+            return nil
         }
     }
 }
 
 private let ccwmCache = NSCache<Event, Matrix>()
-private func evaluateCCWM(forTeamPerformance teamPerformance: TeamEventPerformance) -> Double {
+private func evaluateCCWM(forTeamPerformance teamPerformance: TeamEventPerformance) -> Double? {
     let eventPerformances = suitableEventPerformances(forEvent: teamPerformance.event)
     let numOfTeams = eventPerformances.count
     
@@ -132,7 +138,7 @@ private func evaluateCCWM(forTeamPerformance teamPerformance: TeamEventPerforman
         if let index = eventPerformances.index(of: teamPerformance) {
             return (cachedCCWM.i(Int32(index), j: 0))
         } else {
-            return Double.nan
+            return nil
         }
     } else {
         let matrixA = createMatrixA(forEvent: teamPerformance.event)
@@ -155,7 +161,7 @@ private func evaluateCCWM(forTeamPerformance teamPerformance: TeamEventPerforman
         if let index = eventPerformances.index(of: teamPerformance) {
             return (ccwmMatrix?.i(Int32(index), j: 0))!
         } else {
-            return Double.nan
+            return nil
         }
     }
 }

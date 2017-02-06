@@ -71,6 +71,15 @@ class SSDataManager {
         managedContext.rollback()
     }
     
+    func saveTimeMarker(event: TimeMarkerEvent, atTime time: TimeInterval) {
+        let timeMarker = TimeMarker(entity: NSEntityDescription.entity(forEntityName: "TimeMarker", in: managedContext)!, insertInto: managedContext)
+        
+        timeMarker.localMatchPerformance = scoutedMatchPerformance.local
+        
+        timeMarker.event = event.rawValue
+        timeMarker.time = time as NSNumber?
+    }
+    
     //MARK: - Fuel
     //For recording that the team loaded fuel from somewhere
     var lastFuelLoading: FuelLoading?
@@ -84,9 +93,11 @@ class SSDataManager {
         fuelLoading.location = location
         fuelLoading.time = time as NSNumber
         
+        fuelLoading.isAutonomous = isAutonomous as NSNumber
+        
         lastFuelLoading = fuelLoading
         
-        fuelLoading.isAutonomous = isAutonomous as NSNumber
+        saveTimeMarker(event: .LoadedFuel, atTime: time)
     }
     
     func setAssociatedFuelIncrease(withFuelIncrease fuelIncrease: Double) {
@@ -105,6 +116,8 @@ class SSDataManager {
         fuelScoring.yLocation = location.y as NSNumber
         
         fuelScoring.isAutonomous = NSNumber(value: isAutonomous)
+        
+        saveTimeMarker(event: .ScoredFuel, atTime: time)
     }
     
     //MARK: Gears
@@ -118,6 +131,8 @@ class SSDataManager {
         gearLoading.time = time as NSNumber
         
         gearLoading.isAutonomous = isAutonomous as NSNumber
+        
+        saveTimeMarker(event: .LoadedGear, atTime: time)
     }
     
     func recordGearMounting(onPeg peg: Int, atTime time: TimeInterval) {
@@ -129,6 +144,8 @@ class SSDataManager {
         gearMounting.pegNumber = peg as NSNumber
         
         gearMounting.isAutonomous = isAutonomous as NSNumber
+        
+        saveTimeMarker(event: .ScoredGear, atTime: time)
     }
     
     //MARK: - Defendings
@@ -142,6 +159,8 @@ class SSDataManager {
         defendingObject.time = time as NSNumber
         defendingObject.duration = duration as NSNumber
         defendingObject.successful = successful
+        
+        saveTimeMarker(event: .Defended, atTime: time)
     }
     
     //MARK: - Rope

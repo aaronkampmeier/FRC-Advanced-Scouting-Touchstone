@@ -194,15 +194,15 @@ class TeamListTableViewController: UITableViewController, UISearchControllerDele
 		
         cell.teamLabel.text = "Team \(team.universal.teamNumber!)"
         if isSorted {
-            let statDouble: Double
+            let statValue: StatValue
             if let stat = Team.StatName(rawValue: statToSortBy) {
-                statDouble = team.universal.statValue(forStat: stat).numericValue
+                statValue = team.universal.statValue(forStat: stat)
             } else if let stat = TeamEventPerformance.StatName(rawValue: statToSortBy) {
-                statDouble = dataManager.eventPerformance(forTeam: team.universal, inEvent: selectedEvent!).statValue(forStat: stat).numericValue
+                statValue = dataManager.eventPerformance(forTeam: team.universal, inEvent: selectedEvent!).statValue(forStat: stat)
             } else {
-                statDouble = 0.0
+                statValue = .NoValue
             }
-            cell.statLabel.text = "\(Double(round(statDouble*100)/100))"
+            cell.statLabel.text = "\(statValue)"
         } else {
             cell.statLabel.text = ""
         }
@@ -369,7 +369,7 @@ class TeamListTableViewController: UITableViewController, UISearchControllerDele
             default:
                 let currentTeams = currentEventTeams
                 currentSortedTeams = currentTeams.sorted {objectPair1, objectPair2 in
-                    let isBefore = objectPair1.universal.statValue(forStat: stat).numericValue > objectPair2.universal.statValue(forStat: stat).numericValue
+                    let isBefore = objectPair1.universal.statValue(forStat: stat) > objectPair2.universal.statValue(forStat: stat)
                     if ascending {
                         return !isBefore
                     } else {
@@ -387,14 +387,8 @@ class TeamListTableViewController: UITableViewController, UISearchControllerDele
                 let firstTeamEventPerformance: TeamEventPerformance = dataManager.eventPerformance(forTeam: objectPair1.universal, inEvent: selectedEvent!)
                 let secondTeamEventPerformance: TeamEventPerformance = dataManager.eventPerformance(forTeam: objectPair2.universal, inEvent: selectedEvent!)
                 
-                let firstStatValue = firstTeamEventPerformance.statValue(forStat: stat).numericValue
-                let secondStatValue = secondTeamEventPerformance.statValue(forStat: stat).numericValue
-                
-                if firstStatValue.isNaN {
-                    return false
-                } else if secondStatValue.isNaN {
-                    return true
-                }
+                let firstStatValue = firstTeamEventPerformance.statValue(forStat: stat)
+                let secondStatValue = secondTeamEventPerformance.statValue(forStat: stat)
                 
                 let isBefore = firstStatValue > secondStatValue
                 if ascending {
