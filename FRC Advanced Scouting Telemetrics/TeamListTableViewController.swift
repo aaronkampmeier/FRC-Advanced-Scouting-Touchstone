@@ -350,6 +350,7 @@ class TeamListTableViewController: UITableViewController, UISearchControllerDele
 		sortNavVC.preferredContentSize = CGSize(width: 350, height: 300)
 		
 		let popoverVC = sortNavVC.popoverPresentationController
+        popoverVC?.delegate = self
 		
 		popoverVC?.barButtonItem = sender
 		present(sortNavVC, animated: true, completion: nil)
@@ -415,6 +416,12 @@ class TeamListTableViewController: UITableViewController, UISearchControllerDele
 	@IBAction func returningWithSegue(_ segue: UIStoryboardSegue) {
 		
 	}
+}
+
+extension TeamListTableViewController: UIPopoverPresentationControllerDelegate {
+    func adaptivePresentationStyle(for controller: UIPresentationController, traitCollection: UITraitCollection) -> UIModalPresentationStyle {
+        return .none
+    }
 }
 
 extension TeamListTableViewController: EventSelection {

@@ -1549,7 +1549,7 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <segmentedControl opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="0" translatesAutoresizingMaskIntoConstraints="NO" id="SPL-gJ-B4f">
-                                <rect key="frame" x="113.5" y="280" width="173" height="29"/>
+                                <rect key="frame" x="113.5" y="297" width="173" height="29"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="28" id="FaA-r4-Qxc"/>
                                 </constraints>
@@ -1567,11 +1567,11 @@
                         </subviews>
                         <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <constraints>
-                            <constraint firstItem="SPL-gJ-B4f" firstAttribute="top" secondItem="svs-Jc-Q2Y" secondAttribute="bottom" priority="750" constant="20" id="ISD-jZ-jEi"/>
+                            <constraint firstItem="VA4-xt-SJp" firstAttribute="top" secondItem="SPL-gJ-B4f" secondAttribute="bottom" constant="25" id="Ji7-jH-KgH"/>
                             <constraint firstItem="svs-Jc-Q2Y" firstAttribute="top" secondItem="7qs-wb-MrS" secondAttribute="bottom" id="Ltn-tB-xxb"/>
+                            <constraint firstItem="SPL-gJ-B4f" firstAttribute="top" relation="greaterThanOrEqual" secondItem="svs-Jc-Q2Y" secondAttribute="bottom" constant="20" id="SEO-gh-Tlw"/>
                             <constraint firstItem="svs-Jc-Q2Y" firstAttribute="leading" secondItem="kgZ-CR-sl5" secondAttribute="leading" id="VEi-ul-Omw"/>
                             <constraint firstItem="SPL-gJ-B4f" firstAttribute="centerX" secondItem="kgZ-CR-sl5" secondAttribute="centerX" id="c44-PT-Qjw"/>
-                            <constraint firstItem="VA4-xt-SJp" firstAttribute="top" relation="greaterThanOrEqual" secondItem="SPL-gJ-B4f" secondAttribute="bottom" constant="10" id="pdZ-Sf-lPJ"/>
                             <constraint firstAttribute="trailing" secondItem="svs-Jc-Q2Y" secondAttribute="trailing" id="udw-1I-hPX"/>
                         </constraints>
                     </view>
@@ -1593,7 +1593,7 @@
                 <placeholder placeholderIdentifier="IBFirstResponder" id="KlT-Yk-fEG" userLabel="First Responder" sceneMemberID="firstResponder"/>
                 <exit id="Fqb-qF-c4T" userLabel="Exit" sceneMemberID="exit"/>
             </objects>
-            <point key="canvasLocation" x="1429" y="1019"/>
+            <point key="canvasLocation" x="1366" y="984"/>
         </scene>
         <!--StatsVC-->
         <scene sceneID="5JZ-l0-P62">
@@ -3361,7 +3361,7 @@
                             </connections>
                         </barButtonItem>
                         <button key="titleView" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" id="bD3-zr-aia">
-                            <rect key="frame" x="75" y="6" width="170" height="33"/>
+                            <rect key="frame" x="75" y="5.5" width="170" height="33"/>
                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                             <fontDescription key="fontDescription" style="UICTFontTextStyleHeadline"/>
                             <state key="normal" title="Select Event"/>
@@ -3863,6 +3863,7 @@
             <objects>
                 <navigationController storyboardIdentifier="sortNav" automaticallyAdjustsScrollViewInsets="NO" id="K3x-s6-ZzC" sceneMemberID="viewController">
                     <toolbarItems/>
+                    <value key="contentSizeForViewInPopover" type="size" width="350" height="300"/>
                     <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
                     <size key="freeformSize" width="200" height="100"/>
                     <navigationBar key="navigationBar" contentMode="scaleToFill" id="dh1-I8-5yf">
