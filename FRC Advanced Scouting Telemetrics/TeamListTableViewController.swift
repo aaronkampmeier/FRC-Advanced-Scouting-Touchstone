@@ -161,6 +161,8 @@ class TeamListTableViewController: UITableViewController, UISearchControllerDele
 	
 	override func viewWillAppear(_ animated: Bool) {
 		super.viewWillAppear(animated)
+        
+        self.navigationController?.setToolbarHidden(false, animated: true)
 		
 		//Deselect the current row if the detail vc is not showing at the moment
 		if splitViewController?.isCollapsed ?? false {

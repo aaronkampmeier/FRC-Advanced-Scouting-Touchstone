@@ -84,11 +84,12 @@ class DataSyncingViewController: UIViewController, UITableViewDataSource{
 	}
 	
 	@IBAction func transferInfoPressed(_ sender: UIButton) {
-		let transferInfoVC = storyboard?.instantiateViewController(withIdentifier: "transferInfoTable") as! TransferInfoTableViewController
-		transferInfoVC.preferredContentSize = CGSize(width: 300, height: 300)
-		transferInfoVC.modalPresentationStyle = .popover
-		transferInfoVC.popoverPresentationController?.sourceView = sender
-		present(transferInfoVC, animated: true, completion: nil)
+        let transferNavVC = storyboard?.instantiateViewController(withIdentifier: "transferInfoNav") as! UINavigationController
+		transferNavVC.preferredContentSize = CGSize(width: 300, height: 300)
+		transferNavVC.modalPresentationStyle = .popover
+		transferNavVC.popoverPresentationController?.sourceView = sender
+        transferNavVC.popoverPresentationController?.delegate = self
+		present(transferNavVC, animated: true, completion: nil)
 	}
 	
 	@IBAction func syncIDChanged(_ sender: UITextField) {
@@ -129,4 +130,10 @@ class DataSyncingViewController: UIViewController, UITableViewDataSource{
 		cell.textLabel!.text = connectedPeers[(indexPath as NSIndexPath).row].displayName
 		return cell
 	}
+}
+
+extension DataSyncingViewController: UIPopoverPresentationControllerDelegate {
+    func adaptivePresentationStyle(for controller: UIPresentationController, traitCollection: UITraitCollection) -> UIModalPresentationStyle {
+        return .none
+    }
 }

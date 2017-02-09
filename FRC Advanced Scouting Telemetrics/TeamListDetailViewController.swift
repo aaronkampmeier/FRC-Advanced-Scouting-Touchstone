@@ -146,6 +146,8 @@ class TeamListDetailViewController: UIViewController, TeamSelectionDelegate {
 	
 	override func viewWillAppear(_ animated: Bool) {
 		super.viewWillAppear(animated)
+        
+        self.navigationController?.setToolbarHidden(true, animated: true)
 		
 		//Move initially to the game stats
 		if currentChildVC != gameStatsController {
