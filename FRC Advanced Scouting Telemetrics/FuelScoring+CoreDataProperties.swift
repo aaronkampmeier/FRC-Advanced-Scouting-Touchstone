@@ -17,6 +17,7 @@ extension FuelScoring {
     }
 
     @NSManaged public var accuracy: NSNumber?
+    @NSManaged public var amountShot: NSNumber?
     @NSManaged public var goal: String?
     @NSManaged public var time: NSNumber?
     @NSManaged public var xLocation: NSNumber?

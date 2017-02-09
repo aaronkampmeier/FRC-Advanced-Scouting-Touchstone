@@ -305,6 +305,7 @@
 		933E79501E3864370033563B /* FAST 2-2-2.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "FAST 2-2-2.xcdatamodel"; sourceTree = "<group>"; };
 		934647FB1E3188D800DC96D2 /* SSDefenseViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SSDefenseViewController.swift; sourceTree = "<group>"; };
 		934DC3791E48FD80001753FB /* FAST 2-4.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "FAST 2-4.xcdatamodel"; sourceTree = "<group>"; };
+		934DC3B61E4905B8001753FB /* FAST 2-3-4.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "FAST 2-3-4.xcdatamodel"; sourceTree = "<group>"; };
 		93610E371E42F0C800856BE2 /* FAST 2-3.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "FAST 2-3.xcdatamodel"; sourceTree = "<group>"; };
 		93610E3C1E42F8D400856BE2 /* PitScoutingViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PitScoutingViewController.swift; sourceTree = "<group>"; };
 		936572D81E14E52100439728 /* CloudRemovalManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CloudRemovalManager.swift; sourceTree = "<group>"; };
@@ -328,6 +329,8 @@
 		938D9CAD1E19A1B700A5E522 /* LocalEvent+CoreDataProperties.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "LocalEvent+CoreDataProperties.swift"; sourceTree = "<group>"; };
 		938D9CB01E1B05BA00A5E522 /* FASTTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FASTTests.swift; sourceTree = "<group>"; };
 		9391EA6B1E4852D2008E17A1 /* PitStringFieldCollectionViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PitStringFieldCollectionViewCell.swift; sourceTree = "<group>"; };
+		939EB4571E4A93F300D27F93 /* FAST 2-3-5.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "FAST 2-3-5.xcdatamodel"; sourceTree = "<group>"; };
+		939EB45C1E4BE24D00D27F93 /* FAST 2-3-6.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "FAST 2-3-6.xcdatamodel"; sourceTree = "<group>"; };
 		93AE997F1E3407A00000FB7C /* SSDataManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SSDataManager.swift; sourceTree = "<group>"; };
 		93AE99851E3516EF0000FB7C /* FAST 2- 2.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "FAST 2- 2.xcdatamodel"; sourceTree = "<group>"; };
 		93BA59EC1E2EE7EE00171D72 /* YCMatrix.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = YCMatrix.xcodeproj; path = "YCMatrix-master/YCMatrix.xcodeproj"; sourceTree = "<group>"; };
@@ -1384,6 +1387,9 @@
 		1F78E7891C3B469300221927 /* FRC_Advanced_Scouting_Telemetrics.xcdatamodeld */ = {
 			isa = XCVersionGroup;
 			children = (
+				939EB45C1E4BE24D00D27F93 /* FAST 2-3-6.xcdatamodel */,
+				939EB4571E4A93F300D27F93 /* FAST 2-3-5.xcdatamodel */,
+				934DC3B61E4905B8001753FB /* FAST 2-3-4.xcdatamodel */,
 				934DC3791E48FD80001753FB /* FAST 2-4.xcdatamodel */,
 				93EA7FF61E46A849002EC8C7 /* FAST 2-3-3.xcdatamodel */,
 				93EA7FE41E467224002EC8C7 /* FAST 2-3-2.xcdatamodel */,
@@ -1410,7 +1416,7 @@
 				1F0296661C5C6E42008CA8C2 /* FRC_Advanced_Scouting_Telemetrics CD 2.xcdatamodel */,
 				1F78E78A1C3B469300221927 /* FRC_Advanced_Scouting_Telemetrics.xcdatamodel */,
 			);
-			currentVersion = 93EA7FF61E46A849002EC8C7 /* FAST 2-3-3.xcdatamodel */;
+			currentVersion = 939EB45C1E4BE24D00D27F93 /* FAST 2-3-6.xcdatamodel */;
 			path = FRC_Advanced_Scouting_Telemetrics.xcdatamodeld;
 			sourceTree = "<group>";
 			versionGroupType = wrapper.xcdatamodel;

@@ -12,4 +12,7 @@ import CoreData
 
 open class FuelScoring: NSManagedObject {
 
+    func goalType() -> BoilerGoal {
+        return BoilerGoal(rawValue: goal!)!
+    }
 }

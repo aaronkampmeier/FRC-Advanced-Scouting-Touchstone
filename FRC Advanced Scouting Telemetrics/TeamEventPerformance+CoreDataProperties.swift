@@ -48,18 +48,87 @@ extension TeamEventPerformance: HasStats {
                     }
                     
                     return StatValue.NoValue
+                },
+                StatName.AverageTotalPointsFromFuel: {
+                    return self.average(ofStat: .TotalPointsFromFuel, forMatchPerformances: self.matchPerformances?.allObjects as! [TeamMatchPerformance])
+                },
+                StatName.AverageFuelCycleTime:{
+                    return self.average(ofStat: .AverageFuelCycleTime, forMatchPerformances: self.matchPerformances?.allObjects as! [TeamMatchPerformance])
+                },
+                StatName.AverageGearCycleTime: {
+                    let matchPerformances = self.matchPerformances?.allObjects as! [TeamMatchPerformance]
+                    return self.average(ofStat: .AverageGearCycleTime, forMatchPerformances: matchPerformances)
+                },
+                StatName.AverageHighGoalAccuracy: {
+                    let matchPerformances = self.matchPerformances?.allObjects as! [TeamMatchPerformance]
+                    return self.average(ofStat: .AverageAccuracy, forMatchPerformances: matchPerformances)
+                },
+                StatName.MostRopeClimb: {
+                    return self.average(ofStat: .ClimbingStatus, forMatchPerformances: self.matchPerformances?.allObjects as! [TeamMatchPerformance])
+                },
+                StatName.AverageGearsScored: {
+                    return self.average(ofStat: .TotalGearsScored, forMatchPerformances: self.matchPerformances?.allObjects as! [TeamMatchPerformance])
                 }
             ]
         }
     }
     
-    //Stat Name Defition
+    func average(ofStat stat: TeamMatchPerformance.StatName, forMatchPerformances matchPerformances: [TeamMatchPerformance]) -> StatValue {
+        var sum = 0.0
+        var differentStrings = [String:Int]()
+        var numOfAverages = 0
+        
+        for performance in matchPerformances {
+            switch performance.statValue(forStat: stat) {
+            case .Double(let performanceValue):
+                sum += performanceValue
+                numOfAverages += 1
+            case .String(let string):
+                //For counting the average of strings add all the different strings to a dictionary and keep track of the amount of each
+                if differentStrings.keys.contains(string) {
+                    differentStrings[string]! += 1
+                } else {
+                    differentStrings[string] = 1
+                }
+                numOfAverages += 1
+            default:
+                break
+            }
+        }
+        
+        if numOfAverages == 0 {
+            return StatValue.NoValue
+        } else if differentStrings.count != 0 {
+            var highestCount: (String, Int)?
+            for stringAndCount in differentStrings {
+                if let highest = highestCount {
+                    if stringAndCount.value > highest.1 {
+                        highestCount = stringAndCount
+                    }
+                } else {
+                    highestCount = stringAndCount
+                }
+            }
+            
+            return StatValue.initWithOptional(value: highestCount?.0)
+        } else {
+            return StatValue.Double(sum/Double(numOfAverages))
+        }
+    }
+    
+    //Stat Name Definition
     enum StatName: String, CustomStringConvertible, StatNameable {
         case TotalMatchPoints = "Total Match Points"
         case TotalRankingPoints = "Total Ranking Points"
         case OPR = "OPR"
         case DPR = "DPR"
         case CCWM = "CCWM"
+        case AverageTotalPointsFromFuel = "Average Total Fuel Points"
+        case AverageGearsScored = "Average Gears Scored"
+        case AverageFuelCycleTime = "Average Fuel Cycle Time"
+        case AverageGearCycleTime = "Average Gear Cycle Time"
+        case AverageHighGoalAccuracy = "Average High Goal Accuracy"
+        case MostRopeClimb = "End Climb Status (Majority)"
         
         var description: String {
             get {
@@ -67,7 +136,7 @@ extension TeamEventPerformance: HasStats {
             }
         }
         
-        static let allValues: [StatName] = [.TotalMatchPoints, .TotalRankingPoints, .OPR, .DPR, .CCWM]
+        static let allValues: [StatName] = [.TotalMatchPoints, .TotalRankingPoints, .AverageTotalPointsFromFuel, .AverageFuelCycleTime, .AverageGearsScored, .AverageGearCycleTime, .AverageHighGoalAccuracy, .MostRopeClimb, .OPR, .DPR, .CCWM]
     }
 }
 

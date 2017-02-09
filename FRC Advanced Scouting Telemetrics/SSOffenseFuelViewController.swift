@@ -25,7 +25,7 @@ class SSOffenseFuelViewController: UIViewController {
     var scoringWhereVC: SSOffenseWhereViewController! {
         didSet {
             scoringWhereVC.delegate = self
-            scoringWhereVC.setUpWithButtons([FuelScoringLocations.HighGoal.button(.orange), FuelScoringLocations.LowGoal.button(.orange)], time: 3)
+            scoringWhereVC.setUpWithButtons([BoilerGoal.HighGoal.button(.orange), BoilerGoal.LowGoal.button(.orange)], time: 3)
         }
     }
     
@@ -115,18 +115,13 @@ class SSOffenseFuelViewController: UIViewController {
         }
     }
     
-    enum FuelScoringLocations: String, CustomStringConvertible, FASTSSButtonable {
-        case LowGoal = "Low Goal"
-        case HighGoal = "High Goal"
-        
-        var description: String {
-            return self.rawValue
-        }
-    }
-    
     @IBAction func rewindToSSOffenseFuel(withSegue segue: UIStoryboardSegue) {
         
     }
+}
+
+extension BoilerGoal: FASTSSButtonable {
+    
 }
 
 extension SSOffenseFuelViewController: WhereDelegate {
@@ -136,7 +131,7 @@ extension SSOffenseFuelViewController: WhereDelegate {
             ssDataManager.recordFuelLoading(id, atTime: ssDataManager.stopwatch.elapsedTime)
             hasLoadedFuel = true
         case scoringWhereVC:
-            ssDataManager.recordFuelScoring(inGoal: id, atTime: ssDataManager.stopwatch.elapsedTime, scoredFrom: lastSelectedShotLocation ?? CGPoint(x: 0, y: 0), withAccuracy: Double(lastAccuracy ?? 0.5))
+            ssDataManager.recordFuelScoring(inGoal: id, atTime: ssDataManager.stopwatch.elapsedTime, scoredFrom: lastSelectedShotLocation ?? CGPoint(x: 0, y: 0), withAmountShot: Double(fuelTankSlider.value), withAccuracy: Double(lastAccuracy ?? 1))
             hasLoadedFuel = false
         default:
             break
@@ -146,9 +141,10 @@ extension SSOffenseFuelViewController: WhereDelegate {
     func shouldSelect(_ whereVC: SSOffenseWhereViewController, id: String, handler: @escaping (Bool) -> Void) {
         switch whereVC {
         case loadingWhereVC:
+            lastAccuracy = 1
             handler(true)
         case scoringWhereVC:
-            if id == FuelScoringLocations.HighGoal.rawValue {
+            if id == BoilerGoal.HighGoal.rawValue {
                 lastScoringShouldSelectHandler = handler
                 let gameFieldLocationNav = storyboard?.instantiateViewController(withIdentifier: "gameFieldLocationNav") as! UINavigationController
                 let gameFieldLocation = gameFieldLocationNav.topViewController as! GameFieldLocationViewController

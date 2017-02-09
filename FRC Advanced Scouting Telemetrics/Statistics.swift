@@ -31,7 +31,11 @@ enum StatValue: CustomStringConvertible, Equatable, Comparable {
     
     static func initWithOptional(value: Double?) -> StatValue {
         if let val = value {
-            return StatValue.Double(val)
+            if val.isNaN || val.isInfinite {
+                return StatValue.NoValue
+            } else {
+                return StatValue.Double(val)
+            }
         } else {
             return StatValue.NoValue
         }

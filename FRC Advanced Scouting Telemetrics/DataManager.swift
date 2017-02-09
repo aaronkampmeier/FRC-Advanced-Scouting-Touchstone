@@ -249,6 +249,29 @@ enum ProgrammingLanguage: String, CustomStringConvertible {
     }
 }
 
+enum GamePlayStrategy: String, CustomStringConvertible {
+    case Offensive
+    case Defensive
+    
+    var description: String {
+        get {
+            return self.rawValue
+        }
+    }
+    
+    static var allValues: [GamePlayStrategy] {
+        get {
+            return [.Offensive, .Defensive]
+        }
+    }
+    
+    static var allStringValues: [String] {
+        get {
+            return GamePlayStrategy.allValues.map({$0.description})
+        }
+    }
+}
+
 //MARK: - Game-Specific Properties
 enum StartingPosition: String, CustomStringConvertible {
     case LoadingStation = "Loading Station"
@@ -262,6 +285,17 @@ enum StartingPosition: String, CustomStringConvertible {
     static var allPositions: [StartingPosition] {
         get {
             return [.LoadingStation]
+        }
+    }
+}
+
+enum BoilerGoal: String, CustomStringConvertible {
+    case HighGoal = "High Goal"
+    case LowGoal = "Low Goal"
+    
+    var description: String {
+        get {
+            return self.rawValue
         }
     }
 }
@@ -578,16 +612,6 @@ class LocalToUniversalConversion<L: HasUniversalEquivalent, U:HasLocalEquivalent
         } catch {
             NSLog("Unable to fetch local objects for multiple universal objects")
             return []
-        }
-        
-        print("Predicates: \(predicates.count)")
-        print("Fetched Universals: \(fetchedUniversals.count)")
-        print("Local objects: \(localObjects.count)")
-        
-        if fetchedUniversals.count != localObjects.count {
-            NSLog("Amount of Fetched Universals not equal to the given objects, caused by syncing with someone who has added different events than you")
-            //But actually this could happen because it is being synced with other devices that might have different events added
-//            return nil
         }
         
         //Sort the fetched locals to be in the same order as their universal counterparts

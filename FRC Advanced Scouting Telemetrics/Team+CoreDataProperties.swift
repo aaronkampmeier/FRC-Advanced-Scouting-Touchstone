@@ -111,6 +111,9 @@ extension Team: HasStats {
                 StatName.DriveTrain: {
                     StatValue.initWithOptional(value: self.local.driveTrain)
                 },
+                StatName.HasTurret: {
+                    StatValue.initWithOptional(value: self.local.hasTurret)
+                },
                 StatName.LowGoalCapability: {
                     StatValue.initWithOptional(value: self.local.lowGoalCapability)
                 },
@@ -119,6 +122,9 @@ extension Team: HasStats {
                 },
                 StatName.ClimberCapability: {
                     StatValue.initWithOptional(value: self.local.climberCapability)
+                },
+                StatName.GamePlayStrategy: {
+                    StatValue.initWithOptional(value: self.local.strategy)
                 }
             ]
         }
@@ -135,7 +141,8 @@ extension Team: HasStats {
         case LowGoalCapability = "Low Goal Capability"
         case HighGoalCapability = "High Goal Capability"
         case ClimberCapability = "Climber Capability"
-        
+        case HasTurret = "Has Turret"
+        case GamePlayStrategy = "Game Play Strategy"
         
         var description: String {
             get {
@@ -143,7 +150,7 @@ extension Team: HasStats {
             }
         }
         
-        static let allValues: [StatName] = [.LocalRank, .TeamNumber, .RookieYear, .RobotHeight, .RobotWeight, .ScoringStrategy, .DriveTrain, .LowGoalCapability, .HighGoalCapability, .ClimberCapability]
+        static let allValues: [StatName] = [.LocalRank, .TeamNumber, .RookieYear, .RobotHeight, .RobotWeight, .GamePlayStrategy, .ScoringStrategy, .DriveTrain, .HasTurret, .LowGoalCapability, .HighGoalCapability, .ClimberCapability]
     }
 }
 

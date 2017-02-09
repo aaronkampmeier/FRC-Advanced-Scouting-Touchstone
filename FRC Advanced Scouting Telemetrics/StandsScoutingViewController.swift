@@ -244,6 +244,7 @@ class StandsScoutingViewController: UIViewController {
 	
 	func close(andSave shouldSave: Bool) {
 		if shouldSave {
+            matchPerformance?.local.hasBeenScouted = true as NSNumber
             if !(ssDataManager?.save() ?? true) {
                 //There was a problem saving
                 let alert = UIAlertController(title: "Unable to save", message: "There was a problem saving the scouted data. This is problematic and rare; please file a bug report.", preferredStyle: .alert)

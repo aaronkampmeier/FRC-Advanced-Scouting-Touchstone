@@ -137,6 +137,18 @@ class PitScoutingViewController: UIViewController, UICollectionViewDataSource, U
                 }
             }),
             
+            PitScoutingParameter(type: .SegmentedSelector, label: "Turret", options: SimpleCapability.allStringValues, currentValue: {self.scoutedTeam?.local.hasTurret}, updateHandler: {newValue in
+                if let stringValue = newValue as? String {
+                    self.scoutedTeam?.local.hasTurret = stringValue
+                }
+            }),
+            
+            PitScoutingParameter(type: .SegmentedSelector, label: "Game Strategy", options: GamePlayStrategy.allStringValues, currentValue: {self.scoutedTeam?.local.strategy}, updateHandler: {newValue in
+                if let stringValue = newValue as? String {
+                    self.scoutedTeam?.local.strategy = stringValue
+                }
+            }),
+            
             PitScoutingParameter(type: .SegmentedSelector, label: "Gears Capability", options: SimpleCapability.allStringValues, currentValue: {self.scoutedTeam?.local.gearsCapability}, updateHandler: {newValue in
                 if let capability = newValue as? String {
                     self.scoutedTeam?.local.gearsCapability = capability

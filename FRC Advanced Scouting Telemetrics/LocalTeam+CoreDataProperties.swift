@@ -38,6 +38,7 @@ extension LocalTeam: HasUniversalEquivalent {
     @NSManaged public var driverXP: NSNumber?
     @NSManaged public var frontImage: Data?
     @NSManaged public var gearsCapability: String?
+    @NSManaged public var hasTurret: String?
     @NSManaged public var highGoalCapability: String?
     @NSManaged public var key: String?
     @NSManaged public var lowGoalCapability: String?
@@ -46,6 +47,7 @@ extension LocalTeam: HasUniversalEquivalent {
     @NSManaged public var robotHeight: NSNumber?
     @NSManaged public var robotWeight: NSNumber?
     @NSManaged public var sideImage: Data?
+    @NSManaged public var strategy: String?
     @NSManaged public var tankSize: NSNumber?
     @NSManaged public var visionTrackingCapability: String?
     @NSManaged public var autoPegs: [Int]?

@@ -104,7 +104,7 @@ class SSDataManager {
         lastFuelLoading?.associatedFuelIncrease = fuelIncrease as NSNumber
     }
     
-    func recordFuelScoring(inGoal goal: SSOffenseFuelViewController.FuelScoringLocations.RawValue, atTime time: TimeInterval, scoredFrom location: CGPoint, withAccuracy accuracy: Double) {
+    func recordFuelScoring(inGoal goal: BoilerGoal.RawValue, atTime time: TimeInterval, scoredFrom location: CGPoint, withAmountShot amountShot: Double, withAccuracy accuracy: Double) {
         let fuelScoring = FuelScoring(entity: NSEntityDescription.entity(forEntityName: "FuelScoring", in: managedContext)!, insertInto: managedContext)
         
         fuelScoring.localMatchPerformance = scoutedMatchPerformance.local
@@ -112,6 +112,7 @@ class SSDataManager {
         fuelScoring.goal = goal
         fuelScoring.time = time as NSNumber
         fuelScoring.accuracy = accuracy as NSNumber
+        fuelScoring.amountShot = amountShot as NSNumber
         fuelScoring.xLocation = location.x as NSNumber
         fuelScoring.yLocation = location.y as NSNumber
         
