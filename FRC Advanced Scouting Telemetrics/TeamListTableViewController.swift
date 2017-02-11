@@ -229,15 +229,33 @@ class TeamListTableViewController: UITableViewController, UISearchControllerDele
     }
 	
 	override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-		selectedTeam = currentTeamsToDisplay[(indexPath as NSIndexPath).row]
 		
 		//Checks if the split view is collapsed or not. If it is then simply present the detail view controller because it will push onto self's navigation controller. If it isn't, then present the detail view controller's navigation controller because it is actually a "split" view.
 		let detailRootController: UIViewController
-		if splitViewController!.isCollapsed {
-			detailRootController = appDelegate.teamListDetailVC!
-		} else {
-			detailRootController = appDelegate.teamListDetailVC!.navigationController!
-		}
+        
+        let teamListDetailVC: TeamListDetailViewController
+        if let vc = appDelegate.teamListDetailVC {
+            teamListDetailVC = vc
+        } else {
+            //There is no detail view controller stored in the app delegate (probably because the split vc started out collapsed and a detail vc was never created), so create one now and store it for later
+            let vc = storyboard?.instantiateViewController(withIdentifier: "teamListDetail") as! TeamListDetailViewController
+            self.delegate = vc
+            
+            teamListDetailVC = vc
+        }
+        
+        //If the split view is collapsed then just show the detail view controller because it will be pushed onto self's nav stack. Otherwise present it with a nav controller.
+        if splitViewController!.isCollapsed {
+            detailRootController = teamListDetailVC
+        } else {
+            detailRootController = teamListDetailVC.navigationController!
+        }
+        
+        
+        //Set the selected team (and alert the delegate)
+		selectedTeam = currentTeamsToDisplay[(indexPath as NSIndexPath).row]
+        
+		//Show the detail vc
 		splitViewController?.showDetailViewController(detailRootController, sender: self)
 	}
 

@@ -35,13 +35,11 @@
 		1F1C23DA1E07673E008885A1 /* AddEventTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F1C23D91E07673E008885A1 /* AddEventTableViewController.swift */; };
 		1F21DF121C66942200C55D0E /* SortVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F21DF111C66942200C55D0E /* SortVC.swift */; };
 		1F2F9A221CE2D6E400B85A72 /* TeamListSearchResultsTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F2F9A211CE2D6E400B85A72 /* TeamListSearchResultsTableViewController.swift */; };
-		1F45340E1C6FC3EA004EDDB9 /* GameStatsCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F45340D1C6FC3EA004EDDB9 /* GameStatsCollectionViewCell.swift */; };
 		1F4534101C6FF916004EDDB9 /* StandsScoutingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F45340F1C6FF916004EDDB9 /* StandsScoutingViewController.swift */; };
 		1F4534561C7276DE004EDDB9 /* EventPickerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F4534551C7276DE004EDDB9 /* EventPickerViewController.swift */; };
 		1F4FEDAA1C4AD95C00F4016D /* OldPitScoutingController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F4FEDA91C4AD95C00F4016D /* OldPitScoutingController.swift */; };
 		1F4FEDAC1C4B686000F4016D /* AdminConsoleController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F4FEDAB1C4B686000F4016D /* AdminConsoleController.swift */; };
 		1F4FEDAE1C4C5DEA00F4016D /* AddTeamVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F4FEDAD1C4C5DEA00F4016D /* AddTeamVC.swift */; };
-		1F51D1C21C7FB30F00B4D6C5 /* GameStatsController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F51D1C11C7FB30F00B4D6C5 /* GameStatsController.swift */; };
 		1F51D1C61C7FFBC000B4D6C5 /* GameStatsLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F51D1C51C7FFBC000B4D6C5 /* GameStatsLayout.swift */; };
 		1F58308F1CB09AF900D6F513 /* DataSyncer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F58308E1CB09AF900D6F513 /* DataSyncer.swift */; };
 		1F665D721CB1DA91003CAC1D /* DataSyncingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F665D711CB1DA91003CAC1D /* DataSyncingViewController.swift */; };
@@ -59,8 +57,6 @@
 		1FBC9E691CC2EE11005DB3F4 /* Fabric.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1FBC9E671CC2EE11005DB3F4 /* Fabric.framework */; };
 		1FBC9E6C1CC2F007005DB3F4 /* Crashlytics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1FBC9E6B1CC2F007005DB3F4 /* Crashlytics.framework */; };
 		1FBE627F1CAEE0FB001FDFB7 /* TeamPickerTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FBE627E1CAEE0FB001FDFB7 /* TeamPickerTableViewController.swift */; };
-		1FBE62811CAEF617001FDFB7 /* MatchOverviewViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FBE62801CAEF617001FDFB7 /* MatchOverviewViewController.swift */; };
-		1FCA7ADA1C630BAE004294D1 /* StatsVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FCA7AD91C630BAE004294D1 /* StatsVC.swift */; };
 		1FCEF8F61C9CB231006AC591 /* Globals.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FCEF8F51C9CB231006AC591 /* Globals.swift */; };
 		1FD0A09B1C95093600013A18 /* TeamListTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FD0A09A1C95093600013A18 /* TeamListTableViewCell.swift */; };
 		1FDC1BCE1CD69EBB00ABE327 /* TeamListSplitViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FDC1BCD1CD69EBB00ABE327 /* TeamListSplitViewController.swift */; };
@@ -237,7 +233,6 @@
 		1F2F9A211CE2D6E400B85A72 /* TeamListSearchResultsTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TeamListSearchResultsTableViewController.swift; sourceTree = "<group>"; };
 		1F34C74B1CD1A85B005255D5 /* FRC_Advanced_Scouting_Telemetrics Version 11.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "FRC_Advanced_Scouting_Telemetrics Version 11.xcdatamodel"; sourceTree = "<group>"; };
 		1F34C74C1CD2540B005255D5 /* FRC_Advanced_Scouting_Telemetrics Version 12.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "FRC_Advanced_Scouting_Telemetrics Version 12.xcdatamodel"; sourceTree = "<group>"; };
-		1F45340D1C6FC3EA004EDDB9 /* GameStatsCollectionViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GameStatsCollectionViewCell.swift; sourceTree = "<group>"; };
 		1F45340F1C6FF916004EDDB9 /* StandsScoutingViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StandsScoutingViewController.swift; sourceTree = "<group>"; };
 		1F4534541C7242FB004EDDB9 /* FRC_Advanced_Scouting_Telemetrics CD 6.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "FRC_Advanced_Scouting_Telemetrics CD 6.xcdatamodel"; sourceTree = "<group>"; };
 		1F4534551C7276DE004EDDB9 /* EventPickerViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EventPickerViewController.swift; sourceTree = "<group>"; };
@@ -245,7 +240,6 @@
 		1F4FEDA91C4AD95C00F4016D /* OldPitScoutingController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OldPitScoutingController.swift; sourceTree = "<group>"; };
 		1F4FEDAB1C4B686000F4016D /* AdminConsoleController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AdminConsoleController.swift; sourceTree = "<group>"; };
 		1F4FEDAD1C4C5DEA00F4016D /* AddTeamVC.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AddTeamVC.swift; sourceTree = "<group>"; };
-		1F51D1C11C7FB30F00B4D6C5 /* GameStatsController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GameStatsController.swift; sourceTree = "<group>"; };
 		1F51D1C51C7FFBC000B4D6C5 /* GameStatsLayout.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GameStatsLayout.swift; sourceTree = "<group>"; };
 		1F58308E1CB09AF900D6F513 /* DataSyncer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DataSyncer.swift; sourceTree = "<group>"; };
 		1F665D711CB1DA91003CAC1D /* DataSyncingViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DataSyncingViewController.swift; sourceTree = "<group>"; };
@@ -275,9 +269,7 @@
 		1FBC9E671CC2EE11005DB3F4 /* Fabric.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Fabric.framework; sourceTree = SOURCE_ROOT; };
 		1FBC9E6B1CC2F007005DB3F4 /* Crashlytics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Crashlytics.framework; sourceTree = SOURCE_ROOT; };
 		1FBE627E1CAEE0FB001FDFB7 /* TeamPickerTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TeamPickerTableViewController.swift; sourceTree = "<group>"; };
-		1FBE62801CAEF617001FDFB7 /* MatchOverviewViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MatchOverviewViewController.swift; sourceTree = "<group>"; };
 		1FCA7ACC1C61AB38004294D1 /* FRC_Advanced_Scouting_Telemetrics CD 4.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "FRC_Advanced_Scouting_Telemetrics CD 4.xcdatamodel"; sourceTree = "<group>"; };
-		1FCA7AD91C630BAE004294D1 /* StatsVC.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StatsVC.swift; sourceTree = "<group>"; };
 		1FCEF8F51C9CB231006AC591 /* Globals.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Globals.swift; sourceTree = "<group>"; };
 		1FD0A09A1C95093600013A18 /* TeamListTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TeamListTableViewCell.swift; sourceTree = "<group>"; };
 		1FDC1BCD1CD69EBB00ABE327 /* TeamListSplitViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TeamListSplitViewController.swift; sourceTree = "<group>"; };
@@ -413,7 +405,6 @@
 				1FDC1BD21CD6A35F00ABE327 /* TeamListDetailViewController.swift */,
 				1F2F9A211CE2D6E400B85A72 /* TeamListSearchResultsTableViewController.swift */,
 				1F51D1C51C7FFBC000B4D6C5 /* GameStatsLayout.swift */,
-				1FDC1BCF1CD69EDE00ABE327 /* Segments */,
 				1F21DF111C66942200C55D0E /* SortVC.swift */,
 			);
 			name = "Team List";
@@ -571,17 +562,6 @@
 				1F1C23C01E07487C008885A1 /* LocalTeamRanking+CoreDataProperties.swift */,
 			);
 			name = "Core Data";
-			sourceTree = "<group>";
-		};
-		1FDC1BCF1CD69EDE00ABE327 /* Segments */ = {
-			isa = PBXGroup;
-			children = (
-				1FBE62801CAEF617001FDFB7 /* MatchOverviewViewController.swift */,
-				1F51D1C11C7FB30F00B4D6C5 /* GameStatsController.swift */,
-				1F45340D1C6FC3EA004EDDB9 /* GameStatsCollectionViewCell.swift */,
-				1FCA7AD91C630BAE004294D1 /* StatsVC.swift */,
-			);
-			name = Segments;
 			sourceTree = "<group>";
 		};
 		247597E7D320F6FF4FC40A15 /* Frameworks */ = {
@@ -963,11 +943,9 @@
 				1FDC1BD11CD69F5F00ABE327 /* TeamListTableViewController.swift in Sources */,
 				1F1C23D71E07487C008885A1 /* LocalTeamRanking+CoreDataClass.swift in Sources */,
 				933E794F1E385BB20033563B /* SSPreloadingViewController.swift in Sources */,
-				1FBE62811CAEF617001FDFB7 /* MatchOverviewViewController.swift in Sources */,
 				93FBC39A1E3EEDEC00FEB328 /* SSRopeClimbViewController.swift in Sources */,
 				932C344C1E12DC2600A23203 /* EventInfoVC.swift in Sources */,
 				1F1C23CB1E07487C008885A1 /* LocalTeam+CoreDataClass.swift in Sources */,
-				1F51D1C21C7FB30F00B4D6C5 /* GameStatsController.swift in Sources */,
 				932CB3F21E305E8200712725 /* SSOffenseWhereViewController.swift in Sources */,
 				93610E3D1E42F8D400856BE2 /* PitScoutingViewController.swift in Sources */,
 				1FF1F1791C4604370051EE54 /* TeamDataManager.swift in Sources */,
@@ -977,7 +955,6 @@
 				938BEB3C1E35228E003F2F74 /* GearLoading+CoreDataClass.swift in Sources */,
 				93FBC3961E3E624500FEB328 /* GameFieldLocationViewController.swift in Sources */,
 				1F1C23CE1E07487C008885A1 /* TeamEventPerformance+CoreDataProperties.swift in Sources */,
-				1F45340E1C6FC3EA004EDDB9 /* GameStatsCollectionViewCell.swift in Sources */,
 				1F78E7831C3B469300221927 /* AppDelegate.swift in Sources */,
 				938BEB2D1E352159003F2F74 /* Defending+CoreDataProperties.swift in Sources */,
 				932C344E1E12F7C400A23203 /* CloudImportManager.swift in Sources */,
@@ -1026,7 +1003,6 @@
 				1F1C23C11E07487C008885A1 /* Team+CoreDataClass.swift in Sources */,
 				9391EA6C1E4852D2008E17A1 /* PitStringFieldCollectionViewCell.swift in Sources */,
 				1F1C23C91E07487C008885A1 /* LocalMatchPerformance+CoreDataClass.swift in Sources */,
-				1FCA7ADA1C630BAE004294D1 /* StatsVC.swift in Sources */,
 				1F4FEDAC1C4B686000F4016D /* AdminConsoleController.swift in Sources */,
 				1F1C23841E072ECA008885A1 /* DataManager.swift in Sources */,
 				937E9C961E40468300D0ED76 /* SuperNotesCollectionViewController.swift in Sources */,
