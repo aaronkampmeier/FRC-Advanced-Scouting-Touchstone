@@ -18,20 +18,28 @@ class TeamListDetailViewController: UIViewController, TeamSelectionDelegate {
     @IBOutlet weak var pitScoutingButton: UIBarButtonItem!
 	@IBOutlet weak var navBar: UINavigationItem!
     @IBOutlet var frontImageHeightConstraint: NSLayoutConstraint!
-    var teamLabelAtTopConstraint: NSLayoutConstraint!
     @IBOutlet weak var notesButton: UIButton!
+    @IBOutlet weak var generalInfoTableView: UITableView?
+    @IBOutlet weak var contentScrollView: UIScrollView!
+    
+    var contentViewInsets: UIEdgeInsets {
+        get {
+            return UIEdgeInsetsMake(frontImageHeightConstraint.constant, 0, 0, 0)
+        }
+    }
+    var noContentInsets: UIEdgeInsets {
+        get {
+            return UIEdgeInsetsMake(0, 0, 0, 0)
+        }
+    }
 	
 	var frontImage: TeamImagePhoto? {
 		didSet {
-			frontImageButton.setImage(frontImage?.image, for: UIControlState())
+			frontImageButton.setImage(frontImage?.image, for: .normal)
 		}
 	}
 	
-	var sideImage: TeamImagePhoto? {
-		didSet {
-//			sideImageButton.setImage(sideImage?.image, for: UIControlState())
-		}
-	}
+	var sideImage: TeamImagePhoto?
 
 	let teamManager = TeamDataManager()
 	var selectedTeam: ObjectPair<Team,LocalTeam>? {
@@ -43,12 +51,18 @@ class TeamListDetailViewController: UIViewController, TeamSelectionDelegate {
 				//Populate the images, if there are images
 				if let image = team.local.frontImage {
 					frontImage = TeamImagePhoto(image: UIImage(data: image as Data), attributedCaptionTitle: NSAttributedString(string: "Team \(team.universal.teamNumber!): Front Image"))
-                    teamLabelAtTopConstraint.isActive = false
                     frontImageHeightConstraint.isActive = true
+                    
+                    contentScrollView.contentInset = contentViewInsets
+                    contentScrollView.scrollIndicatorInsets = contentViewInsets
+                    
+                    contentScrollView.contentOffset = CGPoint(x: 0, y: -frontImageHeightConstraint.constant)
 				} else {
 					frontImage = nil
                     frontImageHeightConstraint.isActive = false
-                    teamLabelAtTopConstraint.isActive = true
+                    
+                    contentScrollView.contentInset = noContentInsets
+                    contentScrollView.scrollIndicatorInsets = noContentInsets
 				}
 				if let image = team.local.sideImage {
 					sideImage = TeamImagePhoto(image: UIImage(data: image as Data), attributedCaptionTitle: NSAttributedString(string: "Team \(team.universal.teamNumber!): Side Image"))
@@ -78,6 +92,10 @@ class TeamListDetailViewController: UIViewController, TeamSelectionDelegate {
                 
                 notesButton.isEnabled = false
 			}
+            
+            generalInfoTableView?.reloadData()
+            
+            detailCollection?.load(withTeam: selectedTeam?.universal)
 			
 			NotificationCenter.default.post(name: Notification.Name(rawValue: "TeamSelectedChanged"), object: self)
 		}
@@ -100,12 +118,14 @@ class TeamListDetailViewController: UIViewController, TeamSelectionDelegate {
 			return nil
 		}
 	}
+    
+    var detailCollection: TeamDetailCollectionViewController?
 	
     var teamSelectedBeforeViewLoading: ObjectPair<Team,LocalTeam>?
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        // Do any additional setup after loading trhe view.
+        // Do any additional setup after loading the view.
 		
 		(UIApplication.shared.delegate as! AppDelegate).teamListDetailVC = self
 		
@@ -119,18 +139,22 @@ class TeamListDetailViewController: UIViewController, TeamSelectionDelegate {
 		frontImageButton.imageView?.contentMode = .scaleAspectFill
         frontImageButton.setTitle(nil, for: .normal)
         
-        teamLabelAtTopConstraint = NSLayoutConstraint(item: teamLabel, attribute: .top, relatedBy: .equal, toItem: topLayoutGuide, attribute: .bottom, multiplier: 1, constant: 10)
-        
+        contentScrollView.delegate = self
         if teamSelectedBeforeViewLoading?.local.frontImage != nil {
-            teamLabelAtTopConstraint.isActive = false
             frontImageHeightConstraint.isActive = true
+            
+            contentScrollView.contentInset = contentViewInsets
+            contentScrollView.scrollIndicatorInsets = contentViewInsets
+            
+            contentScrollView.contentOffset = CGPoint(x: 0, y: -frontImageHeightConstraint.constant)
         } else {
             frontImageHeightConstraint.isActive = false
-            teamLabelAtTopConstraint.isActive = true
+            
+            contentScrollView.contentInset = noContentInsets
+            contentScrollView.scrollIndicatorInsets = noContentInsets
+            
+            contentScrollView.contentOffset = CGPoint(x: 0, y: 0)
         }
-        
-//		sideImageButton.imageView?.contentMode = .scaleAspectFit
-//        sideImageButton.setTitle(nil, for: .normal)
 		
 		let displayModeButtonItem = splitViewController!.displayModeButtonItem
 //		displayModeButtonItem.title = "Teams"
@@ -141,6 +165,8 @@ class TeamListDetailViewController: UIViewController, TeamSelectionDelegate {
 			navigationItem.leftBarButtonItems?.insert(displayModeButtonItem, at: 0)
 		}
         
+        generalInfoTableView?.delegate = self
+        generalInfoTableView?.dataSource = self
         
         //Load the data if a team was selected beforehand
         selectedTeam = teamSelectedBeforeViewLoading
@@ -161,6 +187,8 @@ class TeamListDetailViewController: UIViewController, TeamSelectionDelegate {
         } else if segue.identifier == "pitScouting" {
             let pitScoutingVC = segue.destination as! PitScoutingViewController
             pitScoutingVC.scoutedTeam = selectedTeam?.universal
+        } else if segue.identifier == "teamDetail" {
+            detailCollection = segue.destination as! TeamDetailCollectionViewController
         }
 	}
 
@@ -226,6 +254,81 @@ class TeamListDetailViewController: UIViewController, TeamSelectionDelegate {
 		present(photoVC, animated: true, completion: nil)
 		Answers.logContentView(withName: "Team Robot Images", contentType: "Photo", contentId: nil, customAttributes: ["Team":"\(selectedTeam?.universal.teamNumber ?? "")"])
 	}
+}
+
+extension TeamListDetailViewController: UIScrollViewDelegate {
+    func scrollViewDidScroll(_ scrollView: UIScrollView) {
+        print()
+    }
+}
+
+extension TeamListDetailViewController: UITableViewDelegate, UITableViewDataSource {
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        if let team = selectedTeam {
+            if let _ = team.universal.website {
+                return 4
+            } else {
+                return 3
+            }
+        } else {
+            return 0
+        }
+    }
+    
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        switch indexPath.row {
+        case 0:
+            let cell = tableView.dequeueReusableCell(withIdentifier: "nameValue")
+            
+            (cell?.contentView.viewWithTag(1) as! UILabel).text = "Location"
+            (cell?.contentView.viewWithTag(2) as! UILabel).text = selectedTeam?.universal.location
+            
+            return cell!
+        case 1:
+            let cell = tableView.dequeueReusableCell(withIdentifier: "nameValue")
+            
+            (cell?.contentView.viewWithTag(1) as! UILabel).text = "Rookie Year"
+            (cell?.contentView.viewWithTag(2) as! UILabel).text = selectedTeam?.universal.rookieYear?.description
+            
+            return cell!
+        case 2:
+            let cell = tableView.dequeueReusableCell(withIdentifier: "nameValue")
+            
+            (cell?.contentView.viewWithTag(1) as! UILabel).text = "Attending Events"
+            
+            let attendingEvents = (selectedTeam?.universal.eventPerformances?.allObjects as! [TeamEventPerformance]).map() {eventPerformance in
+                return eventPerformance.event
+            }
+            //Create a string of all the attending events
+            var eventString = ""
+            
+            for (index, event) in attendingEvents.enumerated() {
+                eventString += "\(event.name!)"
+                
+                if !(attendingEvents.count - 1 == index) {
+                    eventString += ", "
+                }
+            }
+            
+            (cell?.contentView.viewWithTag(2) as! UILabel).text = eventString
+            
+            return cell!
+        case 3:
+            let cell = tableView.dequeueReusableCell(withIdentifier: "websiteButton")
+            
+            (cell?.contentView.viewWithTag(1) as! UIButton).addTarget(self, action: #selector(websiteButtonPressed(_:)), for: .touchUpInside)
+            
+            return cell!
+        default:
+            return UITableViewCell()
+        }
+    }
+    
+    func websiteButtonPressed(_ sender: UIButton) {
+        if let url = URL(string: selectedTeam?.universal.website ?? "") {
+            UIApplication.shared.openURL(url)
+        }
+    }
 }
 
 extension TeamListDetailViewController: NotesDataSource {
