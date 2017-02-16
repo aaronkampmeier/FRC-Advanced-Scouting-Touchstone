@@ -29,6 +29,10 @@ class TeamDetailCollectionViewController: UICollectionViewController, UICollecti
         // Dispose of any resources that can be recreated.
     }
     
+    override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
+        (self.collectionView?.collectionViewLayout as! UICollectionViewFlowLayout).invalidateLayout()
+    }
+    
     func load(withTeam team: Team?) {
         selectedTeam = team
     }
@@ -64,31 +68,17 @@ class TeamDetailCollectionViewController: UICollectionViewController, UICollecti
             case 0:
                 let tableCell = collectionView.dequeueReusableCell(withReuseIdentifier: "collectionView", for: indexPath) as! TeamDetailKeyValueSpreadCollectionViewCell
                 
-                //General Team Info Cell
-                let attendingEvents = (team.eventPerformances?.allObjects as! [TeamEventPerformance]).map() {eventPerformance in
-                    return eventPerformance.event
-                }
-                //Create a string of all the attending events
-                var eventString = ""
+                let possibleTeamStats = Team.StatName.teamDetailValues
                 
-                for (index, event) in attendingEvents.enumerated() {
-                    eventString += "\(event.name!)"
+                var values: [(String,String?)] = []
+                
+                for statName in possibleTeamStats {
+                    values.append((statName.description,team.statValue(forStat: statName).description))
+                }
                     
-                    if !(attendingEvents.count - 1 == index) {
-                        eventString += ", "
-                    }
-                }
-                
-                let values: [(String,String?)] = [("Name",team.name), ("Location",team.location), ("Rookie Year",team.rookieYear?.description), ("Events Attending",eventString)]
-                
-                tableCell.load(withTitle: "General", andValues: values)
-                
-                tableCell.contentView.layer.borderWidth = 2
-                tableCell.contentView.layer.borderColor = UIColor.green.cgColor
-                tableCell.contentView.layer.cornerRadius = 30
+                tableCell.load(withTitle: "Detail", andValues: values)
                 
                 cell = tableCell
-                
             default:
                 cell = collectionView.dequeueReusableCell(withReuseIdentifier: "empty", for: indexPath)
             }
@@ -100,7 +90,7 @@ class TeamDetailCollectionViewController: UICollectionViewController, UICollecti
     }
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-        return CGSize(width: 600, height: 150)
+        return CGSize(width: self.view.frame.width, height: 300)
     }
 
     // MARK: UICollectionViewDelegate

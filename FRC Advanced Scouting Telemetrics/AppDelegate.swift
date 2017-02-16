@@ -1,4 +1,3 @@
-
 //  AppDelegate.swift
 //  FRC Advanced Scouting Telemetrics
 //

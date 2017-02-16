@@ -65,7 +65,7 @@ enum StatValue: CustomStringConvertible, Equatable, Comparable {
             case .Double(let value):
                 return ((round(value * 100))/100).description
             case .Bool(let value):
-                return value.description
+                return value.description.capitalized
             case .String(let value):
                 return value.description
             case .NoValue:

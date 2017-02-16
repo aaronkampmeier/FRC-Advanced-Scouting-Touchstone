@@ -105,6 +105,7 @@
 		93BA59FB1E2EFCAF00171D72 /* SSOffenseViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93BA59FA1E2EFCAF00171D72 /* SSOffenseViewController.swift */; };
 		93BA5A0C1E2F1EA200171D72 /* YCMatrix.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 93BA59F21E2EE7EF00171D72 /* YCMatrix.framework */; };
 		93BA5A0D1E2F1EA200171D72 /* YCMatrix.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 93BA59F21E2EE7EF00171D72 /* YCMatrix.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		93C5B47C1E53FC9C007D309F /* TeamInfoScrollView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93C5B47B1E53FC9C007D309F /* TeamInfoScrollView.swift */; };
 		93CE1BF71E403A97004165BE /* NotesViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93CE1BF61E403A97004165BE /* NotesViewController.swift */; };
 		93EA7FEA1E4693C6002EC8C7 /* PitSwitchCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93EA7FE91E4693C6002EC8C7 /* PitSwitchCollectionViewCell.swift */; };
 		93FBC3961E3E624500FEB328 /* GameFieldLocationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93FBC3951E3E624500FEB328 /* GameFieldLocationViewController.swift */; };
@@ -329,6 +330,7 @@
 		93AE99851E3516EF0000FB7C /* FAST 2- 2.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "FAST 2- 2.xcdatamodel"; sourceTree = "<group>"; };
 		93BA59EC1E2EE7EE00171D72 /* YCMatrix.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = YCMatrix.xcodeproj; path = "YCMatrix-master/YCMatrix.xcodeproj"; sourceTree = "<group>"; };
 		93BA59FA1E2EFCAF00171D72 /* SSOffenseViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SSOffenseViewController.swift; sourceTree = "<group>"; };
+		93C5B47B1E53FC9C007D309F /* TeamInfoScrollView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TeamInfoScrollView.swift; sourceTree = "<group>"; };
 		93CE1BF61E403A97004165BE /* NotesViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NotesViewController.swift; sourceTree = "<group>"; };
 		93EA7FE41E467224002EC8C7 /* FAST 2-3-2.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "FAST 2-3-2.xcdatamodel"; sourceTree = "<group>"; };
 		93EA7FE91E4693C6002EC8C7 /* PitSwitchCollectionViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PitSwitchCollectionViewCell.swift; sourceTree = "<group>"; };
@@ -411,6 +413,7 @@
 				936967F81E4FD05C001DB15D /* Team Detail Cells */,
 				1F2F9A211CE2D6E400B85A72 /* TeamListSearchResultsTableViewController.swift */,
 				1F21DF111C66942200C55D0E /* SortVC.swift */,
+				93C5B47B1E53FC9C007D309F /* TeamInfoScrollView.swift */,
 			);
 			name = "Team List";
 			sourceTree = "<group>";
@@ -976,6 +979,7 @@
 				1F718F7A1E085BD900BD1951 /* CloudConnectionManager.swift in Sources */,
 				938BEB3A1E35228E003F2F74 /* FuelLoading+CoreDataClass.swift in Sources */,
 				1F4FEDAE1C4C5DEA00F4016D /* AddTeamVC.swift in Sources */,
+				93C5B47C1E53FC9C007D309F /* TeamInfoScrollView.swift in Sources */,
 				938D9CAE1E19A1B700A5E522 /* LocalEvent+CoreDataClass.swift in Sources */,
 				1FD0A09B1C95093600013A18 /* TeamListTableViewCell.swift in Sources */,
 				1F1C23CC1E07487C008885A1 /* LocalTeam+CoreDataProperties.swift in Sources */,

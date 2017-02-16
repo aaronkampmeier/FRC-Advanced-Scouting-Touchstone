@@ -12,7 +12,6 @@ import Crashlytics
 
 class TeamListDetailViewController: UIViewController, TeamSelectionDelegate {
 	@IBOutlet weak var frontImageButton: UIButton!
-//	@IBOutlet weak var sideImageButton: UIButton!
 	@IBOutlet weak var teamLabel: UILabel!
 	@IBOutlet weak var standsScoutingButton: UIBarButtonItem!
     @IBOutlet weak var pitScoutingButton: UIBarButtonItem!
@@ -20,8 +19,12 @@ class TeamListDetailViewController: UIViewController, TeamSelectionDelegate {
     @IBOutlet var frontImageHeightConstraint: NSLayoutConstraint!
     @IBOutlet weak var notesButton: UIButton!
     @IBOutlet weak var generalInfoTableView: UITableView?
-    @IBOutlet weak var contentScrollView: UIScrollView!
+    @IBOutlet weak var contentScrollView: TeamInfoScrollView!
+    @IBOutlet weak var detailTableViewHeight: NSLayoutConstraint!
     
+    var detailCollectionVC: TeamDetailCollectionViewController?
+    
+    //Insets for the scroll view
     var contentViewInsets: UIEdgeInsets {
         get {
             return UIEdgeInsetsMake(frontImageHeightConstraint.constant, 0, 0, 0)
@@ -95,7 +98,7 @@ class TeamListDetailViewController: UIViewController, TeamSelectionDelegate {
             
             generalInfoTableView?.reloadData()
             
-            detailCollection?.load(withTeam: selectedTeam?.universal)
+            detailCollectionVC?.load(withTeam: selectedTeam?.universal)
 			
 			NotificationCenter.default.post(name: Notification.Name(rawValue: "TeamSelectedChanged"), object: self)
 		}
@@ -118,8 +121,6 @@ class TeamListDetailViewController: UIViewController, TeamSelectionDelegate {
 			return nil
 		}
 	}
-    
-    var detailCollection: TeamDetailCollectionViewController?
 	
     var teamSelectedBeforeViewLoading: ObjectPair<Team,LocalTeam>?
     override func viewDidLoad() {
@@ -167,6 +168,8 @@ class TeamListDetailViewController: UIViewController, TeamSelectionDelegate {
         
         generalInfoTableView?.delegate = self
         generalInfoTableView?.dataSource = self
+        generalInfoTableView?.rowHeight = UITableViewAutomaticDimension
+        generalInfoTableView?.estimatedRowHeight = 44
         
         //Load the data if a team was selected beforehand
         selectedTeam = teamSelectedBeforeViewLoading
@@ -177,6 +180,15 @@ class TeamListDetailViewController: UIViewController, TeamSelectionDelegate {
         
         self.navigationController?.setToolbarHidden(true, animated: true)
 	}
+    
+    override func viewWillLayoutSubviews() {
+        super.viewWillLayoutSubviews()
+        
+        super.updateViewConstraints()
+        detailTableViewHeight.constant = generalInfoTableView?.contentSize.height ?? 190
+        
+        detailCollectionVC?.updateViewConstraints()
+    }
 	
 	override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
 		super.prepare(for: segue, sender: sender)
@@ -187,8 +199,8 @@ class TeamListDetailViewController: UIViewController, TeamSelectionDelegate {
         } else if segue.identifier == "pitScouting" {
             let pitScoutingVC = segue.destination as! PitScoutingViewController
             pitScoutingVC.scoutedTeam = selectedTeam?.universal
-        } else if segue.identifier == "teamDetail" {
-            detailCollection = segue.destination as! TeamDetailCollectionViewController
+        } else if segue.identifier == "teamDetailCollection" {
+            detailCollectionVC = segue.destination as! TeamDetailCollectionViewController
         }
 	}
 
@@ -197,6 +209,27 @@ class TeamListDetailViewController: UIViewController, TeamSelectionDelegate {
         // Dispose of any resources that can be recreated.
     }
 	
+    override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
+        super.viewWillTransition(to: size, with: coordinator)
+        //Reset the content insets
+        coordinator.animate(alongsideTransition: {_ in
+            if self.selectedTeam?.local.frontImage != nil {
+                self.contentScrollView.contentInset = self.contentViewInsets
+                self.contentScrollView.scrollIndicatorInsets = self.contentViewInsets
+                
+                self.contentScrollView.contentOffset = CGPoint(x: 0, y: -self.frontImageHeightConstraint.constant)
+            } else {
+                self.frontImageHeightConstraint.isActive = false
+                
+                self.contentScrollView.contentInset = self.noContentInsets
+                self.contentScrollView.scrollIndicatorInsets = self.noContentInsets
+                
+                self.contentScrollView.contentOffset = CGPoint(x: 0, y: 0)
+            }
+        }, completion: nil)
+        
+        self.viewWillLayoutSubviews()
+    }
 	
 	//MARK: - Master View Delegate
 	func selectedTeam(_ team: ObjectPair<Team,LocalTeam>?) {

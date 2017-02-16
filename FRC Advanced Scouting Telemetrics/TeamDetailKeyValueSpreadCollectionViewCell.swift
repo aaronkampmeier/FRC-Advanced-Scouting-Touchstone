@@ -18,6 +18,8 @@ class TeamDetailKeyValueSpreadCollectionViewCell: UICollectionViewCell, UICollec
         titleLabel.text = title
         self.values = values
         
+        titleLabel.preferredMaxLayoutWidth = 130
+        
         collectionView.dataSource = self
         collectionView.delegate = self
         collectionView.reloadData()
@@ -37,6 +39,7 @@ class TeamDetailKeyValueSpreadCollectionViewCell: UICollectionViewCell, UICollec
     }
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-        return CGSize(width: 130, height: 70)
+        
+        return CGSize(width: 140, height: 65)
     }
 }

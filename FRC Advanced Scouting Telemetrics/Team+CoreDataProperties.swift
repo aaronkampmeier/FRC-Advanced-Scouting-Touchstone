@@ -50,7 +50,7 @@ extension Team: HasStats {
                 StatName.LocalRank: {
                     let teamRanking = DataManager().localTeamRanking()
                     if let index = teamRanking.index(of: self) {
-                        return StatValue.Integer(index)
+                        return StatValue.Integer(index + 1)
                     } else {
                         return StatValue.NoValue
                     }
@@ -125,6 +125,47 @@ extension Team: HasStats {
                 },
                 StatName.GamePlayStrategy: {
                     StatValue.initWithOptional(value: self.local.strategy)
+                },
+                
+                //Pit Scouted Team Detail
+                StatName.DriverXP: {
+                    StatValue.initWithOptional(value: self.local.driverXP?.intValue)
+                },
+                StatName.TankSize: {
+                    StatValue.initWithOptional(value: self.local.tankSize?.doubleValue)
+                },
+                StatName.VisionTrackingCapability: {
+                    StatValue.initWithOptional(value: self.local.visionTrackingCapability)
+                },
+                StatName.ProgrammingLanguage: {
+                    StatValue.initWithOptional(value: self.local.programmingLanguage)
+                },
+                StatName.AutoPegCapabilities: {
+                    if let autoPegCapabilities = self.local.autoPegs {
+                        let pegs = autoPegCapabilities.map() {Peg.peg(forNumber: $0)}
+                        
+                        var stringPegs = ""
+                        for (index, peg) in pegs.enumerated() {
+                            stringPegs += peg?.description ?? ""
+                            
+                            if !(index == pegs.count - 1) {
+                                stringPegs += ", "
+                            }
+                        }
+                        
+                        return StatValue.String(stringPegs)
+                    } else {
+                        return StatValue.NoValue
+                    }
+                },
+                StatName.AutoLoadsFuel: {
+                    return StatValue.initWithOptional(value: self.local.autoDoesLoadFuel?.boolValue)
+                },
+                StatName.AutoShootsPreloadedFuel: {
+                    StatValue.initWithOptional(value: self.local.autoDoesShootPreloaded?.boolValue)
+                },
+                StatName.AutoShootsLoadedFuel: {
+                    StatValue.initWithOptional(value: self.local.autoDoesShootMoreFuel?.boolValue)
                 }
             ]
         }
@@ -144,6 +185,17 @@ extension Team: HasStats {
         case HasTurret = "Has Turret"
         case GamePlayStrategy = "Game Play Strategy"
         
+        
+        //Pit Scouted Team Detail
+        case DriverXP = "Driver XP"
+        case TankSize = "Tank Size"
+        case VisionTrackingCapability = "Computer Vision Capability"
+        case ProgrammingLanguage = "Programming Language"
+        case AutoPegCapabilities = "Auto Peg Capabilities"
+        case AutoLoadsFuel = "Auto Loads Fuel"
+        case AutoShootsPreloadedFuel = "Auto Shoots Preloaded"
+        case AutoShootsLoadedFuel = "Auto Shoots Loaded"
+        
         var description: String {
             get {
                 return self.rawValue
@@ -151,6 +203,8 @@ extension Team: HasStats {
         }
         
         static let allValues: [StatName] = [.LocalRank, .TeamNumber, .RookieYear, .RobotHeight, .RobotWeight, .GamePlayStrategy, .ScoringStrategy, .DriveTrain, .HasTurret, .LowGoalCapability, .HighGoalCapability, .ClimberCapability]
+        
+        static let teamDetailValues: [StatName] = [.RobotHeight, .RobotWeight, .DriverXP, .GamePlayStrategy, .ScoringStrategy, .DriveTrain, .HasTurret, .TankSize, .LowGoalCapability, .HighGoalCapability, .VisionTrackingCapability, .ProgrammingLanguage, .AutoPegCapabilities, .AutoLoadsFuel, .AutoShootsPreloadedFuel, .AutoShootsLoadedFuel, .ClimberCapability]
     }
 }
 
