@@ -2073,10 +2073,10 @@
                                                 </constraints>
                                             </view>
                                             <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" scrollEnabled="NO" dataMode="prototypes" style="plain" separatorStyle="none" allowsSelection="NO" rowHeight="44" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="iNk-cv-NDh">
-                                                <rect key="frame" x="20" y="61" width="483.5" height="190"/>
+                                                <rect key="frame" x="20" y="61" width="483.5" height="240"/>
                                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                                 <constraints>
-                                                    <constraint firstAttribute="height" constant="190" id="eLp-od-oku"/>
+                                                    <constraint firstAttribute="height" constant="240" id="eLp-od-oku"/>
                                                 </constraints>
                                                 <prototypes>
                                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="nameValue" id="9Gb-QV-Xbw">
@@ -2131,7 +2131,7 @@
                                                 </prototypes>
                                             </tableView>
                                             <containerView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Oqo-hQ-mlm">
-                                                <rect key="frame" x="20" y="261" width="483.5" height="423"/>
+                                                <rect key="frame" x="20" y="311" width="483.5" height="388"/>
                                                 <connections>
                                                     <segue destination="ae1-kv-WF1" kind="embed" identifier="teamDetailCollection" id="d12-7h-NFZ"/>
                                                 </connections>
@@ -2150,7 +2150,7 @@
                                             <constraint firstItem="0mL-6k-Wog" firstAttribute="centerY" secondItem="th8-Go-Ydc" secondAttribute="centerY" constant="2" id="gJR-lv-xKb"/>
                                             <constraint firstItem="iNk-cv-NDh" firstAttribute="leading" secondItem="4hT-WU-xNY" secondAttribute="leadingMargin" id="gbi-6m-UHD"/>
                                             <constraint firstItem="syi-gT-rTV" firstAttribute="leading" secondItem="th8-Go-Ydc" secondAttribute="leading" id="pnL-cj-c0P"/>
-                                            <constraint firstAttribute="bottom" secondItem="Oqo-hQ-mlm" secondAttribute="bottom" constant="20" id="rC4-jF-zY1"/>
+                                            <constraint firstAttribute="bottom" secondItem="Oqo-hQ-mlm" secondAttribute="bottom" constant="5" id="rC4-jF-zY1"/>
                                             <constraint firstItem="0mL-6k-Wog" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="th8-Go-Ydc" secondAttribute="trailing" constant="10" id="uEB-NA-2qF"/>
                                             <constraint firstItem="Oqo-hQ-mlm" firstAttribute="top" secondItem="iNk-cv-NDh" secondAttribute="bottom" constant="10" id="x2z-T5-Hf7"/>
                                         </constraints>
@@ -2222,7 +2222,7 @@
             <objects>
                 <collectionViewController id="ae1-kv-WF1" customClass="TeamDetailCollectionViewController" customModule="FRC_Advanced_Scouting_Touchstone" customModuleProvider="target" sceneMemberID="viewController">
                     <collectionView key="view" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" misplaced="YES" dataMode="prototypes" id="5Ma-6f-rdn">
-                        <rect key="frame" x="0.0" y="0.0" width="483.5" height="423"/>
+                        <rect key="frame" x="0.0" y="0.0" width="483.5" height="388"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <collectionViewFlowLayout key="collectionViewLayout" minimumLineSpacing="10" minimumInteritemSpacing="10" id="Wc8-er-Pa6">
@@ -2232,8 +2232,45 @@
                             <inset key="sectionInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
                         </collectionViewFlowLayout>
                         <cells>
+                            <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="keyValue" id="5L9-K6-WKS">
+                                <rect key="frame" x="115" y="0.0" width="254" height="158"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
+                                    <rect key="frame" x="0.0" y="0.0" width="254" height="158"/>
+                                    <autoresizingMask key="autoresizingMask"/>
+                                    <subviews>
+                                        <label opaque="NO" userInteractionEnabled="NO" tag="1" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Key" textAlignment="natural" lineBreakMode="wordWrap" numberOfLines="0" baselineAdjustment="alignBaselines" minimumFontSize="10" adjustsLetterSpacingToFitWidth="YES" translatesAutoresizingMaskIntoConstraints="NO" id="ken-WV-rwd">
+                                            <rect key="frame" x="0.0" y="0.0" width="254" height="17"/>
+                                            <constraints>
+                                                <constraint firstAttribute="height" relation="greaterThanOrEqual" constant="17" id="ROh-y9-IzA"/>
+                                            </constraints>
+                                            <fontDescription key="fontDescription" type="system" weight="medium" pointSize="14"/>
+                                            <nil key="textColor"/>
+                                            <nil key="highlightedColor"/>
+                                        </label>
+                                        <label opaque="NO" userInteractionEnabled="NO" tag="2" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="B4l-zw-Tlr">
+                                            <rect key="frame" x="0.0" y="21" width="254" height="14.5"/>
+                                            <constraints>
+                                                <constraint firstAttribute="height" relation="greaterThanOrEqual" constant="15" id="L1V-lq-CdZ"/>
+                                            </constraints>
+                                            <fontDescription key="fontDescription" type="system" pointSize="12"/>
+                                            <nil key="textColor"/>
+                                            <nil key="highlightedColor"/>
+                                        </label>
+                                    </subviews>
+                                </view>
+                                <constraints>
+                                    <constraint firstAttribute="trailing" secondItem="ken-WV-rwd" secondAttribute="trailing" id="4R3-nW-Bm8"/>
+                                    <constraint firstItem="B4l-zw-Tlr" firstAttribute="top" secondItem="ken-WV-rwd" secondAttribute="bottom" constant="4" id="CVF-bO-MiC"/>
+                                    <constraint firstItem="ken-WV-rwd" firstAttribute="top" secondItem="5L9-K6-WKS" secondAttribute="top" id="Jjv-E4-imB"/>
+                                    <constraint firstAttribute="leading" secondItem="ken-WV-rwd" secondAttribute="leading" id="Qw1-9n-IGZ"/>
+                                    <constraint firstAttribute="leading" secondItem="B4l-zw-Tlr" secondAttribute="leading" id="myg-Gu-9na"/>
+                                    <constraint firstAttribute="trailing" secondItem="B4l-zw-Tlr" secondAttribute="trailing" id="n4X-M1-ov2"/>
+                                </constraints>
+                                <size key="customSize" width="254" height="158"/>
+                            </collectionViewCell>
                             <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="tableViewCell" id="WTK-71-jNt" customClass="TeamDetailTableCollectionViewCell" customModule="FRC_Advanced_Scouting_Touchstone" customModuleProvider="target">
-                                <rect key="frame" x="0.0" y="0.0" width="259" height="169"/>
+                                <rect key="frame" x="0.0" y="168" width="259" height="169"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
                                     <rect key="frame" x="0.0" y="0.0" width="259" height="169"/>
@@ -2282,7 +2319,7 @@
                                 </connections>
                             </collectionViewCell>
                             <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="empty" id="1K5-vi-enI">
-                                <rect key="frame" x="443.5" y="66" width="40" height="37"/>
+                                <rect key="frame" x="443.5" y="234" width="40" height="37"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
                                     <rect key="frame" x="0.0" y="0.0" width="40" height="37"/>
@@ -2291,7 +2328,7 @@
                                 <size key="customSize" width="40" height="37"/>
                             </collectionViewCell>
                             <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="collectionView" id="wXV-gf-e9X" customClass="TeamDetailKeyValueSpreadCollectionViewCell" customModule="FRC_Advanced_Scouting_Touchstone" customModuleProvider="target">
-                                <rect key="frame" x="0.0" y="179" width="251" height="145"/>
+                                <rect key="frame" x="0.0" y="347" width="251" height="145"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
                                     <rect key="frame" x="0.0" y="0.0" width="251" height="145"/>
@@ -2312,44 +2349,7 @@
                                                 <size key="footerReferenceSize" width="0.0" height="0.0"/>
                                                 <inset key="sectionInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
                                             </collectionViewFlowLayout>
-                                            <cells>
-                                                <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="keyValue" id="5L9-K6-WKS">
-                                                    <rect key="frame" x="45" y="0.0" width="145" height="40"/>
-                                                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                                    <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
-                                                        <rect key="frame" x="0.0" y="0.0" width="145" height="40"/>
-                                                        <autoresizingMask key="autoresizingMask"/>
-                                                        <subviews>
-                                                            <label opaque="NO" userInteractionEnabled="NO" tag="1" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Key" textAlignment="natural" lineBreakMode="wordWrap" numberOfLines="0" baselineAdjustment="alignBaselines" minimumFontSize="10" adjustsLetterSpacingToFitWidth="YES" translatesAutoresizingMaskIntoConstraints="NO" id="ken-WV-rwd">
-                                                                <rect key="frame" x="8" y="0.0" width="129" height="17"/>
-                                                                <constraints>
-                                                                    <constraint firstAttribute="height" relation="greaterThanOrEqual" constant="17" id="ROh-y9-IzA"/>
-                                                                </constraints>
-                                                                <fontDescription key="fontDescription" type="system" weight="medium" pointSize="14"/>
-                                                                <nil key="textColor"/>
-                                                                <nil key="highlightedColor"/>
-                                                            </label>
-                                                            <label opaque="NO" userInteractionEnabled="NO" tag="2" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="B4l-zw-Tlr">
-                                                                <rect key="frame" x="8" y="21" width="129" height="14.5"/>
-                                                                <constraints>
-                                                                    <constraint firstAttribute="height" relation="greaterThanOrEqual" constant="15" id="L1V-lq-CdZ"/>
-                                                                </constraints>
-                                                                <fontDescription key="fontDescription" type="system" pointSize="12"/>
-                                                                <nil key="textColor"/>
-                                                                <nil key="highlightedColor"/>
-                                                            </label>
-                                                        </subviews>
-                                                    </view>
-                                                    <constraints>
-                                                        <constraint firstAttribute="trailingMargin" secondItem="ken-WV-rwd" secondAttribute="trailing" id="4R3-nW-Bm8"/>
-                                                        <constraint firstItem="B4l-zw-Tlr" firstAttribute="top" secondItem="ken-WV-rwd" secondAttribute="bottom" constant="4" id="CVF-bO-MiC"/>
-                                                        <constraint firstItem="ken-WV-rwd" firstAttribute="top" secondItem="5L9-K6-WKS" secondAttribute="top" id="Jjv-E4-imB"/>
-                                                        <constraint firstAttribute="leadingMargin" secondItem="ken-WV-rwd" secondAttribute="leading" id="Qw1-9n-IGZ"/>
-                                                        <constraint firstAttribute="leadingMargin" secondItem="B4l-zw-Tlr" secondAttribute="leading" id="myg-Gu-9na"/>
-                                                        <constraint firstAttribute="trailingMargin" secondItem="B4l-zw-Tlr" secondAttribute="trailing" id="n4X-M1-ov2"/>
-                                                    </constraints>
-                                                </collectionViewCell>
-                                            </cells>
+                                            <cells/>
                                         </collectionView>
                                     </subviews>
                                 </view>
@@ -2376,7 +2376,7 @@
                 </collectionViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="pXb-me-17D" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="2634" y="182"/>
+            <point key="canvasLocation" x="2633.7890625" y="181.640625"/>
         </scene>
         <!--Team List Table View Controller-->
         <scene sceneID="8W7-88-PdG">

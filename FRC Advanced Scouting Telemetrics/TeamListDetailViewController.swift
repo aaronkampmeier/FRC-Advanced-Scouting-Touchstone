@@ -97,8 +97,11 @@ class TeamListDetailViewController: UIViewController, TeamSelectionDelegate {
 			}
             
             generalInfoTableView?.reloadData()
+            generalInfoTableView?.layoutIfNeeded()
             
             detailCollectionVC?.load(withTeam: selectedTeam?.universal)
+            
+            self.detailTableViewHeight.constant = self.generalInfoTableView?.contentSize.height ?? 10
 			
 			NotificationCenter.default.post(name: Notification.Name(rawValue: "TeamSelectedChanged"), object: self)
 		}
@@ -181,13 +184,12 @@ class TeamListDetailViewController: UIViewController, TeamSelectionDelegate {
         self.navigationController?.setToolbarHidden(true, animated: true)
 	}
     
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+    }
+    
     override func viewWillLayoutSubviews() {
         super.viewWillLayoutSubviews()
-        
-        super.updateViewConstraints()
-        detailTableViewHeight.constant = generalInfoTableView?.contentSize.height ?? 190
-        
-        detailCollectionVC?.updateViewConstraints()
     }
 	
 	override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
@@ -226,9 +228,9 @@ class TeamListDetailViewController: UIViewController, TeamSelectionDelegate {
                 
                 self.contentScrollView.contentOffset = CGPoint(x: 0, y: 0)
             }
+            
+            self.detailTableViewHeight.constant = self.generalInfoTableView?.contentSize.height ?? 10
         }, completion: nil)
-        
-        self.viewWillLayoutSubviews()
     }
 	
 	//MARK: - Master View Delegate

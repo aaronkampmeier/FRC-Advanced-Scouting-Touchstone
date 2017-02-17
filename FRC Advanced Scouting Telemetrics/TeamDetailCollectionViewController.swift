@@ -11,9 +11,24 @@ import UIKit
 class TeamDetailCollectionViewController: UICollectionViewController, UICollectionViewDelegateFlowLayout {
     var selectedTeam: Team? {
         didSet {
+            detailValues.removeAll()
+            if let team = selectedTeam {
+                let possibleTeamStats = Team.StatName.teamDetailValues
+                
+                var values: [(String,String?)] = []
+                
+                for statName in possibleTeamStats {
+                    values.append((statName.description,team.statValue(forStat: statName).description))
+                }
+                
+                detailValues = values
+            }
+            
             collectionView?.reloadData()
         }
     }
+    
+    var detailValues: [(String, String?)] = []
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -22,6 +37,8 @@ class TeamDetailCollectionViewController: UICollectionViewController, UICollecti
         // self.clearsSelectionOnViewWillAppear = false
 
         // Do any additional setup after loading the view.
+        
+        
     }
 
     override func didReceiveMemoryWarning() {
@@ -57,40 +74,42 @@ class TeamDetailCollectionViewController: UICollectionViewController, UICollecti
 
     override func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         // #warning Incomplete implementation, return the number of items
-        return 1
+        return detailValues.count
     }
 
     override func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        let cell: UICollectionViewCell
-    
-        if let team = selectedTeam {
-            switch indexPath.item {
-            case 0:
-                let tableCell = collectionView.dequeueReusableCell(withReuseIdentifier: "collectionView", for: indexPath) as! TeamDetailKeyValueSpreadCollectionViewCell
-                
-                let possibleTeamStats = Team.StatName.teamDetailValues
-                
-                var values: [(String,String?)] = []
-                
-                for statName in possibleTeamStats {
-                    values.append((statName.description,team.statValue(forStat: statName).description))
-                }
-                    
-                tableCell.load(withTitle: "Detail", andValues: values)
-                
-                cell = tableCell
-            default:
-                cell = collectionView.dequeueReusableCell(withReuseIdentifier: "empty", for: indexPath)
-            }
-        } else {
-            cell = collectionView.dequeueReusableCell(withReuseIdentifier: "empty", for: indexPath)
+        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "keyValue", for: indexPath)
+        
+        switch indexPath.section {
+        case 0:
+            let value = detailValues[indexPath.item]
+            
+            (cell.viewWithTag(1) as! UILabel).text = value.0
+            (cell.viewWithTag(2) as! UILabel).text = value.1
+        default:
+            break
         }
+        
+    
+//        if let team = selectedTeam {
+//            switch indexPath.item {
+//            case 0:
+//                let tableCell = collectionView.dequeueReusableCell(withReuseIdentifier: "collectionView", for: indexPath) as! TeamDetailKeyValueSpreadCollectionViewCell
+//                
+//                
+//                cell = tableCell
+//            default:
+//                cell = collectionView.dequeueReusableCell(withReuseIdentifier: "empty", for: indexPath)
+//            }
+//        } else {
+//            cell = collectionView.dequeueReusableCell(withReuseIdentifier: "empty", for: indexPath)
+//        }
     
         return cell
     }
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-        return CGSize(width: self.view.frame.width, height: 300)
+        return CGSize(width: 130, height: 65)
     }
 
     // MARK: UICollectionViewDelegate
