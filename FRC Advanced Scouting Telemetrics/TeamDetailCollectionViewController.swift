@@ -24,11 +24,32 @@ class TeamDetailCollectionViewController: UICollectionViewController, UICollecti
                 detailValues = values
             }
             
+//            collectionView?.reloadData()
+        }
+    }
+    
+    var selectedTeamEventPerformance: TeamEventPerformance? {
+        didSet {
+            eventStats.removeAll()
+            if let eventPerformance = selectedTeamEventPerformance {
+                let possibleStats = TeamEventPerformance.StatName.allValues
+                
+                var values: [(String, String?)] = []
+                
+                for statName in possibleStats {
+                    values.append((statName.description, eventPerformance.statValue(forStat: statName).description))
+                }
+                
+                eventStats = values
+            }
+            
             collectionView?.reloadData()
         }
     }
     
     var detailValues: [(String, String?)] = []
+    
+    var eventStats: [(String, String?)] = []
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -38,7 +59,7 @@ class TeamDetailCollectionViewController: UICollectionViewController, UICollecti
 
         // Do any additional setup after loading the view.
         
-        
+        (collectionViewLayout as! UICollectionViewFlowLayout).headerReferenceSize = CGSize(width: self.view.frame.width, height: 30)
     }
 
     override func didReceiveMemoryWarning() {
@@ -50,8 +71,9 @@ class TeamDetailCollectionViewController: UICollectionViewController, UICollecti
         (self.collectionView?.collectionViewLayout as! UICollectionViewFlowLayout).invalidateLayout()
     }
     
-    func load(withTeam team: Team?) {
+    func load(withTeam team: Team?, andEventPerformance eventPerformance: TeamEventPerformance?) {
         selectedTeam = team
+        selectedTeamEventPerformance = eventPerformance
     }
 
     /*
@@ -68,13 +90,23 @@ class TeamDetailCollectionViewController: UICollectionViewController, UICollecti
 
     override func numberOfSections(in collectionView: UICollectionView) -> Int {
         // #warning Incomplete implementation, return the number of sections
-        return 1
+        if let _ = selectedTeamEventPerformance {
+            return 2
+        } else {
+            return 1
+        }
     }
-
 
     override func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         // #warning Incomplete implementation, return the number of items
-        return detailValues.count
+        switch section {
+        case 0:
+            return detailValues.count
+        case 1:
+            return eventStats.count
+        default:
+            return 0
+        }
     }
 
     override func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
@@ -86,26 +118,31 @@ class TeamDetailCollectionViewController: UICollectionViewController, UICollecti
             
             (cell.viewWithTag(1) as! UILabel).text = value.0
             (cell.viewWithTag(2) as! UILabel).text = value.1
+        case 1:
+            let value = eventStats[indexPath.item]
+            
+            (cell.viewWithTag(1) as! UILabel).text = value.0
+            (cell.viewWithTag(2) as! UILabel).text = value.1
+        default:
+            break
+        }
+    
+        return cell
+    }
+    
+    override func collectionView(_ collectionView: UICollectionView, viewForSupplementaryElementOfKind kind: String, at indexPath: IndexPath) -> UICollectionReusableView {
+        let headerView = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: "header", for: indexPath)
+        
+        switch indexPath.section {
+        case 0:
+            headerView.frame = CGRect(x: 0, y: 0, width: 0, height: 0)
+        case 1:
+            (headerView.viewWithTag(1) as! UILabel).text = "Event: \(selectedTeamEventPerformance?.event.name ?? "") Stats"
         default:
             break
         }
         
-    
-//        if let team = selectedTeam {
-//            switch indexPath.item {
-//            case 0:
-//                let tableCell = collectionView.dequeueReusableCell(withReuseIdentifier: "collectionView", for: indexPath) as! TeamDetailKeyValueSpreadCollectionViewCell
-//                
-//                
-//                cell = tableCell
-//            default:
-//                cell = collectionView.dequeueReusableCell(withReuseIdentifier: "empty", for: indexPath)
-//            }
-//        } else {
-//            cell = collectionView.dequeueReusableCell(withReuseIdentifier: "empty", for: indexPath)
-//        }
-    
-        return cell
+        return headerView
     }
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {

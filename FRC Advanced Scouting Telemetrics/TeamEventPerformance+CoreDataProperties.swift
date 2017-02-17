@@ -136,7 +136,7 @@ extension TeamEventPerformance: HasStats {
             }
         }
         
-        static let allValues: [StatName] = [.TotalMatchPoints, .TotalRankingPoints, .AverageTotalPointsFromFuel, .AverageFuelCycleTime, .AverageGearsScored, .AverageGearCycleTime, .AverageHighGoalAccuracy, .MostRopeClimb, .OPR, .DPR, .CCWM]
+        static let allValues: [StatName] = [.OPR, .DPR, .CCWM, .TotalMatchPoints, .TotalRankingPoints, .AverageTotalPointsFromFuel, .AverageFuelCycleTime, .AverageGearsScored, .AverageGearCycleTime, .AverageHighGoalAccuracy, .MostRopeClimb]
     }
 }
 

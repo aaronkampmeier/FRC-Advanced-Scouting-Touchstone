@@ -99,7 +99,7 @@ class TeamListDetailViewController: UIViewController, TeamSelectionDelegate {
             generalInfoTableView?.reloadData()
             generalInfoTableView?.layoutIfNeeded()
             
-            detailCollectionVC?.load(withTeam: selectedTeam?.universal)
+            detailCollectionVC?.load(withTeam: selectedTeam?.universal, andEventPerformance: teamEventPerformance)
             
             self.detailTableViewHeight.constant = self.generalInfoTableView?.contentSize.height ?? 10
 			
