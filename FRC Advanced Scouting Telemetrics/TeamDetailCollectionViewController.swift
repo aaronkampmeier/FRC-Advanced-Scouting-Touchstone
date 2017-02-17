@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import KTCenterFlowLayout
 
 let TeamDetailCollectionViewNeedsHeightResizing = NSNotification.Name("TeamDetailCollectionViewNeedsHeightResizing")
 
@@ -64,7 +65,10 @@ class TeamDetailCollectionViewController: UICollectionViewController, UICollecti
 
         // Do any additional setup after loading the view.
         
-        (collectionViewLayout as! UICollectionViewFlowLayout).headerReferenceSize = CGSize(width: self.view.frame.width, height: 30)
+        collectionView?.collectionViewLayout = KTCenterFlowLayout()
+        
+        (collectionView?.collectionViewLayout as! UICollectionViewFlowLayout).headerReferenceSize = CGSize(width: self.view.frame.width, height: 30)
+        (collectionView?.collectionViewLayout as! UICollectionViewFlowLayout).minimumInteritemSpacing = 3
         
 //        NotificationCenter.default.post(name: TeamDetailCollectionViewNeedsHeightResizing, object: self, userInfo: nil)
     }
@@ -81,7 +85,6 @@ class TeamDetailCollectionViewController: UICollectionViewController, UICollecti
     }
     
     override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
-        (self.collectionView?.collectionViewLayout as! UICollectionViewFlowLayout).invalidateLayout()
         collectionView?.layoutIfNeeded()
         NotificationCenter.default.post(name: TeamDetailCollectionViewNeedsHeightResizing, object: self, userInfo: nil)
     }
@@ -163,7 +166,7 @@ class TeamDetailCollectionViewController: UICollectionViewController, UICollecti
     }
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-        return CGSize(width: 130, height: 65)
+        return CGSize(width: 112, height: 65)
     }
 
     // MARK: UICollectionViewDelegate

@@ -12,4 +12,5 @@ pod "GMStepper"
 pod 'VerticalSlider'
 pod 'SSBouncyButton', '~> 1.0'
 pod 'UICircularProgressRing'
+pod 'KTCenterFlowLayout'
 end

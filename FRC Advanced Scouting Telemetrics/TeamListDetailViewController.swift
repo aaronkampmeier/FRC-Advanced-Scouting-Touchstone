@@ -67,6 +67,8 @@ class TeamListDetailViewController: UIViewController, TeamSelectionDelegate {
                     
                     contentScrollView.contentInset = noContentInsets
                     contentScrollView.scrollIndicatorInsets = noContentInsets
+                    
+                    contentScrollView.contentOffset = CGPoint(x: 0, y: 0)
 				}
 				if let image = team.local.sideImage {
 					sideImage = TeamImagePhoto(image: UIImage(data: image as Data), attributedCaptionTitle: NSAttributedString(string: "Team \(team.universal.teamNumber!): Side Image"))
@@ -329,22 +331,33 @@ extension TeamListDetailViewController: UITableViewDelegate, UITableViewDataSour
         switch indexPath.row {
         case 0:
             let cell = tableView.dequeueReusableCell(withIdentifier: "nameValue")
+            let keyLabel = cell?.contentView.viewWithTag(1) as! UILabel
             
-            (cell?.contentView.viewWithTag(1) as! UILabel).text = "Location"
+            keyLabel.text = "Location"
+            let textWidth = keyLabel.intrinsicContentSize.width
+            keyLabel.constraints.filter({$0.identifier == "keyWidth"}).first?.constant = textWidth
+            
             (cell?.contentView.viewWithTag(2) as! UILabel).text = selectedTeam?.universal.location
             
             return cell!
         case 1:
             let cell = tableView.dequeueReusableCell(withIdentifier: "nameValue")
+            let keyLabel = cell?.contentView.viewWithTag(1) as! UILabel
             
-            (cell?.contentView.viewWithTag(1) as! UILabel).text = "Rookie Year"
+            keyLabel.text = "Rookie Year"
+            let textWidth = keyLabel.intrinsicContentSize.width
+            keyLabel.constraints.filter({$0.identifier == "keyWidth"}).first?.constant = textWidth
+            
             (cell?.contentView.viewWithTag(2) as! UILabel).text = selectedTeam?.universal.rookieYear?.description
             
             return cell!
         case 2:
             let cell = tableView.dequeueReusableCell(withIdentifier: "nameValue")
+            let keyLabel = cell?.contentView.viewWithTag(1) as! UILabel
             
-            (cell?.contentView.viewWithTag(1) as! UILabel).text = "Attending Events"
+            keyLabel.text = "Attending Events"
+            let textWidth = keyLabel.intrinsicContentSize.width
+            keyLabel.constraints.filter({$0.identifier == "keyWidth"}).first?.constant = textWidth
             
             let attendingEvents = (selectedTeam?.universal.eventPerformances?.allObjects as! [TeamEventPerformance]).map() {eventPerformance in
                 return eventPerformance.event
