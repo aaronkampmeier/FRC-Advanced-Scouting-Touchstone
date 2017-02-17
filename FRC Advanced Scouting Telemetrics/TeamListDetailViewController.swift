@@ -21,6 +21,7 @@ class TeamListDetailViewController: UIViewController, TeamSelectionDelegate {
     @IBOutlet weak var generalInfoTableView: UITableView?
     @IBOutlet weak var contentScrollView: TeamInfoScrollView!
     @IBOutlet weak var detailTableViewHeight: NSLayoutConstraint!
+    @IBOutlet weak var detailCollectionViewHeight: NSLayoutConstraint!
     
     var detailCollectionVC: TeamDetailCollectionViewController?
     
@@ -97,11 +98,9 @@ class TeamListDetailViewController: UIViewController, TeamSelectionDelegate {
 			}
             
             generalInfoTableView?.reloadData()
-            generalInfoTableView?.layoutIfNeeded()
-            
             detailCollectionVC?.load(withTeam: selectedTeam?.universal, andEventPerformance: teamEventPerformance)
             
-            self.detailTableViewHeight.constant = self.generalInfoTableView?.contentSize.height ?? 10
+            resizeDetailViewHeights()
 			
 			NotificationCenter.default.post(name: Notification.Name(rawValue: "TeamSelectedChanged"), object: self)
 		}
@@ -174,6 +173,9 @@ class TeamListDetailViewController: UIViewController, TeamSelectionDelegate {
         generalInfoTableView?.rowHeight = UITableViewAutomaticDimension
         generalInfoTableView?.estimatedRowHeight = 44
         
+        //Watch for notifications requiring the collection view to resize it's height
+        NotificationCenter.default.addObserver(forName: TeamDetailCollectionViewNeedsHeightResizing, object: nil, queue: nil) {_ in self.resizeDetailViewHeights()}
+        
         //Load the data if a team was selected beforehand
         selectedTeam = teamSelectedBeforeViewLoading
     }
@@ -190,6 +192,12 @@ class TeamListDetailViewController: UIViewController, TeamSelectionDelegate {
     
     override func viewWillLayoutSubviews() {
         super.viewWillLayoutSubviews()
+    }
+    
+    override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
+        
+        self.resizeDetailViewHeights()
     }
 	
 	override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
@@ -210,6 +218,13 @@ class TeamListDetailViewController: UIViewController, TeamSelectionDelegate {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
     }
+    
+    func resizeDetailViewHeights() {
+        generalInfoTableView?.layoutIfNeeded()
+        
+        self.detailCollectionViewHeight.constant = self.detailCollectionVC?.collectionView?.collectionViewLayout.collectionViewContentSize.height ?? 10
+        self.detailTableViewHeight.constant = self.generalInfoTableView?.contentSize.height ?? 10
+    }
 	
     override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
         super.viewWillTransition(to: size, with: coordinator)
@@ -229,7 +244,7 @@ class TeamListDetailViewController: UIViewController, TeamSelectionDelegate {
                 self.contentScrollView.contentOffset = CGPoint(x: 0, y: 0)
             }
             
-            self.detailTableViewHeight.constant = self.generalInfoTableView?.contentSize.height ?? 10
+            self.resizeDetailViewHeights()
         }, completion: nil)
     }
 	

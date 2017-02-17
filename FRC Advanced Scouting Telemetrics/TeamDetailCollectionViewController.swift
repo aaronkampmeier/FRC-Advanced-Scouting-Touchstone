@@ -8,6 +8,8 @@
 
 import UIKit
 
+let TeamDetailCollectionViewNeedsHeightResizing = NSNotification.Name("TeamDetailCollectionViewNeedsHeightResizing")
+
 class TeamDetailCollectionViewController: UICollectionViewController, UICollectionViewDelegateFlowLayout {
     var selectedTeam: Team? {
         didSet {
@@ -44,6 +46,9 @@ class TeamDetailCollectionViewController: UICollectionViewController, UICollecti
             }
             
             collectionView?.reloadData()
+            collectionView?.layoutIfNeeded()
+            
+            NotificationCenter.default.post(name: TeamDetailCollectionViewNeedsHeightResizing, object: self, userInfo: nil)
         }
     }
     
@@ -60,8 +65,16 @@ class TeamDetailCollectionViewController: UICollectionViewController, UICollecti
         // Do any additional setup after loading the view.
         
         (collectionViewLayout as! UICollectionViewFlowLayout).headerReferenceSize = CGSize(width: self.view.frame.width, height: 30)
+        
+//        NotificationCenter.default.post(name: TeamDetailCollectionViewNeedsHeightResizing, object: self, userInfo: nil)
     }
-
+    
+    override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
+        NotificationCenter.default.post(name: TeamDetailCollectionViewNeedsHeightResizing, object: self, userInfo: nil)
+    }
+    
+    
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
@@ -69,6 +82,8 @@ class TeamDetailCollectionViewController: UICollectionViewController, UICollecti
     
     override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
         (self.collectionView?.collectionViewLayout as! UICollectionViewFlowLayout).invalidateLayout()
+        collectionView?.layoutIfNeeded()
+        NotificationCenter.default.post(name: TeamDetailCollectionViewNeedsHeightResizing, object: self, userInfo: nil)
     }
     
     func load(withTeam team: Team?, andEventPerformance eventPerformance: TeamEventPerformance?) {
@@ -92,8 +107,10 @@ class TeamDetailCollectionViewController: UICollectionViewController, UICollecti
         // #warning Incomplete implementation, return the number of sections
         if let _ = selectedTeamEventPerformance {
             return 2
-        } else {
+        } else if let _ = selectedTeam {
             return 1
+        } else {
+            return 0
         }
     }
 
@@ -135,7 +152,7 @@ class TeamDetailCollectionViewController: UICollectionViewController, UICollecti
         
         switch indexPath.section {
         case 0:
-            headerView.frame = CGRect(x: 0, y: 0, width: 0, height: 0)
+            (headerView.viewWithTag(1) as! UILabel).text = "General"
         case 1:
             (headerView.viewWithTag(1) as! UILabel).text = "Event: \(selectedTeamEventPerformance?.event.name ?? "") Stats"
         default:
