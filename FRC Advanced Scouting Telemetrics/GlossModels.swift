@@ -24,9 +24,9 @@ struct FRCEvent: Decodable {
 	let eventDistrict: Int
 	let year: Int
 	let week: Int?
-	let location: String
+	let location: String?
 	let venueAddress: String?
-	let timezone: String
+	let timezone: String?
 	let website: String?
 	let official: Bool
 	
@@ -44,6 +44,8 @@ struct FRCEvent: Decodable {
 		self.week = "week" <~~ json
 		self.venueAddress = "venue_address" <~~ json
 		self.website = "website" <~~ json
+        self.timezone = "timezone" <~~ json
+        self.location = "location" <~~ json
         if let official: Bool = "official" <~~ json {
             self.official = official
         } else {
@@ -87,16 +89,6 @@ struct FRCEvent: Decodable {
 			return nil
 		}
 		self.year = year
-		
-		guard let location: String = "location" <~~ json else {
-			return nil
-		}
-		self.location = location
-		
-		guard let timezone: String = "timezone" <~~ json else {
-			return nil
-		}
-		self.timezone = timezone
 	}
 }
 

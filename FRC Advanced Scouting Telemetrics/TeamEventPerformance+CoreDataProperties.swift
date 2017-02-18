@@ -175,6 +175,10 @@ private func evaluateOPR(forTeamPerformance teamPerformance: TeamEventPerformanc
     let eventPerformances = suitableEventPerformances(forEvent: teamPerformance.event)
     let numOfTeams = eventPerformances.count
     
+    if numOfTeams < 3 {
+        return nil
+    }
+    
     if let cachedOPR = oprCache.object(forKey: teamPerformance.event) {
         if let index = eventPerformances.index(of: teamPerformance) {
             return (cachedOPR.i(Int32(index), j: 0))
@@ -215,6 +219,10 @@ private func evaluateCCWM(forTeamPerformance teamPerformance: TeamEventPerforman
     let eventPerformances = suitableEventPerformances(forEvent: teamPerformance.event)
     let numOfTeams = eventPerformances.count
     
+    if numOfTeams < 3 {
+        return nil
+    }
+    
     if let cachedCCWM = ccwmCache.object(forKey: teamPerformance.event) {
         if let index = eventPerformances.index(of: teamPerformance) {
             return (cachedCCWM.i(Int32(index), j: 0))
@@ -252,6 +260,8 @@ private func suitableEventPerformances(forEvent event: Event) -> [TeamEventPerfo
     let allEventPerformances = event.teamEventPerformances?.allObjects as! [TeamEventPerformance]
     
     let eventPerformances = allEventPerformances.filter() {teamEventPerformance in
+        //Check to see the number of match performances that have been scouted
+        
         if (teamEventPerformance.matchPerformances?.count ?? 0) == 0 {
             return false
         } else {
@@ -278,6 +288,7 @@ func solveForX(_ matrixA: Matrix!, matrixB: Matrix!) -> Matrix? {
     return matrixX
 }
 
+///Creates the first matrix A for an OPR calculation. Where n is the number of teams, it is an n*n matrix where each value is the number of matches that the two teams which make up the matrix have played together.
 func createMatrixA(forEvent event: Event) -> Matrix {
     let eventPerformances = suitableEventPerformances(forEvent: event)
     let numOfTeams = eventPerformances.count
@@ -296,8 +307,13 @@ func createMatrixA(forEvent event: Event) -> Matrix {
             var numOfCommonMatches = 0.0
             for firstTeamMatchPerformance in firstTeamMatchPerformances {
                 for secondTeamMatchPerformance in secondTeamMatchPerformances {
+                    
                     if firstTeamMatchPerformance.match == secondTeamMatchPerformance.match && firstTeamMatchPerformance.allianceColor == secondTeamMatchPerformance.allianceColor {
-                        numOfCommonMatches += 1
+                        
+                        //Now also check that this match has been scouted
+                        if firstTeamMatchPerformance.finalScore != nil || secondTeamMatchPerformance.finalScore != nil {
+                            numOfCommonMatches += 1
+                        }
                     }
                 }
             }

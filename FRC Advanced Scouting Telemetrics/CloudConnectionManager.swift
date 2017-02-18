@@ -57,7 +57,7 @@ class CloudData {
                         let events = [FRCEvent].from(jsonArray: json)
                         completionHandler(events)
                     }
-                    NSLog("Successfully retrieved events from cloud")
+                    CLSNSLogv("Successfully retrieved events from cloud", getVaList([]))
                 case .failure(let error):
                     CLSNSLogv("Failed to retrieve events from cloud with error: \(error)", getVaList([]))
                     completionHandler(nil)

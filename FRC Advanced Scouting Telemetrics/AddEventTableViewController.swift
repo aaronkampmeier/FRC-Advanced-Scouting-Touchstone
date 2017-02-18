@@ -60,6 +60,10 @@ class AddEventTableViewController: UITableViewController {
                 self.events = events
             } else {
                 NSLog("Events returned nil")
+                
+                let alert = UIAlertController(title: "Unable to Load Events", message: "There was an error loading events from the cloud.", preferredStyle: .alert)
+                alert.addAction(UIAlertAction(title: "OK", style: .default, handler: {_ in self.performSegue(withIdentifier: "rewindToAdminConsole", sender: self)}))
+                self.present(alert, animated: true, completion: nil)
             }
         }
         
@@ -77,7 +81,7 @@ class AddEventTableViewController: UITableViewController {
     }
 
     @IBAction func cancelPressed(_ sender: UIBarButtonItem) {
-        dismiss(animated: true, completion: nil)
+        performSegue(withIdentifier: "rewindToAdminConsole", sender: self)
     }
     
     // MARK: - Table view data source
@@ -96,7 +100,7 @@ class AddEventTableViewController: UITableViewController {
         let cell = tableView.dequeueReusableCell(withIdentifier: "event", for: indexPath)
 
         cell.textLabel?.text = filteredEvents[indexPath.row].name
-        cell.detailTextLabel?.text = filteredEvents[indexPath.row].location
+        cell.detailTextLabel?.text = filteredEvents[indexPath.row].location ?? ""
 
         return cell
     }
@@ -168,7 +172,7 @@ extension AddEventTableViewController: UISearchResultsUpdating {
                 return frcEvent.name.lowercased().contains(searchText)
                     || frcEvent.eventDistrictString?.lowercased().contains(searchText) ?? false
                     || frcEvent.eventTypeString.lowercased().contains(searchText)
-                    || frcEvent.location.lowercased().contains(searchText)
+                    || frcEvent.location?.lowercased().contains(searchText) ?? false
             }
         } else {
             filteredEvents = events

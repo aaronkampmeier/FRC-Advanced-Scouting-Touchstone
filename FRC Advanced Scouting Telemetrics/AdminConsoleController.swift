@@ -60,8 +60,8 @@ class AdminConsoleController: UIViewController, UITableViewDataSource, UITableVi
 			} else {
 				//Return the event cell with event name and type
 				let cell = tableView.dequeueReusableCell(withIdentifier: "event")!
-				cell.textLabel?.text = "\(events[indexPath.row].name ?? "")"
-				cell.detailTextLabel?.text = "\(events[indexPath.row].location)"
+				cell.textLabel?.text = "\(events[indexPath.row].name ?? "") (\(events[indexPath.row].year?.intValue ?? 0))"
+				cell.detailTextLabel?.text = events[indexPath.row].location
 				return cell
 			}
 		case tableView.numberOfSections - 1:
@@ -164,6 +164,8 @@ class AdminConsoleController: UIViewController, UITableViewDataSource, UITableVi
             events = dataManager.events()
             tableView.reloadData()
         }
+        
+        viewWillAppear(true)
     }
     
     @IBAction func donePressed(_ sender: UIBarButtonItem) {

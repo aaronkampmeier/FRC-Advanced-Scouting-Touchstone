@@ -330,12 +330,6 @@ class TeamListDetailViewController: UIViewController, TeamSelectionDelegate {
 	}
 }
 
-extension TeamListDetailViewController: UIScrollViewDelegate {
-    func scrollViewDidScroll(_ scrollView: UIScrollView) {
-        print()
-    }
-}
-
 extension TeamListDetailViewController: UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         if let team = selectedTeam {
