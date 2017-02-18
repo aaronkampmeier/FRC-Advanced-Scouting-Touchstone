@@ -59,30 +59,29 @@ extension TeamMatchPerformance: HasStats {
                     }
                 },
                 StatName.TotalPointsFromFuel: {
-                    var matchPoints = 0.0
-                    for fuelScoring in self.local.fuelScorings?.allObjects as! [FuelScoring] {
-                        let amountOfFuelScored = (self.eventPerformance!.team.local.tankSize?.doubleValue ?? 0) * (fuelScoring.amountShot!.doubleValue * fuelScoring.accuracy!.doubleValue)
-                        
-                        switch fuelScoring.goalType() {
-                        case .HighGoal:
-                            if fuelScoring.isAutonomous!.boolValue {
-                                matchPoints += amountOfFuelScored
-                            } else {
-                                matchPoints += amountOfFuelScored / 3
-                            }
-                        case .LowGoal:
-                            if fuelScoring.isAutonomous!.boolValue {
-                                matchPoints += amountOfFuelScored / 3
-                            } else {
-                                matchPoints += amountOfFuelScored / 9
+                    if self.local.hasBeenScouted?.boolValue ?? false {
+                        var matchPoints = 0.0
+                        for fuelScoring in self.local.fuelScorings?.allObjects as! [FuelScoring] {
+                            let amountOfFuelScored = (self.eventPerformance!.team.local.tankSize?.doubleValue ?? 0) * (fuelScoring.amountShot!.doubleValue * fuelScoring.accuracy!.doubleValue)
+                            
+                            switch fuelScoring.goalType() {
+                            case .HighGoal:
+                                if fuelScoring.isAutonomous!.boolValue {
+                                    matchPoints += amountOfFuelScored
+                                } else {
+                                    matchPoints += amountOfFuelScored / 3
+                                }
+                            case .LowGoal:
+                                if fuelScoring.isAutonomous!.boolValue {
+                                    matchPoints += amountOfFuelScored / 3
+                                } else {
+                                    matchPoints += amountOfFuelScored / 9
+                                }
                             }
                         }
-                    }
-                    
-                    if self.local.fuelScorings?.count == 0 {
-                        return StatValue.NoValue
-                    } else {
                         return StatValue.Double(matchPoints)
+                    } else {
+                        return StatValue.NoValue
                     }
                 },
                 StatName.TotalGearsScored: {
@@ -91,8 +90,8 @@ extension TeamMatchPerformance: HasStats {
                 },
                 StatName.AverageFuelCycleTime: {
                     if self.local.hasBeenScouted?.boolValue ?? false {
-                        let fuelLoadings = self.local.fuelLoadings?.allObjects as! [FuelLoading]
-                        let fuelScorings = self.local.fuelScorings?.allObjects as! [FuelScoring]
+                        let fuelLoadings = (self.local.fuelLoadings?.allObjects as! [FuelLoading]).sorted() {$0.0.time!.doubleValue < $0.1.time!.doubleValue}
+                        let fuelScorings = (self.local.fuelScorings?.allObjects as! [FuelScoring]).sorted() {$0.0.time!.doubleValue < $0.1.time!.doubleValue}
                         
                         //Reamining fuel loadings is where all the fuel loadings will be stored initially and then each loading will be removed as it is used as part of a cycle
                         var remainingFuelLoadings = fuelLoadings
@@ -123,7 +122,11 @@ extension TeamMatchPerformance: HasStats {
                             numOfCycles += 1
                         }
                         
-                        return StatValue.Double(cycleTimeSum/Double(numOfCycles))
+                        if fuelScorings.count == 0 || fuelLoadings.count == 0 {
+                            return StatValue.NoValue
+                        } else {
+                            return StatValue.Double(cycleTimeSum/Double(numOfCycles))
+                        }
                     } else {
                         return StatValue.NoValue
                     }
@@ -140,7 +143,7 @@ extension TeamMatchPerformance: HasStats {
                             var closestGearLoading: (GearLoading, TimeInterval)?
                             for loading in gearLoadings {
                                 
-                                let timeDifference = (closestGearLoading?.0.time!.doubleValue ?? 0) - loading.time!.doubleValue
+                                let timeDifference = mounting.time!.doubleValue - loading.time!.doubleValue
                                 //If the time between a loading and a mounting is less than another found time difference (and still comes before the mounting), set this loading as the closest
                                 if timeDifference < (closestGearLoading?.1 ?? 0) && timeDifference > 0 {
                                     closestGearLoading = (loading, timeDifference)
@@ -158,7 +161,11 @@ extension TeamMatchPerformance: HasStats {
                             numOfCycles += 1
                         }
                         
-                        return StatValue.Double(cycleTimeSum/Double(numOfCycles))
+                        if gearMountings.count == 0 || gearLoadings.count == 0{
+                            return StatValue.NoValue
+                        } else {
+                            return StatValue.Double(cycleTimeSum/Double(numOfCycles))
+                        }
                     } else {
                         return StatValue.NoValue
                     }
@@ -179,6 +186,51 @@ extension TeamMatchPerformance: HasStats {
                 },
                 StatName.ClimbingStatus: {
                     return StatValue.initWithOptional(value: self.local.ropeClimbStatus)
+                },
+                StatName.Peg1Percentage: {
+                    if self.local.hasBeenScouted?.boolValue ?? false {
+                        let gearMountings = self.local.gearMountings?.allObjects as! [GearMounting]
+                        
+                        let peg1Mountings = gearMountings.filter() {$0.pegNumber?.intValue == 1}
+                        
+                        if gearMountings.count == 0 {
+                            return StatValue.NoValue
+                        } else {
+                            return StatValue.Double(Double(peg1Mountings.count)/Double(gearMountings.count))
+                        }
+                    } else {
+                        return StatValue.NoValue
+                    }
+                },
+                StatName.Peg2Percentage: {
+                    if self.local.hasBeenScouted?.boolValue ?? false {
+                        let gearMountings = self.local.gearMountings?.allObjects as! [GearMounting]
+                        
+                        let peg2Mountings = gearMountings.filter() {$0.pegNumber?.intValue == 2}
+                        
+                        if gearMountings.count == 0 {
+                            return StatValue.NoValue
+                        } else {
+                            return StatValue.Double(Double(peg2Mountings.count)/Double(gearMountings.count))
+                        }
+                    } else {
+                        return StatValue.NoValue
+                    }
+                },
+                StatName.Peg3Percentage: {
+                    if self.local.hasBeenScouted?.boolValue ?? false {
+                        let gearMountings = self.local.gearMountings?.allObjects as! [GearMounting]
+                        
+                        let peg3Mountings = gearMountings.filter() {$0.pegNumber?.intValue == 3}
+                        
+                        if gearMountings.count == 0 {
+                            return StatValue.NoValue
+                        } else {
+                            return StatValue.Double(Double(peg3Mountings.count)/Double(gearMountings.count))
+                        }
+                    } else {
+                        return StatValue.NoValue
+                    }
                 }
             ]
         }
@@ -194,12 +246,16 @@ extension TeamMatchPerformance: HasStats {
         case AverageAccuracy = "Average High Goal Accuracy"
         case ClimbingStatus = "Climbing Status"
         
+        case Peg1Percentage = "Peg 1 Percentage"
+        case Peg2Percentage = "Peg 2 Percentage"
+        case Peg3Percentage = "Peg 3 Percentage"
+        
         var description: String {
             get {
                 return self.rawValue
             }
         }
         
-        static let allValues: [StatName] = [.TotalPoints, .TotalRankingPoints, .TotalPointsFromFuel, .TotalGearsScored, .AverageAccuracy, .AverageFuelCycleTime, .AverageGearCycleTime, .ClimbingStatus]
+        static let allValues: [StatName] = [.TotalPoints, .TotalRankingPoints, .TotalPointsFromFuel, .TotalGearsScored, .AverageAccuracy, .AverageFuelCycleTime, .AverageGearCycleTime, .Peg1Percentage, .Peg2Percentage, .Peg3Percentage, .ClimbingStatus]
     }
 }

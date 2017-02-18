@@ -68,6 +68,15 @@ extension TeamEventPerformance: HasStats {
                 },
                 StatName.AverageGearsScored: {
                     return self.average(ofStat: .TotalGearsScored, forMatchPerformances: self.matchPerformances?.allObjects as! [TeamMatchPerformance])
+                },
+                StatName.Peg1Percentage: {
+                    return self.average(ofStat: .Peg1Percentage, forMatchPerformances: self.matchPerformances?.allObjects as! [TeamMatchPerformance])
+                },
+                StatName.Peg2Percentage: {
+                    return self.average(ofStat: .Peg2Percentage, forMatchPerformances: self.matchPerformances?.allObjects as! [TeamMatchPerformance])
+                },
+                StatName.Peg3Percentage: {
+                    return self.average(ofStat: .Peg3Percentage, forMatchPerformances: self.matchPerformances?.allObjects as! [TeamMatchPerformance])
                 }
             ]
         }
@@ -129,6 +138,9 @@ extension TeamEventPerformance: HasStats {
         case AverageGearCycleTime = "Average Gear Cycle Time"
         case AverageHighGoalAccuracy = "Average High Goal Accuracy"
         case MostRopeClimb = "End Climb Status (Majority)"
+        case Peg1Percentage = "Peg 1 Percentage"
+        case Peg2Percentage = "Peg 2 Percentage"
+        case Peg3Percentage = "Peg 3 Percentage"
         
         var description: String {
             get {
@@ -136,7 +148,7 @@ extension TeamEventPerformance: HasStats {
             }
         }
         
-        static let allValues: [StatName] = [.OPR, .DPR, .CCWM, .TotalMatchPoints, .TotalRankingPoints, .AverageTotalPointsFromFuel, .AverageFuelCycleTime, .AverageGearsScored, .AverageGearCycleTime, .AverageHighGoalAccuracy, .MostRopeClimb]
+        static let allValues: [StatName] = [.OPR, .DPR, .CCWM, .TotalMatchPoints, .TotalRankingPoints, .AverageTotalPointsFromFuel, .AverageFuelCycleTime, .AverageGearsScored, .AverageGearCycleTime, .Peg1Percentage, .Peg2Percentage, .Peg3Percentage, .AverageHighGoalAccuracy, .MostRopeClimb]
     }
 }
 
