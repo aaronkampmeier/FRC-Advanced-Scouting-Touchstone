@@ -22,6 +22,7 @@ class TeamListDetailViewController: UIViewController, TeamSelectionDelegate {
     @IBOutlet weak var contentScrollView: TeamInfoScrollView!
     @IBOutlet weak var detailTableViewHeight: NSLayoutConstraint!
     @IBOutlet weak var detailCollectionViewHeight: NSLayoutConstraint!
+    @IBOutlet weak var matchesButton: UIButton!
     
     var detailCollectionVC: TeamDetailCollectionViewController?
     
@@ -78,8 +79,10 @@ class TeamListDetailViewController: UIViewController, TeamSelectionDelegate {
 				
 				if let _ = selectedEvent {
 					standsScoutingButton.isEnabled = true
+                    matchesButton.isEnabled = true
 				} else {
 					standsScoutingButton.isEnabled = false
+                    matchesButton.isEnabled = false
 				}
                 
                 pitScoutingButton.isEnabled = true
@@ -139,6 +142,7 @@ class TeamListDetailViewController: UIViewController, TeamSelectionDelegate {
 		//Set the stands scouting button to not selectable since there is no team selected
 		standsScoutingButton.isEnabled = false
         pitScoutingButton.isEnabled = false
+        matchesButton.isEnabled = false
 		
 		//Set the images(buttons) content sizing property
 		frontImageButton.imageView?.contentMode = .scaleAspectFill
@@ -177,6 +181,12 @@ class TeamListDetailViewController: UIViewController, TeamSelectionDelegate {
         
         //Watch for notifications requiring the collection view to resize it's height
         NotificationCenter.default.addObserver(forName: TeamDetailCollectionViewNeedsHeightResizing, object: nil, queue: nil) {_ in self.resizeDetailViewHeights()}
+        
+        //Watch for notifications to update team info
+        NotificationCenter.default.addObserver(forName: PitScoutingUpdatedTeamDetail, object: nil, queue: nil) {_ in
+            let team = self.selectedTeam
+            self.selectedTeam = team
+        }
         
         //Load the data if a team was selected beforehand
         selectedTeam = teamSelectedBeforeViewLoading
@@ -276,6 +286,18 @@ class TeamListDetailViewController: UIViewController, TeamSelectionDelegate {
         notesNavVC.popoverPresentationController?.sourceView = sender
         
         present(notesNavVC, animated: true, completion: nil)
+    }
+    
+    @IBAction func matchesButtonPressed(_ sender: UIButton) {
+        let matchListNav = storyboard?.instantiateViewController(withIdentifier: "matchesListNav") as! UINavigationController
+        (matchListNav.topViewController as! TeamMatchesTableViewController).load(forTeamEventPerformance: self.teamEventPerformance)
+        
+        matchListNav.modalPresentationStyle = .popover
+        matchListNav.preferredContentSize = CGSize(width: 350, height: 500)
+        matchListNav.popoverPresentationController?.sourceView = sender
+        matchListNav.popoverPresentationController?.canOverlapSourceViewRect = false
+        
+        present(matchListNav, animated: true, completion: nil)
     }
 	
 	//MARK: Displaying full screen photos

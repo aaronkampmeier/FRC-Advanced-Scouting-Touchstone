@@ -217,9 +217,9 @@ class StandsScoutingViewController: UIViewController {
                     return false
                 }
             }
-			for match in sortedMatchPerformances {
-				askAction.addAction(UIAlertAction(title: "\(match.match!.competitionLevel!) \(match.match!.matchNumber!)", style: .default, handler: {_ in
-                    self.matchPerformance = match
+			for matchPerformance in sortedMatchPerformances {
+				askAction.addAction(UIAlertAction(title: "\(matchPerformance.match!.competitionLevel!) \(matchPerformance.match!.matchNumber!)", style: .default, handler: {_ in
+                    self.matchPerformance = matchPerformance
                 }))
 			}
 			

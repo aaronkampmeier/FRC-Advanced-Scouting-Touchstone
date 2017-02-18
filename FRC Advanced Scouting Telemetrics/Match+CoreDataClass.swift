@@ -45,4 +45,12 @@ open class Match: NSManagedObject {
             }
         }
     }
+    
+    func teamMatchPerformance(forColor color: TeamMatchPerformance.Alliance, andSlot slot: TeamMatchPerformance.Slot) -> TeamMatchPerformance {
+        let performances = (self.teamPerformances?.allObjects as! [TeamMatchPerformance]).filter({$0.alliance == color && $0.slot == slot})
+        
+        assert(performances.count == 1)
+        
+        return performances.first!
+    }
 }

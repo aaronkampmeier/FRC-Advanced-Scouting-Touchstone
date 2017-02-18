@@ -7,7 +7,6 @@
 //
 
 import UIKit
-import KTCenterFlowLayout
 
 let TeamDetailCollectionViewNeedsHeightResizing = NSNotification.Name("TeamDetailCollectionViewNeedsHeightResizing")
 
@@ -64,8 +63,6 @@ class TeamDetailCollectionViewController: UICollectionViewController, UICollecti
         // self.clearsSelectionOnViewWillAppear = false
 
         // Do any additional setup after loading the view.
-        
-        collectionView?.collectionViewLayout = KTCenterFlowLayout()
         
         (collectionView?.collectionViewLayout as! UICollectionViewFlowLayout).headerReferenceSize = CGSize(width: self.view.frame.width, height: 30)
         (collectionView?.collectionViewLayout as! UICollectionViewFlowLayout).minimumInteritemSpacing = 3
@@ -153,11 +150,15 @@ class TeamDetailCollectionViewController: UICollectionViewController, UICollecti
     override func collectionView(_ collectionView: UICollectionView, viewForSupplementaryElementOfKind kind: String, at indexPath: IndexPath) -> UICollectionReusableView {
         let headerView = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: "header", for: indexPath)
         
-        switch indexPath.section {
-        case 0:
+        switch (indexPath.section, kind) {
+        case (0,UICollectionElementKindSectionHeader):
             (headerView.viewWithTag(1) as! UILabel).text = "General"
-        case 1:
-            (headerView.viewWithTag(1) as! UILabel).text = "Event: \(selectedTeamEventPerformance?.event.name ?? "") Stats"
+        case (1, UICollectionElementKindSectionHeader):
+            (headerView.viewWithTag(1) as! UILabel).text = "\(selectedTeamEventPerformance?.event.name ?? "") Stats"
+        case (0, UICollectionElementKindSectionFooter):
+            (headerView.viewWithTag(1) as! UILabel).text = ""
+        case (1, UICollectionElementKindSectionFooter):
+            (headerView.viewWithTag(1) as! UILabel).text = ""
         default:
             break
         }

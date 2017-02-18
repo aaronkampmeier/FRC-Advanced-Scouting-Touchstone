@@ -11,6 +11,7 @@ import UIKit
 typealias PitScoutingUpdateHandler = ((Any?)->Void)
 typealias PitScoutingCurrentValue = ()->Any?
 let PitScoutingNewImageNotification = Notification.Name("PitScoutingNewImageNotification")
+let PitScoutingUpdatedTeamDetail = Notification.Name("PitScoutingUpdatedTeamDetail")
 
 //A class that all the pit scouting cells subclass and override the default methods
 class PitScoutingCell: UICollectionViewCell {
@@ -233,6 +234,8 @@ class PitScoutingViewController: UIViewController, UICollectionViewDataSource, U
         super.viewWillDisappear(animated)
         
         DataManager().commitChanges()
+        
+        NotificationCenter.default.post(name: PitScoutingUpdatedTeamDetail, object: self)
     }
 
     override func didReceiveMemoryWarning() {

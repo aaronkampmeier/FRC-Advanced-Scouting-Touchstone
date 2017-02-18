@@ -17,6 +17,24 @@ open class TeamMatchPerformance: NSManagedObject {
         case Blue = "Blue"
     }
     
+    enum Slot: Int {
+        case One = 1
+        case Two = 2
+        case Three = 3
+    }
+    
+    var alliance: Alliance {
+        get {
+            return Alliance(rawValue: self.allianceColor)!
+        }
+    }
+    
+    var slot: Slot {
+        get {
+            return Slot(rawValue: self.allianceTeam?.intValue ?? 0)!
+        }
+    }
+    
     var rankingPoints: Int? {
         switch allianceColor {
         case "Blue":
