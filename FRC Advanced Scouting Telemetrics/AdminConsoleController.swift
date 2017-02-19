@@ -8,6 +8,7 @@
 
 import Foundation
 import UIKit
+import Crashlytics
 
 class AdminConsoleController: UIViewController, UITableViewDataSource, UITableViewDelegate {
     @IBOutlet weak var tableView: UITableView!
@@ -113,17 +114,37 @@ class AdminConsoleController: UIViewController, UITableViewDataSource, UITableVi
         }
     }
     
-    func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCellEditingStyle, forRowAt indexPath: IndexPath) {
-        switch editingStyle {
-        case .delete:
-            switch indexPath.section {
-            case 0:
-                //Events
-                if indexPath.row == tableView.numberOfRows(inSection: 0) - 1 {
+    func tableView(_ tableView: UITableView, editActionsForRowAt indexPath: IndexPath) -> [UITableViewRowAction]? {
+        switch indexPath.section {
+        case 0:
+            if indexPath.row == tableView.numberOfRows(inSection: 0) - 1 {
+                return nil
+            } else {
+                let reloadAction = UITableViewRowAction.init(style: .normal, title: "Reload") {(rowAction, indexPath) in
+                    //Create a loading view
+                    let spinnerView = UIActivityIndicatorView(activityIndicatorStyle: UIActivityIndicatorViewStyle.whiteLarge)
+                    let grayView = UIView(frame: CGRect(x: self.tableView.frame.width / 2 - 50, y: self.tableView.frame.height / 2 - 50, width: 120, height: 120))
+                    grayView.backgroundColor = UIColor.lightGray
+                    grayView.backgroundColor?.withAlphaComponent(0.7)
+                    grayView.layer.cornerRadius = 10
+                    spinnerView.frame = CGRect(x: grayView.frame.width / 2 - 25, y: grayView.frame.height / 2 - 25, width: 50, height: 50)
+                    grayView.addSubview(spinnerView)
+                    spinnerView.startAnimating()
+                    self.tableView.addSubview(grayView)
                     
-                } else {
+                    CloudReloadingManager(eventToReload: self.events[indexPath.row]) {successful in
+                        grayView.removeFromSuperview()
+                        
+                        self.events = self.dataManager.getEvents()
+                        tableView.reloadData()
+                    }
+                        .reload()
+                }
+                reloadAction.backgroundColor = UIColor.blue
+                
+                let delete = UITableViewRowAction.init(style: .destructive, title: "Delete") {(rowAction, indexPath) in
                     //Remove the event
-                    let removalManager = CloudEventRemovalManager(eventToRemove: events[indexPath.row]) {finished in
+                    let removalManager = CloudEventRemovalManager(eventToRemove: self.events[indexPath.row]) {finished in
                         if !finished {
                             let alert = UIAlertController(title: "Problem Removing Event", message: "An error occured when removing the event.", preferredStyle: .alert)
                             alert.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
@@ -134,14 +155,17 @@ class AdminConsoleController: UIViewController, UITableViewDataSource, UITableVi
                             self.events.remove(at: indexPath.row)
                             tableView.endUpdates()
                         }
+                        
+                        tableView.reloadData()
                     }
                     removalManager.remove()
                 }
-            default:
-                break
+                
+                
+                return [delete, reloadAction]
             }
         default:
-            break
+            return nil
         }
     }
     

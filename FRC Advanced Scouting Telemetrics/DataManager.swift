@@ -80,7 +80,10 @@ class DataManager {
 	
 	///Returns an array of Team objects ordered by their local general ranking
 	fileprivate func simpleLocalTeamRanking() -> [Team] {
-		let orderedLocalTeams = getLocalTeamRankingObject().localTeams?.array as! [LocalTeam]
+		var orderedLocalTeams = getLocalTeamRankingObject().localTeams?.array as! [LocalTeam]
+        
+        //Filter out all the local teams that are not part of an event on the device
+        orderedLocalTeams = orderedLocalTeams.filter {$0.universal != nil}
 		
         return LocalToUniversalConversion<LocalTeam,Team>(localObjects: orderedLocalTeams).convertToUniversal()!
 	}

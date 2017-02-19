@@ -33,13 +33,10 @@ class CloudEventRemovalManager {
                 teamsToRemove.append(team)
             }
         }
-        let localTeamsToRemove = UniversalToLocalConversion<Team,LocalTeam>(universalObjects: teamsToRemove).convertToLocal()
+//        let localTeamsToRemove = UniversalToLocalConversion<Team,LocalTeam>(universalObjects: teamsToRemove).convertToLocal()
         dataManager.delete(teamsToRemove)
         
-        //Won't actually remove the local team. It will stay in the database in case the user adds it back and wants to access their old data. The local team is simply removed from the local team ranking so it doesn't show up in the team list.
-        for localTeam in localTeamsToRemove {
-            localTeam.ranker = nil
-        }
+        //Won't actually remove the local team. It will stay in the database in case the user adds it back and wants to access their old data.
         
         //Now delete the event and along with it the matches, the event performances, and the match performances. Again the local versions will stay.
         dataManager.delete(eventToRemove)

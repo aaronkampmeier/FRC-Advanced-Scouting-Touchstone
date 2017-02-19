@@ -230,21 +230,21 @@ class CloudEventImportManager {
                 match.event = eventObject
                 
                 //Create the local match
+                let localMatch: LocalMatch
                 if !currentLocalMatches.contains(where: {localMatch in
                     return localMatch.key == match.key
                 }) {
-                    let localMatch: LocalMatch
                     localMatch = LocalMatch(entity: NSEntityDescription.entity(forEntityName: "LocalMatch", in: managedContext)!, insertInto: managedContext)
                     localMatch.key = match.key
-                    
-                    
-                    let frcAlliances = frcMatch.alliances!
-                    let blueScore = frcAlliances["blue"]?.score
-                    let redScore = frcAlliances["red"]?.score
-                    
-                    localMatch.blueFinalScore = (blueScore ?? nil) as? NSNumber
-                    localMatch.redFinalScore = (redScore ?? nil) as? NSNumber
+                } else {
+                    localMatch = match.local
                 }
+                let frcAlliances = frcMatch.alliances!
+                let blueScore = frcAlliances["blue"]?.score
+                let redScore = frcAlliances["red"]?.score
+                
+                localMatch.blueFinalScore = blueScore as? NSNumber
+                localMatch.redFinalScore = redScore as? NSNumber
                 
                 //Set up all the teams in the match
                 if let matchAlliances = frcMatch.alliances {

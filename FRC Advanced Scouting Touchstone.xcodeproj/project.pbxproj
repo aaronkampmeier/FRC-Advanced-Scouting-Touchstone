@@ -77,6 +77,7 @@
 		934647FC1E3188D800DC96D2 /* SSDefenseViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 934647FB1E3188D800DC96D2 /* SSDefenseViewController.swift */; };
 		9353ADBC1E57ACF100120F1A /* TeamMatchesTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9353ADBB1E57ACF100120F1A /* TeamMatchesTableViewController.swift */; };
 		9353ADC21E57B09D00120F1A /* MatchListTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9353ADC11E57B09D00120F1A /* MatchListTableViewCell.swift */; };
+		9353ADCA1E58EDF800120F1A /* CloudReloadingManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9353ADC91E58EDF800120F1A /* CloudReloadingManager.swift */; };
 		93610E3D1E42F8D400856BE2 /* PitScoutingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93610E3C1E42F8D400856BE2 /* PitScoutingViewController.swift */; };
 		936572D91E14E52100439728 /* CloudRemovalManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 936572D81E14E52100439728 /* CloudRemovalManager.swift */; };
 		936572DF1E160EBB00439728 /* AboutViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 936572DE1E160EBB00439728 /* AboutViewController.swift */; };
@@ -302,6 +303,7 @@
 		934DC3B61E4905B8001753FB /* FAST 2-3-4.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "FAST 2-3-4.xcdatamodel"; sourceTree = "<group>"; };
 		9353ADBB1E57ACF100120F1A /* TeamMatchesTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TeamMatchesTableViewController.swift; sourceTree = "<group>"; };
 		9353ADC11E57B09D00120F1A /* MatchListTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MatchListTableViewCell.swift; sourceTree = "<group>"; };
+		9353ADC91E58EDF800120F1A /* CloudReloadingManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CloudReloadingManager.swift; sourceTree = "<group>"; };
 		93610E371E42F0C800856BE2 /* FAST 2-3.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "FAST 2-3.xcdatamodel"; sourceTree = "<group>"; };
 		93610E3C1E42F8D400856BE2 /* PitScoutingViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PitScoutingViewController.swift; sourceTree = "<group>"; };
 		936572D81E14E52100439728 /* CloudRemovalManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CloudRemovalManager.swift; sourceTree = "<group>"; };
@@ -599,6 +601,7 @@
 				1F718F791E085BD900BD1951 /* CloudConnectionManager.swift */,
 				932C344D1E12F7C400A23203 /* CloudImportManager.swift */,
 				936572D81E14E52100439728 /* CloudRemovalManager.swift */,
+				9353ADC91E58EDF800120F1A /* CloudReloadingManager.swift */,
 				1F718F7F1E0862FA00BD1951 /* GlossModels.swift */,
 			);
 			name = "Cloud Data";
@@ -956,6 +959,7 @@
 				1F78E78B1C3B469300221927 /* FRC_Advanced_Scouting_Telemetrics.xcdatamodeld in Sources */,
 				930B96641E456D6C00E385D3 /* PitImageSelectorCollectionViewCell.swift in Sources */,
 				1F2F9A221CE2D6E400B85A72 /* TeamListSearchResultsTableViewController.swift in Sources */,
+				9353ADCA1E58EDF800120F1A /* CloudReloadingManager.swift in Sources */,
 				938BEB2B1E352159003F2F74 /* FuelLoading+CoreDataProperties.swift in Sources */,
 				930B965C1E4548F700E385D3 /* PitSegmentedSelectorCollectionViewCell.swift in Sources */,
 				1F1C23C51E07487C008885A1 /* Event+CoreDataClass.swift in Sources */,

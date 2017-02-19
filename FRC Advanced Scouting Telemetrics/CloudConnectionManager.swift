@@ -14,7 +14,7 @@ import Gloss
 private let baseApi = "https://fast.kampmeier.com/api/v2/"
 private let baseApiUrl = try! baseApi.asURL()
 private let apiKey = "c67378f6984026e97ca5abdc343f7f7ff77b5135576aed64c3fcce034d3e55e8"
-private let yearToDrawDataFrom = "2016"
+private let yearToDrawDataFrom = "2017"
 
 private class TBAResponseCache<T> {
     let json: T
@@ -47,7 +47,7 @@ class CloudData {
 	
     func events(withCompletionHandler completionHandler: @escaping ([FRCEvent]?) -> Void) {
         Alamofire.request(baseApi + "tbadb/events/\(yearToDrawDataFrom)", method: .get, headers: headers)
-            .validate(statusCode: 200...200)
+            .validate(statusCode: [200])
             .responseJSON() {response in
                 switch response.result {
                 case .success(let responseJSON):
@@ -60,6 +60,27 @@ class CloudData {
                     CLSNSLogv("Successfully retrieved events from cloud", getVaList([]))
                 case .failure(let error):
                     CLSNSLogv("Failed to retrieve events from cloud with error: \(error)", getVaList([]))
+                    completionHandler(nil)
+                    Crashlytics.sharedInstance().recordError(error)
+                }
+        }
+    }
+    
+    func event(forKey key: String, withCompletionHandler completionHandler: @escaping (FRCEvent?) -> Void) {
+        Alamofire.request(baseApi + "tbadb/event/\(key)", method: .get, headers: headers)
+            .validate(statusCode: [200])
+            .responseJSON {response in
+                switch response.result {
+                case .success(let responseJSON):
+                    if let json = responseJSON as? [String:Any] {
+                        let event = FRCEvent(json: json)
+                        completionHandler(event)
+                    } else {
+                        completionHandler(nil)
+                    }
+                    CLSNSLogv("Successfully retrieved an event from cloud", getVaList([]))
+                case .failure(let error):
+                    CLSNSLogv("Failed to retrieve event with error: \(error)", getVaList([]))
                     completionHandler(nil)
                     Crashlytics.sharedInstance().recordError(error)
                 }
