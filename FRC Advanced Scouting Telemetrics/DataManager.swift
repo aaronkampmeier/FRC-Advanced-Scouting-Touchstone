@@ -118,6 +118,15 @@ class DataManager {
         } else {
             let teamRankingObject = getLocalTeamRankingObject()
             let movedTeam = teamRankingObject.localTeams?.array[fromIndex] as! LocalTeam
+            
+//            //Doing it the old fashioned way
+//            var localTeams = teamRankingObject.localTeams?.array as! [LocalTeam]
+//            
+//            localTeams.remove(at: fromIndex)
+//            localTeams.insert(movedTeam, at: toIndex)
+//            
+//            teamRankingObject.localTeams = NSOrderedSet(array: localTeams)
+            
             teamRankingObject.removeFromLocalTeams(at: fromIndex)
             teamRankingObject.insertIntoLocalTeams(movedTeam, at: toIndex)
         }

@@ -70,6 +70,15 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 		DataSyncer.begin()
 		
 		clearTMPFolder()
+        
+        //Cleanup any local teams that don't have universals
+//        let localTeams = DataManager().getLocalTeamRankingObject().localTeams?.array as! [LocalTeam]
+//        
+//        for team in localTeams {
+//            if team.universal == nil {
+//                DataManager().getLocalTeamRankingObject().removeFromLocalTeams(team)
+//            }
+//        }
 		
         return true
     }
