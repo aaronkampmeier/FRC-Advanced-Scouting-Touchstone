@@ -28,7 +28,7 @@
         <relationship name="localMatchPerformance" maxCount="1" deletionRule="Nullify" destinationEntity="LocalMatchPerformance" inverseName="fuelLoadings" inverseEntity="LocalMatchPerformance" syncable="YES"/>
     </entity>
     <entity name="FuelScoring" representedClassName=".FuelScoring" syncable="YES">
-        <attribute name="accuracy" attributeType="Double" minValueString="0" maxValueString="1" defaultValueString="0" usesScalarValueType="NO" syncable="YES"/>
+        <attribute name="accuracy" optional="YES" attributeType="Double" minValueString="0" maxValueString="1" defaultValueString="0" usesScalarValueType="NO" syncable="YES"/>
         <attribute name="amountShot" attributeType="Double" minValueString="0" maxValueString="1" defaultValueString="0" usesScalarValueType="NO" syncable="YES"/>
         <attribute name="goal" attributeType="String" syncable="YES"/>
         <attribute name="isAutonomous" attributeType="Boolean" defaultValueString="NO" usesScalarValueType="NO" syncable="YES"/>

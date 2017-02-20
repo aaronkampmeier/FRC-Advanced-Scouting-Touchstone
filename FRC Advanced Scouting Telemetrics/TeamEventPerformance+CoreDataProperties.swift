@@ -77,6 +77,42 @@ extension TeamEventPerformance: HasStats {
                 },
                 StatName.Peg3Percentage: {
                     return self.average(ofStat: .Peg3Percentage, forMatchPerformances: self.matchPerformances?.allObjects as! [TeamMatchPerformance])
+                },
+                StatName.TotalWins: {
+                    var winCount = 0
+                    
+                    let matchPerformances = self.matchPerformances?.allObjects as! [TeamMatchPerformance]
+                    for matchPerformance in matchPerformances {
+                        if matchPerformance.winningMargin > 0 {
+                            winCount += 1
+                        }
+                    }
+                    
+                    return StatValue.Integer(winCount)
+                },
+                StatName.TotalLosses: {
+                    var lossCount = 0
+                    
+                    let matchPerformances = self.matchPerformances?.allObjects as! [TeamMatchPerformance]
+                    for matchPerformance in matchPerformances {
+                        if matchPerformance.winningMargin < 0 {
+                            lossCount += 1
+                        }
+                    }
+                    
+                    return StatValue.Integer(lossCount)
+                },
+                StatName.TotalTies: {
+                    var tieCount = 0
+                    
+                    let matchPerformances = self.matchPerformances?.allObjects as! [TeamMatchPerformance]
+                    for matchPerformance in matchPerformances {
+                        if matchPerformance.winningMargin == 0 {
+                            tieCount += 1
+                        }
+                    }
+                    
+                    return StatValue.Integer(tieCount)
                 }
             ]
         }
@@ -141,6 +177,9 @@ extension TeamEventPerformance: HasStats {
         case Peg1Percentage = "Peg 1 Percentage"
         case Peg2Percentage = "Peg 2 Percentage"
         case Peg3Percentage = "Peg 3 Percentage"
+        case TotalWins = "Total Wins"
+        case TotalLosses = "Total Losses"
+        case TotalTies = "Total Ties"
         
         var description: String {
             get {
@@ -148,7 +187,7 @@ extension TeamEventPerformance: HasStats {
             }
         }
         
-        static let allValues: [StatName] = [.OPR, .DPR, .CCWM, .TotalMatchPoints, .TotalRankingPoints, .AverageTotalPointsFromFuel, .AverageFuelCycleTime, .AverageGearsScored, .AverageGearCycleTime, .Peg1Percentage, .Peg2Percentage, .Peg3Percentage, .AverageHighGoalAccuracy, .MostRopeClimb]
+        static let allValues: [StatName] = [.OPR, .DPR, .CCWM, .TotalMatchPoints, .TotalRankingPoints, .TotalWins, .TotalLosses, .TotalTies, .AverageTotalPointsFromFuel, .AverageFuelCycleTime, .AverageGearsScored, .AverageGearCycleTime, .Peg1Percentage, .Peg2Percentage, .Peg3Percentage, .AverageHighGoalAccuracy, .MostRopeClimb]
     }
 }
 
@@ -179,6 +218,13 @@ private func evaluateOPR(forTeamPerformance teamPerformance: TeamEventPerformanc
         return nil
     }
     
+    //Now also check that all the matches have scores
+    for match in teamPerformance.event.matches?.allObjects as! [Match] {
+        if match.local.redFinalScore == nil || match.local.blueFinalScore == nil {
+            return nil
+        }
+    }
+    
     if let cachedOPR = oprCache.object(forKey: teamPerformance.event) {
         if let index = eventPerformances.index(of: teamPerformance) {
             return (cachedOPR.i(Int32(index), j: 0))
@@ -187,7 +233,7 @@ private func evaluateOPR(forTeamPerformance teamPerformance: TeamEventPerformanc
         }
     } else {
         
-        let matrixA = createMatrixA(forEvent: teamPerformance.event)
+        let matrixA = createMatrixA(forEventPerformances: eventPerformances)
         
         
         var rowsB = [Double]() //Should only be one element per row
@@ -201,7 +247,8 @@ private func evaluateOPR(forTeamPerformance teamPerformance: TeamEventPerformanc
         let matrixB = Matrix(from: rowsB, rows: Int32(numOfTeams), columns: 1)
         
         
-        let oprMatrix = solveForX(matrixA, matrixB: matrixB)
+        let oprMatrix = matrixA.solve(matrixB!)
+//        let oprMatrix = solveForX(matrixA, matrixB: matrixB)
         
         //Cache it because these calculations are expensive
         oprCache.setObject(oprMatrix!, forKey: teamPerformance.event)
@@ -223,6 +270,13 @@ private func evaluateCCWM(forTeamPerformance teamPerformance: TeamEventPerforman
         return nil
     }
     
+    //Now also check that all the matches have scores
+    for match in teamPerformance.event.matches?.allObjects as! [Match] {
+        if match.local.redFinalScore == nil || match.local.blueFinalScore == nil {
+            return nil
+        }
+    }
+    
     if let cachedCCWM = ccwmCache.object(forKey: teamPerformance.event) {
         if let index = eventPerformances.index(of: teamPerformance) {
             return (cachedCCWM.i(Int32(index), j: 0))
@@ -230,7 +284,7 @@ private func evaluateCCWM(forTeamPerformance teamPerformance: TeamEventPerforman
             return nil
         }
     } else {
-        let matrixA = createMatrixA(forEvent: teamPerformance.event)
+        let matrixA = createMatrixA(forEventPerformances: eventPerformances)
         
         //Matrix B for CCWM is the same as DPR's Matrix B except for the values are your alliances' scores the opposing alliances' scores (the winning margin)
         var rowsB = [Double]() //Should only be one element for year
@@ -243,7 +297,8 @@ private func evaluateCCWM(forTeamPerformance teamPerformance: TeamEventPerforman
         }
         let matrixB = Matrix(from: rowsB, rows: Int32(numOfTeams), columns: 1)
         
-        let ccwmMatrix = solveForX(matrixA, matrixB: matrixB)
+        let ccwmMatrix = matrixA.solve(matrixB)
+//        let ccwmMatrix = solveForX(matrixA, matrixB: matrixB)
         
         ccwmCache.setObject(ccwmMatrix!, forKey: teamPerformance.event)
         
@@ -289,8 +344,7 @@ func solveForX(_ matrixA: Matrix!, matrixB: Matrix!) -> Matrix? {
 }
 
 ///Creates the first matrix A for an OPR calculation. Where n is the number of teams, it is an n*n matrix where each value is the number of matches that the two teams which make up the matrix have played together.
-func createMatrixA(forEvent event: Event) -> Matrix {
-    let eventPerformances = suitableEventPerformances(forEvent: event)
+func createMatrixA(forEventPerformances eventPerformances: [TeamEventPerformance]) -> Matrix {
     let numOfTeams = eventPerformances.count
     
     var rowsA = [Double]()

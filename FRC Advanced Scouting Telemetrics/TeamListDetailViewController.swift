@@ -23,6 +23,7 @@ class TeamListDetailViewController: UIViewController, TeamSelectionDelegate {
     @IBOutlet weak var detailTableViewHeight: NSLayoutConstraint!
     @IBOutlet weak var detailCollectionViewHeight: NSLayoutConstraint!
     @IBOutlet weak var matchesButton: UIButton!
+    @IBOutlet weak var bananaImageView: UIImageView!
     
     var detailCollectionVC: TeamDetailCollectionViewController?
     
@@ -52,6 +53,12 @@ class TeamListDetailViewController: UIViewController, TeamSelectionDelegate {
 			if let team = selectedTeam {
 				navBar.title = team.universal.teamNumber
 				teamLabel.text = team.universal.nickname
+                
+                if team.local.canBanana?.boolValue ?? false {
+                    bananaImageView.image = #imageLiteral(resourceName: "Banana Filled")
+                } else {
+                    bananaImageView.image = nil
+                }
 				
 				//Populate the images, if there are images
 				if let image = team.local.frontImage {

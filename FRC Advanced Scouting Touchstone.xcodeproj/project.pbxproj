@@ -301,6 +301,7 @@
 		934647FB1E3188D800DC96D2 /* SSDefenseViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SSDefenseViewController.swift; sourceTree = "<group>"; };
 		934DC3791E48FD80001753FB /* FAST 2-4.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "FAST 2-4.xcdatamodel"; sourceTree = "<group>"; };
 		934DC3B61E4905B8001753FB /* FAST 2-3-4.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "FAST 2-3-4.xcdatamodel"; sourceTree = "<group>"; };
+		9352BE1D1E5A6DA500896008 /* FAST 2-3-7.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "FAST 2-3-7.xcdatamodel"; sourceTree = "<group>"; };
 		9353ADBB1E57ACF100120F1A /* TeamMatchesTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TeamMatchesTableViewController.swift; sourceTree = "<group>"; };
 		9353ADC11E57B09D00120F1A /* MatchListTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MatchListTableViewCell.swift; sourceTree = "<group>"; };
 		9353ADC91E58EDF800120F1A /* CloudReloadingManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CloudReloadingManager.swift; sourceTree = "<group>"; };
@@ -1391,6 +1392,7 @@
 		1F78E7891C3B469300221927 /* FRC_Advanced_Scouting_Telemetrics.xcdatamodeld */ = {
 			isa = XCVersionGroup;
 			children = (
+				9352BE1D1E5A6DA500896008 /* FAST 2-3-7.xcdatamodel */,
 				939EB45C1E4BE24D00D27F93 /* FAST 2-3-6.xcdatamodel */,
 				939EB4571E4A93F300D27F93 /* FAST 2-3-5.xcdatamodel */,
 				934DC3B61E4905B8001753FB /* FAST 2-3-4.xcdatamodel */,
@@ -1420,7 +1422,7 @@
 				1F0296661C5C6E42008CA8C2 /* FRC_Advanced_Scouting_Telemetrics CD 2.xcdatamodel */,
 				1F78E78A1C3B469300221927 /* FRC_Advanced_Scouting_Telemetrics.xcdatamodel */,
 			);
-			currentVersion = 939EB45C1E4BE24D00D27F93 /* FAST 2-3-6.xcdatamodel */;
+			currentVersion = 9352BE1D1E5A6DA500896008 /* FAST 2-3-7.xcdatamodel */;
 			path = FRC_Advanced_Scouting_Telemetrics.xcdatamodeld;
 			sourceTree = "<group>";
 			versionGroupType = wrapper.xcdatamodel;

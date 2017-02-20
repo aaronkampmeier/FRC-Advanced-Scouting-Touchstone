@@ -9,13 +9,13 @@
 import UIKit
 
 class AddEventTableViewController: UITableViewController {
-    var loadingView: UIView!
+    var loadingView: UIView?
     var searchController: UISearchController?
 	
 	let cloudConnection = CloudData()
     var events = [FRCEvent]() {
         didSet {
-            loadingView.isHidden = true
+            loadingView?.isHidden = true
             filteredEvents = events
             tableView.reloadData()
         }
@@ -38,23 +38,36 @@ class AddEventTableViewController: UITableViewController {
         // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
         // self.navigationItem.rightBarButtonItem = self.editButtonItem()
         
+        setUp()
+        
+        //Add search functionality
+        searchController = UISearchController(searchResultsController: nil)
+        searchController?.searchResultsUpdater = self
+        searchController?.dimsBackgroundDuringPresentation = false
+        definesPresentationContext = true
+        tableView.tableHeaderView = searchController?.searchBar
+    }
+    
+    func setUp(withYear year: String? = nil) {
         //Create a loading view and add it to the table view to indicate loading of the events
+        events = []
+        
         loadingView = UIView()
         let width: CGFloat = 30
         let height: CGFloat = 30
         let x = (tableView.frame.width / 2) - (width/2)
         let y = (tableView.frame.height / 2) - (height/2) - (self.navigationController?.navigationBar.frame.height)!
-        loadingView.frame = CGRect(x: x, y: y, width: width, height: height)
+        loadingView?.frame = CGRect(x: x, y: y, width: width, height: height)
         
         let spinnerView = UIActivityIndicatorView(activityIndicatorStyle: .gray)
         spinnerView.frame = CGRect(x: 0, y: 0, width: 30, height: 30)
         spinnerView.startAnimating()
         
-        loadingView.addSubview(spinnerView)
+        loadingView?.addSubview(spinnerView)
         
-        self.tableView.addSubview(loadingView)
+        self.tableView.addSubview(loadingView!)
         
-        cloudConnection.events {
+        cloudConnection.events(fromYear: year) {
             if let events = $0 {
                 NSLog("Successfully got FRCEvents")
                 self.events = events
@@ -66,13 +79,6 @@ class AddEventTableViewController: UITableViewController {
                 self.present(alert, animated: true, completion: nil)
             }
         }
-        
-        //Add search functionality
-        searchController = UISearchController(searchResultsController: nil)
-        searchController?.searchResultsUpdater = self
-        searchController?.dimsBackgroundDuringPresentation = false
-        definesPresentationContext = true
-        tableView.tableHeaderView = searchController?.searchBar
     }
 
     override func didReceiveMemoryWarning() {
@@ -82,6 +88,20 @@ class AddEventTableViewController: UITableViewController {
 
     @IBAction func cancelPressed(_ sender: UIBarButtonItem) {
         performSegue(withIdentifier: "rewindToAdminConsole", sender: self)
+    }
+    
+    @IBAction func yearButtonPressed(_ sender: UIBarButtonItem) {
+        var textField: UITextField? = nil
+        let alert = UIAlertController(title: "Enter Year", message: "Enter the year you would like to load events from in the format YYYY.", preferredStyle: .alert)
+        alert.addTextField {tf in
+            textField = tf
+        }
+        
+        alert.addAction(UIAlertAction(title: "Done", style: .default) {alertAction in
+            self.setUp(withYear: textField?.text)
+        })
+        
+        self.present(alert, animated: true, completion: nil)
     }
     
     // MARK: - Table view data source

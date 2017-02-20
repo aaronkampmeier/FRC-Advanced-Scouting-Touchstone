@@ -45,8 +45,8 @@ class CloudData {
     fileprivate let dataCache = NSCache<NSString, TBAResponseCache<Any>>()
     
 	
-    func events(withCompletionHandler completionHandler: @escaping ([FRCEvent]?) -> Void) {
-        Alamofire.request(baseApi + "tbadb/events/\(yearToDrawDataFrom)", method: .get, headers: headers)
+    func events(fromYear year: String? = nil, withCompletionHandler completionHandler: @escaping ([FRCEvent]?) -> Void) {
+        Alamofire.request(baseApi + "tbadb/events/\(year ?? yearToDrawDataFrom)", method: .get, headers: headers)
             .validate(statusCode: [200])
             .responseJSON() {response in
                 switch response.result {

@@ -243,8 +243,17 @@ class CloudEventImportManager {
                 let blueScore = frcAlliances["blue"]?.score
                 let redScore = frcAlliances["red"]?.score
                 
-                localMatch.blueFinalScore = blueScore as? NSNumber
-                localMatch.redFinalScore = redScore as? NSNumber
+                //TBA represents unknown score values as -1 so if the score is -1, then put nil in for the score.
+                if blueScore == -1 {
+                    localMatch.blueFinalScore = nil
+                } else {
+                    localMatch.blueFinalScore = blueScore as? NSNumber
+                }
+                if redScore == -1 {
+                    localMatch.redFinalScore = nil
+                } else {
+                    localMatch.redFinalScore = redScore as? NSNumber
+                }
                 
                 //Set up all the teams in the match
                 if let matchAlliances = frcMatch.alliances {

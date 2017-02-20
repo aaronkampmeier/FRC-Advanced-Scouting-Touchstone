@@ -70,7 +70,8 @@ class EventPickerViewController: UIViewController, UIPickerViewDelegate, UIPicke
 		case 0:
 			return "All Teams (Default)"
 		default:
-			return events![row-1].name
+            let event = events![row-1]
+			return "\(event.name!) (\(event.year!))"
 		}
 	}
 	
