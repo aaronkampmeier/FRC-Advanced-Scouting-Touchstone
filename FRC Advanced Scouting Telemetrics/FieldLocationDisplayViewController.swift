@@ -20,7 +20,7 @@ protocol FieldLocationDisplayDataSource {
 
 protocol FieldLocationDisplayDelegate {
     func addedPoint(withRelativeLocation relativeLocation: CGPoint)
-    func removedPoint(withRelativeLocation relativeLocation: CGPoint)
+//    func removedPoint(withRelativeLocation relativeLocation: CGPoint)
 }
 
 class FieldLocationDisplayViewController: UIViewController {
@@ -72,12 +72,6 @@ class FieldLocationDisplayViewController: UIViewController {
         reloadPoints()
     }
     
-//    override func viewDidAppear(_ animated: Bool) {
-//        super.viewDidAppear(animated)
-//        
-//        reloadInvisibleView()
-//    }
-    
     override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
         super.viewWillTransition(to: size, with: coordinator)
         
@@ -110,7 +104,9 @@ class FieldLocationDisplayViewController: UIViewController {
         if dataSource?.allowsAddition() ?? false {
             let location = sender.location(in: invisibleView)
             
-            points.append(translatePointToRelativePoint(location, withCurrentSize: invisibleView.frame.size))
+            let relativePoint = translatePointToRelativePoint(location, withCurrentSize: invisibleView.frame.size)
+            points.append(relativePoint)
+            delegate?.addedPoint(withRelativeLocation: relativePoint)
         }
     }
     
