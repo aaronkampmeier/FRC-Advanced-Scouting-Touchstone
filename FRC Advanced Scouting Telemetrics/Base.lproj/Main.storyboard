@@ -2003,9 +2003,14 @@
                         </connections>
                     </tableView>
                     <navigationItem key="navigationItem" title="Pick List" id="O5q-IC-5pt">
-                        <barButtonItem key="rightBarButtonItem" systemItem="done" id="kLA-hf-fh2">
+                        <barButtonItem key="leftBarButtonItem" style="done" systemItem="done" id="kLA-hf-fh2">
                             <connections>
                                 <segue destination="9nT-OE-T78" kind="unwind" unwindAction="returnToTeamList:" id="D5z-FQ-y6N"/>
+                            </connections>
+                        </barButtonItem>
+                        <barButtonItem key="rightBarButtonItem" title="Reset" id="e5c-p4-eul">
+                            <connections>
+                                <action selector="resetPressed:" destination="Klq-Xd-jly" id="zmJ-LV-TF3"/>
                             </connections>
                         </barButtonItem>
                     </navigationItem>

@@ -27,7 +27,8 @@ class TeamPickerTableViewController: UITableViewController {
         // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
         // self.navigationItem.rightBarButtonItem = self.editButtonItem()
 		
-		teams = dataManager.localTeamRanking()
+        teams = dataManager.localTeamRanking().filter {$0.local.isInPickList?.boolValue ?? true}
+        
 		
 		Answers.logCustomEvent(withName: "Opened Team Pick List", customAttributes: nil)
     }
@@ -59,12 +60,24 @@ class TeamPickerTableViewController: UITableViewController {
     }
 	
 	override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        let team = shownTeams[indexPath.row]
+        team.local.isInPickList = false as NSNumber
 		shownTeams.remove(at: (indexPath as NSIndexPath).row)
 		
 		tableView.beginUpdates()
 		tableView.deleteRows(at: [indexPath], with: .middle)
 		tableView.endUpdates()
 	}
+    
+    @IBAction func resetPressed(_ sender: UIBarButtonItem) {
+        let allTeams = dataManager.localTeamRanking()
+        for team in allTeams {
+            team.local.isInPickList = true as NSNumber
+        }
+        
+        self.teams = allTeams
+        tableView.reloadData()
+    }
 
     /*
     // Override to support conditional editing of the table view.
