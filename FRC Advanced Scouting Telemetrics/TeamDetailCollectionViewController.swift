@@ -148,26 +148,42 @@ class TeamDetailCollectionViewController: UICollectionViewController, UICollecti
     }
     
     override func collectionView(_ collectionView: UICollectionView, viewForSupplementaryElementOfKind kind: String, at indexPath: IndexPath) -> UICollectionReusableView {
-        let headerView = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: "header", for: indexPath)
-        
         switch (indexPath.section, kind) {
         case (0,UICollectionElementKindSectionHeader):
+            let headerView = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: "header", for: indexPath)
             (headerView.viewWithTag(1) as! UILabel).text = "General"
+            return headerView
         case (1, UICollectionElementKindSectionHeader):
+            let headerView = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: "header", for: indexPath)
             (headerView.viewWithTag(1) as! UILabel).text = "\(selectedTeamEventPerformance?.event.name ?? "") Stats"
+            return headerView
         case (0, UICollectionElementKindSectionFooter):
-            (headerView.viewWithTag(1) as! UILabel).text = ""
+            let footerView = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: "footer", for: indexPath)
+            (footerView.viewWithTag(1) as! UIButton).setTitle(nil, for: .normal)
+            (footerView.viewWithTag(1) as! UIButton).removeTarget(self, action: #selector(viewShotChartPressed(_:)), for: .touchUpInside)
+            
+            return footerView
         case (1, UICollectionElementKindSectionFooter):
-            (headerView.viewWithTag(1) as! UILabel).text = ""
+            let footerView = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: "footer", for: indexPath)
+            (footerView.viewWithTag(1) as! UIButton).setTitle("View Shot Chart", for: .normal)
+            (footerView.viewWithTag(1) as! UIButton).addTarget(self, action: #selector(viewShotChartPressed(_:)), for: .touchUpInside)
+            
+            return footerView
         default:
+            return UICollectionReusableView()
             break
         }
-        
-        return headerView
     }
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
         return CGSize(width: 112, height: 65)
+    }
+    
+    func viewShotChartPressed(_ sender: UIButton) {
+        let shotChartNav = storyboard?.instantiateViewController(withIdentifier: "shotChartNav") as! UINavigationController
+        (shotChartNav.topViewController as! ShotChartViewController).dataSource = self
+        
+        present(shotChartNav, animated: true, completion: nil)
     }
 
     // MARK: UICollectionViewDelegate
@@ -201,4 +217,10 @@ class TeamDetailCollectionViewController: UICollectionViewController, UICollecti
     }
     */
 
+}
+
+extension TeamDetailCollectionViewController: ShotChartDataSource {
+    func teamEventPerformance() -> TeamEventPerformance? {
+        return selectedTeamEventPerformance
+    }
 }

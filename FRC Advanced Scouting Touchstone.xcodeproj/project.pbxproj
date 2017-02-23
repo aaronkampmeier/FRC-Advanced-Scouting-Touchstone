@@ -110,6 +110,8 @@
 		93BA5A0D1E2F1EA200171D72 /* YCMatrix.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 93BA59F21E2EE7EF00171D72 /* YCMatrix.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		93C5B47C1E53FC9C007D309F /* TeamInfoScrollView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93C5B47B1E53FC9C007D309F /* TeamInfoScrollView.swift */; };
 		93CE1BF71E403A97004165BE /* NotesViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93CE1BF61E403A97004165BE /* NotesViewController.swift */; };
+		93D75B641E5D0866002CBED2 /* FieldLocationDisplayViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93D75B631E5D0866002CBED2 /* FieldLocationDisplayViewController.swift */; };
+		93D75B6A1E5DE0F5002CBED2 /* ShotChartViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93D75B691E5DE0F5002CBED2 /* ShotChartViewController.swift */; };
 		93EA7FEA1E4693C6002EC8C7 /* PitSwitchCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93EA7FE91E4693C6002EC8C7 /* PitSwitchCollectionViewCell.swift */; };
 		93FBC3961E3E624500FEB328 /* GameFieldLocationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93FBC3951E3E624500FEB328 /* GameFieldLocationViewController.swift */; };
 		93FBC39A1E3EEDEC00FEB328 /* SSRopeClimbViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93FBC3991E3EEDEC00FEB328 /* SSRopeClimbViewController.swift */; };
@@ -339,6 +341,8 @@
 		93BA59FA1E2EFCAF00171D72 /* SSOffenseViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SSOffenseViewController.swift; sourceTree = "<group>"; };
 		93C5B47B1E53FC9C007D309F /* TeamInfoScrollView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TeamInfoScrollView.swift; sourceTree = "<group>"; };
 		93CE1BF61E403A97004165BE /* NotesViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NotesViewController.swift; sourceTree = "<group>"; };
+		93D75B631E5D0866002CBED2 /* FieldLocationDisplayViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FieldLocationDisplayViewController.swift; sourceTree = "<group>"; };
+		93D75B691E5DE0F5002CBED2 /* ShotChartViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ShotChartViewController.swift; sourceTree = "<group>"; };
 		93EA7FE41E467224002EC8C7 /* FAST 2-3-2.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "FAST 2-3-2.xcdatamodel"; sourceTree = "<group>"; };
 		93EA7FE91E4693C6002EC8C7 /* PitSwitchCollectionViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PitSwitchCollectionViewCell.swift; sourceTree = "<group>"; };
 		93EA7FF61E46A849002EC8C7 /* FAST 2-3-3.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "FAST 2-3-3.xcdatamodel"; sourceTree = "<group>"; };
@@ -384,6 +388,7 @@
 		1F21DF101C645D1F00C55D0E /* View Controllers */ = {
 			isa = PBXGroup;
 			children = (
+				93D75B631E5D0866002CBED2 /* FieldLocationDisplayViewController.swift */,
 				9353ADBB1E57ACF100120F1A /* TeamMatchesTableViewController.swift */,
 				9353ADC11E57B09D00120F1A /* MatchListTableViewCell.swift */,
 				93EA7FF11E46A36E002EC8C7 /* Notes */,
@@ -419,6 +424,7 @@
 				1FD0A09A1C95093600013A18 /* TeamListTableViewCell.swift */,
 				1FDC1BD21CD6A35F00ABE327 /* TeamListDetailViewController.swift */,
 				936967F01E4FB1F7001DB15D /* TeamDetailCollectionViewController.swift */,
+				93D75B691E5DE0F5002CBED2 /* ShotChartViewController.swift */,
 				936967F81E4FD05C001DB15D /* Team Detail Cells */,
 				1F2F9A211CE2D6E400B85A72 /* TeamListSearchResultsTableViewController.swift */,
 				1F21DF111C66942200C55D0E /* SortVC.swift */,
@@ -984,6 +990,7 @@
 				938BEB3C1E35228E003F2F74 /* GearLoading+CoreDataClass.swift in Sources */,
 				93FBC3961E3E624500FEB328 /* GameFieldLocationViewController.swift in Sources */,
 				1F1C23CE1E07487C008885A1 /* TeamEventPerformance+CoreDataProperties.swift in Sources */,
+				93D75B6A1E5DE0F5002CBED2 /* ShotChartViewController.swift in Sources */,
 				1F78E7831C3B469300221927 /* AppDelegate.swift in Sources */,
 				938BEB2D1E352159003F2F74 /* Defending+CoreDataProperties.swift in Sources */,
 				932C344E1E12F7C400A23203 /* CloudImportManager.swift in Sources */,
@@ -1009,6 +1016,7 @@
 				1F1C23C21E07487C008885A1 /* Team+CoreDataProperties.swift in Sources */,
 				1FBB426D1C9A29FC0017E36C /* Statistics.swift in Sources */,
 				1F4FEDAA1C4AD95C00F4016D /* OldPitScoutingController.swift in Sources */,
+				93D75B641E5D0866002CBED2 /* FieldLocationDisplayViewController.swift in Sources */,
 				1FCEF8F61C9CB231006AC591 /* Globals.swift in Sources */,
 				936967F11E4FB1F7001DB15D /* TeamDetailCollectionViewController.swift in Sources */,
 				1F1C23D11E07487C008885A1 /* TimeMarker+CoreDataClass.swift in Sources */,

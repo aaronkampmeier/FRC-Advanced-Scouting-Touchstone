@@ -291,6 +291,11 @@ class StandsScoutingViewController: UIViewController {
 		if stopwatch.isRunning {
 			timerLabel.text = stopwatch.elapsedTimeAsString
 			
+            //Auto end Autonomous when timer hits 20 seconds
+            if stopwatch.elapsedTime > 20 && ssDataManager?.isAutonomous ?? false {
+                endAutonomousPressed(endAutonomousButton)
+            }
+            
 			if stopwatch.elapsedTime > 160 {
 				isRunning = false
 				let alert = UIAlertController(title: "Timer Exceeded Limit", message: "The match should have ended at 2 minutes 30 seconds; the timer has already passed that and automatically stopped. All data will be saved.", preferredStyle: .alert)
