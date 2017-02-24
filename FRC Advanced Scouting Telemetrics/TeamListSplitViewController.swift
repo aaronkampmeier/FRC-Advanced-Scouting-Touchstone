@@ -49,6 +49,7 @@ class TeamListSplitViewController: UISplitViewController, UISplitViewControllerD
     func splitViewController(_ splitViewController: UISplitViewController, collapseSecondary secondaryViewController: UIViewController, onto primaryViewController: UIViewController) -> Bool {
         if let secondaryNav = secondaryViewController as? UINavigationController {
             if let teamDetail = secondaryNav.topViewController as? TeamListDetailViewController {
+                appDelegate.teamListDetailVC = teamDetail
                 if teamDetail.selectedTeam == nil {
                     return true
                 }

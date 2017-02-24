@@ -176,13 +176,28 @@ class StandsScoutingViewController: UIViewController {
         defenseVC = (storyboard?.instantiateViewController(withIdentifier: "ssDefense") as! SSDefenseViewController)
         ropeVC = (storyboard?.instantiateViewController(withIdentifier: "ssRopeVC") as! SSRopeClimbViewController)
 		
-		//Make it look nice
-		timerButton.layer.cornerRadius = 10
-		closeButton.layer.cornerRadius = 10
-		notesButton.layer.cornerRadius = 10
+    }
+    
+    override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
         
-        autonomousLabel.layer.cornerRadius = 5
-        endAutonomousButton.layer.cornerRadius = 10
+        if self.traitCollection.horizontalSizeClass == .regular {
+            //Make it look nice
+            timerButton.layer.cornerRadius = 10
+            closeButton.layer.cornerRadius = 10
+            notesButton.layer.cornerRadius = 10
+            
+            autonomousLabel.layer.cornerRadius = 5
+            endAutonomousButton.layer.cornerRadius = 10
+        } else {
+            //Make it look nice
+            timerButton.layer.cornerRadius = 5
+            closeButton.layer.cornerRadius = 5
+            notesButton.layer.cornerRadius = 5
+            
+            autonomousLabel.layer.cornerRadius = 2.5
+            endAutonomousButton.layer.cornerRadius = 5
+        }
     }
 	
 	override func viewWillAppear(_ animated: Bool) {
