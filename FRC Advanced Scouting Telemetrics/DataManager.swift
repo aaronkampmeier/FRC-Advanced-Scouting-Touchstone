@@ -19,7 +19,7 @@ class DataManager {
 	//MARK: Saving and deleting
 	fileprivate func save() {
 		do {
-			try TeamDataManager.managedContext.save()
+			try DataManager.managedContext.save()
 		} catch let error as NSError {
 			NSLog("Could not save: \(error), \(error.userInfo)")
 		}
@@ -32,7 +32,7 @@ class DataManager {
 	
 	func discardChanges() {
 		NSLog("Discarding Changes")
-		TeamDataManager.managedContext.rollback()
+		DataManager.managedContext.rollback()
 	}
 	
 	func delete(_ objectsToDelete: NSManagedObject...) {

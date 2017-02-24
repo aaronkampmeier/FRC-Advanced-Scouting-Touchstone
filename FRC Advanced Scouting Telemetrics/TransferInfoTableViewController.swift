@@ -80,7 +80,7 @@ class TransferInfoTableViewController: UITableViewController {
         let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath)
 		
 		if let transfer = currentTransfers[resourceNames[(indexPath as NSIndexPath).row]] {
-			(cell.viewWithTag(1) as! UILabel).text = transfer.1.displayName ?? "Unknown"
+			(cell.viewWithTag(1) as! UILabel).text = transfer.1.displayName
 			(cell.viewWithTag(2) as! UIProgressView).observedProgress = transfer.0
 		}
 

@@ -224,7 +224,7 @@ class CloudEventImportManager {
                     self.completionHandler(false, ImportError.InvalidCompetitionLevel)
                     return
                 }
-                match.setNumber = frcMatch.setNumber as? NSNumber
+                match.setNumber = frcMatch.setNumber as NSNumber?
                 match.time = frcMatch.time
                 
                 match.event = eventObject
@@ -247,12 +247,12 @@ class CloudEventImportManager {
                 if blueScore == -1 {
                     localMatch.blueFinalScore = nil
                 } else {
-                    localMatch.blueFinalScore = blueScore as? NSNumber
+                    localMatch.blueFinalScore = blueScore as NSNumber?
                 }
                 if redScore == -1 {
                     localMatch.redFinalScore = nil
                 } else {
-                    localMatch.redFinalScore = redScore as? NSNumber
+                    localMatch.redFinalScore = redScore as NSNumber?
                 }
                 
                 //Set up all the teams in the match

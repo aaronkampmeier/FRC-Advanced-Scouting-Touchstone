@@ -47,7 +47,6 @@ class TeamListDetailViewController: UIViewController, TeamSelectionDelegate {
 	
 	var sideImage: TeamImagePhoto?
 
-	let teamManager = TeamDataManager()
 	var selectedTeam: ObjectPair<Team,LocalTeam>? {
 		didSet {
 			if let team = selectedTeam {
@@ -229,7 +228,7 @@ class TeamListDetailViewController: UIViewController, TeamSelectionDelegate {
             let pitScoutingVC = segue.destination as! PitScoutingViewController
             pitScoutingVC.scoutedTeam = selectedTeam?.universal
         } else if segue.identifier == "teamDetailCollection" {
-            detailCollectionVC = segue.destination as! TeamDetailCollectionViewController
+            detailCollectionVC = (segue.destination as! TeamDetailCollectionViewController)
         }
 	}
 
@@ -438,13 +437,6 @@ class TeamImagePhoto: NSObject, NYTPhoto {
 		self.image = image
 		self.imageData = imageData
 		self.attributedCaptionTitle = attributedCaptionTitle
-	}
-}
-
-extension TeamListDetailViewController: UITextViewDelegate {
-	func textViewDidEndEditing(_ textView: UITextView) {
-//		selectedTeam?.notes = textView.text
-		teamManager.commitChanges()
 	}
 }
 

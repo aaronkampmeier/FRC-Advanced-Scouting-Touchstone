@@ -10,7 +10,7 @@ import UIKit
 import CoreData
 
 class HiddenDebugViewController: UIViewController {
-	let dataManager = TeamDataManager()
+	let dataManager = DataManager()
 	
     override func viewDidLoad() {
         super.viewDidLoad()

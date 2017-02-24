@@ -171,7 +171,6 @@ class TeamDetailCollectionViewController: UICollectionViewController, UICollecti
             return footerView
         default:
             return UICollectionReusableView()
-            break
         }
     }
     

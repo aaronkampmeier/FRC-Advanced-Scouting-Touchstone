@@ -132,7 +132,7 @@ class DataSyncer: NSObject, CDEPersistentStoreEnsembleDelegate {
 		return true
 	}
 	
-	func persistentStoreEnsemble(_ ensemble: CDEPersistentStoreEnsemble!, didFailToSaveMergedChangesInManagedObjectContext savingContext: NSManagedObjectContext!, error: NSError!, reparationManagedObjectContext reparationContext: NSManagedObjectContext!) -> Bool {
+	func persistentStoreEnsemble(_ ensemble: CDEPersistentStoreEnsemble!, didFailToSaveMergedChangesIn savingContext: NSManagedObjectContext!, error: Error!, reparationManagedObjectContext reparationContext: NSManagedObjectContext!) -> Bool {
 		CLSNSLogv("Ensemble did fail to save merged changes. Error: \(error)", getVaList([]))
 		let alert = UIAlertController(title: "Save Failed", message: "The save and sync failed.", preferredStyle: .alert)
 		alert.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
@@ -164,14 +164,14 @@ class DataSyncer: NSObject, CDEPersistentStoreEnsembleDelegate {
 		NSLog("Ensemble did save merged changes")
 		
 		//Merge the changes into the main managed object context
-		TeamDataManager.managedContext.perform() {
-			TeamDataManager.managedContext.mergeChanges(fromContextDidSave: notification)
+		DataManager.managedContext.perform() {
+			DataManager.managedContext.mergeChanges(fromContextDidSave: notification)
 			NSLog("Did merge changes into main context")
 			NotificationCenter.default.post(name: Notification.Name(rawValue: "DataSyncer:NewChangesMerged"), object: self)
 		}
 	}
 	
-	func persistentStoreEnsemble(_ ensemble: CDEPersistentStoreEnsemble!, didDeleechWithError error: NSError!) {
+	func persistentStoreEnsemble(_ ensemble: CDEPersistentStoreEnsemble!, didDeleechWithError error: Error!) {
 		let alert = UIAlertController(title: "Sync Error: Deleech", message: "There was an internal data integrity error which forced your app to disconnect from the shared cloud of data.", preferredStyle: .alert)
 		alert.addAction(UIAlertAction(title: "Attempt to Fix", style: .default, handler: {_ in self.attemptToFixDeelechError()}))
 		alert.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
@@ -180,46 +180,63 @@ class DataSyncer: NSObject, CDEPersistentStoreEnsembleDelegate {
 		CLSNSLogv("Did deleech with error: \(error)", getVaList([]))
 		Crashlytics.sharedInstance().recordError(error)
 	}
-	
-	func persistentStoreEnsemble(_ ensemble: CDEPersistentStoreEnsemble!, globalIdentifiersForManagedObjects objects: [AnyObject]!) -> [AnyObject]! {
-		NSLog("Setting global identifiers")
-		var globalIdentifiers = [AnyObject]()
-		for object in objects {
-			switch object {
-			case is LocalTeamRanking:
-				globalIdentifiers.append("LocalTeamRanking" as NSString)
+    
+    func persistentStoreEnsemble(_ ensemble: CDEPersistentStoreEnsemble!, globalIdentifiersForManagedObjects objects: [Any]!) -> [Any]! {
+        NSLog("Setting global identifiers")
+        var globalIdentifiers = [Any]()
+        for anyObject in objects {
+            switch anyObject {
+            case is LocalTeamRanking:
+                globalIdentifiers.append("LocalTeamRanking" as NSString)
                 
-			//Universals
-			case is Team:
-				globalIdentifiers.append(NSString(string: "Universal:\(object.value(forKey: "key")!)"))
-			case is Event:
-				globalIdentifiers.append(NSString(string: "Universal:\(object.value(forKey: "key")!)"))
-			case is TeamEventPerformance:
-				globalIdentifiers.append(NSString(string: "EventPerformance:\((object.value(forKey: "team")! as AnyObject).value(forKey: "key")!):\((object.value(forKey: "event")! as AnyObject).value(forKey: "key")!)"))
-			case is Match:
-				globalIdentifiers.append(NSString(string: "Universal:\(object.value(forKey: "key")!)"))
-			case is TeamMatchPerformance:
-				globalIdentifiers.append(NSString(string: "Universal:\(object.value(forKey: "key"))"))
-				
-			//Locals
-			case is LocalTeam:
-				globalIdentifiers.append(NSString(string: "Local:\(object.value(forKey: "key")!)"))
-			case is LocalEvent:
-				globalIdentifiers.append(NSString(string: "Local:\(object.value(forKey: "key")!)"))
-			case is LocalMatchPerformance:
-				globalIdentifiers.append(NSString(string: "Local:\(object.value(forKey: "key")!)"))
-			case is LocalMatch:
-				globalIdentifiers.append(NSString(string: "Local:\(object.value(forKey: "key")!)"))
-			case is AutonomousCycle:
-				globalIdentifiers.append("\(UUID().uuidString)" as AnyObject)
-			case is TimeMarker:
-				globalIdentifiers.append("\(UUID().uuidString)" as AnyObject)
-			default:
-				globalIdentifiers.append(NSNull())
-			}
-		}
-		return globalIdentifiers
-	}
+            //Universals
+            case is Team:
+                let object = anyObject as! Team
+                globalIdentifiers.append(NSString(string: "Universal:\(object.key!)"))
+            case is Event:
+                let object = anyObject as! Event
+                globalIdentifiers.append(NSString(string: "Universal:\(object.key!)"))
+            case is TeamEventPerformance:
+                let object = anyObject as! TeamEventPerformance
+                globalIdentifiers.append(NSString(string: "EventPerformance:\(object.team.value(forKey: "key")!):\((object.event).value(forKey: "key")!)"))
+            case is Match:
+                let object = anyObject as! Match
+                globalIdentifiers.append(NSString(string: "Universal:\(object.key!)"))
+            case is TeamMatchPerformance:
+                let object = anyObject as! TeamMatchPerformance
+                globalIdentifiers.append(NSString(string: "Universal:\(object.key!)"))
+                
+            //Locals
+            case is LocalTeam:
+                let object = anyObject as! LocalTeam
+                globalIdentifiers.append(NSString(string: "Local:\(object.key!)"))
+            case is LocalEvent:
+                let object = anyObject as! LocalEvent
+                globalIdentifiers.append(NSString(string: "Local:\(object.key!)"))
+            case is LocalMatchPerformance:
+                let object = anyObject as! LocalMatchPerformance
+                globalIdentifiers.append(NSString(string: "Local:\(object.key!)"))
+            case is LocalMatch:
+                let object = anyObject as! LocalMatch
+                globalIdentifiers.append(NSString(string: "Local:\(object.key!)"))
+            case is Defending:
+                globalIdentifiers.append(UUID().uuidString)
+            case is FuelLoading:
+                globalIdentifiers.append(UUID().uuidString)
+            case is FuelScoring:
+                globalIdentifiers.append(UUID().uuidString)
+            case is GearLoading:
+                globalIdentifiers.append(UUID().uuidString)
+            case is GearMounting:
+                globalIdentifiers.append(UUID().uuidString)
+            case is TimeMarker:
+                globalIdentifiers.append(UUID().uuidString)
+            default:
+                globalIdentifiers.append(NSNull())
+            }
+        }
+        return globalIdentifiers
+    }
 }
 
 //For other files to access MCPeerIDs without importing MultipeerConnectivity

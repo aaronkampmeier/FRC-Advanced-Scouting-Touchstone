@@ -109,7 +109,7 @@ class DataSyncingViewController: UIViewController, UITableViewDataSource{
 			//Present an alert saying the user needs to restart the app
 			let alert = UIAlertController(title: "Please Restart", message: "The app must be restarted in order for this change (updating the sync ID) to take hold.", preferredStyle: .alert)
 			alert.addAction(UIAlertAction(title: "Quit", style: .destructive) {action in
-				TeamDataManager().commitChanges()
+				DataManager().commitChanges()
 				
 				exit(EXIT_SUCCESS)
 			})

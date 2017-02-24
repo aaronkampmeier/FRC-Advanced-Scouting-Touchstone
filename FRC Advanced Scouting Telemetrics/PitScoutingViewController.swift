@@ -90,7 +90,7 @@ class PitScoutingViewController: UIViewController, UICollectionViewDataSource, U
                     self.scoutedTeam?.local.frontImage = imageData as Data?
                 }
                 
-                NotificationCenter.default.post(name: PitScoutingNewImageNotification, object: self, userInfo: ["ForTeam":self.scoutedTeam])
+                NotificationCenter.default.post(name: PitScoutingNewImageNotification, object: self, userInfo: ["ForTeam":self.scoutedTeam as Any])
             }),
             
             PitScoutingParameter(type: .ImageSelector, label: "Side Image", options: nil, currentValue: {
