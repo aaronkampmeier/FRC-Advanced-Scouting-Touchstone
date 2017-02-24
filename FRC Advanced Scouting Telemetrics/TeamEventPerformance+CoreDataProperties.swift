@@ -125,6 +125,9 @@ extension TeamEventPerformance: HasStats {
         
         for performance in matchPerformances {
             switch performance.statValue(forStat: stat) {
+            case .Integer(let performanceValue):
+                sum += Double(performanceValue)
+                numOfAverages += 1
             case .Double(let performanceValue):
                 sum += performanceValue
                 numOfAverages += 1

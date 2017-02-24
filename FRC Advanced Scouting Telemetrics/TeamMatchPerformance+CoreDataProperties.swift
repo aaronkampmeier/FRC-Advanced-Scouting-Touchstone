@@ -85,8 +85,12 @@ extension TeamMatchPerformance: HasStats {
                     }
                 },
                 StatName.TotalGearsScored: {
-                    let gearScorings = self.local.gearMountings
-                    return StatValue.initWithOptional(value: gearScorings?.count)
+                    if self.local.hasBeenScouted?.boolValue ?? false {
+                        let gearScorings = self.local.gearMountings
+                        return StatValue.initWithOptional(value: gearScorings?.count)
+                    } else {
+                        return StatValue.NoValue
+                    }
                 },
                 StatName.AverageFuelCycleTime: {
                     if self.local.hasBeenScouted?.boolValue ?? false {

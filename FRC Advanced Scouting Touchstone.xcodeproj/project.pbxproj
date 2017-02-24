@@ -73,6 +73,8 @@
 		932CB3EA1E305B9000712725 /* SSOffenseFuelViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 932CB3E91E305B9000712725 /* SSOffenseFuelViewController.swift */; };
 		932CB3F01E305E6C00712725 /* SSOffenseGearViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 932CB3EF1E305E6C00712725 /* SSOffenseGearViewController.swift */; };
 		932CB3F21E305E8200712725 /* SSOffenseWhereViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 932CB3F11E305E8200712725 /* SSOffenseWhereViewController.swift */; };
+		933D214B1E609A04008C8276 /* Pods-acknowledgments.plist in Resources */ = {isa = PBXBuildFile; fileRef = 933D214A1E609A04008C8276 /* Pods-acknowledgments.plist */; };
+		933D21511E609BF7008C8276 /* Additional Licenses.plist in Resources */ = {isa = PBXBuildFile; fileRef = 933D21501E609BF7008C8276 /* Additional Licenses.plist */; };
 		933E794F1E385BB20033563B /* SSPreloadingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 933E794E1E385BB20033563B /* SSPreloadingViewController.swift */; };
 		934647FC1E3188D800DC96D2 /* SSDefenseViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 934647FB1E3188D800DC96D2 /* SSDefenseViewController.swift */; };
 		9353ADBC1E57ACF100120F1A /* TeamMatchesTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9353ADBB1E57ACF100120F1A /* TeamMatchesTableViewController.swift */; };
@@ -100,8 +102,6 @@
 		938BEB3F1E354393003F2F74 /* CoreData.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 938BEB3E1E354393003F2F74 /* CoreData.framework */; };
 		938D9CAE1E19A1B700A5E522 /* LocalEvent+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = 938D9CAC1E19A1B700A5E522 /* LocalEvent+CoreDataClass.swift */; };
 		938D9CAF1E19A1B700A5E522 /* LocalEvent+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 938D9CAD1E19A1B700A5E522 /* LocalEvent+CoreDataProperties.swift */; };
-		938D9CB41E1DD99B00A5E522 /* Surge.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1FAA2A921DFE1F3500514B9E /* Surge.framework */; };
-		938D9CB51E1DD99B00A5E522 /* Surge.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 1FAA2A921DFE1F3500514B9E /* Surge.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		9391EA6C1E4852D2008E17A1 /* PitStringFieldCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9391EA6B1E4852D2008E17A1 /* PitStringFieldCollectionViewCell.swift */; };
 		93AE99801E3407A00000FB7C /* SSDataManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93AE997F1E3407A00000FB7C /* SSDataManager.swift */; };
 		93BA599E1E2C95F200171D72 /* FASTTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 938D9CB01E1B05BA00A5E522 /* FASTTests.swift */; };
@@ -146,27 +146,6 @@
 			remoteGlobalIDString = F84A6AAE19A9A72F007B53E1;
 			remoteInfo = SurgeTests;
 		};
-		1FAA2A911DFE1F3500514B9E /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 1FAA2A8C1DFE1F3500514B9E /* Surge.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = F8A1E1AA19917A79009735E2;
-			remoteInfo = Surge;
-		};
-		1FAA2A931DFE1F3500514B9E /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 1FAA2A8C1DFE1F3500514B9E /* Surge.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = F84A6AAE19A9A72F007B53E1;
-			remoteInfo = SurgeTests;
-		};
-		938D9CB61E1DD99B00A5E522 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 1FAA2A8C1DFE1F3500514B9E /* Surge.xcodeproj */;
-			proxyType = 1;
-			remoteGlobalIDString = F8A1E1A919917A79009735E2;
-			remoteInfo = Surge;
-		};
 		93BA59F11E2EE7EF00171D72 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 93BA59EC1E2EE7EE00171D72 /* YCMatrix.xcodeproj */;
@@ -197,7 +176,6 @@
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
-				938D9CB51E1DD99B00A5E522 /* Surge.framework in Embed Frameworks */,
 				93BA5A0D1E2F1EA200171D72 /* YCMatrix.framework in Embed Frameworks */,
 			);
 			name = "Embed Frameworks";
@@ -270,7 +248,6 @@
 		1F9B782A1CD1A42400B4E5AE /* HiddenDebugViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HiddenDebugViewController.swift; sourceTree = "<group>"; };
 		1FA6A73D1CD3B4DD00772C63 /* TransferInfoTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TransferInfoTableViewController.swift; sourceTree = "<group>"; };
 		1FAA2A781DFE1EBE00514B9E /* Surge.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = Surge.xcodeproj; path = "Surge-master/Surge.xcodeproj"; sourceTree = "<group>"; };
-		1FAA2A8C1DFE1F3500514B9E /* Surge.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = Surge.xcodeproj; path = "Surge-master/Surge.xcodeproj"; sourceTree = "<group>"; };
 		1FB1E88D1E061E340038D6D8 /* FAST 2.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "FAST 2.xcdatamodel"; sourceTree = "<group>"; };
 		1FBB426C1C9A29FC0017E36C /* Statistics.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Statistics.swift; sourceTree = "<group>"; wrapsLines = 1; };
 		1FBC9E671CC2EE11005DB3F4 /* Fabric.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Fabric.framework; sourceTree = SOURCE_ROOT; };
@@ -298,6 +275,8 @@
 		932CB3EF1E305E6C00712725 /* SSOffenseGearViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SSOffenseGearViewController.swift; sourceTree = "<group>"; };
 		932CB3F11E305E8200712725 /* SSOffenseWhereViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SSOffenseWhereViewController.swift; sourceTree = "<group>"; };
 		9332F2931E22BB6E00AB3EA6 /* FAST 2-1.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "FAST 2-1.xcdatamodel"; sourceTree = "<group>"; };
+		933D214A1E609A04008C8276 /* Pods-acknowledgments.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "Pods-acknowledgments.plist"; sourceTree = "<group>"; };
+		933D21501E609BF7008C8276 /* Additional Licenses.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "Additional Licenses.plist"; sourceTree = "<group>"; };
 		933E794E1E385BB20033563B /* SSPreloadingViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SSPreloadingViewController.swift; sourceTree = "<group>"; };
 		933E79501E3864370033563B /* FAST 2-2-2.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "FAST 2-2-2.xcdatamodel"; sourceTree = "<group>"; };
 		934647FB1E3188D800DC96D2 /* SSDefenseViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SSDefenseViewController.swift; sourceTree = "<group>"; };
@@ -363,7 +342,6 @@
 				938BEB3F1E354393003F2F74 /* CoreData.framework in Frameworks */,
 				1FBC9E6C1CC2F007005DB3F4 /* Crashlytics.framework in Frameworks */,
 				93BA5A0C1E2F1EA200171D72 /* YCMatrix.framework in Frameworks */,
-				938D9CB41E1DD99B00A5E522 /* Surge.framework in Frameworks */,
 				1FBC9E691CC2EE11005DB3F4 /* Fabric.framework in Frameworks */,
 				17B23A7C19409D43514119DF /* Pods_FRC_Advanced_Scouting_Touchstone.framework in Frameworks */,
 			);
@@ -456,7 +434,6 @@
 			isa = PBXGroup;
 			children = (
 				93BA59EC1E2EE7EE00171D72 /* YCMatrix.xcodeproj */,
-				1FAA2A8C1DFE1F3500514B9E /* Surge.xcodeproj */,
 				1F78E7811C3B469300221927 /* FRC Advanced Scouting Touchstone */,
 				1F78E7991C3B469300221927 /* FRC Advanced Scouting TouchstoneTests */,
 				1F78E7A41C3B469300221927 /* FRC Advanced Scouting TouchstoneUITests */,
@@ -494,6 +471,8 @@
 				1F78E78C1C3B469300221927 /* Assets.xcassets */,
 				1F78E78E1C3B469300221927 /* LaunchScreen.storyboard */,
 				1F78E7911C3B469300221927 /* Info.plist */,
+				933D21501E609BF7008C8276 /* Additional Licenses.plist */,
+				933D214A1E609A04008C8276 /* Pods-acknowledgments.plist */,
 				1F78E7891C3B469300221927 /* FRC_Advanced_Scouting_Telemetrics.xcdatamodeld */,
 			);
 			name = "FRC Advanced Scouting Touchstone";
@@ -534,15 +513,6 @@
 			children = (
 				1FAA2A7E1DFE1EBE00514B9E /* Surge.framework */,
 				1FAA2A801DFE1EBE00514B9E /* SurgeTests.xctest */,
-			);
-			name = Products;
-			sourceTree = "<group>";
-		};
-		1FAA2A8D1DFE1F3500514B9E /* Products */ = {
-			isa = PBXGroup;
-			children = (
-				1FAA2A921DFE1F3500514B9E /* Surge.framework */,
-				1FAA2A941DFE1F3500514B9E /* SurgeTests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -696,7 +666,6 @@
 			buildRules = (
 			);
 			dependencies = (
-				938D9CB71E1DD99B00A5E522 /* PBXTargetDependency */,
 				93BA5A0F1E2F1EA200171D72 /* PBXTargetDependency */,
 			);
 			name = "FRC Advanced Scouting Touchstone";
@@ -787,10 +756,6 @@
 			projectDirPath = "";
 			projectReferences = (
 				{
-					ProductGroup = 1FAA2A8D1DFE1F3500514B9E /* Products */;
-					ProjectRef = 1FAA2A8C1DFE1F3500514B9E /* Surge.xcodeproj */;
-				},
-				{
 					ProductGroup = 1FAA2A791DFE1EBE00514B9E /* Products */;
 					ProjectRef = 1FAA2A781DFE1EBE00514B9E /* Surge.xcodeproj */;
 				},
@@ -823,20 +788,6 @@
 			remoteRef = 1FAA2A7F1DFE1EBE00514B9E /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
-		1FAA2A921DFE1F3500514B9E /* Surge.framework */ = {
-			isa = PBXReferenceProxy;
-			fileType = wrapper.framework;
-			path = Surge.framework;
-			remoteRef = 1FAA2A911DFE1F3500514B9E /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		1FAA2A941DFE1F3500514B9E /* SurgeTests.xctest */ = {
-			isa = PBXReferenceProxy;
-			fileType = wrapper.cfbundle;
-			path = SurgeTests.xctest;
-			remoteRef = 1FAA2A931DFE1F3500514B9E /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
 		93BA59F21E2EE7EF00171D72 /* YCMatrix.framework */ = {
 			isa = PBXReferenceProxy;
 			fileType = wrapper.framework;
@@ -860,7 +811,9 @@
 			files = (
 				1F78E7901C3B469300221927 /* LaunchScreen.storyboard in Resources */,
 				1F78E78D1C3B469300221927 /* Assets.xcassets in Resources */,
+				933D21511E609BF7008C8276 /* Additional Licenses.plist in Resources */,
 				936572E11E1610CA00439728 /* About.rtf in Resources */,
+				933D214B1E609A04008C8276 /* Pods-acknowledgments.plist in Resources */,
 				1F78E7881C3B469300221927 /* Main.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -1087,11 +1040,6 @@
 			isa = PBXTargetDependency;
 			target = 1F78E77E1C3B469300221927 /* FRC Advanced Scouting Touchstone */;
 			targetProxy = 1F78E7A21C3B469300221927 /* PBXContainerItemProxy */;
-		};
-		938D9CB71E1DD99B00A5E522 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			name = Surge;
-			targetProxy = 938D9CB61E1DD99B00A5E522 /* PBXContainerItemProxy */;
 		};
 		93BA5A0F1E2F1EA200171D72 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;

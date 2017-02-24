@@ -7,7 +7,6 @@
 //
 
 import Foundation
-import Surge
 
 ///Would like to redo the entire statistics handling to be more simplistic as follows:
 //One function that you pass an object and it returns stats on the object (i.e. func stats(object: NSManagedObject) -> ApplicableStats)

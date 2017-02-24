@@ -9,6 +9,7 @@
 import Foundation
 import UIKit
 import Crashlytics
+import VTAcknowledgementsViewController
 
 class AdminConsoleController: UIViewController, UITableViewDataSource, UITableViewDelegate {
     @IBOutlet weak var tableView: UITableView!
@@ -45,7 +46,7 @@ class AdminConsoleController: UIViewController, UITableViewDataSource, UITableVi
 			return events.count + 1
 		case tableView.numberOfSections - 1:
 			//About Section
-			return 1
+			return 2
 		default:
 			return 0
 		}
@@ -67,7 +68,14 @@ class AdminConsoleController: UIViewController, UITableViewDataSource, UITableVi
 			}
 		case tableView.numberOfSections - 1:
 			//About Section
-			return tableView.dequeueReusableCell(withIdentifier: "about")!
+            switch indexPath.row {
+            case 0:
+                return tableView.dequeueReusableCell(withIdentifier: "about")!
+            case 1:
+                return tableView.dequeueReusableCell(withIdentifier: "acknowledgments")!
+            default:
+                return tableView.dequeueReusableCell(withIdentifier: "about")!
+            }
 		default:
 			return UITableViewCell()
 		}
@@ -94,7 +102,30 @@ class AdminConsoleController: UIViewController, UITableViewDataSource, UITableVi
 				// TODO: Display event info
 			}
         case tableView.numberOfSections - 1:
-            performSegue(withIdentifier: "about", sender: self)
+            if indexPath.row == 0 {
+                performSegue(withIdentifier: "about", sender: self)
+            } else {
+                if let path = Bundle.main.path(forResource: "Pods-acknowledgments", ofType: "plist") {
+                    
+                    let ackVC = VTAcknowledgementsViewController(path: path)!
+                    ackVC.headerText = "Some portions of this app run on the following libraries"
+                    
+                    if let path = Bundle.main.path(forResource: "Additional Licenses", ofType: "plist") {
+                        let additionalLicensesDict = NSDictionary(contentsOfFile: path)! as! Dictionary<String, Dictionary<String, String>>
+                        
+                        let keys = additionalLicensesDict.keys
+                        for key in keys {
+                            let ack = VTAcknowledgement(title: additionalLicensesDict[key]!["Title"]!, text: additionalLicensesDict[key]!["Text"]!, license: additionalLicensesDict[key]?["License"])
+                            
+                            ackVC.acknowledgements?.append(ack)
+                        }
+                    }
+                    
+                    self.navigationController?.pushViewController(ackVC, animated: true)
+                } else {
+                    assertionFailure()
+                }
+            }
         default:
             break
 		}
