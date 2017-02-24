@@ -106,8 +106,6 @@ class StandsScoutingViewController: UIViewController {
                 present(finalScorePrompt, animated: true, completion: nil)
             }
             
-            Answers.logCustomEvent(withName: "Stopped Stands Scouting Timer", customAttributes: ["At Time":stopwatch.elapsedTimeAsString])
-            
             endAutonomousButton.isHidden = true
             autonomousLabel.isHidden = true
             

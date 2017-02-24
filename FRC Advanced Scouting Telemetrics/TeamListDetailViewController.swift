@@ -333,7 +333,6 @@ class TeamListDetailViewController: UIViewController, TeamSelectionDelegate {
 		
 		let photoVC = NYTPhotosViewController(photos: photosArray, initialPhoto: photo, delegate: self)
 		present(photoVC, animated: true, completion: nil)
-		Answers.logContentView(withName: "Team Robot Images", contentType: "Photo", contentId: nil, customAttributes: ["Team":"\(selectedTeam?.universal.teamNumber ?? "")"])
 	}
 }
 
