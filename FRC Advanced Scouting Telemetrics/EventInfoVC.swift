@@ -69,7 +69,7 @@ class EventInfoVC: UIViewController, UITableViewDataSource {
             }
             
             let alert = UIAlertController(title: "Unable to Add", message: "An error occurred when adding the event \(errorMessage ?? "")", preferredStyle: .alert)
-            alert.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
+            alert.addAction(UIAlertAction(title: "OK", style: .default, handler: {_ in self.performSegue(withIdentifier: "unwindToAdminConsoleFromEventAdd", sender: self)}))
             present(alert, animated: true, completion: nil)
         }
     }
