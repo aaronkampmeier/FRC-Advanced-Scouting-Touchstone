@@ -387,7 +387,6 @@
 		1F4534131C6FFC13004EDDB9 /* Stands Scouting */ = {
 			isa = PBXGroup;
 			children = (
-				93AE997F1E3407A00000FB7C /* SSDataManager.swift */,
 				1F45340F1C6FF916004EDDB9 /* StandsScoutingViewController.swift */,
 				933E794E1E385BB20033563B /* SSPreloadingViewController.swift */,
 				93BA59FA1E2EFCAF00171D72 /* SSOffenseViewController.swift */,
@@ -434,6 +433,7 @@
 				1FCA7ADB1C6408B2004294D1 /* Core Data */,
 				1F58308E1CB09AF900D6F513 /* DataSyncer.swift */,
 				1F1C23831E072ECA008885A1 /* DataManager.swift */,
+				93AE997F1E3407A00000FB7C /* SSDataManager.swift */,
 				9332F2AD1E22C8C300AB3EA6 /* Cloud Data */,
 				1F21DF101C645D1F00C55D0E /* View Controllers */,
 				936572E01E1610CA00439728 /* About.rtf */,
