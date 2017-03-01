@@ -122,7 +122,7 @@ class SSDataManager {
     }
     
     //MARK: Gears
-    func recordGearLoading(fromLocation location: SSOffenseGearViewController.GearLoadingLocations.RawValue, atTime time: TimeInterval) {
+    func recordGearLoading(fromLocation location: GearLoadingLocation.RawValue, atTime time: TimeInterval) {
         
         let gearLoading = GearLoading(entity: NSEntityDescription.entity(forEntityName: "GearLoading", in: managedContext)!, insertInto: managedContext)
         

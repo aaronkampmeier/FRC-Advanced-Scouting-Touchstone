@@ -113,6 +113,66 @@ extension TeamEventPerformance: HasStats {
                     }
                     
                     return StatValue.Integer(tieCount)
+                },
+                StatName.NumberOfMatches: {
+                    return StatValue.initWithOptional(value: self.matchPerformances?.count ?? 0)
+                },
+                StatName.RankingScore: {
+                    var totalRPs = 0
+                    var totalMatchPerformances = 0
+                    
+                    let matchPerformances = self.matchPerformances?.allObjects as! [TeamMatchPerformance]
+                    for matchPerformance in matchPerformances {
+                        if matchPerformance.local.hasBeenScouted?.boolValue ?? false {
+                            totalMatchPerformances += 1
+                            totalRPs += matchPerformance.rankingPoints ?? 0
+                        }
+                    }
+                    
+                    if totalMatchPerformances == 0 {
+                        return StatValue.NoValue
+                    } else {
+                        return StatValue.Double(Double(totalRPs)/Double(totalMatchPerformances))
+                    }
+                },
+                StatName.AverageFloorGearCount: {
+                    return self.average(ofStat: .TotalFloorGears, forMatchPerformances: self.matchPerformances?.allObjects as! [TeamMatchPerformance])
+                },
+                StatName.SuccessfulClimbCount: {
+                    let matchPerformances = self.matchPerformances?.allObjects as! [TeamMatchPerformance]
+                    
+                    let successfulClimbCount = matchPerformances.reduce(0) {partialResult, matchPerformance in
+                        if (matchPerformance.local.hasBeenScouted?.boolValue ?? false) && matchPerformance.local.ropeClimbStatus == Capability.Yes.rawValue {
+                            return partialResult + 1
+                        } else {
+                            return partialResult
+                        }
+                    }
+                    
+                    return StatValue.Integer(successfulClimbCount)
+                },
+                StatName.ClimbSuccessRate: {
+                    let numOfSuccesses: Int
+                    switch self.statValue(forStat: .SuccessfulClimbCount) {
+                    case .Integer(let val):
+                        numOfSuccesses = val
+                    default:
+                        numOfSuccesses = 0
+                    }
+                    
+                    let numOfScoutedMatches = (self.matchPerformances?.allObjects as! [TeamMatchPerformance]).reduce(0) {partialResult, matchPerformance in
+                        if matchPerformance.local.hasBeenScouted?.boolValue ?? false {
+                            return partialResult + 1
+                        } else {
+                            return partialResult
+                        }
+                    }
+                    
+                    if numOfScoutedMatches == 0 {
+                        return StatValue.NoValue
+                    } else {
+                        return StatValue.Double(Double(numOfSuccesses)/Double(numOfScoutedMatches))
+                    }
                 }
             ]
         }
@@ -176,13 +236,18 @@ extension TeamEventPerformance: HasStats {
         case AverageFuelCycleTime = "Average Fuel Cycle Time"
         case AverageGearCycleTime = "Average Gear Cycle Time"
         case AverageHighGoalAccuracy = "Average High Goal Accuracy"
-        case MostRopeClimb = "End Climb Status (Majority)"
+        case MostRopeClimb = "Climb Status (Majority)"
         case Peg1Percentage = "Peg 1 Percentage"
         case Peg2Percentage = "Peg 2 Percentage"
         case Peg3Percentage = "Peg 3 Percentage"
         case TotalWins = "Total Wins"
         case TotalLosses = "Total Losses"
         case TotalTies = "Total Ties"
+        case NumberOfMatches = "Number Of Matches"
+        case RankingScore = "Ranking Score"
+        case AverageFloorGearCount = "Average Floor Gear Count"
+        case SuccessfulClimbCount = "Successful Climb Count"
+        case ClimbSuccessRate = "Climb Success Rate"
         
         var description: String {
             get {
@@ -190,7 +255,7 @@ extension TeamEventPerformance: HasStats {
             }
         }
         
-        static let allValues: [StatName] = [.OPR, .DPR, .CCWM, .TotalMatchPoints, .TotalRankingPoints, .TotalWins, .TotalLosses, .TotalTies, .AverageTotalPointsFromFuel, .AverageFuelCycleTime, .AverageGearsScored, .AverageGearCycleTime, .Peg1Percentage, .Peg2Percentage, .Peg3Percentage, .AverageHighGoalAccuracy, .MostRopeClimb]
+        static let allValues: [StatName] = [.OPR, .DPR, .CCWM, .NumberOfMatches, .TotalMatchPoints, .TotalRankingPoints, .RankingScore, .TotalWins, .TotalLosses, .TotalTies, .AverageTotalPointsFromFuel, .AverageFuelCycleTime, .AverageGearsScored, .AverageFloorGearCount, .AverageGearCycleTime, .Peg1Percentage, .Peg2Percentage, .Peg3Percentage, .AverageHighGoalAccuracy, .MostRopeClimb, .SuccessfulClimbCount, .ClimbSuccessRate]
     }
 }
 
