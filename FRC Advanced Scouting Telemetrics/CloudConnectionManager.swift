@@ -11,9 +11,9 @@ import Crashlytics
 import Alamofire
 import Gloss
 
-private let baseApi = "https://fast.kampmeier.com/api/v2/"
+private let baseApi = "https://www.thebluealliance.com/api/v2/"
 private let baseApiUrl = try! baseApi.asURL()
-private let apiKey = "c67378f6984026e97ca5abdc343f7f7ff77b5135576aed64c3fcce034d3e55e8"
+//private let apiKey = "c67378f6984026e97ca5abdc343f7f7ff77b5135576aed64c3fcce034d3e55e8"
 private let yearToDrawDataFrom = "2017"
 
 private class TBAResponseCache<T> {
@@ -28,7 +28,7 @@ private class TBAResponseCache<T> {
 
 class CloudData {
     fileprivate let headers = [
-        "X-Dreamfactory-API-Key":apiKey,
+        "X-TBA-App-Id":"frc4256:FASTScouting:2",
         "Accept": "application/json"
     ]
     
@@ -46,7 +46,7 @@ class CloudData {
     
 	
     func events(fromYear year: String? = nil, withCompletionHandler completionHandler: @escaping ([FRCEvent]?) -> Void) {
-        Alamofire.request(baseApi + "tbadb/events/\(year ?? yearToDrawDataFrom)", method: .get, headers: headers)
+        Alamofire.request(baseApi + "events/\(year ?? yearToDrawDataFrom)", method: .get, headers: headers)
             .validate(statusCode: [200])
             .responseJSON() {response in
                 switch response.result {
@@ -67,7 +67,7 @@ class CloudData {
     }
     
     func event(forKey key: String, withCompletionHandler completionHandler: @escaping (FRCEvent?) -> Void) {
-        Alamofire.request(baseApi + "tbadb/event/\(key)", method: .get, headers: headers)
+        Alamofire.request(baseApi + "event/\(key)", method: .get, headers: headers)
             .validate(statusCode: [200])
             .responseJSON {response in
                 switch response.result {
@@ -91,7 +91,7 @@ class CloudData {
         //Check if there is something in the cache
         let cachedData = dataCache.object(forKey: "MatchesInEvent\(eventKey)" as NSString)
         
-        Alamofire.request(baseApi + "tbadb/event/\(eventKey)/matches", method: .get, headers: header(withLastModified: cachedData?.lastModified))
+        Alamofire.request(baseApi + "event/\(eventKey)/matches", method: .get, headers: header(withLastModified: cachedData?.lastModified))
         .validate(statusCode: [200,304])
             .responseJSON() {response in
                 switch response.result{
@@ -122,7 +122,7 @@ class CloudData {
     }
     
     func teams(forEventKey eventKey: String, withCompletionHandler completionHandler: @escaping ([FRCTeam]?) -> Void) {
-        Alamofire.request(baseApi + "tbadb/event/\(eventKey)/teams", method: .get, headers: headers)
+        Alamofire.request(baseApi + "event/\(eventKey)/teams", method: .get, headers: headers)
         .validate(statusCode: 200...200)
             .responseJSON {response in
                 switch response.result {
@@ -139,7 +139,7 @@ class CloudData {
     }
     
     func team(withTeamKey teamKey: String, withCompletionHandler completionHandler: @escaping (FRCTeam?) -> Void) {
-        Alamofire.request(baseApi + "tbadb/team/\(teamKey)", method: .get, headers: headers)
+        Alamofire.request(baseApi + "team/\(teamKey)", method: .get, headers: headers)
         .validate(statusCode: 200...200)
             .responseJSON{response in
                 switch response.result {

@@ -16,7 +16,7 @@ class SSOffenseGearViewController: UIViewController {
     var loadingWhereVC: SSOffenseWhereViewController! {
         didSet {
             loadingWhereVC.delegate = self
-            loadingWhereVC.setUpWithButtons([GearLoadingLocations.LoadingStation.button(.purple), GearLoadingLocations.Floor.button(.purple)], time: 3)
+            loadingWhereVC.setUpWithButtons([GearLoadingLocation.LoadingStation.button(.purple), GearLoadingLocation.Floor.button(.purple)], time: 3)
         }
     }
     var mountingWhereVC: SSOffenseWhereViewController! {
@@ -71,17 +71,6 @@ class SSOffenseGearViewController: UIViewController {
         }
     }
     
-    enum GearLoadingLocations: String, CustomStringConvertible, FASTSSButtonable {
-        case LoadingStation = "Loading Station"
-        case Floor
-        
-        var description: String {
-            get {
-                return self.rawValue
-            }
-        }
-    }
-    
     enum GearMountingLocations: String, CustomStringConvertible, FASTSSButtonable {
         case Peg1 = "Peg 1"
         case Peg2 = "Peg 2"
@@ -93,6 +82,10 @@ class SSOffenseGearViewController: UIViewController {
             }
         }
     }
+    
+}
+
+extension GearLoadingLocation: FASTSSButtonable {
     
 }
 

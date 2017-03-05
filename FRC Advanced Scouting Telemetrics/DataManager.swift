@@ -312,6 +312,17 @@ enum BoilerGoal: String, CustomStringConvertible {
     }
 }
 
+enum GearLoadingLocation: String, CustomStringConvertible {
+    case LoadingStation = "Loading Station"
+    case Floor
+    
+    var description: String {
+        get {
+            return self.rawValue
+        }
+    }
+}
+
 enum Peg: String, CustomStringConvertible {
     case Peg1 = "Peg 1"
     case Peg2 = "Peg 2"

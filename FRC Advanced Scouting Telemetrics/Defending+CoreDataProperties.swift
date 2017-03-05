@@ -16,6 +16,7 @@ extension Defending {
         return NSFetchRequest<Defending>(entityName: "Defending") as! NSFetchRequest<NSFetchRequestResult>;
     }
 
+    @NSManaged public var scoutID: String?
     @NSManaged public var duration: NSNumber?
     @NSManaged public var successful: String?
     @NSManaged public var time: NSNumber?

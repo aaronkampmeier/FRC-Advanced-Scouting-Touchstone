@@ -16,6 +16,7 @@ extension FuelLoading {
         return NSFetchRequest<FuelLoading>(entityName: "FuelLoading") as! NSFetchRequest<NSFetchRequestResult>;
     }
 
+    @NSManaged public var scoutID: String?
     @NSManaged public var associatedFuelIncrease: NSNumber?
     @NSManaged public var location: String?
     @NSManaged public var time: NSNumber?

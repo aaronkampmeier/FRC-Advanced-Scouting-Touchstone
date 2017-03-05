@@ -16,6 +16,7 @@ extension GearMounting {
         return NSFetchRequest<GearMounting>(entityName: "GearMounting") as! NSFetchRequest<NSFetchRequestResult>;
     }
 
+    @NSManaged public var scoutID: String?
     @NSManaged public var pegNumber: NSNumber?
     @NSManaged public var time: NSNumber?
     @NSManaged public var isAutonomous: NSNumber?

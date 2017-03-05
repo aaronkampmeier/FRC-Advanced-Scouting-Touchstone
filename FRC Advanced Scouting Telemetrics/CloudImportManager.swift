@@ -336,5 +336,22 @@ class CloudEventImportManager {
         case EventAlreadyInDatabase
         case MatchTeamNotInRoster
         case InvalidCompetitionLevel
+        
+        var localizedDescription: String {
+            get {
+                switch self {
+                case .ErrorLoadingTeams:
+                    return "Error Loading Teams"
+                case .ErrorLoadingMatches:
+                    return "Error Loading Matches"
+                case .EventAlreadyInDatabase:
+                    return "Event Already in Database"
+                case .MatchTeamNotInRoster:
+                    return "Match Team not in Roster"
+                case .InvalidCompetitionLevel:
+                    return "Invalid Competition Level"
+                }
+            }
+        }
     }
 }

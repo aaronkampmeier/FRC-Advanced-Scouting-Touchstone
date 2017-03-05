@@ -52,9 +52,6 @@ class StandsScoutingViewController: UIViewController {
 			Timer.scheduledTimer(timeInterval: 0.1, target: self, selector: #selector(StandsScoutingViewController.updateTimeLabel(_:)), userInfo: nil, repeats: true)
 			stopwatch.start()
 			
-			//Reset previous data
-			ssDataManager?.rollback()
-			
 			//Update the button
 			timerButton.setTitle("Stop", for: UIControlState())
 			timerButton.backgroundColor = UIColor.red
@@ -136,20 +133,16 @@ class StandsScoutingViewController: UIViewController {
 			switch textField {
 			case finalScorePrompt.textFields![0]:
 				//Red Final Score
-//				matchPerformance?.match?.redFinalScore = Double(textField.text!) as NSNumber?
-                break
+                ssDataManager?.scoutedMatch.local.redFinalScore = Double(textField.text ?? "") as NSNumber?
 			case finalScorePrompt.textFields![1]:
 				//Red Ranking Points
-//				matchPerformance?.match?.redRankingPoints = Double(textField.text!) as NSNumber?
-                break
+                ssDataManager?.scoutedMatch.local.redRankingPoints = Double(textField.text ?? "") as NSNumber?
 			case finalScorePrompt.textFields![2]:
 				//Blue Final Score
-//				matchPerformance?.match?.blueFinalScore = Double(textField.text!) as NSNumber?
-                break
+                ssDataManager?.scoutedMatch.local.blueFinalScore = Double(textField.text ?? "") as NSNumber?
 			case finalScorePrompt.textFields![3]:
 				//Blue Ranking Points
-//				matchPerformance?.match?.blueRankingPoints = Double(textField.text!) as NSNumber?
-                break
+                ssDataManager?.scoutedMatch.local.blueRankingPoints = Double(textField.text ?? "") as NSNumber?
 			default:
 				break
 			}
@@ -311,9 +304,6 @@ class StandsScoutingViewController: UIViewController {
             
 			if stopwatch.elapsedTime > 160 {
 				isRunning = false
-				let alert = UIAlertController(title: "Timer Exceeded Limit", message: "The match should have ended at 2 minutes 30 seconds; the timer has already passed that and automatically stopped. All data will be saved.", preferredStyle: .alert)
-				alert.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
-				present(alert, animated: true, completion: nil)
 			} else if stopwatch.elapsedTime > 135 {
 				//Change the color of the start/stop button to blue signifying that it is safe to stop it.
 				timerButton.backgroundColor = UIColor.blue
