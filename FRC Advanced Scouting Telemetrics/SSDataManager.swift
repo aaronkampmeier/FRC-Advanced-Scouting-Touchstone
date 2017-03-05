@@ -14,6 +14,7 @@ import UIKit
 ///A data manager that tracks a team participating in a match. It is a singleton so when the stands scouting vc first initializes it, it saves itself and all the other stands scouting vcs use the same object.
 class SSDataManager {
     let managedContext = DataManager.managedContext
+    let scoutID: String
     
     let scoutedTeam: Team
     let scoutedMatch: Match
@@ -34,11 +35,14 @@ class SSDataManager {
     init(teamBeingScouted: Team, matchBeingScouted: Match, stopwatch: Stopwatch) {
         try! managedContext.save()
         
+        self.scoutID = UUID().uuidString
+        
         self.stopwatch = stopwatch
         
         scoutedTeam = teamBeingScouted
         scoutedMatch = matchBeingScouted
         
+        //Get the match performance that we are scouting
         var teamMatchPerformance: TeamMatchPerformance?
         for matchPerformance in scoutedMatch.teamPerformances?.allObjects as! [TeamMatchPerformance] {
             if matchPerformance.eventPerformance!.team == scoutedTeam {
@@ -49,9 +53,13 @@ class SSDataManager {
         if let matchPerformance = teamMatchPerformance {
             scoutedMatchPerformance = matchPerformance
         } else {
+            Crashlytics.sharedInstance().recordCustomExceptionName("Stands Scouting Team Match Performance Does Not Exist", reason: nil, frameArray: [])
             assertionFailure()
             exit(EXIT_FAILURE)
         }
+        
+        scoutedMatchPerformance.local.scoutIDs = (scoutedMatchPerformance.local.scoutIDs ?? []) + [scoutID]
+        scoutedMatchPerformance.local.defaultScoutID = scoutID
         
         SSDataManager.mostRecentSSDataManager = self
     }
@@ -78,6 +86,8 @@ class SSDataManager {
         
         timeMarker.event = event.rawValue
         timeMarker.time = time as NSNumber?
+        
+        timeMarker.scoutID = scoutID
     }
     
     //MARK: - Fuel
@@ -94,6 +104,8 @@ class SSDataManager {
         fuelLoading.time = time as NSNumber
         
         fuelLoading.isAutonomous = isAutonomous as NSNumber
+        
+        fuelLoading.scoutID = scoutID
         
         lastFuelLoading = fuelLoading
         
@@ -118,6 +130,8 @@ class SSDataManager {
         
         fuelScoring.isAutonomous = NSNumber(value: isAutonomous)
         
+        fuelScoring.scoutID = scoutID
+        
         saveTimeMarker(event: .ScoredFuel, atTime: time)
     }
     
@@ -133,6 +147,8 @@ class SSDataManager {
         
         gearLoading.isAutonomous = isAutonomous as NSNumber
         
+        gearLoading.scoutID = scoutID
+        
         saveTimeMarker(event: .LoadedGear, atTime: time)
     }
     
@@ -145,6 +161,8 @@ class SSDataManager {
         gearMounting.pegNumber = peg as NSNumber
         
         gearMounting.isAutonomous = isAutonomous as NSNumber
+        
+        gearMounting.scoutID = scoutID
         
         saveTimeMarker(event: .ScoredGear, atTime: time)
     }
@@ -160,6 +178,8 @@ class SSDataManager {
         defendingObject.time = time as NSNumber
         defendingObject.duration = duration as NSNumber
         defendingObject.successful = successful
+        
+        defendingObject.scoutID = scoutID
         
         saveTimeMarker(event: .Defended, atTime: time)
     }

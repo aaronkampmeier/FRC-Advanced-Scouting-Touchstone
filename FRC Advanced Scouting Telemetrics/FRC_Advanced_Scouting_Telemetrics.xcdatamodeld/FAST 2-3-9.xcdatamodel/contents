@@ -1,0 +1,194 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="11759" systemVersion="16D32" minimumToolsVersion="Xcode 7.3" sourceLanguage="Swift" userDefinedModelVersionIdentifier="">
+    <entity name="Defending" representedClassName=".Defending" syncable="YES">
+        <attribute name="duration" attributeType="Double" defaultValueString="0.0" usesScalarValueType="NO" syncable="YES"/>
+        <attribute name="scoutID" attributeType="String" defaultValueString="default" syncable="YES"/>
+        <attribute name="successful" attributeType="String" defaultValueString="No" syncable="YES"/>
+        <attribute name="time" attributeType="Double" defaultValueString="0.0" usesScalarValueType="NO" syncable="YES"/>
+        <attribute name="type" attributeType="String" syncable="YES"/>
+        <relationship name="defendingTeam" maxCount="1" deletionRule="Nullify" destinationEntity="LocalMatchPerformance" inverseName="defendings" inverseEntity="LocalMatchPerformance" syncable="YES"/>
+        <relationship name="offendingTeam" maxCount="1" deletionRule="Nullify" destinationEntity="LocalMatchPerformance" inverseName="offendings" inverseEntity="LocalMatchPerformance" syncable="YES"/>
+    </entity>
+    <entity name="Event" representedClassName=".Event" syncable="YES">
+        <attribute name="code" attributeType="String" syncable="YES"/>
+        <attribute name="eventType" attributeType="Integer 64" usesScalarValueType="NO" syncable="YES"/>
+        <attribute name="eventTypeString" attributeType="String" syncable="YES"/>
+        <attribute name="key" attributeType="String" syncable="YES"/>
+        <attribute name="location" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="name" attributeType="String" syncable="YES"/>
+        <attribute name="year" attributeType="Integer 64" usesScalarValueType="NO" syncable="YES"/>
+        <relationship name="matches" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="Match" inverseName="event" inverseEntity="Match" syncable="YES"/>
+        <relationship name="teamEventPerformances" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="TeamEventPerformance" inverseName="event" inverseEntity="TeamEventPerformance" syncable="YES"/>
+        <relationship name="transientLocal" optional="YES" transient="YES" maxCount="1" deletionRule="Nullify" destinationEntity="LocalEvent" inverseName="transientUniversal" inverseEntity="LocalEvent" syncable="YES"/>
+    </entity>
+    <entity name="FuelLoading" representedClassName=".FuelLoading" syncable="YES">
+        <attribute name="associatedFuelIncrease" optional="YES" attributeType="Double" defaultValueString="0.0" usesScalarValueType="NO" syncable="YES"/>
+        <attribute name="isAutonomous" attributeType="Boolean" defaultValueString="NO" usesScalarValueType="NO" syncable="YES"/>
+        <attribute name="location" attributeType="String" syncable="YES"/>
+        <attribute name="scoutID" attributeType="String" defaultValueString="default" syncable="YES"/>
+        <attribute name="time" attributeType="Double" defaultValueString="0" usesScalarValueType="NO" customClassName="." syncable="YES"/>
+        <relationship name="localMatchPerformance" maxCount="1" deletionRule="Nullify" destinationEntity="LocalMatchPerformance" inverseName="fuelLoadings" inverseEntity="LocalMatchPerformance" syncable="YES"/>
+    </entity>
+    <entity name="FuelScoring" representedClassName=".FuelScoring" syncable="YES">
+        <attribute name="accuracy" optional="YES" attributeType="Double" minValueString="0" maxValueString="1" defaultValueString="0" usesScalarValueType="NO" syncable="YES"/>
+        <attribute name="amountShot" attributeType="Double" minValueString="0" maxValueString="1" defaultValueString="0" usesScalarValueType="NO" syncable="YES"/>
+        <attribute name="goal" attributeType="String" syncable="YES"/>
+        <attribute name="isAutonomous" attributeType="Boolean" defaultValueString="NO" usesScalarValueType="NO" syncable="YES"/>
+        <attribute name="scoutID" attributeType="String" defaultValueString="default" syncable="YES"/>
+        <attribute name="time" attributeType="Double" defaultValueString="0.0" usesScalarValueType="NO" syncable="YES"/>
+        <attribute name="xLocation" attributeType="Double" minValueString="0" maxValueString="1" defaultValueString="0.0" usesScalarValueType="NO" syncable="YES"/>
+        <attribute name="yLocation" attributeType="Double" minValueString="0" maxValueString="1" defaultValueString="0.0" usesScalarValueType="NO" syncable="YES"/>
+        <relationship name="localMatchPerformance" maxCount="1" deletionRule="Nullify" destinationEntity="LocalMatchPerformance" inverseName="fuelScorings" inverseEntity="LocalMatchPerformance" syncable="YES"/>
+    </entity>
+    <entity name="GearLoading" representedClassName=".GearLoading" syncable="YES">
+        <attribute name="isAutonomous" attributeType="Boolean" defaultValueString="NO" usesScalarValueType="NO" syncable="YES"/>
+        <attribute name="location" attributeType="String" syncable="YES"/>
+        <attribute name="scoutID" attributeType="String" defaultValueString="default" syncable="YES"/>
+        <attribute name="time" attributeType="Double" defaultValueString="0.0" usesScalarValueType="NO" syncable="YES"/>
+        <relationship name="localMatchPerformance" maxCount="1" deletionRule="Nullify" destinationEntity="LocalMatchPerformance" inverseName="gearLoadings" inverseEntity="LocalMatchPerformance" syncable="YES"/>
+    </entity>
+    <entity name="GearMounting" representedClassName=".GearMounting" syncable="YES">
+        <attribute name="isAutonomous" attributeType="Boolean" defaultValueString="NO" usesScalarValueType="NO" syncable="YES"/>
+        <attribute name="pegNumber" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="NO" syncable="YES"/>
+        <attribute name="scoutID" attributeType="String" defaultValueString="default" syncable="YES"/>
+        <attribute name="time" attributeType="Double" defaultValueString="0.0" usesScalarValueType="NO" syncable="YES"/>
+        <relationship name="localMatchPerformance" maxCount="1" deletionRule="Nullify" destinationEntity="LocalMatchPerformance" inverseName="gearMountings" inverseEntity="LocalMatchPerformance" syncable="YES"/>
+    </entity>
+    <entity name="LocalEvent" representedClassName=".LocalEvent" syncable="YES">
+        <attribute name="key" attributeType="String" syncable="YES"/>
+        <relationship name="rankedTeams" optional="YES" toMany="YES" deletionRule="Nullify" ordered="YES" destinationEntity="LocalTeam" inverseName="localEvents" inverseEntity="LocalTeam" syncable="YES"/>
+        <relationship name="transientUniversal" optional="YES" transient="YES" maxCount="1" deletionRule="Cascade" destinationEntity="Event" inverseName="transientLocal" inverseEntity="Event" syncable="YES"/>
+    </entity>
+    <entity name="LocalMatch" representedClassName=".LocalMatch" syncable="YES">
+        <attribute name="blueFinalScore" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="NO" syncable="YES"/>
+        <attribute name="blueRankingPoints" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="NO" syncable="YES"/>
+        <attribute name="key" attributeType="String" syncable="YES"/>
+        <attribute name="redFinalScore" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="NO" syncable="YES"/>
+        <attribute name="redRankingPoints" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="NO" syncable="YES"/>
+        <relationship name="transientUniversal" optional="YES" transient="YES" maxCount="1" deletionRule="Cascade" destinationEntity="Match" inverseName="transientLocal" inverseEntity="Match" syncable="YES"/>
+    </entity>
+    <entity name="LocalMatchPerformance" representedClassName=".LocalMatchPerformance" syncable="YES">
+        <attribute name="defaultScoutID" attributeType="String" defaultValueString="default" syncable="YES"/>
+        <attribute name="hasBeenScouted" attributeType="Boolean" defaultValueString="NO" usesScalarValueType="NO" syncable="YES"/>
+        <attribute name="key" attributeType="String" syncable="YES"/>
+        <attribute name="ropeClimbStatus" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="scoutIDs" optional="YES" attributeType="Transformable" defaultValueString="default" syncable="YES"/>
+        <relationship name="defendings" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="Defending" inverseName="defendingTeam" inverseEntity="Defending" syncable="YES"/>
+        <relationship name="fuelLoadings" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="FuelLoading" inverseName="localMatchPerformance" inverseEntity="FuelLoading" syncable="YES"/>
+        <relationship name="fuelScorings" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="FuelScoring" inverseName="localMatchPerformance" inverseEntity="FuelScoring" syncable="YES"/>
+        <relationship name="gearLoadings" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="GearLoading" inverseName="localMatchPerformance" inverseEntity="GearLoading" syncable="YES"/>
+        <relationship name="gearMountings" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="GearMounting" inverseName="localMatchPerformance" inverseEntity="GearMounting" syncable="YES"/>
+        <relationship name="offendings" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="Defending" inverseName="offendingTeam" inverseEntity="Defending" syncable="YES"/>
+        <relationship name="timeMarkers" optional="YES" toMany="YES" deletionRule="Cascade" ordered="YES" destinationEntity="TimeMarker" inverseName="localMatchPerformance" inverseEntity="TimeMarker" syncable="YES"/>
+        <relationship name="transientUniversal" optional="YES" transient="YES" maxCount="1" deletionRule="Cascade" destinationEntity="TeamMatchPerformance" inverseName="transientLocal" inverseEntity="TeamMatchPerformance" syncable="YES"/>
+    </entity>
+    <entity name="LocalTeam" representedClassName=".LocalTeam" syncable="YES">
+        <attribute name="autoDoesLoadFuel" optional="YES" attributeType="Boolean" usesScalarValueType="NO" syncable="YES"/>
+        <attribute name="autoDoesShootMoreFuel" optional="YES" attributeType="Boolean" usesScalarValueType="NO" syncable="YES"/>
+        <attribute name="autoDoesShootPreloaded" optional="YES" attributeType="Boolean" usesScalarValueType="NO" syncable="YES"/>
+        <attribute name="autoPegs" optional="YES" attributeType="Transformable" minValueString="1" maxValueString="1" syncable="YES"/>
+        <attribute name="canBanana" optional="YES" attributeType="Boolean" usesScalarValueType="NO" syncable="YES"/>
+        <attribute name="climberCapability" optional="YES" attributeType="String" minValueString="0" syncable="YES"/>
+        <attribute name="driverXP" optional="YES" attributeType="Double" minValueString="0" usesScalarValueType="NO" syncable="YES"/>
+        <attribute name="driveTrain" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="frontImage" optional="YES" attributeType="Binary" allowsExternalBinaryDataStorage="YES" syncable="YES"/>
+        <attribute name="gearsCapability" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="hasTurret" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="highGoalCapability" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="isInPickList" attributeType="Boolean" defaultValueString="YES" usesScalarValueType="NO" syncable="YES"/>
+        <attribute name="key" attributeType="String" syncable="YES"/>
+        <attribute name="lowGoalCapability" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="notes" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="programmingLanguage" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="robotHeight" optional="YES" attributeType="Double" minValueString="0" usesScalarValueType="NO" syncable="YES"/>
+        <attribute name="robotWeight" optional="YES" attributeType="Double" minValueString="0" usesScalarValueType="NO" syncable="YES"/>
+        <attribute name="sideImage" optional="YES" attributeType="Binary" allowsExternalBinaryDataStorage="YES" syncable="YES"/>
+        <attribute name="strategy" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="tankSize" optional="YES" attributeType="Double" usesScalarValueType="NO" syncable="YES"/>
+        <attribute name="visionTrackingCapability" optional="YES" attributeType="String" syncable="YES"/>
+        <relationship name="localEvents" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="LocalEvent" inverseName="rankedTeams" inverseEntity="LocalEvent" syncable="YES"/>
+        <relationship name="ranker" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="LocalTeamRanking" inverseName="localTeams" inverseEntity="LocalTeamRanking" syncable="YES"/>
+        <relationship name="transientUniversal" optional="YES" transient="YES" maxCount="1" deletionRule="Cascade" destinationEntity="Team" inverseName="transientLocal" inverseEntity="Team" syncable="YES"/>
+    </entity>
+    <entity name="LocalTeamRanking" representedClassName=".LocalTeamRanking" syncable="YES">
+        <relationship name="localTeams" optional="YES" toMany="YES" deletionRule="Deny" ordered="YES" destinationEntity="LocalTeam" inverseName="ranker" inverseEntity="LocalTeam" syncable="YES"/>
+    </entity>
+    <entity name="Match" representedClassName=".Match" syncable="YES">
+        <attribute name="competitionLevel" attributeType="String" syncable="YES"/>
+        <attribute name="key" attributeType="String" minValueString="0" syncable="YES"/>
+        <attribute name="matchNumber" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="NO" syncable="YES"/>
+        <attribute name="setNumber" optional="YES" attributeType="Integer 16" minValueString="0" usesScalarValueType="NO" syncable="YES"/>
+        <attribute name="time" optional="YES" attributeType="Date" minDateTimeInterval="-284058000" usesScalarValueType="NO" syncable="YES"/>
+        <relationship name="event" maxCount="1" deletionRule="Nullify" destinationEntity="Event" inverseName="matches" inverseEntity="Event" syncable="YES"/>
+        <relationship name="teamPerformances" optional="YES" toMany="YES" maxCount="6" deletionRule="Cascade" destinationEntity="TeamMatchPerformance" inverseName="match" inverseEntity="TeamMatchPerformance" syncable="YES"/>
+        <relationship name="transientLocal" optional="YES" transient="YES" maxCount="1" deletionRule="Nullify" destinationEntity="LocalMatch" inverseName="transientUniversal" inverseEntity="LocalMatch" syncable="YES"/>
+    </entity>
+    <entity name="Team" representedClassName=".Team" syncable="YES">
+        <attribute name="key" attributeType="String" syncable="YES"/>
+        <attribute name="location" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="name" attributeType="String" syncable="YES"/>
+        <attribute name="nickname" attributeType="String" syncable="YES"/>
+        <attribute name="rookieYear" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="NO" syncable="YES"/>
+        <attribute name="teamNumber" attributeType="String" syncable="YES"/>
+        <attribute name="website" optional="YES" attributeType="String" syncable="YES"/>
+        <relationship name="eventPerformances" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="TeamEventPerformance" inverseName="team" inverseEntity="TeamEventPerformance" syncable="YES"/>
+        <relationship name="transientLocal" optional="YES" transient="YES" maxCount="1" deletionRule="Nullify" destinationEntity="LocalTeam" inverseName="transientUniversal" inverseEntity="LocalTeam" syncable="YES"/>
+    </entity>
+    <entity name="TeamEventPerformance" representedClassName=".TeamEventPerformance" syncable="YES">
+        <relationship name="event" maxCount="1" deletionRule="Nullify" destinationEntity="Event" inverseName="teamEventPerformances" inverseEntity="Event" syncable="YES"/>
+        <relationship name="matchPerformances" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="TeamMatchPerformance" inverseName="eventPerformance" inverseEntity="TeamMatchPerformance" syncable="YES"/>
+        <relationship name="team" maxCount="1" deletionRule="Nullify" destinationEntity="Team" inverseName="eventPerformances" inverseEntity="Team" syncable="YES"/>
+    </entity>
+    <entity name="TeamMatchPerformance" representedClassName=".TeamMatchPerformance" syncable="YES">
+        <attribute name="allianceColor" attributeType="String" minValueString="3" maxValueString="4" syncable="YES"/>
+        <attribute name="allianceTeam" attributeType="Integer 64" minValueString="1" maxValueString="3" usesScalarValueType="NO" syncable="YES"/>
+        <attribute name="key" attributeType="String" syncable="YES"/>
+        <relationship name="eventPerformance" maxCount="1" deletionRule="Nullify" destinationEntity="TeamEventPerformance" inverseName="matchPerformances" inverseEntity="TeamEventPerformance" syncable="YES"/>
+        <relationship name="match" maxCount="1" deletionRule="Nullify" destinationEntity="Match" inverseName="teamPerformances" inverseEntity="Match" syncable="YES"/>
+        <relationship name="transientLocal" optional="YES" transient="YES" maxCount="1" deletionRule="Nullify" destinationEntity="LocalMatchPerformance" inverseName="transientUniversal" inverseEntity="LocalMatchPerformance" syncable="YES"/>
+    </entity>
+    <entity name="TimeMarker" representedClassName=".TimeMarker" syncable="YES">
+        <attribute name="event" attributeType="String" syncable="YES"/>
+        <attribute name="scoutID" attributeType="String" defaultValueString="default" syncable="YES"/>
+        <attribute name="time" attributeType="Double" usesScalarValueType="NO" syncable="YES"/>
+        <relationship name="localMatchPerformance" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="LocalMatchPerformance" inverseName="timeMarkers" inverseEntity="LocalMatchPerformance" syncable="YES"/>
+    </entity>
+    <configuration name="Local">
+        <memberEntity name="LocalMatch"/>
+        <memberEntity name="LocalMatchPerformance"/>
+        <memberEntity name="TimeMarker"/>
+        <memberEntity name="LocalTeam"/>
+        <memberEntity name="LocalTeamRanking"/>
+        <memberEntity name="LocalEvent"/>
+        <memberEntity name="Defending"/>
+        <memberEntity name="FuelLoading"/>
+        <memberEntity name="FuelScoring"/>
+        <memberEntity name="GearLoading"/>
+        <memberEntity name="GearMounting"/>
+    </configuration>
+    <configuration name="Universal">
+        <memberEntity name="Event"/>
+        <memberEntity name="Match"/>
+        <memberEntity name="Team"/>
+        <memberEntity name="TeamEventPerformance"/>
+        <memberEntity name="TeamMatchPerformance"/>
+    </configuration>
+    <elements>
+        <element name="Defending" positionX="511" positionY="162" width="128" height="148"/>
+        <element name="Event" positionX="-387" positionY="309" width="128" height="193"/>
+        <element name="FuelLoading" positionX="351" positionY="324" width="128" height="133"/>
+        <element name="FuelScoring" positionX="511" positionY="315" width="128" height="178"/>
+        <element name="GearLoading" positionX="351" positionY="470" width="128" height="118"/>
+        <element name="GearMounting" positionX="511" positionY="504" width="128" height="118"/>
+        <element name="LocalEvent" positionX="430" positionY="47" width="128" height="88"/>
+        <element name="LocalMatch" positionX="180" positionY="486" width="128" height="133"/>
+        <element name="LocalMatchPerformance" positionX="178" positionY="203" width="128" height="238"/>
+        <element name="LocalTeam" positionX="180" positionY="-283" width="128" height="433"/>
+        <element name="LocalTeamRanking" positionX="376" positionY="-40" width="128" height="58"/>
+        <element name="Match" positionX="-155" positionY="486" width="128" height="163"/>
+        <element name="Team" positionX="-146" positionY="-81" width="128" height="178"/>
+        <element name="TeamEventPerformance" positionX="-146" positionY="144" width="128" height="88"/>
+        <element name="TeamMatchPerformance" positionX="-153" positionY="279" width="128" height="133"/>
+        <element name="TimeMarker" positionX="342" positionY="207" width="126" height="103"/>
+    </elements>
+</model>

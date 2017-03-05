@@ -16,6 +16,7 @@ extension TimeMarker {
         return NSFetchRequest<TimeMarker>(entityName: "TimeMarker") as! NSFetchRequest<NSFetchRequestResult>;
     }
 
+    @NSManaged public var scoutID: String?
     @NSManaged public var event: String?
     @NSManaged public var time: NSNumber?
     @NSManaged public var localMatchPerformance: LocalMatchPerformance?

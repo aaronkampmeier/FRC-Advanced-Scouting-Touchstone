@@ -61,7 +61,7 @@ extension TeamMatchPerformance: HasStats {
                 StatName.TotalPointsFromFuel: {
                     if self.local.hasBeenScouted?.boolValue ?? false {
                         var matchPoints = 0.0
-                        for fuelScoring in self.local.fuelScorings?.allObjects as! [FuelScoring] {
+                        for fuelScoring in self.local.fuelScorings(forScoutID: self.local.defaultScoutID!) {
                             let amountOfFuelScored = (self.eventPerformance!.team.local.tankSize?.doubleValue ?? 0) * (fuelScoring.amountShot!.doubleValue * fuelScoring.accuracy!.doubleValue)
                             
                             switch fuelScoring.goalType() {
@@ -86,8 +86,8 @@ extension TeamMatchPerformance: HasStats {
                 },
                 StatName.TotalGearsScored: {
                     if self.local.hasBeenScouted?.boolValue ?? false {
-                        let gearScorings = self.local.gearMountings
-                        return StatValue.initWithOptional(value: gearScorings?.count)
+                        let gearScorings = self.local.gearMountings(forScoutID: self.local.defaultScoutID!)
+                        return StatValue.initWithOptional(value: gearScorings.count)
                     } else {
                         return StatValue.NoValue
                     }
@@ -197,7 +197,7 @@ extension TeamMatchPerformance: HasStats {
                 },
                 StatName.Peg1Percentage: {
                     if self.local.hasBeenScouted?.boolValue ?? false {
-                        let gearMountings = self.local.gearMountings?.allObjects as! [GearMounting]
+                        let gearMountings = self.local.gearMountings(forScoutID: self.local.defaultScoutID!)
                         
                         let peg1Mountings = gearMountings.filter() {$0.pegNumber?.intValue == 1}
                         
@@ -212,7 +212,7 @@ extension TeamMatchPerformance: HasStats {
                 },
                 StatName.Peg2Percentage: {
                     if self.local.hasBeenScouted?.boolValue ?? false {
-                        let gearMountings = self.local.gearMountings?.allObjects as! [GearMounting]
+                        let gearMountings = self.local.gearMountings(forScoutID: self.local.defaultScoutID!)
                         
                         let peg2Mountings = gearMountings.filter() {$0.pegNumber?.intValue == 2}
                         
@@ -227,7 +227,7 @@ extension TeamMatchPerformance: HasStats {
                 },
                 StatName.Peg3Percentage: {
                     if self.local.hasBeenScouted?.boolValue ?? false {
-                        let gearMountings = self.local.gearMountings?.allObjects as! [GearMounting]
+                        let gearMountings = self.local.gearMountings(forScoutID: self.local.defaultScoutID!)
                         
                         let peg3Mountings = gearMountings.filter() {$0.pegNumber?.intValue == 3}
                         
@@ -242,7 +242,7 @@ extension TeamMatchPerformance: HasStats {
                 },
                 StatName.TotalFloorGears: {
                     if self.local.hasBeenScouted?.boolValue ?? false {
-                        let gearLoadings = self.local.gearLoadings?.allObjects as! [GearLoading]
+                        let gearLoadings = self.local.gearLoadings(forScoutID: self.local.defaultScoutID!)
                         
                         let totalFloorGears = gearLoadings.filter {$0.location == GearLoadingLocation.Floor.rawValue}
                         

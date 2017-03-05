@@ -16,6 +16,7 @@ extension FuelScoring {
         return NSFetchRequest<FuelScoring>(entityName: "FuelScoring") as! NSFetchRequest<NSFetchRequestResult>;
     }
 
+    @NSManaged public var scoutID: String?
     @NSManaged public var accuracy: NSNumber?
     @NSManaged public var amountShot: NSNumber?
     @NSManaged public var goal: String?
