@@ -33,7 +33,8 @@ class SSDataManager {
     }
     
     init(teamBeingScouted: Team, matchBeingScouted: Match, stopwatch: Stopwatch) {
-        try! managedContext.save()
+        try? managedContext.save()
+        managedContext.rollback()
         
         self.scoutID = UUID().uuidString
         

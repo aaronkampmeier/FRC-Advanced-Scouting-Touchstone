@@ -52,9 +52,6 @@ class StandsScoutingViewController: UIViewController {
 			Timer.scheduledTimer(timeInterval: 0.1, target: self, selector: #selector(StandsScoutingViewController.updateTimeLabel(_:)), userInfo: nil, repeats: true)
 			stopwatch.start()
 			
-			//Reset previous data
-			ssDataManager?.rollback()
-			
 			//Update the button
 			timerButton.setTitle("Stop", for: UIControlState())
 			timerButton.backgroundColor = UIColor.red
