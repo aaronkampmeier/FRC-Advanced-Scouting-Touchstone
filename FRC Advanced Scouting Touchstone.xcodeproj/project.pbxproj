@@ -71,7 +71,7 @@
 		933D21511E609BF7008C8276 /* Additional Licenses.plist in Resources */ = {isa = PBXBuildFile; fileRef = 933D21501E609BF7008C8276 /* Additional Licenses.plist */; };
 		933E794F1E385BB20033563B /* SSPreloadingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 933E794E1E385BB20033563B /* SSPreloadingViewController.swift */; };
 		934647FC1E3188D800DC96D2 /* SSDefenseViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 934647FB1E3188D800DC96D2 /* SSDefenseViewController.swift */; };
-		9353ADBC1E57ACF100120F1A /* TeamMatchesTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9353ADBB1E57ACF100120F1A /* TeamMatchesTableViewController.swift */; };
+		9353ADBC1E57ACF100120F1A /* MatchesTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9353ADBB1E57ACF100120F1A /* MatchesTableViewController.swift */; };
 		9353ADC21E57B09D00120F1A /* MatchListTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9353ADC11E57B09D00120F1A /* MatchListTableViewCell.swift */; };
 		9353ADCA1E58EDF800120F1A /* CloudReloadingManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9353ADC91E58EDF800120F1A /* CloudReloadingManager.swift */; };
 		93610E3D1E42F8D400856BE2 /* PitScoutingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93610E3C1E42F8D400856BE2 /* PitScoutingViewController.swift */; };
@@ -103,6 +103,8 @@
 		93BA5A0C1E2F1EA200171D72 /* YCMatrix.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 93BA59F21E2EE7EF00171D72 /* YCMatrix.framework */; };
 		93BA5A0D1E2F1EA200171D72 /* YCMatrix.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 93BA59F21E2EE7EF00171D72 /* YCMatrix.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		93C5B47C1E53FC9C007D309F /* TeamInfoScrollView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93C5B47B1E53FC9C007D309F /* TeamInfoScrollView.swift */; };
+		93C609241E67D035007A689D /* MatchOverviewDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93C609231E67D035007A689D /* MatchOverviewDetailViewController.swift */; };
+		93C609281E67D0CC007A689D /* MatchOverviewMasterViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93C609271E67D0CC007A689D /* MatchOverviewMasterViewController.swift */; };
 		93CE1BF71E403A97004165BE /* NotesViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93CE1BF61E403A97004165BE /* NotesViewController.swift */; };
 		93D75B641E5D0866002CBED2 /* FieldLocationDisplayViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93D75B631E5D0866002CBED2 /* FieldLocationDisplayViewController.swift */; };
 		93D75B6A1E5DE0F5002CBED2 /* ShotChartViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93D75B691E5DE0F5002CBED2 /* ShotChartViewController.swift */; };
@@ -256,7 +258,7 @@
 		934DC3791E48FD80001753FB /* FAST 2-4.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "FAST 2-4.xcdatamodel"; sourceTree = "<group>"; };
 		934DC3B61E4905B8001753FB /* FAST 2-3-4.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "FAST 2-3-4.xcdatamodel"; sourceTree = "<group>"; };
 		9352BE1D1E5A6DA500896008 /* FAST 2-3-7.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "FAST 2-3-7.xcdatamodel"; sourceTree = "<group>"; };
-		9353ADBB1E57ACF100120F1A /* TeamMatchesTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TeamMatchesTableViewController.swift; sourceTree = "<group>"; };
+		9353ADBB1E57ACF100120F1A /* MatchesTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MatchesTableViewController.swift; sourceTree = "<group>"; };
 		9353ADC11E57B09D00120F1A /* MatchListTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MatchListTableViewCell.swift; sourceTree = "<group>"; };
 		9353ADC91E58EDF800120F1A /* CloudReloadingManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CloudReloadingManager.swift; sourceTree = "<group>"; };
 		93610E371E42F0C800856BE2 /* FAST 2-3.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "FAST 2-3.xcdatamodel"; sourceTree = "<group>"; };
@@ -292,6 +294,8 @@
 		93BA59EC1E2EE7EE00171D72 /* YCMatrix.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = YCMatrix.xcodeproj; path = "YCMatrix-master/YCMatrix.xcodeproj"; sourceTree = "<group>"; };
 		93BA59FA1E2EFCAF00171D72 /* SSOffenseViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SSOffenseViewController.swift; sourceTree = "<group>"; };
 		93C5B47B1E53FC9C007D309F /* TeamInfoScrollView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TeamInfoScrollView.swift; sourceTree = "<group>"; };
+		93C609231E67D035007A689D /* MatchOverviewDetailViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MatchOverviewDetailViewController.swift; sourceTree = "<group>"; };
+		93C609271E67D0CC007A689D /* MatchOverviewMasterViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MatchOverviewMasterViewController.swift; sourceTree = "<group>"; };
 		93CE1BF61E403A97004165BE /* NotesViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NotesViewController.swift; sourceTree = "<group>"; };
 		93D75B631E5D0866002CBED2 /* FieldLocationDisplayViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FieldLocationDisplayViewController.swift; sourceTree = "<group>"; };
 		93D75B691E5DE0F5002CBED2 /* ShotChartViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ShotChartViewController.swift; sourceTree = "<group>"; };
@@ -341,7 +345,7 @@
 			isa = PBXGroup;
 			children = (
 				93D75B631E5D0866002CBED2 /* FieldLocationDisplayViewController.swift */,
-				9353ADBB1E57ACF100120F1A /* TeamMatchesTableViewController.swift */,
+				9353ADBB1E57ACF100120F1A /* MatchesTableViewController.swift */,
 				9353ADC11E57B09D00120F1A /* MatchListTableViewCell.swift */,
 				93EA7FF11E46A36E002EC8C7 /* Notes */,
 				1F9B782A1CD1A42400B4E5AE /* HiddenDebugViewController.swift */,
@@ -352,6 +356,7 @@
 				1F30CFC91C7E510100A4EFCA /* Admin Console */,
 				1F4534131C6FFC13004EDDB9 /* Stands Scouting */,
 				936594801E44198D008FF324 /* Pit Scouting */,
+				93C609201E67CE9B007A689D /* Match Overview */,
 			);
 			name = "View Controllers";
 			sourceTree = "<group>";
@@ -582,6 +587,15 @@
 				93BA59F41E2EE7EF00171D72 /* YCMatrixTests.xctest */,
 			);
 			name = Products;
+			sourceTree = "<group>";
+		};
+		93C609201E67CE9B007A689D /* Match Overview */ = {
+			isa = PBXGroup;
+			children = (
+				93C609271E67D0CC007A689D /* MatchOverviewMasterViewController.swift */,
+				93C609231E67D035007A689D /* MatchOverviewDetailViewController.swift */,
+			);
+			name = "Match Overview";
 			sourceTree = "<group>";
 		};
 		93EA7FF11E46A36E002EC8C7 /* Notes */ = {
@@ -877,6 +891,7 @@
 				9353ADC21E57B09D00120F1A /* MatchListTableViewCell.swift in Sources */,
 				93610E3D1E42F8D400856BE2 /* PitScoutingViewController.swift in Sources */,
 				1FBE627F1CAEE0FB001FDFB7 /* TeamPickerTableViewController.swift in Sources */,
+				93C609281E67D0CC007A689D /* MatchOverviewMasterViewController.swift in Sources */,
 				1F1C23DA1E07673E008885A1 /* AddEventTableViewController.swift in Sources */,
 				936572D91E14E52100439728 /* CloudRemovalManager.swift in Sources */,
 				938BEB3C1E35228E003F2F74 /* GearLoading+CoreDataClass.swift in Sources */,
@@ -889,8 +904,9 @@
 				1F1C23D31E07487C008885A1 /* Match+CoreDataClass.swift in Sources */,
 				1F718F7A1E085BD900BD1951 /* CloudConnectionManager.swift in Sources */,
 				938BEB3A1E35228E003F2F74 /* FuelLoading+CoreDataClass.swift in Sources */,
-				9353ADBC1E57ACF100120F1A /* TeamMatchesTableViewController.swift in Sources */,
+				9353ADBC1E57ACF100120F1A /* MatchesTableViewController.swift in Sources */,
 				93C5B47C1E53FC9C007D309F /* TeamInfoScrollView.swift in Sources */,
+				93C609241E67D035007A689D /* MatchOverviewDetailViewController.swift in Sources */,
 				938D9CAE1E19A1B700A5E522 /* LocalEvent+CoreDataClass.swift in Sources */,
 				1FD0A09B1C95093600013A18 /* TeamListTableViewCell.swift in Sources */,
 				1F1C23CC1E07487C008885A1 /* LocalTeam+CoreDataProperties.swift in Sources */,

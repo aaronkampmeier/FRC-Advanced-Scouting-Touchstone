@@ -9,11 +9,58 @@
 import UIKit
 
 class TeamListSplitViewController: UISplitViewController, UISplitViewControllerDelegate {
+    
+    static var `default`: TeamListSplitViewController!
 
+    var teamListTableVC: TeamListTableViewController {
+        get {
+            if let master = teamListMasterVC {
+                return master
+            } else if let master = self.viewControllers.first as? TeamListTableViewController {
+                teamListMasterVC = master
+                return master
+            } else {
+                teamListMasterVC = storyboard?.instantiateViewController(withIdentifier: "teamListTableView") as! TeamListTableViewController
+                return teamListMasterVC!
+            }
+        }
+        
+        set {
+            teamListMasterVC = newValue
+        }
+    }
+    weak fileprivate var teamListMasterVC: TeamListTableViewController?
+    
+    var teamListDetailVC: TeamListDetailViewController {
+        get {
+            if let secondary = teamListSecondaryVC {
+                return secondary
+            } else if let secondary = self.viewControllers.last as? TeamListDetailViewController {
+                teamListSecondaryVC = secondary
+                return secondary
+            } else {
+                //There is none, create one
+                teamListSecondaryVC = storyboard?.instantiateViewController(withIdentifier: "teamListDetail") as! TeamListDetailViewController
+                return teamListSecondaryVC!
+            }
+        }
+        
+        set {
+            teamListSecondaryVC = newValue
+        }
+    }
+    fileprivate var teamListSecondaryVC: TeamListDetailViewController?
+    
+    var matchesMaster: MatchOverviewMasterViewController!
+    var matchesDetail: MatchOverviewDetailViewController?
+    
+    var isInMatchOverview: Bool = false
+    
     override func viewDidLoad() {
         super.viewDidLoad()
 
         // Do any additional setup after loading the view.
+        TeamListSplitViewController.default = self
 		self.delegate = self
     }
 
@@ -49,14 +96,71 @@ class TeamListSplitViewController: UISplitViewController, UISplitViewControllerD
     func splitViewController(_ splitViewController: UISplitViewController, collapseSecondary secondaryViewController: UIViewController, onto primaryViewController: UIViewController) -> Bool {
         if let secondaryNav = secondaryViewController as? UINavigationController {
             if let teamDetail = secondaryNav.topViewController as? TeamListDetailViewController {
-                appDelegate.teamListDetailVC = teamDetail
+                self.teamListDetailVC = teamDetail
                 if teamDetail.selectedTeam == nil {
+                    return true
+                }
+            }
+            
+            if let matchDetail = secondaryNav.topViewController as? MatchOverviewDetailViewController {
+                self.matchesDetail = matchDetail
+                if matchDetail.dataSource?.match() == nil {
                     return true
                 }
             }
         }
         
         return false
+    }
+    
+    func splitViewController(_ splitViewController: UISplitViewController, show vc: UIViewController, sender: Any?) -> Bool {
+        if let teamListTable = vc as? TeamListTableViewController {
+            let primaryNav = UINavigationController(rootViewController: teamListTable)
+            self.show(primaryNav, sender: self)
+            return true
+        }
+        
+        return false
+    }
+    
+    func splitViewController(_ splitViewController: UISplitViewController, showDetail vc: UIViewController, sender: Any?) -> Bool {
+        //Checks if the split view is collapsed or not. If it is then simply present the detail view controller because it will push onto self's navigation controller. If it isn't, then present the detail view controller in a navigation controller because it is actually a "split" view.
+        if let teamListDetail = vc as? TeamListDetailViewController {
+            //If the split view is collapsed then just show the detail view controller because it will be pushed onto self's nav stack. Otherwise present it with a nav controller.
+            if !self.isCollapsed {
+                let secondaryNav = UINavigationController(rootViewController: teamListDetail)
+                self.showDetailViewController(secondaryNav, sender: self)
+                return true
+            } else {
+                return false
+            }
+        } else if let matchDetail = vc as? MatchOverviewDetailViewController {
+            if !self.isCollapsed {
+                let secondaryNav = UINavigationController(rootViewController: matchDetail)
+                self.showDetailViewController(secondaryNav, sender: self)
+                return true
+            } else {
+                return false
+            }
+        } else {
+            return false
+        }
+    }
+    
+    func primaryViewController(forExpanding splitViewController: UISplitViewController) -> UIViewController? {
+        if self.isInMatchOverview {
+            return self.matchesMaster
+        } else {
+            return self.teamListTableVC
+        }
+    }
+    
+    func primaryViewController(forCollapsing splitViewController: UISplitViewController) -> UIViewController? {
+        if self.isInMatchOverview {
+            return self.matchesMaster
+        } else {
+            return self.teamListTableVC
+        }
     }
 }
 
@@ -78,14 +182,23 @@ extension UINavigationController {
 		NSLog("Expanding view controllers")
 		var vcs = viewControllers
 		let primaryContentVC = vcs.removeFirst()
-		var secondaryVCs = vcs
-		let secondaryNav = storyboard?.instantiateViewController(withIdentifier: "secondaryNav") as! UINavigationController
-		
-		if secondaryVCs.isEmpty {
-			secondaryVCs = [(UIApplication.shared.delegate as! AppDelegate).teamListDetailVC!]
-		}
-		secondaryNav.setViewControllers(secondaryVCs, animated: false)
-		self.setViewControllers([primaryContentVC], animated: false)
-		return secondaryNav
+        
+        if (splitViewController as! TeamListSplitViewController).isInMatchOverview {
+            let detailVCs = vcs
+            let detailNav = UINavigationController(rootViewController: (splitViewController as! TeamListSplitViewController).matchesDetail!)
+            
+            self.setViewControllers([primaryContentVC], animated: true)
+            return detailNav
+        } else {
+            var secondaryVCs = vcs
+            let secondaryNav = storyboard?.instantiateViewController(withIdentifier: "secondaryNav") as! UINavigationController
+            
+            if secondaryVCs.isEmpty {
+                secondaryVCs = [((UIApplication.shared.delegate as! AppDelegate).window?.rootViewController as! TeamListSplitViewController).teamListDetailVC]
+            }
+            secondaryNav.setViewControllers(secondaryVCs, animated: false)
+            self.setViewControllers([primaryContentVC], animated: false)
+            return secondaryNav
+        }
 	}
 }

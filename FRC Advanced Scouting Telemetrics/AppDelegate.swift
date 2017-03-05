@@ -18,50 +18,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     var window: UIWindow?
 	
-	var teamListTableVC: TeamListTableViewController? {
-		get {
-			if let master = teamListMasterVC {
-				return master
-			} else if let splitVC = window?.rootViewController as? TeamListSplitViewController {
-				if let master = splitVC.viewControllers.first as? TeamListTableViewController {
-					teamListMasterVC = master
-					return master
-				} else {
-					return nil
-				}
-			}
-			return nil
-		}
-		
-		set {
-			teamListMasterVC = newValue
-			teamListMasterVC?.delegate = teamListSecondaryVC
-		}
-	}
-	weak fileprivate var teamListMasterVC: TeamListTableViewController?
-	
-	var teamListDetailVC: TeamListDetailViewController? {
-		get {
-			if let secondary = teamListSecondaryVC {
-				return secondary
-			} else if let splitVC = window?.rootViewController as? TeamListSplitViewController {
-				if let secondary = splitVC.viewControllers.last as? TeamListDetailViewController {
-					teamListSecondaryVC = secondary
-					return secondary
-				} else {
-					return nil
-				}
-			}
-			return nil
-		}
-		
-		set {
-			teamListSecondaryVC = newValue
-			teamListMasterVC?.delegate = teamListSecondaryVC
-		}
-	}
-	fileprivate var teamListSecondaryVC: TeamListDetailViewController?
-	
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
         // Override point for customization after application launch.
 		Fabric.with([Answers.self, Crashlytics.self])
