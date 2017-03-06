@@ -51,11 +51,6 @@ class TeamListSplitViewController: UISplitViewController, UISplitViewControllerD
     }
     fileprivate var teamListSecondaryVC: TeamListDetailViewController?
     
-    var matchesMaster: MatchOverviewMasterViewController!
-    var matchesDetail: MatchOverviewDetailViewController?
-    
-    var isInMatchOverview: Bool = false
-    
     override func viewDidLoad() {
         super.viewDidLoad()
 
@@ -101,13 +96,6 @@ class TeamListSplitViewController: UISplitViewController, UISplitViewControllerD
                     return true
                 }
             }
-            
-            if let matchDetail = secondaryNav.topViewController as? MatchOverviewDetailViewController {
-                self.matchesDetail = matchDetail
-                if matchDetail.dataSource?.match() == nil {
-                    return true
-                }
-            }
         }
         
         return false
@@ -134,32 +122,8 @@ class TeamListSplitViewController: UISplitViewController, UISplitViewControllerD
             } else {
                 return false
             }
-        } else if let matchDetail = vc as? MatchOverviewDetailViewController {
-            if !self.isCollapsed {
-                let secondaryNav = UINavigationController(rootViewController: matchDetail)
-                self.showDetailViewController(secondaryNav, sender: self)
-                return true
-            } else {
-                return false
-            }
         } else {
             return false
-        }
-    }
-    
-    func primaryViewController(forExpanding splitViewController: UISplitViewController) -> UIViewController? {
-        if self.isInMatchOverview {
-            return self.matchesMaster
-        } else {
-            return self.teamListTableVC
-        }
-    }
-    
-    func primaryViewController(forCollapsing splitViewController: UISplitViewController) -> UIViewController? {
-        if self.isInMatchOverview {
-            return self.matchesMaster
-        } else {
-            return self.teamListTableVC
         }
     }
 }
@@ -183,9 +147,8 @@ extension UINavigationController {
 		var vcs = viewControllers
 		let primaryContentVC = vcs.removeFirst()
         
-        if (splitViewController as! TeamListSplitViewController).isInMatchOverview {
-            let detailVCs = vcs
-            let detailNav = UINavigationController(rootViewController: (splitViewController as! TeamListSplitViewController).matchesDetail!)
+        if let matchSplitVC = splitViewController as? MatchOverviewSplitViewController {
+            let detailNav = UINavigationController(rootViewController: matchSplitVC.matchesDetail!)
             
             self.setViewControllers([primaryContentVC], animated: true)
             return detailNav

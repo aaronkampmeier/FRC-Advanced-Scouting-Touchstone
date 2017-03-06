@@ -419,22 +419,12 @@ class TeamListTableViewController: UITableViewController, TeamListDetailDataSour
 	}
     
     @IBAction func matchesButtonPressed(_ sender: UIBarButtonItem) {
-        let matchesMasterNav = storyboard?.instantiateViewController(withIdentifier: "matchOverviewMasterNav") as! UINavigationController
-        let matchesMaster = matchesMasterNav.topViewController as! MatchOverviewMasterViewController
-        let matchesDetail = storyboard?.instantiateViewController(withIdentifier: "matchOverviewDetail") as! MatchOverviewDetailViewController
+        let matchesSplitVC = storyboard?.instantiateViewController(withIdentifier: "matchOverviewSplitVC") as! MatchOverviewSplitViewController
+        let matchOverviewMaster = (matchesSplitVC.viewControllers.first as! UINavigationController).topViewController as! MatchOverviewMasterViewController
         
-        teamListSplitVC.matchesMaster = matchesMaster
-        teamListSplitVC.matchesDetail = matchesDetail
+        matchOverviewMaster.dataSource = self
         
-        matchesMaster.load(withEvent: self.selectedEvent)
-        
-        teamListSplitVC.isInMatchOverview = true
-        if !teamListSplitVC.isCollapsed {
-            teamListSplitVC.show(matchesMasterNav, sender: self)
-            matchesMaster.teamListSplitVC.showDetailViewController(matchesDetail, sender: self)
-        } else {
-            teamListSplitVC.show(matchesMasterNav, sender: self)
-        }
+        present(matchesSplitVC, animated: true, completion: nil)
     }
 	
 	@IBAction func returnToTeamList(_ segue: UIStoryboardSegue) {
@@ -444,6 +434,12 @@ class TeamListTableViewController: UITableViewController, TeamListDetailDataSour
 	@IBAction func returningWithSegue(_ segue: UIStoryboardSegue) {
 		
 	}
+}
+
+extension TeamListTableViewController: MatchOverviewMasterDataSource {
+    func event() -> Event? {
+        return selectedEvent
+    }
 }
 
 extension TeamListTableViewController: UIPopoverPresentationControllerDelegate {

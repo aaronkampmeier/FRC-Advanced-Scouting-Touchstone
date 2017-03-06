@@ -59,10 +59,7 @@ class FieldLocationDisplayViewController: UIViewController {
         super.viewDidLoad()
 
         // Do any additional setup after loading the view.
-        
-        //Set up
-        imageView.image = dataSource?.fieldImage(forFieldLocationDisplayController: self)
-        points = dataSource?.allPoints(forFieldLocationDisplayController: self) ?? []
+        self.reloadData()
     }
     
     override func viewDidLayoutSubviews() {
@@ -83,6 +80,16 @@ class FieldLocationDisplayViewController: UIViewController {
         // Dispose of any resources that can be recreated.
     }
     
+    func reloadData() {
+        
+        //Set up
+        imageView.image = dataSource?.fieldImage(forFieldLocationDisplayController: self)
+        points = dataSource?.allPoints(forFieldLocationDisplayController: self) ?? []
+        
+        reloadInvisibleView()
+        reloadPoints()
+    }
+    
     func reloadPoints() {
         placedViews = []
         for point in points {
@@ -96,7 +103,7 @@ class FieldLocationDisplayViewController: UIViewController {
     }
     
     func reloadInvisibleView() {
-        let newFrame = AVMakeRect(aspectRatio: imageView.image!.size, insideRect: imageView.frame)
+        let newFrame = AVMakeRect(aspectRatio: imageView.image?.size ?? CGSize.init(width: 1, height: 1), insideRect: imageView.frame)
         invisibleView.frame = newFrame
     }
     

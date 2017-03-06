@@ -54,6 +54,20 @@ open class Match: NSManagedObject, Comparable {
         return performances.first!
     }
     
+    override open var description: String {
+        get {
+            if let setNumber = self.setNumber?.intValue {
+                if self.competitionLevelEnum == .QuarterFinal || self.competitionLevelEnum == .SemiFinal {
+                    return "\(self.competitionLevelEnum) \(setNumber) Match \(self.matchNumber!)"
+                } else {
+                    return "\(self.competitionLevelEnum) \(self.matchNumber!)"
+                }
+            } else {
+                return "\(self.competitionLevelEnum) \(self.matchNumber!)"
+            }
+        }
+    }
+    
     static func ==(lhs: Match, rhs: Match) -> Bool {
         return (lhs.competitionLevelEnum.rankedPosition == rhs.competitionLevelEnum.rankedPosition && lhs.setNumber!.intValue == rhs.setNumber!.intValue && lhs.matchNumber!.intValue == rhs.matchNumber!.intValue)
     }

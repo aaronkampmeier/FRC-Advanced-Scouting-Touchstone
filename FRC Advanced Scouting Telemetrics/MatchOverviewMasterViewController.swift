@@ -8,15 +8,17 @@
 
 import UIKit
 
-class MatchOverviewMasterViewController: UIViewController, MatchOverviewDetailDataSource {
+protocol MatchOverviewMasterDataSource {
+    func event() -> Event?
+}
 
-    var teamListSplitVC: TeamListSplitViewController {
+class MatchOverviewMasterViewController: UIViewController, MatchOverviewDetailDataSource {
+    
+    var dataSource: MatchOverviewMasterDataSource?
+
+    var matchOverviewSplitVC: MatchOverviewSplitViewController {
         get {
-            if let teamSplit = self.splitViewController as? TeamListSplitViewController {
-                return teamSplit
-            } else {
-                return TeamListSplitViewController.default
-            }
+            return self.splitViewController as! MatchOverviewSplitViewController
         }
     }
     var event: Event? {
@@ -40,7 +42,7 @@ class MatchOverviewMasterViewController: UIViewController, MatchOverviewDetailDa
     }
     var selectedMatch: Match? {
         didSet {
-            teamListSplitVC.matchesDetail?.reloadData()
+            matchOverviewSplitVC.matchesDetail?.reloadData()
         }
     }
     
@@ -50,7 +52,9 @@ class MatchOverviewMasterViewController: UIViewController, MatchOverviewDetailDa
         super.viewDidLoad()
 
         // Do any additional setup after loading the view.
-        teamListSplitVC.matchesMaster = self
+        matchOverviewSplitVC.matchesMaster = self
+        
+        self.load(withEvent: dataSource?.event())
         
         matchesTableVC = self.childViewControllers.first as! MatchesTableViewController
         matchesTableVC?.delegate = self
@@ -59,7 +63,7 @@ class MatchOverviewMasterViewController: UIViewController, MatchOverviewDetailDa
         matchesTableVC?.load(withMatches: matchesInEvent)
     }
     
-    func load(withEvent event: Event?) {
+    private func load(withEvent event: Event?) {
         self.event = event
     }
     
@@ -73,10 +77,8 @@ class MatchOverviewMasterViewController: UIViewController, MatchOverviewDetailDa
     }
     
     @IBAction func dismissButtonPressed(_ sender: UIBarButtonItem) {
-        let teamSplitVC = self.teamListSplitVC
-        teamSplitVC.isInMatchOverview = false
-        teamSplitVC.show(teamSplitVC.teamListTableVC.navigationController!, sender: self)
-        teamSplitVC.showDetailViewController(teamSplitVC.teamListDetailVC, sender: self)
+        let splitVC = self.matchOverviewSplitVC
+        splitVC.dismiss(animated: true, completion: nil)
     }
 
     /*
@@ -96,7 +98,7 @@ extension MatchOverviewMasterViewController: MatchesTableViewControllerDelegate 
     }
     
     func selected(match: Match) {
-        teamListSplitVC.showDetailViewController(teamListSplitVC.matchesDetail!, sender: self)
+        matchOverviewSplitVC.showDetailViewController(matchOverviewSplitVC.matchesDetail!, sender: self)
         self.selectedMatch = match
     }
 }

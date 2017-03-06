@@ -22,46 +22,58 @@ class MatchOverviewDetailViewController: UIViewController {
     
     var dataSource: MatchOverviewDetailDataSource?
     
-    var teamListSplitVC: TeamListSplitViewController {
+    var matchOverviewSplitVC: MatchOverviewSplitViewController {
         get {
-            if let teamSplit = self.splitViewController as? TeamListSplitViewController {
-                return teamSplit
+            if let matchSplit = self.splitViewController as? MatchOverviewSplitViewController {
+                return matchSplit
             } else {
-                return TeamListSplitViewController.default
+                return MatchOverviewSplitViewController.default
             }
         }
     }
     var displayedMatch: Match? {
         didSet {
             if let match = displayedMatch {
-                if let setNumber = match.setNumber?.intValue {
-                    if match.competitionLevelEnum == .QuarterFinal || match.competitionLevelEnum == .SemiFinal {
-                        matchTitleLabel.text = "\(match.competitionLevelEnum) \(setNumber) Match \(match.matchNumber!)"
-                    } else {
-                        matchTitleLabel.text = "\(match.competitionLevelEnum) \(match.matchNumber!)"
+                matchTitleLabel.text = match.description
+                
+                redPointsLabel.text = "\(match.local.redFinalScore?.description ?? "-") Pts."
+                redRankingPointsLabel.text = "\(match.local.redRankingPoints?.description ?? "-") RP"
+                bluePointsLabel.text = "\(match.local.blueFinalScore?.description ?? "-") Pts."
+                blueRankingPointsLabel.text = "\(match.local.blueRankingPoints?.description ?? "-") RP"
+                
+                //Set the teams in the segmented control
+                for teamMatchPerformance in match.teamPerformances?.allObjects as! [TeamMatchPerformance] {
+                    switch (teamMatchPerformance.alliance) {
+                    case .Red:
+                        segmentedControl.setTitle(teamMatchPerformance.eventPerformance?.team.teamNumber, forSegmentAt: teamMatchPerformance.slot.rawValue - 1)
+                    case .Blue:
+                        segmentedControl.setTitle(teamMatchPerformance.eventPerformance?.team.teamNumber, forSegmentAt: teamMatchPerformance.slot.rawValue + 2)
                     }
-                } else {
-                    matchTitleLabel.text = "\(match.competitionLevelEnum) \(match.matchNumber!)"
                 }
                 
-                redPointsLabel.text = match.local.redFinalScore?.description
-                redRankingPointsLabel.text = match.local.redRankingPoints?.description
-                bluePointsLabel.text = match.local.blueFinalScore?.description
-                blueRankingPointsLabel.text = match.local.blueRankingPoints?.description
+                segmentedControl.selectedSegmentIndex = 0
+                self.selectedDifferentTeam(segmentedControl)
             }
         }
     }
+    
+    var selectedMatchPerformance: TeamMatchPerformance?
+    
+    var matchPerformanceDetail: MatchOverviewPerformanceDetailViewController!
 
     override func viewDidLoad() {
         super.viewDidLoad()
 
         // Do any additional setup after loading the view.
-        teamListSplitVC.matchesDetail = self
+        matchOverviewSplitVC.matchesDetail = self
         
         self.navigationItem.leftItemsSupplementBackButton = true
-        self.navigationItem.leftBarButtonItem = teamListSplitVC.displayModeButtonItem
+        self.navigationItem.leftBarButtonItem = matchOverviewSplitVC.displayModeButtonItem
         
-        self.dataSource = teamListSplitVC.matchesMaster
+        self.dataSource = matchOverviewSplitVC.matchesMaster
+        
+        matchPerformanceDetail = self.childViewControllers.first! as! MatchOverviewPerformanceDetailViewController
+        matchPerformanceDetail.dataSource = self
         
         reloadData()
     }
@@ -76,7 +88,14 @@ class MatchOverviewDetailViewController: UIViewController {
     }
     
     @IBAction func selectedDifferentTeam(_ sender: UISegmentedControl) {
+        //Set the selected match performance
+        if sender.selectedSegmentIndex <= 2 {
+            selectedMatchPerformance = displayedMatch?.teamMatchPerformance(forColor: .Red, andSlot: TeamMatchPerformance.Slot(rawValue: sender.selectedSegmentIndex + 1)!)
+        } else {
+            selectedMatchPerformance = displayedMatch?.teamMatchPerformance(forColor: .Blue, andSlot: TeamMatchPerformance.Slot(rawValue: sender.selectedSegmentIndex - 2)!)
+        }
         
+        matchPerformanceDetail.reloadData()
     }
 
     /*
@@ -89,4 +108,10 @@ class MatchOverviewDetailViewController: UIViewController {
     }
     */
 
+}
+
+extension MatchOverviewDetailViewController: MatchOverviewPerformanceDetailDataSource {
+    func teamMatchPerformance() -> TeamMatchPerformance? {
+        return selectedMatchPerformance
+    }
 }

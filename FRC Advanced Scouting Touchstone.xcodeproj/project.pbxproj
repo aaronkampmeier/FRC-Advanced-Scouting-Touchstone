@@ -74,6 +74,8 @@
 		9353ADBC1E57ACF100120F1A /* MatchesTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9353ADBB1E57ACF100120F1A /* MatchesTableViewController.swift */; };
 		9353ADC21E57B09D00120F1A /* MatchListTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9353ADC11E57B09D00120F1A /* MatchListTableViewCell.swift */; };
 		9353ADCA1E58EDF800120F1A /* CloudReloadingManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9353ADC91E58EDF800120F1A /* CloudReloadingManager.swift */; };
+		935A2B031E6CD1F0008FEF9D /* MatchOverviewSplitViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 935A2B021E6CD1F0008FEF9D /* MatchOverviewSplitViewController.swift */; };
+		935A2B061E6CDC4C008FEF9D /* MatchOverviewPerformanceDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 935A2B051E6CDC4C008FEF9D /* MatchOverviewPerformanceDetailViewController.swift */; };
 		93610E3D1E42F8D400856BE2 /* PitScoutingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93610E3C1E42F8D400856BE2 /* PitScoutingViewController.swift */; };
 		936572D91E14E52100439728 /* CloudRemovalManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 936572D81E14E52100439728 /* CloudRemovalManager.swift */; };
 		936572DF1E160EBB00439728 /* AboutViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 936572DE1E160EBB00439728 /* AboutViewController.swift */; };
@@ -262,6 +264,8 @@
 		9353ADC11E57B09D00120F1A /* MatchListTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MatchListTableViewCell.swift; sourceTree = "<group>"; };
 		9353ADC91E58EDF800120F1A /* CloudReloadingManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CloudReloadingManager.swift; sourceTree = "<group>"; };
 		935A2AFC1E6C7387008FEF9D /* FAST 2-3-9.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "FAST 2-3-9.xcdatamodel"; sourceTree = "<group>"; };
+		935A2B021E6CD1F0008FEF9D /* MatchOverviewSplitViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MatchOverviewSplitViewController.swift; sourceTree = "<group>"; };
+		935A2B051E6CDC4C008FEF9D /* MatchOverviewPerformanceDetailViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MatchOverviewPerformanceDetailViewController.swift; sourceTree = "<group>"; };
 		93610E371E42F0C800856BE2 /* FAST 2-3.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "FAST 2-3.xcdatamodel"; sourceTree = "<group>"; };
 		93610E3C1E42F8D400856BE2 /* PitScoutingViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PitScoutingViewController.swift; sourceTree = "<group>"; };
 		936572D81E14E52100439728 /* CloudRemovalManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CloudRemovalManager.swift; sourceTree = "<group>"; };
@@ -593,8 +597,10 @@
 		93C609201E67CE9B007A689D /* Match Overview */ = {
 			isa = PBXGroup;
 			children = (
+				935A2B021E6CD1F0008FEF9D /* MatchOverviewSplitViewController.swift */,
 				93C609271E67D0CC007A689D /* MatchOverviewMasterViewController.swift */,
 				93C609231E67D035007A689D /* MatchOverviewDetailViewController.swift */,
+				935A2B051E6CDC4C008FEF9D /* MatchOverviewPerformanceDetailViewController.swift */,
 			);
 			name = "Match Overview";
 			sourceTree = "<group>";
@@ -926,6 +932,8 @@
 				936967F11E4FB1F7001DB15D /* TeamDetailCollectionViewController.swift in Sources */,
 				1F1C23D11E07487C008885A1 /* TimeMarker+CoreDataClass.swift in Sources */,
 				1FA6A73E1CD3B4DD00772C63 /* TransferInfoTableViewController.swift in Sources */,
+				935A2B061E6CDC4C008FEF9D /* MatchOverviewPerformanceDetailViewController.swift in Sources */,
+				935A2B031E6CD1F0008FEF9D /* MatchOverviewSplitViewController.swift in Sources */,
 				1F1C23C61E07487C008885A1 /* Event+CoreDataProperties.swift in Sources */,
 				1F58308F1CB09AF900D6F513 /* DataSyncer.swift in Sources */,
 				1FDC1BD31CD6A35F00ABE327 /* TeamListDetailViewController.swift in Sources */,

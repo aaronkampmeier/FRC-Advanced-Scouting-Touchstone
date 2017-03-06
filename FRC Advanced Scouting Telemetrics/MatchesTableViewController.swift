@@ -69,15 +69,7 @@ class MatchesTableViewController: UITableViewController {
         let cell = tableView.dequeueReusableCell(withIdentifier: "matchCell") as! MatchListTableViewCell
         
         let match = matches[indexPath.row]
-        if let set = match.setNumber?.intValue {
-            if match.competitionLevelEnum == .QuarterFinal || match.competitionLevelEnum == .SemiFinal {
-                cell.matchLabel.text = "\(match.competitionLevelEnum) \(set) Match \(match.matchNumber!)"
-            } else {
-                cell.matchLabel.text = "\(match.competitionLevelEnum) \(match.matchNumber!)"
-            }
-        } else {
-            cell.matchLabel.text = "\(match.competitionLevelEnum) \(match.matchNumber!)"
-        }
+        cell.matchLabel.text = match.description
         
         for teamLabel in cell.teamLabels {
             teamLabel.layer.borderColor = nil
