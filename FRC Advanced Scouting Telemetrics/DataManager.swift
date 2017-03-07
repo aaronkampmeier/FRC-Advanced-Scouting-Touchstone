@@ -234,6 +234,25 @@ enum TimeMarkerEvent: String, CustomStringConvertible {
             return self.rawValue
         }
     }
+    
+    var associatedObject: AnyClass? {
+        get {
+            switch self {
+            case .LoadedFuel:
+                return FuelLoading.self
+            case .ScoredFuel:
+                return FuelScoring.self
+            case .LoadedGear:
+                return GearLoading.self
+            case .ScoredGear:
+                return GearMounting.self
+            case .Defended:
+                return Defending.self
+            case .Error:
+                return nil
+            }
+        }
+    }
 }
 
 

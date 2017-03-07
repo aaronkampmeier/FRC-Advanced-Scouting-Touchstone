@@ -76,6 +76,8 @@
 		9353ADCA1E58EDF800120F1A /* CloudReloadingManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9353ADC91E58EDF800120F1A /* CloudReloadingManager.swift */; };
 		935A2B031E6CD1F0008FEF9D /* MatchOverviewSplitViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 935A2B021E6CD1F0008FEF9D /* MatchOverviewSplitViewController.swift */; };
 		935A2B061E6CDC4C008FEF9D /* MatchOverviewPerformanceDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 935A2B051E6CDC4C008FEF9D /* MatchOverviewPerformanceDetailViewController.swift */; };
+		935A2B081E6E5560008FEF9D /* MatchOverviewTimeMarkerTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 935A2B071E6E5560008FEF9D /* MatchOverviewTimeMarkerTableViewCell.swift */; };
+		935A2B0A1E6E6968008FEF9D /* TimeMarkerDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 935A2B091E6E6968008FEF9D /* TimeMarkerDetailViewController.swift */; };
 		93610E3D1E42F8D400856BE2 /* PitScoutingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93610E3C1E42F8D400856BE2 /* PitScoutingViewController.swift */; };
 		936572D91E14E52100439728 /* CloudRemovalManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 936572D81E14E52100439728 /* CloudRemovalManager.swift */; };
 		936572DF1E160EBB00439728 /* AboutViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 936572DE1E160EBB00439728 /* AboutViewController.swift */; };
@@ -266,6 +268,8 @@
 		935A2AFC1E6C7387008FEF9D /* FAST 2-3-9.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "FAST 2-3-9.xcdatamodel"; sourceTree = "<group>"; };
 		935A2B021E6CD1F0008FEF9D /* MatchOverviewSplitViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MatchOverviewSplitViewController.swift; sourceTree = "<group>"; };
 		935A2B051E6CDC4C008FEF9D /* MatchOverviewPerformanceDetailViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MatchOverviewPerformanceDetailViewController.swift; sourceTree = "<group>"; };
+		935A2B071E6E5560008FEF9D /* MatchOverviewTimeMarkerTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MatchOverviewTimeMarkerTableViewCell.swift; sourceTree = "<group>"; };
+		935A2B091E6E6968008FEF9D /* TimeMarkerDetailViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TimeMarkerDetailViewController.swift; sourceTree = "<group>"; };
 		93610E371E42F0C800856BE2 /* FAST 2-3.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "FAST 2-3.xcdatamodel"; sourceTree = "<group>"; };
 		93610E3C1E42F8D400856BE2 /* PitScoutingViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PitScoutingViewController.swift; sourceTree = "<group>"; };
 		936572D81E14E52100439728 /* CloudRemovalManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CloudRemovalManager.swift; sourceTree = "<group>"; };
@@ -601,6 +605,8 @@
 				93C609271E67D0CC007A689D /* MatchOverviewMasterViewController.swift */,
 				93C609231E67D035007A689D /* MatchOverviewDetailViewController.swift */,
 				935A2B051E6CDC4C008FEF9D /* MatchOverviewPerformanceDetailViewController.swift */,
+				935A2B091E6E6968008FEF9D /* TimeMarkerDetailViewController.swift */,
+				935A2B071E6E5560008FEF9D /* MatchOverviewTimeMarkerTableViewCell.swift */,
 			);
 			name = "Match Overview";
 			sourceTree = "<group>";
@@ -885,6 +891,7 @@
 				930B965C1E4548F700E385D3 /* PitSegmentedSelectorCollectionViewCell.swift in Sources */,
 				1F1C23C51E07487C008885A1 /* Event+CoreDataClass.swift in Sources */,
 				930B96671E45A91A00E385D3 /* PitButtonCollectionViewCell.swift in Sources */,
+				935A2B0A1E6E6968008FEF9D /* TimeMarkerDetailViewController.swift in Sources */,
 				932354461E41686B0039386A /* SuperNotesCollectionViewCell.swift in Sources */,
 				1F1C23D21E07487C008885A1 /* TimeMarker+CoreDataProperties.swift in Sources */,
 				1F1C23CD1E07487C008885A1 /* TeamEventPerformance+CoreDataClass.swift in Sources */,
@@ -967,6 +974,7 @@
 				93AE99801E3407A00000FB7C /* SSDataManager.swift in Sources */,
 				1FE2C12D1C81875A00CECBF1 /* ImageScalingFunctions.swift in Sources */,
 				938BEB3B1E35228E003F2F74 /* FuelScoring+CoreDataClass.swift in Sources */,
+				935A2B081E6E5560008FEF9D /* MatchOverviewTimeMarkerTableViewCell.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
