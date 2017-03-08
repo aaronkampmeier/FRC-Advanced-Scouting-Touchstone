@@ -10,7 +10,7 @@ import Foundation
 import CoreData
 
 
-open class Match: NSManagedObject {
+open class Match: NSManagedObject, Comparable {
     var competitionLevelEnum: CompetitionLevel {
         return CompetitionLevel(rawValue: self.competitionLevel!)!
     }
@@ -52,5 +52,71 @@ open class Match: NSManagedObject {
         assert(performances.count == 1)
         
         return performances.first!
+    }
+    
+    override open var description: String {
+        get {
+            if let setNumber = self.setNumber?.intValue {
+                if self.competitionLevelEnum == .QuarterFinal || self.competitionLevelEnum == .SemiFinal {
+                    return "\(self.competitionLevelEnum) \(setNumber) Match \(self.matchNumber!)"
+                } else {
+                    return "\(self.competitionLevelEnum) \(self.matchNumber!)"
+                }
+            } else {
+                return "\(self.competitionLevelEnum) \(self.matchNumber!)"
+            }
+        }
+    }
+    
+    static func ==(lhs: Match, rhs: Match) -> Bool {
+        return (lhs.competitionLevelEnum.rankedPosition == rhs.competitionLevelEnum.rankedPosition && lhs.setNumber!.intValue == rhs.setNumber!.intValue && lhs.matchNumber!.intValue == rhs.matchNumber!.intValue)
+    }
+    
+    public static func >(lhs: Match, rhs: Match) -> Bool {
+        if lhs.competitionLevelEnum.rankedPosition == rhs.competitionLevelEnum.rankedPosition {
+            if lhs.setNumber!.intValue == rhs.setNumber!.intValue {
+                return lhs.matchNumber!.intValue > rhs.matchNumber!.intValue
+            } else {
+                return lhs.setNumber!.intValue > rhs.setNumber!.intValue
+            }
+        } else {
+            return lhs.competitionLevelEnum.rankedPosition > rhs.competitionLevelEnum.rankedPosition
+        }
+    }
+    
+    public static func >=(lhs: Match, rhs: Match) -> Bool {
+        if lhs.competitionLevelEnum.rankedPosition == rhs.competitionLevelEnum.rankedPosition {
+            if lhs.setNumber!.intValue == rhs.setNumber!.intValue {
+                return lhs.matchNumber!.intValue >= rhs.matchNumber!.intValue
+            } else {
+                return lhs.setNumber!.intValue >= rhs.setNumber!.intValue
+            }
+        } else {
+            return lhs.competitionLevelEnum.rankedPosition >= rhs.competitionLevelEnum.rankedPosition
+        }
+    }
+    
+    public static func <(lhs: Match, rhs: Match) -> Bool {
+        if lhs.competitionLevelEnum.rankedPosition == rhs.competitionLevelEnum.rankedPosition {
+            if lhs.setNumber!.intValue == rhs.setNumber!.intValue {
+                return lhs.matchNumber!.intValue < rhs.matchNumber!.intValue
+            } else {
+                return lhs.setNumber!.intValue < rhs.setNumber!.intValue
+            }
+        } else {
+            return lhs.competitionLevelEnum.rankedPosition < rhs.competitionLevelEnum.rankedPosition
+        }
+    }
+    
+    public static func <=(lhs: Match, rhs: Match) -> Bool {
+        if lhs.competitionLevelEnum.rankedPosition == rhs.competitionLevelEnum.rankedPosition {
+            if lhs.setNumber!.intValue == rhs.setNumber!.intValue {
+                return lhs.matchNumber!.intValue <= rhs.matchNumber!.intValue
+            } else {
+                return lhs.setNumber!.intValue <= rhs.setNumber!.intValue
+            }
+        } else {
+            return lhs.competitionLevelEnum.rankedPosition <= rhs.competitionLevelEnum.rankedPosition
+        }
     }
 }

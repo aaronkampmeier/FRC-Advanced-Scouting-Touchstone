@@ -183,6 +183,16 @@ class SSDataManager {
         defendingObject.scoutID = scoutID
         
         saveTimeMarker(event: .Defended, atTime: time)
+        
+        /*-- For now not going to do this because we can't ensure that the other match performance is being scouted/ that it has a scout id. Also this sort of creates a loop in the data model so ae will only pay attention to the defendings property in a match performance*/
+        //Now also save a time marker on the offending team (the team that was blocked)
+//        let wasBlockedTimeMarker = TimeMarker(entity: NSEntityDescription.entity(forEntityName: "TimeMarker", in: managedContext)!, insertInto: managedContext)
+//        
+//        wasBlockedTimeMarker.localMatchPerformance = offendingTeam.local
+//        
+//        wasBlockedTimeMarker.event = TimeMarkerEvent.WasBlocked.rawValue
+//        wasBlockedTimeMarker.time = time as NSNumber?
+//        wasBlockedTimeMarker.scoutID =
     }
     
     //MARK: - Rope

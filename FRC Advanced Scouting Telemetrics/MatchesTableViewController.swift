@@ -8,28 +8,15 @@
 
 import UIKit
 
-class TeamMatchesTableViewController: UITableViewController {
+protocol MatchesTableViewControllerDelegate {
+    func hasSelectionEnabled() -> Bool
+    func selected(match: Match)
+}
+
+class MatchesTableViewController: UITableViewController {
     
-    var teamEventPerformance: TeamEventPerformance? {
-        didSet {
-            if let eventPerformance = teamEventPerformance {
-                let unsortedMatches = (eventPerformance.matchPerformances?.allObjects as? [TeamMatchPerformance])?.map({$0.match!}) ?? []
-                let sortedMatches = unsortedMatches.sorted() {(firstMatch, secondMatch) in
-                    if firstMatch.competitionLevelEnum.rankedPosition > secondMatch.competitionLevelEnum.rankedPosition {
-                        return true
-                    } else if firstMatch.competitionLevelEnum.rankedPosition == secondMatch.competitionLevelEnum.rankedPosition {
-                        return firstMatch.matchNumber!.int32Value < secondMatch.matchNumber!.int32Value
-                    } else {
-                        return false
-                    }
-                }
-                
-                matches = sortedMatches
-            } else {
-                matches = []
-            }
-        }
-    }
+    var delegate: MatchesTableViewControllerDelegate?
+    
     var matches: [Match] = [] {
         didSet {
             tableView.reloadData()
@@ -39,14 +26,12 @@ class TeamMatchesTableViewController: UITableViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        // Uncomment the following line to preserve selection between presentations
-        // self.clearsSelectionOnViewWillAppear = false
-
         // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
         // self.navigationItem.rightBarButtonItem = self.editButtonItem()
         
         tableView.rowHeight = UITableViewAutomaticDimension
         tableView.estimatedRowHeight = 62
+        tableView.allowsSelection = delegate?.hasSelectionEnabled() ?? false
     }
 
     override func didReceiveMemoryWarning() {
@@ -54,8 +39,8 @@ class TeamMatchesTableViewController: UITableViewController {
         // Dispose of any resources that can be recreated.
     }
     
-    func load(forTeamEventPerformance teamEventPerformance: TeamEventPerformance?) {
-        self.teamEventPerformance = teamEventPerformance
+    func load(withMatches matches: [Match]) {
+        self.matches = matches
     }
     
     override func viewDidLayoutSubviews() {
@@ -84,7 +69,7 @@ class TeamMatchesTableViewController: UITableViewController {
         let cell = tableView.dequeueReusableCell(withIdentifier: "matchCell") as! MatchListTableViewCell
         
         let match = matches[indexPath.row]
-        cell.matchLabel.text = "\(match.competitionLevelEnum) \(match.matchNumber!)"
+        cell.matchLabel.text = match.description
         
         for teamLabel in cell.teamLabels {
             teamLabel.layer.borderColor = nil
@@ -108,19 +93,14 @@ class TeamMatchesTableViewController: UITableViewController {
         } else {
             cell.timeLabel.text = ""
         }
+        cell.timeLabelWidth.constant = cell.timeLabel.intrinsicContentSize.width
         
         return cell
     }
-
-    /*
-    override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "reuseIdentifier", for: indexPath)
-
-        // Configure the cell...
-
-        return cell
+    
+    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        delegate?.selected(match: matches[indexPath.row])
     }
-    */
 
     /*
     // Override to support conditional editing of the table view.

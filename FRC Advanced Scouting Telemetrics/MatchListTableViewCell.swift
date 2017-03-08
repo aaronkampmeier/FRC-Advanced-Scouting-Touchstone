@@ -17,6 +17,7 @@ class MatchListTableViewCell: UITableViewCell {
     @IBOutlet weak var blue2: UILabel!
     @IBOutlet weak var blue3: UILabel!
     @IBOutlet weak var timeLabel: UILabel!
+    @IBOutlet weak var timeLabelWidth: NSLayoutConstraint!
     
     @IBOutlet var teamLabels: [UILabel]!
 

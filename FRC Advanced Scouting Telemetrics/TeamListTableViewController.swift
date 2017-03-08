@@ -9,19 +9,19 @@
 import UIKit
 import Crashlytics
 
-protocol TeamSelectionDelegate: class {
-	func selectedTeam(_ team: ObjectPair<Team, LocalTeam>?)
-	func selectedEvent(_ event: Event?)
-}
-
-class TeamListTableViewController: UITableViewController, UISearchControllerDelegate {
+class TeamListTableViewController: UITableViewController, TeamListDetailDataSource, UISearchControllerDelegate {
 	@IBOutlet weak var eventSelectionButton: UIButton!
     @IBOutlet weak var editButton: UIBarButtonItem!
+    @IBOutlet weak var matchesButton: UIBarButtonItem!
 	
 	var searchController: UISearchController!
-	weak var delegate: TeamSelectionDelegate?
 	let dataManager = DataManager()
 	let teamImagesCache = NSCache<Team, UIImage>()
+    var teamListSplitVC: TeamListSplitViewController {
+        get {
+            return splitViewController as! TeamListSplitViewController
+        }
+    }
 	
     //Local Rank is not considered sorted
     var statToSortBy: String = Team.StatName.LocalRank.rawValue
@@ -63,7 +63,6 @@ class TeamListTableViewController: UITableViewController, UISearchControllerDele
     
 	var selectedTeam: ObjectPair<Team, LocalTeam>? {
 		didSet {
-			delegate?.selectedTeam(selectedTeam)
 			NotificationCenter.default.post(name: Notification.Name(rawValue: "Different Team Selected"), object: self)
 			if let sTeam = selectedTeam {
 				if let index = currentTeamsToDisplay.index(where: {team in
@@ -74,11 +73,12 @@ class TeamListTableViewController: UITableViewController, UISearchControllerDele
 			} else {
 				tableView.deselectRow(at: tableView.indexPathForSelectedRow ?? IndexPath(), animated: false)
 			}
+            
+            teamListSplitVC.teamListDetailVC.reloadData()
 		}
 	}
 	var selectedEvent: Event? {
 		didSet {
-			delegate?.selectedEvent(selectedEvent)
 			
 			if let event = selectedEvent {
 				//Set to nil, because the selected team might not be in the new event
@@ -88,6 +88,8 @@ class TeamListTableViewController: UITableViewController, UISearchControllerDele
 				selectedTeam = nil
                 currentEventTeams = ObjectPair<Team,LocalTeam>.fromArray(dataManager.localTeamRanking(forEvent: event))!
 				eventSelectionButton.setTitle(event.name, for: UIControlState())
+                
+                matchesButton.isEnabled = true
 			} else {
                 isSorted = false
                 statToSortBy = Team.StatName.LocalRank.rawValue
@@ -97,7 +99,11 @@ class TeamListTableViewController: UITableViewController, UISearchControllerDele
 				
 				//Again set selected team to nil
 				selectedTeam = nil
+                
+                matchesButton.isEnabled = false
 			}
+            
+            teamListSplitVC.teamListDetailVC.reloadData()
 		}
 	}
 	var teamEventPerformance: TeamEventPerformance? {
@@ -122,7 +128,7 @@ class TeamListTableViewController: UITableViewController, UISearchControllerDele
         // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
         // self.navigationItem.rightBarButtonItem = self.editButtonItem()
 		
-		(UIApplication.shared.delegate as! AppDelegate).teamListTableVC = self
+		teamListSplitVC.teamListTableVC = self
 		
 		//Set up the searching capabilities and the search bar. At the time of coding, Storyboards do not support the new UISearchController, so this is done programatically.
 		let searchResultsVC = storyboard?.instantiateViewController(withIdentifier: "teamListSearchResults") as! TeamListSearchResultsTableViewController
@@ -171,6 +177,15 @@ class TeamListTableViewController: UITableViewController, UISearchControllerDele
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
+    }
+    
+    //MARK: - TeamListDetailDataSource
+    func team() -> Team? {
+        return selectedTeam?.universal
+    }
+    
+    func inEvent() -> Event? {
+        return selectedEvent
     }
 
     // MARK: - Table view data source
@@ -225,34 +240,13 @@ class TeamListTableViewController: UITableViewController, UISearchControllerDele
     }
 	
 	override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-		
-		//Checks if the split view is collapsed or not. If it is then simply present the detail view controller because it will push onto self's navigation controller. If it isn't, then present the detail view controller's navigation controller because it is actually a "split" view.
-		let detailRootController: UIViewController
-        
-        let teamListDetailVC: TeamListDetailViewController
-        if let vc = appDelegate.teamListDetailVC {
-            teamListDetailVC = vc
-        } else {
-            //There is no detail view controller stored in the app delegate (probably because the split vc started out collapsed and a detail vc was never created), so create one now and store it for later
-            let vc = storyboard?.instantiateViewController(withIdentifier: "teamListDetail") as! TeamListDetailViewController
-            self.delegate = vc
-            
-            teamListDetailVC = vc
-        }
-        
-        //If the split view is collapsed then just show the detail view controller because it will be pushed onto self's nav stack. Otherwise present it with a nav controller.
-        if splitViewController!.isCollapsed {
-            detailRootController = teamListDetailVC
-        } else {
-            detailRootController = teamListDetailVC.navigationController!
-        }
-        
+        let teamListDetailVC: TeamListDetailViewController = teamListSplitVC.teamListDetailVC
         
         //Set the selected team (and alert the delegate)
 		selectedTeam = currentTeamsToDisplay[(indexPath as NSIndexPath).row]
         
 		//Show the detail vc
-		splitViewController?.showDetailViewController(detailRootController, sender: self)
+		splitViewController?.showDetailViewController(teamListDetailVC, sender: self)
 	}
 
     // Override to support conditional editing of the table view.
@@ -424,6 +418,15 @@ class TeamListTableViewController: UITableViewController, UISearchControllerDele
         
 		Answers.logCustomEvent(withName: "Sort Team List", customAttributes: ["Stat":statName, "Ascending":ascending.description])
 	}
+    
+    @IBAction func matchesButtonPressed(_ sender: UIBarButtonItem) {
+        let matchesSplitVC = storyboard?.instantiateViewController(withIdentifier: "matchOverviewSplitVC") as! MatchOverviewSplitViewController
+        let matchOverviewMaster = (matchesSplitVC.viewControllers.first as! UINavigationController).topViewController as! MatchOverviewMasterViewController
+        
+        matchOverviewMaster.dataSource = self
+        
+        present(matchesSplitVC, animated: true, completion: nil)
+    }
 	
 	@IBAction func returnToTeamList(_ segue: UIStoryboardSegue) {
 		
@@ -432,6 +435,12 @@ class TeamListTableViewController: UITableViewController, UISearchControllerDele
 	@IBAction func returningWithSegue(_ segue: UIStoryboardSegue) {
 		
 	}
+}
+
+extension TeamListTableViewController: MatchOverviewMasterDataSource {
+    func event() -> Event? {
+        return selectedEvent
+    }
 }
 
 extension TeamListTableViewController: UIPopoverPresentationControllerDelegate {
