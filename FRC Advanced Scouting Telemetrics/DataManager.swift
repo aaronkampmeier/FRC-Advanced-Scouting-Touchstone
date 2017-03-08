@@ -87,6 +87,14 @@ class DataManager {
 		
         return LocalToUniversalConversion<LocalTeam,Team>(localObjects: orderedLocalTeams).convertToUniversal()!
 	}
+    
+    func localTeamRankingPairs() -> [ObjectPair<Team,LocalTeam>] {
+        var orderedLocalTeams = getLocalTeamRankingObject().localTeams?.array as! [LocalTeam]
+        
+        orderedLocalTeams = orderedLocalTeams.filter {$0.universal != nil}
+        
+        return ObjectPair<Team,LocalTeam>.fromArrayIndividually(orderedLocalTeams)
+    }
 	
     //Use this function when getting local team rankings, not the simpleLocalTeamRanking
 	///Returns an array of Team objects ordered by their local ranking for specified event
@@ -562,6 +570,16 @@ struct ObjectPair<U:HasLocalEquivalent, L:HasUniversalEquivalent> where L.Univer
         let universals = LocalToUniversalConversion<L,U>(localObjects: locals).convertToUniversal()!
         
         return fromArrays(universals, locals: locals)
+    }
+    
+    static func fromArrayIndividually(_ locals: [L]) -> [ObjectPair<U,L>] {
+        var pairs = [ObjectPair<U,L>]()
+        
+        for local in locals {
+            pairs.append(ObjectPair<U,L>(universal: local.universal!, local: local))
+        }
+        
+        return pairs
     }
 }
 

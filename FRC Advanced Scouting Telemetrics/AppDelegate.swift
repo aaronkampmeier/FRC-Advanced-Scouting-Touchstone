@@ -94,14 +94,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 //		} catch {
 //			CLSNSLogv("Unable to clear temporary directory.", getVaList([]))
 //		}
-        
-        //Clear the old database file in case the user had a 1.0 version of the app
-        do {
-            let oldDatabaseUrl = self.applicationDocumentsDirectory.appendingPathComponent("SingleViewCoreData.sqlite")
-            try FileManager.default.removeItem(at: oldDatabaseUrl)
-        } catch {
-            NSLog("Unable to remove old database")
-        }
 	}
 
     func applicationWillResignActive(_ application: UIApplication) {

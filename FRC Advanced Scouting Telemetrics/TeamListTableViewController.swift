@@ -147,16 +147,12 @@ class TeamListTableViewController: UITableViewController, UISearchControllerDele
                 if let index = self.currentTeamsToDisplay.index(where: {$0.universal == team}) {
                     self.tableView.reloadRows(at: [IndexPath.init(row: index, section: 0)], with: .automatic)
                 }
-            } else {
-                
             }
         }
     }
     
     func loadTeams() {
-        let universalTeams = dataManager.localTeamRanking()
-        let localTeams = UniversalToLocalConversion<Team, LocalTeam>(universalObjects: universalTeams).convertToLocal()
-        teams = ObjectPair<Team,LocalTeam>.fromArrays(universalTeams, locals: localTeams)!
+        teams = dataManager.localTeamRankingPairs()
     }
 	
 	override func viewWillAppear(_ animated: Bool) {
