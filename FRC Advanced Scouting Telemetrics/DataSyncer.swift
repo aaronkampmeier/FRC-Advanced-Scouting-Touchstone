@@ -250,8 +250,9 @@ class MultipeerConnection: NSObject, CDEMultipeerConnection {
 	
 	fileprivate let serviceAdvertiser: MCNearbyServiceAdvertiser
 	fileprivate let serviceBrowser: MCNearbyServiceBrowser
-	
 	let session: MCSession
+    
+    let mcSessionDelegateAndTranslator: NetworkMCSessionDelegate
 	
 	var currentFileTransfers = [String:(Progress, FASTPeer)]() {
 		didSet {
@@ -270,6 +271,10 @@ class MultipeerConnection: NSObject, CDEMultipeerConnection {
 		serviceAdvertiser = MCNearbyServiceAdvertiser(peer: myPeerID, discoveryInfo: ["syncSecret":mySyncSecret], serviceType: serviceType)
 		serviceBrowser = MCNearbyServiceBrowser(peer: myPeerID, serviceType: serviceType)
 		
+        /*-- Notice the session's delegate is not MCSessionDelegate!!! (see bottom of file)--*/
+        let sessionTranslator = NetworkMCSessionTranslator()
+        mcSessionDelegateAndTranslator = NetworkMCSessionDelegate(translator: sessionTranslator)!
+        
 		super.init()
 		
 		serviceAdvertiser.delegate = self
@@ -277,8 +282,10 @@ class MultipeerConnection: NSObject, CDEMultipeerConnection {
 		
 		serviceBrowser.delegate = self
 		serviceBrowser.startBrowsingForPeers()
-		
-		session.delegate = self
+        
+        //Session's delegate as an NetworkMCSessionDelegate
+        sessionTranslator.delegate = self
+		session.delegate = mcSessionDelegateAndTranslator
 	}
 	
 	deinit {
@@ -389,13 +396,14 @@ extension MultipeerConnection: MCNearbyServiceBrowserDelegate {
 
 //MARK: Session Delegate
 /** Session Delegate */
-extension MultipeerConnection: MCSessionDelegate {
-	func session(_ session: MCSession, didReceive data: Data, fromPeer peerID: MCPeerID) {
+///NOTICE THIS IS NOT IMPLEMENTING MCSESSIONDELEGATE (see bottom of file)
+extension MultipeerConnection: SessionTranslatorDelegate {
+	func networkSession(_ session: MCSession, didReceive data: Data, fromPeer peerID: MCPeerID) {
 		CLSNSLogv("Received Data", getVaList([]))
 		fileSystem?.receive(data, fromPeerWithID: peerID)
 	}
 	
-	func session(_ session: MCSession, peer peerID: MCPeerID, didChange state: MCSessionState) {
+	func networkSession(_ session: MCSession, peer peerID: MCPeerID, didChange state: MCSessionState) {
 		CLSNSLogv("Peer: \(peerID.displayName), Did change state: \(state)", getVaList([]))
 		
 		DispatchQueue.main.async {
@@ -409,27 +417,23 @@ extension MultipeerConnection: MCSessionDelegate {
 		}
 	}
 	
-	func session(_ session: MCSession, didReceive stream: InputStream, withName streamName: String, fromPeer peerID: MCPeerID) {
-		NSLog("Received Stream")
+	func networkSession(_ session: MCSession, didFinishReceivingResourceWithName resourceName: String, fromPeer peerID: MCPeerID, at localURL: URL?, withError error: Error?) {
+        if let error = error {
+            CLSNSLogv("Error receiving file: \(error)", getVaList([]))
+        } else {
+            if let url = localURL {
+                CLSNSLogv("Did finish receiving resource: \(resourceName)", getVaList([]))
+                
+                fileSystem?.receiveResource(at: url, fromPeerWithID: peerID)
+            } else {
+                CLSNSLogv("URL does not exist for resource: \(resourceName)", getVaList([]))
+            }
+        }
+        currentFileTransfers.removeValue(forKey: resourceName)
 	}
 	
-	func session(_ session: MCSession, didFinishReceivingResourceWithName resourceName: String, fromPeer peerID: MCPeerID, at localURL: URL, withError error: Error?) {
-		CLSNSLogv("Did finish receiving resource: \(resourceName)", getVaList([]))
-		currentFileTransfers.removeValue(forKey: resourceName)
-		DispatchQueue.main.async {
-			NotificationCenter.default.post(name: Notification.Name(rawValue: "DataSyncing:DidFinishReceiving"), object: self, userInfo: ["peer": peerID.displayName, "url":localURL, "name":resourceName])
-		}
-		
-		if error != nil {
-			CLSNSLogv("Error receiving file: \(error)", getVaList([]))
-			return
-		} else {
-			fileSystem?.receiveResource(at: localURL, fromPeerWithID: peerID)
-		}
-	}
-	
-	func session(_ session: MCSession, didStartReceivingResourceWithName resourceName: String, fromPeer peerID: MCPeerID, with progress: Progress) {
-		CLSNSLogv("Did start receiving resource: \(resourceName)", getVaList([]))
+	func networkSession(_ session: MCSession, didStartReceivingResourceWithName resourceName: String, fromPeer peerID: MCPeerID, with progress: Progress) {
+		CLSNSLogv("Did start receiving resource: \(resourceName), from: \(peerID.displayName)", getVaList([]))
 		currentFileTransfers[resourceName] = (progress, peerID)
 	}
 }
@@ -453,3 +457,36 @@ extension MCSessionState: CustomStringConvertible {
 
 ///For other classes to use instead of importing MultipeerConnectivity and using MCSessionState
 typealias SessionState = MCSessionState
+
+/*--------------------------*/
+//At the time of making this the Swift MCSessionDelegate has a typo where the didFinishReceivingResourceWithName function's paramter localURL should have been optional but is instead non-optional. Thus, when a file is being received and the sending device is disconnected, the receiving device crashes as it tries to pass a nil localURL to a non-optional value. To work around this, I followed the example here: "http://stackoverflow.com/questions/42477025/swift-multipeerconnectivity-crash-datecomponents-unconditionallybridgefromobject". It makes the MCSessionDelegate in Objective-C instead and then translates it to a Swift delegate.
+protocol SessionTranslatorDelegate {
+    func networkSession(_ session: MCSession, peer peerID: MCPeerID, didChange state: MCSessionState)
+    func networkSession(_ session: MCSession, didReceive data: Data, fromPeer peerID: MCPeerID)
+    func networkSession(_ session: MCSession, didFinishReceivingResourceWithName resourceName: String, fromPeer peerID: MCPeerID, at localURL: URL?, withError error: Error?)
+    func networkSession(_ session: MCSession, didStartReceivingResourceWithName resourceName: String, fromPeer peerID: MCPeerID, with progress: Progress)
+}
+
+@objc class NetworkMCSessionTranslator: NSObject{
+    
+    var delegate: SessionTranslatorDelegate?
+    
+    public func networkSession(_ session: MCSession, peer peerID: MCPeerID, didChange state: MCSessionState){
+        delegate?.networkSession(session, peer: peerID, didChange: state)
+    }
+    
+    public func networkSession(_ session: MCSession, didReceive data: Data, fromPeer peerID: MCPeerID){
+        delegate?.networkSession(session, didReceive: data, fromPeer: peerID)
+    }
+    
+    public func networkSession(_ session: MCSession, didFinishReceivingResourceWithName resourceName: String, fromPeer peerID: MCPeerID, at localURL: URL?, withError error: Error?){
+        // !!! Notice localURL is now an OPTIONAL !!!
+        
+        delegate?.networkSession(session, didFinishReceivingResourceWithName: resourceName, fromPeer: peerID, at: localURL, withError: error)
+    }
+    
+    public func networkSession(_ session: MCSession, didStartReceivingResourceWithName resourceName: String, fromPeer peerID: MCPeerID, with progress: Progress){
+        delegate?.networkSession(session, didStartReceivingResourceWithName: resourceName, fromPeer: peerID, with: progress)
+    }
+    
+}
