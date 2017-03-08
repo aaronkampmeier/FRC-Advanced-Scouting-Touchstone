@@ -12,6 +12,7 @@ import Crashlytics
 class TeamListTableViewController: UITableViewController, TeamListDetailDataSource, UISearchControllerDelegate {
 	@IBOutlet weak var eventSelectionButton: UIButton!
     @IBOutlet weak var editButton: UIBarButtonItem!
+    @IBOutlet weak var matchesButton: UIBarButtonItem!
 	
 	var searchController: UISearchController!
 	let dataManager = DataManager()
@@ -87,6 +88,8 @@ class TeamListTableViewController: UITableViewController, TeamListDetailDataSour
 				selectedTeam = nil
                 currentEventTeams = ObjectPair<Team,LocalTeam>.fromArray(dataManager.localTeamRanking(forEvent: event))!
 				eventSelectionButton.setTitle(event.name, for: UIControlState())
+                
+                matchesButton.isEnabled = true
 			} else {
                 isSorted = false
                 statToSortBy = Team.StatName.LocalRank.rawValue
@@ -96,6 +99,8 @@ class TeamListTableViewController: UITableViewController, TeamListDetailDataSour
 				
 				//Again set selected team to nil
 				selectedTeam = nil
+                
+                matchesButton.isEnabled = false
 			}
             
             teamListSplitVC.teamListDetailVC.reloadData()

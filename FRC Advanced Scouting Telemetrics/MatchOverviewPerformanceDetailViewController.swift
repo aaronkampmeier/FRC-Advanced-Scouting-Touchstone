@@ -107,6 +107,7 @@ class MatchOverviewPerformanceDetailViewController: UIViewController {
         fieldLocationDisplay.dataSource = self
         
         timeMarkerTableView.dataSource = self
+        timeMarkerTableView.delegate = self
         
         matchStatsCollectionView.dataSource = self
         matchStatsCollectionView.delegate = self
@@ -215,6 +216,32 @@ extension MatchOverviewPerformanceDetailViewController: UITableViewDataSource {
         }
         
         return UITableViewCell()
+    }
+}
+
+extension MatchOverviewPerformanceDetailViewController: UITableViewDelegate {
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        let timeMarker = timeMarkers[indexPath.row]
+        
+        //Present a popover with a detail view on the time marker
+        let timeMarkerDetailVC = storyboard?.instantiateViewController(withIdentifier: "timeMarkerDetail") as! TimeMarkerDetailViewController
+        timeMarkerDetailVC.load(forTimeMarker: timeMarker)
+        
+        timeMarkerDetailVC.modalPresentationStyle = .popover
+        timeMarkerDetailVC.popoverPresentationController?.sourceView = (tableView.cellForRow(at: indexPath) as! MatchOverviewTimeMarkerTableViewCell).iconImageView
+        timeMarkerDetailVC.popoverPresentationController?.delegate = self
+        
+        present(timeMarkerDetailVC, animated: true, completion: nil)
+    }
+}
+
+extension MatchOverviewPerformanceDetailViewController: UIPopoverPresentationControllerDelegate {
+    func adaptivePresentationStyle(for controller: UIPresentationController, traitCollection: UITraitCollection) -> UIModalPresentationStyle {
+        return .none
+    }
+    
+    func popoverPresentationControllerDidDismissPopover(_ popoverPresentationController: UIPopoverPresentationController) {
+        timeMarkerTableView.deselectRow(at: timeMarkerTableView.indexPathForSelectedRow ?? IndexPath(), animated: true)
     }
 }
 
