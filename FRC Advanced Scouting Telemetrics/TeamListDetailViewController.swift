@@ -321,6 +321,8 @@ class TeamListDetailViewController: UIViewController {
         matchListNav.popoverPresentationController?.canOverlapSourceViewRect = false
         
         present(matchListNav, animated: true, completion: nil)
+        
+        Answers.logCustomEvent(withName: "Opened Team Matches View", customAttributes: nil)
     }
 	
 	//MARK: Displaying full screen photos

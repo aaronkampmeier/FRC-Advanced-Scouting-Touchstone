@@ -426,6 +426,8 @@ class TeamListTableViewController: UITableViewController, TeamListDetailDataSour
         matchOverviewMaster.dataSource = self
         
         present(matchesSplitVC, animated: true, completion: nil)
+        
+        Answers.logCustomEvent(withName: "Opened Matches Overview", customAttributes: nil)
     }
 	
 	@IBAction func returnToTeamList(_ segue: UIStoryboardSegue) {

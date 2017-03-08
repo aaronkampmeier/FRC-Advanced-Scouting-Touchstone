@@ -69,23 +69,11 @@ class TeamListSplitViewController: UISplitViewController, UISplitViewControllerD
 	}
 	
 	func targetDisplayModeForAction(in svc: UISplitViewController) -> UISplitViewControllerDisplayMode {
-		NSLog("Target Display Mode For Action")
 		return .automatic
 	}
 	
 	func splitViewController(_ svc: UISplitViewController, willChangeTo displayMode: UISplitViewControllerDisplayMode) {
-		let displayModeString: String
-		switch displayMode {
-		case .allVisible:
-			displayModeString = "All Visible"
-		case .automatic:
-			displayModeString = "Automatic"
-		case .primaryHidden:
-			displayModeString = "Primary Hidden"
-		case .primaryOverlay:
-			displayModeString = "Primary Overlay"
-		}
-		NSLog("SVC will change to \(displayModeString)")
+		
 	}
 
     func splitViewController(_ splitViewController: UISplitViewController, collapseSecondary secondaryViewController: UIViewController, onto primaryViewController: UIViewController) -> Bool {
