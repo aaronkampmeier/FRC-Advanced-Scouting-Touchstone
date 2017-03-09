@@ -205,6 +205,8 @@ extension MatchOverviewPerformanceDetailViewController: UITableViewDataSource {
                 cell.iconImageView.image = #imageLiteral(resourceName: "Gear")
             case .Defended:
                 cell.iconImageView.image = #imageLiteral(resourceName: "Defensive Wood Wall")
+            case .EndedAutonomous:
+                cell.iconImageView.image = nil
             case .Error:
                 cell.iconImageView.image = nil
             }

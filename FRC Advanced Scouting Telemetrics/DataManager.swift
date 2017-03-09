@@ -235,30 +235,12 @@ enum TimeMarkerEvent: String, CustomStringConvertible {
     case ScoredGear = "Scored Gear"
     case Defended
     
+    case EndedAutonomous = "Ended Autonomous"
     case Error
     
     var description: String {
         get {
             return self.rawValue
-        }
-    }
-    
-    var associatedObject: AnyClass? {
-        get {
-            switch self {
-            case .LoadedFuel:
-                return FuelLoading.self
-            case .ScoredFuel:
-                return FuelScoring.self
-            case .LoadedGear:
-                return GearLoading.self
-            case .ScoredGear:
-                return GearMounting.self
-            case .Defended:
-                return Defending.self
-            case .Error:
-                return nil
-            }
         }
     }
 }

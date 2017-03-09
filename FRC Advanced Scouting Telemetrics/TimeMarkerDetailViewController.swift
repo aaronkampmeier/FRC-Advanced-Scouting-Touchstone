@@ -79,6 +79,11 @@ class TimeMarkerDetailViewController: UIViewController, UITableViewDataSource {
                         
                         autoLabel.isHidden = true
                     }
+                case .EndedAutonomous:
+                    titleLabel.text = "Ended Autonomous"
+                    
+                    detailValues = [("Time", timeMarker.time?.doubleValue.description(roundedAt: 2))]
+                    autoLabel.isHidden = true
                 default:
                     break
                 }

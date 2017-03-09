@@ -22,7 +22,13 @@ class SSDataManager {
     let stopwatch: Stopwatch //A place for the stands scouting view controller to put the stopwatch so that other vcs can access it while it is running
     
     var startingPosition: StartingPosition!
-    var isAutonomous: Bool = true
+    var isAutonomous: Bool = true {
+        didSet {
+            if !isAutonomous {
+                saveTimeMarker(event: .EndedAutonomous, atTime: stopwatch.elapsedTime)
+            }
+        }
+    }
     
     var preloadedFuel: Double = 0.0
     var preloadedGear = false
@@ -59,7 +65,6 @@ class SSDataManager {
             exit(EXIT_FAILURE)
         }
         
-        scoutedMatchPerformance.local.scoutIDs = (scoutedMatchPerformance.local.scoutIDs ?? []) + [scoutID]
         scoutedMatchPerformance.local.defaultScoutID = scoutID
         
         SSDataManager.mostRecentSSDataManager = self

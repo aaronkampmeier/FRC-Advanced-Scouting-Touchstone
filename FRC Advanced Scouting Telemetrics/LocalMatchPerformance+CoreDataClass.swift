@@ -34,6 +34,21 @@ open class LocalMatchPerformance: NSManagedObject {
         }
     }
     
+    var scoutIDs: [String]? {
+        get {
+            let timeMarkers = self.timeMarkers?.array as! [TimeMarker]
+            
+            var ids = [String]()
+            for marker in timeMarkers {
+                if !ids.contains(marker.scoutID!) {
+                    ids.append(marker.scoutID!)
+                }
+            }
+            
+            return ids
+        }
+    }
+    
     func timeMarkers(forScoutID scoutID: String) -> [TimeMarker] {
         let timeMarkers = self.timeMarkers?.array as! [TimeMarker]
         return timeMarkers.filter {$0.scoutID == scoutID}
