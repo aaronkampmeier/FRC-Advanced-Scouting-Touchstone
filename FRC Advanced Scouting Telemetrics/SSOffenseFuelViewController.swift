@@ -38,9 +38,11 @@ class SSOffenseFuelViewController: UIViewController {
                 setFuelIncreaseLabel.isHidden = true
                 fuelTankSlider.slider.isEnabled = false
                 fuelTankSlider.slider.value = 0
+                currentFuelTankLevel = 0
             }
         }
     }
+    var lastFuelLoadingTime: TimeInterval?
     
     var lastSelectedShotLocation: CGPoint?
     var lastScoringShouldSelectHandler: ((Bool)->Void)?
@@ -77,10 +79,11 @@ class SSOffenseFuelViewController: UIViewController {
         loadingWhereVC.show()
         setFuelIncreaseLabel.isHidden = false
         fuelTankSlider.slider.isEnabled = true
+        lastFuelLoadingTime = ssDataManager.stopwatch.elapsedTime
     }
 
     func fuelSliderChanged(_ sender: UISlider) {
-        ssDataManager.setAssociatedFuelIncrease(withFuelIncrease: currentFuelTankLevel - Double(sender.value))
+        ssDataManager.setAssociatedFuelIncrease(withFuelIncrease: Double(sender.value) - currentFuelTankLevel, afterTime: lastFuelLoadingTime ?? 0)
         currentFuelTankLevel = Double(sender.value)
         fuelTankSlider.slider.isEnabled = false
         setFuelIncreaseLabel.isHidden = true

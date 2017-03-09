@@ -62,7 +62,7 @@ enum StatValue: CustomStringConvertible, Equatable, Comparable {
             case .Integer(let value):
                 return value.description
             case .Double(let value):
-                return ((round(value * 100))/100).description
+                return value.description(roundedAt: 2)
             case .Bool(let value):
                 return value.description.capitalized
             case .String(let value):
@@ -190,6 +190,12 @@ enum StatValue: CustomStringConvertible, Equatable, Comparable {
         default:
             return false
         }
+    }
+}
+
+extension Double {
+    func description(roundedAt decimalsToRound: Int) -> String {
+        return (floor(self * pow(10, Double(decimalsToRound))) / pow(Double(10), Double(decimalsToRound))).description
     }
 }
 

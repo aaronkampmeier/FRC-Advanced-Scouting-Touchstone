@@ -40,7 +40,7 @@ class TeamListSearchResultsTableViewController: UITableViewController, UISearchR
             universalPredicates.append(NSPredicate(format: "location CONTAINS[cd] %@", argumentArray: [searchText]))
             universalPredicates.append(NSPredicate(format: "name CONTAINS[cd] %@", argumentArray: [searchText]))
             universalPredicates.append(NSPredicate(format: "nickname CONTAINS[cd] %@", argumentArray: [searchText]))
-            universalPredicates.append(NSPredicate(format: "teamNumber LIKE %@", argumentArray: [searchText]))
+            universalPredicates.append(NSPredicate(format: "teamNumber CONTAINS[cd] %@", argumentArray: [searchText]))
             universalPredicates.append(NSPredicate(format: "website CONTAINS[cd] %@", argumentArray: [searchText]))
             let universalPredicate = NSCompoundPredicate(orPredicateWithSubpredicates: universalPredicates)
             

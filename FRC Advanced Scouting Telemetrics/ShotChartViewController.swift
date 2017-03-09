@@ -109,7 +109,8 @@ extension ShotChartViewController: FieldLocationDisplayDataSource {
             let shots = matchPerformances.reduce([CGPoint]()) {points, matchPerformance in
                 if matchPerformance.alliance == forAlliance {
                     var newPoints = [CGPoint]()
-                    if let scorings = matchPerformance.local.fuelScorings?.allObjects as? [FuelScoring] {
+                    let matchScorings = (matchPerformance.local.fuelScorings?.allObjects as? [FuelScoring])?.filter {$0.goal == BoilerGoal.HighGoal.rawValue}
+                    if let scorings = matchScorings {
                         for scoring in scorings {
                             newPoints.append(CGPoint(x: scoring.xLocation?.doubleValue ?? 0, y: scoring.yLocation?.doubleValue ?? 0))
                         }

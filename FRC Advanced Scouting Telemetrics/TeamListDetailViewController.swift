@@ -29,6 +29,7 @@ class TeamListDetailViewController: UIViewController {
     @IBOutlet weak var detailCollectionViewHeight: NSLayoutConstraint!
     @IBOutlet weak var matchesButton: UIButton!
     @IBOutlet weak var bananaImageView: UIImageView!
+    @IBOutlet weak var bananaImageWidth: NSLayoutConstraint!
     
     var teamListSplitVC: TeamListSplitViewController {
         get {
@@ -72,8 +73,10 @@ class TeamListDetailViewController: UIViewController {
                 
                 if team.local.canBanana?.boolValue ?? false {
                     bananaImageView.image = #imageLiteral(resourceName: "Banana Filled")
+                    bananaImageWidth.constant = 40
                 } else {
                     bananaImageView.image = nil
+                    bananaImageWidth.constant = 0
                 }
 				
 				//Populate the images, if there are images

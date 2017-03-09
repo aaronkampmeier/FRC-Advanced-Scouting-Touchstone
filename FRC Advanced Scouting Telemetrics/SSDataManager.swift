@@ -108,13 +108,26 @@ class SSDataManager {
         
         fuelLoading.scoutID = scoutID
         
+        if let increase = fuelIncreaseToBeSet {
+            fuelLoading.associatedFuelIncrease = increase as NSNumber
+            fuelIncreaseToBeSet = nil
+        }
+        
         lastFuelLoading = fuelLoading
         
         saveTimeMarker(event: .LoadedFuel, atTime: time)
     }
     
-    func setAssociatedFuelIncrease(withFuelIncrease fuelIncrease: Double) {
-        lastFuelLoading?.associatedFuelIncrease = fuelIncrease as NSNumber
+    var fuelIncreaseToBeSet: Double?
+    func setAssociatedFuelIncrease(withFuelIncrease fuelIncrease: Double, afterTime time: TimeInterval) {
+        if (lastFuelLoading?.time?.doubleValue ?? 0) > time {
+            //Fuel loading object has already been made and now just needs its amount set
+            lastFuelLoading?.associatedFuelIncrease = fuelIncrease as NSNumber
+            fuelIncreaseToBeSet = nil
+        } else {
+            //Object has not been made yet, set the amount to be set
+            fuelIncreaseToBeSet = fuelIncrease
+        }
     }
     
     func recordFuelScoring(inGoal goal: BoilerGoal.RawValue, atTime time: TimeInterval, scoredFrom location: CGPoint, withAmountShot amountShot: Double, withAccuracy accuracy: Double) {

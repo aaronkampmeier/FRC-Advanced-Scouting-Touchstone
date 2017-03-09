@@ -183,7 +183,11 @@ extension TeamMatchPerformance: HasStats {
                             sum += scoring.accuracy!.doubleValue
                         }
                         
-                        return StatValue.Double(sum/Double(allHighGoalScorings.count))
+                        if allHighGoalScorings.count == 0 {
+                            return StatValue.NoValue
+                        } else {
+                            return StatValue.Double(sum/Double(allHighGoalScorings.count))
+                        }
                     } else {
                         return StatValue.NoValue
                     }

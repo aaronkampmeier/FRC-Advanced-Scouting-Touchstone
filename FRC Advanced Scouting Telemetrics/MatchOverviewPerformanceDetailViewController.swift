@@ -65,6 +65,7 @@ class MatchOverviewPerformanceDetailViewController: UIViewController {
             } else {
                 scoutIDViewHeight.constant = 0
                 scoutIDView.isHidden = true
+                scoutID = nil
             }
         }
     }

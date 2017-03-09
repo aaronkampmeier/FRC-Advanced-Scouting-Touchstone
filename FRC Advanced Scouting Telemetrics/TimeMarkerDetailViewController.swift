@@ -26,7 +26,7 @@ class TimeMarkerDetailViewController: UIViewController, UITableViewDataSource {
                     if let associatedFuelLoading = (fuelLoadings?.first {$0.time?.doubleValue == timeMarker.time?.doubleValue}) {
                         detailValues = [
                             ("Location",associatedFuelLoading.location),
-                            ("Amount Loaded", ((associatedFuelLoading.associatedFuelIncrease?.doubleValue ?? 0) * (timeMarker.localMatchPerformance?.universal?.eventPerformance?.team.local.tankSize?.doubleValue ?? 0)).description)
+                            ("Amount Loaded", ((associatedFuelLoading.associatedFuelIncrease?.doubleValue ?? 0) * (timeMarker.localMatchPerformance?.universal?.eventPerformance?.team.local.tankSize?.doubleValue ?? 0)).description(roundedAt: 2))
                         ]
                         
                         autoLabel.isHidden = !(associatedFuelLoading.isAutonomous?.boolValue ?? false)
@@ -37,8 +37,8 @@ class TimeMarkerDetailViewController: UIViewController, UITableViewDataSource {
                     let fuelScorings = timeMarker.localMatchPerformance?.fuelScorings(forScoutID: timeMarker.scoutID!)
                     if let fuelScoring = (fuelScorings?.first {$0.time?.doubleValue == timeMarker.time?.doubleValue}) {
                         detailValues = [
-                            ("Accuracy", (fuelScoring.accuracy?.doubleValue ?? 0).description),
-                            ("Amount Shot", ((fuelScoring.amountShot?.doubleValue ?? 0) * (timeMarker.localMatchPerformance?.universal?.eventPerformance?.team.local.tankSize?.doubleValue ?? 0)).description),
+                            ("Accuracy", (fuelScoring.accuracy?.doubleValue ?? 0).description(roundedAt: 2)),
+                            ("Amount Shot", ((fuelScoring.amountShot?.doubleValue ?? 0) * (timeMarker.localMatchPerformance?.universal?.eventPerformance?.team.local.tankSize?.doubleValue ?? 0)).description(roundedAt: 2)),
                             ("Goal", (fuelScoring.goalType().description))
                         ]
                         
@@ -73,7 +73,7 @@ class TimeMarkerDetailViewController: UIViewController, UITableViewDataSource {
                     if let defending = (defenses?.first {$0.time?.doubleValue == timeMarker.time?.doubleValue}) {
                         detailValues = [
                             ("Type", defending.type),
-                            ("Duration", (defending.duration?.doubleValue ?? 0).description),
+                            ("Duration", (defending.duration?.doubleValue ?? 0).description(roundedAt: 2)),
                             ("Was Successful", defending.successful)
                         ]
                         

@@ -26,30 +26,16 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 		DataSyncer.begin()
 		
 		clearTMPFolder()
-        
-        //Cleanup any local teams that don't have universals
-//        let localTeams = DataManager().getLocalTeamRankingObject().localTeams?.array as! [LocalTeam]
-//        
-//        for team in localTeams {
-//            if team.universal == nil {
-//                DataManager().getLocalTeamRankingObject().removeFromLocalTeams(team)
-//            }
-//        }
 		
         return true
     }
-    
-    func randRange (_ lower: Int , upper: Int) -> Int {
-        return lower + Int(arc4random_uniform(UInt32(upper - lower + 1)))
-    }
 	
 	func clearTMPFolder() {
-//		do {
-//			print(NSTemporaryDirectory())
-//			try NSFileManager.defaultManager().removeItemAtPath(NSTemporaryDirectory())
-//		} catch {
-//			CLSNSLogv("Unable to clear temporary directory.", getVaList([]))
-//		}
+        do {
+            try FileManager.default.removeItem(atPath: NSTemporaryDirectory())
+        } catch {
+            CLSNSLogv("Unable to clear temporary directory.", getVaList([]))
+        }
 	}
 
     func applicationWillResignActive(_ application: UIApplication) {
