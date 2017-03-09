@@ -24,7 +24,7 @@ class MatchOverviewMasterViewController: UIViewController, MatchOverviewDetailDa
     var event: Event? {
         didSet {
             if let event = event {
-                let unsortedMatches = event.matches?.allObjects as! [Match]
+                let unsortedMatches = event.allMatches?.allObjects as! [Match]
                 let sortedMatches = unsortedMatches.sorted() {(firstMatch, secondMatch) in
                     return firstMatch < secondMatch
                 }

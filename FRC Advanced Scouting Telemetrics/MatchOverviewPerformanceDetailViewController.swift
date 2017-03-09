@@ -28,7 +28,7 @@ class MatchOverviewPerformanceDetailViewController: UIViewController {
             scoutID = nil
             matchPerformanceStats = []
             if let matchPerformance = displayedTeamMatchPerformance {
-                if matchPerformance.local.hasBeenScouted?.boolValue ?? false {
+                if matchPerformance.local.hasBeenScouted {
                     showMatchContentViews()
                 } else {
                     hideMatchContentViews()
@@ -182,7 +182,7 @@ extension MatchOverviewPerformanceDetailViewController: FieldLocationDisplayData
 
 extension MatchOverviewPerformanceDetailViewController: UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        if displayedTeamMatchPerformance?.local.hasBeenScouted?.boolValue ?? false {
+        if displayedTeamMatchPerformance?.local.hasBeenScouted ?? false {
             return timeMarkers.count
         } else {
             return 0
@@ -190,7 +190,7 @@ extension MatchOverviewPerformanceDetailViewController: UITableViewDataSource {
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        if displayedTeamMatchPerformance?.local.hasBeenScouted?.boolValue ?? false {
+        if displayedTeamMatchPerformance?.local.hasBeenScouted ?? false {
             let cell = tableView.dequeueReusableCell(withIdentifier: "timeMarker") as! MatchOverviewTimeMarkerTableViewCell
             let timeMarker = timeMarkers[indexPath.row]
             

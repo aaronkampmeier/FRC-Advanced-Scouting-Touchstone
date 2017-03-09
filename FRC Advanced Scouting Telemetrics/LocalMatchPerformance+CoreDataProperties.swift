@@ -34,7 +34,6 @@ extension LocalMatchPerformance: HasUniversalEquivalent {
 
     @NSManaged public var defaultScoutID: String?
     @NSManaged public var scoutIDs: [String]?
-    @NSManaged public var hasBeenScouted: NSNumber?
     @NSManaged public var key: String?
     @NSManaged public var ropeClimbStatus: String?
     @NSManaged public var defendings: NSSet?

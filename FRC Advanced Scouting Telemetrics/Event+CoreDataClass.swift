@@ -11,5 +11,13 @@ import CoreData
 
 
 open class Event: NSManagedObject {
-
+    var allMatches: NSSet? {
+        get {
+            return self.matches
+        }
+        
+        set {
+            self.matches = newValue
+        }
+    }
 }

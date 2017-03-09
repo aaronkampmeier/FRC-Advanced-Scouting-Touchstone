@@ -60,7 +60,7 @@ class MatchUpdateManager {
     
     private func updateMatches(withCloudMatches cloudMatches: [FRCMatch]?) {
         if let cloudMatches = cloudMatches {
-            for match in (event.matches?.allObjects as! [Match]) {
+            for match in (event.allMatches?.allObjects as! [Match]) {
                 if let cloudMatch = cloudMatches.first(where: {$0.key == match.key}) {
                     let cloudAlliances = cloudMatch.alliances!
                     let blueScore = cloudAlliances["blue"]?.score

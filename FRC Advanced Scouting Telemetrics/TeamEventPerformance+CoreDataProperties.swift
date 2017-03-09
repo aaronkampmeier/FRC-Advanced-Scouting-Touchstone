@@ -123,7 +123,7 @@ extension TeamEventPerformance: HasStats {
                     
                     let matchPerformances = self.matchPerformances?.allObjects as! [TeamMatchPerformance]
                     for matchPerformance in matchPerformances {
-                        if matchPerformance.local.hasBeenScouted?.boolValue ?? false {
+                        if matchPerformance.local.hasBeenScouted {
                             totalMatchPerformances += 1
                             totalRPs += matchPerformance.rankingPoints ?? 0
                         }
@@ -142,7 +142,7 @@ extension TeamEventPerformance: HasStats {
                     let matchPerformances = self.matchPerformances?.allObjects as! [TeamMatchPerformance]
                     
                     let successfulClimbCount = matchPerformances.reduce(0) {partialResult, matchPerformance in
-                        if (matchPerformance.local.hasBeenScouted?.boolValue ?? false) && matchPerformance.local.ropeClimbStatus == Capability.Yes.rawValue {
+                        if (matchPerformance.local.hasBeenScouted) && matchPerformance.local.ropeClimbStatus == Capability.Yes.rawValue {
                             return partialResult + 1
                         } else {
                             return partialResult
@@ -161,7 +161,7 @@ extension TeamEventPerformance: HasStats {
                     }
                     
                     let numOfScoutedMatches = (self.matchPerformances?.allObjects as! [TeamMatchPerformance]).reduce(0) {partialResult, matchPerformance in
-                        if matchPerformance.local.hasBeenScouted?.boolValue ?? false {
+                        if matchPerformance.local.hasBeenScouted {
                             return partialResult + 1
                         } else {
                             return partialResult
@@ -287,7 +287,7 @@ private func evaluateOPR(forTeamPerformance teamPerformance: TeamEventPerformanc
     }
     
     //Now also check that all the matches have scores
-    for match in teamPerformance.event.matches?.allObjects as! [Match] {
+    for match in teamPerformance.event.allMatches?.allObjects as! [Match] {
         if match.local.redFinalScore == nil || match.local.blueFinalScore == nil {
             return nil
         }
@@ -339,7 +339,7 @@ private func evaluateCCWM(forTeamPerformance teamPerformance: TeamEventPerforman
     }
     
     //Now also check that all the matches have scores
-    for match in teamPerformance.event.matches?.allObjects as! [Match] {
+    for match in teamPerformance.event.allMatches?.allObjects as! [Match] {
         if match.local.redFinalScore == nil || match.local.blueFinalScore == nil {
             return nil
         }

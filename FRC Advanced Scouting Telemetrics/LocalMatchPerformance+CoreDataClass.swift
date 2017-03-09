@@ -23,6 +23,17 @@ open class LocalMatchPerformance: NSManagedObject {
         }
     }
     
+    var hasBeenScouted: Bool {
+        get {
+            let scoutIDs = (self.scoutIDs ?? [])
+            if scoutIDs.count >= 1 {
+                return true
+            } else {
+                return false
+            }
+        }
+    }
+    
     func timeMarkers(forScoutID scoutID: String) -> [TimeMarker] {
         let timeMarkers = self.timeMarkers?.array as! [TimeMarker]
         return timeMarkers.filter {$0.scoutID == scoutID}

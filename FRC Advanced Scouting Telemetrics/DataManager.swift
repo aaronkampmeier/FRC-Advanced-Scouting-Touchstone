@@ -212,7 +212,7 @@ class DataManager {
     
     //MARK: - Matches
     func matches(inEvent event: Event) -> [Match] {
-        return event.matches?.allObjects as! [Match]
+        return event.allMatches?.allObjects as! [Match]
     }
     
     func matches() -> [Match] {
