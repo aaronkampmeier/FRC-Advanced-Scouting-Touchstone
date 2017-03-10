@@ -97,14 +97,14 @@ class DataSyncer: NSObject, CDEPersistentStoreEnsembleDelegate {
 	
 	///Begins an Ensemble merge. Retrieves files from the other devices and merges them with this one.
 	func syncWithCompletion(_ completion: CDECompletionBlock?) {
-		NSLog("Syncing Files")
+		CLSNSLogv("Syncing Files", getVaList([]))
 		self.multipeerConnection.syncFilesWithAllPeers()
 		
 		//Wait one second before syncing to allow for remote files to download
 		DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
-			NSLog("Merging")
+			CLSNSLogv("Merging", getVaList([]))
 			self.ensemble.merge() {error in
-				if let error = error {NSLog("Error merging: \(error)")} else {NSLog("Merging completed")}
+				if let error = error {CLSNSLogv("Error merging: \(error)", getVaList([]))} else {CLSNSLogv("Merging completed", getVaList([]))}
 				completion?(error)
 			}
 		}
@@ -128,7 +128,37 @@ class DataSyncer: NSObject, CDEPersistentStoreEnsembleDelegate {
 	}
 	
 	func persistentStoreEnsemble(_ ensemble: CDEPersistentStoreEnsemble!, shouldSaveMergedChangesIn savingContext: NSManagedObjectContext!, reparationManagedObjectContext reparationContext: NSManagedObjectContext!) -> Bool {
-		NSLog("Ensemble should save merged changes")
+		CLSNSLogv("Ensemble should save merged changes", getVaList([]))
+        
+        //1. Global ID, 2. Key, 3. Value
+        var globalIDsAndValues = [(NSManagedObjectID, String, Any?)]()
+        savingContext.performAndWait {
+            let mainContext = DataManager.managedContext
+            for object in savingContext.updatedObjects {
+                if let localTeam = object as? LocalTeam {
+                    for value in localTeam.changedValues() {
+                        if value.value == nil {
+                            do {
+                                try globalIDsAndValues.append((localTeam.objectID, value.key, mainContext.existingObject(with: localTeam.objectID).value(forKey: value.key)))
+                            } catch {
+                                
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        
+        reparationContext.performAndWait {
+            for idAndValue in globalIDsAndValues {
+                do {
+                    try reparationContext.existingObject(with: idAndValue.0).setValue(idAndValue.2, forKey: idAndValue.1)
+                } catch {
+                    
+                }
+            }
+        }
+        
 		return true
 	}
 	
@@ -137,24 +167,6 @@ class DataSyncer: NSObject, CDEPersistentStoreEnsembleDelegate {
 		let alert = UIAlertController(title: "Save Failed", message: "The save and sync failed.", preferredStyle: .alert)
 		alert.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
 		(UIApplication.shared.delegate as! AppDelegate).presentViewControllerOnTop(alert, animated: true)
-		
-//		savingContext.performBlockAndWait() {
-//			for object in savingContext.updatedObjects {
-//				switch object {
-//				case is Match:
-//					var defenses = object.valueForKey("redDefenses")
-//					do {
-//						try object.validateValue(&defenses, forKey: "redDefenses")
-//					} catch {
-//						reparationContext.performBlockAndWait() {
-//							reparationContext.objectWithID(object.objectID).setValue(nil, forKey: "redDefenses")
-//						}
-//					}
-//				default:
-//					break
-//				}
-//			}
-//		}
 		
 		Crashlytics.sharedInstance().recordError(error)
 		return false
@@ -166,7 +178,7 @@ class DataSyncer: NSObject, CDEPersistentStoreEnsembleDelegate {
 		//Merge the changes into the main managed object context
 		DataManager.managedContext.perform() {
 			DataManager.managedContext.mergeChanges(fromContextDidSave: notification)
-			NSLog("Did merge changes into main context")
+			CLSNSLogv("Did merge changes into main context", getVaList([]))
 			NotificationCenter.default.post(name: Notification.Name(rawValue: "DataSyncer:NewChangesMerged"), object: self)
 		}
 	}
