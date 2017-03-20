@@ -10,7 +10,8 @@ import UIKit
 
 class TransferInfoTableViewController: UITableViewController {
 	
-	var currentTransfers = [String:(Progress, FASTPeer)]() {
+    //[FileName:(Progress, Peer Connected To, isDownloading (as opposed to uploading))]
+	var currentTransfers = [String:(Progress, FASTPeer, Bool)]() {
 		didSet {
 			resourceNames = Array(currentTransfers.keys)
 			tableView.reloadData()
@@ -33,27 +34,6 @@ class TransferInfoTableViewController: UITableViewController {
 		NotificationCenter.default.addObserver(forName: NSNotification.Name(rawValue: DSTransferNumberChanged), object: nil, queue: nil) {notification in
 			DispatchQueue.main.async {
 				self.currentTransfers = DataSyncer.sharedDataSyncer().multipeerConnection.currentFileTransfers
-				
-//				self.tableView.beginUpdates()
-//				let updatedKeys = notification.userInfo!["UpdatedKeys"] as! [String]
-//				let updatedFileTransfers = DataSyncer.sharedDataSyncer().multipeerConnection.currentFileTransfers
-//				for key in updatedKeys {
-//					self.currentTransfers[key] = updatedFileTransfers[key]
-//					
-//					if updatedFileTransfers[key] == nil {
-//						if let index = self.resourceNames.indexOf(key) {
-//							self.tableView.deleteRowsAtIndexPaths([NSIndexPath.init(forRow: index, inSection: 0)], withRowAnimation: .Top)
-//							self.resourceNames.removeAtIndex(index)
-//						}
-//					} else {
-//						if !self.resourceNames.contains(key) {
-//							self.resourceNames.append(key)
-//							self.tableView.insertRowsAtIndexPaths([NSIndexPath.init(forRow: self.resourceNames.indexOf(key)!, inSection: 0)], withRowAnimation: .Top)
-//						}
-//					}
-//				}
-//				
-//				self.tableView.endUpdates()
 			}
 		}
     }
@@ -82,6 +62,7 @@ class TransferInfoTableViewController: UITableViewController {
 		if let transfer = currentTransfers[resourceNames[(indexPath as NSIndexPath).row]] {
 			(cell.viewWithTag(1) as! UILabel).text = transfer.1.displayName
 			(cell.viewWithTag(2) as! UIProgressView).observedProgress = transfer.0
+            (cell.viewWithTag(3) as! UIImageView).image = transfer.2 ? #imageLiteral(resourceName: "Down Arrow") : #imageLiteral(resourceName: "Up Arrow")
 		}
 
         return cell

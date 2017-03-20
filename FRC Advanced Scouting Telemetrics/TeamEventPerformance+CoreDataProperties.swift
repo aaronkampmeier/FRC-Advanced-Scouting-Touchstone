@@ -173,6 +173,12 @@ extension TeamEventPerformance: HasStats {
                     } else {
                         return StatValue.Double(Double(numOfSuccesses)/Double(numOfScoutedMatches))
                     }
+                },
+                StatName.AverageAutoFuelScored: {
+                    return self.average(ofStat: .AutoFuelScored, forMatchPerformances: self.matchPerformances?.allObjects as! [TeamMatchPerformance])
+                },
+                StatName.AverageAutoGearsScored: {
+                    return self.average(ofStat: .AutoGearsScored, forMatchPerformances: self.matchPerformances?.allObjects as! [TeamMatchPerformance])
                 }
             ]
         }
@@ -248,6 +254,8 @@ extension TeamEventPerformance: HasStats {
         case AverageFloorGearCount = "Average Floor Gear Count"
         case SuccessfulClimbCount = "Successful Climb Count"
         case ClimbSuccessRate = "Climb Success Rate"
+        case AverageAutoFuelScored = "Average Auto Fuel Scored"
+        case AverageAutoGearsScored = "Average Auto Gears Scored"
         
         var description: String {
             get {
@@ -255,7 +263,7 @@ extension TeamEventPerformance: HasStats {
             }
         }
         
-        static let allValues: [StatName] = [.OPR, .DPR, .CCWM, .NumberOfMatches, .TotalMatchPoints, .TotalRankingPoints, .RankingScore, .TotalWins, .TotalLosses, .TotalTies, .AverageTotalPointsFromFuel, .AverageFuelCycleTime, .AverageGearsScored, .AverageFloorGearCount, .AverageGearCycleTime, .Peg1Percentage, .Peg2Percentage, .Peg3Percentage, .AverageHighGoalAccuracy, .MostRopeClimb, .SuccessfulClimbCount, .ClimbSuccessRate]
+        static let allValues: [StatName] = [.OPR, .DPR, .CCWM, .NumberOfMatches, .TotalMatchPoints, .TotalRankingPoints, .RankingScore, .TotalWins, .TotalLosses, .TotalTies, .AverageTotalPointsFromFuel, .AverageAutoFuelScored, .AverageFuelCycleTime, .AverageHighGoalAccuracy, .AverageGearsScored, .AverageAutoGearsScored, .AverageFloorGearCount, .AverageGearCycleTime, .Peg1Percentage, .Peg2Percentage, .Peg3Percentage, .MostRopeClimb, .SuccessfulClimbCount, .ClimbSuccessRate]
     }
 }
 

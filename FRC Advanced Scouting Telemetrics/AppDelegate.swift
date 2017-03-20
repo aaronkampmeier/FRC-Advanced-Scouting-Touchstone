@@ -134,6 +134,35 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             // abort() causes the application to generate a crash log and terminate. You should not use this function in a shipping application, although it may be useful during development.
             CLSNSLogv("Unresolved error \(wrappedError), \(wrappedError.userInfo)", getVaList([]))
             Crashlytics.sharedInstance().recordError(wrappedError)
+            
+            //Error code 134110 means that the coordinator was unable to migrate the store to a newer model version. If this happens then alert the user and present them with the option to erase all data and recreate the store.
+            let restoreDataAction = UIAlertAction(title: "Restore and Exit", style: .destructive) {alertAction in
+                do {
+                    try FileManager.default.removeItem(at: url)
+                    try FileManager.default.removeItem(at: localDataURL)
+                    NSLog("Removed old persistent stores to restore data.")
+                    exit(2)
+                } catch {
+                    
+                }
+            }
+            let freezeDataAction = UIAlertAction(title: "Keep Data and Wait for a Fix", style: .default) {action in
+                let alert = UIAlertController(title: "Apologies", message: "We are extremely sorry for any inconvenience and are working on a fix.", preferredStyle: .alert)
+                appDelegate.presentViewControllerOnTop(alert, animated: true)
+            }
+            
+            if (error as NSError).code == 134110 {
+                let alert = UIAlertController(title: "Internal Error", message: "A problem was detected with the saved data. It is necessary to restore all data. Reopen the app after completion. (This is to be expected if you have updated from a version previous to 2.2.1 (618))", preferredStyle: .alert)
+                alert.addAction(freezeDataAction)
+                alert.addAction(restoreDataAction)
+                
+                appDelegate.presentViewControllerOnTop(alert, animated: true)
+            } else {
+                let alert = UIAlertController(title: "Internal Error", message: "There was a problem initializing the saved data.", preferredStyle: .alert)
+                alert.addAction(freezeDataAction)
+                alert.addAction(restoreDataAction)
+                appDelegate.presentViewControllerOnTop(alert, animated: true)
+            }
         }
         
         return coordinator
@@ -168,7 +197,12 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
                 // abort() causes the application to generate a crash log and terminate. You should not use this function in a shipping application, although it may be useful during development.
                 let nserror = error as NSError
                 NSLog("Unresolved error \(nserror), \(nserror.userInfo)")
-                abort()
+                Crashlytics.sharedInstance().recordError(nserror)
+                
+                let alert = UIAlertController(title: "Error Saving", message: "There was an error saving data.", preferredStyle: .alert)
+                alert.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
+                
+                presentViewControllerOnTop(alert, animated: true)
             }
         }
     }

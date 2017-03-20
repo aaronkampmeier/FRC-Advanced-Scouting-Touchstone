@@ -254,6 +254,28 @@ extension TeamMatchPerformance: HasStats {
                     } else {
                         return StatValue.NoValue
                     }
+                },
+                StatName.AutoFuelScored: {
+                    if self.local.hasBeenScouted {
+                        let fuelScorings = self.local.fuelScorings(forScoutID: self.local.defaultScoutID ?? "default").filter {$0.isAutonomous?.boolValue ?? false}
+                        var totalScored = 0.0
+                        for scoring in fuelScorings {
+                            totalScored += (scoring.amountShot?.doubleValue ?? 0) * (scoring.accuracy?.doubleValue ?? 0.5) * (self.eventPerformance?.team.local.tankSize?.doubleValue ?? 0)
+                        }
+                        
+                        return StatValue.Double(totalScored)
+                    } else {
+                        return StatValue.NoValue
+                    }
+                },
+                StatName.AutoGearsScored: {
+                    if self.local.hasBeenScouted {
+                        let gearScorings = self.local.gearMountings(forScoutID: self.local.defaultScoutID ?? "default").filter {$0.isAutonomous?.boolValue ?? false}
+                        
+                        return StatValue.Integer(gearScorings.count)
+                    } else {
+                        return StatValue.NoValue
+                    }
                 }
             ]
         }
@@ -272,6 +294,8 @@ extension TeamMatchPerformance: HasStats {
         case Peg2Percentage = "Peg 2 Percentage"
         case Peg3Percentage = "Peg 3 Percentage"
         case TotalFloorGears = "Total Floor Gears"
+        case AutoFuelScored = "Auto Fuel Scored"
+        case AutoGearsScored = "Auto Gears Scored"
         
         var description: String {
             get {
@@ -279,6 +303,6 @@ extension TeamMatchPerformance: HasStats {
             }
         }
         
-        static let allValues: [StatName] = [.TotalPoints, .TotalRankingPoints, .TotalPointsFromFuel, .TotalGearsScored, .TotalFloorGears, .AverageAccuracy, .AverageFuelCycleTime, .AverageGearCycleTime, .Peg1Percentage, .Peg2Percentage, .Peg3Percentage, .ClimbingStatus]
+        static let allValues: [StatName] = [.TotalPoints, .TotalRankingPoints, .TotalPointsFromFuel, .AutoFuelScored, .TotalGearsScored, .TotalFloorGears, .AverageAccuracy, .AverageFuelCycleTime, .AverageGearCycleTime, .AutoGearsScored, .Peg1Percentage, .Peg2Percentage, .Peg3Percentage, .ClimbingStatus]
     }
 }

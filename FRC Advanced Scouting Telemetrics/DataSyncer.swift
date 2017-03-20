@@ -100,7 +100,7 @@ class DataSyncer: NSObject, CDEPersistentStoreEnsembleDelegate {
 		CLSNSLogv("Syncing Files", getVaList([]))
 		self.multipeerConnection.syncFilesWithAllPeers()
 		
-		//Wait one second before syncing to allow for remote files to download
+		//Wait one second before merging to allow for remote files to download
 		DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
 			CLSNSLogv("Merging", getVaList([]))
 			self.ensemble.merge() {error in
@@ -266,7 +266,8 @@ class MultipeerConnection: NSObject, CDEMultipeerConnection {
     
     let mcSessionDelegateAndTranslator: NetworkMCSessionDelegate
 	
-	var currentFileTransfers = [String:(Progress, FASTPeer)]() {
+    //[FileName:(Progress, Peer Connected To, isDownloading (as opposed to uploading))]
+	var currentFileTransfers = [String:(Progress, FASTPeer, Bool)]() {
 		didSet {
 			let oldKeys = Set(oldValue.keys)
 			let newKeys = Set(currentFileTransfers.keys)
@@ -328,19 +329,34 @@ class MultipeerConnection: NSObject, CDEMultipeerConnection {
 	func sendAndDiscardFile(at url: URL!, toPeerWithID peerID: NSCoding & NSCopying & NSObjectProtocol) -> Bool {
 		NSLog("Sending file")
 		let peer = peerID as! MCPeerID
-		let progress = session.sendResource(at: url, withName: url.lastPathComponent, toPeer: peer) {sendError in
-			if let error = sendError {
-				NSLog("Unable to send file. Error: \(error)")
-			}
-			
-			do {
-				try FileManager.default.removeItem(at: url)
-			} catch {
-				NSLog("Unable to delete tmp file. Error: \(error)")
-			}
-		}
+        
+        if !currentFileTransfers.contains(where: {$0.value.1 == peer && $0.value.2 == false}) {
+            let progress = session.sendResource(at: url, withName: url.lastPathComponent, toPeer: peer) {sendError in
+                if let error = sendError {
+                    CLSNSLogv("Unable to send file. Error: \(error)", getVaList([]))
+                }
+                
+                if let index = self.currentFileTransfers.index(forKey: url.lastPathComponent) {
+                    self.currentFileTransfers.remove(at: index)
+                }
+                
+                do {
+                    try FileManager.default.removeItem(at: url)
+                } catch {
+                    CLSNSLogv("Unable to delete tmp file. Error: \(error)", getVaList([]))
+                }
+            }
+            
+            if let progress = progress {
+                //False because we are uploading the file, not downloading
+                currentFileTransfers[url.lastPathComponent] = (progress, peer, false)
+            }
+            
+            return progress != nil
+        }
+        
+        return false
 		
-		return progress != nil
 	}
 	
 	func syncFilesWithAllPeers() {
@@ -446,7 +462,8 @@ extension MultipeerConnection: SessionTranslatorDelegate {
 	
 	func networkSession(_ session: MCSession, didStartReceivingResourceWithName resourceName: String, fromPeer peerID: MCPeerID, with progress: Progress) {
 		CLSNSLogv("Did start receiving resource: \(resourceName), from: \(peerID.displayName)", getVaList([]))
-		currentFileTransfers[resourceName] = (progress, peerID)
+        //True because we are receiving the file (downloading)
+		currentFileTransfers[resourceName] = (progress, peerID, true)
 	}
 }
 
