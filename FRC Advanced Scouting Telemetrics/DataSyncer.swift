@@ -82,9 +82,15 @@ class DataSyncer: NSObject, CDEPersistentStoreEnsembleDelegate {
 	}
 	
 	@objc private func didImportFiles() {
-		//syncWithCompletion(nil)
 		NSLog("Did import files")
-		multipeerConnection.syncFilesWithAllPeers()
+        self.multipeerConnection.syncFilesWithAllPeers()
+        self.ensemble.merge {error in
+            if let error = error {
+                CLSNSLogv("There was an error with the import files merge: \(error)", getVaList([]))
+            }
+            
+            CLSNSLogv("Import Files merge completed", getVaList([]))
+        }
 	}
 	
 	@objc private func autoSync(_ timer: Timer) {
@@ -299,6 +305,16 @@ class MultipeerConnection: NSObject, CDEMultipeerConnection {
         //Session's delegate as an NetworkMCSessionDelegate
         sessionTranslator.delegate = self
 		session.delegate = mcSessionDelegateAndTranslator
+        
+        if #available(iOS 10.0, *) {
+            Timer.scheduledTimer(withTimeInterval: 5, repeats: true) {timer in
+                for fileTransfer in self.currentFileTransfers {
+                    if fileTransfer.value.0.isCancelled || fileTransfer.value.0.isPaused {
+                        self.currentFileTransfers.removeValue(forKey: fileTransfer.key)
+                    }
+                }
+            }
+        }
 	}
 	
 	deinit {
