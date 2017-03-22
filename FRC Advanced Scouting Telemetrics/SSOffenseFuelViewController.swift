@@ -56,6 +56,7 @@ class SSOffenseFuelViewController: UIViewController {
         // Do any additional setup after loading the view.
         setFuelIncreaseLabel.isHidden = true
         fuelTankSlider.slider.addTarget(self, action: #selector(fuelSliderChanged(_:)), for: .touchUpInside)
+        fuelTankSlider.slider.addTarget(self, action: #selector(fuelSliderChanged(_:)), for: .touchUpOutside)
         fuelTankSlider.slider.isEnabled = false
         
         //Account for preloaded fuel
