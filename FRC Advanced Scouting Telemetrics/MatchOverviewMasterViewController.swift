@@ -13,7 +13,6 @@ protocol MatchOverviewMasterDataSource {
 }
 
 class MatchOverviewMasterViewController: UIViewController, MatchOverviewDetailDataSource {
-    
     var dataSource: MatchOverviewMasterDataSource?
 
     var matchOverviewSplitVC: MatchOverviewSplitViewController {
@@ -70,6 +69,10 @@ class MatchOverviewMasterViewController: UIViewController, MatchOverviewDetailDa
     func match() -> Match? {
         return selectedMatch
     }
+    
+    func shouldShowExitButton() -> Bool {
+        return false
+    }
 
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
@@ -93,12 +96,12 @@ class MatchOverviewMasterViewController: UIViewController, MatchOverviewDetailDa
 }
 
 extension MatchOverviewMasterViewController: MatchesTableViewControllerDelegate {
+    func matchesTableViewController(_ matchesTableViewController: MatchesTableViewController, selectedMatchCell: UITableViewCell?, withAssociatedMatch associatedMatch: Match?) {
+        matchOverviewSplitVC.showDetailViewController(matchOverviewSplitVC.matchesDetail!, sender: self)
+        self.selectedMatch = associatedMatch
+    }
+
     func hasSelectionEnabled() -> Bool {
         return true
-    }
-    
-    func selected(match: Match) {
-        matchOverviewSplitVC.showDetailViewController(matchOverviewSplitVC.matchesDetail!, sender: self)
-        self.selectedMatch = match
     }
 }

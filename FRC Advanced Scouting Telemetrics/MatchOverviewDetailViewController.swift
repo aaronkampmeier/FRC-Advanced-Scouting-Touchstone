@@ -10,6 +10,7 @@ import UIKit
 
 protocol MatchOverviewDetailDataSource {
     func match() -> Match?
+    func shouldShowExitButton() -> Bool
 }
 
 class MatchOverviewDetailViewController: UIViewController {
@@ -22,7 +23,7 @@ class MatchOverviewDetailViewController: UIViewController {
     
     var dataSource: MatchOverviewDetailDataSource?
     
-    var matchOverviewSplitVC: MatchOverviewSplitViewController {
+    var matchOverviewSplitVC: MatchOverviewSplitViewController? {
         get {
             if let matchSplit = self.splitViewController as? MatchOverviewSplitViewController {
                 return matchSplit
@@ -65,17 +66,29 @@ class MatchOverviewDetailViewController: UIViewController {
         super.viewDidLoad()
 
         // Do any additional setup after loading the view.
-        matchOverviewSplitVC.matchesDetail = self
+        matchOverviewSplitVC?.matchesDetail = self
         
         self.navigationItem.leftItemsSupplementBackButton = true
-        self.navigationItem.leftBarButtonItem = matchOverviewSplitVC.displayModeButtonItem
+        self.navigationItem.leftBarButtonItem = matchOverviewSplitVC?.displayModeButtonItem
         
-        self.dataSource = matchOverviewSplitVC.matchesMaster
+        if let master = matchOverviewSplitVC?.matchesMaster {
+            if dataSource == nil {
+                self.dataSource = master
+            }
+        }
         
         matchPerformanceDetail = self.childViewControllers.first! as! MatchOverviewPerformanceDetailViewController
         matchPerformanceDetail.dataSource = self
         
         reloadData()
+        
+        if dataSource?.shouldShowExitButton() ?? false {
+            self.navigationItem.setRightBarButtonItems([], animated: false)
+            let doneButton = UIBarButtonItem(title: "Done", style: .done, target: self, action: #selector(donePressed(_:)))
+            self.navigationItem.setRightBarButtonItems([doneButton], animated: false)
+        } else {
+            self.navigationItem.setRightBarButtonItems([], animated: false)
+        }
     }
 
     override func didReceiveMemoryWarning() {
@@ -96,6 +109,10 @@ class MatchOverviewDetailViewController: UIViewController {
         }
         
         matchPerformanceDetail.reloadData()
+    }
+    
+    func donePressed(_ sender: UIBarButtonItem) {
+        self.dismiss(animated: true, completion: nil)
     }
 
     /*

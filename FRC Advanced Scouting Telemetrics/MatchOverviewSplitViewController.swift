@@ -10,7 +10,7 @@ import UIKit
 
 class MatchOverviewSplitViewController: UISplitViewController, UISplitViewControllerDelegate {
     
-    static var `default`: MatchOverviewSplitViewController!
+    static var `default`: MatchOverviewSplitViewController?
     
     var matchesMaster: MatchOverviewMasterViewController!
     var matchesDetail: MatchOverviewDetailViewController?

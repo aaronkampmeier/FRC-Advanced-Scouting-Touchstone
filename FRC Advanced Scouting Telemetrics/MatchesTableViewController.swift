@@ -10,7 +10,7 @@ import UIKit
 
 protocol MatchesTableViewControllerDelegate {
     func hasSelectionEnabled() -> Bool
-    func selected(match: Match)
+    func matchesTableViewController(_ matchesTableViewController: MatchesTableViewController, selectedMatchCell: UITableViewCell?, withAssociatedMatch associatedMatch: Match?)
 }
 
 class MatchesTableViewController: UITableViewController {
@@ -99,7 +99,7 @@ class MatchesTableViewController: UITableViewController {
     }
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        delegate?.selected(match: matches[indexPath.row])
+        delegate?.matchesTableViewController(self, selectedMatchCell: tableView.cellForRow(at: indexPath), withAssociatedMatch: matches[indexPath.row])
     }
 
     /*

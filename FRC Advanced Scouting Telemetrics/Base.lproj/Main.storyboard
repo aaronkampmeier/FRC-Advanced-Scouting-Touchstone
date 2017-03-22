@@ -1678,7 +1678,7 @@
         <!--Stands Scouting View Controller-->
         <scene sceneID="tay-4H-r1h">
             <objects>
-                <viewController id="N6I-TT-Y61" customClass="StandsScoutingViewController" customModule="FRC_Advanced_Scouting_Touchstone" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="standsScouting" id="N6I-TT-Y61" customClass="StandsScoutingViewController" customModule="FRC_Advanced_Scouting_Touchstone" customModuleProvider="target" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="6pI-pa-H6S"/>
                         <viewControllerLayoutGuide type="bottom" id="2ao-PM-RlD"/>
@@ -2366,7 +2366,7 @@
         <scene sceneID="E0Q-2t-Cn4">
             <objects>
                 <collectionViewController id="ae1-kv-WF1" customClass="TeamDetailCollectionViewController" customModule="FRC_Advanced_Scouting_Touchstone" customModuleProvider="target" sceneMemberID="viewController">
-                    <collectionView key="view" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" misplaced="YES" dataMode="prototypes" id="5Ma-6f-rdn">
+                    <collectionView key="view" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" dataMode="prototypes" id="5Ma-6f-rdn">
                         <rect key="frame" x="0.0" y="0.0" width="842.5" height="388"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
@@ -3776,7 +3776,7 @@
         <!--Navigation Controller-->
         <scene sceneID="Og5-hW-8cs">
             <objects>
-                <navigationController automaticallyAdjustsScrollViewInsets="NO" id="bBK-bW-q6s" sceneMemberID="viewController">
+                <navigationController storyboardIdentifier="matchDetailNav" automaticallyAdjustsScrollViewInsets="NO" id="bBK-bW-q6s" sceneMemberID="viewController">
                     <toolbarItems/>
                     <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
                     <size key="freeformSize" width="200" height="200"/>

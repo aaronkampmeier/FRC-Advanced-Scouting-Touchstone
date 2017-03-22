@@ -22,21 +22,11 @@ class StandsScoutingViewController: UIViewController {
 	
 	var teamEventPerformance: TeamEventPerformance?
 	var matchPerformance: TeamMatchPerformance? {
-		willSet {
-            matchAndEventLabel.text = "\(teamEventPerformance!.event.name!)  \(newValue!.match!.competitionLevel!) \(newValue!.match!.matchNumber!)"
-            ssDataManager = SSDataManager(teamBeingScouted: team, matchBeingScouted: newValue!.match!, stopwatch: stopwatch)
-            
-            //Ask for where the robot is starting
-//            let startingPositionHandler: (UIAlertAction) -> Void = {alertAction in
-//                let position = StartingPosition(rawValue: alertAction.title!)
-//                self.ssDataManager.startingPosition = position
-//            }
-//            
-//            let alert = UIAlertController(title: "Starting Location", message: "In what position is the robot starting?", preferredStyle: .alert)
-//            for position in StartingPosition.allPositions {
-//                alert.addAction(UIAlertAction(title: position.description, style: .default, handler: startingPositionHandler))
-//            }
-//            present(alert, animated: true, completion: nil)
+        willSet {
+            if self.isViewLoaded {
+                matchAndEventLabel.text = "\(teamEventPerformance!.event.name!)  \(newValue!.match!.competitionLevel!) \(newValue!.match!.matchNumber!)"
+                ssDataManager = SSDataManager(teamBeingScouted: team, matchBeingScouted: newValue!.match!, stopwatch: stopwatch)
+            }
 		}
 	}
 	var team: Team {
@@ -167,6 +157,10 @@ class StandsScoutingViewController: UIViewController {
         defenseVC = (storyboard?.instantiateViewController(withIdentifier: "ssDefense") as! SSDefenseViewController)
         ropeVC = (storyboard?.instantiateViewController(withIdentifier: "ssRopeVC") as! SSRopeClimbViewController)
 		
+        if let matchPerformance = matchPerformance {
+            matchAndEventLabel.text = "\(teamEventPerformance?.event.name ?? "")  \(matchPerformance.match?.competitionLevel ?? "") \(matchPerformance.match?.matchNumber?.intValue.description ?? "")"
+            ssDataManager = SSDataManager(teamBeingScouted: team, matchBeingScouted: matchPerformance.match!, stopwatch: stopwatch)
+        }
     }
     
     override func viewDidLayoutSubviews() {
@@ -229,7 +223,7 @@ class StandsScoutingViewController: UIViewController {
                 }))
 			}
 			
-			askAction.addAction(UIAlertAction(title: "Cancel", style: .destructive) {action in
+			askAction.addAction(UIAlertAction(title: "Cancel", style: .cancel) {action in
 				self.close(andSave: false)
 			})
 			present(askAction, animated: true, completion: nil)

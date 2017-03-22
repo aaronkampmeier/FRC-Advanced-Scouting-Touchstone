@@ -308,8 +308,10 @@ class TeamListDetailViewController: UIViewController {
         present(notesNavVC, animated: true, completion: nil)
     }
     
+    var selectedMatch: Match?
     @IBAction func matchesButtonPressed(_ sender: UIButton) {
         let matchListNav = storyboard?.instantiateViewController(withIdentifier: "matchesListNav") as! UINavigationController
+        (matchListNav.topViewController as! MatchesTableViewController).delegate = self
         
         let unsortedMatches = (self.teamEventPerformance?.matchPerformances?.allObjects as? [TeamMatchPerformance])?.map({$0.match!}) ?? []
         let sortedMatches = unsortedMatches.sorted() {(firstMatch, secondMatch) in
@@ -355,6 +357,50 @@ class TeamListDetailViewController: UIViewController {
 		let photoVC = NYTPhotosViewController(photos: photosArray, initialPhoto: photo, delegate: self)
 		present(photoVC, animated: true, completion: nil)
 	}
+}
+
+extension TeamListDetailViewController: MatchesTableViewControllerDelegate {
+    func hasSelectionEnabled() -> Bool {
+        return true
+    }
+    
+    func matchesTableViewController(_ matchesTableViewController: MatchesTableViewController, selectedMatchCell: UITableViewCell?, withAssociatedMatch associatedMatch: Match?) {
+        selectedMatch = associatedMatch
+        //Present an action sheet to see if the user wants to view it or scout it
+        let actionSheet = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
+        
+        actionSheet.addAction(UIAlertAction(title: "View Match", style: .default) {action in
+            let matchDetailNav = self.storyboard?.instantiateViewController(withIdentifier: "matchDetailNav") as! UINavigationController
+            let matchDetail = matchDetailNav.topViewController as! MatchOverviewDetailViewController
+            
+            matchDetail.dataSource = self
+            
+            matchesTableViewController.present(matchDetailNav, animated: true, completion: nil)
+        })
+        actionSheet.addAction(UIAlertAction(title: "Stands Scout", style: .default) {action in
+            let standsScoutingVC = self.storyboard?.instantiateViewController(withIdentifier: "standsScouting") as! StandsScoutingViewController
+            standsScoutingVC.teamEventPerformance = self.teamEventPerformance
+            standsScoutingVC.matchPerformance = (associatedMatch?.teamPerformances?.allObjects as! [TeamMatchPerformance]).first {$0.eventPerformance == self.teamEventPerformance}
+            
+            matchesTableViewController.present(standsScoutingVC, animated: true, completion: nil)
+        })
+        actionSheet.addAction(UIAlertAction(title: "Cancel", style: .cancel) {action in
+            matchesTableViewController.tableView.deselectRow(at: matchesTableViewController.tableView.indexPathForSelectedRow ?? IndexPath(), animated: true)
+        })
+        
+        
+        matchesTableViewController.present(actionSheet, animated: true, completion: nil)
+    }
+}
+
+extension TeamListDetailViewController: MatchOverviewDetailDataSource {
+    func match() -> Match? {
+        return selectedMatch
+    }
+    
+    func shouldShowExitButton() -> Bool {
+        return true
+    }
 }
 
 extension TeamListDetailViewController: UITableViewDelegate, UITableViewDataSource {
