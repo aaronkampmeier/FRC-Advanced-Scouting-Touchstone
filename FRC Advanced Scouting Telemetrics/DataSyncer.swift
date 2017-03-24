@@ -33,7 +33,7 @@ class DataSyncer: NSObject, CDEPersistentStoreEnsembleDelegate {
 			syncSecret = stringValue
 		} else {
 			NSLog("No sync secret exists, using default.")
-			syncSecret = "FRC-4256-FAST-EnsembleSync"
+			syncSecret = "FRC-4256-FAST"
 		}
 		
 		multipeerConnection = MultipeerConnection(syncSecret: syncSecret)
@@ -41,7 +41,7 @@ class DataSyncer: NSObject, CDEPersistentStoreEnsembleDelegate {
 		
 		fileSystem = CDEMultipeerCloudFileSystem(rootDirectory: rootDir, multipeerConnection: multipeerConnection)
 		multipeerConnection.fileSystem = (fileSystem as! CDEMultipeerCloudFileSystem)
-		ensemble = CDEPersistentStoreEnsemble(ensembleIdentifier: "FASTStore", persistentStore: appDelegate.localPersistentStoreURL, managedObjectModelURL: appDelegate.managedObjectModelURL, cloudFileSystem: fileSystem)
+		ensemble = CDEPersistentStoreEnsemble(ensembleIdentifier: "FASTStoreV2", persistentStore: appDelegate.localPersistentStoreURL, managedObjectModelURL: appDelegate.managedObjectModelURL, cloudFileSystem: fileSystem)
 		
 		super.init()
 		
@@ -64,9 +64,9 @@ class DataSyncer: NSObject, CDEPersistentStoreEnsembleDelegate {
 			NSLog("Leeching ensemble")
 			sharedDataSyncer().ensemble.leechPersistentStore() {error in
 				if let error = error {
-					NSLog("Unable to leech the persistent store. Error: \(error)")
+					CLSNSLogv("Unable to leech the persistent store. Error: \(error)", getVaList([]))
 				} else {
-					NSLog("Leech successful")
+					CLSNSLogv("Leech successful", getVaList([]))
 				}
 			}
 		} else {
@@ -143,12 +143,9 @@ class DataSyncer: NSObject, CDEPersistentStoreEnsembleDelegate {
             for object in savingContext.updatedObjects {
                 if let localTeam = object as? LocalTeam {
                     for value in localTeam.changedValues() {
+                        let onDeviceObject = try? mainContext.existingObject(with: localTeam.objectID)
                         if value.value == nil {
-                            do {
-                                try globalIDsAndValues.append((localTeam.objectID, value.key, mainContext.existingObject(with: localTeam.objectID).value(forKey: value.key)))
-                            } catch {
-                                
-                            }
+                            globalIDsAndValues.append((localTeam.objectID, value.key, onDeviceObject?.value(forKey: value.key)))
                         }
                     }
                 }
@@ -189,14 +186,24 @@ class DataSyncer: NSObject, CDEPersistentStoreEnsembleDelegate {
 		}
 	}
 	
-	func persistentStoreEnsemble(_ ensemble: CDEPersistentStoreEnsemble!, didDeleechWithError error: Error!) {
-		let alert = UIAlertController(title: "Sync Error: Deleech", message: "There was an internal data integrity error which forced your app to disconnect from the shared cloud of data.", preferredStyle: .alert)
-		alert.addAction(UIAlertAction(title: "Attempt to Fix", style: .default, handler: {_ in self.attemptToFixDeelechError()}))
-		alert.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
-		(UIApplication.shared.delegate as! AppDelegate).presentViewControllerOnTop(alert, animated: true)
-		
-		CLSNSLogv("Did deleech with error: \(error)", getVaList([]))
-		Crashlytics.sharedInstance().recordError(error)
+	func persistentStoreEnsemble(_ ensemble: CDEPersistentStoreEnsemble!, didDeleechWithError error: NSError!) {
+        if error.code == 205 {
+            //Error 205 is CDEErrorCodeStoreUnregistered. So let's just re-leech
+            CLSNSLogv("Did deleech with 205. Attempting to fix.", getVaList([]))
+            self.attemptToFixDeelechError()
+        } else if error.code == 203 {
+            //Error 203 is CDEErrorCodeDataCorruptionDetected.
+            CLSNSLogv("Did deleech with 203. Attempting to fix.", getVaList([]))
+            self.attemptToFixDeelechError()
+        } else {
+            let alert = UIAlertController(title: "Sync Error: Deleech", message: "There was an internal data integrity error which forced your app to disconnect from the shared cloud of data. (Error \(error.code))", preferredStyle: .alert)
+            alert.addAction(UIAlertAction(title: "Attempt to Fix", style: .default, handler: {_ in self.attemptToFixDeelechError()}))
+            alert.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
+            (UIApplication.shared.delegate as! AppDelegate).presentViewControllerOnTop(alert, animated: true)
+            
+            CLSNSLogv("Did deleech with error: \(error)", getVaList([]))
+        }
+        Crashlytics.sharedInstance().recordError(error)
 	}
     
     func persistentStoreEnsemble(_ ensemble: CDEPersistentStoreEnsemble!, globalIdentifiersForManagedObjects objects: [Any]!) -> [Any]! {
