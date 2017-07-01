@@ -120,7 +120,7 @@ class AddEventTableViewController: UITableViewController {
         let cell = tableView.dequeueReusableCell(withIdentifier: "event", for: indexPath)
 
         cell.textLabel?.text = filteredEvents[indexPath.row].name
-        cell.detailTextLabel?.text = filteredEvents[indexPath.row].location ?? ""
+        cell.detailTextLabel?.text = filteredEvents[indexPath.row].locationName ?? ""
 
         return cell
     }
@@ -190,9 +190,9 @@ extension AddEventTableViewController: UISearchResultsUpdating {
         if searchController.isActive {
             filteredEvents = events.filter {frcEvent in
                 return frcEvent.name.lowercased().contains(searchText)
-                    || frcEvent.eventDistrictString?.lowercased().contains(searchText) ?? false
+                    || frcEvent.district?.displayName.lowercased().contains(searchText) ?? false
                     || frcEvent.eventTypeString.lowercased().contains(searchText)
-                    || frcEvent.location?.lowercased().contains(searchText) ?? false
+                    || frcEvent.locationName?.lowercased().contains(searchText) ?? false
             }
         } else {
             filteredEvents = events

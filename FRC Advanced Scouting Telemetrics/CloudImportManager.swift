@@ -93,7 +93,7 @@ class CloudEventImportManager {
         event.key = frcEvent.key
         event.name = frcEvent.name
         event.year = frcEvent.year as NSNumber
-        event.location = frcEvent.location
+        event.location = frcEvent.locationName
         
         //Create the local one if there is no local object already
         if event.fetchLocalObject() == nil {
@@ -135,7 +135,7 @@ class CloudEventImportManager {
                 }
                 
                 team.key = frcTeam.key
-                team.location = frcTeam.location
+                team.location = frcTeam.stateProv
                 team.name = frcTeam.name
                 team.nickname = frcTeam.nickname
                 team.rookieYear = frcTeam.rookieYear as NSNumber
@@ -209,7 +209,7 @@ class CloudEventImportManager {
                 
                 match.key = frcMatch.key
                 match.matchNumber = frcMatch.matchNumber as NSNumber
-                switch frcMatch.competitionLevel {
+                switch frcMatch.compLevel {
                 case "qm":
                     match.competitionLevel = Match.CompetitionLevel.Qualifier.rawValue
                 case "ef":
@@ -225,7 +225,7 @@ class CloudEventImportManager {
                     return
                 }
                 match.setNumber = frcMatch.setNumber as NSNumber?
-                match.time = frcMatch.time
+                match.time = frcMatch.actualTime
                 
                 match.event = eventObject
                 
@@ -258,50 +258,50 @@ class CloudEventImportManager {
                 //Set up all the teams in the match
                 if let matchAlliances = frcMatch.alliances {
                     for matchAlliance in matchAlliances {
-                        if let teamStrings = matchAlliance.value.teams {
-                            for teamString in teamStrings {
-                                //Find the TeamEventPerformance that pertains to this team and match
-                                let eventPerformance: TeamEventPerformance
-                                if let index = teamEventPerformanceObjects.index(where: {eventPerformance in
-                                    return eventPerformance.team.key == teamString
-                                }) {
-                                    eventPerformance = teamEventPerformanceObjects[index]
-                                } else {
-                                    //For some reason, this team in the match does was not included in the total teams list of all the teams at this event (TBA's fault). Add the team seperately.
-                                    cloudConnection.team(withTeamKey: teamString) {(frcTeam) in
-                                        if let team = frcTeam {
-                                            self.importTeams(fromTeams: [team])
-                                        } else {
-                                            self.completionHandler(false, .MatchTeamNotInRoster)
-                                            CLSNSLogv("Match (\(frcMatch.key)) team \(teamString) not in roster for event \(self.frcEvent.key)", getVaList([]))
-                                        }
+                        let teamStrings = matchAlliance.value.teams
+                        for teamString in teamStrings {
+                            //Find the TeamEventPerformance that pertains to this team and match
+                            let eventPerformance: TeamEventPerformance
+                            if let index = teamEventPerformanceObjects.index(where: {eventPerformance in
+                                return eventPerformance.team.key == teamString
+                            }) {
+                                eventPerformance = teamEventPerformanceObjects[index]
+                            } else {
+                                //For some reason, this team in the match does was not included in the total teams list of all the teams at this event (TBA's fault). Add the team seperately.
+                                cloudConnection.team(withTeamKey: teamString) {(frcTeam) in
+                                    if let team = frcTeam {
+                                        self.importTeams(fromTeams: [team])
+                                    } else {
+                                        self.completionHandler(false, .MatchTeamNotInRoster)
+                                        CLSNSLogv("Match (\(frcMatch.key)) team \(teamString) not in roster for event \(self.frcEvent.key)", getVaList([]))
                                     }
-                                    //By calling import teams again, it will return back to the matches
-                                    return
                                 }
-                                
-                                //Create the matchPerformance object
-                                let matchPerformance: TeamMatchPerformance
-                                matchPerformance = TeamMatchPerformance(entity: NSEntityDescription.entity(forEntityName: "TeamMatchPerformance", in: managedContext)!, insertInto: managedContext)
-                                
-                                matchPerformance.match = match
-                                matchPerformance.eventPerformance = eventPerformance
-                                matchPerformance.allianceColor = matchAlliance.key.capitalized
-                                matchPerformance.allianceTeam = (teamStrings.index(of: teamString)! + 1) as NSNumber //The array of team strings comes in the correct order from the cloud
-                                matchPerformance.key = "\(match.key!)_\(teamString)"
-                                
-                                //Check for a local object
-                                if !currentLocalMatchPerformances.contains(where: {localMatchPerformance in
-                                    return localMatchPerformance.key == matchPerformance.key
-                                }) {
-                                    //Create a local object
-                                    let localMatchPerformance = LocalMatchPerformance(entity: NSEntityDescription.entity(forEntityName: "LocalMatchPerformance", in: managedContext)!, insertInto: managedContext)
-                                    localMatchPerformance.key = matchPerformance.key
-                                }
-                                
-                                teamMatchPerformanceObjects.append(matchPerformance)
+                                //By calling import teams again, it will return back to the matches
+                                return
                             }
+                            
+                            //Create the matchPerformance object
+                            let matchPerformance: TeamMatchPerformance
+                            matchPerformance = TeamMatchPerformance(entity: NSEntityDescription.entity(forEntityName: "TeamMatchPerformance", in: managedContext)!, insertInto: managedContext)
+                            
+                            matchPerformance.match = match
+                            matchPerformance.eventPerformance = eventPerformance
+                            matchPerformance.allianceColor = matchAlliance.key.capitalized
+                            matchPerformance.allianceTeam = (teamStrings.index(of: teamString)! + 1) as NSNumber //The array of team strings comes in the correct order from the cloud
+                            matchPerformance.key = "\(match.key!)_\(teamString)"
+                            
+                            //Check for a local object
+                            if !currentLocalMatchPerformances.contains(where: {localMatchPerformance in
+                                return localMatchPerformance.key == matchPerformance.key
+                            }) {
+                                //Create a local object
+                                let localMatchPerformance = LocalMatchPerformance(entity: NSEntityDescription.entity(forEntityName: "LocalMatchPerformance", in: managedContext)!, insertInto: managedContext)
+                                localMatchPerformance.key = matchPerformance.key
+                            }
+                            
+                            teamMatchPerformanceObjects.append(matchPerformance)
                         }
+                        
                     }
                 } else {
                     //TODO: Send an error saying the alliance data isn't up yet

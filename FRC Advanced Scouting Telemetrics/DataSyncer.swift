@@ -33,15 +33,15 @@ class DataSyncer: NSObject, CDEPersistentStoreEnsembleDelegate {
 			syncSecret = stringValue
 		} else {
 			NSLog("No sync secret exists, using default.")
-			syncSecret = "FRC-4256-FAST"
+			syncSecret = "FRC-4256-FAST-V4"
 		}
 		
 		multipeerConnection = MultipeerConnection(syncSecret: syncSecret)
-		let rootDir = appDelegate.applicationDocumentsDirectory.appendingPathComponent("EnsembleMultipeerSyncV2", isDirectory: true).path
+		let rootDir = appDelegate.applicationDocumentsDirectory.appendingPathComponent("EnsembleMultipeerSyncV3", isDirectory: true).path
 		
 		fileSystem = CDEMultipeerCloudFileSystem(rootDirectory: rootDir, multipeerConnection: multipeerConnection)
 		multipeerConnection.fileSystem = (fileSystem as! CDEMultipeerCloudFileSystem)
-		ensemble = CDEPersistentStoreEnsemble(ensembleIdentifier: "FASTStoreV2", persistentStore: appDelegate.localPersistentStoreURL, managedObjectModelURL: appDelegate.managedObjectModelURL, cloudFileSystem: fileSystem)
+		ensemble = CDEPersistentStoreEnsemble(ensembleIdentifier: "FASTStoreV4", persistentStore: appDelegate.localPersistentStoreURL, managedObjectModelURL: appDelegate.managedObjectModelURL, cloudFileSystem: fileSystem)
 		
 		super.init()
 		
@@ -142,10 +142,45 @@ class DataSyncer: NSObject, CDEPersistentStoreEnsembleDelegate {
             let mainContext = DataManager.managedContext
             for object in savingContext.updatedObjects {
                 if let localTeam = object as? LocalTeam {
+                    let onDeviceObject = try? mainContext.existingObject(with: localTeam.objectID)
+                    //In the local tam objects, we want to save and sync the value that is not nil.
                     for value in localTeam.changedValues() {
-                        let onDeviceObject = try? mainContext.existingObject(with: localTeam.objectID)
-                        if value.value == nil {
+                        
+                        /*
+                        //For the notes, we would like to add them together
+                        if value.key == "notes" {
+                            if let externalNotes = value.value as? String {
+                                if let onDeviceNotes = onDeviceObject?.value(forKey: value.key) as? String {
+                                    //They both have notes, so append them if they are equal
+                                    if externalNotes != onDeviceNotes {
+                                        globalIDsAndValues.append((localTeam.objectID, value.key, onDeviceNotes + "\n\n" + externalNotes))
+                                    }
+                                } else {
+                                    //There are only external notes so let's use those
+                                    globalIDsAndValues.append((localTeam.objectID, value.key, externalNotes))
+                                }
+                            } else {
+                                //There are no external notes, just use the on device ones
+                                globalIDsAndValues.append((localTeam.objectID, value.key, onDeviceObject?.value(forKey: value.key)))
+                            }
+                        } else */ if value.value == nil {
+                            //For everything else, just chose the value that is not nil
                             globalIDsAndValues.append((localTeam.objectID, value.key, onDeviceObject?.value(forKey: value.key)))
+                        }
+                    }
+                } else if let localMatch = object as? LocalMatch {
+                    //On the local match performances, we need to take the ranking points one that is higher
+                    if let onDeviceLocalMatch = try? mainContext.existingObject(with: localMatch.objectID) as! LocalMatch {
+                        if localMatch.redRankingPoints?.doubleValue ?? 0 > onDeviceLocalMatch.redRankingPoints?.doubleValue ?? 0 {
+                            globalIDsAndValues.append((localMatch.objectID, "redRankingPoints", localMatch.redRankingPoints))
+                        } else {
+                            globalIDsAndValues.append((localMatch.objectID, "redRankingPoints", onDeviceLocalMatch.redRankingPoints))
+                        }
+                        
+                        if localMatch.blueRankingPoints?.doubleValue ?? 0 > onDeviceLocalMatch.blueRankingPoints?.doubleValue ?? 0 {
+                            globalIDsAndValues.append((localMatch.objectID, "blueRankingPoints", localMatch.blueRankingPoints))
+                        } else {
+                            globalIDsAndValues.append((localMatch.objectID, "blueRankingPoints", onDeviceLocalMatch.blueRankingPoints))
                         }
                     }
                 }
@@ -165,8 +200,14 @@ class DataSyncer: NSObject, CDEPersistentStoreEnsembleDelegate {
 		return true
 	}
 	
-	func persistentStoreEnsemble(_ ensemble: CDEPersistentStoreEnsemble!, didFailToSaveMergedChangesIn savingContext: NSManagedObjectContext!, error: Error!, reparationManagedObjectContext reparationContext: NSManagedObjectContext!) -> Bool {
+	func persistentStoreEnsemble(_ ensemble: CDEPersistentStoreEnsemble!, didFailToSaveMergedChangesIn savingContext: NSManagedObjectContext!, error: NSError!, reparationManagedObjectContext reparationContext: NSManagedObjectContext!) -> Bool {
 		CLSNSLogv("Ensemble did fail to save merged changes. Error: \(error)", getVaList([]))
+        
+        if error.code == 1560 {
+            //There were validation errors
+            
+        }
+        
 		let alert = UIAlertController(title: "Save Failed", message: "The save and sync failed.", preferredStyle: .alert)
 		alert.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
 		(UIApplication.shared.delegate as! AppDelegate).presentViewControllerOnTop(alert, animated: true)

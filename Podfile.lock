@@ -8,7 +8,6 @@ PODS:
     - Ensembles/Core
     - SSZipArchive
   - FLAnimatedImage (1.0.12)
-  - Gloss (1.2.1)
   - GMStepper (2.0.0)
   - NYTPhotoViewer (1.1.0):
     - NYTPhotoViewer/AnimatedGifSupport (= 1.1.0)
@@ -32,7 +31,6 @@ DEPENDENCIES:
   - Alamofire (~> 4.0)
   - Ensembles (~> 1.0)
   - Ensembles/Multipeer (~> 1.0)
-  - Gloss (~> 1.1)
   - GMStepper
   - NYTPhotoViewer (~> 1.1.0)
   - SSBouncyButton (~> 1.0)
@@ -45,7 +43,6 @@ SPEC CHECKSUMS:
   BRYSerialAnimationQueue: 75feef56345338619a6c2111f2a81de28a59c368
   Ensembles: 3725562044c8d4c518b4287d10076e5a28c96d0d
   FLAnimatedImage: 4a0b56255d9b05f18b6dd7ee06871be5d3b89e31
-  Gloss: 9ab33b8ede01e4232571d43a6bf9259b85d1de69
   GMStepper: 6aff0c881afac2f432e5c9b0df71e44e14110a06
   NYTPhotoViewer: e80e8767f3780d2df37c6f72cbab15d6c7232911
   SSBouncyButton: 90f6da63da6c6d32f9dab4928b80632b427d871a
@@ -56,6 +53,6 @@ SPEC CHECKSUMS:
   VerticalSlider: d0e269208ce7aa98e0273c0d244e9625d603b75e
   VTAcknowledgementsViewController: e1de80f2c0ce31cc7e1c6f1c8aaeec2770371f09
 
-PODFILE CHECKSUM: 2f7c66c8084bed491c6e8f540f32065461df435f
+PODFILE CHECKSUM: 3f0c414b77e5c45b90ba2cbb2da0f13857519e7c
 
-COCOAPODS: 1.1.1
+COCOAPODS: 1.2.0

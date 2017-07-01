@@ -34,6 +34,24 @@ open class LocalMatchPerformance: NSManagedObject {
         }
     }
     
+    var preferredScoutID: String {
+        get {
+            let timeMarkers = self.timeMarkers?.array as! [TimeMarker]
+            if self.defaultScoutID != nil && self.defaultScoutID != "default" {
+                return self.defaultScoutID!
+            } else if timeMarkers.count > 0 {
+                for marker in timeMarkers {
+                    if let id = marker.scoutID {
+                        return id
+                    }
+                }
+                return "default"
+            } else {
+                return "default"
+            }
+        }
+    }
+    
     var scoutIDs: [String]? {
         get {
             let timeMarkers = self.timeMarkers?.array as! [TimeMarker]

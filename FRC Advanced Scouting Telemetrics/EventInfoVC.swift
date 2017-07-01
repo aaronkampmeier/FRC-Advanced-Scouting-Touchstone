@@ -109,18 +109,19 @@ class EventInfoVC: UIViewController, UITableViewDataSource {
             keyLabel.text = "Address"
             keyLabel.constraints.filter({$0.identifier == "keyWidth"}).first?.constant = keyLabel.intrinsicContentSize.width
             
-            (cell?.viewWithTag(2) as! UILabel).text = selectedEvent?.venueAddress
+            (cell?.viewWithTag(2) as! UILabel).text = selectedEvent?.address
             
             return cell!
         case 2:
             //Official FIRST FMS
             let cell = tableView.dequeueReusableCell(withIdentifier: "nameValue")
             
-            let keyLabel = cell?.viewWithTag(1) as! UILabel
-            keyLabel.text = "Uses Official FIRST FMS"
-            keyLabel.constraints.filter({$0.identifier == "keyWidth"}).first?.constant = keyLabel.intrinsicContentSize.width
-            
-            (cell?.viewWithTag(2) as! UILabel).text = selectedEvent?.official.description.capitalized
+            //TODO: Find another way to describe if it is official or not
+//            let keyLabel = cell?.viewWithTag(1) as! UILabel
+//            keyLabel.text = "Uses Official FIRST FMS"
+//            keyLabel.constraints.filter({$0.identifier == "keyWidth"}).first?.constant = keyLabel.intrinsicContentSize.width
+//
+//            (cell?.viewWithTag(2) as! UILabel).text = selectedEvent?.official.description.capitalized
             
             return cell!
         case 3:

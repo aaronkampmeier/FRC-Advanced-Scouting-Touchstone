@@ -231,4 +231,9 @@ class AdminConsoleController: UIViewController, UITableViewDataSource, UITableVi
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         super.prepare(for: segue, sender: sender)
     }
+    
+    @IBAction func advancedPressed(_ sender: UIBarButtonItem) {
+        let advancedController = storyboard?.instantiateViewController(withIdentifier: "advancedControl") as! HiddenDebugViewController
+        present(advancedController, animated: true, completion: nil)
+    }
 }
