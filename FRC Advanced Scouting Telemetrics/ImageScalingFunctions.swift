@@ -9,6 +9,8 @@
 import Foundation
 import CoreGraphics
 
+//These functions are normally helpers for a shot chart image.
+
 func translatePointToRelativePoint(_ point: CGPoint, withCurrentSize currentSize: CGSize) -> CGPoint {
     let newX = point.x / currentSize.width
     let newY = point.y / currentSize.height
