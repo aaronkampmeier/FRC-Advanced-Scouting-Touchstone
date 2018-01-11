@@ -33,7 +33,7 @@ class NotesViewController: UIViewController {
         reload()
     }
     
-    func autoSave(_ timer: Timer) {
+    @objc func autoSave(_ timer: Timer) {
         dataManager.commitChanges()
     }
     

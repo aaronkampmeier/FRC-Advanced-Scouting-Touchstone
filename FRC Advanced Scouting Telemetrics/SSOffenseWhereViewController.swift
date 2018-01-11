@@ -118,7 +118,7 @@ class SSOffenseWhereViewController: UIViewController {
     }
     
     var currentScheduledTask: DispatchWorkItem?
-    func didSelectButton(_ sender: SSBouncyButton) {
+    @objc func didSelectButton(_ sender: SSBouncyButton) {
         for button in ssBouncyButtons {
             button.isSelected = false
         }

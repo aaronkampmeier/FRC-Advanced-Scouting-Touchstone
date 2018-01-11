@@ -70,6 +70,7 @@
 		933D21511E609BF7008C8276 /* Additional Licenses.plist in Resources */ = {isa = PBXBuildFile; fileRef = 933D21501E609BF7008C8276 /* Additional Licenses.plist */; };
 		933E794F1E385BB20033563B /* SSPreloadingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 933E794E1E385BB20033563B /* SSPreloadingViewController.swift */; };
 		934647FC1E3188D800DC96D2 /* SSDefenseViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 934647FB1E3188D800DC96D2 /* SSDefenseViewController.swift */; };
+		934DDE462002B0510032095C /* RealmDataMangager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 934DDE452002B0510032095C /* RealmDataMangager.swift */; };
 		9353ADBC1E57ACF100120F1A /* MatchesTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9353ADBB1E57ACF100120F1A /* MatchesTableViewController.swift */; };
 		9353ADC21E57B09D00120F1A /* MatchListTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9353ADC11E57B09D00120F1A /* MatchListTableViewCell.swift */; };
 		9353ADCA1E58EDF800120F1A /* CloudReloadingManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9353ADC91E58EDF800120F1A /* CloudReloadingManager.swift */; };
@@ -264,6 +265,7 @@
 		934647FB1E3188D800DC96D2 /* SSDefenseViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SSDefenseViewController.swift; sourceTree = "<group>"; };
 		934DC3791E48FD80001753FB /* FAST 2-4.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "FAST 2-4.xcdatamodel"; sourceTree = "<group>"; };
 		934DC3B61E4905B8001753FB /* FAST 2-3-4.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "FAST 2-3-4.xcdatamodel"; sourceTree = "<group>"; };
+		934DDE452002B0510032095C /* RealmDataMangager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RealmDataMangager.swift; sourceTree = "<group>"; };
 		9352BE1D1E5A6DA500896008 /* FAST 2-3-7.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "FAST 2-3-7.xcdatamodel"; sourceTree = "<group>"; };
 		9353ADBB1E57ACF100120F1A /* MatchesTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MatchesTableViewController.swift; sourceTree = "<group>"; };
 		9353ADC11E57B09D00120F1A /* MatchListTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MatchListTableViewCell.swift; sourceTree = "<group>"; };
@@ -456,6 +458,7 @@
 				939C08B01E6F8AFB005623ED /* Data Syncing */,
 				1F1C23831E072ECA008885A1 /* DataManager.swift */,
 				93AE997F1E3407A00000FB7C /* SSDataManager.swift */,
+				934DDE452002B0510032095C /* RealmDataMangager.swift */,
 				9332F2AD1E22C8C300AB3EA6 /* Cloud Data */,
 				1F21DF101C645D1F00C55D0E /* View Controllers */,
 				936572E01E1610CA00439728 /* About.rtf */,
@@ -725,7 +728,7 @@
 					1F78E77E1C3B469300221927 = {
 						CreatedOnToolsVersion = 7.2;
 						DevelopmentTeam = 3T77TK2ECU;
-						LastSwiftMigration = 0820;
+						LastSwiftMigration = 0920;
 						ProvisioningStyle = Automatic;
 						SystemCapabilities = {
 							com.apple.Siri = {
@@ -736,13 +739,13 @@
 					1F78E7951C3B469300221927 = {
 						CreatedOnToolsVersion = 7.2;
 						DevelopmentTeam = 3T77TK2ECU;
-						LastSwiftMigration = 0800;
+						LastSwiftMigration = 0920;
 						ProvisioningStyle = Automatic;
 						TestTargetID = 1F78E77E1C3B469300221927;
 					};
 					1F78E7A01C3B469300221927 = {
 						CreatedOnToolsVersion = 7.2;
-						LastSwiftMigration = 0800;
+						LastSwiftMigration = 0920;
 						TestTargetID = 1F78E77E1C3B469300221927;
 					};
 				};
@@ -932,6 +935,7 @@
 				93FBC3961E3E624500FEB328 /* GameFieldLocationViewController.swift in Sources */,
 				1F1C23CE1E07487C008885A1 /* TeamEventPerformance+CoreDataProperties.swift in Sources */,
 				93D75B6A1E5DE0F5002CBED2 /* ShotChartViewController.swift in Sources */,
+				934DDE462002B0510032095C /* RealmDataMangager.swift in Sources */,
 				1F78E7831C3B469300221927 /* AppDelegate.swift in Sources */,
 				938BEB2D1E352159003F2F74 /* Defending+CoreDataProperties.swift in Sources */,
 				932C344E1E12F7C400A23203 /* CloudImportManager.swift in Sources */,
@@ -1184,7 +1188,8 @@
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_OBJC_BRIDGING_HEADER = "FRC Advanced Scouting Telemetrics/FRC Advanced Scouting Touchstone-Bridging-Header.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
-				SWIFT_VERSION = 3.0;
+				SWIFT_SWIFT3_OBJC_INFERENCE = Default;
+				SWIFT_VERSION = 4.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				VERSIONING_SYSTEM = "apple-generic";
 			};
@@ -1226,7 +1231,8 @@
 				PROVISIONING_PROFILE = "";
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_OBJC_BRIDGING_HEADER = "FRC Advanced Scouting Telemetrics/FRC Advanced Scouting Touchstone-Bridging-Header.h";
-				SWIFT_VERSION = 3.0;
+				SWIFT_SWIFT3_OBJC_INFERENCE = Default;
+				SWIFT_VERSION = 4.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				VERSIONING_SYSTEM = "apple-generic";
 			};
@@ -1244,7 +1250,8 @@
 				PRODUCT_BUNDLE_IDENTIFIER = "com.kampmeier.FRC-Advanced-Scouting-TouchstoneTests";
 				PRODUCT_NAME = "FRC Advanced Scouting Touchstone Tests";
 				SWIFT_OBJC_BRIDGING_HEADER = "";
-				SWIFT_VERSION = 3.0;
+				SWIFT_SWIFT3_OBJC_INFERENCE = On;
+				SWIFT_VERSION = 4.0;
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/FRC Advanced Scouting Touchstone.app/FRC Advanced Scouting Touchstone";
 			};
 			name = Debug;
@@ -1261,7 +1268,8 @@
 				PRODUCT_BUNDLE_IDENTIFIER = "com.kampmeier.FRC-Advanced-Scouting-TouchstoneTests";
 				PRODUCT_NAME = "FRC Advanced Scouting Touchstone Tests";
 				SWIFT_OBJC_BRIDGING_HEADER = "";
-				SWIFT_VERSION = 3.0;
+				SWIFT_SWIFT3_OBJC_INFERENCE = On;
+				SWIFT_VERSION = 4.0;
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/FRC Advanced Scouting Touchstone.app/FRC Advanced Scouting Touchstone";
 			};
 			name = Release;
@@ -1274,7 +1282,8 @@
 				PRODUCT_BUNDLE_IDENTIFIER = "com.kampmeier.FRC-Advanced-Scouting-TouchstoneUITests";
 				PRODUCT_NAME = "FRC Advanced Scouting Touchstone UI Tests";
 				SWIFT_OBJC_BRIDGING_HEADER = "";
-				SWIFT_VERSION = 3.0;
+				SWIFT_SWIFT3_OBJC_INFERENCE = On;
+				SWIFT_VERSION = 4.0;
 				TEST_TARGET_NAME = "FRC Advanced Scouting Telemetrics";
 				USES_XCTRUNNER = YES;
 			};
@@ -1288,7 +1297,8 @@
 				PRODUCT_BUNDLE_IDENTIFIER = "com.kampmeier.FRC-Advanced-Scouting-TouchstoneUITests";
 				PRODUCT_NAME = "FRC Advanced Scouting Touchstone UI Tests";
 				SWIFT_OBJC_BRIDGING_HEADER = "";
-				SWIFT_VERSION = 3.0;
+				SWIFT_SWIFT3_OBJC_INFERENCE = On;
+				SWIFT_VERSION = 4.0;
 				TEST_TARGET_NAME = "FRC Advanced Scouting Telemetrics";
 				USES_XCTRUNNER = YES;
 			};

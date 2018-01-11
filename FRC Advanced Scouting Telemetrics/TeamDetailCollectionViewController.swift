@@ -178,7 +178,7 @@ class TeamDetailCollectionViewController: UICollectionViewController, UICollecti
         return CGSize(width: 112, height: 65)
     }
     
-    func viewShotChartPressed(_ sender: UIButton) {
+    @objc func viewShotChartPressed(_ sender: UIButton) {
         let shotChartNav = storyboard?.instantiateViewController(withIdentifier: "shotChartNav") as! UINavigationController
         (shotChartNav.topViewController as! ShotChartViewController).dataSource = self
         

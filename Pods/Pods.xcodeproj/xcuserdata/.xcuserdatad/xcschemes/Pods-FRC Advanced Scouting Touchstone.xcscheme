@@ -14,7 +14,7 @@
             buildForArchiving = "YES">
             <BuildableReference
                BuildableIdentifier = 'primary'
-               BlueprintIdentifier = '56F8F31A9F41946FE8FB2C567AB3A1DE'
+               BlueprintIdentifier = '2C70FD713B979735374695C3B1044328'
                BlueprintName = 'Pods-FRC Advanced Scouting Touchstone'
                ReferencedContainer = 'container:Pods.xcodeproj'
                BuildableName = 'Pods-FRC Advanced Scouting Touchstone.framework'>

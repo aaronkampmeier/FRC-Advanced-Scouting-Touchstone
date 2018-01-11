@@ -31,7 +31,7 @@ class SSPreloadingViewController: UIViewController {
         ssDataManager.preloadedGear = sender.isOn
     }
     
-    func didChangeFuelTankSliderValue(_ sender: UISlider) {
+    @objc func didChangeFuelTankSliderValue(_ sender: UISlider) {
         ssDataManager.preloadedFuel = Double(sender.value)
     }
     

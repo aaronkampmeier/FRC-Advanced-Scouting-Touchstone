@@ -83,7 +83,7 @@ class SSOffenseFuelViewController: UIViewController {
         lastFuelLoadingTime = ssDataManager.stopwatch.elapsedTime
     }
 
-    func fuelSliderChanged(_ sender: UISlider) {
+    @objc func fuelSliderChanged(_ sender: UISlider) {
         ssDataManager.setAssociatedFuelIncrease(withFuelIncrease: Double(sender.value) - currentFuelTankLevel, afterTime: lastFuelLoadingTime ?? 0)
         currentFuelTankLevel = Double(sender.value)
         fuelTankSlider.slider.isEnabled = false

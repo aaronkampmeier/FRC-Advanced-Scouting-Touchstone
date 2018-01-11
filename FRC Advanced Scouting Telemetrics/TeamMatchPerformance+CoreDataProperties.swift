@@ -94,8 +94,8 @@ extension TeamMatchPerformance: HasStats {
                 },
                 StatName.AverageFuelCycleTime: {
                     if self.local.hasBeenScouted {
-                        let fuelLoadings = (self.local.fuelLoadings?.allObjects as! [FuelLoading]).sorted() {$0.0.time!.doubleValue < $0.1.time!.doubleValue}
-                        let fuelScorings = (self.local.fuelScorings?.allObjects as! [FuelScoring]).sorted() {$0.0.time!.doubleValue < $0.1.time!.doubleValue}
+                        let fuelLoadings = (self.local.fuelLoadings?.allObjects as! [FuelLoading]).sorted() {$0.time!.doubleValue < $1.time!.doubleValue}
+                        let fuelScorings = (self.local.fuelScorings?.allObjects as! [FuelScoring]).sorted() {$0.time!.doubleValue < $1.time!.doubleValue}
                         
                         //Reamining fuel loadings is where all the fuel loadings will be stored initially and then each loading will be removed as it is used as part of a cycle
                         var remainingFuelLoadings = fuelLoadings

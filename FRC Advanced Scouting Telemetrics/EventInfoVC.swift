@@ -135,7 +135,7 @@ class EventInfoVC: UIViewController, UITableViewDataSource {
         }
     }
     
-    func websiteButtonPressed(_ sender: UIButton) {
+    @objc func websiteButtonPressed(_ sender: UIButton) {
         if let url = URL(string: selectedEvent?.website ?? "") {
             UIApplication.shared.openURL(url)
         }

@@ -137,7 +137,7 @@ class SSDefenseViewController: UIViewController {
         }
     }
     
-    func selectedTeam(_ sender: SSBouncyButton) {
+    @objc func selectedTeam(_ sender: SSBouncyButton) {
         for button in teamButtons {
             button.isSelected = false
         }

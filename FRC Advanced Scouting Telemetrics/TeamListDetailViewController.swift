@@ -476,7 +476,7 @@ extension TeamListDetailViewController: UITableViewDelegate, UITableViewDataSour
         }
     }
     
-    func websiteButtonPressed(_ sender: UIButton) {
+    @objc func websiteButtonPressed(_ sender: UIButton) {
         if let url = URL(string: selectedTeam?.website ?? "") {
             UIApplication.shared.openURL(url)
         }

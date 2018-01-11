@@ -50,7 +50,7 @@ class DataSyncingViewController: UIViewController, UITableViewDataSource{
 		
 	}
 	
-	func peerChangedState(_ notification: Notification) {
+	@objc func peerChangedState(_ notification: Notification) {
 		let peer = (notification as NSNotification).userInfo!["peer"] as! FASTPeer
 		let state = SessionState.init(rawValue: (notification as NSNotification).userInfo!["state"] as! Int)!
 		
@@ -69,7 +69,7 @@ class DataSyncingViewController: UIViewController, UITableViewDataSource{
 		}
 	}
 	
-	func numberOfTransfersChanged(_ notification: Notification) {
+	@objc func numberOfTransfersChanged(_ notification: Notification) {
 		DispatchQueue.main.async {
 			self.transferNumberLabel.text = "\(DataSyncer.sharedDataSyncer().multipeerConnection.currentFileTransfers.count)"
 		}

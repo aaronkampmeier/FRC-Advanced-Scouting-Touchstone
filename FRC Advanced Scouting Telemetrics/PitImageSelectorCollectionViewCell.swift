@@ -35,9 +35,9 @@ class PitImageSelectorCollectionViewCell: PitScoutingCell {
     @IBAction func imageButtonPressed(_ sender: UIButton) {
         if UIImagePickerController.isSourceTypeAvailable(.camera) || UIImagePickerController.isSourceTypeAvailable(.photoLibrary) {
             //Ask for permission
-            let authStatus = AVCaptureDevice.authorizationStatus(forMediaType: AVMediaTypeVideo)
+            let authStatus = AVCaptureDevice.authorizationStatus(for: AVMediaType.video)
             if  authStatus != .authorized && authStatus == .notDetermined {
-                AVCaptureDevice.requestAccess(forMediaType: AVMediaTypeVideo, completionHandler: nil)
+                AVCaptureDevice.requestAccess(for: AVMediaType.video, completionHandler: {_ in })
             } else if authStatus == .denied {
                 let alert = UIAlertController(title: "You Have Denied Acces to the Camera", message: "Go to Settings> Privacy> Camera> FAST and turn it on.", preferredStyle: .alert)
                 alert.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))

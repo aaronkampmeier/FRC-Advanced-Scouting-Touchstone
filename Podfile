@@ -12,6 +12,7 @@ pod 'VerticalSlider'
 pod 'SSBouncyButton', '~> 1.0'
 pod 'UICircularProgressRing'
 pod 'VTAcknowledgementsViewController'
+pod 'RealmSwift'
 end
 
 post_install do | installer |

@@ -73,7 +73,7 @@ class MatchOverviewPerformanceDetailViewController: UIViewController {
         didSet {
             if let id = scoutID {
                 timeMarkers = displayedTeamMatchPerformance?.local.timeMarkers(forScoutID: id) ?? []
-                timeMarkers = timeMarkers.sorted {($0.0.time?.doubleValue ?? 0) < ($0.1.time?.doubleValue ?? 0)}
+                timeMarkers = timeMarkers.sorted {($0.time?.doubleValue ?? 0) < ($1.time?.doubleValue ?? 0)}
             }
             
             fieldLocationDisplay.reloadData()

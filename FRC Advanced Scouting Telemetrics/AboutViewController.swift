@@ -19,7 +19,7 @@ class AboutViewController: UIViewController {
         aboutTextView.text = ""
         if let rtf = Bundle.main.url(forResource: "About", withExtension: "rtf") {
             do {
-            let attributedString = try NSAttributedString(url: rtf, options: [NSDocumentTypeDocumentAttribute:NSRTFTextDocumentType], documentAttributes: nil)
+            let attributedString = try NSAttributedString(url: rtf, options: [NSAttributedString.DocumentReadingOptionKey.documentType:NSAttributedString.DocumentType.rtf], documentAttributes: nil)
             aboutTextView.attributedText = attributedString
             } catch {
                 NSLog("Unable to read About.rtf file")

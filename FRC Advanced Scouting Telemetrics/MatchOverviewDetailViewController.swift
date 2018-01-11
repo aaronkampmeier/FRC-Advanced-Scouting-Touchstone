@@ -111,7 +111,7 @@ class MatchOverviewDetailViewController: UIViewController {
         matchPerformanceDetail.reloadData()
     }
     
-    func donePressed(_ sender: UIBarButtonItem) {
+    @objc func donePressed(_ sender: UIBarButtonItem) {
         self.dismiss(animated: true, completion: nil)
     }
 

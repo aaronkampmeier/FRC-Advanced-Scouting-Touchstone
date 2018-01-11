@@ -286,7 +286,7 @@ class StandsScoutingViewController: UIViewController {
 		isRunning = !isRunning
 	}
 	
-	func updateTimeLabel(_ timer: Timer) {
+	@objc func updateTimeLabel(_ timer: Timer) {
 		if stopwatch.isRunning {
 			timerLabel.text = stopwatch.elapsedTimeAsString
 			

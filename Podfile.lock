@@ -16,6 +16,11 @@ PODS:
     - FLAnimatedImage (~> 1.0.8)
     - NYTPhotoViewer/Core
   - NYTPhotoViewer/Core (1.1.0)
+  - Realm (3.0.2):
+    - Realm/Headers (= 3.0.2)
+  - Realm/Headers (3.0.2)
+  - RealmSwift (3.0.2):
+    - Realm (= 3.0.2)
   - SSBouncyButton (1.0.7):
     - BRYSerialAnimationQueue (~> 1.0)
     - UIColor-Hex (~> 0.1)
@@ -33,6 +38,7 @@ DEPENDENCIES:
   - Ensembles/Multipeer (~> 1.0)
   - GMStepper
   - NYTPhotoViewer (~> 1.1.0)
+  - RealmSwift
   - SSBouncyButton (~> 1.0)
   - UICircularProgressRing
   - VerticalSlider
@@ -45,6 +51,8 @@ SPEC CHECKSUMS:
   FLAnimatedImage: 4a0b56255d9b05f18b6dd7ee06871be5d3b89e31
   GMStepper: 6aff0c881afac2f432e5c9b0df71e44e14110a06
   NYTPhotoViewer: e80e8767f3780d2df37c6f72cbab15d6c7232911
+  Realm: 6f23fd1f178a09342eac21bfa7c2bf4312a7a180
+  RealmSwift: 695393add1b8f9d5fa75dd16e6355cf3935f71e2
   SSBouncyButton: 90f6da63da6c6d32f9dab4928b80632b427d871a
   SSZipArchive: 63f8e11cfcc33e03e4cd666b4359ea8bd6facd0c
   UICircularProgressRing: 8eca1c123d323dcef59ba3ca86b81c8d7e751ae4
@@ -53,6 +61,6 @@ SPEC CHECKSUMS:
   VerticalSlider: d0e269208ce7aa98e0273c0d244e9625d603b75e
   VTAcknowledgementsViewController: e1de80f2c0ce31cc7e1c6f1c8aaeec2770371f09
 
-PODFILE CHECKSUM: 3f0c414b77e5c45b90ba2cbb2da0f13857519e7c
+PODFILE CHECKSUM: ddebdf3a8adea0358e83f5325a8c806def775cfc
 
 COCOAPODS: 1.2.0
