@@ -6,7 +6,7 @@
 //  Copyright © 2018 Kampfire Technologies. All rights reserved.
 //
 
-//NOTE: With realm, you can only use objects on the thread they were created! See Realm Swift Model docs.
+//NOTE: With realm, you can only use objects on the thread they were created! See Realm Swift Model docs. You can use ThreadSafeReference to pass objects.
 
 import Foundation
 import RealmSwift

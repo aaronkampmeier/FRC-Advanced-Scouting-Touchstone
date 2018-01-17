@@ -75,6 +75,7 @@ class PitScoutingViewController: UIViewController, UICollectionViewDataSource, U
         // Do any additional setup after loading the view.
         
         do {
+            //TODO: Move these into data file
         pitScoutingParameters = [
             
             PitScoutingParameter(type: .ImageSelector, label: "Front Image", options: nil, currentValue: {

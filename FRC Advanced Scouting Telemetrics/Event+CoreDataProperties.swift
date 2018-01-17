@@ -10,41 +10,6 @@ import Foundation
 import CoreData
 
 
-extension Event: HasLocalEquivalent {
-    var localEntityName: String {
-        get {
-            return "LocalEvent"
-        }
-    }
-    typealias SelfObject = Event
-    typealias LocalType = LocalEvent
-    
-    static func specificFR() -> NSFetchRequest<Event> {
-        return NSFetchRequest<Event>(entityName: "Event")
-    }
-
-    @nonobjc open override class func fetchRequest() -> NSFetchRequest<NSFetchRequestResult> {
-        return NSFetchRequest<Event>(entityName: "Event") as! NSFetchRequest<NSFetchRequestResult>;
-    }
-    
-    static func genericFetchRequest() -> NSFetchRequest<NSManagedObject> {
-        return NSFetchRequest<NSManagedObject>(entityName: "Event")
-    }
-
-    @NSManaged public var code: String?
-    @NSManaged public var eventType: NSNumber?
-    @NSManaged public var eventTypeString: String?
-    @NSManaged public var key: String?
-    @NSManaged public var location: String?
-    @NSManaged public var name: String?
-    @NSManaged public var year: NSNumber?
-    @NSManaged public var matches: NSSet?
-    @NSManaged public var teamEventPerformances: NSSet?
-    @NSManaged public var transientLocal: LocalEvent?
-	
-
-}
-
 extension Event: HasStats {
     var stats: [StatName:()->StatValue] {
         get {

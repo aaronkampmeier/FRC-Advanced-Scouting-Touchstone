@@ -9,40 +9,6 @@
 import Foundation
 import CoreData
 
-
-extension Team: HasLocalEquivalent {
-    var localEntityName: String {
-        get {
-            return "LocalTeam"
-        }
-    }
-    typealias SelfObject = Team
-    typealias LocalType = LocalTeam
-    
-    static func specificFR() -> NSFetchRequest<Team> {
-        return NSFetchRequest<Team>(entityName: "Team")
-    }
-
-    @nonobjc open override class func fetchRequest() -> NSFetchRequest<NSFetchRequestResult> {
-        return NSFetchRequest<Team>(entityName: "Team") as! NSFetchRequest<NSFetchRequestResult>;
-    }
-    
-    static func genericFetchRequest() -> NSFetchRequest<NSManagedObject> {
-        return NSFetchRequest<NSManagedObject>(entityName: "Team")
-    }
-
-    @NSManaged public var key: String?
-    @NSManaged public var location: String?
-    @NSManaged public var name: String?
-    @NSManaged public var nickname: String?
-    @NSManaged public var rookieYear: NSNumber?
-    @NSManaged public var teamNumber: String?
-    @NSManaged public var website: String?
-    @NSManaged public var eventPerformances: NSSet?
-    @NSManaged public var transientLocal: LocalTeam?
-
-}
-
 extension Team: HasStats {
     var stats: [StatName:()->StatValue] {
         get {
