@@ -69,10 +69,15 @@
 			<key>orderHint</key>
 			<integer>21</integer>
 		</dict>
-		<key>RealmSwift.xcscheme</key>
+		<key>RealmLoginKit.xcscheme</key>
 		<dict>
 			<key>orderHint</key>
 			<integer>22</integer>
+		</dict>
+		<key>RealmSwift.xcscheme</key>
+		<dict>
+			<key>orderHint</key>
+			<integer>23</integer>
 		</dict>
 		<key>SSBouncyButton.xcscheme</key>
 		<dict>
@@ -83,6 +88,11 @@
 		<dict>
 			<key>orderHint</key>
 			<integer>8</integer>
+		</dict>
+		<key>TORoundedTableView.xcscheme</key>
+		<dict>
+			<key>orderHint</key>
+			<integer>24</integer>
 		</dict>
 		<key>UICircularProgressRing.xcscheme</key>
 		<dict>

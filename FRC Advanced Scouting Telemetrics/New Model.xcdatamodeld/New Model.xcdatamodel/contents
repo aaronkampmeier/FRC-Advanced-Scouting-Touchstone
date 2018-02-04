@@ -1,47 +1,47 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="13772" systemVersion="17C205" minimumToolsVersion="Automatic" sourceLanguage="Swift" userDefinedModelVersionIdentifier="">
-    <entity name="Event" representedClassName="Event" syncable="YES" codeGenerationType="class">
+<model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="13772" systemVersion="17D47" minimumToolsVersion="Automatic" sourceLanguage="Swift" userDefinedModelVersionIdentifier="">
+    <entity name="Event" representedClassName="Event" syncable="YES">
         <attribute name="key" attributeType="String" syncable="YES"/>
         <relationship name="matches" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="Match" inverseName="event" inverseEntity="Match" syncable="YES"/>
         <relationship name="teams" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Team" inverseName="events" inverseEntity="Team" syncable="YES"/>
     </entity>
-    <entity name="EventRanking" representedClassName="EventRanking" syncable="YES" codeGenerationType="class">
+    <entity name="EventRanking" representedClassName="EventRanking" syncable="YES">
         <relationship name="teams" maxCount="1" deletionRule="Deny" destinationEntity="Team" syncable="YES"/>
     </entity>
-    <entity name="GeneralRanking" representedClassName="GeneralRanking" syncable="YES" codeGenerationType="class">
+    <entity name="GeneralRanking" representedClassName="GeneralRanking" syncable="YES">
         <relationship name="teams" optional="YES" maxCount="1" deletionRule="Deny" destinationEntity="Team" syncable="YES"/>
     </entity>
-    <entity name="Match" representedClassName="Match" syncable="YES" codeGenerationType="class">
+    <entity name="Match" representedClassName="Match" syncable="YES">
         <attribute name="key" attributeType="String" syncable="YES"/>
         <relationship name="event" maxCount="1" deletionRule="Nullify" destinationEntity="Event" inverseName="matches" inverseEntity="Event" syncable="YES"/>
         <relationship name="teams" optional="YES" toMany="YES" maxCount="6" deletionRule="Nullify" destinationEntity="Team" inverseName="matches" inverseEntity="Team" syncable="YES"/>
     </entity>
-    <entity name="ScoutedMatch" representedClassName="ScoutedMatch" syncable="YES" codeGenerationType="class">
+    <entity name="ScoutedMatch" representedClassName="ScoutedMatch" syncable="YES">
         <attribute name="blueRP" optional="YES" syncable="YES"/>
         <attribute name="blueScore" optional="YES" syncable="YES"/>
         <attribute name="key" optional="YES" syncable="YES"/>
         <attribute name="redRP" optional="YES" syncable="YES"/>
         <attribute name="redScore" optional="YES" syncable="YES"/>
     </entity>
-    <entity name="ScoutedMatchPerformance" representedClassName="ScoutedMatchPerformance" syncable="YES" codeGenerationType="class">
+    <entity name="ScoutedMatchPerformance" representedClassName="ScoutedMatchPerformance" syncable="YES">
         <attribute name="key" optional="YES" syncable="YES"/>
     </entity>
-    <entity name="ScoutedTeam" representedClassName="ScoutedTeam" syncable="YES" codeGenerationType="class">
+    <entity name="ScoutedTeam" representedClassName="ScoutedTeam" syncable="YES">
         <attribute name="key" attributeType="String" syncable="YES"/>
     </entity>
-    <entity name="Team" representedClassName="Team" syncable="YES" codeGenerationType="class">
+    <entity name="Team" representedClassName="Team" syncable="YES">
         <attribute name="key" attributeType="String" syncable="YES"/>
         <relationship name="events" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Event" inverseName="teams" inverseEntity="Event" syncable="YES"/>
         <relationship name="matches" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Match" inverseName="teams" inverseEntity="Match" syncable="YES"/>
     </entity>
     <elements>
-        <element name="Team" positionX="-792" positionY="-5148" width="128" height="88"/>
         <element name="Event" positionX="-1044" positionY="-5157" width="128" height="88"/>
-        <element name="Match" positionX="-999" positionY="-4986" width="128" height="88"/>
-        <element name="ScoutedTeam" positionX="-578" positionY="-5148" width="128" height="58"/>
-        <element name="ScoutedMatch" positionX="-594" positionY="-5032" width="117" height="118"/>
         <element name="EventRanking" positionX="-657" positionY="-5256" width="128" height="58"/>
         <element name="GeneralRanking" positionX="-882" positionY="-5256" width="128" height="58"/>
+        <element name="Match" positionX="-999" positionY="-4986" width="128" height="88"/>
+        <element name="ScoutedMatch" positionX="-594" positionY="-5032" width="117" height="118"/>
         <element name="ScoutedMatchPerformance" positionX="-614" positionY="-4876" width="155" height="58"/>
+        <element name="ScoutedTeam" positionX="-578" positionY="-5148" width="128" height="58"/>
+        <element name="Team" positionX="-792" positionY="-5148" width="128" height="88"/>
     </elements>
 </model>

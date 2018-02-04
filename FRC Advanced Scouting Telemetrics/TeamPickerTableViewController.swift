@@ -17,7 +17,6 @@ class TeamPickerTableViewController: UITableViewController {
 	}
 	var shownTeams = [Team]()
 	
-	let dataManager = DataManager()
     override func viewDidLoad() {
         super.viewDidLoad()
 
@@ -27,7 +26,7 @@ class TeamPickerTableViewController: UITableViewController {
         // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
         // self.navigationItem.rightBarButtonItem = self.editButtonItem()
 		
-        teams = dataManager.localTeamRanking().filter {$0.local.isInPickList?.boolValue ?? true}
+        teams = RealmController.realmController.teamRanking().filter {$0.scouted.isInPickList}
         
 		
 		Answers.logCustomEvent(withName: "Opened Team Pick List", customAttributes: nil)
@@ -54,14 +53,14 @@ class TeamPickerTableViewController: UITableViewController {
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath)
 		
-		cell.textLabel?.text = "Team \(shownTeams[(indexPath as NSIndexPath).row].teamNumber!)"
+		cell.textLabel?.text = "Team \(shownTeams[(indexPath as NSIndexPath).row].teamNumber)"
 		
         return cell
     }
 	
 	override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         let team = shownTeams[indexPath.row]
-        team.local.isInPickList = false as NSNumber
+        team.scouted.isInPickList = false
 		shownTeams.remove(at: (indexPath as NSIndexPath).row)
 		
 		tableView.beginUpdates()
@@ -70,9 +69,9 @@ class TeamPickerTableViewController: UITableViewController {
 	}
     
     @IBAction func resetPressed(_ sender: UIBarButtonItem) {
-        let allTeams = dataManager.localTeamRanking()
+        let allTeams = RealmController.realmController.teamRanking()
         for team in allTeams {
-            team.local.isInPickList = true as NSNumber
+            team.scouted.isInPickList = true
         }
         
         self.teams = allTeams

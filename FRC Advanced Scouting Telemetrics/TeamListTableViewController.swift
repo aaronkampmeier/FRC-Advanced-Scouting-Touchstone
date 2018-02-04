@@ -15,7 +15,7 @@ class TeamListTableViewController: UITableViewController, TeamListDetailDataSour
     @IBOutlet weak var matchesButton: UIBarButtonItem!
 	
 	var searchController: UISearchController!
-	let dataManager = DataManager()
+	let realmController = RealmController.realmController
 	let teamImagesCache = NSCache<Team, UIImage>()
     var teamListSplitVC: TeamListSplitViewController {
         get {
@@ -37,7 +37,7 @@ class TeamListTableViewController: UITableViewController, TeamListDetailDataSour
 		}
 	}
     var isSortingAscending: Bool = false
-	var currentSortedTeams: [ObjectPair<Team, LocalTeam>]? {
+	var currentSortedTeams: [Team]? {
 		didSet {
 			if let teams = currentSortedTeams {
 				currentTeamsToDisplay = teams
@@ -47,26 +47,27 @@ class TeamListTableViewController: UITableViewController, TeamListDetailDataSour
 		}
 	}
 	
-    var teams: [ObjectPair<Team, LocalTeam>] = []
+    var teams: [Team] = []
 	
-	var currentEventTeams: [ObjectPair<Team,LocalTeam>] = [ObjectPair<Team,LocalTeam>]() {
+	var currentEventTeams: [Team] = [Team]() {
 		didSet {
 			currentTeamsToDisplay = currentEventTeams
 		}
 	}
-	var currentTeamsToDisplay = [ObjectPair<Team,LocalTeam>]() {
+	var currentTeamsToDisplay = [Team]() {
 		didSet {
 			tableView.reloadData()
 		}
 	}
     
     
-	var selectedTeam: ObjectPair<Team, LocalTeam>? {
+	var selectedTeam: Team? {
 		didSet {
 			NotificationCenter.default.post(name: Notification.Name(rawValue: "Different Team Selected"), object: self)
 			if let sTeam = selectedTeam {
+                //Select row in table view
 				if let index = currentTeamsToDisplay.index(where: {team in
-					return team.universal == sTeam.universal
+					return team == sTeam
 				}) {
 					tableView.selectRow(at: IndexPath.init(row: index, section: 0), animated: false, scrollPosition: .none)
 				}
@@ -86,7 +87,7 @@ class TeamListTableViewController: UITableViewController, TeamListDetailDataSour
                 statToSortBy = Team.StatName.LocalRank.rawValue
                 
 				selectedTeam = nil
-                currentEventTeams = ObjectPair<Team,LocalTeam>.fromArray(dataManager.localTeamRanking(forEvent: event))!
+                currentEventTeams = realmController.teamRanking(forEvent: event)
 				eventSelectionButton.setTitle(event.name, for: UIControlState())
                 
                 matchesButton.isEnabled = true
@@ -108,9 +109,9 @@ class TeamListTableViewController: UITableViewController, TeamListDetailDataSour
 	}
 	var teamEventPerformance: TeamEventPerformance? {
 		get {
-			if let team = selectedTeam?.universal {
+			if let team = selectedTeam {
 				if let event = selectedEvent {
-					return dataManager.eventPerformance(forTeam: team, inEvent: event)
+					return realmController.eventPerformance(forTeam: team, atEvent: event)
 				}
 			}
 			return nil
@@ -148,17 +149,21 @@ class TeamListTableViewController: UITableViewController, TeamListDetailDataSour
         //Add an observer for whenever a team's image is changed
         NotificationCenter.default.addObserver(forName: PitScoutingNewImageNotification, object: nil, queue: nil) {notification in
             if let team = notification.userInfo?["ForTeam"] as? Team {
-                self.teamImagesCache.setObject(UIImage(data: team.local.frontImage!)!, forKey: team)
+                self.teamImagesCache.setObject(UIImage(data: team.scouted.frontImage!)!, forKey: team)
                 
-                if let index = self.currentTeamsToDisplay.index(where: {$0.universal == team}) {
+                if let index = self.currentTeamsToDisplay.index(where: {$0 == team}) {
                     self.tableView.reloadRows(at: [IndexPath.init(row: index, section: 0)], with: .automatic)
                 }
             }
         }
+        
+        NotificationCenter.default.addObserver(forName: DidLogIntoSyncServerNotification, object: RealmController.realmController, queue: nil) {notification in
+            self.updateForImport(notification)
+        }
     }
     
     func loadTeams() {
-        teams = dataManager.localTeamRankingPairs()
+        teams = realmController.teamRanking()
     }
 	
 	override func viewWillAppear(_ animated: Bool) {
@@ -173,6 +178,16 @@ class TeamListTableViewController: UITableViewController, TeamListDetailDataSour
 			}
 		}
 	}
+    
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        
+        //Check if the user has logged in and if not, then present a log in view controller
+        if !RealmController.realmController.isLoggedIn {
+            let logInVC = storyboard?.instantiateViewController(withIdentifier: "signInVC") as! SignInViewController
+            self.present(logInVC, animated: true, completion: nil)
+        }
+    }
 
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
@@ -181,7 +196,7 @@ class TeamListTableViewController: UITableViewController, TeamListDetailDataSour
     
     //MARK: - TeamListDetailDataSource
     func team() -> Team? {
-        return selectedTeam?.universal
+        return selectedTeam
     }
     
     func inEvent() -> Event? {
@@ -205,13 +220,13 @@ class TeamListTableViewController: UITableViewController, TeamListDetailDataSour
 
         let team = currentTeamsToDisplay[(indexPath as NSIndexPath).row]
 		
-        cell.teamLabel.text = "Team \(team.universal.teamNumber!)"
+        cell.teamLabel.text = "Team \(team.teamNumber)"
         if isSorted {
             let statValue: StatValue
             if let stat = Team.StatName(rawValue: statToSortBy) {
-                statValue = team.universal.statValue(forStat: stat)
+                statValue = team.statValue(forStat: stat)
             } else if let stat = TeamEventPerformance.StatName(rawValue: statToSortBy) {
-                statValue = dataManager.eventPerformance(forTeam: team.universal, inEvent: selectedEvent!).statValue(forStat: stat)
+                statValue = realmController.eventPerformance(forTeam: team, atEvent: selectedEvent!).statValue(forStat: stat)
             } else {
                 statValue = .NoValue
             }
@@ -220,17 +235,18 @@ class TeamListTableViewController: UITableViewController, TeamListDetailDataSour
             cell.statLabel.text = ""
         }
 		
-        cell.rankLabel.text = "\(currentEventTeams.index(where: {$0.universal == team.universal})! as Int + 1)"
+        cell.rankLabel.text = "\(currentEventTeams.index(where: {$0 == team})! as Int + 1)"
 		
-		if let image = teamImagesCache.object(forKey: team.universal) {
+		if let image = teamImagesCache.object(forKey: team) {
 			cell.frontImage.image = image
 		} else {
-			if let imageData = team.local.frontImage {
+			if let imageData = team.scouted.frontImage {
 				guard let uiImage = UIImage(data: imageData as Data) else {
-					fatalError("Image Data Corrupted")
+					Crashlytics.sharedInstance().recordCustomExceptionName("Image data corrupted", reason: "Attempt to create UIImage from data failed.", frameArray: [])
+                    return cell
 				}
 				cell.frontImage.image = uiImage
-				teamImagesCache.setObject(uiImage, forKey: team.universal)
+				teamImagesCache.setObject(uiImage, forKey: team)
 			} else {
 				cell.frontImage.image = UIImage(named: "FRC-Logo")
 			}
@@ -263,7 +279,7 @@ class TeamListTableViewController: UITableViewController, TeamListDetailDataSour
     override func tableView(_ tableView: UITableView, moveRowAt fromIndexPath: IndexPath, to toIndexPath: IndexPath) {
 		//Move the team in the array and in Core Data
         //TODO: Move a team in the ranking when the user moves it
-        dataManager.moveTeam(from: fromIndexPath.row, to: toIndexPath.row, inEvent: selectedEvent)
+        realmController.moveTeam(from: fromIndexPath.row, to: toIndexPath.row, inEvent: selectedEvent)
         
         let movedTeam = currentEventTeams[fromIndexPath.row]
         if selectedEvent == nil {
@@ -282,7 +298,7 @@ class TeamListTableViewController: UITableViewController, TeamListDetailDataSour
 	
 	override func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
 		if let event = selectedEvent {
-			return "Event: \(event.name!)"
+			return "Event: \(event.name)"
 		} else {
 			return "All Teams"
 		}
@@ -379,8 +395,8 @@ class TeamListTableViewController: UITableViewController, TeamListDetailDataSour
                 isSorted = false
             default:
                 let currentTeams = currentEventTeams
-                currentSortedTeams = currentTeams.sorted {objectPair1, objectPair2 in
-                    let isBefore = objectPair1.universal.statValue(forStat: stat) > objectPair2.universal.statValue(forStat: stat)
+                currentSortedTeams = currentTeams.sorted {team1, team2 in
+                    let isBefore = team1.statValue(forStat: stat) > team2.statValue(forStat: stat)
                     if ascending {
                         return !isBefore
                     } else {
@@ -394,9 +410,9 @@ class TeamListTableViewController: UITableViewController, TeamListDetailDataSour
             statToSortBy = stat.rawValue
             
             let currentTeams = currentEventTeams
-            currentSortedTeams = currentTeams.sorted {objectPair1, objectPair2 in
-                let firstTeamEventPerformance: TeamEventPerformance = dataManager.eventPerformance(forTeam: objectPair1.universal, inEvent: selectedEvent!)
-                let secondTeamEventPerformance: TeamEventPerformance = dataManager.eventPerformance(forTeam: objectPair2.universal, inEvent: selectedEvent!)
+            currentSortedTeams = currentTeams.sorted {team1, team2 in
+                let firstTeamEventPerformance: TeamEventPerformance = realmController.eventPerformance(forTeam: team1, atEvent: selectedEvent!)
+                let secondTeamEventPerformance: TeamEventPerformance = realmController.eventPerformance(forTeam: team2, atEvent: selectedEvent!)
                 
                 let firstStatValue = firstTeamEventPerformance.statValue(forStat: stat)
                 let secondStatValue = secondTeamEventPerformance.statValue(forStat: stat)

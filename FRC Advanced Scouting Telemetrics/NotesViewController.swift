@@ -18,10 +18,15 @@ class NotesViewController: UIViewController {
     @IBOutlet weak var notesTextView: UITextView?
     
     var dataSource: NotesDataSource?
-    let dataManager = DataManager()
     var autosaveTimer: Timer?
     
     var team: Team!
+    
+    var notes: String = "" {
+        didSet {
+            notesTextView?.text = notes
+        }
+    }
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -34,21 +39,23 @@ class NotesViewController: UIViewController {
     }
     
     @objc func autoSave(_ timer: Timer) {
-        dataManager.commitChanges()
+        save()
+    }
+    
+    func save() {
+        RealmController.realmController.genericWrite(onRealm: .Synced) {
+            team.scouted.notes = self.notes
+        }
     }
     
     func reload() {
         if let team = dataSource?.currentTeamContext() {
             self.team = team
-            if let notes = team.local.notes {
-                notesTextView?.text = notes
-            } else {
-                notesTextView?.text = ""
-            }
+            self.notes = team.scouted.notes
             
             //Set the title in the nav bar
             if let _ = self.navigationController {
-                self.navigationItem.title = "Team \(team.teamNumber!) Notes"
+                self.navigationItem.title = "Team \(team.teamNumber) Notes"
             }
         }
     }
@@ -69,7 +76,7 @@ class NotesViewController: UIViewController {
         super.viewWillDisappear(animated)
         
         if dataSource?.notesShouldSave() ?? false {
-            dataManager.commitChanges()
+            save()
         }
         
         if let timer = autosaveTimer {
@@ -100,6 +107,6 @@ class NotesViewController: UIViewController {
 
 extension NotesViewController: UITextViewDelegate {
     func textViewDidEndEditing(_ textView: UITextView) {
-        team.local.notes = textView.text
+        save()
     }
 }

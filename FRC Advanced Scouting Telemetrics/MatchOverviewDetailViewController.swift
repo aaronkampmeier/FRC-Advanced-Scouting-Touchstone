@@ -37,18 +37,18 @@ class MatchOverviewDetailViewController: UIViewController {
             if let match = displayedMatch {
                 matchTitleLabel.text = match.description
                 
-                redPointsLabel.text = "\(match.local.redFinalScore?.description ?? "-") Pts."
-                redRankingPointsLabel.text = "\(match.local.redRankingPoints?.description ?? "-") RP"
-                bluePointsLabel.text = "\(match.local.blueFinalScore?.description ?? "-") Pts."
-                blueRankingPointsLabel.text = "\(match.local.blueRankingPoints?.description ?? "-") RP"
+                redPointsLabel.text = "\(match.scouted.redScore.value?.description ?? "-") Pts."
+                redRankingPointsLabel.text = "\(match.scouted.redRP.value?.description ?? "-") RP"
+                bluePointsLabel.text = "\(match.scouted.blueScore.value?.description ?? "-") Pts."
+                blueRankingPointsLabel.text = "\(match.scouted.blueRP.value?.description ?? "-") RP"
                 
                 //Set the teams in the segmented control
-                for teamMatchPerformance in match.teamPerformances?.allObjects as! [TeamMatchPerformance] {
+                for teamMatchPerformance in match.teamPerformances {
                     switch (teamMatchPerformance.alliance) {
                     case .Red:
-                        segmentedControl.setTitle(teamMatchPerformance.eventPerformance?.team.teamNumber, forSegmentAt: teamMatchPerformance.slot.rawValue - 1)
+                        segmentedControl.setTitle(teamMatchPerformance.teamEventPerformance?.team?.teamNumber.description, forSegmentAt: teamMatchPerformance.slot.rawValue - 1)
                     case .Blue:
-                        segmentedControl.setTitle(teamMatchPerformance.eventPerformance?.team.teamNumber, forSegmentAt: teamMatchPerformance.slot.rawValue + 2)
+                        segmentedControl.setTitle(teamMatchPerformance.teamEventPerformance?.team?.teamNumber.description, forSegmentAt: teamMatchPerformance.slot.rawValue + 2)
                     }
                 }
                 

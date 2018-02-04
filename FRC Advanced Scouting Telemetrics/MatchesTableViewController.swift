@@ -75,13 +75,13 @@ class MatchesTableViewController: UITableViewController {
             teamLabel.layer.borderColor = nil
         }
         
-        cell.red1.text = match.teamMatchPerformance(forColor: .Red, andSlot: .One).eventPerformance?.team.teamNumber
-        cell.red2.text = match.teamMatchPerformance(forColor: .Red, andSlot: .Two).eventPerformance?.team.teamNumber
-        cell.red3.text = match.teamMatchPerformance(forColor: .Red, andSlot: .Three).eventPerformance?.team.teamNumber
+        cell.red1.text = match.teamMatchPerformance(forColor: .Red, andSlot: .One).teamEventPerformance?.team?.teamNumber.description
+        cell.red2.text = match.teamMatchPerformance(forColor: .Red, andSlot: .Two).teamEventPerformance?.team?.teamNumber.description
+        cell.red3.text = match.teamMatchPerformance(forColor: .Red, andSlot: .Three).teamEventPerformance?.team?.teamNumber.description
         
-        cell.blue1.text = match.teamMatchPerformance(forColor: .Blue, andSlot: .One).eventPerformance?.team.teamNumber
-        cell.blue2.text = match.teamMatchPerformance(forColor: .Blue, andSlot: .Two).eventPerformance?.team.teamNumber
-        cell.blue3.text = match.teamMatchPerformance(forColor: .Blue, andSlot: .Three).eventPerformance?.team.teamNumber
+        cell.blue1.text = match.teamMatchPerformance(forColor: .Blue, andSlot: .One).teamEventPerformance?.team?.teamNumber.description
+        cell.blue2.text = match.teamMatchPerformance(forColor: .Blue, andSlot: .Two).teamEventPerformance?.team?.teamNumber.description
+        cell.blue3.text = match.teamMatchPerformance(forColor: .Blue, andSlot: .Three).teamEventPerformance?.team?.teamNumber.description
         
         
         if let date = match.time {

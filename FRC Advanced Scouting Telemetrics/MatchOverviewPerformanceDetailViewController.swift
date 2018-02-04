@@ -28,12 +28,12 @@ class MatchOverviewPerformanceDetailViewController: UIViewController {
             scoutID = nil
             matchPerformanceStats = []
             if let matchPerformance = displayedTeamMatchPerformance {
-                if matchPerformance.local.hasBeenScouted {
+                if matchPerformance.scouted.hasBeenScouted {
                     showMatchContentViews()
                 } else {
                     hideMatchContentViews()
                 }
-                availableScoutIDs = matchPerformance.local.scoutIDs ?? ["default"]
+                availableScoutIDs = matchPerformance.scouted.scoutIDs ?? ["default"]
                 
                 //Get all the stats
                 let availableStats = TeamMatchPerformance.StatName.allValues
@@ -72,8 +72,8 @@ class MatchOverviewPerformanceDetailViewController: UIViewController {
     var scoutID: String? {
         didSet {
             if let id = scoutID {
-                timeMarkers = displayedTeamMatchPerformance?.local.timeMarkers(forScoutID: id) ?? []
-                timeMarkers = timeMarkers.sorted {($0.time?.doubleValue ?? 0) < ($1.time?.doubleValue ?? 0)}
+                timeMarkers = displayedTeamMatchPerformance?.scouted.timeMarkers(forScoutID: id) ?? []
+                timeMarkers = timeMarkers.sorted {($0.time) < ($1.time)}
             }
             
             fieldLocationDisplay.reloadData()
@@ -165,24 +165,26 @@ extension MatchOverviewPerformanceDetailViewController: FieldLocationDisplayData
     }
     
     func allPoints(forFieldLocationDisplayController fieldLocationDisplayVC: FieldLocationDisplayViewController) -> [CGPoint] {
-        if let matchPerformance = displayedTeamMatchPerformance {
-            let fuelShots = matchPerformance.local.fuelScorings(forScoutID: scoutID ?? "default")
-            let highGoalShots = fuelShots.filter {$0.goal == BoilerGoal.HighGoal.rawValue}
-            
-            let points = highGoalShots.map {fuelScoring in
-                return CGPoint(x: fuelScoring.xLocation?.doubleValue ?? 0, y: fuelScoring.yLocation?.doubleValue ?? 0)
-            }
-            
-            return points
-        } else {
-            return []
-        }
+        //TODO: Remove the field location displayer for 2018 season
+//        if let matchPerformance = displayedTeamMatchPerformance {
+//            let fuelShots = matchPerformance.scouted.fuelScorings(forScoutID: scoutID ?? "default")
+//            let highGoalShots = fuelShots.filter {$0.goal == BoilerGoal.HighGoal.rawValue}
+//
+//            let points = highGoalShots.map {fuelScoring in
+//                return CGPoint(x: fuelScoring.xLocation?.doubleValue ?? 0, y: fuelScoring.yLocation?.doubleValue ?? 0)
+//            }
+//
+//            return points
+//        } else {
+//            return []
+//        }
+        return []
     }
 }
 
 extension MatchOverviewPerformanceDetailViewController: UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        if displayedTeamMatchPerformance?.local.hasBeenScouted ?? false {
+        if displayedTeamMatchPerformance?.scouted.hasBeenScouted ?? false {
             return timeMarkers.count
         } else {
             return 0
@@ -190,21 +192,11 @@ extension MatchOverviewPerformanceDetailViewController: UITableViewDataSource {
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        if displayedTeamMatchPerformance?.local.hasBeenScouted ?? false {
+        if displayedTeamMatchPerformance?.scouted.hasBeenScouted ?? false {
             let cell = tableView.dequeueReusableCell(withIdentifier: "timeMarker") as! MatchOverviewTimeMarkerTableViewCell
             let timeMarker = timeMarkers[indexPath.row]
             
             switch timeMarker.timeMarkerEventType {
-            case .LoadedFuel:
-                cell.iconImageView.image = #imageLiteral(resourceName: "Fuel")
-            case .ScoredFuel:
-                cell.iconImageView.image = #imageLiteral(resourceName: "Fuel")
-            case .LoadedGear:
-                cell.iconImageView.image = #imageLiteral(resourceName: "Gear")
-            case .ScoredGear:
-                cell.iconImageView.image = #imageLiteral(resourceName: "Gear")
-            case .Defended:
-                cell.iconImageView.image = #imageLiteral(resourceName: "Defensive Wood Wall")
             case .EndedAutonomous:
                 cell.iconImageView.image = nil
             case .Error:
@@ -212,7 +204,7 @@ extension MatchOverviewPerformanceDetailViewController: UITableViewDataSource {
             }
             
             cell.timeMarkerEventLabel.text = timeMarker.event
-            let elapsedTime = timeMarker.time?.doubleValue ?? 0
+            let elapsedTime = timeMarker.time
             cell.timeLabel.text = String.init(format: "%02d:%02d", Int(elapsedTime / 60), Int(elapsedTime.truncatingRemainder(dividingBy: 60)))
             
             return cell

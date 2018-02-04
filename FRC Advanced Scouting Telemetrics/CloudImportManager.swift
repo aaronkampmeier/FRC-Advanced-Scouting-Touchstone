@@ -7,28 +7,27 @@
 //
 
 import Foundation
-import CoreData
+import RealmSwift
 import Crashlytics
 
 class CloudEventImportManager {
-    fileprivate let dataManager = DataManager()
-    fileprivate let managedContext = DataManager.managedContext
+    fileprivate let realmController = RealmController.realmController
     fileprivate let cloudConnection = CloudData()
     
     fileprivate let completionHandler: (Bool, ImportError?) -> Void
     
     //Pre-existing objects
-    fileprivate let currentEvents: [Event]
+    fileprivate let currentEvents: Results<Event>
     fileprivate let currentTeams: [Team]
-    fileprivate let currentLocalTeams: [LocalTeam]
-    fileprivate let currentMatches: [Match]
-    fileprivate let currentLocalMatchPerformances: [LocalMatchPerformance]
-    fileprivate let currentLocalMatches: [LocalMatch]
+    fileprivate let currentScoutedTeams: Results<ScoutedTeam>
+    fileprivate let currentMatches: Results<Match>
+    fileprivate let currentScoutedMatchPerformances: Results<ScoutedMatchPerformance>
+    fileprivate let currentScoutedMatches: Results<ScoutedMatch>
     fileprivate let frcEvent: FRCEvent
     
     //Created objects (Including objects that were pre-existing but still would have been created were they not)
     fileprivate var eventObject: Event?
-    fileprivate var localEventObject: LocalEvent?
+    fileprivate var scoutedEventRanker: EventRanker?
     fileprivate var teamObjects: [Team] = []
     fileprivate var teamEventPerformanceObjects: [TeamEventPerformance] = []
     fileprivate var matchObjects: [Match] = []
@@ -40,27 +39,12 @@ class CloudEventImportManager {
         }
         
         self.completionHandler = completionHandler
-        currentEvents = dataManager.events()
-        currentTeams = dataManager.localTeamRanking()
-        do {
-            currentLocalTeams = try managedContext.fetch(LocalTeam.specificFR())
-        } catch {
-            NSLog("Unable to fetch local teams")
-            currentLocalTeams = []
-        }
-        currentMatches = dataManager.matches()
-        do {
-            currentLocalMatchPerformances = try managedContext.fetch(LocalMatchPerformance.specificFR())
-        } catch {
-            NSLog("Unable to fetch local match performances")
-            currentLocalMatchPerformances = []
-        }
-        do {
-            currentLocalMatches = try managedContext.fetch(LocalMatch.specificFR())
-        } catch {
-            NSLog("Unable to fetch current local matches")
-            currentLocalMatches = []
-        }
+        currentEvents = realmController.generalRealm.objects(Event.self)
+        currentTeams = realmController.teamRanking()
+        currentScoutedTeams = realmController.syncedRealm.objects(ScoutedTeam.self)
+        currentMatches = realmController.generalRealm.objects(Match.self)
+        currentScoutedMatchPerformances = realmController.syncedRealm.objects(ScoutedMatchPerformance.self)
+        currentScoutedMatches = realmController.syncedRealm.objects(ScoutedMatch.self)
         self.frcEvent = frcEvent
     }
     
@@ -76,38 +60,35 @@ class CloudEventImportManager {
         
         CLSNSLogv("Beginning import of event: %@", getVaList([frcEvent.key]))
         //Create an event object
-        let event: Event
-        event = Event(entity: NSEntityDescription.entity(forEntityName: "Event", in: managedContext)!, insertInto: managedContext)
-//        if #available(iOS 10.0, *) {
-//            event = Event(entity: Event.entity(), insertInto: managedContext)
-//        } else {
-//            event = Event(entity: NSEntityDescription.entity(forEntityName: "Event", in: managedContext)!, insertInto: managedContext)
-//        }
+        let event: Event = Event()
+        event.key = frcEvent.key
+        realmController.genericWrite(onRealm: .General) {
+            realmController.generalRealm.add(event)
+        }
         
         //Start loading the teams
         cloudConnection.teams(forEventKey: frcEvent.key, withCompletionHandler: importTeams)
         
-        event.code = frcEvent.eventCode
-        event.eventType = frcEvent.eventType as NSNumber
-        event.eventTypeString = frcEvent.eventTypeString
-        event.key = frcEvent.key
-        event.name = frcEvent.name
-        event.year = frcEvent.year as NSNumber
-        event.location = frcEvent.locationName
+        realmController.genericWrite(onRealm: .General) {
+            event.code = frcEvent.eventCode
+            event.eventType = frcEvent.eventType
+            event.eventTypeString = frcEvent.eventTypeString
+            event.name = frcEvent.name
+            event.year = frcEvent.year
+            event.location = frcEvent.locationName
+        }
         
         //Create the local one if there is no local object already
-        if event.fetchLocalObject() == nil {
-            let localEvent: LocalEvent
-            localEvent = LocalEvent(entity: NSEntityDescription.entity(forEntityName: "LocalEvent", in: managedContext)!, insertInto: managedContext)
-//            if #available(iOS 10.0, *) {
-//                localEvent = LocalEvent(entity: LocalEvent.entity(), insertInto: managedContext)
-//            } else {
-//                localEvent = LocalEvent(entity: NSEntityDescription.entity(forEntityName: "LocalEvent", in: managedContext)!, insertInto: managedContext)
-//            }
-            localEvent.key = event.key
-            localEventObject = localEvent
+        if let eventRanker = realmController.getTeamRanker(forEvent: event) {
+            scoutedEventRanker = eventRanker
         } else {
-            localEventObject = event.fetchLocalObject()
+            //No hay uno
+            let eventRanker = EventRanker()
+            eventRanker.key = event.key
+            scoutedEventRanker = eventRanker
+            realmController.genericWrite(onRealm: .Synced) {
+                realmController.syncedRealm.add(eventRanker)
+            }
         }
         
         eventObject = event
@@ -126,55 +107,58 @@ class CloudEventImportManager {
                     team = currentTeams[index]
                 } else {
                     //Create a new team and set its properties
-                    team = Team(entity: NSEntityDescription.entity(forEntityName: "Team", in: managedContext)!, insertInto: managedContext)
-//                    if #available(iOS 10.0, *) {
-//                        team = Team(entity: Team.entity(), insertInto: managedContext)
-//                    } else {
-//                        team = Team(entity: NSEntityDescription.entity(forEntityName: "Team", in: managedContext)!, insertInto: managedContext)
-//                    }
+                    team = Team()
+                    team.key = frcTeam.key
+                    realmController.genericWrite(onRealm: .General) {
+                        realmController.generalRealm.add(team)
+                    }
                 }
                 
-                team.key = frcTeam.key
-                team.location = frcTeam.stateProv
-                team.name = frcTeam.name
-                team.nickname = frcTeam.nickname
-                team.rookieYear = frcTeam.rookieYear as NSNumber
-                team.teamNumber = frcTeam.teamNumber.description
-                team.website = frcTeam.website
+                realmController.genericWrite(onRealm: .General) {
+                    team.location = frcTeam.stateProv
+                    team.name = frcTeam.name
+                    team.nickname = frcTeam.nickname ?? ""
+                    team.rookieYear = frcTeam.rookieYear
+                    team.teamNumber = frcTeam.teamNumber
+                    team.website = frcTeam.website
+                }
                 
                 //Check if it already has a local equivalent
-                let localTeam: LocalTeam
-                if let index = currentLocalTeams.index(where: {localTeam in
+                let scoutedTeam: ScoutedTeam
+                if let index = currentScoutedTeams.index(where: {localTeam in
                     return localTeam.key == team.key
                 }) {
-                    localTeam = currentLocalTeams[index]
+                    scoutedTeam = currentScoutedTeams[index]
                 } else {
                     //Doesn't have a local equivalent, make one
-                    localTeam = LocalTeam(entity: NSEntityDescription.entity(forEntityName: "LocalTeam", in: managedContext)!, insertInto: managedContext)
-                    localTeam.key = team.key
+                    scoutedTeam = ScoutedTeam()
+                    scoutedTeam.key = team.key
+                    realmController.genericWrite(onRealm: .Synced) {
+                        realmController.syncedRealm.add(scoutedTeam)
+                    }
                 }
                 
                 //Add the local team to the local event object's ranked teams
-                if !(localTeam.localEvents?.contains(where: {lEvent in
-                    return (lEvent as! LocalEvent) == localEventObject
-                }))! {
-                    localTeam.addToLocalEvents(localEventObject!)
+                if !(scoutedTeam.eventRankers.contains(scoutedEventRanker!)) {
+                    realmController.genericWrite(onRealm: .Synced) {
+                        scoutedEventRanker?.rankedTeams.append(scoutedTeam)
+                    }
                 }
                 //Add the local team to the local ranking object
-                if localTeam.ranker == nil {
-                    localTeam.ranker = dataManager.getLocalTeamRankingObject()
+                if scoutedTeam.ranker == nil {
+                    realmController.genericWrite(onRealm: .Synced) {
+                        realmController.getGeneralTeamRanker().rankedTeams.append(scoutedTeam)
+                    }
                 }
                 
                 //Now create the TeamEventPerformance object
-                let teamEventPerformance: TeamEventPerformance
-                teamEventPerformance = TeamEventPerformance(entity: NSEntityDescription.entity(forEntityName: "TeamEventPerformance", in: managedContext)!, insertInto: managedContext)
-//                if #available(iOS 10.0, *) {
-//                    teamEventPerformance = TeamEventPerformance(entity: TeamEventPerformance.entity(), insertInto: managedContext)
-//                } else {
-//                    teamEventPerformance = TeamEventPerformance(entity: NSEntityDescription.entity(forEntityName: "TeamEventPerformance", in: managedContext)!, insertInto: managedContext)
-//                }
-                teamEventPerformance.event = eventObject!
+                let teamEventPerformance = TeamEventPerformance()
+                teamEventPerformance.event = eventObject
                 teamEventPerformance.team = team
+                teamEventPerformance.key = "\(teamEventPerformance.team!.key)_\(teamEventPerformance.event!.key)"
+                realmController.genericWrite(onRealm: .General) {
+                    realmController.generalRealm.add(teamEventPerformance)
+                }
                 
                 teamEventPerformanceObjects.append(teamEventPerformance)
                 
@@ -199,60 +183,68 @@ class CloudEventImportManager {
                     match = currentMatches[index]
                 } else {
                     //Create a new match
-                    match = Match(entity: NSEntityDescription.entity(forEntityName: "Match", in: managedContext)!, insertInto: managedContext)
-//                    if #available(iOS 10.0, *) {
-//                        match = Match(entity: Match.entity(), insertInto: managedContext)
-//                    } else {
-//                        match = Match(entity: NSEntityDescription.entity(forEntityName: "Match", in: managedContext)!, insertInto: managedContext)
-//                    }
+                    match = Match()
+                    match.key = frcMatch.key
+                    
+                    realmController.genericWrite(onRealm: .General) {
+                        realmController.generalRealm.add(match)
+                    }
                 }
                 
-                match.key = frcMatch.key
-                match.matchNumber = frcMatch.matchNumber as NSNumber
-                switch frcMatch.compLevel {
-                case "qm":
-                    match.competitionLevel = Match.CompetitionLevel.Qualifier.rawValue
-                case "ef":
-                    match.competitionLevel = Match.CompetitionLevel.Eliminator.rawValue
-                case "sf":
-                    match.competitionLevel = Match.CompetitionLevel.SemiFinal.rawValue
-                case "qf":
-                    match.competitionLevel = Match.CompetitionLevel.QuarterFinal.rawValue
-                case "f":
-                    match.competitionLevel = Match.CompetitionLevel.Final.rawValue
-                default:
-                    self.completionHandler(false, ImportError.InvalidCompetitionLevel)
-                    return
+                realmController.genericWrite(onRealm: .General) {
+                    match.matchNumber = frcMatch.matchNumber
+                    switch frcMatch.compLevel {
+                    case "qm":
+                        match.competitionLevel = Match.CompetitionLevel.Qualifier.rawValue
+                    case "ef":
+                        match.competitionLevel = Match.CompetitionLevel.Eliminator.rawValue
+                    case "sf":
+                        match.competitionLevel = Match.CompetitionLevel.SemiFinal.rawValue
+                    case "qf":
+                        match.competitionLevel = Match.CompetitionLevel.QuarterFinal.rawValue
+                    case "f":
+                        match.competitionLevel = Match.CompetitionLevel.Final.rawValue
+                    default:
+                        self.completionHandler(false, ImportError.InvalidCompetitionLevel)
+                        return
+                    }
+                    match.setNumber.value = frcMatch.setNumber
+                    match.time = frcMatch.actualTime
+                    
+                    match.event = eventObject
                 }
-                match.setNumber = frcMatch.setNumber as NSNumber?
-                match.time = frcMatch.actualTime
-                
-                match.event = eventObject
                 
                 //Create the local match
-                let localMatch: LocalMatch
-                if !currentLocalMatches.contains(where: {localMatch in
+                let scoutedMatch: ScoutedMatch
+                if !currentScoutedMatches.contains(where: {localMatch in
                     return localMatch.key == match.key
                 }) {
-                    localMatch = LocalMatch(entity: NSEntityDescription.entity(forEntityName: "LocalMatch", in: managedContext)!, insertInto: managedContext)
-                    localMatch.key = match.key
+                    //Does not exist, create it
+                    scoutedMatch = ScoutedMatch()
+                    scoutedMatch.key = match.key
+                    realmController.genericWrite(onRealm: .Synced) {
+                        realmController.syncedRealm.add(scoutedMatch)
+                    }
                 } else {
-                    localMatch = match.local
+                    scoutedMatch = match.scouted
                 }
+                
                 let frcAlliances = frcMatch.alliances!
                 let blueScore = frcAlliances["blue"]?.score
                 let redScore = frcAlliances["red"]?.score
                 
                 //TBA represents unknown score values as -1 so if the score is -1, then put nil in for the score.
-                if blueScore == -1 {
-                    localMatch.blueFinalScore = nil
-                } else {
-                    localMatch.blueFinalScore = blueScore as NSNumber?
-                }
-                if redScore == -1 {
-                    localMatch.redFinalScore = nil
-                } else {
-                    localMatch.redFinalScore = redScore as NSNumber?
+                realmController.genericWrite(onRealm: .Synced) {
+                    if blueScore == -1 {
+                        scoutedMatch.blueScore.value = nil
+                    } else {
+                        scoutedMatch.blueScore.value = blueScore
+                    }
+                    if redScore == -1 {
+                        scoutedMatch.redScore.value = nil
+                    } else {
+                        scoutedMatch.redScore.value = redScore
+                    }
                 }
                 
                 //Set up all the teams in the match
@@ -263,7 +255,7 @@ class CloudEventImportManager {
                             //Find the TeamEventPerformance that pertains to this team and match
                             let eventPerformance: TeamEventPerformance
                             if let index = teamEventPerformanceObjects.index(where: {eventPerformance in
-                                return eventPerformance.team.key == teamString
+                                return eventPerformance.team!.key == teamString
                             }) {
                                 eventPerformance = teamEventPerformanceObjects[index]
                             } else {
@@ -282,21 +274,27 @@ class CloudEventImportManager {
                             
                             //Create the matchPerformance object
                             let matchPerformance: TeamMatchPerformance
-                            matchPerformance = TeamMatchPerformance(entity: NSEntityDescription.entity(forEntityName: "TeamMatchPerformance", in: managedContext)!, insertInto: managedContext)
-                            
-                            matchPerformance.match = match
-                            matchPerformance.eventPerformance = eventPerformance
-                            matchPerformance.allianceColor = matchAlliance.key.capitalized
-                            matchPerformance.allianceTeam = (teamStrings.index(of: teamString)! + 1) as NSNumber //The array of team strings comes in the correct order from the cloud
-                            matchPerformance.key = "\(match.key!)_\(teamString)"
+                            matchPerformance = TeamMatchPerformance()
+                            matchPerformance.key = "\(match.key)_\(teamString)"
+                            realmController.genericWrite(onRealm: .General) {
+                                realmController.generalRealm.add(matchPerformance)
+                                
+                                matchPerformance.match = match
+                                matchPerformance.teamEventPerformance = eventPerformance
+                                matchPerformance.allianceColor = matchAlliance.key.capitalized
+                                matchPerformance.allianceTeam = (teamStrings.index(of: teamString)! + 1) //The array of team strings comes in the correct order from the cloud
+                            }
                             
                             //Check for a local object
-                            if !currentLocalMatchPerformances.contains(where: {localMatchPerformance in
+                            if !currentScoutedMatchPerformances.contains(where: {localMatchPerformance in
                                 return localMatchPerformance.key == matchPerformance.key
                             }) {
                                 //Create a local object
-                                let localMatchPerformance = LocalMatchPerformance(entity: NSEntityDescription.entity(forEntityName: "LocalMatchPerformance", in: managedContext)!, insertInto: managedContext)
-                                localMatchPerformance.key = matchPerformance.key
+                                let scoutedMatchPerformance = ScoutedMatchPerformance()
+                                scoutedMatchPerformance.key = matchPerformance.key
+                                realmController.genericWrite(onRealm: .Synced) {
+                                    realmController.syncedRealm.add(scoutedMatchPerformance)
+                                }
                             }
                             
                             teamMatchPerformanceObjects.append(matchPerformance)
@@ -320,8 +318,6 @@ class CloudEventImportManager {
     
     private func finalize() {
         CLSNSLogv("Finalizing event import", getVaList([]))
-        //Do any last cleanup
-        dataManager.commitChanges()
         
         NotificationCenter.default.post(Notification(name: Notification.Name(rawValue: "UpdatedTeams"), object: self))
         

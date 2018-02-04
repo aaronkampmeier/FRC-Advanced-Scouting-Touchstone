@@ -8,16 +8,16 @@
 
 import UIKit
 
-class SSRopeClimbViewController: UIViewController {
+class SSClimbViewController: UIViewController {
     
     lazy var ssDataManager = SSDataManager.currentSSDataManager()!
     
-    var ropeClimbSuccessfulVC: SSOffenseWhereViewController? {
+    var climbSuccessfulVC: SSOffenseWhereViewController? {
         didSet {
-            if let ropeClimbSuccessfulVC = ropeClimbSuccessfulVC {
-                ropeClimbSuccessfulVC.delegate = self
-                ropeClimbSuccessfulVC.setUpWithButtons([SSOffenseWhereViewController.Button.init(title: "Yes", color: .blue, id: LocalMatchPerformance.RopeClimbSuccess.Yes.rawValue), SSOffenseWhereViewController.Button.init(title: "Somewhat", color: .blue, id: LocalMatchPerformance.RopeClimbSuccess.Somewhat.rawValue), SSOffenseWhereViewController.Button.init(title: "No", color: .blue, id: LocalMatchPerformance.RopeClimbSuccess.No.rawValue)], time: 3)
-                ropeClimbSuccessfulVC.setPrompt(to: "Rope Climb Successful")
+            if let climbSuccessfulVC = climbSuccessfulVC {
+                climbSuccessfulVC.delegate = self
+                climbSuccessfulVC.setUpWithButtons([SSOffenseWhereViewController.Button.init(title: "Yes", color: .blue, id: ScoutedMatchPerformance.ClimbSuccess.Yes.rawValue), SSOffenseWhereViewController.Button.init(title: "Somewhat", color: .blue, id: ScoutedMatchPerformance.ClimbSuccess.Somewhat.rawValue), SSOffenseWhereViewController.Button.init(title: "No", color: .blue, id: ScoutedMatchPerformance.ClimbSuccess.No.rawValue)], time: 3)
+                climbSuccessfulVC.setPrompt(to: "Rope Climb Successful")
             }
         }
     }
@@ -31,7 +31,7 @@ class SSRopeClimbViewController: UIViewController {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         
-        ropeClimbSuccessfulVC?.show()
+        climbSuccessfulVC?.show()
     }
 
     override func didReceiveMemoryWarning() {
@@ -48,14 +48,14 @@ class SSRopeClimbViewController: UIViewController {
         // Pass the selected object to the new view controller.
         
         if segue.identifier == "ropeClimbSuccessful" {
-            ropeClimbSuccessfulVC = (segue.destination as! SSOffenseWhereViewController)
+            climbSuccessfulVC = (segue.destination as! SSOffenseWhereViewController)
         }
     }
 }
 
-extension SSRopeClimbViewController: WhereDelegate {
+extension SSClimbViewController: WhereDelegate {
     func selected(_ whereVC: SSOffenseWhereViewController, id: String) {
-        ssDataManager.recordRopeClimb(id)
+        ssDataManager.recordClimb(id)
     }
     
     func shouldSelect(_ whereVC: SSOffenseWhereViewController, id: String, handler: @escaping (Bool) -> Void) {

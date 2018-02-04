@@ -14,11 +14,6 @@
 			<key>isShown</key>
 			<false/>
 		</dict>
-		<key>Ensembles.xcscheme</key>
-		<dict>
-			<key>isShown</key>
-			<false/>
-		</dict>
 		<key>FLAnimatedImage.xcscheme</key>
 		<dict>
 			<key>isShown</key>
@@ -49,6 +44,11 @@
 			<key>isShown</key>
 			<false/>
 		</dict>
+		<key>RealmLoginKit.xcscheme</key>
+		<dict>
+			<key>isShown</key>
+			<false/>
+		</dict>
 		<key>RealmSwift.xcscheme</key>
 		<dict>
 			<key>isShown</key>
@@ -59,7 +59,7 @@
 			<key>isShown</key>
 			<false/>
 		</dict>
-		<key>SSZipArchive.xcscheme</key>
+		<key>TORoundedTableView.xcscheme</key>
 		<dict>
 			<key>isShown</key>
 			<false/>

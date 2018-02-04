@@ -23,7 +23,6 @@ class SortVC: UIViewController, UIPickerViewDelegate, UIPickerViewDataSource {
 	
     var statsToDisplay = [String]()
     fileprivate var selectedStat: String?
-    fileprivate let dataManager = DataManager()
 	
     fileprivate var isAscending = false
 	

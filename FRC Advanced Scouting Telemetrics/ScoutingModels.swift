@@ -9,7 +9,41 @@
 import Foundation
 import RealmSwift
 
-@objcMembers class ScoutedTeam: Object {
+@objcMembers class GeneralRanker: Object {
+    dynamic var key = "General Ranker" //Is a singleton
+    
+    dynamic let rankedTeams = List<ScoutedTeam>()
+    
+    override static func primaryKey() -> String {
+        return "key"
+    }
+}
+
+@objcMembers class EventRanker: Object {
+    dynamic var key = "" //One for each event. Follows "ranker_(event code)"
+    
+    dynamic let rankedTeams = List<ScoutedTeam>()
+    
+    override static func primaryKey() -> String {
+        return "key"
+    }
+}
+
+@objcMembers class ScoutedTeam: Object, HasGeneralEquivalent {
+    
+    typealias SelfObject = ScoutedTeam
+    
+    typealias GeneralType = Team
+    
+    var ranker: GeneralRanker? {
+        get {
+            let rankers = LinkingObjects(fromType: GeneralRanker.self, property: "rankedTeams")
+            return rankers.first
+        }
+    }
+    
+    let eventRankers = LinkingObjects(fromType: EventRanker.self, property: "rankedTeams")
+    
     ///Cross Year Values
     dynamic var key = ""
     dynamic var notes = ""
@@ -21,7 +55,7 @@ import RealmSwift
     dynamic var frontImage: Data?
     dynamic var strategy: String?
     dynamic var canBanana = false
-    let driverXP = RealmOptional<Int>()
+    let driverXP = RealmOptional<Double>()
     dynamic var driveTrain: String?
     dynamic var isInPickList = true
     
@@ -33,42 +67,39 @@ import RealmSwift
     }
     
     //To connect to the general team
-    @objc private dynamic var universalCache: Team?
-    @objc dynamic var universalTeam: Team {
-        get {
-            if let team = universalCache {
-                return team
-            } else {
-                //Retrieve it and put it in the conveinence variable
-                
-            }
-        }
-    }
+    dynamic var cache: GeneralType?
+    
     override static func ignoredProperties() -> [String] {
-        return ["universalCache"]
+        return ["cache"]
     }
 }
 
-@objcMembers class ScoutedMatch: Object {
+@objcMembers class ScoutedMatch: Object, HasGeneralEquivalent {
     dynamic var key = ""
-    dynamic var blueScore = 0
-    dynamic var blueRP = 0
-    dynamic var redScore = 0
-    dynamic var redRP = 0
+    let blueScore = RealmOptional<Int>()
+    let blueRP = RealmOptional<Int>()
+    let redScore = RealmOptional<Int>()
+    let redRP = RealmOptional<Int>()
     
     override static func primaryKey() -> String {
         return "key"
     }
+    
+    typealias SelfObject = ScoutedMatch
+    typealias GeneralType = Match
+    dynamic var cache: Match?
+    override static func ignoredProperties() -> [String] {
+        return ["cache"]
+    }
 }
 
-@objcMembers class ScoutedMatchPerformance: Object {
+@objcMembers class ScoutedMatchPerformance: Object, HasGeneralEquivalent {
     dynamic var key = ""
-    dynamic var hasBeenScouted = false
-    let timeMarkers = List<TimeMarker>()
+    let timeMarkers = LinkingObjects(fromType: TimeMarker.self, property: "scoutedMatchPerformance")
     
     //--- Maybe try to remove
     dynamic var defaultScoutID = ""
-    let scoutIDs = List<String>()
+//    let scoutIDs = List<String>()
     //---
     
     dynamic var climbStatus = ""
@@ -76,16 +107,67 @@ import RealmSwift
     override static func primaryKey() -> String {
         return "key"
     }
-}
-
-@objcMembers class TimeMarker: Object {
-    dynamic var event = ""
-    dynamic var scoutID = ""
-    dynamic var time = Date()
     
-    let scoutedMatchPerformance = LinkingObjects(fromType: ScoutedMatchPerformance.self, property: "timeMarkers")
+    typealias SelfObject = ScoutedMatchPerformance
+    typealias GeneralType = TeamMatchPerformance
+    dynamic var cache: TeamMatchPerformance?
+    override static func ignoredProperties() -> [String] {
+        return ["cache"]
+    }
     
-    var timeMarkerEventType: TimeMarkerEvent {
-        return TimeMarkerEvent(rawValue: event) ?? .Error
+    enum ClimbSuccess: String, CustomStringConvertible {
+        case Yes
+        case Somewhat
+        case No
+        
+        var description: String {
+            get {
+                return self.rawValue
+            }
+        }
+    }
+    
+    var hasBeenScouted: Bool {
+        get {
+            let scoutIDs = (self.scoutIDs ?? [])
+            if scoutIDs.count >= 1 {
+                return true
+            } else {
+                return false
+            }
+        }
+    }
+    
+    ///TODO: Seems to be random and not very helpful
+    var preferredScoutID: String {
+        get {
+            if self.defaultScoutID != "default" {
+                return self.defaultScoutID
+            } else if timeMarkers.count > 0 {
+                for marker in timeMarkers {
+                    return marker.scoutID
+                }
+                return "default"
+            } else {
+                return "default"
+            }
+        }
+    }
+    
+    var scoutIDs: [String]? {
+        get {
+            var ids = [String]()
+            for marker in timeMarkers {
+                if !ids.contains(marker.scoutID) {
+                    ids.append(marker.scoutID)
+                }
+            }
+            
+            return ids
+        }
+    }
+    
+    func timeMarkers(forScoutID scoutID: String) -> [TimeMarker] {
+        return timeMarkers.filter {$0.scoutID == scoutID}
     }
 }

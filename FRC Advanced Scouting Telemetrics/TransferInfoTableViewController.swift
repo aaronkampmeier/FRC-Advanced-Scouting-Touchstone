@@ -7,17 +7,13 @@
 //
 
 import UIKit
+import RealmSwift
 
 class TransferInfoTableViewController: UITableViewController {
-	
-    //[FileName:(Progress, Peer Connected To, isDownloading (as opposed to uploading))]
-	var currentTransfers = [String:(Progress, FASTPeer, Bool)]() {
-		didSet {
-			resourceNames = Array(currentTransfers.keys)
-			tableView.reloadData()
-		}
-	}
-	var resourceNames = [String]()
+    
+	let realmController = RealmController.realmController
+    
+    var uploadToken: SyncSession.ProgressNotificationToken!
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -27,15 +23,11 @@ class TransferInfoTableViewController: UITableViewController {
 
         // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
         // self.navigationItem.rightBarButtonItem = self.editButtonItem()
-		
-		currentTransfers = DataSyncer.sharedDataSyncer().multipeerConnection.currentFileTransfers
-		resourceNames = Array(currentTransfers.keys)
-		
-		NotificationCenter.default.addObserver(forName: NSNotification.Name(rawValue: DSTransferNumberChanged), object: nil, queue: nil) {notification in
-			DispatchQueue.main.async {
-				self.currentTransfers = DataSyncer.sharedDataSyncer().multipeerConnection.currentFileTransfers
-			}
-		}
+        if let syncUser = realmController.currentSyncUser {
+            uploadToken = syncUser.session(for: realmController.currentRealmURL!)?.addProgressNotification(for: .upload, mode: .reportIndefinitely) {progress in
+                
+            }
+        }
     }
 
     override func didReceiveMemoryWarning() {
@@ -52,18 +44,14 @@ class TransferInfoTableViewController: UITableViewController {
 
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         // #warning Incomplete implementation, return the number of rows
-        return currentTransfers.count
+        return 2 //1 upload, 1 download
     }
 
 	
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath)
 		
-		if let transfer = currentTransfers[resourceNames[(indexPath as NSIndexPath).row]] {
-			(cell.viewWithTag(1) as! UILabel).text = transfer.1.displayName
-			(cell.viewWithTag(2) as! UIProgressView).observedProgress = transfer.0
-            (cell.viewWithTag(3) as! UIImageView).image = transfer.2 ? #imageLiteral(resourceName: "Down Arrow") : #imageLiteral(resourceName: "Up Arrow")
-		}
+        
 
         return cell
     }

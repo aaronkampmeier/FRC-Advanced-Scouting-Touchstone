@@ -17,7 +17,7 @@ class PitTableViewSelectorCollectionViewCell: PitScoutingCell, UITableViewDataSo
     var options: [String] = []
     var selectedOptions = [String]() {
         didSet {
-            updateHandler?(selectedOptions)
+            pitScoutingVC?.register(update: updateHandler, withValue: selectedOptions)
         }
     }
     

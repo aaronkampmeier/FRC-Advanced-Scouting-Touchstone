@@ -39,6 +39,6 @@ class PitSegmentedSelectorCollectionViewCell: PitScoutingCell {
     }
     
     @IBAction func segmentSelected(_ sender: UISegmentedControl) {
-        updateHandler?(options[sender.selectedSegmentIndex])
+        pitScoutingVC?.register(update: updateHandler, withValue: options[sender.selectedSegmentIndex])
     }
 }

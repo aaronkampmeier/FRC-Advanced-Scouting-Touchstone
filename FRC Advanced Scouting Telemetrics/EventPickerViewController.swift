@@ -12,7 +12,6 @@ class EventPickerViewController: UIViewController, UIPickerViewDelegate, UIPicke
 	@IBOutlet weak var eventPicker: UIPickerView!
 	
 	var delegate: EventSelection?
-	var dataManager = DataManager()
 	fileprivate var events: [Event]?
 	fileprivate var currentEvent: Event?
 	fileprivate var chosenEvent: Event?
@@ -25,7 +24,7 @@ class EventPickerViewController: UIViewController, UIPickerViewDelegate, UIPicke
 		eventPicker.delegate = self
 		
 		//Load all the events
-		events = dataManager.events()
+		events = Array(RealmController.realmController.generalRealm.objects(Event.self))
     }
 
     override func didReceiveMemoryWarning() {
@@ -71,7 +70,7 @@ class EventPickerViewController: UIViewController, UIPickerViewDelegate, UIPicke
 			return "All Teams (Default)"
 		default:
             let event = events![row-1]
-			return "\(event.name!) (\(event.year!))"
+			return "\(event.name) (\(event.year))"
 		}
 	}
 	

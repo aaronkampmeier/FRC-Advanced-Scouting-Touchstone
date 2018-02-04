@@ -25,6 +25,6 @@ class PitStringFieldCollectionViewCell: PitScoutingCell {
     
     @IBAction func textEditingEnded(_ sender: UITextField) {
         //TODO: Sanitize the data
-        updateHandler?(sender.text)
+        pitScoutingVC?.register(update: updateHandler, withValue: sender.text)
     }
 }

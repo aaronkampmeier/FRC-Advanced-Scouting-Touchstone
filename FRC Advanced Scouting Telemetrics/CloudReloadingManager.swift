@@ -16,7 +16,7 @@ class CloudReloadingManager {
     
     let completionHandler: CloudReloadingCompletionHandler
     let cloudConnection = CloudData()
-    let dataManager = DataManager()
+    let realmController = RealmController.realmController
     
     init(eventToReload: Event, completionHandler: @escaping CloudReloadingCompletionHandler) {
         self.eventToReload = eventToReload
@@ -25,9 +25,8 @@ class CloudReloadingManager {
     
     func reload() {
         //To reload, it removes the event and then calls a CloudImportManager to re-import it
-        cloudConnection.event(forKey: eventToReload.key!, withCompletionHandler: reloadEvent)
-        dataManager.delete(eventToReload)
-
+        cloudConnection.event(forKey: eventToReload.key, withCompletionHandler: reloadEvent)
+        realmController.delete(object: eventToReload)
     }
     
     private func reloadEvent(frcEvent: FRCEvent?) {
@@ -47,7 +46,7 @@ class MatchUpdateManager {
     var event: Event
     
     let cloudConnection = CloudData()
-    let dataManager = DataManager()
+    let realmController = RealmController.realmController
     
     init(eventToUpdateMatchesIn event: Event) {
         self.event = event
@@ -55,12 +54,12 @@ class MatchUpdateManager {
     
     ///Asynchronously update all the scores in the event's matches
     func update() {
-        cloudConnection.matches(forEventKey: event.key!, withCompletionHandler: updateMatches)
+        cloudConnection.matches(forEventKey: event.key, withCompletionHandler: updateMatches)
     }
     
     private func updateMatches(withCloudMatches cloudMatches: [FRCMatch]?) {
         if let cloudMatches = cloudMatches {
-            for match in (event.allMatches?.allObjects as! [Match]) {
+            for match in (event.matches) {
                 if let cloudMatch = cloudMatches.first(where: {$0.key == match.key}) {
                     let cloudAlliances = cloudMatch.alliances!
                     let blueScore = cloudAlliances["blue"]?.score
@@ -68,14 +67,14 @@ class MatchUpdateManager {
                     
                     //TBA represents unknown score values as -1 so if the score is -1, then put nil in for the score.
                     if blueScore == -1 {
-                        match.local.blueFinalScore = nil
+                        match.scouted.blueScore.value = nil
                     } else {
-                        match.local.blueFinalScore = blueScore as NSNumber?
+                        match.scouted.blueScore.value = blueScore
                     }
                     if redScore == -1 {
-                        match.local.redFinalScore = nil
+                        match.scouted.redScore.value = nil
                     } else {
-                        match.local.redFinalScore = redScore as NSNumber?
+                        match.scouted.redScore.value = redScore
                     }
                 }
             }

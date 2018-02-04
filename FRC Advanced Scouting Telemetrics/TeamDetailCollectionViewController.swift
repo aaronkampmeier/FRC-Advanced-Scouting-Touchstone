@@ -155,7 +155,7 @@ class TeamDetailCollectionViewController: UICollectionViewController, UICollecti
             return headerView
         case (1, UICollectionElementKindSectionHeader):
             let headerView = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: "header", for: indexPath)
-            (headerView.viewWithTag(1) as! UILabel).text = "\(selectedTeamEventPerformance?.event.name ?? "") Stats"
+            (headerView.viewWithTag(1) as! UILabel).text = "\(selectedTeamEventPerformance?.event?.name ?? "") Stats"
             return headerView
         case (0, UICollectionElementKindSectionFooter):
             let footerView = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: "footer", for: indexPath)

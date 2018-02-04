@@ -105,16 +105,18 @@ extension ShotChartViewController: FieldLocationDisplayDataSource {
             abort()
         }
         
-        if let matchPerformances = dataSource?.teamEventPerformance()?.matchPerformances?.allObjects as? [TeamMatchPerformance] {
+        if let matchPerformances = dataSource?.teamEventPerformance()?.matchPerformances {
             let shots = matchPerformances.reduce([CGPoint]()) {points, matchPerformance in
                 if matchPerformance.alliance == forAlliance {
                     var newPoints = [CGPoint]()
-                    let matchScorings = (matchPerformance.local.fuelScorings?.allObjects as? [FuelScoring])?.filter {$0.goal == BoilerGoal.HighGoal.rawValue}
-                    if let scorings = matchScorings {
-                        for scoring in scorings {
-                            newPoints.append(CGPoint(x: scoring.xLocation?.doubleValue ?? 0, y: scoring.yLocation?.doubleValue ?? 0))
-                        }
-                    }
+                    
+                    //TODO: Edit and make generic for future use
+//                    let matchScorings = [(matchPerformance.local.fuelScorings?.allObjects as? [FuelScoring])?.filter {$0.goal == BoilerGoal.HighGoal.rawValue}]
+//                    if let scorings = matchScorings {
+//                        for scoring in scorings {
+//                            newPoints.append(CGPoint(x: scoring.xLocation?.doubleValue ?? 0, y: scoring.yLocation?.doubleValue ?? 0))
+//                        }
+//                    }
                     
                     return points + newPoints
                 } else {

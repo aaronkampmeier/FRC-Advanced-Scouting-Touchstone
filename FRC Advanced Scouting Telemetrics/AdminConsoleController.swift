@@ -13,14 +13,12 @@ import VTAcknowledgementsViewController
 
 class AdminConsoleController: UIViewController, UITableViewDataSource, UITableViewDelegate {
     @IBOutlet weak var tableView: UITableView!
-    
-    let dataManager = DataManager()
 	
 	var events = [Event]()
     
     override func viewDidLoad() {
         super.viewDidLoad()
-		events = dataManager.getEvents()
+		events = Array(RealmController.realmController.generalRealm.objects(Event.self))
 	}
     
     override func viewWillAppear(_ animated: Bool) {
@@ -62,7 +60,7 @@ class AdminConsoleController: UIViewController, UITableViewDataSource, UITableVi
 			} else {
 				//Return the event cell with event name and type
 				let cell = tableView.dequeueReusableCell(withIdentifier: "event")!
-				cell.textLabel?.text = "\(events[indexPath.row].name ?? "") (\(events[indexPath.row].year?.intValue ?? 0))"
+				cell.textLabel?.text = "\(events[indexPath.row].name) (\(events[indexPath.row].year))"
 				cell.detailTextLabel?.text = events[indexPath.row].location
 				return cell
 			}
@@ -166,7 +164,7 @@ class AdminConsoleController: UIViewController, UITableViewDataSource, UITableVi
                     CloudReloadingManager(eventToReload: self.events[indexPath.row]) {successful in
                         grayView.removeFromSuperview()
                         
-                        self.events = self.dataManager.getEvents()
+                        self.events = Array(RealmController.realmController.generalRealm.objects(Event.self))
                         tableView.reloadData()
                     }
                         .reload()
@@ -216,7 +214,7 @@ class AdminConsoleController: UIViewController, UITableViewDataSource, UITableVi
     
     @IBAction func rewindToAdminConsole(withSegue segue: UIStoryboardSegue) {
         if segue.identifier == "unwindToAdminConsoleFromEventAdd" {
-            events = dataManager.events()
+            events = Array(RealmController.realmController.generalRealm.objects(Event.self))
             tableView.reloadData()
         }
         
@@ -224,7 +222,6 @@ class AdminConsoleController: UIViewController, UITableViewDataSource, UITableVi
     }
     
     @IBAction func donePressed(_ sender: UIBarButtonItem) {
-        dataManager.commitChanges()
         dismiss(animated: true, completion: nil)
     }
     

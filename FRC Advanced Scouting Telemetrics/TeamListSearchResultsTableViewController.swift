@@ -10,9 +10,9 @@ import UIKit
 
 class TeamListSearchResultsTableViewController: UITableViewController, UISearchResultsUpdating {
     var teamListTableVC: TeamListTableViewController!
-    var eventTeams = [ObjectPair<Team,LocalTeam>]()
+    var eventTeams = [Team]()
     
-    var filteredTeams = [ObjectPair<Team,LocalTeam>]()
+    var filteredTeams = [Team]()
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -49,8 +49,8 @@ class TeamListSearchResultsTableViewController: UITableViewController, UISearchR
             let localPredicate = NSCompoundPredicate(orPredicateWithSubpredicates: localPredicates)
             
             
-            filteredTeams = eventTeams.filter() {objectPair in
-                    return universalPredicate.evaluate(with: objectPair.universal) || localPredicate.evaluate(with: objectPair.local)
+            filteredTeams = eventTeams.filter() {team in
+                    return universalPredicate.evaluate(with: team) || localPredicate.evaluate(with: team)
             }
             
             tableView.reloadData()
@@ -73,7 +73,7 @@ class TeamListSearchResultsTableViewController: UITableViewController, UISearchR
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "basic", for: indexPath)
 
-        cell.textLabel?.text = "Team " + filteredTeams[indexPath.row].universal.teamNumber!
+        cell.textLabel?.text = "Team \(filteredTeams[indexPath.row].teamNumber)"
 
         return cell
     }

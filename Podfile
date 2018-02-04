@@ -4,8 +4,6 @@ use_frameworks!
 
 target 'FRC Advanced Scouting Touchstone' do
 pod 'Alamofire', '~> 4.0'
-pod "Ensembles", "~> 1.0"
-pod "Ensembles/Multipeer", "~> 1.0"
 pod 'NYTPhotoViewer', '~> 1.1.0'
 pod "GMStepper"
 pod 'VerticalSlider'
@@ -13,6 +11,7 @@ pod 'SSBouncyButton', '~> 1.0'
 pod 'UICircularProgressRing'
 pod 'VTAcknowledgementsViewController'
 pod 'RealmSwift'
+pod 'RealmLoginKit'
 end
 
 post_install do | installer |

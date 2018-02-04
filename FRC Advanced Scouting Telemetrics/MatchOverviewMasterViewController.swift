@@ -23,7 +23,7 @@ class MatchOverviewMasterViewController: UIViewController, MatchOverviewDetailDa
     var event: Event? {
         didSet {
             if let event = event {
-                let unsortedMatches = event.allMatches?.allObjects as! [Match]
+                let unsortedMatches = event.matches
                 let sortedMatches = unsortedMatches.sorted() {(firstMatch, secondMatch) in
                     return firstMatch < secondMatch
                 }
@@ -55,7 +55,7 @@ class MatchOverviewMasterViewController: UIViewController, MatchOverviewDetailDa
         
         self.load(withEvent: dataSource?.event())
         
-        matchesTableVC = self.childViewControllers.first as! MatchesTableViewController
+        matchesTableVC = (self.childViewControllers.first as! MatchesTableViewController)
         matchesTableVC?.delegate = self
         matchesTableVC?.tableView.allowsSelection = true
         

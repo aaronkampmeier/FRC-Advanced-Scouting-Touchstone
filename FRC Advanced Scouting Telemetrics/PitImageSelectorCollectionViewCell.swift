@@ -93,7 +93,7 @@ extension PitImageSelectorCollectionViewCell: UIImagePickerControllerDelegate {
     func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String : Any]) {
         picker.dismiss(animated: true, completion: nil)
         if let image = info[UIImagePickerControllerOriginalImage] as? UIImage {
-            updateHandler?(image)
+            pitScoutingVC?.register(update: updateHandler, withValue: image)
             imageButton.setImage(image, for: .normal)
         }
     }

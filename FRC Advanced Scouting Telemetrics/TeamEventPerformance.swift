@@ -7,30 +7,29 @@
 //
 
 import Foundation
-import CoreData
 import YCMatrix
+import RealmSwift
 
-extension TeamEventPerformance {
-
-    @nonobjc open override class func fetchRequest() -> NSFetchRequest<NSFetchRequestResult> {
-        return NSFetchRequest<TeamEventPerformance>(entityName: "TeamEventPerformance") as! NSFetchRequest<NSFetchRequestResult>;
+@objcMembers class TeamEventPerformance: Object {
+    dynamic var event: Event?
+    dynamic var team: Team?
+    let matchPerformances = LinkingObjects(fromType: TeamMatchPerformance.self, property: "teamEventPerformance")
+    
+    dynamic var key = ""
+    override static func primaryKey() -> String {
+        return "key"
     }
-
-    @NSManaged public var event: Event
-    @NSManaged public var matchPerformances: NSSet?
-    @NSManaged public var team: Team
-
 }
 
 extension TeamEventPerformance: HasStats {
     var stats: [StatName:()->StatValue] {
         get {
             return [
-                StatName.TotalMatchPoints:{return StatValue.initWithOptional(value: (self.matchPerformances?.allObjects as! [TeamMatchPerformance]).reduce(0.0) {(result, matchPerformance) in
+                StatName.TotalMatchPoints:{return StatValue.initWithOptional(value: (Array(self.matchPerformances)).reduce(0) {(result, matchPerformance) in
                     return result + (matchPerformance.finalScore ?? 0)
                     })
                 },
-                StatName.TotalRankingPoints:{return StatValue.initWithOptional(value: (self.matchPerformances?.allObjects as! [TeamMatchPerformance]).reduce(0) {(result, matchPerformance) in
+                StatName.TotalRankingPoints:{return StatValue.initWithOptional(value: (self.matchPerformances).reduce(0) {(result, matchPerformance) in
                     return result + (matchPerformance.rankingPoints ?? 0)
                     })
                 },
@@ -49,39 +48,10 @@ extension TeamEventPerformance: HasStats {
                     
                     return StatValue.NoValue
                 },
-                StatName.AverageTotalPointsFromFuel: {
-                    return self.average(ofStat: .TotalPointsFromFuel, forMatchPerformances: self.matchPerformances?.allObjects as! [TeamMatchPerformance])
-                },
-                StatName.AverageFuelCycleTime:{
-                    return self.average(ofStat: .AverageFuelCycleTime, forMatchPerformances: self.matchPerformances?.allObjects as! [TeamMatchPerformance])
-                },
-                StatName.AverageGearCycleTime: {
-                    let matchPerformances = self.matchPerformances?.allObjects as! [TeamMatchPerformance]
-                    return self.average(ofStat: .AverageGearCycleTime, forMatchPerformances: matchPerformances)
-                },
-                StatName.AverageHighGoalAccuracy: {
-                    let matchPerformances = self.matchPerformances?.allObjects as! [TeamMatchPerformance]
-                    return self.average(ofStat: .AverageAccuracy, forMatchPerformances: matchPerformances)
-                },
-                StatName.MostRopeClimb: {
-                    return self.average(ofStat: .ClimbingStatus, forMatchPerformances: self.matchPerformances?.allObjects as! [TeamMatchPerformance])
-                },
-                StatName.AverageGearsScored: {
-                    return self.average(ofStat: .TotalGearsScored, forMatchPerformances: self.matchPerformances?.allObjects as! [TeamMatchPerformance])
-                },
-                StatName.Peg1Percentage: {
-                    return self.average(ofStat: .Peg1Percentage, forMatchPerformances: self.matchPerformances?.allObjects as! [TeamMatchPerformance])
-                },
-                StatName.Peg2Percentage: {
-                    return self.average(ofStat: .Peg2Percentage, forMatchPerformances: self.matchPerformances?.allObjects as! [TeamMatchPerformance])
-                },
-                StatName.Peg3Percentage: {
-                    return self.average(ofStat: .Peg3Percentage, forMatchPerformances: self.matchPerformances?.allObjects as! [TeamMatchPerformance])
-                },
                 StatName.TotalWins: {
                     var winCount = 0
                     
-                    let matchPerformances = self.matchPerformances?.allObjects as! [TeamMatchPerformance]
+                    let matchPerformances = self.matchPerformances
                     for matchPerformance in matchPerformances {
                         if matchPerformance.winningMargin > 0 {
                             winCount += 1
@@ -93,7 +63,7 @@ extension TeamEventPerformance: HasStats {
                 StatName.TotalLosses: {
                     var lossCount = 0
                     
-                    let matchPerformances = self.matchPerformances?.allObjects as! [TeamMatchPerformance]
+                    let matchPerformances = self.matchPerformances
                     for matchPerformance in matchPerformances {
                         if matchPerformance.winningMargin < 0 {
                             lossCount += 1
@@ -105,7 +75,7 @@ extension TeamEventPerformance: HasStats {
                 StatName.TotalTies: {
                     var tieCount = 0
                     
-                    let matchPerformances = self.matchPerformances?.allObjects as! [TeamMatchPerformance]
+                    let matchPerformances = self.matchPerformances
                     for matchPerformance in matchPerformances {
                         if matchPerformance.winningMargin == 0 {
                             tieCount += 1
@@ -115,15 +85,15 @@ extension TeamEventPerformance: HasStats {
                     return StatValue.Integer(tieCount)
                 },
                 StatName.NumberOfMatches: {
-                    return StatValue.initWithOptional(value: self.matchPerformances?.count ?? 0)
+                    return StatValue.initWithOptional(value: self.matchPerformances.count)
                 },
                 StatName.RankingScore: {
                     var totalRPs = 0
                     var totalMatchPerformances = 0
                     
-                    let matchPerformances = self.matchPerformances?.allObjects as! [TeamMatchPerformance]
+                    let matchPerformances = self.matchPerformances
                     for matchPerformance in matchPerformances {
-                        if matchPerformance.local.hasBeenScouted {
+                        if matchPerformance.scouted.hasBeenScouted {
                             totalMatchPerformances += 1
                             totalRPs += matchPerformance.rankingPoints ?? 0
                         }
@@ -135,14 +105,11 @@ extension TeamEventPerformance: HasStats {
                         return StatValue.Double(Double(totalRPs)/Double(totalMatchPerformances))
                     }
                 },
-                StatName.AverageFloorGearCount: {
-                    return self.average(ofStat: .TotalFloorGears, forMatchPerformances: self.matchPerformances?.allObjects as! [TeamMatchPerformance])
-                },
                 StatName.SuccessfulClimbCount: {
-                    let matchPerformances = self.matchPerformances?.allObjects as! [TeamMatchPerformance]
+                    let matchPerformances = self.matchPerformances
                     
                     let successfulClimbCount = matchPerformances.reduce(0) {partialResult, matchPerformance in
-                        if (matchPerformance.local.hasBeenScouted) && matchPerformance.local.ropeClimbStatus == Capability.Yes.rawValue {
+                        if (matchPerformance.scouted.hasBeenScouted) && matchPerformance.scouted.climbStatus == ClimbStatus.Attempted.rawValue {
                             return partialResult + 1
                         } else {
                             return partialResult
@@ -160,8 +127,8 @@ extension TeamEventPerformance: HasStats {
                         numOfSuccesses = 0
                     }
                     
-                    let numOfScoutedMatches = (self.matchPerformances?.allObjects as! [TeamMatchPerformance]).reduce(0) {partialResult, matchPerformance in
-                        if matchPerformance.local.hasBeenScouted {
+                    let numOfScoutedMatches = (self.matchPerformances).reduce(0) {partialResult, matchPerformance in
+                        if matchPerformance.scouted.hasBeenScouted {
                             return partialResult + 1
                         } else {
                             return partialResult
@@ -173,12 +140,6 @@ extension TeamEventPerformance: HasStats {
                     } else {
                         return StatValue.Double(Double(numOfSuccesses)/Double(numOfScoutedMatches))
                     }
-                },
-                StatName.AverageAutoFuelScored: {
-                    return self.average(ofStat: .AutoFuelScored, forMatchPerformances: self.matchPerformances?.allObjects as! [TeamMatchPerformance])
-                },
-                StatName.AverageAutoGearsScored: {
-                    return self.average(ofStat: .AutoGearsScored, forMatchPerformances: self.matchPerformances?.allObjects as! [TeamMatchPerformance])
                 }
             ]
         }
@@ -287,7 +248,7 @@ extension TeamEventPerformance {
 ///Evaluates OPR using YCMatrix and the algorithm published by Ether located here: https://www.chiefdelphi.com/forums/showpost.php?p=1119150&postcount=36
 private let oprCache = NSCache<Event, Matrix>()
 private func evaluateOPR(forTeamPerformance teamPerformance: TeamEventPerformance) -> Double? {
-    let eventPerformances = suitableEventPerformances(forEvent: teamPerformance.event)
+    let eventPerformances = suitableEventPerformances(forEvent: teamPerformance.event!)
     let numOfTeams = eventPerformances.count
     
     if numOfTeams < 3 {
@@ -295,13 +256,13 @@ private func evaluateOPR(forTeamPerformance teamPerformance: TeamEventPerformanc
     }
     
     //Now also check that all the matches have scores
-    for match in teamPerformance.event.allMatches?.allObjects as! [Match] {
-        if match.local.redFinalScore == nil || match.local.blueFinalScore == nil {
+    for match in teamPerformance.event!.matches {
+        if match.scouted.redScore.value == nil || match.scouted.redScore.value == nil {
             return nil
         }
     }
     
-    if let cachedOPR = oprCache.object(forKey: teamPerformance.event) {
+    if let cachedOPR = oprCache.object(forKey: teamPerformance.event!) {
         if let index = eventPerformances.index(of: teamPerformance) {
             return (cachedOPR.i(Int32(index), j: 0))
         } else {
@@ -312,9 +273,9 @@ private func evaluateOPR(forTeamPerformance teamPerformance: TeamEventPerformanc
         let matrixA = createMatrixA(forEventPerformances: eventPerformances)
         
         
-        var rowsB = [Double]() //Should only be one element per row
+        var rowsB = [Int]() //Should only be one element per row
         for eventPerformance in eventPerformances {
-            let matchPerformances = eventPerformance.matchPerformances?.allObjects as! [TeamMatchPerformance]
+            let matchPerformances = eventPerformance.matchPerformances
             let sumOfAllScores = matchPerformances.reduce(0) {scoreSum, matchPerformance in
                 return scoreSum + (matchPerformance.finalScore ?? 0)
             }
@@ -322,12 +283,12 @@ private func evaluateOPR(forTeamPerformance teamPerformance: TeamEventPerformanc
         }
         let matrixB = Matrix(from: rowsB, rows: Int32(numOfTeams), columns: 1)
         
-        
+        //TODO: Decide best way to solve opr
         let oprMatrix = matrixA.solve(matrixB!)
 //        let oprMatrix = solveForX(matrixA, matrixB: matrixB)
         
         //Cache it because these calculations are expensive
-        oprCache.setObject(oprMatrix!, forKey: teamPerformance.event)
+        oprCache.setObject(oprMatrix!, forKey: teamPerformance.event!)
         
         if let index = eventPerformances.index(of: teamPerformance) {
             return (oprMatrix?.i(Int32(index), j: 0))!
@@ -339,7 +300,7 @@ private func evaluateOPR(forTeamPerformance teamPerformance: TeamEventPerformanc
 
 private let ccwmCache = NSCache<Event, Matrix>()
 private func evaluateCCWM(forTeamPerformance teamPerformance: TeamEventPerformance) -> Double? {
-    let eventPerformances = suitableEventPerformances(forEvent: teamPerformance.event)
+    let eventPerformances = suitableEventPerformances(forEvent: teamPerformance.event!)
     let numOfTeams = eventPerformances.count
     
     if numOfTeams < 3 {
@@ -347,13 +308,13 @@ private func evaluateCCWM(forTeamPerformance teamPerformance: TeamEventPerforman
     }
     
     //Now also check that all the matches have scores
-    for match in teamPerformance.event.allMatches?.allObjects as! [Match] {
-        if match.local.redFinalScore == nil || match.local.blueFinalScore == nil {
+    for match in teamPerformance.event!.matches {
+        if match.scouted.redScore.value == nil || match.scouted.blueScore.value == nil {
             return nil
         }
     }
     
-    if let cachedCCWM = ccwmCache.object(forKey: teamPerformance.event) {
+    if let cachedCCWM = ccwmCache.object(forKey: teamPerformance.event!) {
         if let index = eventPerformances.index(of: teamPerformance) {
             return (cachedCCWM.i(Int32(index), j: 0))
         } else {
@@ -362,11 +323,11 @@ private func evaluateCCWM(forTeamPerformance teamPerformance: TeamEventPerforman
     } else {
         let matrixA = createMatrixA(forEventPerformances: eventPerformances)
         
-        //Matrix B for CCWM is the same as DPR's Matrix B except for the values are your alliances' scores the opposing alliances' scores (the winning margin)
-        var rowsB = [Double]() //Should only be one element for year
+        //Matrix B for CCWM is the same as DPR's Matrix B except for the values are your alliance's scores minus the opposing alliance's scores (the winning margin)
+        var rowsB = [Int]() //Should only be one element for year
         for eventPerformance in eventPerformances {
-            let matchPerformances = eventPerformance.matchPerformances?.allObjects as! [TeamMatchPerformance]
-            let sumOfWinningMargins = matchPerformances.reduce(0.0) {(partialResult, matchPerformance) in
+            let matchPerformances = eventPerformance.matchPerformances
+            let sumOfWinningMargins = matchPerformances.reduce(0) {(partialResult, matchPerformance) in
                 return partialResult + matchPerformance.winningMargin
             }
             rowsB.append(sumOfWinningMargins)
@@ -376,7 +337,7 @@ private func evaluateCCWM(forTeamPerformance teamPerformance: TeamEventPerforman
         let ccwmMatrix = matrixA.solve(matrixB)
 //        let ccwmMatrix = solveForX(matrixA, matrixB: matrixB)
         
-        ccwmCache.setObject(ccwmMatrix!, forKey: teamPerformance.event)
+        ccwmCache.setObject(ccwmMatrix!, forKey: teamPerformance.event!)
         
         if let index = eventPerformances.index(of: teamPerformance) {
             return (ccwmMatrix?.i(Int32(index), j: 0))!
@@ -388,19 +349,19 @@ private func evaluateCCWM(forTeamPerformance teamPerformance: TeamEventPerforman
 
 ///Returns all the team event performances in an event that actually participate in an event.
 private func suitableEventPerformances(forEvent event: Event) -> [TeamEventPerformance] {
-    let allEventPerformances = event.teamEventPerformances?.allObjects as! [TeamEventPerformance]
+    let allEventPerformances = event.teamEventPerformances
     
     let eventPerformances = allEventPerformances.filter() {teamEventPerformance in
         //Check to see the number of match performances that have been scouted
         
-        if (teamEventPerformance.matchPerformances?.count ?? 0) == 0 {
+        if (teamEventPerformance.matchPerformances.count) == 0 {
             return false
         } else {
             return true
         }
     }
     
-    return eventPerformances
+    return Array(eventPerformances)
 }
 
 //Solves Ax=B
@@ -426,13 +387,13 @@ func createMatrixA(forEventPerformances eventPerformances: [TeamEventPerformance
     var rowsA = [Double]()
     for (firstIndex, firstEventPerformance) in eventPerformances.enumerated() {
         var row = [Double]()
-        let firstTeamMatchPerformances = firstEventPerformance.matchPerformances?.allObjects as! [TeamMatchPerformance]
+        let firstTeamMatchPerformances = firstEventPerformance.matchPerformances
         
         for (secondIndex, secondEventPerformance) in eventPerformances.enumerated() {
             if firstIndex == secondIndex {
                 assert(firstEventPerformance == secondEventPerformance)
             }
-            let secondTeamMatchPerformances = secondEventPerformance.matchPerformances?.allObjects as! [TeamMatchPerformance]
+            let secondTeamMatchPerformances = secondEventPerformance.matchPerformances
             
             var numOfCommonMatches = 0.0
             for firstTeamMatchPerformance in firstTeamMatchPerformances {

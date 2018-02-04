@@ -31,8 +31,8 @@ class SuperNotesCollectionViewController: UICollectionViewController {
         // Do any additional setup after loading the view.
         
         if let match = dataSource?.superNotesForMatch() {
-            teams = (match.teamPerformances?.allObjects as! [TeamMatchPerformance]).map() {teamMatchPerformance in
-                return teamMatchPerformance.eventPerformance!.team
+            teams = (match.teamPerformances).map() {teamMatchPerformance in
+                return teamMatchPerformance.teamEventPerformance!.team!
             }
         } else {
             teams = dataSource?.superNotesForTeams() ?? []
@@ -48,7 +48,7 @@ class SuperNotesCollectionViewController: UICollectionViewController {
     
     @IBAction func donePressed(_ sender: UIBarButtonItem) {
         dismiss(animated: true) {
-            DataManager().commitChanges()
+            
         }
     }
 

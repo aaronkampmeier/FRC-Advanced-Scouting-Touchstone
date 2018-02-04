@@ -27,7 +27,6 @@ class PitButtonCollectionViewCell: PitScoutingCell {
     @IBAction func buttonPressed(_ sender: UIButton) {
         sender.isSelected = !sender.isSelected
         
-        updateHandler?(sender.isSelected)
+        pitScoutingVC?.register(update: updateHandler, withValue: sender.isSelected)
     }
-    
 }

@@ -18,7 +18,7 @@ class SuperNotesCollectionViewCell: UICollectionViewCell {
         notesVC.dataSource = self
         
         self.team = team
-        teamLabel.text = "\(team.teamNumber!)"
+        teamLabel.text = "\(team.teamNumber)"
         
         notesVC.reload()
     }

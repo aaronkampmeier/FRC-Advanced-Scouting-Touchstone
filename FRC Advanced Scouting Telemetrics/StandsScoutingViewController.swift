@@ -14,7 +14,6 @@ class StandsScoutingViewController: UIViewController {
 	@IBOutlet weak var timerLabel: UILabel!
 	@IBOutlet weak var teamLabel: UILabel!
 	@IBOutlet weak var matchAndEventLabel: UILabel!
-	@IBOutlet weak var segmentedControl: UISegmentedControl!
 	@IBOutlet weak var closeButton: UIButton!
     @IBOutlet weak var notesButton: UIButton!
     @IBOutlet weak var endAutonomousButton: UIButton!
@@ -24,15 +23,15 @@ class StandsScoutingViewController: UIViewController {
 	var matchPerformance: TeamMatchPerformance? {
         willSet {
             if self.isViewLoaded {
-                matchAndEventLabel.text = "\(teamEventPerformance!.event.name!)  \(newValue!.match!.competitionLevel!) \(newValue!.match!.matchNumber!)"
+                matchAndEventLabel.text = "\(teamEventPerformance!.event!.name)  \(newValue!.match!.competitionLevel) \(newValue!.match!.matchNumber)"
                 ssDataManager = SSDataManager(teamBeingScouted: team, matchBeingScouted: newValue!.match!, stopwatch: stopwatch)
             }
 		}
 	}
 	var team: Team {
-		return teamEventPerformance!.team
+		return teamEventPerformance!.team!
 	}
-	let dataManager = DataManager()
+    
     var ssDataManager: SSDataManager?
 	
 	let stopwatch = Stopwatch()
@@ -48,11 +47,8 @@ class StandsScoutingViewController: UIViewController {
 			
 			//Set appropriate state for elements in the view
 			closeButton.isHidden = true
-			
-			//Let the user now select new segments
-			segmentedControl.isEnabled = true
             
-            cycleFromViewController(currentVC!, toViewController: offenseVC!)
+            cycleFromViewController(currentVC!, toViewController: gameScoutVC!)
             
             endAutonomousButton.isHidden = false
             autonomousLabel.isHidden = false
@@ -67,12 +63,8 @@ class StandsScoutingViewController: UIViewController {
             //Set appropriate state for elements in the view
             closeButton.isHidden = false
             
-            //Turn off ability to select new segments
-            segmentedControl.isEnabled = false
-            
             //Cycle to the rope view controller
-            cycleFromViewController(currentVC!, toViewController: ropeVC!)
-            segmentedControl.selectedSegmentIndex = 0
+            cycleFromViewController(currentVC!, toViewController: climbVC!)
             
             //Ask for the final score if it lasted longer than 2:15
             if stopwatch.elapsedTime >= 135 {
@@ -119,46 +111,60 @@ class StandsScoutingViewController: UIViewController {
 		}
 	}
 	func getFinalScore(_ action: UIAlertAction) {
+        RealmController.realmController.syncedRealm.beginWrite()
 		for textField in finalScorePrompt.textFields! {
 			switch textField {
 			case finalScorePrompt.textFields![0]:
 				//Red Final Score
-                ssDataManager?.scoutedMatch.local.redFinalScore = Double(textField.text ?? "") as NSNumber?
+                if let intValue = Int(textField.text ?? "") {
+                    ssDataManager?.scoutedMatch.scouted.redScore.value = intValue
+                }
 			case finalScorePrompt.textFields![1]:
 				//Red Ranking Points
-                ssDataManager?.scoutedMatch.local.redRankingPoints = Double(textField.text ?? "") as NSNumber?
+                if let intValue = Int(textField.text ?? "") {
+                    ssDataManager?.scoutedMatch.scouted.redRP.value = intValue
+                }
 			case finalScorePrompt.textFields![2]:
 				//Blue Final Score
-                ssDataManager?.scoutedMatch.local.blueFinalScore = Double(textField.text ?? "") as NSNumber?
+                if let intValue = Int(textField.text ?? "") {
+                    ssDataManager?.scoutedMatch.scouted.blueScore.value = intValue
+                }
 			case finalScorePrompt.textFields![3]:
 				//Blue Ranking Points
-                ssDataManager?.scoutedMatch.local.blueRankingPoints = Double(textField.text ?? "") as NSNumber?
+                if let intValue = Int(textField.text ?? "") {
+                    ssDataManager?.scoutedMatch.scouted.blueRP.value = intValue
+                }
 			default:
 				break
 			}
 		}
+        
+        do {
+            try RealmController.realmController.syncedRealm.commitWrite()
+        } catch {
+            CLSNSLogv("Error Saving final scores in stands scouting: \(error)", getVaList([]))
+            Crashlytics.sharedInstance().recordError(error)
+        }
 	}
 	
     //Child view controllers
 	var currentVC: UIViewController?
 	var initialChild: UIViewController?
-    var offenseVC: SSOffenseViewController?
-    var defenseVC: SSDefenseViewController?
-    var ropeVC: SSRopeClimbViewController?
+    var gameScoutVC: SSGameScoutingViewController?
+    var climbVC: SSClimbViewController?
 
     override func viewDidLoad() {
         super.viewDidLoad()
 
         // Do any additional setup after loading the view.
-		teamLabel.text = "Team \(teamEventPerformance!.team.teamNumber!)"
+		teamLabel.text = "Team \(teamEventPerformance!.team!.teamNumber)"
 		
 		//Get all the view controllers
-        offenseVC = (storyboard?.instantiateViewController(withIdentifier: "SSOffense") as! SSOffenseViewController)
-        defenseVC = (storyboard?.instantiateViewController(withIdentifier: "ssDefense") as! SSDefenseViewController)
-        ropeVC = (storyboard?.instantiateViewController(withIdentifier: "ssRopeVC") as! SSRopeClimbViewController)
+        gameScoutVC = (storyboard?.instantiateViewController(withIdentifier: "ssGameScoutVC") as! SSGameScoutingViewController)
+        climbVC = (storyboard?.instantiateViewController(withIdentifier: "ssClimbVC") as! SSClimbViewController)
 		
         if let matchPerformance = matchPerformance {
-            matchAndEventLabel.text = "\(teamEventPerformance?.event.name ?? "")  \(matchPerformance.match?.competitionLevel ?? "") \(matchPerformance.match?.matchNumber?.intValue.description ?? "")"
+            matchAndEventLabel.text = "\(teamEventPerformance?.event?.name ?? "")  \(matchPerformance.match?.competitionLevel ?? "") \(matchPerformance.match?.matchNumber.description ?? "")"
             ssDataManager = SSDataManager(teamBeingScouted: team, matchBeingScouted: matchPerformance.match!, stopwatch: stopwatch)
         }
     }
@@ -207,18 +213,18 @@ class StandsScoutingViewController: UIViewController {
 	func setUpStandsScouting() {
 		if matchPerformance == nil {
 			//Ask for the match to use
-			let askAction = UIAlertController(title: "Select Match", message: "Select the match for Team \(teamEventPerformance!.team.teamNumber!) in the event \(teamEventPerformance!.event.name!) for stands scouting.", preferredStyle: .alert)
-            let sortedMatchPerformances = (teamEventPerformance?.matchPerformances?.allObjects as! [TeamMatchPerformance]).sorted() {(firstMatchPerformance, secondMatchPerformance) in
+            let askAction = UIAlertController(title: "Select Match", message: "Select the match for Team \(teamEventPerformance!.team!.teamNumber) in the event \(teamEventPerformance!.event!.name) for stands scouting.", preferredStyle: .alert)
+            let sortedMatchPerformances = Array(teamEventPerformance!.matchPerformances).sorted() {(firstMatchPerformance, secondMatchPerformance) in
                 if firstMatchPerformance.match!.competitionLevelEnum.rankedPosition > secondMatchPerformance.match!.competitionLevelEnum.rankedPosition {
                     return true
                 } else if firstMatchPerformance.match!.competitionLevelEnum.rankedPosition == secondMatchPerformance.match!.competitionLevelEnum.rankedPosition {
-                    return firstMatchPerformance.match!.matchNumber!.int32Value < secondMatchPerformance.match!.matchNumber!.int32Value
+                    return firstMatchPerformance.match!.matchNumber < secondMatchPerformance.match!.matchNumber
                 } else {
                     return false
                 }
             }
 			for matchPerformance in sortedMatchPerformances {
-				askAction.addAction(UIAlertAction(title: "\(matchPerformance.match!.competitionLevel!) \(matchPerformance.match!.matchNumber!)", style: .default, handler: {_ in
+				askAction.addAction(UIAlertAction(title: "\(matchPerformance.match!.competitionLevel) \(matchPerformance.match!.matchNumber)", style: .default, handler: {_ in
                     self.matchPerformance = matchPerformance
                 }))
 			}
@@ -243,29 +249,12 @@ class StandsScoutingViewController: UIViewController {
 	}
 	
 	func close(andSave shouldSave: Bool) {
-		if shouldSave {
-            if !(ssDataManager?.save() ?? true) {
-                //There was a problem saving
-                let alert = UIAlertController(title: "Unable to save", message: "There was a problem saving the scouted data. This is problematic and rare; please file a bug report.", preferredStyle: .alert)
-                alert.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
-            }
-		} else {
-			ssDataManager?.rollback()
-		}
+        if !shouldSave {
+            ssDataManager?.rollback()
+        }
 		
 		dismiss(animated: true, completion: nil)
 		Answers.logCustomEvent(withName: "Closed Stands Scouting", customAttributes: ["With Save":shouldSave.description])
-	}
-    
-	@IBAction func selectedNewPart(_ sender: UISegmentedControl) {
-		switch sender.selectedSegmentIndex {
-		case 0:
-			cycleFromViewController(currentVC!, toViewController: offenseVC!)
-		case 1:
-            cycleFromViewController(currentVC!, toViewController: defenseVC!)
-		default:
-			break
-		}
 	}
 	
 	override func prepare(for segue: UIStoryboardSegue, sender: Any?) {

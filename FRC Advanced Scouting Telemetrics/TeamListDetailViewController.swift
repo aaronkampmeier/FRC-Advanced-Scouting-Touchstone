@@ -62,16 +62,14 @@ class TeamListDetailViewController: UIViewController {
 			frontImageButton.setImage(frontImage?.image, for: .normal)
 		}
 	}
-	
-	var sideImage: TeamImagePhoto?
 
 	var selectedTeam: Team? {
 		didSet {
 			if let team = selectedTeam {
-				navBar.title = team.teamNumber
+				navBar.title = team.teamNumber.description
 				teamLabel.text = team.nickname
                 
-                if team.local.canBanana?.boolValue ?? false {
+                if team.scouted.canBanana {
                     bananaImageView.image = #imageLiteral(resourceName: "Banana Filled")
                     bananaImageWidth.constant = 40
                 } else {
@@ -80,8 +78,8 @@ class TeamListDetailViewController: UIViewController {
                 }
 				
 				//Populate the images, if there are images
-				if let image = team.local.frontImage {
-					frontImage = TeamImagePhoto(image: UIImage(data: image as Data), attributedCaptionTitle: NSAttributedString(string: "Team \(team.teamNumber!): Front Image"))
+				if let image = team.scouted.frontImage {
+					frontImage = TeamImagePhoto(image: UIImage(data: image as Data), attributedCaptionTitle: NSAttributedString(string: "Team \(team.teamNumber): Front Image"))
                     frontImageHeightConstraint.isActive = true
                     
                     contentScrollView.contentInset = contentViewInsets
@@ -96,11 +94,6 @@ class TeamListDetailViewController: UIViewController {
                     contentScrollView.scrollIndicatorInsets = noContentInsets
                     
                     contentScrollView.contentOffset = CGPoint(x: 0, y: 0)
-				}
-				if let image = team.local.sideImage {
-					sideImage = TeamImagePhoto(image: UIImage(data: image as Data), attributedCaptionTitle: NSAttributedString(string: "Team \(team.teamNumber!): Side Image"))
-				} else {
-					sideImage = nil
 				}
 				
 				if let _ = selectedEvent {
@@ -119,7 +112,6 @@ class TeamListDetailViewController: UIViewController {
                 teamLabel.text = "Select Team"
                 
                 frontImage = nil
-                sideImage = nil
                 
                 standsScoutingButton.isEnabled = false
                 
@@ -142,8 +134,8 @@ class TeamListDetailViewController: UIViewController {
 			if let team = selectedTeam {
 				if let event = selectedEvent {
 					//Get two sets
-					let eventPerformances: Set<TeamEventPerformance> = Set(event.teamEventPerformances?.allObjects as! [TeamEventPerformance])
-					let teamPerformances = Set(team.eventPerformances?.allObjects as! [TeamEventPerformance])
+					let eventPerformances: Set<TeamEventPerformance> = Set(event.teamEventPerformances)
+					let teamPerformances = Set(team.eventPerformances)
 					
 					//Combine the two sets to find the one in both
 					let teamEventPerformance = Array(eventPerformances.intersection(teamPerformances)).first!
@@ -269,7 +261,7 @@ class TeamListDetailViewController: UIViewController {
         super.viewWillTransition(to: size, with: coordinator)
         //Reset the content insets
         coordinator.animate(alongsideTransition: {_ in
-            if self.selectedTeam?.local.frontImage != nil {
+            if self.selectedTeam?.scouted.frontImage != nil {
                 self.contentScrollView.contentInset = self.contentViewInsets
                 self.contentScrollView.scrollIndicatorInsets = self.contentViewInsets
                 
@@ -313,7 +305,7 @@ class TeamListDetailViewController: UIViewController {
         let matchListNav = storyboard?.instantiateViewController(withIdentifier: "matchesListNav") as! UINavigationController
         (matchListNav.topViewController as! MatchesTableViewController).delegate = self
         
-        let unsortedMatches = (self.teamEventPerformance?.matchPerformances?.allObjects as? [TeamMatchPerformance])?.map({$0.match!}) ?? []
+        let unsortedMatches = (self.teamEventPerformance?.matchPerformances)?.map({$0.match!}) ?? []
         let sortedMatches = unsortedMatches.sorted() {(firstMatch, secondMatch) in
             return firstMatch < secondMatch
         }
@@ -350,9 +342,6 @@ class TeamListDetailViewController: UIViewController {
 		if let image = frontImage {
 			photosArray.append(image)
 		}
-		if let image = sideImage {
-			photosArray.append(image)
-		}
 		
 		let photoVC = NYTPhotosViewController(photos: photosArray, initialPhoto: photo, delegate: self)
 		present(photoVC, animated: true, completion: nil)
@@ -380,7 +369,7 @@ extension TeamListDetailViewController: MatchesTableViewControllerDelegate {
         actionSheet.addAction(UIAlertAction(title: "Stands Scout", style: .default) {action in
             let standsScoutingVC = self.storyboard?.instantiateViewController(withIdentifier: "standsScouting") as! StandsScoutingViewController
             standsScoutingVC.teamEventPerformance = self.teamEventPerformance
-            standsScoutingVC.matchPerformance = (associatedMatch?.teamPerformances?.allObjects as! [TeamMatchPerformance]).first {$0.eventPerformance == self.teamEventPerformance}
+            standsScoutingVC.matchPerformance = (associatedMatch?.teamPerformances)?.first {$0.teamEventPerformance == self.teamEventPerformance}
             
             matchesTableViewController.present(standsScoutingVC, animated: true, completion: nil)
         })
@@ -437,34 +426,35 @@ extension TeamListDetailViewController: UITableViewDelegate, UITableViewDataSour
             let textWidth = keyLabel.intrinsicContentSize.width
             keyLabel.constraints.filter({$0.identifier == "keyWidth"}).first?.constant = textWidth
             
-            (cell?.contentView.viewWithTag(2) as! UILabel).text = selectedTeam?.rookieYear?.description
+            (cell?.contentView.viewWithTag(2) as! UILabel).text = selectedTeam?.rookieYear.description
             
             return cell!
-        case 2:
-            let cell = tableView.dequeueReusableCell(withIdentifier: "nameValue")
-            let keyLabel = cell?.contentView.viewWithTag(1) as! UILabel
-            
-            keyLabel.text = "Attending Events"
-            let textWidth = keyLabel.intrinsicContentSize.width
-            keyLabel.constraints.filter({$0.identifier == "keyWidth"}).first?.constant = textWidth
-            
-            let attendingEvents = (selectedTeam?.eventPerformances?.allObjects as! [TeamEventPerformance]).map() {eventPerformance in
-                return eventPerformance.event
-            }
-            //Create a string of all the attending events
-            var eventString = ""
-            
-            for (index, event) in attendingEvents.enumerated() {
-                eventString += "\(event.name!)"
-                
-                if !(attendingEvents.count - 1 == index) {
-                    eventString += ", "
-                }
-            }
-            
-            (cell?.contentView.viewWithTag(2) as! UILabel).text = eventString
-            
-            return cell!
+            //TODO: Find something better than Attending Events becuase an event that is not tracked on device but the team is still attending would not be listed
+//        case 2:
+//            let cell = tableView.dequeueReusableCell(withIdentifier: "nameValue")
+//            let keyLabel = cell?.contentView.viewWithTag(1) as! UILabel
+//
+//            keyLabel.text = "Attending Events"
+//            let textWidth = keyLabel.intrinsicContentSize.width
+//            keyLabel.constraints.filter({$0.identifier == "keyWidth"}).first?.constant = textWidth
+//
+//            let attendingEvents = Array(selectedTeam!.eventPerformances).map() {eventPerformance in
+//                return eventPerformance.event
+//            }
+//            //Create a string of all the attending events
+//            var eventString = ""
+//
+//            for (index, event) in attendingEvents.enumerated() {
+//                eventString += "\(event.name!)"
+//
+//                if !(attendingEvents.count - 1 == index) {
+//                    eventString += ", "
+//                }
+//            }
+//
+//            (cell?.contentView.viewWithTag(2) as! UILabel).text = eventString
+//
+//            return cell!
         case 3:
             let cell = tableView.dequeueReusableCell(withIdentifier: "websiteButton")
             
@@ -517,8 +507,6 @@ extension TeamListDetailViewController: NYTPhotosViewControllerDelegate {
 		if let photo = photo as? TeamImagePhoto {
 			if photo == frontImage {
 				return frontImageButton
-			} else if photo == sideImage {
-				return nil //sideImageButton
 			} else {
 				return nil
 			}
