@@ -69,7 +69,6 @@
 		93483E8F20291AC400E9AC82 /* LoginHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93483E7C20291AC400E9AC82 /* LoginHeaderView.swift */; };
 		93483E9020291AC400E9AC82 /* RealmLogoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93483E7D20291AC400E9AC82 /* RealmLogoView.swift */; };
 		93483E9120291AC400E9AC82 /* LoginTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93483E7E20291AC400E9AC82 /* LoginTableViewCell.swift */; };
-		93483E9520291C4700E9AC82 /* RootViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93483E9420291C4700E9AC82 /* RootViewController.swift */; };
 		93483E98202937EE00E9AC82 /* awsconfiguration.json in Resources */ = {isa = PBXBuildFile; fileRef = 93483E97202937ED00E9AC82 /* awsconfiguration.json */; };
 		934DDE462002B0510032095C /* RealmDataMangager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 934DDE452002B0510032095C /* RealmDataMangager.swift */; };
 		9353ADBC1E57ACF100120F1A /* MatchesTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9353ADBB1E57ACF100120F1A /* MatchesTableViewController.swift */; };
@@ -232,7 +231,6 @@
 		93483E7D20291AC400E9AC82 /* RealmLogoView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RealmLogoView.swift; sourceTree = "<group>"; };
 		93483E7E20291AC400E9AC82 /* LoginTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LoginTableViewCell.swift; sourceTree = "<group>"; };
 		93483E7F20291AC400E9AC82 /* RealmLoginKit.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RealmLoginKit.h; sourceTree = "<group>"; };
-		93483E9420291C4700E9AC82 /* RootViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RootViewController.swift; sourceTree = "<group>"; };
 		93483E97202937ED00E9AC82 /* awsconfiguration.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = awsconfiguration.json; sourceTree = "<group>"; };
 		934DDE452002B0510032095C /* RealmDataMangager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RealmDataMangager.swift; sourceTree = "<group>"; };
 		9353ADBB1E57ACF100120F1A /* MatchesTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MatchesTableViewController.swift; sourceTree = "<group>"; };
@@ -306,7 +304,6 @@
 		1F21DF101C645D1F00C55D0E /* View Controllers */ = {
 			isa = PBXGroup;
 			children = (
-				93483E9420291C4700E9AC82 /* RootViewController.swift */,
 				93D75B631E5D0866002CBED2 /* FieldLocationDisplayViewController.swift */,
 				9353ADBB1E57ACF100120F1A /* MatchesTableViewController.swift */,
 				9353ADC11E57B09D00120F1A /* MatchListTableViewCell.swift */,
@@ -1000,7 +997,6 @@
 				9353ADBC1E57ACF100120F1A /* MatchesTableViewController.swift in Sources */,
 				93C5B47C1E53FC9C007D309F /* TeamInfoScrollView.swift in Sources */,
 				93C609241E67D035007A689D /* MatchOverviewDetailViewController.swift in Sources */,
-				93483E9520291C4700E9AC82 /* RootViewController.swift in Sources */,
 				93483E8D20291AC400E9AC82 /* StatusBarUnderlayView.swift in Sources */,
 				1FD0A09B1C95093600013A18 /* TeamListTableViewCell.swift in Sources */,
 				9369681A1E502AC8001DB15D /* TeamDetailKeyValueSpreadCollectionViewCell.swift in Sources */,

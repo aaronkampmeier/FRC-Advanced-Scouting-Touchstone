@@ -24,7 +24,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 		Crashlytics.sharedInstance().setUserIdentifier(UIDevice.current.identifierForVendor?.uuidString ?? "Unknown")
         
         //Check if the user is logged in
-        if RealmController.realmController.isLoggedIn {
+        if RealmController.realmController.currentSyncUser != nil {
             //We are logged in, switch to the team list view
         } else {
             //Show log in page
@@ -39,7 +39,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             
             loginVC.loginSuccessfulHandler = {user,teamNumber in
                 RealmController.realmController.currentSyncUser = user
-                RealmController.realmController.openSyncedRealm(withSyncUser: user, forTeam: teamNumber)
+                RealmController.realmController.openSyncedRealm(withSyncUser: user)
                 
                 let mainStoryboard = UIStoryboard(name: "Main", bundle: nil)
                 self.window?.rootViewController = mainStoryboard.instantiateInitialViewController()

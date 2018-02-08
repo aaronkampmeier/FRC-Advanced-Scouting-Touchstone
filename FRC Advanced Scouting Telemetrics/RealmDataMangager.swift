@@ -25,7 +25,6 @@ class RealmController {
     
     let syncAuthURL = URL(string: "http://\(rosServerAddress)")!
     var currentRealmURL:URL?
-    var isLoggedIn = false
     var currentSyncUser: SyncUser?
     
     private init() {
@@ -40,7 +39,7 @@ class RealmController {
         if let currentUser = SyncUser.current {
             //Use this user to log in
             currentSyncUser = currentUser
-            openSyncedRealm(withSyncUser: currentUser, forTeam: "4256")
+            openSyncedRealm(withSyncUser: currentUser)
         } else {
             //Is not logged in
             currentSyncUser = nil
@@ -55,15 +54,15 @@ class RealmController {
                 completionHandler(error)
             } else {
                 //User sync user
-                self.openSyncedRealm(withSyncUser: syncUser!, forTeam: teamNumber)
+                self.openSyncedRealm(withSyncUser: syncUser!)
                 completionHandler(nil)
                 self.currentSyncUser = syncUser
             }
         }
     }
     
-    func openSyncedRealm(withSyncUser syncUser: SyncUser, forTeam teamNumber: String) {
-        let realmURL = URL(string: "realm://\(rosServerAddress)/~/(teamNumber)_scouted_data")!
+    func openSyncedRealm(withSyncUser syncUser: SyncUser) {
+        let realmURL = URL(string: "realm://\(rosServerAddress)/~/scouted_data")!
         currentRealmURL = realmURL
         
         //Create sync config with sync user
@@ -78,7 +77,6 @@ class RealmController {
             self.syncedRealm = try Realm(configuration: scoutedRealmConfig)
             NotificationCenter.default.post(name: DidLogIntoSyncServerNotification, object: self)
             CLSNSLogv("Did log into and open synced realm", getVaList([]))
-            isLoggedIn = true
         } catch {
             CLSNSLogv("Error opening synced realm: \(error)", getVaList([]))
             Crashlytics.sharedInstance().recordError(error)
