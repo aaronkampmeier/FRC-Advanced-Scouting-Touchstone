@@ -13,7 +13,11 @@ class TransferInfoTableViewController: UITableViewController {
     
 	let realmController = RealmController.realmController
     
-    var uploadToken: SyncSession.ProgressNotificationToken!
+    var uploadToken: SyncSession.ProgressNotificationToken?
+    var downloadToken: SyncSession.ProgressNotificationToken?
+    
+    weak var uploadProgressIndicator: UIProgressView?
+    weak var downloadProgressIndicator: UIProgressView?
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -25,9 +29,24 @@ class TransferInfoTableViewController: UITableViewController {
         // self.navigationItem.rightBarButtonItem = self.editButtonItem()
         if let syncUser = realmController.currentSyncUser {
             uploadToken = syncUser.session(for: realmController.currentRealmURL!)?.addProgressNotification(for: .upload, mode: .reportIndefinitely) {progress in
-                
+//                if progress.isTransferComplete {
+//
+//                } else {
+                    self.uploadProgressIndicator?.setProgress(Float(progress.fractionTransferred), animated: true)
+//                }
+            }
+            
+            downloadToken = syncUser.session(for: realmController.currentRealmURL!)?.addProgressNotification(for: .download, mode: .reportIndefinitely) {progress in
+                self.downloadProgressIndicator?.setProgress(Float(progress.fractionTransferred), animated: true)
             }
         }
+    }
+    
+    override func viewDidDisappear(_ animated: Bool) {
+        super.viewDidDisappear(animated)
+        
+        uploadToken?.invalidate()
+        downloadToken?.invalidate()
     }
 
     override func didReceiveMemoryWarning() {
@@ -51,7 +70,14 @@ class TransferInfoTableViewController: UITableViewController {
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath)
 		
-        
+        if indexPath.row == 0 {
+            //Upload
+            (cell.viewWithTag(1) as! UILabel).text = "Upload Progress"
+            uploadProgressIndicator = (cell.viewWithTag(2) as! UIProgressView)
+        } else {
+            (cell.viewWithTag(1) as! UILabel).text = "Download Progress"
+            downloadProgressIndicator = (cell.viewWithTag(2) as! UIProgressView)
+        }
 
         return cell
     }

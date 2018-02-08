@@ -21,7 +21,7 @@
 	<key>CFBundleSignature</key>
 	<string>????</string>
 	<key>CFBundleVersion</key>
-	<string>773</string>
+	<string>816</string>
 	<key>Fabric</key>
 	<dict>
 		<key>APIKey</key>
@@ -46,6 +46,11 @@
 	<false/>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
+	<key>NSAppTransportSecurity</key>
+	<dict>
+		<key>NSAllowsArbitraryLoads</key>
+		<true/>
+	</dict>
 	<key>NSCameraUsageDescription</key>
 	<string>FAST uses the camera in order to take photos of robots in Pit Scouting.</string>
 	<key>NSPhotoLibraryUsageDescription</key>

@@ -49,7 +49,7 @@ class RealmController {
     
     //Right now just logging in user, not registering new ones
     func logIn(toTeam teamNumber: String, withUsername username: String, andPassword password: String, completionHandler: @escaping (Error?)->Void) {
-        SyncUser.logIn(with: SyncCredentials.usernamePassword(username: username, password: password, register: false), server: syncAuthURL) {syncUser, error in
+        SyncUser.logIn(with: SyncCredentials.usernamePassword(username: username, password: password, register: true), server: syncAuthURL) {syncUser, error in
             if let error = error {
                 CLSNSLogv("Error Signing In: \(error)", getVaList([]))
                 completionHandler(error)
@@ -63,7 +63,7 @@ class RealmController {
     }
     
     func openSyncedRealm(withSyncUser syncUser: SyncUser, forTeam teamNumber: String) {
-        let realmURL = URL(string: "realm://\(rosServerAddress)/team_\(teamNumber)")!
+        let realmURL = URL(string: "realm://\(rosServerAddress)/~/(teamNumber)_scouted_data")!
         currentRealmURL = realmURL
         
         //Create sync config with sync user

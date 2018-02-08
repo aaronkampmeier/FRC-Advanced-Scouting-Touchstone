@@ -2,6 +2,15 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
+	<key>RealmLoginKit</key>
+	<dict>
+		<key>Title</key>
+		<string>RealmLoginKit</string>
+		<key>Text</key>
+		<string>Realm LoginKit is licensed under the Apache license.</string>
+		<key>License</key>
+		<string>Apache</string>
+	</dict>
 	<key>YCMatrix</key>
 	<dict>
 		<key>Title</key>

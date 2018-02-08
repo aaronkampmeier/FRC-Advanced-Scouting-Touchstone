@@ -51,6 +51,26 @@
 		933D214B1E609A04008C8276 /* Pods-acknowledgments.plist in Resources */ = {isa = PBXBuildFile; fileRef = 933D214A1E609A04008C8276 /* Pods-acknowledgments.plist */; };
 		933D21511E609BF7008C8276 /* Additional Licenses.plist in Resources */ = {isa = PBXBuildFile; fileRef = 933D21501E609BF7008C8276 /* Additional Licenses.plist */; };
 		933E794F1E385BB20033563B /* SSPreloadingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 933E794E1E385BB20033563B /* SSPreloadingViewController.swift */; };
+		93483E8020291AC400E9AC82 /* LoginFormValidation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93483E6720291AC400E9AC82 /* LoginFormValidation.swift */; };
+		93483E8120291AC400E9AC82 /* LoginTableViewDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93483E6920291AC400E9AC82 /* LoginTableViewDataSource.swift */; };
+		93483E8220291AC400E9AC82 /* LoginKeyboardManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93483E6A20291AC400E9AC82 /* LoginKeyboardManager.swift */; };
+		93483E8320291AC400E9AC82 /* LoginViewControllerTransitioning.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93483E6B20291AC400E9AC82 /* LoginViewControllerTransitioning.swift */; };
+		93483E8420291AC400E9AC82 /* AWSCognitoAuthenticationProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93483E6D20291AC400E9AC82 /* AWSCognitoAuthenticationProvider.swift */; };
+		93483E8520291AC400E9AC82 /* LoginPersistedCredentialsCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93483E6F20291AC400E9AC82 /* LoginPersistedCredentialsCoordinator.swift */; };
+		93483E8620291AC400E9AC82 /* LoginCredentials.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93483E7020291AC400E9AC82 /* LoginCredentials.swift */; };
+		93483E8720291AC400E9AC82 /* UIImage+Icons.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93483E7220291AC400E9AC82 /* UIImage+Icons.swift */; };
+		93483E8820291AC400E9AC82 /* FileManager+ApplicationFilePaths.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93483E7320291AC400E9AC82 /* FileManager+ApplicationFilePaths.swift */; };
+		93483E8920291AC400E9AC82 /* Realm+RLMSupport.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93483E7420291AC400E9AC82 /* Realm+RLMSupport.swift */; };
+		93483E8A20291AC400E9AC82 /* String+URLComponents.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93483E7520291AC400E9AC82 /* String+URLComponents.swift */; };
+		93483E8B20291AC400E9AC82 /* LoginViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93483E7720291AC400E9AC82 /* LoginViewController.swift */; };
+		93483E8C20291AC400E9AC82 /* LoginFooterView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93483E7920291AC400E9AC82 /* LoginFooterView.swift */; };
+		93483E8D20291AC400E9AC82 /* StatusBarUnderlayView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93483E7A20291AC400E9AC82 /* StatusBarUnderlayView.swift */; };
+		93483E8E20291AC400E9AC82 /* LoginView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93483E7B20291AC400E9AC82 /* LoginView.swift */; };
+		93483E8F20291AC400E9AC82 /* LoginHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93483E7C20291AC400E9AC82 /* LoginHeaderView.swift */; };
+		93483E9020291AC400E9AC82 /* RealmLogoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93483E7D20291AC400E9AC82 /* RealmLogoView.swift */; };
+		93483E9120291AC400E9AC82 /* LoginTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93483E7E20291AC400E9AC82 /* LoginTableViewCell.swift */; };
+		93483E9520291C4700E9AC82 /* RootViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93483E9420291C4700E9AC82 /* RootViewController.swift */; };
+		93483E98202937EE00E9AC82 /* awsconfiguration.json in Resources */ = {isa = PBXBuildFile; fileRef = 93483E97202937ED00E9AC82 /* awsconfiguration.json */; };
 		934DDE462002B0510032095C /* RealmDataMangager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 934DDE452002B0510032095C /* RealmDataMangager.swift */; };
 		9353ADBC1E57ACF100120F1A /* MatchesTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9353ADBB1E57ACF100120F1A /* MatchesTableViewController.swift */; };
 		9353ADC21E57B09D00120F1A /* MatchListTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9353ADC11E57B09D00120F1A /* MatchListTableViewCell.swift */; };
@@ -193,6 +213,27 @@
 		933D214A1E609A04008C8276 /* Pods-acknowledgments.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "Pods-acknowledgments.plist"; sourceTree = "<group>"; };
 		933D21501E609BF7008C8276 /* Additional Licenses.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "Additional Licenses.plist"; sourceTree = "<group>"; };
 		933E794E1E385BB20033563B /* SSPreloadingViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SSPreloadingViewController.swift; sourceTree = "<group>"; };
+		93483E6720291AC400E9AC82 /* LoginFormValidation.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LoginFormValidation.swift; sourceTree = "<group>"; };
+		93483E6920291AC400E9AC82 /* LoginTableViewDataSource.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LoginTableViewDataSource.swift; sourceTree = "<group>"; };
+		93483E6A20291AC400E9AC82 /* LoginKeyboardManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LoginKeyboardManager.swift; sourceTree = "<group>"; };
+		93483E6B20291AC400E9AC82 /* LoginViewControllerTransitioning.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LoginViewControllerTransitioning.swift; sourceTree = "<group>"; };
+		93483E6D20291AC400E9AC82 /* AWSCognitoAuthenticationProvider.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AWSCognitoAuthenticationProvider.swift; sourceTree = "<group>"; };
+		93483E6F20291AC400E9AC82 /* LoginPersistedCredentialsCoordinator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LoginPersistedCredentialsCoordinator.swift; sourceTree = "<group>"; };
+		93483E7020291AC400E9AC82 /* LoginCredentials.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LoginCredentials.swift; sourceTree = "<group>"; };
+		93483E7220291AC400E9AC82 /* UIImage+Icons.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIImage+Icons.swift"; sourceTree = "<group>"; };
+		93483E7320291AC400E9AC82 /* FileManager+ApplicationFilePaths.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "FileManager+ApplicationFilePaths.swift"; sourceTree = "<group>"; };
+		93483E7420291AC400E9AC82 /* Realm+RLMSupport.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Realm+RLMSupport.swift"; sourceTree = "<group>"; };
+		93483E7520291AC400E9AC82 /* String+URLComponents.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "String+URLComponents.swift"; sourceTree = "<group>"; };
+		93483E7720291AC400E9AC82 /* LoginViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LoginViewController.swift; sourceTree = "<group>"; };
+		93483E7920291AC400E9AC82 /* LoginFooterView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LoginFooterView.swift; sourceTree = "<group>"; };
+		93483E7A20291AC400E9AC82 /* StatusBarUnderlayView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StatusBarUnderlayView.swift; sourceTree = "<group>"; };
+		93483E7B20291AC400E9AC82 /* LoginView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LoginView.swift; sourceTree = "<group>"; };
+		93483E7C20291AC400E9AC82 /* LoginHeaderView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LoginHeaderView.swift; sourceTree = "<group>"; };
+		93483E7D20291AC400E9AC82 /* RealmLogoView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RealmLogoView.swift; sourceTree = "<group>"; };
+		93483E7E20291AC400E9AC82 /* LoginTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LoginTableViewCell.swift; sourceTree = "<group>"; };
+		93483E7F20291AC400E9AC82 /* RealmLoginKit.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RealmLoginKit.h; sourceTree = "<group>"; };
+		93483E9420291C4700E9AC82 /* RootViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RootViewController.swift; sourceTree = "<group>"; };
+		93483E97202937ED00E9AC82 /* awsconfiguration.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = awsconfiguration.json; sourceTree = "<group>"; };
 		934DDE452002B0510032095C /* RealmDataMangager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RealmDataMangager.swift; sourceTree = "<group>"; };
 		9353ADBB1E57ACF100120F1A /* MatchesTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MatchesTableViewController.swift; sourceTree = "<group>"; };
 		9353ADC11E57B09D00120F1A /* MatchListTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MatchListTableViewCell.swift; sourceTree = "<group>"; };
@@ -265,6 +306,7 @@
 		1F21DF101C645D1F00C55D0E /* View Controllers */ = {
 			isa = PBXGroup;
 			children = (
+				93483E9420291C4700E9AC82 /* RootViewController.swift */,
 				93D75B631E5D0866002CBED2 /* FieldLocationDisplayViewController.swift */,
 				9353ADBB1E57ACF100120F1A /* MatchesTableViewController.swift */,
 				9353ADC11E57B09D00120F1A /* MatchListTableViewCell.swift */,
@@ -351,6 +393,7 @@
 		1F78E7811C3B469300221927 /* FRC Advanced Scouting Touchstone */ = {
 			isa = PBXGroup;
 			children = (
+				93483E6420291AC400E9AC82 /* RealmLoginKit */,
 				1F78E7821C3B469300221927 /* AppDelegate.swift */,
 				1FBB426C1C9A29FC0017E36C /* Statistics.swift */,
 				1FE2C12C1C81875A00CECBF1 /* ImageScalingFunctions.swift */,
@@ -363,6 +406,7 @@
 				1F78E78C1C3B469300221927 /* Assets.xcassets */,
 				1F78E78E1C3B469300221927 /* LaunchScreen.storyboard */,
 				1F78E7911C3B469300221927 /* Info.plist */,
+				93483E97202937ED00E9AC82 /* awsconfiguration.json */,
 				933D21501E609BF7008C8276 /* Additional Licenses.plist */,
 				933D214A1E609A04008C8276 /* Pods-acknowledgments.plist */,
 			);
@@ -435,6 +479,96 @@
 				93A15E911F05E9A00057C965 /* JSONModels.swift */,
 			);
 			name = "Cloud Data";
+			sourceTree = "<group>";
+		};
+		93483E6420291AC400E9AC82 /* RealmLoginKit */ = {
+			isa = PBXGroup;
+			children = (
+				93483E6520291AC400E9AC82 /* Models */,
+				93483E7120291AC400E9AC82 /* Extensions */,
+				93483E7620291AC400E9AC82 /* Controllers */,
+				93483E7820291AC400E9AC82 /* Views */,
+				93483E7F20291AC400E9AC82 /* RealmLoginKit.h */,
+			);
+			path = RealmLoginKit;
+			sourceTree = "<group>";
+		};
+		93483E6520291AC400E9AC82 /* Models */ = {
+			isa = PBXGroup;
+			children = (
+				93483E6620291AC400E9AC82 /* InputValidation */,
+				93483E6820291AC400E9AC82 /* UIStateCoordination */,
+				93483E6C20291AC400E9AC82 /* AuthenticationProviders */,
+				93483E6E20291AC400E9AC82 /* CredentialsPersistence */,
+			);
+			path = Models;
+			sourceTree = "<group>";
+		};
+		93483E6620291AC400E9AC82 /* InputValidation */ = {
+			isa = PBXGroup;
+			children = (
+				93483E6720291AC400E9AC82 /* LoginFormValidation.swift */,
+			);
+			path = InputValidation;
+			sourceTree = "<group>";
+		};
+		93483E6820291AC400E9AC82 /* UIStateCoordination */ = {
+			isa = PBXGroup;
+			children = (
+				93483E6920291AC400E9AC82 /* LoginTableViewDataSource.swift */,
+				93483E6A20291AC400E9AC82 /* LoginKeyboardManager.swift */,
+				93483E6B20291AC400E9AC82 /* LoginViewControllerTransitioning.swift */,
+			);
+			path = UIStateCoordination;
+			sourceTree = "<group>";
+		};
+		93483E6C20291AC400E9AC82 /* AuthenticationProviders */ = {
+			isa = PBXGroup;
+			children = (
+				93483E6D20291AC400E9AC82 /* AWSCognitoAuthenticationProvider.swift */,
+			);
+			path = AuthenticationProviders;
+			sourceTree = "<group>";
+		};
+		93483E6E20291AC400E9AC82 /* CredentialsPersistence */ = {
+			isa = PBXGroup;
+			children = (
+				93483E6F20291AC400E9AC82 /* LoginPersistedCredentialsCoordinator.swift */,
+				93483E7020291AC400E9AC82 /* LoginCredentials.swift */,
+			);
+			path = CredentialsPersistence;
+			sourceTree = "<group>";
+		};
+		93483E7120291AC400E9AC82 /* Extensions */ = {
+			isa = PBXGroup;
+			children = (
+				93483E7220291AC400E9AC82 /* UIImage+Icons.swift */,
+				93483E7320291AC400E9AC82 /* FileManager+ApplicationFilePaths.swift */,
+				93483E7420291AC400E9AC82 /* Realm+RLMSupport.swift */,
+				93483E7520291AC400E9AC82 /* String+URLComponents.swift */,
+			);
+			path = Extensions;
+			sourceTree = "<group>";
+		};
+		93483E7620291AC400E9AC82 /* Controllers */ = {
+			isa = PBXGroup;
+			children = (
+				93483E7720291AC400E9AC82 /* LoginViewController.swift */,
+			);
+			path = Controllers;
+			sourceTree = "<group>";
+		};
+		93483E7820291AC400E9AC82 /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				93483E7920291AC400E9AC82 /* LoginFooterView.swift */,
+				93483E7A20291AC400E9AC82 /* StatusBarUnderlayView.swift */,
+				93483E7B20291AC400E9AC82 /* LoginView.swift */,
+				93483E7C20291AC400E9AC82 /* LoginHeaderView.swift */,
+				93483E7D20291AC400E9AC82 /* RealmLogoView.swift */,
+				93483E7E20291AC400E9AC82 /* LoginTableViewCell.swift */,
+			);
+			path = Views;
 			sourceTree = "<group>";
 		};
 		93633B20200D9B35000EC83A /* Realm */ = {
@@ -679,6 +813,7 @@
 				1F78E78D1C3B469300221927 /* Assets.xcassets in Resources */,
 				933D21511E609BF7008C8276 /* Additional Licenses.plist in Resources */,
 				936572E11E1610CA00439728 /* About.rtf in Resources */,
+				93483E98202937EE00E9AC82 /* awsconfiguration.json in Resources */,
 				933D214B1E609A04008C8276 /* Pods-acknowledgments.plist in Resources */,
 				1F78E7881C3B469300221927 /* Main.storyboard in Resources */,
 			);
@@ -721,13 +856,16 @@
 			files = (
 			);
 			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
 			);
 			name = "[CP] Check Pods Manifest.lock";
 			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-FRC Advanced Scouting Touchstone-checkManifestLockResult.txt",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "diff \"${PODS_ROOT}/../Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n";
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
 			showEnvVarsInLog = 0;
 		};
 		6E93FD200EC5692A4D299EFE /* [CP] Copy Pods Resources */ = {
@@ -751,9 +889,52 @@
 			files = (
 			);
 			inputPaths = (
+				"${SRCROOT}/Pods/Target Support Files/Pods-FRC Advanced Scouting Touchstone/Pods-FRC Advanced Scouting Touchstone-frameworks.sh",
+				"${BUILT_PRODUCTS_DIR}/AWSAuthCore/AWSAuthCore.framework",
+				"${BUILT_PRODUCTS_DIR}/AWSAuthUI/AWSAuthUI.framework",
+				"${BUILT_PRODUCTS_DIR}/AWSCognitoIdentityProvider/AWSCognitoIdentityProvider.framework",
+				"${BUILT_PRODUCTS_DIR}/AWSCognitoIdentityProviderASF/AWSCognitoIdentityProviderASF.framework",
+				"${BUILT_PRODUCTS_DIR}/AWSCore/AWSCore.framework",
+				"${BUILT_PRODUCTS_DIR}/AWSMobileClient/AWSMobileClient.framework",
+				"${BUILT_PRODUCTS_DIR}/AWSUserPoolsSignIn/AWSUserPoolsSignIn.framework",
+				"${BUILT_PRODUCTS_DIR}/Alamofire/Alamofire.framework",
+				"${BUILT_PRODUCTS_DIR}/BRYSerialAnimationQueue/BRYSerialAnimationQueue.framework",
+				"${BUILT_PRODUCTS_DIR}/FLAnimatedImage/FLAnimatedImage.framework",
+				"${BUILT_PRODUCTS_DIR}/GMStepper/GMStepper.framework",
+				"${BUILT_PRODUCTS_DIR}/NYTPhotoViewer/NYTPhotoViewer.framework",
+				"${BUILT_PRODUCTS_DIR}/Realm/Realm.framework",
+				"${BUILT_PRODUCTS_DIR}/RealmSwift/RealmSwift.framework",
+				"${BUILT_PRODUCTS_DIR}/SSBouncyButton/SSBouncyButton.framework",
+				"${BUILT_PRODUCTS_DIR}/TORoundedTableView/TORoundedTableView.framework",
+				"${BUILT_PRODUCTS_DIR}/UICircularProgressRing/UICircularProgressRing.framework",
+				"${BUILT_PRODUCTS_DIR}/UIColor-Hex/UIColor_Hex.framework",
+				"${BUILT_PRODUCTS_DIR}/UIImage+BetterAdditions/UIImage_BetterAdditions.framework",
+				"${BUILT_PRODUCTS_DIR}/VTAcknowledgementsViewController/VTAcknowledgementsViewController.framework",
+				"${BUILT_PRODUCTS_DIR}/VerticalSlider/VerticalSlider.framework",
 			);
 			name = "[CP] Embed Pods Frameworks";
 			outputPaths = (
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/AWSAuthCore.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/AWSAuthUI.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/AWSCognitoIdentityProvider.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/AWSCognitoIdentityProviderASF.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/AWSCore.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/AWSMobileClient.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/AWSUserPoolsSignIn.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Alamofire.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/BRYSerialAnimationQueue.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/FLAnimatedImage.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/GMStepper.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/NYTPhotoViewer.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Realm.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/RealmSwift.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/SSBouncyButton.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/TORoundedTableView.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/UICircularProgressRing.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/UIColor_Hex.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/UIImage_BetterAdditions.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/VTAcknowledgementsViewController.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/VerticalSlider.framework",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
@@ -781,7 +962,10 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				93483E8620291AC400E9AC82 /* LoginCredentials.swift in Sources */,
+				93483E8820291AC400E9AC82 /* FileManager+ApplicationFilePaths.swift in Sources */,
 				9365947B1E441981008FF324 /* PitTextFieldCollectionViewCell.swift in Sources */,
+				93483E9120291AC400E9AC82 /* LoginTableViewCell.swift in Sources */,
 				930B96641E456D6C00E385D3 /* PitImageSelectorCollectionViewCell.swift in Sources */,
 				1F2F9A221CE2D6E400B85A72 /* TeamListSearchResultsTableViewController.swift in Sources */,
 				9353ADCA1E58EDF800120F1A /* CloudReloadingManager.swift in Sources */,
@@ -800,7 +984,10 @@
 				93610E3D1E42F8D400856BE2 /* PitScoutingViewController.swift in Sources */,
 				1FBE627F1CAEE0FB001FDFB7 /* TeamPickerTableViewController.swift in Sources */,
 				93372A06202669510087A364 /* SignInViewController.swift in Sources */,
+				93483E8B20291AC400E9AC82 /* LoginViewController.swift in Sources */,
 				93C609281E67D0CC007A689D /* MatchOverviewMasterViewController.swift in Sources */,
+				93483E8020291AC400E9AC82 /* LoginFormValidation.swift in Sources */,
+				93483E8120291AC400E9AC82 /* LoginTableViewDataSource.swift in Sources */,
 				1F1C23DA1E07673E008885A1 /* AddEventTableViewController.swift in Sources */,
 				936572D91E14E52100439728 /* CloudRemovalManager.swift in Sources */,
 				93FBC3961E3E624500FEB328 /* GameFieldLocationViewController.swift in Sources */,
@@ -813,14 +1000,18 @@
 				9353ADBC1E57ACF100120F1A /* MatchesTableViewController.swift in Sources */,
 				93C5B47C1E53FC9C007D309F /* TeamInfoScrollView.swift in Sources */,
 				93C609241E67D035007A689D /* MatchOverviewDetailViewController.swift in Sources */,
+				93483E9520291C4700E9AC82 /* RootViewController.swift in Sources */,
+				93483E8D20291AC400E9AC82 /* StatusBarUnderlayView.swift in Sources */,
 				1FD0A09B1C95093600013A18 /* TeamListTableViewCell.swift in Sources */,
 				9369681A1E502AC8001DB15D /* TeamDetailKeyValueSpreadCollectionViewCell.swift in Sources */,
 				93CE1BF71E403A97004165BE /* NotesViewController.swift in Sources */,
 				930B96621E456D3000E385D3 /* PitTableViewSelectorCollectionViewCell.swift in Sources */,
 				1F1C23C21E07487C008885A1 /* Team.swift in Sources */,
 				1FBB426D1C9A29FC0017E36C /* Statistics.swift in Sources */,
+				93483E8420291AC400E9AC82 /* AWSCognitoAuthenticationProvider.swift in Sources */,
 				93D75B641E5D0866002CBED2 /* FieldLocationDisplayViewController.swift in Sources */,
 				936967F11E4FB1F7001DB15D /* TeamDetailCollectionViewController.swift in Sources */,
+				93483E8220291AC400E9AC82 /* LoginKeyboardManager.swift in Sources */,
 				93633B1F200D9B29000EC83A /* Match.swift in Sources */,
 				1FA6A73E1CD3B4DD00772C63 /* TransferInfoTableViewController.swift in Sources */,
 				935A2B061E6CDC4C008FEF9D /* MatchOverviewPerformanceDetailViewController.swift in Sources */,
@@ -835,16 +1026,25 @@
 				1F4534101C6FF916004EDDB9 /* StandsScoutingViewController.swift in Sources */,
 				936967F71E4FD057001DB15D /* TeamDetailTableCollectionViewCell.swift in Sources */,
 				1F665D721CB1DA91003CAC1D /* DataSyncingViewController.swift in Sources */,
+				93483E8A20291AC400E9AC82 /* String+URLComponents.swift in Sources */,
 				1FDC1BCE1CD69EBB00ABE327 /* TeamListSplitViewController.swift in Sources */,
+				93483E8F20291AC400E9AC82 /* LoginHeaderView.swift in Sources */,
+				93483E8920291AC400E9AC82 /* Realm+RLMSupport.swift in Sources */,
 				1F21DF121C66942200C55D0E /* SortVC.swift in Sources */,
 				9391EA6C1E4852D2008E17A1 /* PitStringFieldCollectionViewCell.swift in Sources */,
+				93483E8320291AC400E9AC82 /* LoginViewControllerTransitioning.swift in Sources */,
+				93483E8720291AC400E9AC82 /* UIImage+Icons.swift in Sources */,
 				9317C03B201ECFEF00F1E907 /* SSGameScoutingViewController.swift in Sources */,
 				1F4FEDAC1C4B686000F4016D /* AdminConsoleController.swift in Sources */,
 				937E9C961E40468300D0ED76 /* SuperNotesCollectionViewController.swift in Sources */,
 				93EA7FEA1E4693C6002EC8C7 /* PitSwitchCollectionViewCell.swift in Sources */,
 				1F12CF181C7A6CD70014200C /* Stopwatch.swift in Sources */,
+				93483E9020291AC400E9AC82 /* RealmLogoView.swift in Sources */,
+				93483E8C20291AC400E9AC82 /* LoginFooterView.swift in Sources */,
 				93AE99801E3407A00000FB7C /* SSDataManager.swift in Sources */,
 				1FE2C12D1C81875A00CECBF1 /* ImageScalingFunctions.swift in Sources */,
+				93483E8520291AC400E9AC82 /* LoginPersistedCredentialsCoordinator.swift in Sources */,
+				93483E8E20291AC400E9AC82 /* LoginView.swift in Sources */,
 				935A2B081E6E5560008FEF9D /* MatchOverviewTimeMarkerTableViewCell.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

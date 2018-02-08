@@ -11,7 +11,10 @@ pod 'SSBouncyButton', '~> 1.0'
 pod 'UICircularProgressRing'
 pod 'VTAcknowledgementsViewController'
 pod 'RealmSwift'
-pod 'RealmLoginKit'
+pod 'TORoundedTableView'
+pod 'AWSMobileClient'
+pod 'AWSUserPoolsSignIn'
+pod 'AWSAuthUI'
 end
 
 post_install do | installer |

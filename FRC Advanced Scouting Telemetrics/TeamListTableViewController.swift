@@ -8,6 +8,7 @@
 
 import UIKit
 import Crashlytics
+import AWSAuthUI
 
 class TeamListTableViewController: UITableViewController, TeamListDetailDataSource, UISearchControllerDelegate {
 	@IBOutlet weak var eventSelectionButton: UIButton!
@@ -182,11 +183,6 @@ class TeamListTableViewController: UITableViewController, TeamListDetailDataSour
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         
-        //Check if the user has logged in and if not, then present a log in view controller
-        if !RealmController.realmController.isLoggedIn {
-            let logInVC = storyboard?.instantiateViewController(withIdentifier: "signInVC") as! SignInViewController
-            self.present(logInVC, animated: true, completion: nil)
-        }
     }
 
     override func didReceiveMemoryWarning() {
