@@ -118,6 +118,12 @@ class PitScoutingViewController: UIViewController, UICollectionViewDataSource, U
                 self.scoutedTeam?.scouted.robotWeight.value = newValue as? Double
             }),
             
+            PitScoutingParameter(type: .TextField, label: "Length", options: nil, currentValue: {self.scoutedTeam?.scouted.robotLength.value}, updateHandler: {newValue in
+                self.scoutedTeam?.scouted.robotLength.value = newValue as? Double
+            }),
+            PitScoutingParameter(type: .TextField, label: "Width", options: nil, currentValue: {self.scoutedTeam?.scouted.robotWidth.value}, updateHandler: {newValue in
+                self.scoutedTeam?.scouted.robotWidth.value = newValue as? Double
+            }),
             PitScoutingParameter(type: .TextField, label: "Height", options: nil, currentValue: {self.scoutedTeam?.scouted.robotHeight.value}, updateHandler: {newValue in
                 self.scoutedTeam?.scouted.robotHeight.value = newValue as? Double
             }),
@@ -130,8 +136,30 @@ class PitScoutingViewController: UIViewController, UICollectionViewDataSource, U
                 self.scoutedTeam?.scouted.driveTrain = newValue as? String
             }),
             
+            PitScoutingParameter(type: .StringField, label: "Program. Lang.", options: nil, currentValue: {self.scoutedTeam?.scouted.programmingLanguage}, updateHandler: {newValue in
+                self.scoutedTeam?.scouted.programmingLanguage = newValue as? String
+            }),
+            
+            PitScoutingParameter(type: .SegmentedSelector, label: "Computer Vision Capability", options: Capability.allStringValues, currentValue: {self.scoutedTeam?.scouted.computerVisionCapability}, updateHandler: {newValue in
+                self.scoutedTeam?.scouted.computerVisionCapability = newValue as? String
+            }),
+            
             PitScoutingParameter(type: .SegmentedSelector, label: "Game Strategy", options: GamePlayStrategy.allStringValues, currentValue: {self.scoutedTeam?.scouted.strategy}, updateHandler: {newValue in
                 self.scoutedTeam?.scouted.strategy = newValue as? String
+            }),
+            
+            //2018 Game Values
+            PitScoutingParameter(type: .SegmentedSelector, label: "Scale Capability", options: Capability.allStringValues, currentValue: {self.scoutedTeam?.scouted.scaleCapability}, updateHandler: {newValue in
+                self.scoutedTeam?.scouted.scaleCapability = newValue as? String
+            }),
+            PitScoutingParameter(type: .SegmentedSelector, label: "Switch Capability", options: Capability.allStringValues, currentValue: {self.scoutedTeam?.scouted.switchCapability}, updateHandler: {newValue in
+                self.scoutedTeam?.scouted.switchCapability = newValue as? String
+            }),
+            PitScoutingParameter(type: .SegmentedSelector, label: "Vault Capability", options: Capability.allStringValues, currentValue: {self.scoutedTeam?.scouted.vaultCapability}, updateHandler: {newValue in
+                self.scoutedTeam?.scouted.vaultCapability = newValue as? String
+            }),
+            PitScoutingParameter(type: .SegmentedSelector, label: "Climb Capability", options: Capability.allStringValues, currentValue: {self.scoutedTeam?.scouted.climbCapability}, updateHandler: {newValue in
+                self.scoutedTeam?.scouted.climbCapability = newValue as? String
             }),
             
             ///Banana
@@ -143,6 +171,7 @@ class PitScoutingViewController: UIViewController, UICollectionViewDataSource, U
         
         collectionView?.dataSource = self
         collectionView?.delegate = self
+        collectionView?.keyboardDismissMode = .interactive
         
         //Initially set the labels' values
         teamLabel?.text = String(scoutedTeam?.teamNumber ?? -1)

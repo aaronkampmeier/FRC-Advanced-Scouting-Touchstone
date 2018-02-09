@@ -48,6 +48,7 @@ import RealmSwift
     dynamic var key = ""
     dynamic var notes = ""
     dynamic var programmingLanguage: String?
+    dynamic var computerVisionCapability: String?
     let robotHeight = RealmOptional<Double>()
     let robotWeight = RealmOptional<Double>()
     let robotLength = RealmOptional<Double>()
@@ -60,7 +61,10 @@ import RealmSwift
     dynamic var isInPickList = true
     
     ///Game Based Values
-    
+    dynamic var scaleCapability: String?
+    dynamic var switchCapability: String?
+    dynamic var vaultCapability: String?
+    dynamic var climbCapability: String?
     
     override static func primaryKey() -> String {
         return "key"

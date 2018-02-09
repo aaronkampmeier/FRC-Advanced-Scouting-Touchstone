@@ -50,6 +50,12 @@ extension Team: HasStats {
                 StatName.RookieYear: {
                     return StatValue.Integer(self.rookieYear)
                 },
+                StatName.RobotLength: {
+                    return StatValue.initWithOptional(value: self.scouted.robotLength.value)
+                },
+                StatName.RobotWidth: {
+                    StatValue.initWithOptional(value: self.scouted.robotWidth.value)
+                },
                 StatName.RobotHeight: {
                     if let doubleValue = self.scouted.robotHeight.value {
                         return StatValue.Double(doubleValue)
@@ -67,6 +73,9 @@ extension Team: HasStats {
                 StatName.DriveTrain: {
                     StatValue.initWithOptional(value: self.scouted.driveTrain)
                 },
+                StatName.ClimberCapability: {
+                    StatValue.initWithOptional(value: self.scouted.climbCapability)
+                },
                 StatName.GamePlayStrategy: {
                     StatValue.initWithOptional(value: self.scouted.strategy)
                 },
@@ -75,6 +84,19 @@ extension Team: HasStats {
                 },
                 StatName.ProgrammingLanguage: {
                     StatValue.initWithOptional(value: self.scouted.programmingLanguage)
+                },
+                StatName.VisionTrackingCapability: {
+                    StatValue.initWithOptional(value: self.scouted.computerVisionCapability)
+                },
+                
+                StatName.ScaleCapability: {
+                    StatValue.initWithOptional(value: self.scouted.scaleCapability)
+                },
+                StatName.SwitchCapability: {
+                    StatValue.initWithOptional(value: self.scouted.scaleCapability)
+                },
+                StatName.VaultCapability: {
+                    StatValue.initWithOptional(value: self.scouted.vaultCapability)
                 }
             ]
         }
@@ -84,6 +106,8 @@ extension Team: HasStats {
         case LocalRank = "Local Rank"
         case TeamNumber = "Team Number"
         case RookieYear = "Rookie Year"
+        case RobotLength = "Robot Length"
+        case RobotWidth = "Robot Width"
         case RobotHeight = "Robot Height"
         case RobotWeight = "Robot Weight"
         case DriveTrain = "Drive Train"
@@ -95,7 +119,9 @@ extension Team: HasStats {
         case ProgrammingLanguage = "Programming Language"
         
         //Game Specific
-        
+        case ScaleCapability = "Scale Capability"
+        case SwitchCapability = "Switch Capability"
+        case VaultCapability = "Vault Capability"
         
         var description: String {
             get {
@@ -103,9 +129,9 @@ extension Team: HasStats {
             }
         }
         
-        static let allValues: [StatName] = [.LocalRank, .TeamNumber, .RookieYear, .RobotHeight, .RobotWeight, .GamePlayStrategy, .DriveTrain, .ClimberCapability]
+        static let allValues: [StatName] = [.LocalRank, .TeamNumber, .RookieYear, .DriverXP, .RobotLength, .RobotWidth, .RobotHeight, .RobotWeight, .GamePlayStrategy, .VisionTrackingCapability, .DriveTrain, .ProgrammingLanguage, .ScaleCapability, .SwitchCapability, .VaultCapability, .ClimberCapability]
         
-        static let teamDetailValues: [StatName] = [.RobotHeight, .RobotWeight, .DriverXP, .GamePlayStrategy, .DriveTrain,  .VisionTrackingCapability, .ProgrammingLanguage, .ClimberCapability]
+        static let teamDetailValues: [StatName] = [.DriverXP, .RobotLength, .RobotWidth, .RobotHeight, .RobotWeight, .GamePlayStrategy, .VisionTrackingCapability, .DriveTrain, .ProgrammingLanguage, .ScaleCapability, .SwitchCapability, .VaultCapability, .ClimberCapability]
     }
 }
 

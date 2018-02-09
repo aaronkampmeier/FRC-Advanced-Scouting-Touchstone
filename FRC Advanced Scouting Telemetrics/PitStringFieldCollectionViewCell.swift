@@ -23,7 +23,7 @@ class PitStringFieldCollectionViewCell: PitScoutingCell {
         }
     }
     
-    @IBAction func textEditingEnded(_ sender: UITextField) {
+    @IBAction func textFieldValueChanged(_ sender: UITextField) {
         //TODO: Sanitize the data
         pitScoutingVC?.register(update: updateHandler, withValue: sender.text)
     }

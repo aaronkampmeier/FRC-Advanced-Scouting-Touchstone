@@ -21,7 +21,7 @@ class RealmController {
     
     let generalRealm: Realm
     
-    var syncedRealm: Realm
+    var syncedRealm: Realm!
     
     let syncAuthURL = URL(string: "http://\(rosServerAddress)")!
     var currentRealmURL:URL?
@@ -35,7 +35,7 @@ class RealmController {
         
         generalRealm = try! Realm(configuration: generalRealmConfig)
         
-        syncedRealm = try! Realm()
+        syncedRealm = nil
         if let currentUser = SyncUser.current {
             //Use this user to log in
             currentSyncUser = currentUser

@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import RealmSwift
 
 protocol NotesDataSource {
     func currentTeamContext() -> Team
@@ -20,11 +21,34 @@ class NotesViewController: UIViewController {
     var dataSource: NotesDataSource?
     var autosaveTimer: Timer?
     
-    var team: Team!
+//    var teamChangeNotificationToken: NotificationToken?
+    var team: Team? {
+        didSet {
+            //Set the notes and set an updater
+            self.notes = team!.scouted.notes
+            updateTextView()
+            
+//            teamChangeNotificationToken = team?.scouted.observe {teamObjectChange in
+//                switch teamObjectChange {
+//                case .change(let propertyChanges):
+//                    for propertyChange in propertyChanges {
+//                        if propertyChange.name == "notes" {
+//
+//                        }
+//                    }
+//                }
+//            }
+            
+            //Set the title in the nav bar
+            if let _ = self.navigationController {
+                self.navigationItem.title = "Team \(team!.teamNumber) Notes"
+            }
+        }
+    }
     
     var notes: String = "" {
         didSet {
-            notesTextView?.text = notes
+            
         }
     }
     
@@ -44,19 +68,13 @@ class NotesViewController: UIViewController {
     
     func save() {
         RealmController.realmController.genericWrite(onRealm: .Synced) {
-            team.scouted.notes = self.notes
+            team?.scouted.notes = self.notes
         }
     }
     
     func reload() {
         if let team = dataSource?.currentTeamContext() {
             self.team = team
-            self.notes = team.scouted.notes
-            
-            //Set the title in the nav bar
-            if let _ = self.navigationController {
-                self.navigationItem.title = "Team \(team.teamNumber) Notes"
-            }
         }
     }
     
@@ -92,6 +110,10 @@ class NotesViewController: UIViewController {
     @IBAction func donePressed(_ sender: UIBarButtonItem) {
         dismiss(animated: true, completion: nil)
     }
+    
+    func updateTextView() {
+        self.notesTextView?.text = notes
+    }
 
     /*
     // MARK: - Navigation
@@ -106,7 +128,7 @@ class NotesViewController: UIViewController {
 }
 
 extension NotesViewController: UITextViewDelegate {
-    func textViewDidEndEditing(_ textView: UITextView) {
-        save()
+    func textViewDidChange(_ textView: UITextView) {
+        self.notes = textView.text
     }
 }

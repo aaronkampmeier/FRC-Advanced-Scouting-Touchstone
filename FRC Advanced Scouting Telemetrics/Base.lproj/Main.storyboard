@@ -197,7 +197,7 @@
                                                     <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                                     <textInputTraits key="textInputTraits" keyboardType="decimalPad"/>
                                                     <connections>
-                                                        <action selector="textFieldEditingEnded:" destination="PUd-A0-JNj" eventType="editingDidEnd" id="19x-Lx-GPL"/>
+                                                        <action selector="textFieldValueChanged:" destination="PUd-A0-JNj" eventType="editingChanged" id="mcO-Lr-N6b"/>
                                                     </connections>
                                                 </textField>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Double" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="3iG-7f-wL4">
@@ -436,7 +436,7 @@
                                                     <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                                     <textInputTraits key="textInputTraits"/>
                                                     <connections>
-                                                        <action selector="textEditingEnded:" destination="yQ1-b4-OJT" eventType="editingDidEnd" id="9X0-EV-bZQ"/>
+                                                        <action selector="textFieldValueChanged:" destination="yQ1-b4-OJT" eventType="editingChanged" id="otl-BC-ioA"/>
                                                     </connections>
                                                 </textField>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="String" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Mpe-24-Aut">

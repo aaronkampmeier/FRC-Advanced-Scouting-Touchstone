@@ -60,7 +60,10 @@ class TeamPickerTableViewController: UITableViewController {
 	
 	override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         let team = shownTeams[indexPath.row]
-        team.scouted.isInPickList = false
+        
+        RealmController.realmController.genericWrite(onRealm: .Synced) {
+            team.scouted.isInPickList = false
+        }
 		shownTeams.remove(at: (indexPath as NSIndexPath).row)
 		
 		tableView.beginUpdates()
@@ -70,8 +73,10 @@ class TeamPickerTableViewController: UITableViewController {
     
     @IBAction func resetPressed(_ sender: UIBarButtonItem) {
         let allTeams = RealmController.realmController.teamRanking()
-        for team in allTeams {
-            team.scouted.isInPickList = true
+        RealmController.realmController.genericWrite(onRealm: .Synced) {
+            for team in allTeams {
+                team.scouted.isInPickList = true
+            }
         }
         
         self.teams = allTeams
