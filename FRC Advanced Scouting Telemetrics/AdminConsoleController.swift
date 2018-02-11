@@ -44,7 +44,7 @@ class AdminConsoleController: UIViewController, UITableViewDataSource, UITableVi
 			return events.count + 1
 		case tableView.numberOfSections - 1:
 			//About Section
-			return 2
+			return 3
 		default:
 			return 0
 		}
@@ -71,6 +71,8 @@ class AdminConsoleController: UIViewController, UITableViewDataSource, UITableVi
                 return tableView.dequeueReusableCell(withIdentifier: "about")!
             case 1:
                 return tableView.dequeueReusableCell(withIdentifier: "acknowledgments")!
+            case 2:
+                return tableView.dequeueReusableCell(withIdentifier: "logout")!
             default:
                 return tableView.dequeueReusableCell(withIdentifier: "about")!
             }
@@ -102,7 +104,7 @@ class AdminConsoleController: UIViewController, UITableViewDataSource, UITableVi
         case tableView.numberOfSections - 1:
             if indexPath.row == 0 {
                 performSegue(withIdentifier: "about", sender: self)
-            } else {
+            } else if indexPath.row == 1 {
                 if let path = Bundle.main.path(forResource: "Pods-acknowledgments", ofType: "plist") {
                     
                     let ackVC = VTAcknowledgementsViewController(path: path)!
@@ -123,6 +125,13 @@ class AdminConsoleController: UIViewController, UITableViewDataSource, UITableVi
                 } else {
                     assertionFailure()
                 }
+            } else if indexPath.row == 2 {
+                //Logout button pressed
+                RealmController.realmController.currentSyncUser?.logOut()
+                RealmController.realmController.currentSyncUser = nil
+                
+                //Now return to the log in screen
+                (UIApplication.shared.delegate as! AppDelegate).displayLogin()
             }
         default:
             break
@@ -230,7 +239,7 @@ class AdminConsoleController: UIViewController, UITableViewDataSource, UITableVi
     }
     
     @IBAction func advancedPressed(_ sender: UIBarButtonItem) {
-        let advancedController = storyboard?.instantiateViewController(withIdentifier: "advancedControl") as! HiddenDebugViewController
-        present(advancedController, animated: true, completion: nil)
+//        let advancedController = storyboard?.instantiateViewController(withIdentifier: "advancedControl") as! HiddenDebugViewController
+//        present(advancedController, animated: true, completion: nil)
     }
 }

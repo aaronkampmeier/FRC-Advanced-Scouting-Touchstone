@@ -19,21 +19,24 @@ class RealmController {
     
     static var realmController: RealmController = RealmController()
     
-    let generalRealm: Realm
+    var generalRealm: Realm!
     
     var syncedRealm: Realm!
     
     let syncAuthURL = URL(string: "http://\(rosServerAddress)")!
-    var currentRealmURL:URL?
+    var syncedRealmURL: URL?
+    var generalRealmURL: URL?
     var currentSyncUser: SyncUser?
     
     private init() {
-        var generalRealmConfig = Realm.Configuration()
+//        var generalRealmConfig = Realm.Configuration()
+//
+//        generalRealmConfig.fileURL = generalRealmConfig.fileURL?.deletingLastPathComponent().appendingPathComponent("General Realm.realm")
+//        generalRealmConfig.objectTypes = [Team.self,Match.self,TeamEventPerformance.self,Event.self,TeamMatchPerformance.self]
+//
+//        generalRealm = try! Realm(configuration: generalRealmConfig)
         
-        generalRealmConfig.fileURL = generalRealmConfig.fileURL?.deletingLastPathComponent().appendingPathComponent("General Realm.realm")
-        generalRealmConfig.objectTypes = [Team.self,Match.self,TeamEventPerformance.self,Event.self,TeamMatchPerformance.self]
-        
-        generalRealm = try! Realm(configuration: generalRealmConfig)
+        generalRealm = nil
         
         syncedRealm = nil
         if let currentUser = SyncUser.current {
@@ -62,23 +65,31 @@ class RealmController {
     }
     
     func openSyncedRealm(withSyncUser syncUser: SyncUser) {
-        let realmURL = URL(string: "realm://\(rosServerAddress)/~/scouted_data")!
-        currentRealmURL = realmURL
+        let scoutedRealmURL = URL(string: "realm://\(rosServerAddress)/~/scouted_data")!
+        syncedRealmURL = scoutedRealmURL
         
         //Create sync config with sync user
-        let syncConfig = SyncConfiguration(user: syncUser, realmURL: realmURL)
-        var scoutedRealmConfig = Realm.Configuration(syncConfiguration: syncConfig)
+        let scoutedSyncConfig = SyncConfiguration(user: syncUser, realmURL: scoutedRealmURL)
+        var scoutedRealmConfig = Realm.Configuration(syncConfiguration: scoutedSyncConfig)
         
         //Set the object types to be used in the Synced Realm to keep it separate from the other realm
         scoutedRealmConfig.objectTypes = [GeneralRanker.self, EventRanker.self, ScoutedTeam.self, ScoutedMatch.self, ScoutedMatchPerformance.self, TimeMarker.self]
         
+        //Now for the general realm
+        let generalStructureRealmURL = URL(string: "realm://\(rosServerAddress)/~/general_structure")!
+        generalRealmURL = generalStructureRealmURL
+        let generalSyncConfig = SyncConfiguration(user: syncUser, realmURL: generalStructureRealmURL)
+        var generalRealmConfig = Realm.Configuration(syncConfiguration: generalSyncConfig)
+        generalRealmConfig.objectTypes = [Team.self,Match.self,TeamEventPerformance.self,Event.self,TeamMatchPerformance.self]
+        
         do {
             //Attempt to open the realm
+            self.generalRealm = try Realm(configuration: generalRealmConfig)
             self.syncedRealm = try Realm(configuration: scoutedRealmConfig)
             NotificationCenter.default.post(name: DidLogIntoSyncServerNotification, object: self)
-            CLSNSLogv("Did log into and open synced realm", getVaList([]))
+            CLSNSLogv("Did log into and open realms", getVaList([]))
         } catch {
-            CLSNSLogv("Error opening synced realm: \(error)", getVaList([]))
+            CLSNSLogv("Error opening realms: \(error)", getVaList([]))
             Crashlytics.sharedInstance().recordError(error)
         }
     }

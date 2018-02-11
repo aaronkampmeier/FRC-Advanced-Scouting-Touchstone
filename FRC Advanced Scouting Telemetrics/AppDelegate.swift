@@ -28,23 +28,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             //We are logged in, switch to the team list view
         } else {
             //Show log in page
-            //Present log in screen
-            let loginVC = LoginViewController(style: .darkOpaque)
-            loginVC.isCancelButtonHidden = true
-            loginVC.serverURL = RealmController.realmController.syncAuthURL.absoluteString
-            loginVC.isServerURLFieldHidden = true
-            
-            //TODO: Extract these into seperate file (or don't to make them harder to find)
-            loginVC.authenticationProvider = AWSCognitoAuthenticationProvider(serviceRegion: .USEast1, userPoolID: "us-east-1_FuyxJ3oI6", clientID: "50a007212mgh063emptr07n5tu", clientSecret: "i2ujhnqfmnfi0ishlme00qi0pms5s4auhi5p7hv8fc223afcchp")
-            
-            loginVC.loginSuccessfulHandler = {user,teamNumber in
-                RealmController.realmController.currentSyncUser = user
-                RealmController.realmController.openSyncedRealm(withSyncUser: user)
-                
-                let mainStoryboard = UIStoryboard(name: "Main", bundle: nil)
-                self.window?.rootViewController = mainStoryboard.instantiateInitialViewController()
-            }
-            self.window?.rootViewController = loginVC
+            displayLogin()
         }
 		
         return AWSMobileClient.sharedInstance().interceptApplication(application, didFinishLaunchingWithOptions: launchOptions)
@@ -52,6 +36,26 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 //        clearTMPFolder()
 		
 //        return true
+    }
+    
+    func displayLogin() {
+        //Present log in screen
+        let loginVC = LoginViewController(style: .darkOpaque)
+        loginVC.isCancelButtonHidden = true
+        loginVC.serverURL = RealmController.realmController.syncAuthURL.absoluteString
+        loginVC.isServerURLFieldHidden = true
+        
+        //TODO: Extract these into seperate file (or don't to make them harder to find)
+        loginVC.authenticationProvider = AWSCognitoAuthenticationProvider(serviceRegion: .USEast1, userPoolID: "us-east-1_FuyxJ3oI6", clientID: "50a007212mgh063emptr07n5tu", clientSecret: "i2ujhnqfmnfi0ishlme00qi0pms5s4auhi5p7hv8fc223afcchp")
+        
+        loginVC.loginSuccessfulHandler = {user,teamNumber in
+            RealmController.realmController.currentSyncUser = user
+            RealmController.realmController.openSyncedRealm(withSyncUser: user)
+            
+            let mainStoryboard = UIStoryboard(name: "Main", bundle: nil)
+            self.window?.rootViewController = mainStoryboard.instantiateInitialViewController()
+        }
+        self.window?.rootViewController = loginVC
     }
 	
 	func clearTMPFolder() {

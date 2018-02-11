@@ -18,6 +18,9 @@ class TransferInfoTableViewController: UITableViewController {
     
     weak var uploadProgressIndicator: UIProgressView?
     weak var downloadProgressIndicator: UIProgressView?
+    
+    weak var uploadImage: UIImageView?
+    weak var downloadImage: UIImageView?
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -28,16 +31,28 @@ class TransferInfoTableViewController: UITableViewController {
         // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
         // self.navigationItem.rightBarButtonItem = self.editButtonItem()
         if let syncUser = realmController.currentSyncUser {
-            uploadToken = syncUser.session(for: realmController.currentRealmURL!)?.addProgressNotification(for: .upload, mode: .reportIndefinitely) {progress in
-//                if progress.isTransferComplete {
-//
-//                } else {
-                    self.uploadProgressIndicator?.setProgress(Float(progress.fractionTransferred), animated: true)
-//                }
+            uploadToken = syncUser.session(for: realmController.syncedRealmURL!)?.addProgressNotification(for: .upload, mode: .reportIndefinitely) {[weak self] progress in
+                DispatchQueue.main.async {
+                    if progress.isTransferComplete {
+                        self?.uploadProgressIndicator?.setProgress(1, animated: false)
+                        self?.uploadImage?.image = #imageLiteral(resourceName: "CorrectIcon")
+                    } else {
+                        self?.uploadImage?.image = #imageLiteral(resourceName: "Up Arrow")
+                        self?.uploadProgressIndicator?.setProgress(Float(progress.fractionTransferred), animated: true)
+                    }
+                }
             }
             
-            downloadToken = syncUser.session(for: realmController.currentRealmURL!)?.addProgressNotification(for: .download, mode: .reportIndefinitely) {progress in
-                self.downloadProgressIndicator?.setProgress(Float(progress.fractionTransferred), animated: true)
+            downloadToken = syncUser.session(for: realmController.syncedRealmURL!)?.addProgressNotification(for: .download, mode: .reportIndefinitely) {[weak self] progress in
+                DispatchQueue.main.async {
+                    if progress.isTransferComplete {
+                        self?.downloadProgressIndicator?.setProgress(1, animated: false)
+                        self?.downloadImage?.image = #imageLiteral(resourceName: "CorrectIcon")
+                    } else {
+                        self?.downloadImage?.image = #imageLiteral(resourceName: "Down Arrow")
+                        self?.downloadProgressIndicator?.setProgress(Float(progress.fractionTransferred), animated: true)
+                    }
+                }
             }
         }
     }
@@ -74,9 +89,13 @@ class TransferInfoTableViewController: UITableViewController {
             //Upload
             (cell.viewWithTag(1) as! UILabel).text = "Upload Progress"
             uploadProgressIndicator = (cell.viewWithTag(2) as! UIProgressView)
+            uploadImage = (cell.viewWithTag(3) as! UIImageView)
+            uploadImage?.image = #imageLiteral(resourceName: "Up Arrow")
         } else {
             (cell.viewWithTag(1) as! UILabel).text = "Download Progress"
             downloadProgressIndicator = (cell.viewWithTag(2) as! UIProgressView)
+            downloadImage = (cell.viewWithTag(3) as! UIImageView)
+            downloadImage?.image = #imageLiteral(resourceName: "Down Arrow")
         }
 
         return cell

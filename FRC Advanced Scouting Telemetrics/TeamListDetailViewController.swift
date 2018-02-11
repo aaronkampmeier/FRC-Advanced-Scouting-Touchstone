@@ -9,6 +9,7 @@
 import UIKit
 import NYTPhotoViewer
 import Crashlytics
+import RealmSwift
 
 protocol TeamListDetailDataSource {
     func team() -> Team?
@@ -65,69 +66,27 @@ class TeamListDetailViewController: UIViewController {
 
 	var selectedTeam: Team? {
 		didSet {
-			if let team = selectedTeam {
-				navBar.title = team.teamNumber.description
-				teamLabel.text = team.nickname
-                
-                if team.scouted.canBanana {
-                    bananaImageView.image = #imageLiteral(resourceName: "Banana Filled")
-                    bananaImageWidth.constant = 40
-                } else {
-                    bananaImageView.image = nil
-                    bananaImageWidth.constant = 0
+            self.updateView(forTeam: selectedTeam)
+            
+            //Register for updates
+            teamUpdateToken = selectedTeam?.scouted.observe {[weak self] objectChange in
+                switch objectChange {
+                case .change:
+                    self?.updateView(forTeam: self?.selectedTeam)
+                case .deleted:
+                    //Welp, what now
+                    self?.selectedTeam = nil
+                case .error(let error):
+                    //Hmm why would this happen
+                    CLSNSLogv("Error monitoring team detail view updates: %@", getVaList([error]))
+                    Crashlytics.sharedInstance().recordError(error)
                 }
-				
-				//Populate the images, if there are images
-				if let image = team.scouted.frontImage {
-					frontImage = TeamImagePhoto(image: UIImage(data: image as Data), attributedCaptionTitle: NSAttributedString(string: "Team \(team.teamNumber): Front Image"))
-                    frontImageHeightConstraint.isActive = true
-                    
-                    contentScrollView.contentInset = contentViewInsets
-                    contentScrollView.scrollIndicatorInsets = contentViewInsets
-                    
-                    contentScrollView.contentOffset = CGPoint(x: 0, y: -frontImageHeightConstraint.constant)
-				} else {
-					frontImage = nil
-                    frontImageHeightConstraint.isActive = false
-                    
-                    contentScrollView.contentInset = noContentInsets
-                    contentScrollView.scrollIndicatorInsets = noContentInsets
-                    
-                    contentScrollView.contentOffset = CGPoint(x: 0, y: 0)
-				}
-				
-				if let _ = selectedEvent {
-					standsScoutingButton.isEnabled = true
-                    matchesButton.isEnabled = true
-				} else {
-					standsScoutingButton.isEnabled = false
-                    matchesButton.isEnabled = false
-				}
-                
-                pitScoutingButton.isEnabled = true
-                
-                notesButton.isEnabled = true
-			} else {
-                navBar.title = "Select Team"
-                teamLabel.text = "Select Team"
-                
-                frontImage = nil
-                
-                standsScoutingButton.isEnabled = false
-                
-                pitScoutingButton.isEnabled = false
-                
-                notesButton.isEnabled = false
-			}
-            
-            generalInfoTableView?.reloadData()
-            detailCollectionVC?.load(withTeam: selectedTeam, andEventPerformance: teamEventPerformance)
-            
-            resizeDetailViewHeights()
+            }
 			
 			NotificationCenter.default.post(name: Notification.Name(rawValue: "TeamSelectedChanged"), object: self)
 		}
 	}
+    
 	var selectedEvent: Event?
 	var teamEventPerformance: TeamEventPerformance? {
 		get {
@@ -146,6 +105,12 @@ class TeamListDetailViewController: UIViewController {
 			return nil
 		}
 	}
+    
+    var teamUpdateToken: NotificationToken? {
+        didSet {
+            oldValue?.invalidate()
+        }
+    }
 	
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -201,16 +166,10 @@ class TeamListDetailViewController: UIViewController {
         //Watch for notifications requiring the collection view to resize it's height. This ensures that this object's container view is always the same height as it's child collection view forcing the user to use this scroll view and not the scroll view in the colleciton view.
         NotificationCenter.default.addObserver(forName: TeamDetailCollectionViewNeedsHeightResizing, object: nil, queue: nil) {_ in self.resizeDetailViewHeights()}
         
-        //Watch for notifications to update team info
-        NotificationCenter.default.addObserver(forName: PitScoutingUpdatedTeamDetail, object: nil, queue: nil) {_ in
-            let team = self.selectedTeam
-            self.selectedTeam = team
-        }
-        
         //Load the data if a team was selected beforehand
         self.reloadData()
     }
-	
+    
 	override func viewWillAppear(_ animated: Bool) {
 		super.viewWillAppear(animated)
         
@@ -250,6 +209,68 @@ class TeamListDetailViewController: UIViewController {
         // Dispose of any resources that can be recreated.
     }
     
+    func updateView(forTeam team: Team?) {
+        if let team = team {
+            navBar.title = team.teamNumber.description
+            teamLabel.text = team.nickname
+            
+            if team.scouted.canBanana {
+                bananaImageView.image = #imageLiteral(resourceName: "Banana Filled")
+                bananaImageWidth.constant = 40
+            } else {
+                bananaImageView.image = nil
+                bananaImageWidth.constant = 0
+            }
+            
+            //Populate the images, if there are images
+            if let image = team.scouted.frontImage {
+                frontImage = TeamImagePhoto(image: UIImage(data: image as Data), attributedCaptionTitle: NSAttributedString(string: "Team \(team.teamNumber): Front Image"))
+                frontImageHeightConstraint.isActive = true
+                
+                contentScrollView.contentInset = contentViewInsets
+                contentScrollView.scrollIndicatorInsets = contentViewInsets
+                
+                contentScrollView.contentOffset = CGPoint(x: 0, y: -frontImageHeightConstraint.constant)
+            } else {
+                frontImage = nil
+                frontImageHeightConstraint.isActive = false
+                
+                contentScrollView.contentInset = noContentInsets
+                contentScrollView.scrollIndicatorInsets = noContentInsets
+                
+                contentScrollView.contentOffset = CGPoint(x: 0, y: 0)
+            }
+            
+            if let _ = selectedEvent {
+                standsScoutingButton.isEnabled = true
+                matchesButton.isEnabled = true
+            } else {
+                standsScoutingButton.isEnabled = false
+                matchesButton.isEnabled = false
+            }
+            
+            pitScoutingButton.isEnabled = true
+            
+            notesButton.isEnabled = true
+        } else {
+            navBar.title = "Select Team"
+            teamLabel.text = "Select Team"
+            
+            frontImage = nil
+            
+            standsScoutingButton.isEnabled = false
+            
+            pitScoutingButton.isEnabled = false
+            
+            notesButton.isEnabled = false
+        }
+        
+        generalInfoTableView?.reloadData()
+        detailCollectionVC?.load(withTeam: selectedTeam, andEventPerformance: teamEventPerformance)
+        
+        resizeDetailViewHeights()
+    }
+    
     func resizeDetailViewHeights() {
         generalInfoTableView?.layoutIfNeeded()
         
@@ -285,10 +306,6 @@ class TeamListDetailViewController: UIViewController {
             selectedTeam = dataSource?.team()
         }
     }
-	
-	@IBAction func listPressed(_ sender: UIBarButtonItem) {
-		//splitViewController?.showViewController(splitViewController!.viewControllers.first!, sender: self)
-	}
     
     @IBAction func notesButtonPressed(_ sender: UIButton) {
         let notesNavVC = storyboard?.instantiateViewController(withIdentifier: "notesNavVC") as! UINavigationController

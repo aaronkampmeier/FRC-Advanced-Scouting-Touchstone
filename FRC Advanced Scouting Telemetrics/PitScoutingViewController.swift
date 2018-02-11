@@ -107,8 +107,8 @@ class PitScoutingViewController: UIViewController, UICollectionViewDataSource, U
             }, updateHandler: {newValue in
                 if let image = newValue as? UIImage {
                     //TODO: Lower the image quality to save space
-                    let imageData = UIImageJPEGRepresentation(image, 1)
-                    self.scoutedTeam?.scouted.frontImage = imageData as Data?
+                    let imageData = UIImageJPEGRepresentation(image, 0.6)
+                    self.scoutedTeam?.scouted.frontImage = imageData
                 }
                 
                 NotificationCenter.default.post(name: PitScoutingNewImageNotification, object: self, userInfo: ["ForTeam":self.scoutedTeam as Any])
