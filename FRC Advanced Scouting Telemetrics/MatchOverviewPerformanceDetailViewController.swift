@@ -201,6 +201,9 @@ extension MatchOverviewPerformanceDetailViewController: UITableViewDataSource {
                 cell.iconImageView.image = nil
             case .Error:
                 cell.iconImageView.image = nil
+                
+            default:
+                cell.iconImageView.image = nil
             }
             
             cell.timeMarkerEventLabel.text = timeMarker.event

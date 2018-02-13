@@ -111,7 +111,6 @@ class StandsScoutingViewController: UIViewController {
 		}
 	}
 	func getFinalScore(_ action: UIAlertAction) {
-        RealmController.realmController.syncedRealm.beginWrite()
 		for textField in finalScorePrompt.textFields! {
 			switch textField {
 			case finalScorePrompt.textFields![0]:
@@ -138,13 +137,6 @@ class StandsScoutingViewController: UIViewController {
 				break
 			}
 		}
-        
-        do {
-            try RealmController.realmController.syncedRealm.commitWrite()
-        } catch {
-            CLSNSLogv("Error Saving final scores in stands scouting: \(error)", getVaList([]))
-            Crashlytics.sharedInstance().recordError(error)
-        }
 	}
 	
     //Child view controllers
@@ -251,6 +243,8 @@ class StandsScoutingViewController: UIViewController {
 	func close(andSave shouldSave: Bool) {
         if !shouldSave {
             ssDataManager?.rollback()
+        } else {
+            ssDataManager?.save()
         }
 		
 		dismiss(animated: true, completion: nil)

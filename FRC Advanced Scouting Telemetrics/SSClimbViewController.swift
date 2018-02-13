@@ -16,8 +16,8 @@ class SSClimbViewController: UIViewController {
         didSet {
             if let climbSuccessfulVC = climbSuccessfulVC {
                 climbSuccessfulVC.delegate = self
-                climbSuccessfulVC.setUpWithButtons([SSOffenseWhereViewController.Button.init(title: "Yes", color: .blue, id: ScoutedMatchPerformance.ClimbSuccess.Yes.rawValue), SSOffenseWhereViewController.Button.init(title: "Somewhat", color: .blue, id: ScoutedMatchPerformance.ClimbSuccess.Somewhat.rawValue), SSOffenseWhereViewController.Button.init(title: "No", color: .blue, id: ScoutedMatchPerformance.ClimbSuccess.No.rawValue)], time: 3)
-                climbSuccessfulVC.setPrompt(to: "Rope Climb Successful")
+                climbSuccessfulVC.setUpWithButtons(ClimbStatus.allValues.map({SSOffenseWhereViewController.Button(title: $0.description, color: UIColor.blue, id: $0.rawValue)}), time: 3)
+                climbSuccessfulVC.setPrompt(to: "Rope Climb Status:")
             }
         }
     }

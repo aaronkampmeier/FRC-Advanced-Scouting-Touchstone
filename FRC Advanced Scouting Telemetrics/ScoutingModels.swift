@@ -102,11 +102,13 @@ import RealmSwift
     let timeMarkers = LinkingObjects(fromType: TimeMarker.self, property: "scoutedMatchPerformance")
     
     //--- Maybe try to remove
-    dynamic var defaultScoutID = ""
+    dynamic var defaultScoutID: String? = nil
 //    let scoutIDs = List<String>()
     //---
     
-    dynamic var climbStatus = ""
+    dynamic var climbStatus: String? = nil
+    
+    dynamic var didCrossAutoLine: Bool = false
     
     override static func primaryKey() -> String {
         return "key"
@@ -117,18 +119,6 @@ import RealmSwift
     dynamic var cache: TeamMatchPerformance?
     override static func ignoredProperties() -> [String] {
         return ["cache"]
-    }
-    
-    enum ClimbSuccess: String, CustomStringConvertible {
-        case Yes
-        case Somewhat
-        case No
-        
-        var description: String {
-            get {
-                return self.rawValue
-            }
-        }
     }
     
     var hasBeenScouted: Bool {
@@ -146,7 +136,7 @@ import RealmSwift
     var preferredScoutID: String {
         get {
             if self.defaultScoutID != "default" {
-                return self.defaultScoutID
+                return self.defaultScoutID!
             } else if timeMarkers.count > 0 {
                 for marker in timeMarkers {
                     return marker.scoutID

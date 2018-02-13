@@ -13,6 +13,9 @@ import RealmSwift
     dynamic var event = ""
     dynamic var scoutID = ""
     dynamic var time: TimeInterval = 0
+    dynamic var isAuto: Bool = false
+    
+    dynamic var associatedLocation: String? = nil
     
     dynamic var scoutedMatchPerformance: ScoutedMatchPerformance?
     
@@ -23,6 +26,8 @@ import RealmSwift
 
 enum TimeMarkerEvent: String, CustomStringConvertible {
     //Year-by-year
+    case GrabbedCube = "Grabbed Cube"
+    case PlacedCube = "Placed Cube"
     
     //Cross-Year
     case EndedAutonomous = "Ended Autonomous"

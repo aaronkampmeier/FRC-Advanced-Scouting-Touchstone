@@ -28,15 +28,16 @@ class SSDataManager {
         }
     }
     
-    var preloadedFuel: Double = 0.0
-    var preloadedGear = false
-    
     fileprivate weak static var mostRecentSSDataManager: SSDataManager?
     class func currentSSDataManager() -> SSDataManager? {
         return mostRecentSSDataManager
     }
     
+    var preloadedCube: Bool?
+    
     init(teamBeingScouted: Team, matchBeingScouted: Match, stopwatch: Stopwatch) {
+        //Start the write session
+        RealmController.realmController.syncedRealm.beginWrite()
         
         self.scoutID = UUID().uuidString
         
@@ -69,30 +70,42 @@ class SSDataManager {
         SSDataManager.mostRecentSSDataManager = self
     }
     
-    func rollback() {
-        //TODO: Implement a way to erase scouted data from a session
-    }
-    
-    func saveTimeMarker(event: TimeMarkerEvent, atTime time: TimeInterval) {
-        let timeMarker = RealmController.realmController.syncedRealm.create(TimeMarker.self)
-        
+    func save() {
         do {
-            try RealmController.realmController.syncedRealm.write {
-                timeMarker.scoutedMatchPerformance = scoutedMatchPerformance.scouted
-                
-                timeMarker.event = event.rawValue
-                timeMarker.time = time
-                
-                timeMarker.scoutID = scoutID
-            }
+            try RealmController.realmController.syncedRealm.commitWrite()
+            CLSNSLogv("Saved Stands Scouting Data", getVaList([]))
         } catch {
-            CLSNSLogv("Error writing a new time marker", getVaList([]))
+            CLSNSLogv("Error commiting write of stands scouting data", getVaList([]))
             Crashlytics.sharedInstance().recordError(error)
         }
     }
     
-    //MARK: - Climg
-    func recordClimb(_ successful: ScoutedMatchPerformance.ClimbSuccess.RawValue) {
+    func rollback() {
+        //TODO: Implement a way to erase scouted data from a session
+        RealmController.realmController.syncedRealm.cancelWrite()
+        CLSNSLogv("Rolledback Stands Scouting Data", getVaList([]))
+    }
+    
+    func setDidCrossAutoLine(didCross: Bool) {
+        scoutedMatchPerformance.scouted.didCrossAutoLine = didCross
+    }
+    
+    func saveTimeMarker(event: TimeMarkerEvent, atTime time: TimeInterval, withAssociatedLocation associatedLocation: String? = nil) {
+        let timeMarker = RealmController.realmController.syncedRealm.create(TimeMarker.self)
+        
+        timeMarker.scoutedMatchPerformance = scoutedMatchPerformance.scouted
+        
+        timeMarker.event = event.rawValue
+        timeMarker.time = time
+        timeMarker.isAuto = self.isAutonomous
+        
+        timeMarker.associatedLocation = associatedLocation
+        
+        timeMarker.scoutID = scoutID
+    }
+    
+    //MARK: - Climb
+    func recordClimb(_ successful: ClimbStatus.RawValue) {
         scoutedMatchPerformance.scouted.climbStatus = successful
     }
 }

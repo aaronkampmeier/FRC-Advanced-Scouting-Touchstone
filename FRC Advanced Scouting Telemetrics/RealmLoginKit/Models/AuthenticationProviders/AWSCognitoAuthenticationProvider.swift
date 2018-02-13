@@ -100,10 +100,10 @@ public class AWSCognitoAuthenticationProvider: NSObject, AuthenticationProvider,
             }
 
             let response = task.result!
-            response.user.getSession().continueWith(block: { task -> Any? in
-                DispatchQueue.main.async { getUserSessionBlock(task) }
-                return nil
-            }, cancellationToken: self.cancellationTokenSource!.token)
+            
+            //The user signed up but now needs to confirm their account
+            
+            onCompletion?(nil, AWSCognitoError.NeedUserVerification)
         }
 
         // Make the initial signup request to the Cognito User Pool
@@ -111,6 +111,19 @@ public class AWSCognitoAuthenticationProvider: NSObject, AuthenticationProvider,
             DispatchQueue.main.async { signUpBlock(task) }
             return nil
         }, cancellationToken: cancellationTokenSource!.token)
+    }
+    
+    enum AWSCognitoError: Error {
+        case NeedUserVerification
+        
+        var localizedDescription: String {
+            get {
+                switch self {
+                case .NeedUserVerification:
+                    return "Signup successful, now verify your email using the message sent to you before singing in."
+                }
+            }
+        }
     }
 
     private func logIntoExistingAccount(onCompletion: ((RLMSyncCredentials?, Error?) -> Void)?) {

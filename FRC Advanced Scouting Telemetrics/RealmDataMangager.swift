@@ -11,9 +11,11 @@
 import Foundation
 import RealmSwift
 import Crashlytics
+import AWSCognitoIdentityProvider
+import AWSMobileClient
 
 let DidLogIntoSyncServerNotification = NSNotification.Name(rawValue: "DidLogIntoSyncServer")
-private let rosServerAddress = "192.168.2.124:9080"
+private let rosServerAddress = "fastapp.tech:9443"
 
 class RealmController {
     
@@ -23,19 +25,12 @@ class RealmController {
     
     var syncedRealm: Realm!
     
-    let syncAuthURL = URL(string: "http://\(rosServerAddress)")!
+    let syncAuthURL = URL(string: "https://\(rosServerAddress)")!
     var syncedRealmURL: URL?
     var generalRealmURL: URL?
     var currentSyncUser: SyncUser?
     
     private init() {
-//        var generalRealmConfig = Realm.Configuration()
-//
-//        generalRealmConfig.fileURL = generalRealmConfig.fileURL?.deletingLastPathComponent().appendingPathComponent("General Realm.realm")
-//        generalRealmConfig.objectTypes = [Team.self,Match.self,TeamEventPerformance.self,Event.self,TeamMatchPerformance.self]
-//
-//        generalRealm = try! Realm(configuration: generalRealmConfig)
-        
         generalRealm = nil
         
         syncedRealm = nil
@@ -50,22 +45,27 @@ class RealmController {
     }
     
     //Right now just logging in user, not registering new ones
-    func logIn(toTeam teamNumber: String, withUsername username: String, andPassword password: String, completionHandler: @escaping (Error?)->Void) {
-        SyncUser.logIn(with: SyncCredentials.usernamePassword(username: username, password: password, register: true), server: syncAuthURL) {syncUser, error in
-            if let error = error {
-                CLSNSLogv("Error Signing In: \(error)", getVaList([]))
-                completionHandler(error)
-            } else {
-                //User sync user
-                self.openSyncedRealm(withSyncUser: syncUser!)
-                completionHandler(nil)
-                self.currentSyncUser = syncUser
-            }
-        }
-    }
+//    func logIn(toTeam teamNumber: String, withUsername username: String, andPassword password: String, completionHandler: @escaping (Error?)->Void) {
+//        SyncUser.logIn(with: SyncCredentials.usernamePassword(username: username, password: password, register: true), server: syncAuthURL) {syncUser, error in
+//            if let error = error {
+//                CLSNSLogv("Error Signing In: \(error)", getVaList([]))
+//                completionHandler(error)
+//            } else {
+//                //User sync user
+//                self.openSyncedRealm(withSyncUser: syncUser!)
+//                completionHandler(nil)
+//                self.currentSyncUser = syncUser
+//            }
+//        }
+//    }
     
     func openSyncedRealm(withSyncUser syncUser: SyncUser) {
-        let scoutedRealmURL = URL(string: "realm://\(rosServerAddress)/~/scouted_data")!
+        //Set crashlytics identifiers
+        //TODO: Use the AWS Cognito Device IDs (https://aws.amazon.com/blogs/mobile/tracking-and-remembering-devices-using-amazon-cognito-your-user-pools/)
+        Crashlytics.sharedInstance().setUserName(syncUser.identity!)
+        Crashlytics.sharedInstance().setUserIdentifier(UIDevice.current.identifierForVendor?.uuidString ?? "Unknown")
+        
+        let scoutedRealmURL = URL(string: "realms://\(rosServerAddress)/~/scouted_data")!
         syncedRealmURL = scoutedRealmURL
         
         //Create sync config with sync user
@@ -76,7 +76,7 @@ class RealmController {
         scoutedRealmConfig.objectTypes = [GeneralRanker.self, EventRanker.self, ScoutedTeam.self, ScoutedMatch.self, ScoutedMatchPerformance.self, TimeMarker.self]
         
         //Now for the general realm
-        let generalStructureRealmURL = URL(string: "realm://\(rosServerAddress)/~/general_structure")!
+        let generalStructureRealmURL = URL(string: "realms://\(rosServerAddress)/~/general_structure")!
         generalRealmURL = generalStructureRealmURL
         let generalSyncConfig = SyncConfiguration(user: syncUser, realmURL: generalStructureRealmURL)
         var generalRealmConfig = Realm.Configuration(syncConfiguration: generalSyncConfig)
@@ -375,4 +375,38 @@ enum ClimbStatus: String, CustomStringConvertible {
             return self.rawValue
         }
     }
+    
+    static let allValues: [ClimbStatus] = [.Successful, .Attempted, .NotAttempted]
+}
+
+//2018
+enum CubeSource: String, CustomStringConvertible {
+    case Pile
+    case Line
+    case Portal
+    case Other
+    
+    var description: String {
+        get {
+            return self.rawValue
+        }
+    }
+    
+    static let allValues: [CubeSource] = [.Pile, .Line, .Portal, .Other]
+}
+
+enum CubeDestination: String, CustomStringConvertible {
+    case Scale
+    case Switch
+    case OpponentSwitch = "Opponent's Switch"
+    case Vault
+    case Dropped
+    
+    var description: String {
+        get {
+            return self.rawValue
+        }
+    }
+    
+    static let allValues: [CubeDestination] = [.Scale, .Switch, .OpponentSwitch, .Vault, .Dropped]
 }

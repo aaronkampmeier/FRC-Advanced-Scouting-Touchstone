@@ -246,6 +246,7 @@ extension TeamEventPerformance {
 }
 
 ///Evaluates OPR using YCMatrix and the algorithm published by Ether located here: https://www.chiefdelphi.com/forums/showpost.php?p=1119150&postcount=36
+private let matrixAReuseKey = NSString(string: "CCWMAndOPRMatrixA")
 private let oprCache = NSCache<Event, Matrix>()
 private func evaluateOPR(forTeamPerformance teamPerformance: TeamEventPerformance) -> Double? {
     let eventPerformances = suitableEventPerformances(forEvent: teamPerformance.event!)
@@ -270,13 +271,12 @@ private func evaluateOPR(forTeamPerformance teamPerformance: TeamEventPerformanc
         }
     } else {
         
-        let matrixA = createMatrixA(forEventPerformances: eventPerformances)
-        
+        let matrixA = createMatrixA(forEventPerformances: eventPerformances, withReuseKey: matrixAReuseKey)
         
         var rowsB = [Int]() //Should only be one element per row
         for eventPerformance in eventPerformances {
-            let matchPerformances = eventPerformance.matchPerformances
-            let sumOfAllScores = matchPerformances.reduce(0) {scoreSum, matchPerformance in
+            let _matchPerformances = matchPerformances(fromEventPerformance: eventPerformance)
+            let sumOfAllScores = _matchPerformances.reduce(0) {scoreSum, matchPerformance in
                 return scoreSum + (matchPerformance.finalScore ?? 0)
             }
             rowsB.append(sumOfAllScores)
@@ -285,7 +285,6 @@ private func evaluateOPR(forTeamPerformance teamPerformance: TeamEventPerformanc
         
         //TODO: Decide best way to solve opr
         let oprMatrix = matrixA.solve(matrixB!)
-//        let oprMatrix = solveForX(matrixA, matrixB: matrixB)
         
         //Cache it because these calculations are expensive
         oprCache.setObject(oprMatrix!, forKey: teamPerformance.event!)
@@ -321,13 +320,13 @@ private func evaluateCCWM(forTeamPerformance teamPerformance: TeamEventPerforman
             return nil
         }
     } else {
-        let matrixA = createMatrixA(forEventPerformances: eventPerformances)
+        let matrixA = createMatrixA(forEventPerformances: eventPerformances, withReuseKey: matrixAReuseKey)
         
         //Matrix B for CCWM is the same as DPR's Matrix B except for the values are your alliance's scores minus the opposing alliance's scores (the winning margin)
         var rowsB = [Int]() //Should only be one element for year
         for eventPerformance in eventPerformances {
-            let matchPerformances = eventPerformance.matchPerformances
-            let sumOfWinningMargins = matchPerformances.reduce(0) {(partialResult, matchPerformance) in
+            let _matchPerformances = matchPerformances(fromEventPerformance: eventPerformance)
+            let sumOfWinningMargins = _matchPerformances.reduce(0) {(partialResult, matchPerformance) in
                 return partialResult + matchPerformance.winningMargin
             }
             rowsB.append(sumOfWinningMargins)
@@ -335,7 +334,6 @@ private func evaluateCCWM(forTeamPerformance teamPerformance: TeamEventPerforman
         let matrixB = Matrix(from: rowsB, rows: Int32(numOfTeams), columns: 1)
         
         let ccwmMatrix = matrixA.solve(matrixB)
-//        let ccwmMatrix = solveForX(matrixA, matrixB: matrixB)
         
         ccwmCache.setObject(ccwmMatrix!, forKey: teamPerformance.event!)
         
@@ -365,7 +363,7 @@ private func suitableEventPerformances(forEvent event: Event) -> [TeamEventPerfo
 }
 
 //Solves Ax=B
-func solveForX(_ matrixA: Matrix!, matrixB: Matrix!) -> Matrix? {
+private func solveForX(_ matrixA: Matrix!, matrixB: Matrix!) -> Matrix? {
     let matrixP = matrixA?.transposingAndMultiplying(withRight: matrixA)
     let matrixS = matrixA?.transposingAndMultiplying(withRight: matrixB)
     
@@ -381,44 +379,70 @@ func solveForX(_ matrixA: Matrix!, matrixB: Matrix!) -> Matrix? {
 }
 
 ///Creates the first matrix A for an OPR calculation. Where n is the number of teams, it is an n*n matrix where each value is the number of matches that the two teams which make up the matrix have played together.
-func createMatrixA(forEventPerformances eventPerformances: [TeamEventPerformance]) -> Matrix {
-    let numOfTeams = eventPerformances.count
-    
-    var rowsA = [Double]()
-    for (firstIndex, firstEventPerformance) in eventPerformances.enumerated() {
-        var row = [Double]()
-        let firstTeamMatchPerformances = firstEventPerformance.matchPerformances
+private let matrixACache = NSCache<NSString, Matrix>()
+private func createMatrixA(forEventPerformances eventPerformances: [TeamEventPerformance], withReuseKey reuseKey: NSString? = nil) -> Matrix {
+    if let cachedMatrix = matrixACache.object(forKey: reuseKey ?? NSString()) {
+        return cachedMatrix
+    } else {
         
-        for (secondIndex, secondEventPerformance) in eventPerformances.enumerated() {
-            if firstIndex == secondIndex {
-                assert(firstEventPerformance == secondEventPerformance)
-            }
-            let secondTeamMatchPerformances = secondEventPerformance.matchPerformances
+        let numOfTeams = eventPerformances.count
+        
+        var rowsA = [Double]()
+        for (firstIndex, firstEventPerformance) in eventPerformances.enumerated() {
+            var row = [Double]()
+            let firstTeamMatchPerformances = matchPerformances(fromEventPerformance: firstEventPerformance)
             
-            var numOfCommonMatches = 0.0
-            for firstTeamMatchPerformance in firstTeamMatchPerformances {
-                for secondTeamMatchPerformance in secondTeamMatchPerformances {
-                    
-                    if firstTeamMatchPerformance.match == secondTeamMatchPerformance.match && firstTeamMatchPerformance.allianceColor == secondTeamMatchPerformance.allianceColor {
+            for (secondIndex, secondEventPerformance) in eventPerformances.enumerated() {
+                if firstIndex == secondIndex {
+                    assert(firstEventPerformance == secondEventPerformance)
+                }
+                let secondTeamMatchPerformances = matchPerformances(fromEventPerformance: secondEventPerformance)
+                
+                var numOfCommonMatches = 0.0
+                for firstTeamMatchPerformance in firstTeamMatchPerformances {
+                    for secondTeamMatchPerformance in secondTeamMatchPerformances {
                         
-                        //Now also check that this match has been scouted
-                        if firstTeamMatchPerformance.finalScore != nil || secondTeamMatchPerformance.finalScore != nil {
-                            numOfCommonMatches += 1
+                        if firstTeamMatchPerformance.match == secondTeamMatchPerformance.match && firstTeamMatchPerformance.allianceColor == secondTeamMatchPerformance.allianceColor {
+                            
+                            //Now also check that this match has been scouted
+                            if firstTeamMatchPerformance.finalScore != nil || secondTeamMatchPerformance.finalScore != nil {
+                                numOfCommonMatches += 1
+                            }
                         }
                     }
                 }
+                
+                row.append(numOfCommonMatches)
             }
-            
-            row.append(numOfCommonMatches)
+            rowsA += row
         }
-        rowsA += row
+        
+        let matrixA = Matrix(from: rowsA, rows: Int32(numOfTeams), columns: Int32(numOfTeams))!
+        
+        if let reuseKey = reuseKey {
+            matrixACache.setObject(matrixA, forKey: reuseKey)
+        }
+        
+        return matrixA
     }
-    
-    return Matrix(from: rowsA, rows: Int32(numOfTeams), columns: Int32(numOfTeams))
+}
+
+private let matchPerformancesCache = NSCache<TeamEventPerformance, NSArray>()
+private func matchPerformances(fromEventPerformance eventPerformance: TeamEventPerformance) -> [TeamMatchPerformance] {
+    if let cachedMatchPerformances = matchPerformancesCache.object(forKey: eventPerformance) {
+        return cachedMatchPerformances as! [TeamMatchPerformance]
+    } else {
+        let matchPerformances = eventPerformance.matchPerformances
+        
+        //Store it in the cache
+        let array = Array(matchPerformances)
+        matchPerformancesCache.setObject(NSArray(array: array), forKey: eventPerformance)
+        return array
+    }
 }
 
 ///Forward and Backwards matrix substitution formulas drawn from http://mathfaculty.fullerton.edu/mathews/n2003/BackSubstitutionMod.html
-func forwardSubstitute(_ matrixA: Matrix!, matrixB: Matrix!) -> Matrix? {
+private func forwardSubstitute(_ matrixA: Matrix!, matrixB: Matrix!) -> Matrix? {
     let matrixX = Matrix(ofRows: matrixA.rows, columns: 1, value: 0)
     
     for i in 0..<matrixA.rows {
@@ -432,7 +456,7 @@ func forwardSubstitute(_ matrixA: Matrix!, matrixB: Matrix!) -> Matrix? {
     return matrixX
 }
 
-func backwardSubstitute(_ matrixA: Matrix!, matrixB: Matrix!) -> Matrix? {
+private func backwardSubstitute(_ matrixA: Matrix!, matrixB: Matrix!) -> Matrix? {
     let matrixX = Matrix(ofRows: matrixA.rows, columns: 1, value: 0)
     
     let backwardsArray = (Int(matrixA.rows)-1) ..= 0
@@ -448,7 +472,7 @@ func backwardSubstitute(_ matrixA: Matrix!, matrixB: Matrix!) -> Matrix? {
 
 //An operator that takes an upper bound and a lower bound and returns an array with all the values from the upper bound to the lower bound. It's the inverse of the ... operator
 infix operator ..=
-func ..=(lhs: Int, rhs: Int) -> [Int] {
+private func ..=(lhs: Int, rhs: Int) -> [Int] {
     if lhs == rhs {
         return [rhs]
     } else {
@@ -456,7 +480,7 @@ func ..=(lhs: Int, rhs: Int) -> [Int] {
     }
 }
 
-func sigma(_ initialIncrementerValue: Int, topIncrementValue: Int, function: (Int) -> Double) -> Double {
+private func sigma(_ initialIncrementerValue: Int, topIncrementValue: Int, function: (Int) -> Double) -> Double {
     if initialIncrementerValue == topIncrementValue {
         return function(initialIncrementerValue)
     } else if initialIncrementerValue > topIncrementValue {

@@ -423,7 +423,7 @@ public class LoginViewController: UIViewController {
             login(credentials, authenticationURL, 30, DispatchQueue.main) { (user, error) in
                 // Display an error message if the login failed
                 if let error = error {
-                    CLSNSLogv("Error Signing In: \(error)", getVaList([]))
+                    CLSNSLogv("Error Signing In (1): \(error)", getVaList([]))
                     Crashlytics.sharedInstance().recordError(error)
                     self.loginView.footerView.isSubmitting = false
                     self.showError(title: "Unable to Sign In", message: error.localizedDescription)
@@ -460,7 +460,17 @@ public class LoginViewController: UIViewController {
 
                 // Show an error dialog if an error was supplied
                 if let error = error {
-                    self.showError(title: "Unable to Sign In", message: error.localizedDescription)
+                    switch error {
+                    case AWSCognitoAuthenticationProvider.AWSCognitoError.NeedUserVerification:
+                        CLSNSLogv("Needs to Verify Email", getVaList([]))
+                        self.showError(title: "Verification Required", message: "Signup was successful, now please verify your email by following the instructions sent to you before signing in.")
+                        self.setRegistering(false, animated: true)
+                    default:
+                        CLSNSLogv("Error Signing In (2): \(error)", getVaList([]))
+                        Crashlytics.sharedInstance().recordError(error)
+                        self.loginView.footerView.isSubmitting = false
+                        self.showError(title: "Unable to Sign In", message: error.localizedDescription)
+                    }
                 }
 
                 // Hide the spinning indicator

@@ -21,7 +21,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
         // Override point for customization after application launch.
 		Fabric.with([Answers.self, Crashlytics.self])
-		Crashlytics.sharedInstance().setUserIdentifier(UIDevice.current.identifierForVendor?.uuidString ?? "Unknown")
         
         //Check if the user is logged in
         if RealmController.realmController.currentSyncUser != nil {
@@ -43,6 +42,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         let loginVC = LoginViewController(style: .darkOpaque)
         loginVC.isCancelButtonHidden = true
         loginVC.serverURL = RealmController.realmController.syncAuthURL.absoluteString
+        loginVC.isSecureConnection = true
         loginVC.isServerURLFieldHidden = true
         
         //TODO: Extract these into seperate file (or don't to make them harder to find)

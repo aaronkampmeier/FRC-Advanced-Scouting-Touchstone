@@ -143,7 +143,7 @@ class TeamDetailCollectionViewController: UICollectionViewController, UICollecti
         default:
             break
         }
-    
+        
         return cell
     }
     

@@ -47,7 +47,6 @@
 		932C344C1E12DC2600A23203 /* EventInfoVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 932C344B1E12DC2600A23203 /* EventInfoVC.swift */; };
 		932C344E1E12F7C400A23203 /* CloudImportManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 932C344D1E12F7C400A23203 /* CloudImportManager.swift */; };
 		932CB3F21E305E8200712725 /* SSOffenseWhereViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 932CB3F11E305E8200712725 /* SSOffenseWhereViewController.swift */; };
-		93372A06202669510087A364 /* SignInViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93372A05202669510087A364 /* SignInViewController.swift */; };
 		933D214B1E609A04008C8276 /* Pods-acknowledgments.plist in Resources */ = {isa = PBXBuildFile; fileRef = 933D214A1E609A04008C8276 /* Pods-acknowledgments.plist */; };
 		933D21511E609BF7008C8276 /* Additional Licenses.plist in Resources */ = {isa = PBXBuildFile; fileRef = 933D21501E609BF7008C8276 /* Additional Licenses.plist */; };
 		933E794F1E385BB20033563B /* SSPreloadingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 933E794E1E385BB20033563B /* SSPreloadingViewController.swift */; };
@@ -104,7 +103,7 @@
 		93D75B6A1E5DE0F5002CBED2 /* ShotChartViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93D75B691E5DE0F5002CBED2 /* ShotChartViewController.swift */; };
 		93EA7FEA1E4693C6002EC8C7 /* PitSwitchCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93EA7FE91E4693C6002EC8C7 /* PitSwitchCollectionViewCell.swift */; };
 		93FBC3961E3E624500FEB328 /* GameFieldLocationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93FBC3951E3E624500FEB328 /* GameFieldLocationViewController.swift */; };
-		93FBC39A1E3EEDEC00FEB328 /* SSRopeClimbViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93FBC3991E3EEDEC00FEB328 /* SSRopeClimbViewController.swift */; };
+		93FBC39A1E3EEDEC00FEB328 /* SSClimbViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93FBC3991E3EEDEC00FEB328 /* SSClimbViewController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -208,7 +207,6 @@
 		932C344B1E12DC2600A23203 /* EventInfoVC.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EventInfoVC.swift; sourceTree = "<group>"; };
 		932C344D1E12F7C400A23203 /* CloudImportManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CloudImportManager.swift; sourceTree = "<group>"; };
 		932CB3F11E305E8200712725 /* SSOffenseWhereViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SSOffenseWhereViewController.swift; sourceTree = "<group>"; };
-		93372A05202669510087A364 /* SignInViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignInViewController.swift; sourceTree = "<group>"; };
 		933D214A1E609A04008C8276 /* Pods-acknowledgments.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "Pods-acknowledgments.plist"; sourceTree = "<group>"; };
 		933D21501E609BF7008C8276 /* Additional Licenses.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "Additional Licenses.plist"; sourceTree = "<group>"; };
 		933E794E1E385BB20033563B /* SSPreloadingViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SSPreloadingViewController.swift; sourceTree = "<group>"; };
@@ -265,7 +263,7 @@
 		93D75B691E5DE0F5002CBED2 /* ShotChartViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ShotChartViewController.swift; sourceTree = "<group>"; };
 		93EA7FE91E4693C6002EC8C7 /* PitSwitchCollectionViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PitSwitchCollectionViewCell.swift; sourceTree = "<group>"; };
 		93FBC3951E3E624500FEB328 /* GameFieldLocationViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GameFieldLocationViewController.swift; sourceTree = "<group>"; };
-		93FBC3991E3EEDEC00FEB328 /* SSRopeClimbViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SSRopeClimbViewController.swift; sourceTree = "<group>"; };
+		93FBC3991E3EEDEC00FEB328 /* SSClimbViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SSClimbViewController.swift; sourceTree = "<group>"; };
 		D5E09D382B48C9148EBC98C8 /* Pods-FRC Advanced Scouting Touchstone.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-FRC Advanced Scouting Touchstone.release.xcconfig"; path = "Pods/Target Support Files/Pods-FRC Advanced Scouting Touchstone/Pods-FRC Advanced Scouting Touchstone.release.xcconfig"; sourceTree = "<group>"; };
 		E41AD9671774068A9E097A14 /* Pods-FRC Advanced Scouting Touchstone.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-FRC Advanced Scouting Touchstone.debug.xcconfig"; path = "Pods/Target Support Files/Pods-FRC Advanced Scouting Touchstone/Pods-FRC Advanced Scouting Touchstone.debug.xcconfig"; sourceTree = "<group>"; };
 		FF590BD6742CA543F314D9DB /* Pods_FRC_Advanced_Scouting_Touchstone.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_FRC_Advanced_Scouting_Touchstone.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -313,7 +311,6 @@
 				1F4178BF1CD02E4200801D5B /* Team List */,
 				1FBE627E1CAEE0FB001FDFB7 /* TeamPickerTableViewController.swift */,
 				1F4534551C7276DE004EDDB9 /* EventPickerViewController.swift */,
-				93372A05202669510087A364 /* SignInViewController.swift */,
 				1F30CFC91C7E510100A4EFCA /* Admin Console */,
 				1F4534131C6FFC13004EDDB9 /* Stands Scouting */,
 				936594801E44198D008FF324 /* Pit Scouting */,
@@ -357,7 +354,7 @@
 				933E794E1E385BB20033563B /* SSPreloadingViewController.swift */,
 				9317C03A201ECFEF00F1E907 /* SSGameScoutingViewController.swift */,
 				932CB3F11E305E8200712725 /* SSOffenseWhereViewController.swift */,
-				93FBC3991E3EEDEC00FEB328 /* SSRopeClimbViewController.swift */,
+				93FBC3991E3EEDEC00FEB328 /* SSClimbViewController.swift */,
 				93FBC3951E3E624500FEB328 /* GameFieldLocationViewController.swift */,
 				1F12CF171C7A6CD70014200C /* Stopwatch.swift */,
 			);
@@ -394,8 +391,8 @@
 				1F78E7821C3B469300221927 /* AppDelegate.swift */,
 				1FBB426C1C9A29FC0017E36C /* Statistics.swift */,
 				1FE2C12C1C81875A00CECBF1 /* ImageScalingFunctions.swift */,
-				93AE997F1E3407A00000FB7C /* SSDataManager.swift */,
 				93633B20200D9B35000EC83A /* Realm */,
+				93AE997F1E3407A00000FB7C /* SSDataManager.swift */,
 				9332F2AD1E22C8C300AB3EA6 /* Cloud Data */,
 				1F21DF101C645D1F00C55D0E /* View Controllers */,
 				936572E01E1610CA00439728 /* About.rtf */,
@@ -973,14 +970,13 @@
 				932354461E41686B0039386A /* SuperNotesCollectionViewCell.swift in Sources */,
 				1FDC1BD11CD69F5F00ABE327 /* TeamListTableViewController.swift in Sources */,
 				933E794F1E385BB20033563B /* SSPreloadingViewController.swift in Sources */,
-				93FBC39A1E3EEDEC00FEB328 /* SSRopeClimbViewController.swift in Sources */,
+				93FBC39A1E3EEDEC00FEB328 /* SSClimbViewController.swift in Sources */,
 				932C344C1E12DC2600A23203 /* EventInfoVC.swift in Sources */,
 				932CB3F21E305E8200712725 /* SSOffenseWhereViewController.swift in Sources */,
 				9353ADC21E57B09D00120F1A /* MatchListTableViewCell.swift in Sources */,
 				93633B23200DAAEF000EC83A /* ScoutingModels.swift in Sources */,
 				93610E3D1E42F8D400856BE2 /* PitScoutingViewController.swift in Sources */,
 				1FBE627F1CAEE0FB001FDFB7 /* TeamPickerTableViewController.swift in Sources */,
-				93372A06202669510087A364 /* SignInViewController.swift in Sources */,
 				93483E8B20291AC400E9AC82 /* LoginViewController.swift in Sources */,
 				93C609281E67D0CC007A689D /* MatchOverviewMasterViewController.swift in Sources */,
 				93483E8020291AC400E9AC82 /* LoginFormValidation.swift in Sources */,

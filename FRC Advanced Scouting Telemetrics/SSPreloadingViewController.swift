@@ -10,16 +10,15 @@ import UIKit
 import VerticalSlider
 
 class SSPreloadingViewController: UIViewController {
-    @IBOutlet weak var fuelTankSlider: VerticalSlider!
-    @IBOutlet weak var gearSwitch: UISwitch!
+    @IBOutlet weak var cubeSwitch: UISwitch!
     
     lazy var ssDataManager = SSDataManager.currentSSDataManager()!
-
+    
     override func viewDidLoad() {
         super.viewDidLoad()
 
         // Do any additional setup after loading the view.
-        fuelTankSlider.slider.addTarget(self, action: #selector(didChangeFuelTankSliderValue(_:)), for: .valueChanged)
+        
     }
 
     override func didReceiveMemoryWarning() {
@@ -27,12 +26,8 @@ class SSPreloadingViewController: UIViewController {
         // Dispose of any resources that can be recreated.
     }
     
-    @IBAction func didChangeGearSwitch(_ sender: UISwitch) {
-        ssDataManager.preloadedGear = sender.isOn
-    }
-    
-    @objc func didChangeFuelTankSliderValue(_ sender: UISlider) {
-        ssDataManager.preloadedFuel = Double(sender.value)
+    @IBAction func cubeSwitchSwitched(_ sender: UISwitch) {
+        ssDataManager.preloadedCube = sender.isOn
     }
     
     /*
