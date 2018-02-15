@@ -108,4 +108,8 @@ class SSDataManager {
     func recordClimb(_ successful: ClimbStatus.RawValue) {
         scoutedMatchPerformance.scouted.climbStatus = successful
     }
+    
+    func recordAssist(_ assist: ClimbAssistStatus.RawValue) {
+        scoutedMatchPerformance.scouted.climbAssistStatus = assist
+    }
 }

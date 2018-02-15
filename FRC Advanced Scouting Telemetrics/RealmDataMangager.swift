@@ -238,6 +238,11 @@ extension HasGeneralEquivalent {
                 return universalObject
             } else {
                 let universalObject = fetchGeneralObject()
+                
+                if universalObject == nil {
+                    //TODO: There is no general object for the scouted object, we should throw an error
+                }
+                
                 self.cache = universalObject
                 return universalObject
             }
@@ -257,9 +262,17 @@ extension HasScoutedEquivalent {
             if let localObject = cache {
                 return localObject
             } else {
-                let localObject = fetchScoutedObject()!
-                self.cache = localObject
-                return localObject
+                let localObject = fetchScoutedObject()
+                
+                if let object = localObject {
+                    self.cache = object
+                    return object
+                } else {
+                    //There is no scouted equivalent, this is a problem
+                    assertionFailure("No scouted object for local object")
+                    Crashlytics.sharedInstance().recordCustomExceptionName("No scouted object for local object", reason: "Key: \(self.key)", frameArray: [])
+                    exit(EXIT_FAILURE)
+                }
             }
         }
     }
@@ -377,6 +390,20 @@ enum ClimbStatus: String, CustomStringConvertible {
     }
     
     static let allValues: [ClimbStatus] = [.Successful, .Attempted, .NotAttempted]
+}
+
+enum ClimbAssistStatus: String, CustomStringConvertible {
+    case SuccessfullyAssisted = "Successfully Assisted"
+    case AttemptedAssist = "Attempted Assist"
+    case DidNotAssist = "Did Not Assist"
+    
+    var description: String {
+        get {
+            return self.rawValue
+        }
+    }
+    
+    static let allValues: [ClimbAssistStatus] = [.SuccessfullyAssisted, .AttemptedAssist, .DidNotAssist]
 }
 
 //2018

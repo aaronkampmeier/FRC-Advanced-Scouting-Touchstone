@@ -343,7 +343,7 @@ extension StandsScoutingViewController: NotesDataSource {
     }
     
     func notesShouldSave() -> Bool {
-        return false
+        return true
     }
 }
 

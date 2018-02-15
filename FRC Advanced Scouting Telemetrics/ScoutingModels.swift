@@ -107,6 +107,7 @@ import RealmSwift
     //---
     
     dynamic var climbStatus: String? = nil
+    dynamic var climbAssistStatus: String? = nil
     
     dynamic var didCrossAutoLine: Bool = false
     

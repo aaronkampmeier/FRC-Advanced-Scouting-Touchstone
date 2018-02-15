@@ -122,6 +122,7 @@ class TeamListTableViewController: UITableViewController, TeamListDetailDataSour
     
     var generalRealmObserverToken: NotificationToken?
     var syncedRealmPhotoObserverToken: NotificationToken?
+    var initialProgressNotification: NotificationToken?
 	
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -147,14 +148,11 @@ class TeamListTableViewController: UITableViewController, TeamListDetailDataSour
         generalRealmObserverToken = realmController.generalRealm.objects(Team.self).observe {[weak self] collectionChange in
             switch collectionChange {
             case .initial:
-                //If the current teams are empty then yeah reload because this means they were populated down from the cloud (probably after first signing in)
-                self?.loadTeams()
-                self?.selectedEvent = nil
-                self?.isSorted = false
+                break
             case .update(_, let deletions, let insertions, _):
                 if insertions.count > 0 || deletions.count > 0 {
                     self?.loadTeams()
-                    self?.selectedEvent = nil
+//                    self?.selectedEvent = nil
                     self?.isSorted = false
                 }
             case .error(let error):
@@ -168,44 +166,22 @@ class TeamListTableViewController: UITableViewController, TeamListDetailDataSour
 		//Load in the beginning data
 		selectedEvent = nil
         
-        //Add an observer for whenever a team's image is changed
-//        let scoutedTeams = realmController.syncedRealm.objects(ScoutedTeam.self)
-//        syncedRealmPhotoObserverToken = scoutedTeams.observe {[weak self] change in
-//            switch change {
-//            case .update(_, deletions: let deletions, insertions: let insertions, modifications: let modifications):
-//                for modification in modifications {
-//                    let scoutedTeam = scoutedTeams[modification]
-//                    let team = scoutedTeam.general!
-//                    
-//                    //Find row of team
-//                    if let index = self?.currentTeamsToDisplay.index(of: team) {
-//                        
-//                        self?.tableView.reloadRows(at: [IndexPath(row: index, section: 0)], with: .automatic)
-//                    }
-//                }
-//            default:
-//                break
-//            }
-//        }
-        
-//        NotificationCenter.default.addObserver(forName: PitScoutingNewImageNotification, object: nil, queue: nil) {notification in
-//            if let team = notification.userInfo?["ForTeam"] as? Team {
-//                self.teamImagesCache.setObject(UIImage(data: team.scouted.frontImage!)!, forKey: team)
-//
-//                if let index = self.currentTeamsToDisplay.index(where: {$0 == team}) {
-//                    self.tableView.reloadRows(at: [IndexPath.init(row: index, section: 0)], with: .automatic)
-//                }
-//            }
-//        }
-        
-//        NotificationCenter.default.addObserver(forName: DidLogIntoSyncServerNotification, object: RealmController.realmController, queue: nil) {notification in
-//            self.updateForImport(notification)
-//        }
+        //Add a monitor to check when all new information is downloaded
+        initialProgressNotification = realmController.currentSyncUser?.session(for: realmController.syncedRealmURL!)?.addProgressNotification(for: .download, mode: .forCurrentlyOutstandingWork) {[weak self] progress in
+            if progress.isTransferComplete {
+                //It is complete, reload the data
+                DispatchQueue.main.async {
+                    self?.loadTeams()
+                    self?.isSorted = false
+                }
+            }
+        }
     }
     
     deinit {
         syncedRealmPhotoObserverToken?.invalidate()
         generalRealmObserverToken?.invalidate()
+        initialProgressNotification?.invalidate()
     }
     
     func loadTeams() {

@@ -58,25 +58,29 @@ class CloudEventImportManager {
             return
         }
         
+        //Prevent an import if the realm is not completely synced and updated with the most recent data
+        
+        
         CLSNSLogv("Beginning import of event: %@", getVaList([frcEvent.key]))
+        
+        ///Begin the Write
+        realmController.generalRealm.beginWrite()
+        realmController.syncedRealm.beginWrite()
+        
         //Create an event object
         let event: Event = Event()
         event.key = frcEvent.key
-        realmController.genericWrite(onRealm: .General) {
-            realmController.generalRealm.add(event)
-        }
+        realmController.generalRealm.add(event, update: true)
         
         //Start loading the teams
         cloudConnection.teams(forEventKey: frcEvent.key, withCompletionHandler: importTeams)
         
-        realmController.genericWrite(onRealm: .General) {
-            event.code = frcEvent.eventCode
-            event.eventType = frcEvent.eventType
-            event.eventTypeString = frcEvent.eventTypeString
-            event.name = frcEvent.name
-            event.year = frcEvent.year
-            event.location = frcEvent.locationName
-        }
+        event.code = frcEvent.eventCode
+        event.eventType = frcEvent.eventType
+        event.eventTypeString = frcEvent.eventTypeString
+        event.name = frcEvent.name
+        event.year = frcEvent.year
+        event.location = frcEvent.locationName
         
         //Create the local one if there is no local object already
         if let eventRanker = realmController.getTeamRanker(forEvent: event) {
@@ -86,9 +90,7 @@ class CloudEventImportManager {
             let eventRanker = EventRanker()
             eventRanker.key = event.key
             scoutedEventRanker = eventRanker
-            realmController.genericWrite(onRealm: .Synced) {
-                realmController.syncedRealm.add(eventRanker)
-            }
+            realmController.syncedRealm.add(eventRanker, update: true)
         }
         
         eventObject = event
@@ -109,19 +111,15 @@ class CloudEventImportManager {
                     //Create a new team and set its properties
                     team = Team()
                     team.key = frcTeam.key
-                    realmController.genericWrite(onRealm: .General) {
-                        realmController.generalRealm.add(team)
-                    }
+                    realmController.generalRealm.add(team, update: true)
                 }
                 
-                realmController.genericWrite(onRealm: .General) {
-                    team.location = frcTeam.stateProv
-                    team.name = frcTeam.name
-                    team.nickname = frcTeam.nickname ?? ""
-                    team.rookieYear = frcTeam.rookieYear
-                    team.teamNumber = frcTeam.teamNumber
-                    team.website = frcTeam.website
-                }
+                team.location = frcTeam.stateProv
+                team.name = frcTeam.name
+                team.nickname = frcTeam.nickname ?? ""
+                team.rookieYear = frcTeam.rookieYear
+                team.teamNumber = frcTeam.teamNumber
+                team.website = frcTeam.website
                 
                 //Check if it already has a local equivalent
                 let scoutedTeam: ScoutedTeam
@@ -133,22 +131,16 @@ class CloudEventImportManager {
                     //Doesn't have a local equivalent, make one
                     scoutedTeam = ScoutedTeam()
                     scoutedTeam.key = team.key
-                    realmController.genericWrite(onRealm: .Synced) {
-                        realmController.syncedRealm.add(scoutedTeam)
-                    }
+                    realmController.syncedRealm.add(scoutedTeam, update: true)
                 }
                 
                 //Add the local team to the local event object's ranked teams
                 if !(scoutedTeam.eventRankers.contains(scoutedEventRanker!)) {
-                    realmController.genericWrite(onRealm: .Synced) {
-                        scoutedEventRanker?.rankedTeams.append(scoutedTeam)
-                    }
+                    scoutedEventRanker?.rankedTeams.append(scoutedTeam)
                 }
                 //Add the local team to the local ranking object
                 if scoutedTeam.ranker == nil {
-                    realmController.genericWrite(onRealm: .Synced) {
-                        realmController.getGeneralTeamRanker().rankedTeams.append(scoutedTeam)
-                    }
+                    realmController.getGeneralTeamRanker().rankedTeams.append(scoutedTeam)
                 }
                 
                 //Now create the TeamEventPerformance object
@@ -156,9 +148,7 @@ class CloudEventImportManager {
                 teamEventPerformance.event = eventObject
                 teamEventPerformance.team = team
                 teamEventPerformance.key = "\(teamEventPerformance.team!.key)_\(teamEventPerformance.event!.key)"
-                realmController.genericWrite(onRealm: .General) {
-                    realmController.generalRealm.add(teamEventPerformance)
-                }
+                realmController.generalRealm.add(teamEventPerformance, update: true)
                 
                 teamEventPerformanceObjects.append(teamEventPerformance)
                 
@@ -186,33 +176,29 @@ class CloudEventImportManager {
                     match = Match()
                     match.key = frcMatch.key
                     
-                    realmController.genericWrite(onRealm: .General) {
-                        realmController.generalRealm.add(match)
-                    }
+                    realmController.generalRealm.add(match, update: true)
                 }
                 
-                realmController.genericWrite(onRealm: .General) {
-                    match.matchNumber = frcMatch.matchNumber
-                    switch frcMatch.compLevel {
-                    case "qm":
-                        match.competitionLevel = Match.CompetitionLevel.Qualifier.rawValue
-                    case "ef":
-                        match.competitionLevel = Match.CompetitionLevel.Eliminator.rawValue
-                    case "sf":
-                        match.competitionLevel = Match.CompetitionLevel.SemiFinal.rawValue
-                    case "qf":
-                        match.competitionLevel = Match.CompetitionLevel.QuarterFinal.rawValue
-                    case "f":
-                        match.competitionLevel = Match.CompetitionLevel.Final.rawValue
-                    default:
-                        self.completionHandler(false, ImportError.InvalidCompetitionLevel)
-                        return
-                    }
-                    match.setNumber.value = frcMatch.setNumber
-                    match.time = frcMatch.actualTime
-                    
-                    match.event = eventObject
+                match.matchNumber = frcMatch.matchNumber
+                switch frcMatch.compLevel {
+                case "qm":
+                    match.competitionLevel = Match.CompetitionLevel.Qualifier.rawValue
+                case "ef":
+                    match.competitionLevel = Match.CompetitionLevel.Eliminator.rawValue
+                case "sf":
+                    match.competitionLevel = Match.CompetitionLevel.SemiFinal.rawValue
+                case "qf":
+                    match.competitionLevel = Match.CompetitionLevel.QuarterFinal.rawValue
+                case "f":
+                    match.competitionLevel = Match.CompetitionLevel.Final.rawValue
+                default:
+                    self.completionHandler(false, ImportError.InvalidCompetitionLevel)
+                    return
                 }
+                match.setNumber.value = frcMatch.setNumber
+                match.time = frcMatch.actualTime
+                
+                match.event = eventObject
                 
                 //Create the local match
                 let scoutedMatch: ScoutedMatch
@@ -222,9 +208,7 @@ class CloudEventImportManager {
                     //Does not exist, create it
                     scoutedMatch = ScoutedMatch()
                     scoutedMatch.key = match.key
-                    realmController.genericWrite(onRealm: .Synced) {
-                        realmController.syncedRealm.add(scoutedMatch)
-                    }
+                    realmController.syncedRealm.add(scoutedMatch, update: true)
                 } else {
                     scoutedMatch = match.scouted
                 }
@@ -234,17 +218,15 @@ class CloudEventImportManager {
                 let redScore = frcAlliances["red"]?.score
                 
                 //TBA represents unknown score values as -1 so if the score is -1, then put nil in for the score.
-                realmController.genericWrite(onRealm: .Synced) {
-                    if blueScore == -1 {
-                        scoutedMatch.blueScore.value = nil
-                    } else {
-                        scoutedMatch.blueScore.value = blueScore
-                    }
-                    if redScore == -1 {
-                        scoutedMatch.redScore.value = nil
-                    } else {
-                        scoutedMatch.redScore.value = redScore
-                    }
+                if blueScore == -1 {
+                    scoutedMatch.blueScore.value = nil
+                } else {
+                    scoutedMatch.blueScore.value = blueScore
+                }
+                if redScore == -1 {
+                    scoutedMatch.redScore.value = nil
+                } else {
+                    scoutedMatch.redScore.value = redScore
                 }
                 
                 //Set up all the teams in the match
@@ -276,14 +258,12 @@ class CloudEventImportManager {
                             let matchPerformance: TeamMatchPerformance
                             matchPerformance = TeamMatchPerformance()
                             matchPerformance.key = "\(match.key)_\(teamString)"
-                            realmController.genericWrite(onRealm: .General) {
-                                realmController.generalRealm.add(matchPerformance)
-                                
-                                matchPerformance.match = match
-                                matchPerformance.teamEventPerformance = eventPerformance
-                                matchPerformance.allianceColor = matchAlliance.key.capitalized
-                                matchPerformance.allianceTeam = (teamStrings.index(of: teamString)! + 1) //The array of team strings comes in the correct order from the cloud
-                            }
+                            realmController.generalRealm.add(matchPerformance, update: true)
+                            
+                            matchPerformance.match = match
+                            matchPerformance.teamEventPerformance = eventPerformance
+                            matchPerformance.allianceColor = matchAlliance.key.capitalized
+                            matchPerformance.allianceTeam = (teamStrings.index(of: teamString)! + 1) //The array of team strings comes in the correct order from the cloud
                             
                             //Check for a local object
                             if !currentScoutedMatchPerformances.contains(where: {localMatchPerformance in
@@ -292,9 +272,7 @@ class CloudEventImportManager {
                                 //Create a local object
                                 let scoutedMatchPerformance = ScoutedMatchPerformance()
                                 scoutedMatchPerformance.key = matchPerformance.key
-                                realmController.genericWrite(onRealm: .Synced) {
-                                    realmController.syncedRealm.add(scoutedMatchPerformance)
-                                }
+                                realmController.syncedRealm.add(scoutedMatchPerformance, update: true)
                             }
                             
                             teamMatchPerformanceObjects.append(matchPerformance)
@@ -318,6 +296,14 @@ class CloudEventImportManager {
     
     private func finalize() {
         CLSNSLogv("Finalizing event import", getVaList([]))
+        
+        do {
+            try realmController.syncedRealm.commitWrite()
+            try realmController.generalRealm.commitWrite()
+        } catch {
+            CLSNSLogv("Failed to commit import writes: \(error)", getVaList([]))
+            Crashlytics.sharedInstance().recordError(error)
+        }
         
         NotificationCenter.default.post(Notification(name: Notification.Name(rawValue: "UpdatedTeams"), object: self))
         

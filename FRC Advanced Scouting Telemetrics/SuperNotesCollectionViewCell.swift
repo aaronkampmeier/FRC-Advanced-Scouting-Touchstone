@@ -32,6 +32,6 @@ extension SuperNotesCollectionViewCell: NotesDataSource {
     
     func notesShouldSave() -> Bool {
         //TODO: Hmm figure this out with realm writes
-        return true
+        return false
     }
 }

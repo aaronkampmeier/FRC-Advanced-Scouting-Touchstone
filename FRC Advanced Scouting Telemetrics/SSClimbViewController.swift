@@ -16,9 +16,17 @@ class SSClimbViewController: UIViewController {
         didSet {
             if let climbSuccessfulVC = climbSuccessfulVC {
                 climbSuccessfulVC.delegate = self
-                climbSuccessfulVC.setUpWithButtons(ClimbStatus.allValues.map({SSOffenseWhereViewController.Button(title: $0.description, color: UIColor.blue, id: $0.rawValue)}), time: 3)
-                climbSuccessfulVC.setPrompt(to: "Rope Climb Status:")
+                climbSuccessfulVC.setUpWithButtons(ClimbStatus.allValues.map({SSOffenseWhereViewController.Button(title: $0.description, color: UIColor.blue, id: $0.rawValue)}), time: 2)
+                climbSuccessfulVC.setPrompt(to: "Climb Status:")
             }
+        }
+    }
+    
+    var climbAssistVC: SSOffenseWhereViewController? {
+        didSet {
+            climbAssistVC?.delegate = self
+            climbAssistVC?.setUpWithButtons(ClimbAssistStatus.allValues.map({SSOffenseWhereViewController.Button(title: $0.description, color: UIColor.blue, id: $0.rawValue)}), time: 2)
+            climbAssistVC?.setPrompt(to: "Did Assist Other Team:")
         }
     }
 
@@ -32,6 +40,7 @@ class SSClimbViewController: UIViewController {
         super.viewWillAppear(animated)
         
         climbSuccessfulVC?.show()
+        climbAssistVC?.show()
     }
 
     override func didReceiveMemoryWarning() {
@@ -49,13 +58,23 @@ class SSClimbViewController: UIViewController {
         
         if segue.identifier == "ropeClimbSuccessful" {
             climbSuccessfulVC = (segue.destination as! SSOffenseWhereViewController)
+        } else if segue.identifier == "didHelpClimb" {
+            climbAssistVC = (segue.destination as! SSOffenseWhereViewController)
         }
     }
 }
 
 extension SSClimbViewController: WhereDelegate {
     func selected(_ whereVC: SSOffenseWhereViewController, id: String) {
-        ssDataManager.recordClimb(id)
+        switch whereVC {
+        case climbSuccessfulVC:
+            ssDataManager.recordClimb(id)
+        case climbAssistVC:
+            ssDataManager.recordAssist(id)
+        default:
+            break
+        }
+        
     }
     
     func shouldSelect(_ whereVC: SSOffenseWhereViewController, id: String, handler: @escaping (Bool) -> Void) {

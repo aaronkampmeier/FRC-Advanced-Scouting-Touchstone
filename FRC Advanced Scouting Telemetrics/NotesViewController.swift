@@ -67,8 +67,13 @@ class NotesViewController: UIViewController {
     }
     
     func save() {
-        RealmController.realmController.genericWrite(onRealm: .Synced) {
+        if RealmController.realmController.syncedRealm.isInWriteTransaction {
+            //Don't start a new write
             team?.scouted.notes = self.notes
+        } else {
+            RealmController.realmController.genericWrite(onRealm: .Synced) {
+                team?.scouted.notes = self.notes
+            }
         }
     }
     
@@ -85,17 +90,13 @@ class NotesViewController: UIViewController {
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         
-        if dataSource?.notesShouldSave() ?? false {
-            autosaveTimer = Timer.scheduledTimer(timeInterval: 10, target: self, selector: #selector(autoSave(_:)), userInfo: nil, repeats: true)
-        }
+        autosaveTimer = Timer.scheduledTimer(timeInterval: 10, target: self, selector: #selector(autoSave(_:)), userInfo: nil, repeats: true)
     }
     
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
         
-        if dataSource?.notesShouldSave() ?? false {
-            save()
-        }
+        save()
         
         if let timer = autosaveTimer {
             timer.invalidate()

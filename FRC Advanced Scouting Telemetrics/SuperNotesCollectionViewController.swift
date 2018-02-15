@@ -21,6 +21,9 @@ class SuperNotesCollectionViewController: UICollectionViewController {
     var dataSource: SuperNotesDataSource?
     
     var teams = [Team]()
+    
+    var didBeginWrite = false
+    var autoSaveTimer: Timer?
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -29,6 +32,12 @@ class SuperNotesCollectionViewController: UICollectionViewController {
         // self.clearsSelectionOnViewWillAppear = false
 
         // Do any additional setup after loading the view.
+        
+        if !RealmController.realmController.syncedRealm.isInWriteTransaction {
+            RealmController.realmController.syncedRealm.beginWrite()
+            didBeginWrite = true
+        }
+        
         
         if let match = dataSource?.superNotesForMatch() {
             teams = (match.teamPerformances).map() {teamMatchPerformance in
@@ -39,6 +48,8 @@ class SuperNotesCollectionViewController: UICollectionViewController {
         }
         
         Answers.logContentView(withName: "Super Notes", contentType: "Notes", contentId: nil, customAttributes: nil)
+        
+        autoSaveTimer = Timer(timeInterval: 10, target: self, selector: #selector(save), userInfo: nil, repeats: true)
     }
 
     override func didReceiveMemoryWarning() {
@@ -49,6 +60,27 @@ class SuperNotesCollectionViewController: UICollectionViewController {
     @IBAction func donePressed(_ sender: UIBarButtonItem) {
         dismiss(animated: true) {
             
+        }
+        autoSaveTimer?.invalidate()
+        if didBeginWrite {
+            do {
+                try RealmController.realmController.syncedRealm.commitWrite()
+            } catch {
+                CLSNSLogv("Error commiting super notes data: \(error)", getVaList([]))
+                Crashlytics.sharedInstance().recordError(error)
+            }
+        }
+    }
+    
+    @objc func save() {
+        if didBeginWrite {
+            do {
+                try RealmController.realmController.syncedRealm.commitWrite()
+                RealmController.realmController.syncedRealm.beginWrite()
+            } catch {
+                CLSNSLogv("Error commiting super notes data: \(error)", getVaList([]))
+                Crashlytics.sharedInstance().recordError(error)
+            }
         }
     }
 
