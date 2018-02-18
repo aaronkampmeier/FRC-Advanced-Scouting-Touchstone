@@ -59,7 +59,9 @@ class CloudEventImportManager {
         }
         
         //Prevent an import if the realm is not completely synced and updated with the most recent data
-        
+//        realmController.currentSyncUser?.session(for: realmController.syncedRealmURL!)?.addProgressNotification(for: .Download, mode: .forCurrentlyOutstandingWork) {progress in
+//
+//        }
         
         CLSNSLogv("Beginning import of event: %@", getVaList([frcEvent.key]))
         

@@ -157,17 +157,11 @@ class TeamDetailCollectionViewController: UICollectionViewController, UICollecti
             let headerView = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: "header", for: indexPath)
             (headerView.viewWithTag(1) as! UILabel).text = "\(selectedTeamEventPerformance?.event?.name ?? "") Stats"
             return headerView
-        case (0, UICollectionElementKindSectionFooter):
+        case (_, UICollectionElementKindSectionFooter):
             let footerView = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: "footer", for: indexPath)
             (footerView.viewWithTag(1) as! UIButton).setTitle(nil, for: .normal)
             (footerView.viewWithTag(1) as! UIButton).removeTarget(self, action: #selector(viewShotChartPressed(_:)), for: .touchUpInside)
-            
-            return footerView
-        case (1, UICollectionElementKindSectionFooter):
-            let footerView = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: "footer", for: indexPath)
-            (footerView.viewWithTag(1) as! UIButton).setTitle("View Shot Chart", for: .normal)
-            (footerView.viewWithTag(1) as! UIButton).addTarget(self, action: #selector(viewShotChartPressed(_:)), for: .touchUpInside)
-            
+
             return footerView
         default:
             return UICollectionReusableView()

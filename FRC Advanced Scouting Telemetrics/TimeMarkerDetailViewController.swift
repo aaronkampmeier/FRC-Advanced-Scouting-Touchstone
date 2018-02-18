@@ -23,6 +23,16 @@ class TimeMarkerDetailViewController: UIViewController, UITableViewDataSource {
                     
                     detailValues = [("Time", timeMarker.time.description(roundedAt: 2))]
                     autoLabel.isHidden = true
+                case .GrabbedCube:
+                    titleLabel.text = "Grabbed Cube"
+                    
+                    detailValues = [("Time", timeMarker.time.description(roundedAt: 2)), ("Location", timeMarker.associatedLocation ?? "Unknown")]
+                    autoLabel.isHidden = !timeMarker.isAuto
+                case .PlacedCube:
+                    titleLabel.text = "Placed Cube"
+                    
+                    detailValues = [("Time", timeMarker.time.description(roundedAt: 2)), ("Location", timeMarker.associatedLocation ?? "Unknown")]
+                    autoLabel.isHidden = !timeMarker.isAuto
                 default:
                     break
                 }

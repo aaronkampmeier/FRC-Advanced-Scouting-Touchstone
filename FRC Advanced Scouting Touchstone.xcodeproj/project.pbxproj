@@ -308,7 +308,7 @@
 				93EA7FF11E46A36E002EC8C7 /* Notes */,
 				1F9B782A1CD1A42400B4E5AE /* HiddenDebugViewController.swift */,
 				1FA6A73F1CD3B4E800772C63 /* Data Syncing */,
-				1F4178BF1CD02E4200801D5B /* Team List */,
+				1F4178BF1CD02E4200801D5B /* Team List Detail */,
 				1FBE627E1CAEE0FB001FDFB7 /* TeamPickerTableViewController.swift */,
 				1F4534551C7276DE004EDDB9 /* EventPickerViewController.swift */,
 				1F30CFC91C7E510100A4EFCA /* Admin Console */,
@@ -330,7 +330,7 @@
 			name = "Admin Console";
 			sourceTree = "<group>";
 		};
-		1F4178BF1CD02E4200801D5B /* Team List */ = {
+		1F4178BF1CD02E4200801D5B /* Team List Detail */ = {
 			isa = PBXGroup;
 			children = (
 				1FDC1BCD1CD69EBB00ABE327 /* TeamListSplitViewController.swift */,
@@ -344,7 +344,7 @@
 				1F21DF111C66942200C55D0E /* SortVC.swift */,
 				93C5B47B1E53FC9C007D309F /* TeamInfoScrollView.swift */,
 			);
-			name = "Team List";
+			name = "Team List Detail";
 			sourceTree = "<group>";
 		};
 		1F4534131C6FFC13004EDDB9 /* Stands Scouting */ = {

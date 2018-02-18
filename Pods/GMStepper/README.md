@@ -5,6 +5,7 @@
 
 A stepper with a sliding label in the middle. Pan the label or tap the buttons. Check out the tutorial, [How to Build a Custom Stepper - Part 1](http://gmertk.github.io/custom-stepper-part-1/).
 
+
 ## Screenshot
 
 ![Screenshot_1.gif](https://raw.githubusercontent.com/gmertk/GMStepper/master/Screenshots/screenshot_1.gif)
@@ -68,6 +69,9 @@ var labelBackgroundColor: UIColor = UIColor(red:0.26, green:0.6, blue:0.87, alph
 /// Font of the middle label. Defaults to AvenirNext-Bold, 25.0 points in size.
 var labelFont = UIFont(name: "AvenirNext-Bold", size: 25.0)
 
+/// Corner radius of the middle label's layer. Defaults to 0.0.
+var labelCornerRadius: CGFloat = 0.0
+
 /// Corner radius of the stepper's layer. Defaults to 4.0.
 var cornerRadius: CGFloat = 4.0
 
@@ -85,9 +89,10 @@ var limitHitAnimationColor: UIColor = UIColor(red:0.26, green:0.6, blue:0.87, al
 ```
 
 
-## Author
+## Authors
 
-Günay Mert Karadoğan, mertkaradogan@gmail.com
+* [Brent Whitman](https://github.com/bwhtmn) - Maintainer
+* [Günay Mert Karadoğan](https://github.com/gmertk) - Creator
 
 ## License
 

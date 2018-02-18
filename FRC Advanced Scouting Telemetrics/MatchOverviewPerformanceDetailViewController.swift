@@ -20,7 +20,6 @@ class MatchOverviewPerformanceDetailViewController: UIViewController {
     @IBOutlet weak var scoutIDViewHeight: NSLayoutConstraint!
     @IBOutlet weak var hasNotBeenScoutedHeight: NSLayoutConstraint!
     @IBOutlet weak var matchContentView: UIView!
-    @IBOutlet weak var fieldLocationDisplayerView: UIView!
 
     var dataSource: MatchOverviewPerformanceDetailDataSource?
     var displayedTeamMatchPerformance: TeamMatchPerformance? {
@@ -76,21 +75,18 @@ class MatchOverviewPerformanceDetailViewController: UIViewController {
                 timeMarkers = timeMarkers.sorted {($0.time) < ($1.time)}
             }
             
-            fieldLocationDisplay.reloadData()
             timeMarkerTableView.reloadData()
         }
     }
     
     func hideMatchContentViews() {
         hasNotBeenScoutedHeight.constant = 22
-        fieldLocationDisplayerView.isHidden = true
         timeMarkerTableView.isHidden = true
         matchStatsCollectionView.isHidden = true
     }
     
     func showMatchContentViews() {
         hasNotBeenScoutedHeight.constant = 0
-        fieldLocationDisplayerView.isHidden = false
         timeMarkerTableView.isHidden = false
         matchStatsCollectionView.isHidden = false
     }
@@ -98,14 +94,10 @@ class MatchOverviewPerformanceDetailViewController: UIViewController {
     var timeMarkers: [TimeMarker] = []
     var matchPerformanceStats = [(String, String?)]()
     
-    var fieldLocationDisplay: FieldLocationDisplayViewController!
-    
     override func viewDidLoad() {
         super.viewDidLoad()
 
         // Do any additional setup after loading the view.
-        fieldLocationDisplay = self.childViewControllers.first as! FieldLocationDisplayViewController
-        fieldLocationDisplay.dataSource = self
         
         timeMarkerTableView.dataSource = self
         timeMarkerTableView.delegate = self
@@ -142,46 +134,6 @@ class MatchOverviewPerformanceDetailViewController: UIViewController {
 
 }
 
-extension MatchOverviewPerformanceDetailViewController: FieldLocationDisplayDataSource {
-    func allowsMultiplePoints() -> Bool {
-        return true
-    }
-    
-    func allowsAddition() -> Bool {
-        return false
-    }
-    
-    func fieldImage(forFieldLocationDisplayController fieldLocationDisplayVC: FieldLocationDisplayViewController) -> UIImage {
-        if let teamMatchPerformance = displayedTeamMatchPerformance {
-            switch teamMatchPerformance.alliance {
-            case .Red:
-                return #imageLiteral(resourceName: "Red Boiler Map")
-            case .Blue:
-                return #imageLiteral(resourceName: "Blue Boiler Map")
-            }
-        } else {
-            return #imageLiteral(resourceName: "Red Boiler Map")
-        }
-    }
-    
-    func allPoints(forFieldLocationDisplayController fieldLocationDisplayVC: FieldLocationDisplayViewController) -> [CGPoint] {
-        //TODO: Remove the field location displayer for 2018 season
-//        if let matchPerformance = displayedTeamMatchPerformance {
-//            let fuelShots = matchPerformance.scouted.fuelScorings(forScoutID: scoutID ?? "default")
-//            let highGoalShots = fuelShots.filter {$0.goal == BoilerGoal.HighGoal.rawValue}
-//
-//            let points = highGoalShots.map {fuelScoring in
-//                return CGPoint(x: fuelScoring.xLocation?.doubleValue ?? 0, y: fuelScoring.yLocation?.doubleValue ?? 0)
-//            }
-//
-//            return points
-//        } else {
-//            return []
-//        }
-        return []
-    }
-}
-
 extension MatchOverviewPerformanceDetailViewController: UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         if displayedTeamMatchPerformance?.scouted.hasBeenScouted ?? false {
@@ -201,7 +153,6 @@ extension MatchOverviewPerformanceDetailViewController: UITableViewDataSource {
                 cell.iconImageView.image = nil
             case .Error:
                 cell.iconImageView.image = nil
-                
             default:
                 cell.iconImageView.image = nil
             }

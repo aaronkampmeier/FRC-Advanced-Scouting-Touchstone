@@ -5,12 +5,12 @@ use_frameworks!
 target 'FRC Advanced Scouting Touchstone' do
 pod 'Alamofire', '~> 4.0'
 pod 'NYTPhotoViewer', '~> 1.1.0'
-pod "GMStepper"
+pod "GMStepper", '~> 2.1'
 pod 'VerticalSlider'
 pod 'SSBouncyButton', '~> 1.0'
 pod 'UICircularProgressRing'
 pod 'VTAcknowledgementsViewController'
-pod 'RealmSwift'
+pod 'RealmSwift', '~> 3.1.1'
 pod 'TORoundedTableView'
 pod 'AWSMobileClient'
 pod 'AWSUserPoolsSignIn'
