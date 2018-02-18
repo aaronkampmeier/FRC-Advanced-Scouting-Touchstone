@@ -454,8 +454,8 @@
 		9317C035201ADB6B00F1E907 /* General Models */ = {
 			isa = PBXGroup;
 			children = (
-				93633B1E200D9B29000EC83A /* Match.swift */,
 				1F1C23AA1E07487C008885A1 /* Team.swift */,
+				93633B1E200D9B29000EC83A /* Match.swift */,
 				1F1C23AE1E07487C008885A1 /* Event.swift */,
 				1F1C23AC1E07487C008885A1 /* TeamMatchPerformance.swift */,
 				1F1C23B61E07487C008885A1 /* TeamEventPerformance.swift */,

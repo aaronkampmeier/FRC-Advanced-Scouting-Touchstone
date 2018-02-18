@@ -114,26 +114,89 @@ extension TeamMatchPerformance: HasStats {
                     } else {
                         return StatValue.NoValue
                     }
+                },
+                StatName.ClimbAssistStatus: {
+                    StatValue.initWithOptional(value: self.scouted.climbAssistStatus)
+                },
+                StatName.DidCrossAutoLine: {
+                    StatValue.initWithOptional(value: self.scouted.didCrossAutoLine)
+                },
+                StatName.PercentCubesFromPile: {
+                    let timeMarkers = self.getTimeMarkers(withAssociatedLocation: CubeSource.Pile.rawValue)
+                    return StatValue.Integer(timeMarkers.count) / self.statValue(forStat: .TotalGrabbedCubes)
+                },
+                StatName.PercentCubesFromLine: {
+                    let timeMarkers = self.getTimeMarkers(withAssociatedLocation: CubeSource.Line.rawValue)
+                    return StatValue.Integer(timeMarkers.count) / self.statValue(forStat: .TotalGrabbedCubes)
+                },
+                StatName.PercentCubesFromPortal: {
+                    let timeMarkers = self.getTimeMarkers(withAssociatedLocation: CubeSource.Portal.rawValue)
+                    return StatValue.Integer(timeMarkers.count) / self.statValue(forStat: .TotalGrabbedCubes)
+                },
+                StatName.TotalGrabbedCubes: {
+                    if self.scouted.hasBeenScouted {
+                        let timeMarkers = self.scouted.timeMarkers(forScoutID: self.scouted.defaultScoutID).filter {$0.timeMarkerEventType == .GrabbedCube}
+                        return StatValue.Integer(timeMarkers.count)
+                    } else {
+                        return StatValue.NoValue
+                    }
+                },
+                StatName.PercentCubesPlacedInScale: {
+                    let timeMarkers = self.getTimeMarkers(withAssociatedLocation: CubeDestination.Scale.rawValue)
+                    return StatValue.Integer(timeMarkers.count) / self.statValue(forStat: .TotalPlacedCubes)
+                },
+                StatName.PercentCubesPlacedInSwitch: {
+                    let timeMarkers = self.getTimeMarkers(withAssociatedLocation: CubeDestination.Switch.rawValue)
+                    return StatValue.Integer(timeMarkers.count) / self.statValue(forStat: .TotalPlacedCubes)
+                },
+                StatName.PercentCubesPlacedInOpponentSwitch: {
+                    let timeMarkers = self.getTimeMarkers(withAssociatedLocation: CubeDestination.OpponentSwitch.rawValue)
+                    return StatValue.Integer(timeMarkers.count) / self.statValue(forStat: .TotalPlacedCubes)
+                },
+                StatName.PercentCubesPlacedInVault: {
+                    let timeMarkers = self.getTimeMarkers(withAssociatedLocation: CubeDestination.Vault.rawValue)
+                    return StatValue.Integer(timeMarkers.count) / self.statValue(forStat: .TotalPlacedCubes)
+                },
+                StatName.PercentCubesDropped: {
+                    let timeMarkers = self.getTimeMarkers(withAssociatedLocation: CubeDestination.Dropped.rawValue)
+                    return StatValue.Integer(timeMarkers.count) / self.statValue(forStat: .TotalPlacedCubes)
+                },
+                StatName.TotalPlacedCubes: {
+                    if self.scouted.hasBeenScouted {
+                        let timeMarkers = self.scouted.timeMarkers(forScoutID: self.scouted.defaultScoutID).filter {$0.timeMarkerEventType == .PlacedCube}
+                        return StatValue.Integer(timeMarkers.count)
+                    } else {
+                        return StatValue.NoValue
+                    }
                 }
             ]
         }
     }
     
+    func getTimeMarkers(withAssociatedLocation assocLocation: String) -> [TimeMarker] {
+        return self.scouted.timeMarkers(forScoutID: self.scouted.defaultScoutID).filter {$0.associatedLocation == assocLocation}
+    }
+    
     enum StatName: String, CustomStringConvertible, StatNameable {
         case TotalPoints = "Total Points"
         case TotalRankingPoints = "Total Ranking Points"
-        case TotalPointsFromFuel = "Total Fuel Points"
-        case TotalGearsScored = "Total Gears Scored"
-        case AverageFuelCycleTime = "Average Fuel Cycle Time"
-        case AverageGearCycleTime = "Average Gear Cycle Time"
-        case AverageAccuracy = "Average High Goal Accuracy"
         case ClimbingStatus = "Climbing Status"
-        case Peg1Percentage = "Peg 1 Percentage"
-        case Peg2Percentage = "Peg 2 Percentage"
-        case Peg3Percentage = "Peg 3 Percentage"
-        case TotalFloorGears = "Total Floor Gears"
-        case AutoFuelScored = "Auto Fuel Scored"
-        case AutoGearsScored = "Auto Gears Scored"
+        
+        case ClimbAssistStatus = "Did Assist a Climb"
+        
+        //2018
+        case DidCrossAutoLine = "Did Cross Auto Line"
+        case PercentCubesFromPile = "Percent Cubes From Pile"
+        case PercentCubesFromLine = "Percent Cubes From Line"
+        case PercentCubesFromPortal = "Percent Cubes From Portal"
+        case TotalGrabbedCubes = "Total Grabbed Cubes"
+        
+        case PercentCubesPlacedInScale = "Percent Cubes in Scale"
+        case PercentCubesPlacedInSwitch = "Percent Cubes in Switch"
+        case PercentCubesPlacedInOpponentSwitch = "Cubes in Opp. Switch"
+        case PercentCubesPlacedInVault = "Percent Cubes in Vault"
+        case PercentCubesDropped = "Percent Cubes Dropped"
+        case TotalPlacedCubes = "Total Placed Cubes"
         
         var description: String {
             get {
@@ -141,6 +204,6 @@ extension TeamMatchPerformance: HasStats {
             }
         }
         
-        static let allValues: [StatName] = [.TotalPoints, .TotalRankingPoints, .TotalPointsFromFuel, .AutoFuelScored, .TotalGearsScored, .TotalFloorGears, .AverageAccuracy, .AverageFuelCycleTime, .AverageGearCycleTime, .AutoGearsScored, .Peg1Percentage, .Peg2Percentage, .Peg3Percentage, .ClimbingStatus]
+        static let allValues: [StatName] = [.TotalPoints, .TotalRankingPoints, .ClimbingStatus, .ClimbAssistStatus, .DidCrossAutoLine, .PercentCubesFromPile, .PercentCubesFromLine, .PercentCubesFromPortal, .TotalGrabbedCubes, .PercentCubesPlacedInScale, .PercentCubesPlacedInSwitch, .PercentCubesPlacedInOpponentSwitch, .PercentCubesPlacedInVault, .PercentCubesDropped, .TotalPlacedCubes]
     }
 }

@@ -102,7 +102,7 @@ import RealmSwift
     let timeMarkers = LinkingObjects(fromType: TimeMarker.self, property: "scoutedMatchPerformance")
     
     //--- Maybe try to remove
-    dynamic var defaultScoutID: String? = nil
+    dynamic var defaultScoutID: String = "default"
 //    let scoutIDs = List<String>()
     //---
     
@@ -137,7 +137,7 @@ import RealmSwift
     var preferredScoutID: String {
         get {
             if self.defaultScoutID != "default" {
-                return self.defaultScoutID!
+                return self.defaultScoutID
             } else if timeMarkers.count > 0 {
                 for marker in timeMarkers {
                     return marker.scoutID

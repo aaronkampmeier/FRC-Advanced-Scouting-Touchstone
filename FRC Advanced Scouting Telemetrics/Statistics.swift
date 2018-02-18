@@ -18,6 +18,7 @@ enum StatValue: CustomStringConvertible, Equatable, Comparable {
     case Double(Double)
     case Bool(Bool)
     case String(String)
+    case Percent(Double)
     case NoValue
     
     static func initWithOptional(value: Int?) -> StatValue {
@@ -56,6 +57,18 @@ enum StatValue: CustomStringConvertible, Equatable, Comparable {
         }
     }
     
+    static func initWithOptionalPercent(value: Double?) -> StatValue {
+        if let val = value {
+            if val.isNaN || val.isInfinite {
+                return .NoValue
+            } else {
+                return StatValue.Percent(val)
+            }
+        } else {
+            return .NoValue
+        }
+    }
+    
     var description: String {
         get {
             switch self {
@@ -63,6 +76,8 @@ enum StatValue: CustomStringConvertible, Equatable, Comparable {
                 return value.description
             case .Double(let value):
                 return value.description(roundedAt: 2)
+            case .Percent(let value):
+                return "\((value * 100).description(roundedAt: 1))%"
             case .Bool(let value):
                 return value.description.capitalized
             case .String(let value):
@@ -83,6 +98,8 @@ enum StatValue: CustomStringConvertible, Equatable, Comparable {
             return true
         case (.String(let a), .String(let b)) where a == b:
             return true
+        case (.Percent(let a), .Percent(let b)) where a == b:
+            return true
         default:
             return false
         }
@@ -93,6 +110,8 @@ enum StatValue: CustomStringConvertible, Equatable, Comparable {
         case (.Integer(let a), .Integer(let b)) where a < b:
             return true
         case (.Double(let a), .Double(let b)) where a < b:
+            return true
+        case (.Percent(let a), .Percent(let b)) where a < b:
             return true
         case (.Bool(let a), .Bool(let b)):
             switch (a,b) {
@@ -122,6 +141,8 @@ enum StatValue: CustomStringConvertible, Equatable, Comparable {
             return true
         case (.Double(let a), .Double(let b)) where a > b:
             return true
+        case (.Percent(let a), .Percent(let b)) where a > b:
+            return true
         case (.Bool(let a), .Bool(let b)):
             switch (a,b) {
             case (true, true):
@@ -150,6 +171,8 @@ enum StatValue: CustomStringConvertible, Equatable, Comparable {
             return true
         case (.Double(let a), .Double(let b)) where a <= b:
             return true
+        case (.Percent(let a), .Percent(let b)) where a <= b:
+            return true
         case (.Bool(let a), .Bool(let b)):
             switch (a,b) {
             case (true, true):
@@ -174,6 +197,8 @@ enum StatValue: CustomStringConvertible, Equatable, Comparable {
             return true
         case (.Double(let a), .Double(let b)) where a >= b:
             return true
+        case (.Percent(let a), .Percent(let b)) where a >= b:
+            return true
         case (.Bool(let a), .Bool(let b)):
             switch (a,b) {
             case (true, true):
@@ -190,6 +215,22 @@ enum StatValue: CustomStringConvertible, Equatable, Comparable {
         default:
             return false
         }
+    }
+}
+
+//To make a percent
+func /(lhs: StatValue, rhs: StatValue) -> StatValue {
+    switch (lhs, rhs) {
+    case (.Double(let a), .Double(let b)):
+        return StatValue.initWithOptionalPercent(value: a / b)
+    case (.Integer(let a), .Integer(let b)):
+        return StatValue.initWithOptionalPercent(value: Double(a) / Double(b))
+    case (.Double(let a), .Integer(let b)):
+        return StatValue.initWithOptionalPercent(value: a / Double(b))
+    case (.Integer(let a), .Double(let b)):
+        return StatValue.initWithOptionalPercent(value: Double(a) / b)
+    default:
+        return StatValue.NoValue
     }
 }
 

@@ -68,6 +68,8 @@ class SSDataManager {
         scoutedMatchPerformance.scouted.defaultScoutID = scoutID
         
         SSDataManager.mostRecentSSDataManager = self
+        
+        scoutedMatchPerformance.scouted.didCrossAutoLine = false
     }
     
     func save() {

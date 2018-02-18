@@ -25,6 +25,17 @@ extension TeamEventPerformance: HasStats {
     var stats: [StatName:()->StatValue] {
         get {
             return [
+                StatName.ScoutedMatches: {
+                    let count = self.matchPerformances.reduce(0) {partialResult, matchPerformance in
+                        if matchPerformance.scouted.hasBeenScouted {
+                            return partialResult + 1
+                        } else {
+                            return partialResult
+                        }
+                    }
+                    
+                    return StatValue.Integer(count)
+                },
                 StatName.TotalMatchPoints:{return StatValue.initWithOptional(value: (Array(self.matchPerformances)).reduce(0) {(result, matchPerformance) in
                     return result + (matchPerformance.finalScore ?? 0)
                     })
@@ -109,7 +120,7 @@ extension TeamEventPerformance: HasStats {
                     let matchPerformances = self.matchPerformances
                     
                     let successfulClimbCount = matchPerformances.reduce(0) {partialResult, matchPerformance in
-                        if (matchPerformance.scouted.hasBeenScouted) && matchPerformance.scouted.climbStatus == ClimbStatus.Attempted.rawValue {
+                        if (matchPerformance.scouted.hasBeenScouted) && matchPerformance.scouted.climbStatus == ClimbStatus.Successful.rawValue {
                             return partialResult + 1
                         } else {
                             return partialResult
@@ -138,14 +149,84 @@ extension TeamEventPerformance: HasStats {
                     if numOfScoutedMatches == 0 {
                         return StatValue.NoValue
                     } else {
-                        return StatValue.Double(Double(numOfSuccesses)/Double(numOfScoutedMatches))
+                        return StatValue.Integer(numOfSuccesses) / StatValue.Integer(numOfScoutedMatches)
                     }
+                },
+                
+                StatName.MajorityClimbStatus: {
+                    return self.average(ofStat: .ClimbingStatus, forMatchPerformances: Array(self.matchPerformances))
+                },
+                StatName.MajorityClimbAssistStatus: {
+                    return self.average(ofStat: .ClimbAssistStatus, forMatchPerformances: Array(self.matchPerformances))
+                },
+                StatName.ClimbAssistAttempts: {
+                    let teamMatchPerformances = self.matchPerformances
+                    
+                    let climbAttemptCount = teamMatchPerformances.reduce(0) {partialResult, matchPerformance in
+                        if (matchPerformance.scouted.hasBeenScouted) && matchPerformance.scouted.climbAssistStatus == ClimbAssistStatus.AttemptedAssist.rawValue || matchPerformance.scouted.climbAssistStatus == ClimbAssistStatus.SuccessfullyAssisted.rawValue {
+                            return partialResult + 1
+                        } else {
+                            return partialResult
+                        }
+                    }
+                    
+                    return StatValue.Integer(climbAttemptCount)
+                },
+                
+                
+                StatName.AutoLineCrossCount: {
+                    let crossCount = self.matchPerformances.reduce(0) {partialResult, matchPerformance in
+                        if matchPerformance.scouted.didCrossAutoLine {
+                            return partialResult + 1
+                        } else {
+                            return partialResult
+                        }
+                    }
+                    
+                    return StatValue.Integer(crossCount)
+                },
+                StatName.AverageGrabbedCubes: {
+                    self.average(ofStat: .TotalGrabbedCubes)
+                },
+                StatName.PercentCubesFromPile: {
+                    self.findPercentOfCubes(withLocation: CubeSource.Pile.rawValue)
+                },
+                StatName.PercentCubesFromLine: {
+                    self.findPercentOfCubes(withLocation: CubeSource.Line.rawValue)
+                },
+                StatName.PercentCubesFromPortal: {
+                    self.findPercentOfCubes(withLocation: CubeSource.Portal.rawValue)
+                },
+                StatName.AveragePlacedCubes: {
+                    self.average(ofStat: .TotalPlacedCubes)
+                },
+                StatName.PercentCubesInScale:{
+                    self.findPercentOfCubes(withLocation: CubeDestination.Scale.rawValue)
+                },
+                StatName.PercentCubesInSwitch: {
+                    self.findPercentOfCubes(withLocation: CubeDestination.Switch.rawValue)
+                },
+                StatName.PercentCubesInOpponentSwitch: {
+                    self.findPercentOfCubes(withLocation: CubeDestination.OpponentSwitch.rawValue)
+                },
+                StatName.PercentCubesInVault: {
+                    self.findPercentOfCubes(withLocation: CubeDestination.Vault.rawValue)
+                },
+                StatName.PercentCubesDropped: {
+                    self.findPercentOfCubes(withLocation: CubeDestination.Dropped.rawValue)
                 }
             ]
         }
     }
     
-    func average(ofStat stat: TeamMatchPerformance.StatName, forMatchPerformances matchPerformances: [TeamMatchPerformance]) -> StatValue {
+    func average(ofStat stat: TeamMatchPerformance.StatName, forMatchPerformances performances: [TeamMatchPerformance]? = nil) -> StatValue {
+        let matchPerformances: [TeamMatchPerformance]
+        if performances == nil {
+            matchPerformances = Array(self.matchPerformances)
+        } else {
+            matchPerformances = performances!
+        }
+        var isPercent = false
         var sum = 0.0
         var differentStrings = [String:Int]()
         var numOfAverages = 0
@@ -156,6 +237,10 @@ extension TeamEventPerformance: HasStats {
                 sum += Double(performanceValue)
                 numOfAverages += 1
             case .Double(let performanceValue):
+                sum += performanceValue
+                numOfAverages += 1
+            case .Percent(let performanceValue):
+                isPercent = true
                 sum += performanceValue
                 numOfAverages += 1
             case .String(let string):
@@ -187,36 +272,108 @@ extension TeamEventPerformance: HasStats {
             
             return StatValue.initWithOptional(value: highestCount?.0)
         } else {
-            return StatValue.Double(sum/Double(numOfAverages))
+            if isPercent {
+                return StatValue.Double(sum) / StatValue.Integer(numOfAverages)
+            } else {
+                return StatValue.Double(sum/Double(numOfAverages))
+            }
         }
+    }
+    
+    func sum(ofStat stat: TeamMatchPerformance.StatName, forMatchPerformances performances: [TeamMatchPerformance]? = nil) -> StatValue {
+        let matchPerformances: [TeamMatchPerformance]
+        if performances == nil {
+            matchPerformances = Array(self.matchPerformances)
+        } else {
+            matchPerformances = performances!
+        }
+        
+        var sum = 0.0
+        var doesHaveValues = false
+        var areDoubles = false
+        
+        for performance in matchPerformances {
+            switch performance.statValue(forStat: stat) {
+            case .Integer(let pVal):
+                sum += Double(pVal)
+                doesHaveValues = true
+            case .Double(let pVal):
+                sum += pVal
+                doesHaveValues = true
+                areDoubles = true
+            default:
+                break
+            }
+        }
+        
+        if doesHaveValues {
+            if areDoubles {
+                return StatValue.Double(sum)
+            } else {
+                return StatValue.Integer(Int(sum))
+            }
+        } else {
+            return StatValue.NoValue
+        }
+    }
+    
+    func timeMarkers(withAssociatedLocations assocLocation: String, fromMatchPerformances performances: [TeamMatchPerformance]? = nil) -> [TimeMarker] {
+        let matchPerformances: [TeamMatchPerformance]
+        if performances == nil {
+            matchPerformances = Array(self.matchPerformances)
+        } else {
+            matchPerformances = performances!
+        }
+        
+        var timeMarkers = [TimeMarker]()
+        
+        for performance in matchPerformances {
+            timeMarkers += performance.getTimeMarkers(withAssociatedLocation: assocLocation)
+        }
+        
+        return timeMarkers
+    }
+    
+    func findPercentOfCubes(withLocation location: String) -> StatValue {
+        return StatValue.Integer(self.timeMarkers(withAssociatedLocations: location).count) / self.sum(ofStat: .TotalGrabbedCubes)
     }
     
     //Stat Name Definition
     enum StatName: String, CustomStringConvertible, StatNameable {
+        case ScoutedMatches = "Scouted Matches"
         case TotalMatchPoints = "Total Match Points"
         case TotalRankingPoints = "Total Ranking Points"
         case OPR = "OPR"
         case DPR = "DPR"
         case CCWM = "CCWM"
-        case AverageTotalPointsFromFuel = "Average Total Fuel Points"
-        case AverageGearsScored = "Average Gears Scored"
-        case AverageFuelCycleTime = "Average Fuel Cycle Time"
-        case AverageGearCycleTime = "Average Gear Cycle Time"
-        case AverageHighGoalAccuracy = "Average High Goal Accuracy"
-        case MostRopeClimb = "Climb Status (Majority)"
-        case Peg1Percentage = "Peg 1 Percentage"
-        case Peg2Percentage = "Peg 2 Percentage"
-        case Peg3Percentage = "Peg 3 Percentage"
+        
+        case MajorityClimbStatus = "Climb Status (Majority)"
+        case SuccessfulClimbCount = "Successful Climb Count"
+        case ClimbSuccessRate = "Climb Success Rate"
         case TotalWins = "Total Wins"
         case TotalLosses = "Total Losses"
         case TotalTies = "Total Ties"
         case NumberOfMatches = "Number Of Matches"
         case RankingScore = "Ranking Score"
-        case AverageFloorGearCount = "Average Floor Gear Count"
-        case SuccessfulClimbCount = "Successful Climb Count"
-        case ClimbSuccessRate = "Climb Success Rate"
-        case AverageAutoFuelScored = "Average Auto Fuel Scored"
-        case AverageAutoGearsScored = "Average Auto Gears Scored"
+        
+        case MajorityClimbAssistStatus = "Climb Assisting Status (Majority)"
+        case ClimbAssistAttempts = "Cimb Assist Attempts"
+        
+        
+        //2018
+        case AutoLineCrossCount = "Auto Line Cross Count"
+        case AverageGrabbedCubes = "Average Grabbed Cubes"
+        case PercentCubesFromPile = "Percent Cubes From Pile"
+        case PercentCubesFromLine = "Percent Cubes From Line"
+        case PercentCubesFromPortal = "Percent Cubes From Portal"
+        
+        case AveragePlacedCubes = "Average Placed Cubes"
+        case PercentCubesInScale = "Percent Cubes in Scale"
+        case PercentCubesInSwitch = "Percent Cubes in Switch"
+        case PercentCubesInOpponentSwitch = "Cubes in Opp. Switch"
+        case PercentCubesInVault = "Percent Cubes in Vault"
+        case PercentCubesDropped = "Percent Cubes Dropped"
+        
         
         var description: String {
             get {
@@ -224,7 +381,11 @@ extension TeamEventPerformance: HasStats {
             }
         }
         
-        static let allValues: [StatName] = [.OPR, .DPR, .CCWM, .NumberOfMatches, .TotalMatchPoints, .TotalRankingPoints, .RankingScore, .TotalWins, .TotalLosses, .TotalTies, .AverageTotalPointsFromFuel, .AverageAutoFuelScored, .AverageFuelCycleTime, .AverageHighGoalAccuracy, .AverageGearsScored, .AverageAutoGearsScored, .AverageFloorGearCount, .AverageGearCycleTime, .Peg1Percentage, .Peg2Percentage, .Peg3Percentage, .MostRopeClimb, .SuccessfulClimbCount, .ClimbSuccessRate]
+        static let allValues: [StatName] = [.OPR, .DPR, .CCWM, .ScoutedMatches, .NumberOfMatches, .TotalMatchPoints, .TotalRankingPoints, .RankingScore, .TotalWins, .TotalLosses, .TotalTies, .MajorityClimbStatus, .SuccessfulClimbCount, .ClimbSuccessRate, .MajorityClimbAssistStatus, .ClimbAssistAttempts,
+            
+            .AutoLineCrossCount, .AverageGrabbedCubes, .PercentCubesFromPile, .PercentCubesFromLine, .PercentCubesFromPortal,
+            .AveragePlacedCubes, .PercentCubesInScale, .PercentCubesInSwitch, .PercentCubesInOpponentSwitch, .PercentCubesInVault, .PercentCubesDropped
+        ]
     }
 }
 

@@ -42,6 +42,11 @@ class RealmController {
             //Is not logged in
             currentSyncUser = nil
         }
+        
+        SyncManager.shared.errorHandler = {error, session in
+            CLSNSLogv("Realm Sync Error: \(error)", getVaList([]))
+            Crashlytics.sharedInstance().recordError(error)
+        }
     }
     
     //Right now just logging in user, not registering new ones
