@@ -49,21 +49,6 @@ class RealmController {
         }
     }
     
-    //Right now just logging in user, not registering new ones
-//    func logIn(toTeam teamNumber: String, withUsername username: String, andPassword password: String, completionHandler: @escaping (Error?)->Void) {
-//        SyncUser.logIn(with: SyncCredentials.usernamePassword(username: username, password: password, register: true), server: syncAuthURL) {syncUser, error in
-//            if let error = error {
-//                CLSNSLogv("Error Signing In: \(error)", getVaList([]))
-//                completionHandler(error)
-//            } else {
-//                //User sync user
-//                self.openSyncedRealm(withSyncUser: syncUser!)
-//                completionHandler(nil)
-//                self.currentSyncUser = syncUser
-//            }
-//        }
-//    }
-    
     func openSyncedRealm(withSyncUser syncUser: SyncUser) {
         //Set crashlytics identifiers
         //TODO: Use the AWS Cognito Device IDs (https://aws.amazon.com/blogs/mobile/tracking-and-remembering-devices-using-amazon-cognito-your-user-pools/)
@@ -110,9 +95,18 @@ class RealmController {
         }
     }
     
-    func delete(objects: [Object]) {
+    func delete<T: Object>(objects: [T]) {
+        let realm = objects.first?.realm
+        realm?.beginWrite()
         for object in objects {
-            self.delete(object: object)
+            realm?.delete(object)
+        }
+        
+        do {
+            try realm?.commitWrite()
+        } catch {
+            CLSNSLogv("Unable to delete objects", getVaList([]))
+            Crashlytics.sharedInstance().recordError(error)
         }
     }
     

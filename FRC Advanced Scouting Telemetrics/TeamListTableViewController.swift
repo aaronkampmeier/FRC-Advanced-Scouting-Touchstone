@@ -152,7 +152,7 @@ class TeamListTableViewController: UITableViewController, TeamListDetailDataSour
             case .update(_, let deletions, let insertions, _):
                 if insertions.count > 0 || deletions.count > 0 {
                     self?.loadTeams()
-//                    self?.selectedEvent = nil
+                    self?.selectedEvent = nil
                     self?.isSorted = false
                 }
             case .error(let error):
@@ -172,6 +172,7 @@ class TeamListTableViewController: UITableViewController, TeamListDetailDataSour
                 //It is complete, reload the data
                 DispatchQueue.main.async {
                     self?.loadTeams()
+                    self?.selectedEvent = nil
                     self?.isSorted = false
                 }
             }

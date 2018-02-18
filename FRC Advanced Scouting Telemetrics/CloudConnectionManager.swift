@@ -12,7 +12,7 @@ import Alamofire
 
 private let baseApi = "https://www.thebluealliance.com/api/v3/"
 private let baseApiUrl = try! baseApi.asURL()
-private let yearToDrawDataFrom = "2017"
+private let yearToDrawDataFrom = "2018"
 
 private class TBAResponseCache<T> {
     let json: T

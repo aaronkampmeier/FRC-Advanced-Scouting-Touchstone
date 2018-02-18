@@ -67,9 +67,9 @@ class SSClimbViewController: UIViewController {
 extension SSClimbViewController: WhereDelegate {
     func selected(_ whereVC: SSOffenseWhereViewController, id: String) {
         switch whereVC {
-        case climbSuccessfulVC:
+        case climbSuccessfulVC!:
             ssDataManager.recordClimb(id)
-        case climbAssistVC:
+        case climbAssistVC!:
             ssDataManager.recordAssist(id)
         default:
             break
