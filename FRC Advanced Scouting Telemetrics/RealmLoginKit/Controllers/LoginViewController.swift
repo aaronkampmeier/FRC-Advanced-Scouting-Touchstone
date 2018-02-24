@@ -17,7 +17,6 @@
 ////////////////////////////////////////////////////////////////////////////
 
 import UIKit
-import TORoundedTableView
 import Realm
 import Crashlytics
 
@@ -351,6 +350,14 @@ public class LoginViewController: UIViewController {
         loginView.didTapCloseHandler = { self.dismiss(animated: true, completion: nil) }
         loginView.didTapLogInHandler = { self.submitLoginRequest() }
         loginView.didTapRegisterHandler = { self.setRegistering(!self.isRegistering, animated: true) }
+        
+        loginView.didTapForgotPasswordHandler = {
+            //Show the forgot password vc
+            let mainStoryboard = UIStoryboard(name: "Main", bundle: nil)
+            let forgotPassVC = mainStoryboard.instantiateViewController(withIdentifier: "forgotPassword")
+            
+            self.present(forgotPassVC, animated: true, completion: nil)
+        }
 
         // Configure the keyboard manager for the login view
         keyboardManager.keyboardHeightDidChangeHandler = { newHeight in

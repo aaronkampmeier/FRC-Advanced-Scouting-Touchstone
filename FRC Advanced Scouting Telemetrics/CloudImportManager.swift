@@ -54,7 +54,7 @@ class CloudEventImportManager {
         if currentEvents.contains(where: {event in
             return event.key == frcEvent.key
         }) {
-            completionHandler(false, .EventAlreadyInDatabase)
+            throwError(error: .EventAlreadyInDatabase)
             return
         }
         
@@ -141,7 +141,7 @@ class CloudEventImportManager {
                     scoutedEventRanker?.rankedTeams.append(scoutedTeam)
                 }
                 //Add the local team to the local ranking object
-                if scoutedTeam.ranker == nil {
+                if !realmController.getGeneralTeamRanker().rankedTeams.contains(scoutedTeam) {
                     realmController.getGeneralTeamRanker().rankedTeams.append(scoutedTeam)
                 }
                 
@@ -160,7 +160,7 @@ class CloudEventImportManager {
             //Now get the matches
             cloudConnection.matches(forEventKey: frcEvent.key, withCompletionHandler: importMatches)
         } else {
-            completionHandler(false, .ErrorLoadingTeams)
+            throwError(error: .ErrorLoadingTeams)
         }
     }
     
@@ -194,7 +194,7 @@ class CloudEventImportManager {
                 case "f":
                     match.competitionLevel = Match.CompetitionLevel.Final.rawValue
                 default:
-                    self.completionHandler(false, ImportError.InvalidCompetitionLevel)
+                    throwError(error: .InvalidCompetitionLevel)
                     return
                 }
                 match.setNumber.value = frcMatch.setNumber
@@ -248,7 +248,7 @@ class CloudEventImportManager {
                                     if let team = frcTeam {
                                         self.importTeams(fromTeams: [team])
                                     } else {
-                                        self.completionHandler(false, .MatchTeamNotInRoster)
+                                        self.throwError(error: .MatchTeamNotInRoster)
                                         CLSNSLogv("Match (\(frcMatch.key)) team \(teamString) not in roster for event \(self.frcEvent.key)", getVaList([]))
                                     }
                                 }
@@ -292,8 +292,14 @@ class CloudEventImportManager {
             finalize()
         } else {
             //TODO: Send an error saying the match data isn't up yet and to check back later
-            completionHandler(false, .ErrorLoadingMatches)
+            throwError(error: .ErrorLoadingMatches)
         }
+    }
+    
+    private func throwError(error: ImportError) {
+        realmController.syncedRealm.cancelWrite()
+        realmController.generalRealm.cancelWrite()
+        completionHandler(false, error)
     }
     
     private func finalize() {

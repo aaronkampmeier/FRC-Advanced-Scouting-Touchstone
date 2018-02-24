@@ -38,12 +38,12 @@ public class AWSCognitoAuthenticationProvider: NSObject, AuthenticationProvider,
     // Task token to let us cancel requests as needed
     private var cancellationTokenSource: AWSCancellationTokenSource?
 
-    public init(serviceRegion: AWSRegionType, userPoolID: String, clientID: String, clientSecret: String) {
+    public override init() {
         // Capture the Cognito account tokens + settings
-        self.serviceRegion = serviceRegion
-        self.userPoolID = userPoolID
-        self.clientID = clientID
-        self.clientSecret = clientSecret
+        self.serviceRegion = .USEast1
+        self.userPoolID = "us-east-1_FuyxJ3oI6"
+        self.clientID = "50a007212mgh063emptr07n5tu"
+        self.clientSecret = "i2ujhnqfmnfi0ishlme00qi0pms5s4auhi5p7hv8fc223afcchp"
 
         // Access the User Pool object containing our users
         let serviceConfiguration = AWSServiceConfiguration(region: self.serviceRegion, credentialsProvider: nil)
@@ -148,14 +148,39 @@ public class AWSCognitoAuthenticationProvider: NSObject, AuthenticationProvider,
             return nil
         }, cancellationToken: cancellationTokenSource!.token)
     }
+    
+    
+    //Forgot Password
+    public func forgotPassword(username: String, onCompletion: @escaping (Error?) -> Void) {
+        let user = self.userPool.getUser(username)
+        user.forgotPassword().continueWith {task in
+            onCompletion(self.formattedError(task.error as NSError?))
+            
+            return nil
+        }
+        
+    }
+    
+    public func confirmForgotPassword(username: String, confirmationKey: String, withNewPassword newPassword: String, onCompletion: @escaping (Error?) -> Void) {
+        let user = self.userPool.getUser(username)
+        user.confirmForgotPassword(confirmationKey, password: newPassword).continueWith {task in
+            onCompletion(self.formattedError(task.error as NSError?))
+            
+            return nil
+        }
+    }
 
     // Cognito returns the error message in a "message" property in
     // 'userInfo'. This method copies that string to 'localizedDescription' 
     // for easier access
-    private func formattedError(_ error: NSError) -> NSError {
-        var userInfo = error.userInfo
-        userInfo[NSLocalizedDescriptionKey] = userInfo["message"]
-        return NSError(domain: error.domain, code: error.code, userInfo: userInfo)
+    private func formattedError(_ error: NSError?) -> NSError? {
+        if let error = error {
+            var userInfo = error.userInfo
+            userInfo[NSLocalizedDescriptionKey] = userInfo["message"]
+            return NSError(domain: error.domain, code: error.code, userInfo: userInfo)
+        } else {
+            return nil
+        }
     }
     
     

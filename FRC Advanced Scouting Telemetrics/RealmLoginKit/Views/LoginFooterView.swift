@@ -45,6 +45,7 @@ class LoginFooterView: UIView {
     // Button heights
     private let loginButtonHeight = 50
     private let registerButtonHeight = 44
+    private let forgotPasswordButtonHeight = 30
     
     // Scale of the buttons from the parent view width
     private let loginButtonWidthScale = 0.8
@@ -56,7 +57,7 @@ class LoginFooterView: UIView {
     
     private var viewHeight: CGFloat {
         if !isRegisterButtonHidden {
-            return CGFloat(topMargin + loginButtonHeight + middleMargin + registerButtonHeight + bottomMargin)
+            return CGFloat(topMargin + loginButtonHeight + middleMargin + registerButtonHeight + middleMargin / 2 + forgotPasswordButtonHeight + bottomMargin)
         }
         
         return CGFloat(topMargin + loginButtonHeight + bottomMargin)
@@ -67,9 +68,12 @@ class LoginFooterView: UIView {
     private let registerButton = UIButton(type: .system)
     private let loadingIndicator = UIActivityIndicatorView(activityIndicatorStyle: .white)
     
+    private let forgotPasswordButton = UIButton(type: UIButtonType.system)
     
     var loginButtonTappedHandler: (() -> Void)?
     var registerButtonTappedHandler: (() -> Void)?
+    
+    var forgotPasswordTappedHandler: (() -> Void)?
     
     private var _isRegistering: Bool = false
     var isRegistering: Bool {
@@ -119,6 +123,11 @@ class LoginFooterView: UIView {
         registerButton.addTarget(self, action: #selector(buttonTapped(sender:)), for: .touchUpInside)
         addSubview(registerButton)
         
+        forgotPasswordButton.setTitle("Forgot Password", for: .normal)
+        forgotPasswordButton.addTarget(self, action: #selector(forgotPasswordPressed(sender:)), for: .touchUpInside)
+        forgotPasswordButton.isEnabled = true
+        addSubview(forgotPasswordButton)
+        
         loadingIndicator.autoresizingMask = [.flexibleTopMargin, .flexibleLeftMargin, .flexibleRightMargin, .flexibleBottomMargin]
         
         updateButtonTitles()
@@ -144,6 +153,14 @@ class LoginFooterView: UIView {
         rect.origin.y = loginButton.frame.maxY + CGFloat(middleMargin)
         rect.origin.x = (bounds.size.width - rect.size.width) * 0.5
         registerButton.frame = rect
+        
+        forgotPasswordButton.sizeToFit()
+        rect = forgotPasswordButton.frame
+        rect.size.height = CGFloat(forgotPasswordButtonHeight)
+        rect.size.width = 130
+        rect.origin.x = (bounds.size.width - rect.size.width) * 0.5
+        rect.origin.y = registerButton.frame.maxY + CGFloat(middleMargin) / 2
+        forgotPasswordButton.frame = rect
         
         registerButton.isHidden = isRegisterButtonHidden
     }
@@ -184,6 +201,10 @@ class LoginFooterView: UIView {
         else {
             registerButtonTappedHandler?()
         }
+    }
+    
+    @objc func forgotPasswordPressed(sender: UIButton) {
+        forgotPasswordTappedHandler?()
     }
 
     private func updateButtonTitles() {

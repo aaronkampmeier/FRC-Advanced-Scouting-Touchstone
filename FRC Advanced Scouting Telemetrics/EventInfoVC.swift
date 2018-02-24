@@ -52,9 +52,9 @@ class EventInfoVC: UIViewController, UITableViewDataSource {
     
     func finishedImport(didComplete: Bool, withError error: CloudEventImportManager.ImportError?) {
         if didComplete {
-            NSLog("Did complete event import")
+            CLSNSLogv("Did complete event import", getVaList([]))
             if let error = error {
-                NSLog("With error: \(error)")
+                CLSNSLogv("With error: \(error)", getVaList([]))
             }
             
             performSegue(withIdentifier: "unwindToAdminConsoleFromEventAdd", sender: self)

@@ -50,6 +50,15 @@ class LoginView: UIView, UITableViewDelegate, UIViewControllerTransitioningDeleg
         set { footerView.loginButtonTappedHandler = newValue }
         get { return footerView.loginButtonTappedHandler }
     }
+    
+    public var didTapForgotPasswordHandler: (() -> Void)? {
+        set {
+            footerView.forgotPasswordTappedHandler = newValue
+        }
+        get {
+            return footerView.forgotPasswordTappedHandler
+        }
+    }
 
     /* Whether the view is in a state of registration or not */
     private var _registering = false

@@ -46,7 +46,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         loginVC.isServerURLFieldHidden = true
         
         //TODO: Extract these into seperate file (or don't to make them harder to find)
-        loginVC.authenticationProvider = AWSCognitoAuthenticationProvider(serviceRegion: .USEast1, userPoolID: "us-east-1_FuyxJ3oI6", clientID: "50a007212mgh063emptr07n5tu", clientSecret: "i2ujhnqfmnfi0ishlme00qi0pms5s4auhi5p7hv8fc223afcchp")
+        loginVC.authenticationProvider = AWSCognitoAuthenticationProvider()
         
         loginVC.loginSuccessfulHandler = {user,teamNumber in
             RealmController.realmController.currentSyncUser = user

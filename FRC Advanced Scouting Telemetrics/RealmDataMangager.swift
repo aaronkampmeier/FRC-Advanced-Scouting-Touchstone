@@ -78,6 +78,30 @@ class RealmController {
             self.syncedRealm = try Realm(configuration: scoutedRealmConfig)
             NotificationCenter.default.post(name: DidLogIntoSyncServerNotification, object: self)
             CLSNSLogv("Did log into and open realms", getVaList([]))
+            
+            //Now perform sanity checks quickly
+            syncedRealm.beginWrite()
+            let ranker = getGeneralTeamRanker()
+            var seen = [ScoutedTeam]()
+            var didRemoveDuplicates = false
+            for team in ranker.rankedTeams {
+                if seen.contains(team) {
+                    ranker.rankedTeams.remove(at: ranker.rankedTeams.index(of: team)!)
+                    didRemoveDuplicates = true
+                } else {
+                    seen.append(team)
+                }
+            }
+            if didRemoveDuplicates {
+                CLSNSLogv("Removing duplicates in general ranker", getVaList([]))
+                Crashlytics.sharedInstance().recordCustomExceptionName("Did have to remove duplicate teams from ranker", reason: "There were duplicate teams in the ranker", frameArray: [])
+            }
+            do {
+                try syncedRealm.commitWrite()
+            } catch {
+                CLSNSLogv("Unable to remove duplicate ranked teams: \(error)", getVaList([]))
+                Crashlytics.sharedInstance().recordError(error)
+            }
         } catch {
             CLSNSLogv("Error opening realms: \(error)", getVaList([]))
             Crashlytics.sharedInstance().recordError(error)
@@ -115,13 +139,20 @@ class RealmController {
         let generalRanker = syncedRealm.object(ofType: GeneralRanker.self, forPrimaryKey: "General Ranker")
         
         if let ranker = generalRanker {
+            
             return ranker
         } else {
             //Create a ranker
             let newRanker = GeneralRanker()
-            try! syncedRealm.write {
+            
+            if syncedRealm.isInWriteTransaction {
                 syncedRealm.add(newRanker)
+            } else {
+                try! syncedRealm.write {
+                    syncedRealm.add(newRanker)
+                }
             }
+            
             return newRanker
         }
     }

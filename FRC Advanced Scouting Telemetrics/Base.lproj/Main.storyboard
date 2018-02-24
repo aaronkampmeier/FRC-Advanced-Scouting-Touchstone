@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="14092" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="v0c-l5-P8z">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="14101" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="v0c-l5-P8z">
     <device id="ipad9_7" orientation="landscape">
         <adaptation id="fullscreen"/>
     </device>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14081.1"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14086"/>
         <capability name="Aspect ratio constraints" minToolsVersion="5.1"/>
         <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
         <capability name="Navigation items with more than one left or right bar item" minToolsVersion="7.0"/>
@@ -104,7 +104,7 @@
                 <placeholder placeholderIdentifier="IBFirstResponder" id="LWm-cK-xSr" userLabel="First Responder" sceneMemberID="firstResponder"/>
                 <exit id="2h0-aa-k1o" userLabel="Exit" sceneMemberID="exit"/>
             </objects>
-            <point key="canvasLocation" x="4037" y="101"/>
+            <point key="canvasLocation" x="4760.7421875" y="100.78125"/>
         </scene>
         <!--Pick an Event-->
         <scene sceneID="f2o-MI-RsJ">
@@ -490,7 +490,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="YAh-9k-L04" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="3541" y="60"/>
+            <point key="canvasLocation" x="4265.0390625" y="59.375"/>
         </scene>
         <!--Transfer Info-->
         <scene sceneID="jpo-zH-5ew">
@@ -1659,7 +1659,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="iHX-y4-ITb" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="626" y="396"/>
+            <point key="canvasLocation" x="1350" y="395.3125"/>
         </scene>
         <!--Climb View Controller-->
         <scene sceneID="COb-Fl-QZt">
@@ -1757,7 +1757,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="lUt-Tq-Reu" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1250" y="-112"/>
+            <point key="canvasLocation" x="1974.0234374999998" y="-112.109375"/>
         </scene>
         <!--Pick List-->
         <scene sceneID="dv2-aE-BW4">
@@ -2131,7 +2131,7 @@
                 </collectionViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="pXb-me-17D" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="2201" y="209"/>
+            <point key="canvasLocation" x="2925" y="208.59375"/>
         </scene>
         <!--Shot Chart-->
         <scene sceneID="ghX-MD-pvH">
@@ -2187,7 +2187,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="jgZ-os-6kE" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="2308" y="645"/>
+            <point key="canvasLocation" x="3031.640625" y="644.53125"/>
         </scene>
         <!--View Controller-->
         <scene sceneID="hO2-Va-fB2">
@@ -2457,7 +2457,7 @@
                     </connections>
                 </tapGestureRecognizer>
             </objects>
-            <point key="canvasLocation" x="2783" y="666"/>
+            <point key="canvasLocation" x="3506.8359375" y="665.625"/>
         </scene>
         <!--Navigation Controller-->
         <scene sceneID="Xv6-xx-QW2">
@@ -2475,7 +2475,7 @@
                 </navigationController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="haz-nZ-fnf" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="3053" y="-112"/>
+            <point key="canvasLocation" x="3776.9531249999995" y="-112.5"/>
         </scene>
         <!--Matches-->
         <scene sceneID="01O-hW-auK">
@@ -2605,7 +2605,7 @@
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="HPj-xO-URn" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="3000" y="218"/>
+            <point key="canvasLocation" x="3724.2187499999995" y="217.96875"/>
         </scene>
         <!--Team List Table View Controller-->
         <scene sceneID="8W7-88-PdG">
@@ -2675,15 +2675,15 @@
                     </tableView>
                     <toolbarItems>
                         <barButtonItem width="5" style="plain" systemItem="fixedSpace" id="78D-YA-Vjp"/>
-                        <barButtonItem image="Sort" id="fvy-8s-p33">
-                            <connections>
-                                <action selector="sortPressed:" destination="has-i4-dJU" id="UuE-RY-jts"/>
-                            </connections>
-                        </barButtonItem>
-                        <barButtonItem style="plain" systemItem="flexibleSpace" id="ORr-aX-Rku"/>
                         <barButtonItem image="Edit" id="ija-jy-05E">
                             <connections>
                                 <action selector="editPressed:" destination="has-i4-dJU" id="Jc9-NR-WMz"/>
+                            </connections>
+                        </barButtonItem>
+                        <barButtonItem style="plain" systemItem="flexibleSpace" id="ORr-aX-Rku"/>
+                        <barButtonItem image="Sort" id="fvy-8s-p33">
+                            <connections>
+                                <action selector="sortPressed:" destination="has-i4-dJU" id="UuE-RY-jts"/>
                             </connections>
                         </barButtonItem>
                         <barButtonItem style="plain" systemItem="flexibleSpace" id="GMJ-zh-w5s"/>
@@ -2717,6 +2717,7 @@
                             </connections>
                         </barButtonItem>
                     </navigationItem>
+                    <simulatedToolbarMetrics key="simulatedBottomBarMetrics"/>
                     <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
                     <size key="freeformSize" width="320" height="600"/>
                     <connections>
@@ -2728,6 +2729,128 @@
                 <placeholder placeholderIdentifier="IBFirstResponder" id="gBL-gX-UjV" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="336" y="944"/>
+        </scene>
+        <!--Forogt Password-->
+        <scene sceneID="JmE-hV-T5F">
+            <objects>
+                <viewController id="aqX-uD-WL5" customClass="ForgotPasswordViewController" customModule="FRC_Advanced_Scouting_Touchstone" customModuleProvider="target" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="U2U-IM-kNH"/>
+                        <viewControllerLayoutGuide type="bottom" id="eah-1L-2XT"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="noQ-xT-wnk">
+                        <rect key="frame" x="0.0" y="0.0" width="1024" height="400"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Enter Team Number" textAlignment="center" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="1lp-LK-qjC">
+                                <rect key="frame" x="422.5" y="94" width="180" height="40"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="40" id="Ck7-Vn-nHy"/>
+                                    <constraint firstAttribute="width" constant="180" id="hSw-q9-QHq"/>
+                                </constraints>
+                                <nil key="textColor"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="16"/>
+                                <textInputTraits key="textInputTraits"/>
+                            </textField>
+                        </subviews>
+                        <color key="backgroundColor" white="0.14999999999999999" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        <constraints>
+                            <constraint firstItem="1lp-LK-qjC" firstAttribute="top" secondItem="U2U-IM-kNH" secondAttribute="bottom" constant="30" id="WPs-dO-qbT"/>
+                            <constraint firstItem="1lp-LK-qjC" firstAttribute="centerX" secondItem="noQ-xT-wnk" secondAttribute="centerX" id="kpV-V5-rPu"/>
+                        </constraints>
+                    </view>
+                    <navigationItem key="navigationItem" title="Forogt Password" id="Lx2-Uz-SwG">
+                        <barButtonItem key="leftBarButtonItem" systemItem="cancel" id="ODb-wk-RnC">
+                            <connections>
+                                <action selector="cancelPressed:" destination="aqX-uD-WL5" id="Y3J-Pd-i07"/>
+                            </connections>
+                        </barButtonItem>
+                        <barButtonItem key="rightBarButtonItem" title="Next" id="BJ8-Am-6ne">
+                            <connections>
+                                <action selector="continuePressed:" destination="aqX-uD-WL5" id="yur-i9-gif"/>
+                            </connections>
+                        </barButtonItem>
+                    </navigationItem>
+                    <size key="freeformSize" width="1024" height="400"/>
+                    <connections>
+                        <outlet property="cancelButton" destination="ODb-wk-RnC" id="Qrr-3N-Ney"/>
+                        <outlet property="teamNumberField" destination="1lp-LK-qjC" id="AIe-Vg-pqr"/>
+                        <segue destination="oMj-X5-rb6" kind="show" identifier="confirm" id="EJg-jp-dtq"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="GGe-yA-w1P" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="-594" y="-72"/>
+        </scene>
+        <!--Confirm Forgot Password-->
+        <scene sceneID="KhY-eO-nXU">
+            <objects>
+                <viewController id="oMj-X5-rb6" customClass="ConfirmForgotPasswordViewController" customModule="FRC_Advanced_Scouting_Touchstone" customModuleProvider="target" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="hgc-6Z-U1C"/>
+                        <viewControllerLayoutGuide type="bottom" id="0D6-Xe-eNw"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="aUY-Qb-RuA">
+                        <rect key="frame" x="0.0" y="0.0" width="1024" height="500"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Confirmation Code" textAlignment="center" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="5j9-AI-cnJ">
+                                <rect key="frame" x="437" y="133" width="150" height="40"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="40" id="E7N-iQ-HsD"/>
+                                    <constraint firstAttribute="width" constant="150" id="yJo-M4-Ja8"/>
+                                </constraints>
+                                <nil key="textColor"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="15"/>
+                                <textInputTraits key="textInputTraits"/>
+                            </textField>
+                            <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="New Password" textAlignment="center" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="BDd-dc-OuB">
+                                <rect key="frame" x="437" y="197" width="150" height="30"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="30" id="0Qg-8K-mZA"/>
+                                    <constraint firstAttribute="width" constant="150" id="d3k-7i-dyH"/>
+                                </constraints>
+                                <nil key="textColor"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                <textInputTraits key="textInputTraits" secureTextEntry="YES"/>
+                            </textField>
+                            <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Confirm Password" textAlignment="center" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="0y9-CI-x1B">
+                                <rect key="frame" x="437" y="247" width="150" height="30"/>
+                                <nil key="textColor"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                <textInputTraits key="textInputTraits" secureTextEntry="YES"/>
+                            </textField>
+                        </subviews>
+                        <color key="backgroundColor" red="0.14902138710021973" green="0.14901724457740784" blue="0.14901807904243469" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+                        <constraints>
+                            <constraint firstItem="BDd-dc-OuB" firstAttribute="top" secondItem="5j9-AI-cnJ" secondAttribute="bottom" constant="24" id="4gF-cC-PPo"/>
+                            <constraint firstItem="5j9-AI-cnJ" firstAttribute="top" secondItem="hgc-6Z-U1C" secondAttribute="bottom" constant="35" id="APg-zO-PMx"/>
+                            <constraint firstItem="5j9-AI-cnJ" firstAttribute="centerX" secondItem="aUY-Qb-RuA" secondAttribute="centerX" id="Cc2-WT-oPO"/>
+                            <constraint firstItem="BDd-dc-OuB" firstAttribute="centerX" secondItem="aUY-Qb-RuA" secondAttribute="centerX" id="ZvB-XH-Fxn"/>
+                            <constraint firstItem="0y9-CI-x1B" firstAttribute="width" secondItem="BDd-dc-OuB" secondAttribute="width" id="aMw-eH-hhn"/>
+                            <constraint firstItem="0y9-CI-x1B" firstAttribute="height" secondItem="BDd-dc-OuB" secondAttribute="height" id="ccQ-yw-8fp"/>
+                            <constraint firstItem="0y9-CI-x1B" firstAttribute="top" secondItem="BDd-dc-OuB" secondAttribute="bottom" constant="20" id="dIe-Ec-bMU"/>
+                            <constraint firstItem="0y9-CI-x1B" firstAttribute="centerX" secondItem="aUY-Qb-RuA" secondAttribute="centerX" id="p3Y-WV-WWl"/>
+                        </constraints>
+                    </view>
+                    <navigationItem key="navigationItem" title="Confirm Forgot Password" prompt="Enter the code sent to your team email" id="Agq-dU-CVm">
+                        <barButtonItem key="backBarButtonItem" title="Cancel" id="YaS-QU-Zgh"/>
+                        <barButtonItem key="rightBarButtonItem" systemItem="done" id="SMZ-U2-7xb">
+                            <connections>
+                                <action selector="donePressed:" destination="oMj-X5-rb6" id="tYP-4q-fdl"/>
+                            </connections>
+                        </barButtonItem>
+                    </navigationItem>
+                    <size key="freeformSize" width="1024" height="500"/>
+                    <connections>
+                        <outlet property="confirmPasswordField" destination="0y9-CI-x1B" id="Fho-Em-YDS"/>
+                        <outlet property="confirmationCodeField" destination="5j9-AI-cnJ" id="axp-qo-FdA"/>
+                        <outlet property="newPasswordField" destination="BDd-dc-OuB" id="Dbc-Pz-M3c"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="w2X-sD-R8X" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="-594" y="395"/>
         </scene>
         <!--Split View-->
         <scene sceneID="m4A-CE-4hG">
@@ -2911,7 +3034,7 @@
                 <placeholder placeholderIdentifier="IBFirstResponder" id="9Pn-7a-lIp" userLabel="First Responder" sceneMemberID="firstResponder"/>
                 <exit id="pzr-R7-JIb" userLabel="Exit" sceneMemberID="exit"/>
             </objects>
-            <point key="canvasLocation" x="3747" y="793"/>
+            <point key="canvasLocation" x="4470.703125" y="792.96875"/>
         </scene>
         <!--Add Event-->
         <scene sceneID="jpp-ek-mic">
@@ -3150,7 +3273,7 @@
                 </navigationController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Ykx-1K-Le5" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-337" y="931"/>
+            <point key="canvasLocation" x="-289" y="944"/>
         </scene>
         <!--Navigation Controller-->
         <scene sceneID="ScR-LK-0Ks">
@@ -3370,7 +3493,7 @@
                 </collectionViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="SjP-TY-HAB" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="54" y="102"/>
+            <point key="canvasLocation" x="778.125" y="101.5625"/>
         </scene>
         <!--Navigation Controller-->
         <scene sceneID="Ji3-zG-vEe">
@@ -3390,7 +3513,7 @@
                 </navigationController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="x7W-lY-vOB" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="626" y="79"/>
+            <point key="canvasLocation" x="1350" y="78.90625"/>
         </scene>
         <!--Navigation Controller-->
         <scene sceneID="GEy-0V-psi">
@@ -3410,7 +3533,7 @@
                 </navigationController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="RwZ-jB-YM0" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="375" y="43"/>
+            <point key="canvasLocation" x="1099.21875" y="42.96875"/>
         </scene>
         <!--Navigation Controller-->
         <scene sceneID="p5P-Fq-vc4">
@@ -3430,7 +3553,7 @@
                 </navigationController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="czE-cX-rT6" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="2034" y="588"/>
+            <point key="canvasLocation" x="2758.0078125" y="587.5"/>
         </scene>
         <!--Match Overview Split View Controller-->
         <scene sceneID="97b-go-4z9">
@@ -3776,6 +3899,24 @@
                 <placeholder placeholderIdentifier="IBFirstResponder" id="1dR-vi-Gqy" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="1826" y="-1638"/>
+        </scene>
+        <!--Navigation Controller-->
+        <scene sceneID="z8X-Rn-O3r">
+            <objects>
+                <navigationController storyboardIdentifier="forgotPassword" automaticallyAdjustsScrollViewInsets="NO" id="Xva-mW-s6U" sceneMemberID="viewController">
+                    <toolbarItems/>
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" id="sIV-oL-eaf">
+                        <rect key="frame" x="0.0" y="20" width="1024" height="44"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                    </navigationBar>
+                    <nil name="viewControllers"/>
+                    <connections>
+                        <segue destination="aqX-uD-WL5" kind="relationship" relationship="rootViewController" id="M1h-1o-3XE"/>
+                    </connections>
+                </navigationController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="13d-RB-eg0" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="-1240" y="308"/>
         </scene>
     </scenes>
     <resources>

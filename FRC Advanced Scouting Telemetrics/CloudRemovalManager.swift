@@ -42,7 +42,16 @@ class CloudEventRemovalManager {
             }
         }
         
+        let matchesToDelete = Array(eventToRemove.matches)
+        let teamMatchPerformances = Array(eventToRemove.matches.reduce([TeamMatchPerformance]()) {partialArray, match in
+            return partialArray + match.teamPerformances})
+        let teamEventPerformances = Array(eventToRemove.teamEventPerformances)
+        
         //Now delete the event and along with it the matches, the event performances, and the match performances. Again the local versions will stay.
+        realmController.delete(objects: matchesToDelete)
+        realmController.delete(objects: teamMatchPerformances)
+        realmController.delete(objects: teamEventPerformances)
+        
         realmController.delete(object: eventToRemove)
         CLSNSLogv("Finished removal of event", getVaList([]))
         NotificationCenter.default.post(Notification(name: Notification.Name(rawValue: "UpdatedTeams")))

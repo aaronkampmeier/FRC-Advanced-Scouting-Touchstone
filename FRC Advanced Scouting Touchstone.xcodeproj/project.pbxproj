@@ -88,7 +88,6 @@
 		936967F71E4FD057001DB15D /* TeamDetailTableCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 936967F61E4FD057001DB15D /* TeamDetailTableCollectionViewCell.swift */; };
 		9369681A1E502AC8001DB15D /* TeamDetailKeyValueSpreadCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 936968191E502AC8001DB15D /* TeamDetailKeyValueSpreadCollectionViewCell.swift */; };
 		937E9C961E40468300D0ED76 /* SuperNotesCollectionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 937E9C951E40468300D0ED76 /* SuperNotesCollectionViewController.swift */; };
-		938BEB3F1E354393003F2F74 /* CoreData.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 938BEB3E1E354393003F2F74 /* CoreData.framework */; };
 		9391EA6C1E4852D2008E17A1 /* PitStringFieldCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9391EA6B1E4852D2008E17A1 /* PitStringFieldCollectionViewCell.swift */; };
 		93A15E921F05E9A00057C965 /* JSONModels.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93A15E911F05E9A00057C965 /* JSONModels.swift */; };
 		93AE99801E3407A00000FB7C /* SSDataManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93AE997F1E3407A00000FB7C /* SSDataManager.swift */; };
@@ -99,6 +98,8 @@
 		93C609241E67D035007A689D /* MatchOverviewDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93C609231E67D035007A689D /* MatchOverviewDetailViewController.swift */; };
 		93C609281E67D0CC007A689D /* MatchOverviewMasterViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93C609271E67D0CC007A689D /* MatchOverviewMasterViewController.swift */; };
 		93CE1BF71E403A97004165BE /* NotesViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93CE1BF61E403A97004165BE /* NotesViewController.swift */; };
+		93CEA6302041ED0600C5B357 /* ForgotPasswordViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93CEA62F2041ED0600C5B357 /* ForgotPasswordViewController.swift */; };
+		93CEA6322041FB5300C5B357 /* ConfirmForgotPasswordViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93CEA6312041FB5300C5B357 /* ConfirmForgotPasswordViewController.swift */; };
 		93D75B641E5D0866002CBED2 /* FieldLocationDisplayViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93D75B631E5D0866002CBED2 /* FieldLocationDisplayViewController.swift */; };
 		93D75B6A1E5DE0F5002CBED2 /* ShotChartViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93D75B691E5DE0F5002CBED2 /* ShotChartViewController.swift */; };
 		93EA7FEA1E4693C6002EC8C7 /* PitSwitchCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93EA7FE91E4693C6002EC8C7 /* PitSwitchCollectionViewCell.swift */; };
@@ -259,6 +260,8 @@
 		93C609231E67D035007A689D /* MatchOverviewDetailViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MatchOverviewDetailViewController.swift; sourceTree = "<group>"; };
 		93C609271E67D0CC007A689D /* MatchOverviewMasterViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MatchOverviewMasterViewController.swift; sourceTree = "<group>"; };
 		93CE1BF61E403A97004165BE /* NotesViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NotesViewController.swift; sourceTree = "<group>"; };
+		93CEA62F2041ED0600C5B357 /* ForgotPasswordViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ForgotPasswordViewController.swift; sourceTree = "<group>"; };
+		93CEA6312041FB5300C5B357 /* ConfirmForgotPasswordViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConfirmForgotPasswordViewController.swift; sourceTree = "<group>"; };
 		93D75B631E5D0866002CBED2 /* FieldLocationDisplayViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FieldLocationDisplayViewController.swift; sourceTree = "<group>"; };
 		93D75B691E5DE0F5002CBED2 /* ShotChartViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ShotChartViewController.swift; sourceTree = "<group>"; };
 		93EA7FE91E4693C6002EC8C7 /* PitSwitchCollectionViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PitSwitchCollectionViewCell.swift; sourceTree = "<group>"; };
@@ -274,7 +277,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				938BEB3F1E354393003F2F74 /* CoreData.framework in Frameworks */,
 				1FBC9E6C1CC2F007005DB3F4 /* Crashlytics.framework in Frameworks */,
 				93BA5A0C1E2F1EA200171D72 /* YCMatrix.framework in Frameworks */,
 				1FBC9E691CC2EE11005DB3F4 /* Fabric.framework in Frameworks */,
@@ -302,6 +304,7 @@
 		1F21DF101C645D1F00C55D0E /* View Controllers */ = {
 			isa = PBXGroup;
 			children = (
+				93CEA6332041FB5900C5B357 /* Forgot Password */,
 				93D75B631E5D0866002CBED2 /* FieldLocationDisplayViewController.swift */,
 				9353ADBB1E57ACF100120F1A /* MatchesTableViewController.swift */,
 				9353ADC11E57B09D00120F1A /* MatchListTableViewCell.swift */,
@@ -636,6 +639,15 @@
 				935A2B071E6E5560008FEF9D /* MatchOverviewTimeMarkerTableViewCell.swift */,
 			);
 			name = "Match Overview";
+			sourceTree = "<group>";
+		};
+		93CEA6332041FB5900C5B357 /* Forgot Password */ = {
+			isa = PBXGroup;
+			children = (
+				93CEA62F2041ED0600C5B357 /* ForgotPasswordViewController.swift */,
+				93CEA6312041FB5300C5B357 /* ConfirmForgotPasswordViewController.swift */,
+			);
+			name = "Forgot Password";
 			sourceTree = "<group>";
 		};
 		93EA7FF11E46A36E002EC8C7 /* Notes */ = {
@@ -1009,6 +1021,7 @@
 				935A2B061E6CDC4C008FEF9D /* MatchOverviewPerformanceDetailViewController.swift in Sources */,
 				935A2B031E6CD1F0008FEF9D /* MatchOverviewSplitViewController.swift in Sources */,
 				1F1C23C61E07487C008885A1 /* Event.swift in Sources */,
+				93CEA6302041ED0600C5B357 /* ForgotPasswordViewController.swift in Sources */,
 				1FDC1BD31CD6A35F00ABE327 /* TeamListDetailViewController.swift in Sources */,
 				1F1C23C41E07487C008885A1 /* TeamMatchPerformance.swift in Sources */,
 				1F4534561C7276DE004EDDB9 /* EventPickerViewController.swift in Sources */,
@@ -1020,6 +1033,7 @@
 				1F665D721CB1DA91003CAC1D /* DataSyncingViewController.swift in Sources */,
 				93483E8A20291AC400E9AC82 /* String+URLComponents.swift in Sources */,
 				1FDC1BCE1CD69EBB00ABE327 /* TeamListSplitViewController.swift in Sources */,
+				93CEA6322041FB5300C5B357 /* ConfirmForgotPasswordViewController.swift in Sources */,
 				93483E8F20291AC400E9AC82 /* LoginHeaderView.swift in Sources */,
 				93483E8920291AC400E9AC82 /* Realm+RLMSupport.swift in Sources */,
 				1F21DF121C66942200C55D0E /* SortVC.swift in Sources */,

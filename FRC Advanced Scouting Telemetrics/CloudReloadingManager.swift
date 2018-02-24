@@ -31,10 +31,11 @@ class CloudReloadingManager {
     
     private func reloadEvent(frcEvent: FRCEvent?) {
         if let frcEvent = frcEvent {
+            CLSNSLogv("Beginning event reload", getVaList([]))
             CloudEventImportManager(shouldPreload: false, forEvent: frcEvent) {(successful, importError) in
                 self.completionHandler(successful)
                 
-                CLSNSLogv("Successfully re-imported (reloaded) cloud event: \(frcEvent.key)", getVaList([]))
+                CLSNSLogv("Finished re-imported (reloaded) cloud event: \(frcEvent.key), withError: \(String(describing: importError))", getVaList([]))
             }
                 .import()
         }
@@ -66,6 +67,7 @@ class MatchUpdateManager {
                     let redScore = cloudAlliances["red"]?.score
                     
                     //TBA represents unknown score values as -1 so if the score is -1, then put nil in for the score.
+                    //TODO: Update to use realm writes
                     if blueScore == -1 {
                         match.scouted.blueScore.value = nil
                     } else {
