@@ -29,10 +29,7 @@ class SSGameScoutingViewController: UIViewController {
         placeCubeVC.delegate = self
         placeCubeVC.setUpWithButtons(CubeDestination.allValues.map({SSOffenseWhereViewController.Button(title: $0.description, color: UIColor.purple, id: $0.rawValue)}), time: 3)
         placeCubeVC.setPrompt(to: "Placed Cube: ")
-    }
-    
-    override func viewDidAppear(_ animated: Bool) {
-        super.viewDidAppear(animated)
+        
         
         let initialChildVC = self.childViewControllers.first!
         let nextVC: UIViewController?
@@ -43,6 +40,11 @@ class SSGameScoutingViewController: UIViewController {
         }
         cycleFromViewController(initialChildVC, toViewController: nextVC!)
         (nextVC as! SSOffenseWhereViewController).show()
+    }
+    
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        
     }
 
     override func didReceiveMemoryWarning() {
