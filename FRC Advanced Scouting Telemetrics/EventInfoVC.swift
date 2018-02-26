@@ -41,16 +41,25 @@ class EventInfoVC: UIViewController, UITableViewDataSource {
     }
     
     @IBAction func addButtonPressed(_ sender: UIBarButtonItem) {
+        
         //Create a cloud event import object and begin the import process
         if let frcEvent = selectedEvent {
             let cloudImport = CloudEventImportManager(shouldPreload: true, forEvent: frcEvent, withCompletionHandler: finishedImport)
             cloudImport.import()
             activityIndicator.startAnimating()
             loadingView.isHidden = false
+            
+            //Prevent touches on the display so that the user can move out and make changes while the import is happening
+            self.view.isUserInteractionEnabled = false
+            self.navigationController?.navigationBar.isUserInteractionEnabled = false
         }
     }
     
     func finishedImport(didComplete: Bool, withError error: CloudEventImportManager.ImportError?) {
+        //Reenable user interaction
+        self.view.isUserInteractionEnabled = true
+        self.view.isUserInteractionEnabled = true
+        
         if didComplete {
             CLSNSLogv("Did complete event import", getVaList([]))
             if let error = error {

@@ -101,7 +101,10 @@ class CloudEventImportManager {
     fileprivate func importTeams(fromTeams teams: [FRCTeam]?) {
         CLSNSLogv("Beginning import of teams from event", getVaList([]))
         if let frcTeams = teams {
-            for frcTeam in frcTeams {
+            let sortedTeams = frcTeams.sorted {(firstTeam, secondTeam) in
+                return firstTeam.teamNumber < secondTeam.teamNumber
+            }
+            for frcTeam in sortedTeams {
                 //Check to make sure the team isn't already in the database
                 let team: Team
                 if let index = currentTeams.index(where: {team in
@@ -118,7 +121,7 @@ class CloudEventImportManager {
                 
                 team.location = frcTeam.stateProv
                 team.name = frcTeam.name
-                team.nickname = frcTeam.nickname ?? ""
+                team.nickname = frcTeam.nickname ?? "\(frcTeam.teamNumber)"
                 team.rookieYear = frcTeam.rookieYear
                 team.teamNumber = frcTeam.teamNumber
                 team.website = frcTeam.website

@@ -170,7 +170,15 @@ class AdminConsoleController: UIViewController, UITableViewDataSource, UITableVi
                     spinnerView.startAnimating()
                     self.tableView.addSubview(grayView)
                     
+                    //Prevent user interaction
+                    self.view.isUserInteractionEnabled = false
+                    self.navigationController?.navigationBar.isUserInteractionEnabled = false
+                    
                     CloudReloadingManager(eventToReload: self.events[indexPath.row]) {successful in
+                        //Return user interaction
+                        self.view.isUserInteractionEnabled = true
+                        self.navigationController?.navigationBar.isUserInteractionEnabled = true
+                        
                         grayView.removeFromSuperview()
                         
                         self.events = Array(RealmController.realmController.generalRealm.objects(Event.self))
