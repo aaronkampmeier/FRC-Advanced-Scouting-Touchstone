@@ -11,7 +11,8 @@ import UIKit
 class EventPickerViewController: UIViewController, UIPickerViewDelegate, UIPickerViewDataSource {
 	@IBOutlet weak var eventPicker: UIPickerView!
 	
-	var delegate: EventSelection?
+    @IBOutlet weak var introText: UILabel!
+    var delegate: EventSelection?
 	fileprivate var events: [Event]?
 	fileprivate var currentEvent: Event?
 	fileprivate var chosenEvent: Event?
@@ -25,6 +26,12 @@ class EventPickerViewController: UIViewController, UIPickerViewDelegate, UIPicke
 		
 		//Load all the events
 		events = Array(RealmController.realmController.generalRealm.objects(Event.self))
+        
+        if events?.count == 0 {
+            introText.isHidden = false
+        } else {
+            introText.isHidden = true
+        }
     }
 
     override func didReceiveMemoryWarning() {

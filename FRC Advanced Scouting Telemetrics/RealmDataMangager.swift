@@ -50,10 +50,6 @@ class RealmController {
     }
     
     func openSyncedRealm(withSyncUser syncUser: SyncUser) {
-        //Set crashlytics identifiers
-        //TODO: Use the AWS Cognito Device IDs (https://aws.amazon.com/blogs/mobile/tracking-and-remembering-devices-using-amazon-cognito-your-user-pools/)
-        Crashlytics.sharedInstance().setUserName(syncUser.identity!)
-        Crashlytics.sharedInstance().setUserIdentifier(UIDevice.current.identifierForVendor?.uuidString ?? "Unknown")
         
         let scoutedRealmURL = URL(string: "realms://\(rosServerAddress)/~/scouted_data")!
         syncedRealmURL = scoutedRealmURL
