@@ -2668,7 +2668,7 @@
             </objects>
             <point key="canvasLocation" x="336" y="944"/>
         </scene>
-        <!--Forogt Password-->
+        <!--Forgot Password-->
         <scene sceneID="JmE-hV-T5F">
             <objects>
                 <viewController id="aqX-uD-WL5" customClass="ForgotPasswordViewController" customModule="FRC_Advanced_Scouting_Touchstone" customModuleProvider="target" sceneMemberID="viewController">
@@ -2697,7 +2697,7 @@
                             <constraint firstItem="1lp-LK-qjC" firstAttribute="centerX" secondItem="noQ-xT-wnk" secondAttribute="centerX" id="kpV-V5-rPu"/>
                         </constraints>
                     </view>
-                    <navigationItem key="navigationItem" title="Forogt Password" id="Lx2-Uz-SwG">
+                    <navigationItem key="navigationItem" title="Forgot Password" id="Lx2-Uz-SwG">
                         <barButtonItem key="leftBarButtonItem" systemItem="cancel" id="ODb-wk-RnC">
                             <connections>
                                 <action selector="cancelPressed:" destination="aqX-uD-WL5" id="Y3J-Pd-i07"/>

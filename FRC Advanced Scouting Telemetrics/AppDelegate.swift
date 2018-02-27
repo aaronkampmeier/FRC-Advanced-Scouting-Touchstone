@@ -25,6 +25,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         //Check if the user is logged in
         if RealmController.realmController.currentSyncUser != nil {
             //We are logged in, switch to the team list view
+            let teamNumber = UserDefaults.standard.value(forKey: "LoggedInTeam") as? String ?? "Unknown"
+            Crashlytics.sharedInstance().setUserName(teamNumber)
         } else {
             //Show log in page
             displayLogin()
