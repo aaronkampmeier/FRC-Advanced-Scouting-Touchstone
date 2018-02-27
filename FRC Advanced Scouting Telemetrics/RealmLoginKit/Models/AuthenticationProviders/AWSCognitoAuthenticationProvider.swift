@@ -19,6 +19,7 @@
 import UIKit
 import Realm
 import AWSCognitoIdentityProvider
+import Crashlytics
 
 public class AWSCognitoAuthenticationProvider: NSObject, AuthenticationProvider, AWSCognitoIdentityInteractiveAuthenticationDelegate {
 
@@ -81,17 +82,6 @@ public class AWSCognitoAuthenticationProvider: NSObject, AuthenticationProvider,
         // Any additional, potentially required attributes submitted along with the username and password credentials
         let attributes = [AWSCognitoIdentityUserAttributeType(name: "email", value: teamEmail!)]
 
-        // The block called when the response from the user session request is complete
-        let getUserSessionBlock: ((AWSTask<AWSCognitoIdentityUserSession>) -> Void) = { task in
-            if (task.error != nil) {
-                onCompletion?(nil, self.formattedError(task.error! as NSError))
-                return
-            }
-
-            let session = task.result!
-            print("Access token is \(session.accessToken!). Please 'confirm' user from the dashboard to continue.")
-        }
-
         // The block called when the response from a signup request is received
         let signUpBlock: ((AWSTask<AWSCognitoIdentityUserPoolSignUpResponse>) -> Void) = { task in
             if (task.error != nil) {
@@ -99,7 +89,10 @@ public class AWSCognitoAuthenticationProvider: NSObject, AuthenticationProvider,
                 return
             }
 
-            let response = task.result!
+            let _ = task.result!
+            
+            //Log this event
+            Answers.logSignUp(withMethod: "AWS Cognito", success: nil, customAttributes: ["Team":self.username ?? "Unk"])
             
             //The user signed up but now needs to confirm their account
             
@@ -135,6 +128,13 @@ public class AWSCognitoAuthenticationProvider: NSObject, AuthenticationProvider,
             }
 
             let userSession = task.result!
+            
+            //Save the team that we are logging into
+            UserDefaults.standard.set(self.username, forKey: "LoggedInTeam")
+            
+            //Log some metrics
+            Crashlytics.sharedInstance().setUserName(self.username)
+            Answers.logLogin(withMethod: "AWS Cognito", success: nil, customAttributes: ["Team":self.username ?? "Unk"])
 
             // Extract the token from the user session and set up the resulting SyncCredentials objects
             let credentials = RLMSyncCredentials(customToken: userSession.accessToken!.tokenString, provider: RLMIdentityProvider(rawValue: "cognito"), userInfo: nil)

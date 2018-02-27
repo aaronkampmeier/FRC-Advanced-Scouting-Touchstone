@@ -18,7 +18,7 @@ class TeamListTableViewController: UITableViewController, TeamListDetailDataSour
 	
 	var searchController: UISearchController!
 	let realmController = RealmController.realmController
-	let teamImagesCache = NSCache<Team, UIImage>()
+    var teamImages = [String:UIImage]()
     var teamListSplitVC: TeamListSplitViewController {
         get {
             return splitViewController as! TeamListSplitViewController
@@ -121,7 +121,6 @@ class TeamListTableViewController: UITableViewController, TeamListDetailDataSour
 	}
     
     var generalRealmObserverToken: NotificationToken?
-    var syncedRealmPhotoObserverToken: NotificationToken?
     var initialProgressNotification: NotificationToken?
 	
     override func viewDidLoad() {
@@ -180,7 +179,6 @@ class TeamListTableViewController: UITableViewController, TeamListDetailDataSour
     }
     
     deinit {
-        syncedRealmPhotoObserverToken?.invalidate()
         generalRealmObserverToken?.invalidate()
         initialProgressNotification?.invalidate()
     }
@@ -210,6 +208,8 @@ class TeamListTableViewController: UITableViewController, TeamListDetailDataSour
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
+        
+        self.teamImages.removeAll()
     }
     
     //MARK: - TeamListDetailDataSource
@@ -255,7 +255,7 @@ class TeamListTableViewController: UITableViewController, TeamListDetailDataSour
 		
         cell.rankLabel.text = "\(currentEventTeams.index(where: {$0 == team})! as Int + 1)"
 		
-		if let image = teamImagesCache.object(forKey: team) {
+		if let image = teamImages[team.key] {
 			cell.frontImage.image = image
 		} else {
 			if let imageData = team.scouted.frontImage {
@@ -264,7 +264,7 @@ class TeamListTableViewController: UITableViewController, TeamListDetailDataSour
                     return cell
 				}
 				cell.frontImage.image = uiImage
-				teamImagesCache.setObject(uiImage, forKey: team)
+                teamImages[team.key] = uiImage
 			} else {
 				cell.frontImage.image = UIImage(named: "FRC-Logo")
 			}

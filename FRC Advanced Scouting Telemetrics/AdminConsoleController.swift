@@ -72,7 +72,12 @@ class AdminConsoleController: UIViewController, UITableViewDataSource, UITableVi
             case 1:
                 return tableView.dequeueReusableCell(withIdentifier: "acknowledgments")!
             case 2:
-                return tableView.dequeueReusableCell(withIdentifier: "logout")!
+                let cell = tableView.dequeueReusableCell(withIdentifier: "logout")!
+                
+                let teamNumber: String = UserDefaults.standard.value(forKey: "LoggedInTeam") as? String ?? "?"
+                (cell.viewWithTag(1) as! UILabel).text = "Log Out of Team \(teamNumber)"
+                
+                return cell
             default:
                 return tableView.dequeueReusableCell(withIdentifier: "about")!
             }
@@ -126,6 +131,12 @@ class AdminConsoleController: UIViewController, UITableViewDataSource, UITableVi
                     assertionFailure()
                 }
             } else if indexPath.row == 2 {
+                let loggedInTeam: String = UserDefaults.standard.value(forKey: "LoggedInTeam") as? String ?? "Unknown"
+                Answers.logCustomEvent(withName: "Sign Out", customAttributes: ["Team":loggedInTeam])
+                
+                //Remove user default
+                UserDefaults.standard.setValue(nil, forKeyPath: "LoggedInTeam")
+                
                 //Logout button pressed
                 RealmController.realmController.currentSyncUser?.logOut()
                 RealmController.realmController.currentSyncUser = nil
