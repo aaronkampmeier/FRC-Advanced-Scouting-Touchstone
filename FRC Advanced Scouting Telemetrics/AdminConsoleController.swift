@@ -113,7 +113,7 @@ class AdminConsoleController: UIViewController, UITableViewDataSource, UITableVi
                 if let path = Bundle.main.path(forResource: "Pods-acknowledgments", ofType: "plist") {
                     
                     let ackVC = VTAcknowledgementsViewController(path: path)!
-                    ackVC.headerText = "Some portions of this app run on the following libraries"
+                    ackVC.headerText = "Portions of this app run on the following libraries"
                     
                     if let path = Bundle.main.path(forResource: "Additional Licenses", ofType: "plist") {
                         let additionalLicensesDict = NSDictionary(contentsOfFile: path)! as! Dictionary<String, Dictionary<String, String>>
