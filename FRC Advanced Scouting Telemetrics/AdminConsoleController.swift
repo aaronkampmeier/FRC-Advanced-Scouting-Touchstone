@@ -13,13 +13,13 @@ import VTAcknowledgementsViewController
 
 class AdminConsoleController: UIViewController, UITableViewDataSource, UITableViewDelegate {
     @IBOutlet weak var tableView: UITableView!
-	
-	var events = [Event]()
+    
+    var events = [Event]()
     
     override func viewDidLoad() {
         super.viewDidLoad()
-		events = Array(RealmController.realmController.generalRealm.objects(Event.self))
-	}
+        events = Array(RealmController.realmController.generalRealm.objects(Event.self))
+    }
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
@@ -27,45 +27,45 @@ class AdminConsoleController: UIViewController, UITableViewDataSource, UITableVi
             tableView.deselectRow(at: selectedIndexPath, animated: true)
         }
     }
-	
-	enum adminConsoleSections: Int {
-		case events
-		case about
-	}
-	
-	func numberOfSections(in tableView: UITableView) -> Int {
-		return 2
-	}
-	
-	func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-		switch section {
-		case 0:
-			//Events
-			return events.count + 1
-		case tableView.numberOfSections - 1:
-			//About Section
-			return 3
-		default:
-			return 0
-		}
-	}
-	
-	func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-		switch indexPath.section {
-		case 0:
-			//Events
-			if indexPath.row == tableView.numberOfRows(inSection: 0) - 1 {
-				//Return the add event cell
-				return tableView.dequeueReusableCell(withIdentifier: "addEvent")!
-			} else {
-				//Return the event cell with event name and type
-				let cell = tableView.dequeueReusableCell(withIdentifier: "event")!
-				cell.textLabel?.text = "\(events[indexPath.row].name) (\(events[indexPath.row].year))"
-				cell.detailTextLabel?.text = events[indexPath.row].location
-				return cell
-			}
-		case tableView.numberOfSections - 1:
-			//About Section
+    
+    enum adminConsoleSections: Int {
+        case events
+        case about
+    }
+    
+    func numberOfSections(in tableView: UITableView) -> Int {
+        return 2
+    }
+    
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        switch section {
+        case 0:
+            //Events
+            return events.count + 1
+        case tableView.numberOfSections - 1:
+            //About Section
+            return 3
+        default:
+            return 0
+        }
+    }
+    
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        switch indexPath.section {
+        case 0:
+            //Events
+            if indexPath.row == tableView.numberOfRows(inSection: 0) - 1 {
+                //Return the add event cell
+                return tableView.dequeueReusableCell(withIdentifier: "addEvent")!
+            } else {
+                //Return the event cell with event name and type
+                let cell = tableView.dequeueReusableCell(withIdentifier: "event")!
+                cell.textLabel?.text = "\(events[indexPath.row].name) (\(events[indexPath.row].year))"
+                cell.detailTextLabel?.text = events[indexPath.row].location
+                return cell
+            }
+        case tableView.numberOfSections - 1:
+            //About Section
             switch indexPath.row {
             case 0:
                 return tableView.dequeueReusableCell(withIdentifier: "about")!
@@ -81,31 +81,31 @@ class AdminConsoleController: UIViewController, UITableViewDataSource, UITableVi
             default:
                 return tableView.dequeueReusableCell(withIdentifier: "about")!
             }
-		default:
-			return UITableViewCell()
-		}
-	}
-	
-	func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
-		switch section {
-		case 0:
-			return "Events"
-		default:
-			return ""
-		}
-	}
-	
-	func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-		switch indexPath.section {
-		case 0:
-			//Events
-			if indexPath.row == tableView.numberOfRows(inSection: 0) - 1 {
-				//Did select add event
-				performSegue(withIdentifier: "addEvent", sender: tableView)
-			} else {
-				//Did select event info
-				// TODO: Display event info
-			}
+        default:
+            return UITableViewCell()
+        }
+    }
+    
+    func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
+        switch section {
+        case 0:
+            return "Events"
+        default:
+            return ""
+        }
+    }
+    
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        switch indexPath.section {
+        case 0:
+            //Events
+            if indexPath.row == tableView.numberOfRows(inSection: 0) - 1 {
+                //Did select add event
+                performSegue(withIdentifier: "addEvent", sender: tableView)
+            } else {
+                //Did select event info
+                // TODO: Display event info
+            }
         case tableView.numberOfSections - 1:
             if indexPath.row == 0 {
                 performSegue(withIdentifier: "about", sender: self)
@@ -146,8 +146,8 @@ class AdminConsoleController: UIViewController, UITableViewDataSource, UITableVi
             }
         default:
             break
-		}
-	}
+        }
+    }
     
     func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
         switch indexPath.section {

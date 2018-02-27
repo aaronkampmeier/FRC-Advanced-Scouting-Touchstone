@@ -17,10 +17,10 @@ let appDelegate = UIApplication.shared.delegate as! AppDelegate
 class AppDelegate: UIResponder, UIApplicationDelegate {
 
     var window: UIWindow?
-	
+    
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
         // Override point for customization after application launch.
-		Fabric.with([Answers.self, Crashlytics.self])
+        Fabric.with([Answers.self, Crashlytics.self])
         
         //Check if the user is logged in
         if RealmController.realmController.currentSyncUser != nil {
@@ -32,11 +32,11 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         
         
         Crashlytics.sharedInstance().setUserIdentifier(UIDevice.current.identifierForVendor?.uuidString ?? "Unknown")
-		
+        
         return AWSMobileClient.sharedInstance().interceptApplication(application, didFinishLaunchingWithOptions: launchOptions)
         
 //        clearTMPFolder()
-		
+        
 //        return true
     }
     
@@ -60,8 +60,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         }
         self.window?.rootViewController = loginVC
     }
-	
-	func clearTMPFolder() {
+    
+    func clearTMPFolder() {
         //Clear the temporary folder as it can build up lots of unneeded ensembles data. However, at this time Fabric is probably downloading some settings from the cloud so we need to avoid deleting those files.
         do {
             for file in try FileManager.default.contentsOfDirectory(atPath: NSTemporaryDirectory()) {
@@ -72,7 +72,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         } catch {
             CLSNSLogv("Unable to clear temporary directory with error: \(error)", getVaList([]))
         }
-	}
+    }
 
     func applicationWillResignActive(_ application: UIApplication) {
         // Sent when the application is about to move from active to inactive state. This can occur for certain types of temporary interruptions (such as an incoming phone call or SMS message) or when the user quits the application and it begins the transition to the background state.
@@ -96,23 +96,23 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         // Called when the application is about to terminate. Save data if appropriate. See also applicationDidEnterBackground:.
         // Saves changes in the application's managed object context before the application terminates.
     }
-	
-	func presentViewControllerOnTop(_ viewControllerToPresent: UIViewController, animated flag: Bool, completion: (() -> Void)? = nil) {
-		DispatchQueue.main.async {
-			self.window?.rootViewController?.presentViewControllerFromVisibleViewController(viewControllerToPresent, animated: flag, completion: completion)
-		}
-	}
+    
+    func presentViewControllerOnTop(_ viewControllerToPresent: UIViewController, animated flag: Bool, completion: (() -> Void)? = nil) {
+        DispatchQueue.main.async {
+            self.window?.rootViewController?.presentViewControllerFromVisibleViewController(viewControllerToPresent, animated: flag, completion: completion)
+        }
+    }
 }
 
 //Adds a function to UIViewController to allow presenting views (i.e. alerts) on the top view controller from lower view controllers
 extension UIViewController {
-	func presentViewControllerFromVisibleViewController(_ viewControllerToPresent: UIViewController, animated flag: Bool, completion: (() -> Void)? = nil) {
-		if let navigationController = self as? UINavigationController, let topViewController = navigationController.topViewController {
-			topViewController.presentViewControllerFromVisibleViewController(viewControllerToPresent, animated: flag, completion: completion)
-		} else if (presentedViewController != nil) {
-			presentedViewController!.presentViewControllerFromVisibleViewController(viewControllerToPresent, animated: flag, completion: completion)
-		} else {
-			present(viewControllerToPresent, animated: flag, completion: completion)
-		}
-	}
+    func presentViewControllerFromVisibleViewController(_ viewControllerToPresent: UIViewController, animated flag: Bool, completion: (() -> Void)? = nil) {
+        if let navigationController = self as? UINavigationController, let topViewController = navigationController.topViewController {
+            topViewController.presentViewControllerFromVisibleViewController(viewControllerToPresent, animated: flag, completion: completion)
+        } else if (presentedViewController != nil) {
+            presentedViewController!.presentViewControllerFromVisibleViewController(viewControllerToPresent, animated: flag, completion: completion)
+        } else {
+            present(viewControllerToPresent, animated: flag, completion: completion)
+        }
+    }
 }
