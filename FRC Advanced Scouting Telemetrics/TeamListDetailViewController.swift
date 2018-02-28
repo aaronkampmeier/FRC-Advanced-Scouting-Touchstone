@@ -97,7 +97,12 @@ class TeamListDetailViewController: UIViewController {
 					let teamPerformances = Set(team.eventPerformances)
 					
 					//Combine the two sets to find the one in both
-					let teamEventPerformance = Array(eventPerformances.intersection(teamPerformances)).first!
+					let teamEventPerformance = Array(eventPerformances.intersection(teamPerformances)).first
+                    
+                    if teamEventPerformance == nil {
+                        //It should not be if we are here
+                        Crashlytics.sharedInstance().recordCustomExceptionName("Team Event Performance is nil", reason: "Team Event Performance is not present in the event.teamEventPerformances and team.eventPerformances. Event: \(event); Team: \(team)", frameArray: [])
+                    }
 					
 					return teamEventPerformance
 				}

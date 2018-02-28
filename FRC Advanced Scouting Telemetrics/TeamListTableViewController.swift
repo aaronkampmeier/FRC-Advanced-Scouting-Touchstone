@@ -363,15 +363,7 @@ class TeamListTableViewController: UITableViewController, TeamListDetailDataSour
         }
     }
     
-    //MARK: -
-//    func updateForImport(_ notification: Notification) {
-//        self.loadTeams()
-//        self.selectedEvent = nil
-//        self.isSorted = false
-//    }
     
-    //MARK: - Searching
-
     // MARK: - Navigation
 
     // In a storyboard-based application, you will often want to do a little preparation before navigation
@@ -447,8 +439,6 @@ class TeamListTableViewController: UITableViewController, TeamListDetailDataSour
         } else {
             assertionFailure()
         }
-        
-        
         
         Answers.logCustomEvent(withName: "Sort Team List", customAttributes: ["Stat":statName, "Ascending":ascending.description])
     }

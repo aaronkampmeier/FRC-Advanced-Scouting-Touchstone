@@ -36,6 +36,7 @@ class TeamListSearchResultsTableViewController: UITableViewController, UISearchR
 	
 	func updateSearchResults(for searchController: UISearchController) {
         if let searchText = searchController.searchBar.text {
+            //For the new realm database
             var universalPredicates: [NSPredicate] = []
             universalPredicates.append(NSPredicate(format: "location CONTAINS[cd] %@", argumentArray: [searchText]))
             universalPredicates.append(NSPredicate(format: "name CONTAINS[cd] %@", argumentArray: [searchText]))
@@ -43,14 +44,13 @@ class TeamListSearchResultsTableViewController: UITableViewController, UISearchR
             universalPredicates.append(NSPredicate(format: "teamNumber CONTAINS[cd] %@", argumentArray: [searchText]))
             universalPredicates.append(NSPredicate(format: "website CONTAINS[cd] %@", argumentArray: [searchText]))
             let universalPredicate = NSCompoundPredicate(orPredicateWithSubpredicates: universalPredicates)
-            
+
             var localPredicates = [NSPredicate]()
             localPredicates.append(NSPredicate(format: "notes CONTAINS[cd] %@", argumentArray: [searchText]))
             let localPredicate = NSCompoundPredicate(orPredicateWithSubpredicates: localPredicates)
             
-            
             filteredTeams = eventTeams.filter() {team in
-                    return universalPredicate.evaluate(with: team) || localPredicate.evaluate(with: team)
+                return universalPredicate.evaluate(with: team) || localPredicate.evaluate(with: team)
             }
             
             tableView.reloadData()
