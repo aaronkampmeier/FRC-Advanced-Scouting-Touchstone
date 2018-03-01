@@ -49,6 +49,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         loginVC.serverURL = RealmController.realmController.syncAuthURL.absoluteString
         loginVC.isSecureConnection = true
         loginVC.isServerURLFieldHidden = true
+        loginVC.isCopyrightLabelHidden = true
         
         //TODO: Extract these into seperate file (or don't to make them harder to find)
         loginVC.authenticationProvider = AWSCognitoAuthenticationProvider()
