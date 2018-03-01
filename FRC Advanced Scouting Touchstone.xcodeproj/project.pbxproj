@@ -15,7 +15,6 @@
 		1F1C23CE1E07487C008885A1 /* TeamEventPerformance.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F1C23B61E07487C008885A1 /* TeamEventPerformance.swift */; };
 		1F1C23DA1E07673E008885A1 /* AddEventTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F1C23D91E07673E008885A1 /* AddEventTableViewController.swift */; };
 		1F21DF121C66942200C55D0E /* SortVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F21DF111C66942200C55D0E /* SortVC.swift */; };
-		1F2F9A221CE2D6E400B85A72 /* TeamListSearchResultsTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F2F9A211CE2D6E400B85A72 /* TeamListSearchResultsTableViewController.swift */; };
 		1F4534101C6FF916004EDDB9 /* StandsScoutingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F45340F1C6FF916004EDDB9 /* StandsScoutingViewController.swift */; };
 		1F4534561C7276DE004EDDB9 /* EventPickerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F4534551C7276DE004EDDB9 /* EventPickerViewController.swift */; };
 		1F4FEDAC1C4B686000F4016D /* AdminConsoleController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F4FEDAB1C4B686000F4016D /* AdminConsoleController.swift */; };
@@ -168,7 +167,6 @@
 		1F1C23B61E07487C008885A1 /* TeamEventPerformance.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TeamEventPerformance.swift; sourceTree = "<group>"; };
 		1F1C23D91E07673E008885A1 /* AddEventTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AddEventTableViewController.swift; sourceTree = "<group>"; };
 		1F21DF111C66942200C55D0E /* SortVC.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SortVC.swift; sourceTree = "<group>"; };
-		1F2F9A211CE2D6E400B85A72 /* TeamListSearchResultsTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TeamListSearchResultsTableViewController.swift; sourceTree = "<group>"; };
 		1F45340F1C6FF916004EDDB9 /* StandsScoutingViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StandsScoutingViewController.swift; sourceTree = "<group>"; };
 		1F4534551C7276DE004EDDB9 /* EventPickerViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EventPickerViewController.swift; sourceTree = "<group>"; };
 		1F4FEDAB1C4B686000F4016D /* AdminConsoleController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AdminConsoleController.swift; sourceTree = "<group>"; };
@@ -343,7 +341,6 @@
 				936967F01E4FB1F7001DB15D /* TeamDetailCollectionViewController.swift */,
 				93D75B691E5DE0F5002CBED2 /* ShotChartViewController.swift */,
 				936967F81E4FD05C001DB15D /* Team Detail Cells */,
-				1F2F9A211CE2D6E400B85A72 /* TeamListSearchResultsTableViewController.swift */,
 				1F21DF111C66942200C55D0E /* SortVC.swift */,
 				93C5B47B1E53FC9C007D309F /* TeamInfoScrollView.swift */,
 			);
@@ -973,7 +970,6 @@
 				9365947B1E441981008FF324 /* PitTextFieldCollectionViewCell.swift in Sources */,
 				93483E9120291AC400E9AC82 /* LoginTableViewCell.swift in Sources */,
 				930B96641E456D6C00E385D3 /* PitImageSelectorCollectionViewCell.swift in Sources */,
-				1F2F9A221CE2D6E400B85A72 /* TeamListSearchResultsTableViewController.swift in Sources */,
 				9353ADCA1E58EDF800120F1A /* CloudReloadingManager.swift in Sources */,
 				930B965C1E4548F700E385D3 /* PitSegmentedSelectorCollectionViewCell.swift in Sources */,
 				93A15E921F05E9A00057C965 /* JSONModels.swift in Sources */,

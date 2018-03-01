@@ -11,7 +11,7 @@ import Crashlytics
 import AWSAuthUI
 import RealmSwift
 
-class TeamListTableViewController: UITableViewController, TeamListDetailDataSource, UISearchControllerDelegate {
+class TeamListTableViewController: UITableViewController, TeamListDetailDataSource {
     @IBOutlet weak var eventSelectionButton: UIButton!
     @IBOutlet weak var editButton: UIBarButtonItem!
     @IBOutlet weak var matchesButton: UIBarButtonItem!
@@ -27,36 +27,44 @@ class TeamListTableViewController: UITableViewController, TeamListDetailDataSour
     
     //Local Rank is not considered sorted
     var statToSortBy: String = Team.StatName.LocalRank.rawValue
+    //Should move functionality in here to a setSortingState func
     var isSorted = false {
         didSet {
             if isSorted {
                 setEditing(false, animated: true)
                 editButton.isEnabled = false
             } else {
-                currentSortedTeams = nil
+                currentSortedTeams = currentEventTeams
                 editButton.isEnabled = true
             }
         }
     }
     var isSortingAscending: Bool = false
-    var currentSortedTeams: [Team]? {
+    
+    var isSearching = false {
         didSet {
-            if let teams = currentSortedTeams {
-                currentTeamsToDisplay = teams
+            if isSearching {
+                self.navigationController?.setToolbarHidden(true, animated: true)
             } else {
-                currentTeamsToDisplay = currentEventTeams
+                self.navigationController?.setToolbarHidden(false, animated: true)
             }
         }
     }
     
-    var teams: [Team] = []
-    
+    //Is a hierarchy
+    var allTeams: [Team] = [] //All the teams for all the events on device
     var currentEventTeams: [Team] = [Team]() {
         didSet {
-            currentTeamsToDisplay = currentEventTeams
+            currentSortedTeams = currentEventTeams
         }
     }
-    var currentTeamsToDisplay = [Team]() {
+    var currentSortedTeams: [Team] = [] {
+        didSet {
+            currentTeamsToDisplay = currentSortedTeams
+        }
+    }
+    //Searching would happen right in between here
+    var currentTeamsToDisplay = [Team]() { //This is always eaxaclty the end what the table view will display
         didSet {
             tableView.reloadData()
         }
@@ -82,26 +90,23 @@ class TeamListTableViewController: UITableViewController, TeamListDetailDataSour
     }
     var selectedEvent: Event? {
         didSet {
+//            searchController.dismiss(animated: true, completion: nil) //Unwind searching
+            
+            isSorted = false //Unwind sorting
+            statToSortBy = Team.StatName.LocalRank.rawValue
+            
+            //Set to nil, because the selected team might not be in the new event
+            selectedTeam = nil
             
             if let event = selectedEvent {
-                //Set to nil, because the selected team might not be in the new event
-                isSorted = false
-                statToSortBy = Team.StatName.LocalRank.rawValue
-                
-                selectedTeam = nil
                 currentEventTeams = realmController.teamRanking(forEvent: event)
                 eventSelectionButton.setTitle(event.name, for: UIControlState())
                 
                 matchesButton.isEnabled = true
             } else {
-                isSorted = false
-                statToSortBy = Team.StatName.LocalRank.rawValue
                 
-                currentEventTeams = teams
+                currentEventTeams = allTeams
                 eventSelectionButton.setTitle("All Teams", for: UIControlState())
-                
-                //Again set selected team to nil
-                selectedTeam = nil
                 
                 matchesButton.isEnabled = false
             }
@@ -122,6 +127,7 @@ class TeamListTableViewController: UITableViewController, TeamListDetailDataSour
     
     var generalRealmObserverToken: NotificationToken?
     var initialProgressNotification: NotificationToken?
+    var eventsObserverToken: NotificationToken?
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -137,13 +143,26 @@ class TeamListTableViewController: UITableViewController, TeamListDetailDataSour
         teamListSplitVC.teamListTableVC = self
         
         //Set up the searching capabilities and the search bar. At the time of coding, Storyboards do not support the new UISearchController, so this is done programatically.
-        let searchResultsVC = storyboard?.instantiateViewController(withIdentifier: "teamListSearchResults") as! TeamListSearchResultsTableViewController
-        searchResultsVC.teamListTableVC = self
-        searchController = UISearchController(searchResultsController: searchResultsVC)
-        searchController.searchResultsUpdater = searchResultsVC
+        searchController = UISearchController(searchResultsController: nil)
+        searchController.searchResultsUpdater = self
+        searchController.delegate = self
+        searchController.hidesNavigationBarDuringPresentation = true
+        searchController.obscuresBackgroundDuringPresentation = false
+        self.definesPresentationContext = true
         tableView.tableHeaderView = searchController.searchBar
         
-        //Add responder for notification about a new team
+        //Track if an event was added or delted (redundant most of the time with the following team observer except for when an event doesn't have any teams)
+        eventsObserverToken = realmController.generalRealm.objects(Event.self).observe {[weak self] eventsChanges in
+            switch eventsChanges {
+            case .update(_, let deletions, let insertions,_):
+                if deletions.count > 0 || insertions.count > 0 {
+                    self?.selectedEvent = nil
+                }
+            default:
+                break
+            }
+        }
+        //Add responder for notification about changes in the amount of teams
         generalRealmObserverToken = realmController.generalRealm.objects(Team.self).observe {[weak self] collectionChange in
             switch collectionChange {
             case .initial:
@@ -181,16 +200,21 @@ class TeamListTableViewController: UITableViewController, TeamListDetailDataSour
     deinit {
         generalRealmObserverToken?.invalidate()
         initialProgressNotification?.invalidate()
+        eventsObserverToken?.invalidate()
     }
     
     func loadTeams() {
-        teams = realmController.teamRanking()
+        allTeams = realmController.teamRanking()
     }
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         
-        self.navigationController?.setToolbarHidden(false, animated: true)
+        if isSearching {
+            self.navigationController?.setToolbarHidden(true, animated: true) //Set hidden if we are returning to a search
+        } else {
+            self.navigationController?.setToolbarHidden(false, animated: true)
+        }
         
         //Deselect the current row if the detail vc is not showing at the moment
         if splitViewController?.isCollapsed ?? false {
@@ -301,8 +325,8 @@ class TeamListTableViewController: UITableViewController, TeamListDetailDataSour
         
         let movedTeam = currentEventTeams[fromIndexPath.row]
         if selectedEvent == nil {
-            teams.remove(at: fromIndexPath.row)
-            teams.insert(movedTeam, at: toIndexPath.row)
+            allTeams.remove(at: fromIndexPath.row)
+            allTeams.insert(movedTeam, at: toIndexPath.row)
         }
         currentEventTeams.remove(at: fromIndexPath.row)
         currentEventTeams.insert(movedTeam, at: toIndexPath.row)
@@ -404,8 +428,7 @@ class TeamListTableViewController: UITableViewController, TeamListDetailDataSour
             case Team.StatName.LocalRank:
                 isSorted = false
             default:
-                let currentTeams = currentEventTeams
-                currentSortedTeams = currentTeams.sorted {team1, team2 in
+                currentSortedTeams = currentEventTeams.sorted {team1, team2 in
                     let isBefore = team1.statValue(forStat: stat) > team2.statValue(forStat: stat)
                     if ascending {
                         return !isBefore
@@ -419,8 +442,7 @@ class TeamListTableViewController: UITableViewController, TeamListDetailDataSour
         } else if let stat = eventPerformanceStat {
             statToSortBy = stat.rawValue
             
-            let currentTeams = currentEventTeams
-            currentSortedTeams = currentTeams.sorted {team1, team2 in
+            currentSortedTeams = currentEventTeams.sorted {team1, team2 in
                 let firstTeamEventPerformance: TeamEventPerformance = realmController.eventPerformance(forTeam: team1, atEvent: selectedEvent!)
                 let secondTeamEventPerformance: TeamEventPerformance = realmController.eventPerformance(forTeam: team2, atEvent: selectedEvent!)
                 
@@ -501,5 +523,54 @@ extension TeamListTableViewController: SortDelegate {
     
     func isAscending() -> Bool {
         return isSortingAscending
+    }
+}
+
+extension TeamListTableViewController: UISearchResultsUpdating, UISearchControllerDelegate {
+    func updateSearchResults(for searchController: UISearchController) {
+        if let searchText = searchController.searchBar.text {
+            //For the new realm database
+            var universalPredicates: [NSPredicate] = []
+            universalPredicates.append(NSPredicate(format: "location CONTAINS[cd] %@", argumentArray: [searchText]))
+            universalPredicates.append(NSPredicate(format: "name CONTAINS[cd] %@", argumentArray: [searchText]))
+            universalPredicates.append(NSPredicate(format: "nickname CONTAINS[cd] %@", argumentArray: [searchText]))
+            //For team number we want to return as many as possible as we are building the string (i.e. "42" should include team 4256 as a result).
+            if let inputtedNum = Int(searchText) {
+                if inputtedNum < 9999 && inputtedNum > 0 {
+                    var upperTeamNumLimit = inputtedNum
+                    while upperTeamNumLimit < 1000 {
+                        upperTeamNumLimit = (upperTeamNumLimit * 10) + 9
+                    }
+                    
+                    var lowerTeamNumLimit = inputtedNum
+                    while lowerTeamNumLimit < 1000 {
+                        lowerTeamNumLimit = lowerTeamNumLimit * 10
+                    }
+                    
+                    //Now create predicate with limits
+                    universalPredicates.append(NSPredicate(format: "teamNumber BETWEEN {%@,%@}", argumentArray: [lowerTeamNumLimit, upperTeamNumLimit]))
+                }
+            }
+            universalPredicates.append(NSPredicate(format: "website CONTAINS[cd] %@", argumentArray: [searchText]))
+            let universalPredicate = NSCompoundPredicate(orPredicateWithSubpredicates: universalPredicates)
+            
+            let filteredTeams = self.currentSortedTeams.filter() {team in
+                return universalPredicate.evaluate(with: team)
+            }
+            
+            currentTeamsToDisplay = filteredTeams
+            
+            tableView.reloadData()
+        }
+    }
+    
+    func didPresentSearchController(_ searchController: UISearchController) {
+        isSearching = true
+    }
+    
+    func didDismissSearchController(_ searchController: UISearchController) {
+        //Set the current teams to display back
+        currentTeamsToDisplay = currentSortedTeams
+        isSearching = false
     }
 }

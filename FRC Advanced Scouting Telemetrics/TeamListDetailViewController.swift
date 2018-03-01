@@ -92,19 +92,14 @@ class TeamListDetailViewController: UIViewController {
 		get {
 			if let team = selectedTeam {
 				if let event = selectedEvent {
-					//Get two sets
-					let eventPerformances: Set<TeamEventPerformance> = Set(event.teamEventPerformances)
-					let teamPerformances = Set(team.eventPerformances)
-					
-					//Combine the two sets to find the one in both
-					let teamEventPerformance = Array(eventPerformances.intersection(teamPerformances)).first
+					let performance = RealmController.realmController.eventPerformance(forTeam: team, atEvent: event)
                     
-                    if teamEventPerformance == nil {
-                        //It should not be if we are here
-                        Crashlytics.sharedInstance().recordCustomExceptionName("Team Event Performance is nil", reason: "Team Event Performance is not present in the event.teamEventPerformances and team.eventPerformances. Event: \(event); Team: \(team)", frameArray: [])
-                    }
+//                    if teamEventPerformance == nil {
+//                        //It should not be if we are here
+//                        Crashlytics.sharedInstance().recordCustomExceptionName("Team Event Performance is nil", reason: "Team Event Performance is not present in the event.teamEventPerformances and team.eventPerformances. Event: \(event); Team: \(team)", frameArray: [])
+//                    }
 					
-					return teamEventPerformance
+					return performance
 				}
 			}
 			return nil
