@@ -50,6 +50,8 @@ class CloudEventImportManager {
     
     ///Takes an FRCEvent and creates core data objects in the database
     func `import`() {
+        
+        
         //First make sure the event being added is not already in the database
         if currentEvents.contains(where: {event in
             return event.key == frcEvent.key
@@ -57,11 +59,6 @@ class CloudEventImportManager {
             throwError(error: .EventAlreadyInDatabase)
             return
         }
-        
-        //Prevent an import if the realm is not completely synced and updated with the most recent data
-//        realmController.currentSyncUser?.session(for: realmController.syncedRealmURL!)?.addProgressNotification(for: .Download, mode: .forCurrentlyOutstandingWork) {progress in
-//
-//        }
         
         CLSNSLogv("Beginning import of event: %@", getVaList([frcEvent.key]))
         

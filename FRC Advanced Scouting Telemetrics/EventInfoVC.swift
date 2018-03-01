@@ -8,6 +8,8 @@
 
 import UIKit
 import Crashlytics
+import RealmSwift
+import Realm
 
 class EventInfoVC: UIViewController, UITableViewDataSource {
     var selectedEvent: FRCEvent?
@@ -42,17 +44,54 @@ class EventInfoVC: UIViewController, UITableViewDataSource {
     
     @IBAction func addButtonPressed(_ sender: UIBarButtonItem) {
         
-        //Create a cloud event import object and begin the import process
-        if let frcEvent = selectedEvent {
-            let cloudImport = CloudEventImportManager(shouldPreload: true, forEvent: frcEvent, withCompletionHandler: finishedImport)
-            cloudImport.import()
-            activityIndicator.startAnimating()
-            loadingView.isHidden = false
-            
-            //Prevent touches on the display so that the user can move out and make changes while the import is happening
-            self.view.isUserInteractionEnabled = false
-            self.navigationController?.navigationBar.isUserInteractionEnabled = false
+        let syncSession = RealmController.realmController.currentSyncUser?.session(for: RealmController.realmController.generalRealmURL!)
+        
+        //Does not seem to work, bummer. Sync state seems to always be active
+        guard syncSession?.state == .active else {
+            //The realm is not connected to the ROS, throw alert
+            let alert = UIAlertController(title: "Not Connected", message: "The device is not connected to the sync server. No events should be added while the app is disconnected.", preferredStyle: .alert)
+            alert.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
+            self.present(alert, animated: true, completion: nil)
+            Answers.logCustomEvent(withName: "Import Trial Without Connection", customAttributes: nil)
+            return
         }
+        
+        var isInSync = false
+        
+        //Again, not sure it works or is helpful
+        let progressToken = syncSession?.addProgressNotification(for: .download, mode: .forCurrentlyOutstandingWork) {progress in
+            if progress.isTransferComplete {
+                //Okay we are in sync, continue
+                isInSync = true
+                //Create a cloud event import object and begin the import process
+                if let frcEvent = self.selectedEvent {
+                    DispatchQueue.main.async {
+                        let cloudImport = CloudEventImportManager(shouldPreload: true, forEvent: frcEvent, withCompletionHandler: self.finishedImport)
+                        cloudImport.import()
+                        self.activityIndicator.startAnimating()
+                        self.loadingView.isHidden = false
+                        
+                        //Prevent touches on the display so that the user can move out and make changes while the import is happening
+                        self.view.isUserInteractionEnabled = false
+                        self.navigationController?.navigationBar.isUserInteractionEnabled = false
+                    }
+                }
+            } else {
+                //The realm is not in sync, do not continue
+                isInSync = false
+            }
+        }
+        
+        DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + 5, execute: {
+            progressToken?.invalidate()
+            if !isInSync {
+                //Throw error that the realm needs to finish downloading sync stuff before importing an event
+                let alert = UIAlertController(title: "Downloads in Progress", message: "Data is currently being synced from the sync server down to the device. Event imports need to happen after this device has finished syncing all data. Try again later.", preferredStyle: .alert)
+                alert.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
+                self.presentViewControllerFromVisibleViewController(alert, animated: true)
+                Answers.logCustomEvent(withName: "Attempted Import During Sync", customAttributes: nil)
+            }
+        })
     }
     
     func finishedImport(didComplete: Bool, withError error: CloudEventImportManager.ImportError?) {
@@ -78,7 +117,7 @@ class EventInfoVC: UIViewController, UITableViewDataSource {
             }
             
             let alert = UIAlertController(title: "Unable to Add", message: "An error occurred when adding the event \(errorMessage ?? "")", preferredStyle: .alert)
-            alert.addAction(UIAlertAction(title: "OK", style: .default, handler: {_ in self.performSegue(withIdentifier: "unwindToAdminConsoleFromEventAdd", sender: self)}))
+            alert.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
             present(alert, animated: true, completion: nil)
         }
     }

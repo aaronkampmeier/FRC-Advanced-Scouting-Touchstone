@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Scheme
-   LastUpgradeVersion = "0820"
+   LastUpgradeVersion = "0930"
    version = "1.3">
    <BuildAction
       parallelizeBuildables = "YES"
@@ -14,7 +14,7 @@
             buildForAnalyzing = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "BF13DF10C2F4065221B364DC0C78B9FF"
+               BlueprintIdentifier = "4F2923909E6C7246CA55A5B64BAADC4A"
                BuildableName = "VTAcknowledgementsViewController.framework"
                BlueprintName = "VTAcknowledgementsViewController"
                ReferencedContainer = "container:Pods.xcodeproj">
@@ -45,7 +45,7 @@
       <MacroExpansion>
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "BF13DF10C2F4065221B364DC0C78B9FF"
+            BlueprintIdentifier = "4F2923909E6C7246CA55A5B64BAADC4A"
             BuildableName = "VTAcknowledgementsViewController.framework"
             BlueprintName = "VTAcknowledgementsViewController"
             ReferencedContainer = "container:Pods.xcodeproj">
@@ -63,7 +63,7 @@
       <MacroExpansion>
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "BF13DF10C2F4065221B364DC0C78B9FF"
+            BlueprintIdentifier = "4F2923909E6C7246CA55A5B64BAADC4A"
             BuildableName = "VTAcknowledgementsViewController.framework"
             BlueprintName = "VTAcknowledgementsViewController"
             ReferencedContainer = "container:Pods.xcodeproj">

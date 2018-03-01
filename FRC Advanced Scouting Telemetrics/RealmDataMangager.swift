@@ -178,8 +178,8 @@ class RealmController {
     }
     
     ///Returns an array of Team objects ordered by their local ranking for specified event
-    func teamRanking(forEvent event: Event? = nil) -> [Team] {
-        return event != nil ? teamRanking(forEvent: event) : simpleTeamRanking()
+    func teamRanking(_ event: Event? = nil) -> [Team] {
+        return event != nil ? teamRanking(forEvent: event!) : simpleTeamRanking()
     }
     
     func moveTeam(from fromIndex: Int, to toIndex: Int, inEvent event: Event? = nil) {

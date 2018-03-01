@@ -6,8 +6,8 @@
 //  Copyright © 2016 Kampfire Technologies. All rights reserved.
 //
 
-import Foundation
 import UIKit
+import Crashlytics
 
 protocol SortDelegate {
 	func selectedStat(_ stat: String, isAscending: Bool)
@@ -48,6 +48,7 @@ class SortVC: UIViewController, UIPickerViewDelegate, UIPickerViewDataSource {
 	override func viewWillDisappear(_ animated: Bool) {
 		super.viewWillDisappear(animated)
 		delegate?.selectedStat(selectedStat!, isAscending: isAscending)
+        Answers.logCustomEvent(withName: "Sort Team List", customAttributes: ["Stat":selectedStat, "Ascending":isAscending.description])
     }
 	
 	override func viewDidDisappear(_ animated: Bool) {

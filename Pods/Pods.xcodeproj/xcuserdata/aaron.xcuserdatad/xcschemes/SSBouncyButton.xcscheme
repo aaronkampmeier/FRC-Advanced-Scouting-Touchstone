@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Scheme
-   LastUpgradeVersion = "0820"
+   LastUpgradeVersion = "0930"
    version = "1.3">
    <BuildAction
       parallelizeBuildables = "YES"
@@ -14,7 +14,7 @@
             buildForAnalyzing = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "70350AB5524D59D2FED3F9708B11EC11"
+               BlueprintIdentifier = "4662E349DD3D2FC46579D9678D75ED09"
                BuildableName = "SSBouncyButton.framework"
                BlueprintName = "SSBouncyButton"
                ReferencedContainer = "container:Pods.xcodeproj">
@@ -45,7 +45,7 @@
       <MacroExpansion>
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "70350AB5524D59D2FED3F9708B11EC11"
+            BlueprintIdentifier = "4662E349DD3D2FC46579D9678D75ED09"
             BuildableName = "SSBouncyButton.framework"
             BlueprintName = "SSBouncyButton"
             ReferencedContainer = "container:Pods.xcodeproj">
@@ -63,7 +63,7 @@
       <MacroExpansion>
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "70350AB5524D59D2FED3F9708B11EC11"
+            BlueprintIdentifier = "4662E349DD3D2FC46579D9678D75ED09"
             BuildableName = "SSBouncyButton.framework"
             BlueprintName = "SSBouncyButton"
             ReferencedContainer = "container:Pods.xcodeproj">
