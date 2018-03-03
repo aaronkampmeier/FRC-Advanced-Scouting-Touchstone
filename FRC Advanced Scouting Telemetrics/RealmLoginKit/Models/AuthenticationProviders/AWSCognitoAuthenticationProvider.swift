@@ -85,6 +85,8 @@ public class AWSCognitoAuthenticationProvider: NSObject, AuthenticationProvider,
         // The block called when the response from a signup request is received
         let signUpBlock: ((AWSTask<AWSCognitoIdentityUserPoolSignUpResponse>) -> Void) = { task in
             if (task.error != nil) {
+                let error = task.error! as NSError
+                Answers.logSignUp(withMethod: "AWS Cognito", success: NSNumber(booleanLiteral: false), customAttributes: ["Code":error.code.description])
                 onCompletion?(nil, self.formattedError(task.error! as NSError))
                 return
             }
@@ -92,7 +94,7 @@ public class AWSCognitoAuthenticationProvider: NSObject, AuthenticationProvider,
             let _ = task.result!
             
             //Log this event
-            Answers.logSignUp(withMethod: "AWS Cognito", success: nil, customAttributes: ["Team":self.username ?? "Unk"])
+            Answers.logSignUp(withMethod: "AWS Cognito", success: NSNumber(booleanLiteral: true), customAttributes: ["Team":self.username ?? "Unk"])
             
             //The user signed up but now needs to confirm their account
             
@@ -123,6 +125,8 @@ public class AWSCognitoAuthenticationProvider: NSObject, AuthenticationProvider,
         // Set up the block that will be called when we get a response from the server
         let getUserSessionBlock: ((AWSTask<AWSCognitoIdentityUserSession>) -> Void) = { task in
             if (task.error != nil) {
+                let error = task.error! as NSError
+                Answers.logLogin(withMethod: "AWS Cognito", success: NSNumber.init(booleanLiteral: false), customAttributes: ["Code": error.code.description])
                 onCompletion?(nil, self.formattedError(task.error! as NSError))
                 return
             }
@@ -134,7 +138,7 @@ public class AWSCognitoAuthenticationProvider: NSObject, AuthenticationProvider,
             
             //Log some metrics
             Crashlytics.sharedInstance().setUserName(self.username)
-            Answers.logLogin(withMethod: "AWS Cognito", success: nil, customAttributes: ["Team":self.username ?? "Unk"])
+            Answers.logLogin(withMethod: "AWS Cognito", success: NSNumber(booleanLiteral: true), customAttributes: ["Team":self.username ?? "Unk"])
 
             // Extract the token from the user session and set up the resulting SyncCredentials objects
             let credentials = RLMSyncCredentials(customToken: userSession.accessToken!.tokenString, provider: RLMIdentityProvider(rawValue: "cognito"), userInfo: nil)

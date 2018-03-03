@@ -2,6 +2,15 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
+	<key>Charts</key>
+	<dict>
+		<key>Title</key>
+		<string>Charts</string>
+		<key>Text</key>
+		<string>Copyright 2016 Daniel Cohen Gindi &amp; Philipp Jahoda</string>
+		<key>License</key>
+		<string>Apache License Version 2.0</string>
+	</dict>
 	<key>RealmLoginKit</key>
 	<dict>
 		<key>Title</key>

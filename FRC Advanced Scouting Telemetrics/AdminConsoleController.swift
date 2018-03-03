@@ -101,7 +101,11 @@ class AdminConsoleController: UIViewController, UITableViewDataSource, UITableVi
             //Events
             if indexPath.row == tableView.numberOfRows(inSection: 0) - 1 {
                 //Did select add event
-                performSegue(withIdentifier: "addEvent", sender: tableView)
+                //First present warning
+                let warning = UIAlertController(title: "Do Not Repeat", message: "Events need only be added to a team's FAST account once. This should be done by your scouting lead. Please make sure someone else has not already added the same event as this may cause data inconsistencies in rare cases.", preferredStyle: .alert)
+                warning.addAction(UIAlertAction(title: "I Understand", style: .default, handler: {_ in self.performSegue(withIdentifier: "addEvent", sender: tableView)}))
+                warning.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: {_ in self.viewWillAppear(false) /*This is just to clear the table view selection*/}))
+                self.present(warning, animated: true, completion: nil)
             } else {
                 //Did select event info
                 // TODO: Display event info

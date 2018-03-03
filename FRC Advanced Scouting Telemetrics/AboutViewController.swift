@@ -22,11 +22,19 @@ class AboutViewController: UIViewController {
             let attributedString = try NSAttributedString(url: rtf, options: [NSAttributedString.DocumentReadingOptionKey.documentType:NSAttributedString.DocumentType.rtf], documentAttributes: nil)
             aboutTextView.attributedText = attributedString
             } catch {
-                NSLog("Unable to read About.rtf file")
+                CLSNSLogv("Unable to read About.rtf file", getVaList([]))
             }
         }
         
         Answers.logContentView(withName: "FAST About Page", contentType: nil, contentId: nil, customAttributes: nil)
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        
+        if #available(iOS 11.0, *) {
+            aboutTextView.contentInset = self.additionalSafeAreaInsets
+        }
     }
 
     override func didReceiveMemoryWarning() {
