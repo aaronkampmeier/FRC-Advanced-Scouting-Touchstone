@@ -91,6 +91,8 @@
 		9391EA6C1E4852D2008E17A1 /* PitStringFieldCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9391EA6B1E4852D2008E17A1 /* PitStringFieldCollectionViewCell.swift */; };
 		93A15E921F05E9A00057C965 /* JSONModels.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93A15E911F05E9A00057C965 /* JSONModels.swift */; };
 		93AE99801E3407A00000FB7C /* SSDataManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93AE997F1E3407A00000FB7C /* SSDataManager.swift */; };
+		93B32D09204A757000D10269 /* Charts.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 93B32D06204A755200D10269 /* Charts.framework */; };
+		93B32D0A204A757000D10269 /* Charts.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 93B32D06204A755200D10269 /* Charts.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		93BA599E1E2C95F200171D72 /* FASTTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 938D9CB01E1B05BA00A5E522 /* FASTTests.swift */; };
 		93BA5A0C1E2F1EA200171D72 /* YCMatrix.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 93BA59F21E2EE7EF00171D72 /* YCMatrix.framework */; };
 		93BA5A0D1E2F1EA200171D72 /* YCMatrix.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 93BA59F21E2EE7EF00171D72 /* YCMatrix.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
@@ -121,6 +123,27 @@
 			proxyType = 1;
 			remoteGlobalIDString = 1F78E77E1C3B469300221927;
 			remoteInfo = "FRC Advanced Scouting Telemetrics";
+		};
+		93B32D05204A755200D10269 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 93B32D00204A755200D10269 /* Charts.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 65AD9E95D9ED4DC0BD73A743;
+			remoteInfo = Charts;
+		};
+		93B32D07204A755200D10269 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 93B32D00204A755200D10269 /* Charts.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 1CBBC58C6CE1EBEE9852CE41;
+			remoteInfo = ChartsTests;
+		};
+		93B32D0B204A757000D10269 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 93B32D00204A755200D10269 /* Charts.xcodeproj */;
+			proxyType = 1;
+			remoteGlobalIDString = A58A4ED274A941CA248EA921;
+			remoteInfo = Charts;
 		};
 		93BA59F11E2EE7EF00171D72 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -153,6 +176,7 @@
 			dstSubfolderSpec = 10;
 			files = (
 				93BA5A0D1E2F1EA200171D72 /* YCMatrix.framework in Embed Frameworks */,
+				93B32D0A204A757000D10269 /* Charts.framework in Embed Frameworks */,
 			);
 			name = "Embed Frameworks";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -250,11 +274,11 @@
 		936967F61E4FD057001DB15D /* TeamDetailTableCollectionViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TeamDetailTableCollectionViewCell.swift; sourceTree = "<group>"; };
 		936968191E502AC8001DB15D /* TeamDetailKeyValueSpreadCollectionViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TeamDetailKeyValueSpreadCollectionViewCell.swift; sourceTree = "<group>"; };
 		937E9C951E40468300D0ED76 /* SuperNotesCollectionViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SuperNotesCollectionViewController.swift; sourceTree = "<group>"; };
-		938BEB3E1E354393003F2F74 /* CoreData.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreData.framework; path = System/Library/Frameworks/CoreData.framework; sourceTree = SDKROOT; };
 		938D9CB01E1B05BA00A5E522 /* FASTTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FASTTests.swift; sourceTree = "<group>"; };
 		9391EA6B1E4852D2008E17A1 /* PitStringFieldCollectionViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PitStringFieldCollectionViewCell.swift; sourceTree = "<group>"; };
 		93A15E911F05E9A00057C965 /* JSONModels.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JSONModels.swift; sourceTree = "<group>"; };
 		93AE997F1E3407A00000FB7C /* SSDataManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SSDataManager.swift; sourceTree = "<group>"; };
+		93B32D00204A755200D10269 /* Charts.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = Charts.xcodeproj; path = "Charts-master/Charts.xcodeproj"; sourceTree = "<group>"; };
 		93BA59EC1E2EE7EE00171D72 /* YCMatrix.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = YCMatrix.xcodeproj; path = "YCMatrix-master/YCMatrix.xcodeproj"; sourceTree = "<group>"; };
 		93C5B47B1E53FC9C007D309F /* TeamInfoScrollView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TeamInfoScrollView.swift; sourceTree = "<group>"; };
 		93C609231E67D035007A689D /* MatchOverviewDetailViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MatchOverviewDetailViewController.swift; sourceTree = "<group>"; };
@@ -279,6 +303,7 @@
 			files = (
 				1FBC9E6C1CC2F007005DB3F4 /* Crashlytics.framework in Frameworks */,
 				93BA5A0C1E2F1EA200171D72 /* YCMatrix.framework in Frameworks */,
+				93B32D09204A757000D10269 /* Charts.framework in Frameworks */,
 				1FBC9E691CC2EE11005DB3F4 /* Fabric.framework in Frameworks */,
 				17B23A7C19409D43514119DF /* Pods_FRC_Advanced_Scouting_Touchstone.framework in Frameworks */,
 			);
@@ -367,6 +392,7 @@
 		1F78E7761C3B469300221927 = {
 			isa = PBXGroup;
 			children = (
+				93B32D00204A755200D10269 /* Charts.xcodeproj */,
 				93BA59EC1E2EE7EE00171D72 /* YCMatrix.xcodeproj */,
 				1F78E7811C3B469300221927 /* FRC Advanced Scouting Touchstone */,
 				1F78E7991C3B469300221927 /* FRC Advanced Scouting TouchstoneTests */,
@@ -443,7 +469,6 @@
 		247597E7D320F6FF4FC40A15 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				938BEB3E1E354393003F2F74 /* CoreData.framework */,
 				1F9B78241CD07C7000B4E5AE /* NYTPhotoViewer.framework */,
 				1FDE56921CCD376B009042CD /* opencv2.framework */,
 				1FBC9E6B1CC2F007005DB3F4 /* Crashlytics.framework */,
@@ -619,6 +644,15 @@
 			name = "Team Detail Cells";
 			sourceTree = "<group>";
 		};
+		93B32D01204A755200D10269 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				93B32D06204A755200D10269 /* Charts.framework */,
+				93B32D08204A755200D10269 /* ChartsTests.xctest */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
 		93BA59ED1E2EE7EE00171D72 /* Products */ = {
 			isa = PBXGroup;
 			children = (
@@ -690,6 +724,7 @@
 			);
 			dependencies = (
 				93BA5A0F1E2F1EA200171D72 /* PBXTargetDependency */,
+				93B32D0C204A757000D10269 /* PBXTargetDependency */,
 			);
 			name = "FRC Advanced Scouting Touchstone";
 			productName = "FRC Advanced Scouting Telemetrics";
@@ -780,6 +815,10 @@
 			projectDirPath = "";
 			projectReferences = (
 				{
+					ProductGroup = 93B32D01204A755200D10269 /* Products */;
+					ProjectRef = 93B32D00204A755200D10269 /* Charts.xcodeproj */;
+				},
+				{
 					ProductGroup = 93BA59ED1E2EE7EE00171D72 /* Products */;
 					ProjectRef = 93BA59EC1E2EE7EE00171D72 /* YCMatrix.xcodeproj */;
 				},
@@ -794,6 +833,20 @@
 /* End PBXProject section */
 
 /* Begin PBXReferenceProxy section */
+		93B32D06204A755200D10269 /* Charts.framework */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.framework;
+			path = Charts.framework;
+			remoteRef = 93B32D05204A755200D10269 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		93B32D08204A755200D10269 /* ChartsTests.xctest */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.cfbundle;
+			path = ChartsTests.xctest;
+			remoteRef = 93B32D07204A755200D10269 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
 		93BA59F21E2EE7EF00171D72 /* YCMatrix.framework */ = {
 			isa = PBXReferenceProxy;
 			fileType = wrapper.framework;
@@ -905,7 +958,6 @@
 				"${BUILT_PRODUCTS_DIR}/AWSUserPoolsSignIn/AWSUserPoolsSignIn.framework",
 				"${BUILT_PRODUCTS_DIR}/Alamofire/Alamofire.framework",
 				"${BUILT_PRODUCTS_DIR}/BRYSerialAnimationQueue/BRYSerialAnimationQueue.framework",
-				"${BUILT_PRODUCTS_DIR}/Charts/Charts.framework",
 				"${BUILT_PRODUCTS_DIR}/FLAnimatedImage/FLAnimatedImage.framework",
 				"${BUILT_PRODUCTS_DIR}/GMStepper/GMStepper.framework",
 				"${BUILT_PRODUCTS_DIR}/NYTPhotoViewer/NYTPhotoViewer.framework",
@@ -929,7 +981,6 @@
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/AWSUserPoolsSignIn.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Alamofire.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/BRYSerialAnimationQueue.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Charts.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/FLAnimatedImage.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/GMStepper.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/NYTPhotoViewer.framework",
@@ -1084,6 +1135,11 @@
 			target = 1F78E77E1C3B469300221927 /* FRC Advanced Scouting Touchstone */;
 			targetProxy = 1F78E7A21C3B469300221927 /* PBXContainerItemProxy */;
 		};
+		93B32D0C204A757000D10269 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = Charts;
+			targetProxy = 93B32D0B204A757000D10269 /* PBXContainerItemProxy */;
+		};
 		93BA5A0F1E2F1EA200171D72 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			name = YCMatrix;
@@ -1221,7 +1277,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = E41AD9671774068A9E097A14 /* Pods-FRC Advanced Scouting Touchstone.debug.xcconfig */;
 			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = "$(inherited)";
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
@@ -1267,7 +1323,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = D5E09D382B48C9148EBC98C8 /* Pods-FRC Advanced Scouting Touchstone.release.xcconfig */;
 			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = "$(inherited)";
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_IDENTITY = "iPhone Developer";

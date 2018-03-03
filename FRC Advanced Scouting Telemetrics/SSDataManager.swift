@@ -70,6 +70,9 @@ class SSDataManager {
         SSDataManager.mostRecentSSDataManager = self
         
         scoutedMatchPerformance.scouted.didCrossAutoLine = false
+        
+        
+        CLSNSLogv("Began Stands Scouting for key: \(teamMatchPerformance!.key)", getVaList([]))
     }
     
     func save() {

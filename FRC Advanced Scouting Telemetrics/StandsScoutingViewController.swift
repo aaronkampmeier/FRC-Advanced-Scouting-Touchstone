@@ -241,14 +241,17 @@ class StandsScoutingViewController: UIViewController {
 	}
 	
 	func close(andSave shouldSave: Bool) {
-        if !shouldSave {
-            ssDataManager?.rollback()
-        } else {
-            ssDataManager?.save()
+        //Wait 3 seconds for all the climb data to be in
+        DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + 2.1) {
+            if shouldSave {
+                self.ssDataManager?.save()
+            } else {
+                self.ssDataManager?.rollback()
+            }
+            
+            self.dismiss(animated: true, completion: nil)
+            Answers.logCustomEvent(withName: "Closed Stands Scouting", customAttributes: ["With Save":shouldSave.description])
         }
-		
-		dismiss(animated: true, completion: nil)
-		Answers.logCustomEvent(withName: "Closed Stands Scouting", customAttributes: ["With Save":shouldSave.description])
 	}
 	
 	override func prepare(for segue: UIStoryboardSegue, sender: Any?) {

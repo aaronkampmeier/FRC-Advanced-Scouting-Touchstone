@@ -16,9 +16,6 @@ PODS:
     - AWSAuthCore (= 2.6.11)
     - AWSCognitoIdentityProvider (= 2.6.11)
   - BRYSerialAnimationQueue (1.0.0)
-  - Charts (3.0.5):
-    - Charts/Core (= 3.0.5)
-  - Charts/Core (3.0.5)
   - FLAnimatedImage (1.0.12)
   - GMStepper (2.1)
   - NYTPhotoViewer (1.1.0):
@@ -48,7 +45,6 @@ DEPENDENCIES:
   - AWSAuthUI
   - AWSMobileClient
   - AWSUserPoolsSignIn
-  - Charts
   - GMStepper (~> 2.1)
   - NYTPhotoViewer (~> 1.1.0)
   - RealmSwift (~> 3.1.1)
@@ -67,7 +63,6 @@ SPEC CHECKSUMS:
   AWSMobileClient: 6ba0612943c6dee6b7a5bdf288296c6a8dfffb13
   AWSUserPoolsSignIn: 97a1023f253b01400960ba869053a9a061a0c5e8
   BRYSerialAnimationQueue: 75feef56345338619a6c2111f2a81de28a59c368
-  Charts: 45cdc985b764c838b35ee47eb1365d15735f6d1a
   FLAnimatedImage: 4a0b56255d9b05f18b6dd7ee06871be5d3b89e31
   GMStepper: 8994824040d57d952134e409b7724d05a1a41c18
   NYTPhotoViewer: e80e8767f3780d2df37c6f72cbab15d6c7232911
@@ -80,6 +75,6 @@ SPEC CHECKSUMS:
   UIImage+BetterAdditions: 185cbe06059747dd4a65562c1b0c560e761d030c
   VTAcknowledgementsViewController: e1de80f2c0ce31cc7e1c6f1c8aaeec2770371f09
 
-PODFILE CHECKSUM: eb4a131ca3eb9ac9bd785840c3b8a6a5a506bb6c
+PODFILE CHECKSUM: c5663160255bc996e03d83fb91f354fa314a2a90
 
 COCOAPODS: 1.4.0
