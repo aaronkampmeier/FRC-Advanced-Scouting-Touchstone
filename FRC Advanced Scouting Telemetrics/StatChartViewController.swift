@@ -117,7 +117,16 @@ class StatChartViewController: UIViewController {
         barChart.data = chartData
         
         //Set titles
-        barChart.chartDescription?.text = "Team \(teamMatchPerformances.first!.teamEventPerformance!.team!.teamNumber), Event \(teamMatchPerformances.first!.match!.event!.key)"
+        barChart.chartDescription?.text = "No Data"
+        if let teamMatchPerformance = teamMatchPerformances.first {
+            if let team = teamMatchPerformance.teamEventPerformance?.team {
+                if let event = teamMatchPerformance.match?.event {
+                    if valueEntries.count > 0 {
+                        barChart.chartDescription?.text = "Team \(team.teamNumber), Event \(event.key)"
+                    }
+                }
+            }
+        }
         self.navigationItem.title = statAxisName
     }
     

@@ -187,7 +187,7 @@ class TeamDetailCollectionViewController: UICollectionViewController, UICollecti
             let chartVC = storyboard?.instantiateViewController(withIdentifier: "chartVC") as! StatChartViewController
             chartVC.setUp(forTeamPerformances: Array(selectedTeamEventPerformance!.matchPerformances), withStats: stat.visualizableMatchStats, andStatDescription: stat.name)
             let navController = UINavigationController(rootViewController: chartVC)
-            navController.modalPresentationStyle = .formSheet
+            navController.modalPresentationStyle = .pageSheet
             present(navController, animated: true, completion: nil)
         }
     }
