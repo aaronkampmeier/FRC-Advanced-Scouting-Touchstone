@@ -192,31 +192,51 @@ extension TeamEventPerformance: HasStats {
                     self.average(ofStat: .TotalGrabbedCubes)
                 },
                 StatName.PercentCubesFromPile: {
-                    self.findPercentOfCubes(withLocation: CubeSource.Pile.rawValue)
+                    self.findPercentOfGrabbedCubes(withLocation: CubeSource.Pile.rawValue)
                 },
                 StatName.PercentCubesFromLine: {
-                    self.findPercentOfCubes(withLocation: CubeSource.Line.rawValue)
+                    self.findPercentOfGrabbedCubes(withLocation: CubeSource.Line.rawValue)
                 },
                 StatName.PercentCubesFromPortal: {
-                    self.findPercentOfCubes(withLocation: CubeSource.Portal.rawValue)
+                    self.findPercentOfGrabbedCubes(withLocation: CubeSource.Portal.rawValue)
+                },
+                StatName.TotalPlacedCubes: {
+                    self.sum(ofStat: .TotalPlacedCubes)
                 },
                 StatName.AveragePlacedCubes: {
                     self.average(ofStat: .TotalPlacedCubes)
                 },
+                StatName.StandardDeviationPlacedCubes: {
+                    var placedCubeValues: [Double] = []
+                    for matchPerformance in self.matchPerformances {
+                        switch matchPerformance.statValue(forStat: TeamMatchPerformance.StatName.TotalPlacedCubes) {
+                        case .Integer(let val):
+                            placedCubeValues.append(Double(val))
+                        default:
+                            break
+                        }
+                    }
+                    
+                    if placedCubeValues.count > 0 {
+                        return StatValue.Double(placedCubeValues.sd)
+                    } else {
+                        return StatValue.NoValue
+                    }
+                },
                 StatName.PercentCubesInScale:{
-                    self.findPercentOfCubes(withLocation: CubeDestination.Scale.rawValue)
+                    self.findPercentOfPlacedCubes(withLocation: CubeDestination.Scale.rawValue)
                 },
                 StatName.PercentCubesInSwitch: {
-                    self.findPercentOfCubes(withLocation: CubeDestination.Switch.rawValue)
+                    self.findPercentOfPlacedCubes(withLocation: CubeDestination.Switch.rawValue)
                 },
                 StatName.PercentCubesInOpponentSwitch: {
-                    self.findPercentOfCubes(withLocation: CubeDestination.OpponentSwitch.rawValue)
+                    self.findPercentOfPlacedCubes(withLocation: CubeDestination.OpponentSwitch.rawValue)
                 },
                 StatName.PercentCubesInVault: {
-                    self.findPercentOfCubes(withLocation: CubeDestination.Vault.rawValue)
+                    self.findPercentOfPlacedCubes(withLocation: CubeDestination.Vault.rawValue)
                 },
                 StatName.PercentCubesDropped: {
-                    self.findPercentOfCubes(withLocation: CubeDestination.Dropped.rawValue)
+                    self.findPercentOfPlacedCubes(withLocation: CubeDestination.Dropped.rawValue)
                 }
             ]
         }
@@ -337,8 +357,15 @@ extension TeamEventPerformance: HasStats {
         return timeMarkers
     }
     
-    func findPercentOfCubes(withLocation location: String) -> StatValue {
+    func findPercentOfGrabbedCubes(withLocation location: String) -> StatValue {
         return StatValue.Integer(self.timeMarkers(withAssociatedLocations: location).count) / self.sum(ofStat: .TotalGrabbedCubes)
+    }
+    
+    func findPercentOfPlacedCubes(withLocation location: String) -> StatValue {
+        let timeMarkers = self.timeMarkers(withAssociatedLocations: location)
+        let total = self.sum(ofStat: .AllPlacedCubes)
+        
+        return StatValue.Integer(timeMarkers.count) / total
     }
     
     //Stat Name Definition
@@ -371,12 +398,15 @@ extension TeamEventPerformance: HasStats {
         case PercentCubesFromLine = "Percent Cubes From Line"
         case PercentCubesFromPortal = "Percent Cubes From Portal"
         
+        case TotalPlacedCubes = "Total Placed Cubes"
         case AveragePlacedCubes = "Average Placed Cubes"
         case PercentCubesInScale = "Percent Cubes in Scale"
         case PercentCubesInSwitch = "Percent Cubes in Switch"
         case PercentCubesInOpponentSwitch = "Cubes in Opp. Switch"
         case PercentCubesInVault = "Percent Cubes in Vault"
         case PercentCubesDropped = "Percent Cubes Dropped"
+        
+        case StandardDeviationPlacedCubes = "Std. Dev. Placed Cubes"
         
         
         var description: String {
@@ -388,7 +418,7 @@ extension TeamEventPerformance: HasStats {
         static let allValues: [StatName] = [.OPR, .DPR, .CCWM, .ScoutedMatches, .NumberOfMatches, .TotalMatchPoints, .TotalRankingPoints, .RankingScore, .TotalWins, .TotalLosses, .TotalTies, .MajorityClimbStatus, .SuccessfulClimbCount, .ClimbSuccessRate, .MajorityClimbAssistStatus, .ClimbAssistAttempts,
             
             .AutoLineCrossCount, .TotalGrabbedCubes, .AverageGrabbedCubes, .PercentCubesFromPile, .PercentCubesFromLine, .PercentCubesFromPortal,
-            .AveragePlacedCubes, .PercentCubesInScale, .PercentCubesInSwitch, .PercentCubesInOpponentSwitch, .PercentCubesInVault, .PercentCubesDropped
+            .TotalPlacedCubes, .AveragePlacedCubes, .StandardDeviationPlacedCubes, .PercentCubesInScale, .PercentCubesInSwitch, .PercentCubesInOpponentSwitch, .PercentCubesInVault, .PercentCubesDropped
         ]
         
         var visualizableAssociatedStats: [TeamMatchPerformance.StatName] {
@@ -402,6 +432,8 @@ extension TeamEventPerformance: HasStats {
                     return [.PercentCubesFromLine]
                 case .PercentCubesFromPortal:
                     return [.PercentCubesFromPortal]
+                case .TotalPlacedCubes:
+                    return [.TotalPlacedCubes]
                 case .PercentCubesInScale:
                     return [TeamMatchPerformance.StatName.PercentCubesPlacedInScale]
                 case .PercentCubesInSwitch:

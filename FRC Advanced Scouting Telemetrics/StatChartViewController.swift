@@ -131,7 +131,9 @@ class StatChartViewController: UIViewController {
     }
     
     func setUp(forTeamPerformances teamPerformances: [TeamMatchPerformance], withStats stats: [TeamMatchPerformance.StatName], andStatDescription statDescription: String) {
-        self.teamMatchPerformances = teamPerformances
+        self.teamMatchPerformances = teamPerformances.sorted {(matchPerf1, matchPerf2) in
+            return matchPerf1.match!.matchNumber < matchPerf2.match!.matchNumber
+        }
         self.stats = stats
         self.statAxisName = statDescription
     }

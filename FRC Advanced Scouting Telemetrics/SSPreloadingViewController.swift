@@ -7,7 +7,6 @@
 //
 
 import UIKit
-import VerticalSlider
 
 class SSPreloadingViewController: UIViewController {
     @IBOutlet weak var cubeSwitch: UISwitch!

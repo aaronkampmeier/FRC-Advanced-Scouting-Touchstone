@@ -1,5 +1,5 @@
 PODS:
-  - Alamofire (4.3.0)
+  - Alamofire (4.6.0)
   - AWSAuthCore (2.6.11):
     - AWSCore (= 2.6.11)
   - AWSAuthUI (2.6.11):
@@ -41,11 +41,10 @@ PODS:
   - UICircularProgressRing (1.2.1)
   - UIColor-Hex (0.1.1)
   - UIImage+BetterAdditions (2.0.3)
-  - VerticalSlider (1.0.0)
   - VTAcknowledgementsViewController (1.2.1)
 
 DEPENDENCIES:
-  - Alamofire (~> 4.0)
+  - Alamofire
   - AWSAuthUI
   - AWSMobileClient
   - AWSUserPoolsSignIn
@@ -56,11 +55,10 @@ DEPENDENCIES:
   - SSBouncyButton (~> 1.0)
   - TORoundedTableView
   - UICircularProgressRing
-  - VerticalSlider
   - VTAcknowledgementsViewController
 
 SPEC CHECKSUMS:
-  Alamofire: 856a113053a7bc9cbe5d6367a555d773fc5cfef7
+  Alamofire: f41a599bd63041760b26d393ec1069d9d7b917f4
   AWSAuthCore: 400f64223dc7509bf2c2b320c25f03c9281e2aac
   AWSAuthUI: 6259cddd495ea178bd7da560453aef9e7909e0c1
   AWSCognitoIdentityProvider: 83b8a4dcdd83f54750ff6556f24757894c6e6062
@@ -80,9 +78,8 @@ SPEC CHECKSUMS:
   UICircularProgressRing: 8eca1c123d323dcef59ba3ca86b81c8d7e751ae4
   UIColor-Hex: 77e80f383c6b3a63c5e95a9a4a7f4a71976e38a5
   UIImage+BetterAdditions: 185cbe06059747dd4a65562c1b0c560e761d030c
-  VerticalSlider: d0e269208ce7aa98e0273c0d244e9625d603b75e
   VTAcknowledgementsViewController: e1de80f2c0ce31cc7e1c6f1c8aaeec2770371f09
 
-PODFILE CHECKSUM: 12aac2cab45b2882eec27942a9e5661e316b948c
+PODFILE CHECKSUM: eb4a131ca3eb9ac9bd785840c3b8a6a5a506bb6c
 
 COCOAPODS: 1.4.0

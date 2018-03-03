@@ -64,6 +64,8 @@ class TeamDetailCollectionViewController: UICollectionViewController, UICollecti
         
         (collectionView?.collectionViewLayout as! UICollectionViewFlowLayout).headerReferenceSize = CGSize(width: self.view.frame.width, height: 30)
         (collectionView?.collectionViewLayout as! UICollectionViewFlowLayout).minimumInteritemSpacing = 3
+        
+        collectionView?.isScrollEnabled = false
     }
     
     override func viewDidLayoutSubviews() {

@@ -143,31 +143,35 @@ extension TeamMatchPerformance: HasStats {
                 },
                 StatName.PercentCubesPlacedInScale: {
                     let timeMarkers = self.getTimeMarkers(withAssociatedLocation: CubeDestination.Scale.rawValue)
-                    return StatValue.Integer(timeMarkers.count) / self.statValue(forStat: .TotalPlacedCubes)
+                    return StatValue.Integer(timeMarkers.count) / self.statValue(forStat: .AllPlacedCubes)
                 },
                 StatName.PercentCubesPlacedInSwitch: {
                     let timeMarkers = self.getTimeMarkers(withAssociatedLocation: CubeDestination.Switch.rawValue)
-                    return StatValue.Integer(timeMarkers.count) / self.statValue(forStat: .TotalPlacedCubes)
+                    return StatValue.Integer(timeMarkers.count) / self.statValue(forStat: .AllPlacedCubes)
                 },
                 StatName.PercentCubesPlacedInOpponentSwitch: {
                     let timeMarkers = self.getTimeMarkers(withAssociatedLocation: CubeDestination.OpponentSwitch.rawValue)
-                    return StatValue.Integer(timeMarkers.count) / self.statValue(forStat: .TotalPlacedCubes)
+                    return StatValue.Integer(timeMarkers.count) / self.statValue(forStat: .AllPlacedCubes)
                 },
                 StatName.PercentCubesPlacedInVault: {
                     let timeMarkers = self.getTimeMarkers(withAssociatedLocation: CubeDestination.Vault.rawValue)
-                    return StatValue.Integer(timeMarkers.count) / self.statValue(forStat: .TotalPlacedCubes)
+                    return StatValue.Integer(timeMarkers.count) / self.statValue(forStat: .AllPlacedCubes)
                 },
                 StatName.PercentCubesDropped: {
                     let timeMarkers = self.getTimeMarkers(withAssociatedLocation: CubeDestination.Dropped.rawValue)
-                    return StatValue.Integer(timeMarkers.count) / self.statValue(forStat: .TotalPlacedCubes)
+                    return StatValue.Integer(timeMarkers.count) / self.statValue(forStat: .AllPlacedCubes)
                 },
                 StatName.TotalPlacedCubes: {
                     if self.scouted.hasBeenScouted {
-                        let timeMarkers = self.scouted.timeMarkers(forScoutID: self.scouted.defaultScoutID).filter {$0.timeMarkerEventType == .PlacedCube}
+                        let timeMarkers = self.scouted.timeMarkers(forScoutID: self.scouted.defaultScoutID).filter {$0.timeMarkerEventType == .PlacedCube && $0.associatedLocation != CubeDestination.Dropped.rawValue}
                         return StatValue.Integer(timeMarkers.count)
                     } else {
                         return StatValue.NoValue
                     }
+                },
+                StatName.AllPlacedCubes: {
+                    let tms = self.getTimeMarkers(forEvent: .PlacedCube)
+                    return StatValue.Integer(tms.count)
                 }
             ]
         }
@@ -175,6 +179,10 @@ extension TeamMatchPerformance: HasStats {
     
     func getTimeMarkers(withAssociatedLocation assocLocation: String) -> [TimeMarker] {
         return self.scouted.timeMarkers(forScoutID: self.scouted.defaultScoutID).filter {$0.associatedLocation == assocLocation}
+    }
+    
+    func getTimeMarkers(forEvent event: TimeMarkerEvent) -> [TimeMarker] {
+        return self.scouted.timeMarkers(forScoutID: self.scouted.defaultScoutID).filter {$0.timeMarkerEventType == event}
     }
     
     enum StatName: String, CustomStringConvertible, StatNameable {
@@ -197,6 +205,8 @@ extension TeamMatchPerformance: HasStats {
         case PercentCubesPlacedInVault = "Percent Cubes in Vault"
         case PercentCubesDropped = "Percent Cubes Dropped"
         case TotalPlacedCubes = "Total Placed Cubes"
+        
+        case AllPlacedCubes = "All Placed Cubes" //Not Exposed
         
         var description: String {
             get {

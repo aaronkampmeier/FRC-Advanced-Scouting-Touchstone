@@ -155,7 +155,6 @@ if [[ "$CONFIGURATION" == "Debug" ]]; then
   install_framework "${BUILT_PRODUCTS_DIR}/UIColor-Hex/UIColor_Hex.framework"
   install_framework "${BUILT_PRODUCTS_DIR}/UIImage+BetterAdditions/UIImage_BetterAdditions.framework"
   install_framework "${BUILT_PRODUCTS_DIR}/VTAcknowledgementsViewController/VTAcknowledgementsViewController.framework"
-  install_framework "${BUILT_PRODUCTS_DIR}/VerticalSlider/VerticalSlider.framework"
 fi
 if [[ "$CONFIGURATION" == "Release" ]]; then
   install_framework "${BUILT_PRODUCTS_DIR}/AWSAuthCore/AWSAuthCore.framework"
@@ -179,7 +178,6 @@ if [[ "$CONFIGURATION" == "Release" ]]; then
   install_framework "${BUILT_PRODUCTS_DIR}/UIColor-Hex/UIColor_Hex.framework"
   install_framework "${BUILT_PRODUCTS_DIR}/UIImage+BetterAdditions/UIImage_BetterAdditions.framework"
   install_framework "${BUILT_PRODUCTS_DIR}/VTAcknowledgementsViewController/VTAcknowledgementsViewController.framework"
-  install_framework "${BUILT_PRODUCTS_DIR}/VerticalSlider/VerticalSlider.framework"
 fi
 if [ "${COCOAPODS_PARALLEL_CODE_SIGN}" == "true" ]; then
   wait
