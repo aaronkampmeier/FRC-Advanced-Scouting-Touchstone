@@ -14,7 +14,7 @@
             buildForArchiving = "YES">
             <BuildableReference
                BuildableIdentifier = 'primary'
-               BlueprintIdentifier = '2A64CD4BC38885C4A5F5BF006F446D2D'
+               BlueprintIdentifier = 'AE0B89A840D14269C94E5A0331DF6C5E'
                BlueprintName = 'UIImage+BetterAdditions'
                ReferencedContainer = 'container:Pods.xcodeproj'
                BuildableName = 'UIImage+BetterAdditions.framework'>

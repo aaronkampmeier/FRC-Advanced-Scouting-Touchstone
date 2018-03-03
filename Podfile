@@ -15,6 +15,7 @@ pod 'TORoundedTableView'
 pod 'AWSMobileClient'
 pod 'AWSUserPoolsSignIn'
 pod 'AWSAuthUI'
+pod 'Charts'
 end
 
 post_install do | installer |

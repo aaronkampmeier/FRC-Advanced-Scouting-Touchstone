@@ -185,6 +185,9 @@ extension TeamEventPerformance: HasStats {
                     
                     return StatValue.Integer(crossCount)
                 },
+                StatName.TotalGrabbedCubes: {
+                    self.sum(ofStat: .TotalGrabbedCubes)
+                },
                 StatName.AverageGrabbedCubes: {
                     self.average(ofStat: .TotalGrabbedCubes)
                 },
@@ -362,6 +365,7 @@ extension TeamEventPerformance: HasStats {
         
         //2018
         case AutoLineCrossCount = "Auto Line Cross Count"
+        case TotalGrabbedCubes = "Total Grabbed Cubes"
         case AverageGrabbedCubes = "Average Grabbed Cubes"
         case PercentCubesFromPile = "Percent Cubes From Pile"
         case PercentCubesFromLine = "Percent Cubes From Line"
@@ -383,9 +387,36 @@ extension TeamEventPerformance: HasStats {
         
         static let allValues: [StatName] = [.OPR, .DPR, .CCWM, .ScoutedMatches, .NumberOfMatches, .TotalMatchPoints, .TotalRankingPoints, .RankingScore, .TotalWins, .TotalLosses, .TotalTies, .MajorityClimbStatus, .SuccessfulClimbCount, .ClimbSuccessRate, .MajorityClimbAssistStatus, .ClimbAssistAttempts,
             
-            .AutoLineCrossCount, .AverageGrabbedCubes, .PercentCubesFromPile, .PercentCubesFromLine, .PercentCubesFromPortal,
+            .AutoLineCrossCount, .TotalGrabbedCubes, .AverageGrabbedCubes, .PercentCubesFromPile, .PercentCubesFromLine, .PercentCubesFromPortal,
             .AveragePlacedCubes, .PercentCubesInScale, .PercentCubesInSwitch, .PercentCubesInOpponentSwitch, .PercentCubesInVault, .PercentCubesDropped
         ]
+        
+        var visualizableAssociatedStats: [TeamMatchPerformance.StatName] {
+            get {
+                switch self {
+                case .TotalGrabbedCubes:
+                    return [.TotalGrabbedCubes]
+                case .PercentCubesFromPile:
+                    return [TeamMatchPerformance.StatName.PercentCubesFromPile]
+                case .PercentCubesFromLine:
+                    return [.PercentCubesFromLine]
+                case .PercentCubesFromPortal:
+                    return [.PercentCubesFromPortal]
+                case .PercentCubesInScale:
+                    return [TeamMatchPerformance.StatName.PercentCubesPlacedInScale]
+                case .PercentCubesInSwitch:
+                    return [.PercentCubesPlacedInSwitch]
+                case .PercentCubesInOpponentSwitch:
+                    return [.PercentCubesPlacedInOpponentSwitch]
+                case .PercentCubesInVault:
+                    return [TeamMatchPerformance.StatName.PercentCubesPlacedInVault]
+                case .PercentCubesDropped:
+                    return [.PercentCubesDropped]
+                default:
+                    return []
+                }
+            }
+        }
     }
 }
 

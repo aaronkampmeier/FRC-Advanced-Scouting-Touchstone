@@ -83,6 +83,7 @@
 		936572DF1E160EBB00439728 /* AboutViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 936572DE1E160EBB00439728 /* AboutViewController.swift */; };
 		936572E11E1610CA00439728 /* About.rtf in Resources */ = {isa = PBXBuildFile; fileRef = 936572E01E1610CA00439728 /* About.rtf */; };
 		9365947B1E441981008FF324 /* PitTextFieldCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9365947A1E441981008FF324 /* PitTextFieldCollectionViewCell.swift */; };
+		9366C5AD20490AAD00A84C47 /* StatChartViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9366C5AC20490AAD00A84C47 /* StatChartViewController.swift */; };
 		936967F11E4FB1F7001DB15D /* TeamDetailCollectionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 936967F01E4FB1F7001DB15D /* TeamDetailCollectionViewController.swift */; };
 		936967F71E4FD057001DB15D /* TeamDetailTableCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 936967F61E4FD057001DB15D /* TeamDetailTableCollectionViewCell.swift */; };
 		9369681A1E502AC8001DB15D /* TeamDetailKeyValueSpreadCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 936968191E502AC8001DB15D /* TeamDetailKeyValueSpreadCollectionViewCell.swift */; };
@@ -244,6 +245,7 @@
 		936572DE1E160EBB00439728 /* AboutViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AboutViewController.swift; sourceTree = "<group>"; };
 		936572E01E1610CA00439728 /* About.rtf */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.rtf; path = About.rtf; sourceTree = "<group>"; };
 		9365947A1E441981008FF324 /* PitTextFieldCollectionViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PitTextFieldCollectionViewCell.swift; sourceTree = "<group>"; };
+		9366C5AC20490AAD00A84C47 /* StatChartViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StatChartViewController.swift; sourceTree = "<group>"; };
 		936967F01E4FB1F7001DB15D /* TeamDetailCollectionViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TeamDetailCollectionViewController.swift; sourceTree = "<group>"; };
 		936967F61E4FD057001DB15D /* TeamDetailTableCollectionViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TeamDetailTableCollectionViewCell.swift; sourceTree = "<group>"; };
 		936968191E502AC8001DB15D /* TeamDetailKeyValueSpreadCollectionViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TeamDetailKeyValueSpreadCollectionViewCell.swift; sourceTree = "<group>"; };
@@ -310,6 +312,7 @@
 				1F9B782A1CD1A42400B4E5AE /* HiddenDebugViewController.swift */,
 				1FA6A73F1CD3B4E800772C63 /* Data Syncing */,
 				1F4178BF1CD02E4200801D5B /* Team List Detail */,
+				9366C5AC20490AAD00A84C47 /* StatChartViewController.swift */,
 				1FBE627E1CAEE0FB001FDFB7 /* TeamPickerTableViewController.swift */,
 				1F4534551C7276DE004EDDB9 /* EventPickerViewController.swift */,
 				1F30CFC91C7E510100A4EFCA /* Admin Console */,
@@ -391,7 +394,7 @@
 				1F78E7821C3B469300221927 /* AppDelegate.swift */,
 				1FBB426C1C9A29FC0017E36C /* Statistics.swift */,
 				1FE2C12C1C81875A00CECBF1 /* ImageScalingFunctions.swift */,
-				93633B20200D9B35000EC83A /* Realm */,
+				93633B20200D9B35000EC83A /* Realm Database */,
 				93AE997F1E3407A00000FB7C /* SSDataManager.swift */,
 				9332F2AD1E22C8C300AB3EA6 /* Cloud Data */,
 				1F21DF101C645D1F00C55D0E /* View Controllers */,
@@ -565,13 +568,13 @@
 			path = Views;
 			sourceTree = "<group>";
 		};
-		93633B20200D9B35000EC83A /* Realm */ = {
+		93633B20200D9B35000EC83A /* Realm Database */ = {
 			isa = PBXGroup;
 			children = (
 				93633B21200D9B42000EC83A /* Models */,
 				934DDE452002B0510032095C /* RealmDataMangager.swift */,
 			);
-			name = Realm;
+			name = "Realm Database";
 			sourceTree = "<group>";
 		};
 		93633B21200D9B42000EC83A /* Models */ = {
@@ -902,6 +905,7 @@
 				"${BUILT_PRODUCTS_DIR}/AWSUserPoolsSignIn/AWSUserPoolsSignIn.framework",
 				"${BUILT_PRODUCTS_DIR}/Alamofire/Alamofire.framework",
 				"${BUILT_PRODUCTS_DIR}/BRYSerialAnimationQueue/BRYSerialAnimationQueue.framework",
+				"${BUILT_PRODUCTS_DIR}/Charts/Charts.framework",
 				"${BUILT_PRODUCTS_DIR}/FLAnimatedImage/FLAnimatedImage.framework",
 				"${BUILT_PRODUCTS_DIR}/GMStepper/GMStepper.framework",
 				"${BUILT_PRODUCTS_DIR}/NYTPhotoViewer/NYTPhotoViewer.framework",
@@ -926,6 +930,7 @@
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/AWSUserPoolsSignIn.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Alamofire.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/BRYSerialAnimationQueue.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Charts.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/FLAnimatedImage.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/GMStepper.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/NYTPhotoViewer.framework",
@@ -1001,6 +1006,7 @@
 				9353ADBC1E57ACF100120F1A /* MatchesTableViewController.swift in Sources */,
 				93C5B47C1E53FC9C007D309F /* TeamInfoScrollView.swift in Sources */,
 				93C609241E67D035007A689D /* MatchOverviewDetailViewController.swift in Sources */,
+				9366C5AD20490AAD00A84C47 /* StatChartViewController.swift in Sources */,
 				93483E8D20291AC400E9AC82 /* StatusBarUnderlayView.swift in Sources */,
 				1FD0A09B1C95093600013A18 /* TeamListTableViewCell.swift in Sources */,
 				9369681A1E502AC8001DB15D /* TeamDetailKeyValueSpreadCollectionViewCell.swift in Sources */,

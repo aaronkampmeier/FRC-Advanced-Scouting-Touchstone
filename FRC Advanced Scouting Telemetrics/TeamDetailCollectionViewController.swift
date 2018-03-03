@@ -25,8 +25,6 @@ class TeamDetailCollectionViewController: UICollectionViewController, UICollecti
                 
                 detailValues = values
             }
-            
-//            collectionView?.reloadData()
         }
     }
     
@@ -36,10 +34,10 @@ class TeamDetailCollectionViewController: UICollectionViewController, UICollecti
             if let eventPerformance = selectedTeamEventPerformance {
                 let possibleStats = TeamEventPerformance.StatName.allValues
                 
-                var values: [(String, String?)] = []
+                var values: [(String, String?, [TeamMatchPerformance.StatName])] = []
                 
                 for statName in possibleStats {
-                    values.append((statName.description, eventPerformance.statValue(forStat: statName).description))
+                    values.append((statName.description, eventPerformance.statValue(forStat: statName).description, statName.visualizableAssociatedStats))
                 }
                 
                 eventStats = values
@@ -54,7 +52,7 @@ class TeamDetailCollectionViewController: UICollectionViewController, UICollecti
     
     var detailValues: [(String, String?)] = []
     
-    var eventStats: [(String, String?)] = []
+    var eventStats: [(name: String, value: String?, visualizableMatchStats: [TeamMatchPerformance.StatName])] = []
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -66,15 +64,12 @@ class TeamDetailCollectionViewController: UICollectionViewController, UICollecti
         
         (collectionView?.collectionViewLayout as! UICollectionViewFlowLayout).headerReferenceSize = CGSize(width: self.view.frame.width, height: 30)
         (collectionView?.collectionViewLayout as! UICollectionViewFlowLayout).minimumInteritemSpacing = 3
-        
-//        NotificationCenter.default.post(name: TeamDetailCollectionViewNeedsHeightResizing, object: self, userInfo: nil)
     }
     
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
         NotificationCenter.default.post(name: TeamDetailCollectionViewNeedsHeightResizing, object: self, userInfo: nil)
     }
-    
     
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
@@ -135,16 +130,64 @@ class TeamDetailCollectionViewController: UICollectionViewController, UICollecti
             
             (cell.viewWithTag(1) as! UILabel).text = value.0
             (cell.viewWithTag(2) as! UILabel).text = value.1
+            
+            let chartImage = cell.viewWithTag(3) as! UIImageView
+            chartImage.isHidden = true
+            for constraint in chartImage.constraints {
+                if constraint.identifier == "width" {
+                    constraint.constant = 0
+                }
+            }
+            chartImage.updateConstraints()
         case 1:
             let value = eventStats[indexPath.item]
             
             (cell.viewWithTag(1) as! UILabel).text = value.0
-            (cell.viewWithTag(2) as! UILabel).text = value.1
+            let textLabel = cell.viewWithTag(2) as! UILabel
+            textLabel.text = value.1
+            
+            let chartImage = cell.viewWithTag(3) as! UIImageView
+            if value.visualizableMatchStats.count > 0 {
+                for constraint in chartImage.constraints {
+                    if constraint.identifier == "width" {
+                        constraint.constant = 20
+                    }
+                }
+                chartImage.isHidden = false
+            } else {
+                for constraint in chartImage.constraints {
+                    if constraint.identifier == "width" {
+                        constraint.constant = 0
+                    }
+                }
+                chartImage.isHidden = true
+            }
+            chartImage.updateConstraints()
         default:
             break
         }
         
         return cell
+    }
+    
+    override func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        //Figure out the stat
+        if indexPath.section == 0 {
+            //Team Stats, we don't select these so do nothing
+        } else if indexPath.section == 1 {
+            //Team Event Perf stats, okay make sure it has assoc stats
+            let stat = eventStats[indexPath.item]
+            guard stat.visualizableMatchStats.count > 0 else {
+                return //Yeet
+            }
+            
+            //Present the stat charting vc
+            let chartVC = storyboard?.instantiateViewController(withIdentifier: "chartVC") as! StatChartViewController
+            chartVC.setUp(forTeamPerformances: Array(selectedTeamEventPerformance!.matchPerformances), withStats: stat.visualizableMatchStats, andStatDescription: stat.name)
+            let navController = UINavigationController(rootViewController: chartVC)
+            navController.modalPresentationStyle = .formSheet
+            present(navController, animated: true, completion: nil)
+        }
     }
     
     override func collectionView(_ collectionView: UICollectionView, viewForSupplementaryElementOfKind kind: String, at indexPath: IndexPath) -> UICollectionReusableView {
