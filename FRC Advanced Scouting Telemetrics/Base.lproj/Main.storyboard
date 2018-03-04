@@ -2281,7 +2281,7 @@
                             <constraint firstItem="JJR-OQ-oby" firstAttribute="top" secondItem="XjR-A4-N3d" secondAttribute="bottom" id="Aeh-gZ-plU"/>
                             <constraint firstAttribute="trailing" secondItem="JJR-OQ-oby" secondAttribute="trailing" id="CyE-4X-E0B"/>
                             <constraint firstItem="JJR-OQ-oby" firstAttribute="leading" secondItem="2m9-Hf-Xil" secondAttribute="leading" id="Z7D-G2-Zhj"/>
-                            <constraint firstItem="GCt-lq-w5Y" firstAttribute="top" secondItem="JJR-OQ-oby" secondAttribute="bottom" id="yiT-EL-MZ2"/>
+                            <constraint firstAttribute="bottom" secondItem="JJR-OQ-oby" secondAttribute="bottom" id="yiT-EL-MZ2"/>
                         </constraints>
                     </view>
                     <navigationItem key="navigationItem" title="Matches" id="nVt-oy-rtp">
@@ -2585,6 +2585,7 @@
                     </toolbarItems>
                     <navigationItem key="navigationItem" id="ObO-4k-BR5">
                         <nil key="title"/>
+                        <barButtonItem key="leftBarButtonItem" image="Chart" id="uWw-oI-VvP"/>
                         <button key="titleView" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" id="bD3-zr-aia">
                             <rect key="frame" x="104" y="5.5" width="112" height="33"/>
                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
@@ -3816,7 +3817,7 @@
         <image name="Banana" width="33" height="33"/>
         <image name="Banana Filled" width="33" height="33"/>
         <image name="Camera" width="30" height="30"/>
-        <image name="Chart" width="50" height="50"/>
+        <image name="Chart" width="27" height="27"/>
         <image name="Edit" width="27" height="27"/>
         <image name="Pit Scouting" width="31" height="31"/>
         <image name="Plus Math Filled-100" width="100" height="100"/>
