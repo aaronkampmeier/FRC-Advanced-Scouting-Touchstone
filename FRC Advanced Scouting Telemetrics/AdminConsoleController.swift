@@ -222,8 +222,7 @@ class AdminConsoleController: UIViewController, UITableViewDataSource, UITableVi
                     removalManager.remove()
                 }
                 
-                
-                return [delete, reloadAction]
+                return [reloadAction, delete]
             }
         default:
             return nil
