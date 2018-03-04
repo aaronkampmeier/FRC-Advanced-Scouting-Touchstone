@@ -87,6 +87,8 @@ class TeamListTableViewController: UITableViewController, TeamListDetailDataSour
                 matchesButton.isEnabled = false
             }
             
+            reloadEventRankerObserver()
+            
             teamListSplitVC.teamListDetailVC.reloadData()
         }
     }
@@ -104,6 +106,11 @@ class TeamListTableViewController: UITableViewController, TeamListDetailDataSour
     var generalRealmObserverToken: NotificationToken?
     var initialProgressNotification: NotificationToken?
     var eventsObserverToken: NotificationToken?
+    var eventRankerObserverToken: NotificationToken? {
+        didSet {
+            oldValue?.invalidate()
+        }
+    }
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -148,7 +155,7 @@ class TeamListTableViewController: UITableViewController, TeamListDetailDataSour
         //Track if an event was added or delted (redundant most of the time with the following team observer except for when an event doesn't have any teams)
         eventsObserverToken = realmController.generalRealm.objects(Event.self).observe {[weak self] eventsChanges in
             switch eventsChanges {
-            case .update(_, let deletions, let insertions,_):
+            case .update(_, let deletions,_,_):
                 if deletions.count > 0 {
                     self?.selectedEvent = nil
                 }
@@ -182,6 +189,32 @@ class TeamListTableViewController: UITableViewController, TeamListDetailDataSour
                 }
             }
         }
+        
+        reloadEventRankerObserver()
+    }
+    
+    func reloadEventRankerObserver() {
+        //Add observer to listen for changes in the pick list
+        eventRankerObserverToken = nil
+        if let event = selectedEvent {
+            if let eventRanker = realmController.getTeamRanker(forEvent: event) {
+                self.eventRankerObserverToken = eventRanker.observe {[weak self] objectChange in
+                    switch objectChange {
+                    case .change(let changes):
+                        for change in changes {
+                            if change.name == "pickedTeams" {
+                                //Reload all visible rows
+                                if let visibleRows = self?.tableView.indexPathsForVisibleRows {
+                                    self?.tableView.reloadRows(at: visibleRows, with: UITableViewRowAnimation.none)
+                                }
+                            }
+                        }
+                    default:
+                        break
+                    }
+                }
+            }
+        }
     }
     
     override func viewDidDisappear(_ animated: Bool) {
@@ -190,6 +223,7 @@ class TeamListTableViewController: UITableViewController, TeamListDetailDataSour
         generalRealmObserverToken?.invalidate()
         initialProgressNotification?.invalidate()
         eventsObserverToken?.invalidate()
+        eventRankerObserverToken?.invalidate()
     }
 
     override func didReceiveMemoryWarning() {
@@ -243,14 +277,10 @@ class TeamListTableViewController: UITableViewController, TeamListDetailDataSour
         cell.rankLabel.text = "\(currentEventTeams.index(where: {$0 == team})! as Int + 1)"
         
         //Show a red X over the rank label if they have been picked
-        cell.rankLabel.textColor = .black
+        cell.accessoryView = nil
         if let event = selectedEvent {
             if let eventRanker = realmController.getTeamRanker(forEvent: event) {
-                if eventRanker.isInPickList(team: team) {
-                    //Show indicator that it is still in pick list
-//                    cell.accessoryType = .none
-                    cell.accessoryView = nil
-                } else {
+                if !eventRanker.isInPickList(team: team) {
                     //Show indicator that it is not in pick list
 //                    cell.accessoryType = .checkmark
                     let crossImage = UIImageView(image: #imageLiteral(resourceName: "Cross"))
@@ -318,8 +348,13 @@ class TeamListTableViewController: UITableViewController, TeamListDetailDataSour
                 
                 let markAsPickedAction = UITableViewRowAction(style: .normal, title: "Mark Picked") {rowAction, indexPath in
                     
-                    RealmController.realmController.genericWrite(onRealm: .Synced) {
-                        ranker.setIsInPickList(!ranker.isInPickList(team: team), team: team)
+                    RealmController.realmController.syncedRealm.beginWrite()
+                    ranker.setIsInPickList(!ranker.isInPickList(team: team), team: team)
+                    do {
+                        try RealmController.realmController.syncedRealm.commitWrite(withoutNotifying: [self.eventRankerObserverToken ?? NotificationToken()])
+                    } catch {
+                        CLSNSLogv("Error saving write of change to pick list: \(error)", getVaList([]))
+                        Crashlytics.sharedInstance().recordError(error)
                     }
                     
                     //Reload that row
@@ -348,8 +383,13 @@ class TeamListTableViewController: UITableViewController, TeamListDetailDataSour
             
             let markAsPicked = UIContextualAction(style: .normal, title: "Mark Picked") {(contextAction: UIContextualAction, sourceView: UIView, completionHandler: (Bool) -> Void) in
                 
-                RealmController.realmController.genericWrite(onRealm: .Synced) {
-                    ranker.setIsInPickList(!ranker.isInPickList(team: team), team: team)
+                RealmController.realmController.syncedRealm.beginWrite()
+                ranker.setIsInPickList(!ranker.isInPickList(team: team), team: team)
+                do {
+                    try RealmController.realmController.syncedRealm.commitWrite(withoutNotifying: [self.eventRankerObserverToken ?? NotificationToken()])
+                } catch {
+                    CLSNSLogv("Error saving write of change to pick list: \(error)", getVaList([]))
+                    Crashlytics.sharedInstance().recordError(error)
                 }
                 
                 completionHandler(true)
@@ -410,11 +450,33 @@ class TeamListTableViewController: UITableViewController, TeamListDetailDataSour
         }
     }
     
-    @IBAction func editPressed(_ sender: UIBarButtonItem) {
-        if isEditing {
-            setEditing(false, animated: true)
-        } else {
-            setEditing(true, animated: true)
+    @IBAction func editPressed(_ sender: UIBarButtonItem, forEvent event: UIEvent) {
+        guard let touch = event.allTouches?.first else {
+            return
+        }
+        
+        if touch.tapCount == 1 {
+            //Is asingle short press
+            if isEditing {
+                setEditing(false, animated: true)
+            } else {
+                setEditing(true, animated: true)
+            }
+        } else if touch.tapCount == 0 {
+            //Long press
+            if let frcEvent = selectedEvent {
+                let clearPickListAlert = UIAlertController(title: "Reset Picked Teams", message: "Would you like to reset what teams are picked or not? This will not affect any scouting data, just the Xs next to teams that were marked as picked. ", preferredStyle: .alert)
+                clearPickListAlert.addAction(UIAlertAction(title: "Reset", style: .default, handler: {_ in
+                    //Reset the picked teams
+                    let eventRanker = RealmController.realmController.getTeamRanker(forEvent: frcEvent)
+                    
+                    RealmController.realmController.genericWrite(onRealm: .Synced) {
+                        eventRanker?.pickedTeams.removeAll()
+                    }
+                }))
+                clearPickListAlert.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
+                self.present(clearPickListAlert, animated: true, completion: nil)
+            }
         }
     }
     

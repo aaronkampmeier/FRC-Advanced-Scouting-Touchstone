@@ -2567,7 +2567,7 @@
                         <barButtonItem width="5" style="plain" systemItem="fixedSpace" id="78D-YA-Vjp"/>
                         <barButtonItem image="Edit" id="ija-jy-05E">
                             <connections>
-                                <action selector="editPressed:" destination="has-i4-dJU" id="Jc9-NR-WMz"/>
+                                <action selector="editPressed:forEvent:" destination="has-i4-dJU" id="FyF-zg-czL"/>
                             </connections>
                         </barButtonItem>
                         <barButtonItem style="plain" systemItem="flexibleSpace" id="ORr-aX-Rku"/>
