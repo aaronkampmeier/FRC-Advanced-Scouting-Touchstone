@@ -334,42 +334,6 @@ class TeamListTableViewController: UITableViewController, TeamListDetailDataSour
         return .none
     }
     
-    override func tableView(_ tableView: UITableView, editActionsForRowAt indexPath: IndexPath) -> [UITableViewRowAction]? {
-        if #available(iOS 11.0, *) {
-            //Don't use these, instead use UISwipeActions
-            return nil
-        } else {
-            if let event = selectedEvent {
-                
-                guard let ranker = RealmController.realmController.getTeamRanker(forEvent: event) else {
-                    return nil
-                }
-                let team = self.currentTeamsToDisplay[indexPath.row]
-                
-                let markAsPickedAction = UITableViewRowAction(style: .normal, title: "Mark Picked") {rowAction, indexPath in
-                    
-                    RealmController.realmController.syncedRealm.beginWrite()
-                    ranker.setIsInPickList(!ranker.isInPickList(team: team), team: team)
-                    do {
-                        try RealmController.realmController.syncedRealm.commitWrite(withoutNotifying: [self.eventRankerObserverToken ?? NotificationToken()])
-                    } catch {
-                        CLSNSLogv("Error saving write of change to pick list: \(error)", getVaList([]))
-                        Crashlytics.sharedInstance().recordError(error)
-                    }
-                    
-                    //Reload that row
-                    tableView.reloadRows(at: [indexPath], with: UITableViewRowAnimation.right)
-                }
-                
-                markAsPickedAction.backgroundColor = ranker.isInPickList(team: team) ? .purple : .red
-                markAsPickedAction.title = ranker.isInPickList(team: team) ? "Mark As Picked" : "Unmark as Picked"
-                
-                return [markAsPickedAction]
-            }
-            return []
-        }
-    }
-    
     //For selecting which teams have been picked
     @available(iOS 11.0, *)
     override func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
@@ -481,7 +445,7 @@ class TeamListTableViewController: UITableViewController, TeamListDetailDataSour
     }
     
     // MARK: - Navigation
-
+    
     // In a storyboard-based application, you will often want to do a little preparation before navigation
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         super.prepare(for: segue, sender: sender)
