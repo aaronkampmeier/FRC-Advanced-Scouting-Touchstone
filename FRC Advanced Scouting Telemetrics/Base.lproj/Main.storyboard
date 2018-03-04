@@ -1692,58 +1692,6 @@
             </objects>
             <point key="canvasLocation" x="1874" y="-113"/>
         </scene>
-        <!--Pick List-->
-        <scene sceneID="dv2-aE-BW4">
-            <objects>
-                <tableViewController id="Klq-Xd-jly" customClass="TeamPickerTableViewController" customModule="FRC_Advanced_Scouting_Touchstone" customModuleProvider="target" sceneMemberID="viewController">
-                    <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="28" sectionFooterHeight="28" id="9Ud-Ko-kb8">
-                        <rect key="frame" x="0.0" y="0.0" width="300" height="300"/>
-                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                        <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                        <prototypes>
-                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="cell" textLabel="rxf-F1-lr6" style="IBUITableViewCellStyleDefault" id="b22-0z-Wjf">
-                                <rect key="frame" x="0.0" y="28" width="300" height="44"/>
-                                <autoresizingMask key="autoresizingMask"/>
-                                <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="b22-0z-Wjf" id="Nj3-fk-Bed">
-                                    <rect key="frame" x="0.0" y="0.0" width="300" height="43.5"/>
-                                    <autoresizingMask key="autoresizingMask"/>
-                                    <subviews>
-                                        <label opaque="NO" multipleTouchEnabled="YES" contentMode="left" text="Title" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="rxf-F1-lr6">
-                                            <rect key="frame" x="16" y="0.0" width="268" height="43.5"/>
-                                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                            <fontDescription key="fontDescription" type="system" pointSize="16"/>
-                                            <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                                            <nil key="highlightedColor"/>
-                                        </label>
-                                    </subviews>
-                                </tableViewCellContentView>
-                            </tableViewCell>
-                        </prototypes>
-                        <connections>
-                            <outlet property="dataSource" destination="Klq-Xd-jly" id="z7D-OB-iYn"/>
-                            <outlet property="delegate" destination="Klq-Xd-jly" id="wjc-UA-9GM"/>
-                        </connections>
-                    </tableView>
-                    <navigationItem key="navigationItem" title="Pick List" id="O5q-IC-5pt">
-                        <barButtonItem key="leftBarButtonItem" style="done" systemItem="done" id="kLA-hf-fh2">
-                            <connections>
-                                <segue destination="9nT-OE-T78" kind="unwind" unwindAction="returnToTeamList:" id="D5z-FQ-y6N"/>
-                            </connections>
-                        </barButtonItem>
-                        <barButtonItem key="rightBarButtonItem" title="Reset" id="e5c-p4-eul">
-                            <connections>
-                                <action selector="resetPressed:" destination="Klq-Xd-jly" id="zmJ-LV-TF3"/>
-                            </connections>
-                        </barButtonItem>
-                    </navigationItem>
-                    <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
-                    <size key="freeformSize" width="300" height="300"/>
-                </tableViewController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="pap-92-9Xn" userLabel="First Responder" sceneMemberID="firstResponder"/>
-                <exit id="9nT-OE-T78" userLabel="Exit" sceneMemberID="exit"/>
-            </objects>
-            <point key="canvasLocation" x="1130" y="1572"/>
-        </scene>
         <!--Select Team-->
         <scene sceneID="RaC-IB-gLU">
             <objects>
@@ -2558,7 +2506,7 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <prototypes>
-                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" shouldIndentWhileEditing="NO" reuseIdentifier="rankedCell" id="VD9-zW-9Kd" customClass="TeamListTableViewCell" customModule="FRC_Advanced_Scouting_Touchstone" customModuleProvider="target">
+                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" shouldIndentWhileEditing="NO" reuseIdentifier="rankedCell" id="VD9-zW-9Kd" customClass="TeamListTableViewCell" customModule="FRC_Advanced_Scouting_Touchstone" customModuleProvider="target">
                                 <rect key="frame" x="0.0" y="28" width="320" height="44"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="VD9-zW-9Kd" id="ECb-cw-os9">
@@ -2619,7 +2567,7 @@
                         <barButtonItem width="5" style="plain" systemItem="fixedSpace" id="78D-YA-Vjp"/>
                         <barButtonItem image="Edit" id="ija-jy-05E">
                             <connections>
-                                <action selector="editPressed:" destination="has-i4-dJU" id="Jc9-NR-WMz"/>
+                                <action selector="editPressed:forEvent:" destination="has-i4-dJU" id="FyF-zg-czL"/>
                             </connections>
                         </barButtonItem>
                         <barButtonItem style="plain" systemItem="flexibleSpace" id="ORr-aX-Rku"/>
@@ -2637,11 +2585,6 @@
                     </toolbarItems>
                     <navigationItem key="navigationItem" id="ObO-4k-BR5">
                         <nil key="title"/>
-                        <barButtonItem key="leftBarButtonItem" image="Team Picker" id="Oyu-8S-IST">
-                            <connections>
-                                <segue destination="JaS-6p-IKU" kind="presentation" modalPresentationStyle="pageSheet" id="kdt-UB-ylp"/>
-                            </connections>
-                        </barButtonItem>
                         <button key="titleView" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" id="bD3-zr-aia">
                             <rect key="frame" x="104" y="5.5" width="112" height="33"/>
                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
@@ -2807,26 +2750,6 @@
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Xiv-eq-Nwc" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="-1547" y="1338"/>
-        </scene>
-        <!--Navigation Controller-->
-        <scene sceneID="pqJ-rI-Igc">
-            <objects>
-                <navigationController automaticallyAdjustsScrollViewInsets="NO" modalPresentationStyle="pageSheet" id="JaS-6p-IKU" sceneMemberID="viewController">
-                    <toolbarItems/>
-                    <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
-                    <size key="freeformSize" width="200" height="200"/>
-                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="uzP-Lo-SVj">
-                        <rect key="frame" x="0.0" y="20" width="200" height="44"/>
-                        <autoresizingMask key="autoresizingMask"/>
-                    </navigationBar>
-                    <nil name="viewControllers"/>
-                    <connections>
-                        <segue destination="Klq-Xd-jly" kind="relationship" relationship="rootViewController" id="gfx-tG-0Tu"/>
-                    </connections>
-                </navigationController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="ugf-a5-rr6" userLabel="First Responder" sceneMemberID="firstResponder"/>
-            </objects>
-            <point key="canvasLocation" x="752" y="1233"/>
         </scene>
         <!--Syncing Conflict View Controller-->
         <scene sceneID="Nxc-yN-7J2">
@@ -3900,7 +3823,6 @@
         <image name="Settings-50" width="27" height="27"/>
         <image name="Sort" width="27" height="27"/>
         <image name="Stands Scouting" width="31" height="31"/>
-        <image name="Team Picker" width="27" height="27"/>
     </resources>
     <inferredMetricsTieBreakers>
         <segue reference="yoF-JC-lMK"/>

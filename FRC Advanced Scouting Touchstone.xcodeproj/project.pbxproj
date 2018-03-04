@@ -30,7 +30,6 @@
 		1FBB426D1C9A29FC0017E36C /* Statistics.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FBB426C1C9A29FC0017E36C /* Statistics.swift */; };
 		1FBC9E691CC2EE11005DB3F4 /* Fabric.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1FBC9E671CC2EE11005DB3F4 /* Fabric.framework */; };
 		1FBC9E6C1CC2F007005DB3F4 /* Crashlytics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1FBC9E6B1CC2F007005DB3F4 /* Crashlytics.framework */; };
-		1FBE627F1CAEE0FB001FDFB7 /* TeamPickerTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FBE627E1CAEE0FB001FDFB7 /* TeamPickerTableViewController.swift */; };
 		1FD0A09B1C95093600013A18 /* TeamListTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FD0A09A1C95093600013A18 /* TeamListTableViewCell.swift */; };
 		1FDC1BCE1CD69EBB00ABE327 /* TeamListSplitViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FDC1BCD1CD69EBB00ABE327 /* TeamListSplitViewController.swift */; };
 		1FDC1BD11CD69F5F00ABE327 /* TeamListTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FDC1BD01CD69F5F00ABE327 /* TeamListTableViewController.swift */; };
@@ -214,7 +213,6 @@
 		1FBB426C1C9A29FC0017E36C /* Statistics.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Statistics.swift; sourceTree = "<group>"; wrapsLines = 1; };
 		1FBC9E671CC2EE11005DB3F4 /* Fabric.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Fabric.framework; sourceTree = SOURCE_ROOT; };
 		1FBC9E6B1CC2F007005DB3F4 /* Crashlytics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Crashlytics.framework; sourceTree = SOURCE_ROOT; };
-		1FBE627E1CAEE0FB001FDFB7 /* TeamPickerTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TeamPickerTableViewController.swift; sourceTree = "<group>"; };
 		1FD0A09A1C95093600013A18 /* TeamListTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TeamListTableViewCell.swift; sourceTree = "<group>"; };
 		1FDC1BCD1CD69EBB00ABE327 /* TeamListSplitViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TeamListSplitViewController.swift; sourceTree = "<group>"; };
 		1FDC1BD01CD69F5F00ABE327 /* TeamListTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TeamListTableViewController.swift; sourceTree = "<group>"; };
@@ -338,7 +336,6 @@
 				1FA6A73F1CD3B4E800772C63 /* Data Syncing */,
 				1F4178BF1CD02E4200801D5B /* Team List Detail */,
 				9366C5AC20490AAD00A84C47 /* StatChartViewController.swift */,
-				1FBE627E1CAEE0FB001FDFB7 /* TeamPickerTableViewController.swift */,
 				1F4534551C7276DE004EDDB9 /* EventPickerViewController.swift */,
 				1F30CFC91C7E510100A4EFCA /* Admin Console */,
 				1F4534131C6FFC13004EDDB9 /* Stands Scouting */,
@@ -1038,7 +1035,6 @@
 				9353ADC21E57B09D00120F1A /* MatchListTableViewCell.swift in Sources */,
 				93633B23200DAAEF000EC83A /* ScoutingModels.swift in Sources */,
 				93610E3D1E42F8D400856BE2 /* PitScoutingViewController.swift in Sources */,
-				1FBE627F1CAEE0FB001FDFB7 /* TeamPickerTableViewController.swift in Sources */,
 				93483E8B20291AC400E9AC82 /* LoginViewController.swift in Sources */,
 				93C609281E67D0CC007A689D /* MatchOverviewMasterViewController.swift in Sources */,
 				93483E8020291AC400E9AC82 /* LoginFormValidation.swift in Sources */,
