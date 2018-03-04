@@ -220,14 +220,10 @@ class CloudEventImportManager {
                 let redScore = frcAlliances["red"]?.score
                 
                 //TBA represents unknown score values as -1 so if the score is -1, then put nil in for the score.
-                if blueScore == -1 {
-                    scoutedMatch.blueScore.value = nil
-                } else {
+                if blueScore != -1 {
                     scoutedMatch.blueScore.value = blueScore
                 }
-                if redScore == -1 {
-                    scoutedMatch.redScore.value = nil
-                } else {
+                if redScore != -1 {
                     scoutedMatch.redScore.value = redScore
                 }
                 
