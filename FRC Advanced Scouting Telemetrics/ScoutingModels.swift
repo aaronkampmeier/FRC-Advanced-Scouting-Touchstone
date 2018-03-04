@@ -8,6 +8,7 @@
 
 import Foundation
 import RealmSwift
+import Crashlytics
 
 @objcMembers class GeneralRanker: Object {
     dynamic var key = "General Ranker" //Is a singleton
@@ -23,6 +24,38 @@ import RealmSwift
     dynamic var key = "" //One for each event. Follows "ranker_(event code)"
     
     dynamic let rankedTeams = List<ScoutedTeam>()
+    
+    ///Teams that have been picked; the ones that are no longer in pick list
+    dynamic let pickedTeams = List<ScoutedTeam>()
+    
+    func isInPickList(team: Team) -> Bool {
+        return !pickedTeams.contains(team.scouted)
+    }
+    
+    ///Must be within write transaction
+    func setIsInPickList(_ isIn: Bool, team: Team) {
+        guard rankedTeams.contains(team.scouted) else {
+            CLSNSLogv("Trying to set team in pick list that is not even part of the event", getVaList([]))
+            return
+        }
+        
+        if isIn {
+            //Remove it from the picked teams
+            if let index = pickedTeams.index(of: team.scouted) {
+                pickedTeams.remove(at: index)
+            } else {
+                //Already not in
+            }
+        } else {
+            //Add it to the picked teams
+            guard !pickedTeams.contains(team.scouted) else {
+                //Already in the pick list so return
+                return
+            }
+            
+            pickedTeams.append(team.scouted)
+        }
+    }
     
     override static func primaryKey() -> String {
         return "key"
@@ -58,7 +91,13 @@ import RealmSwift
     dynamic var canBanana = false
     let driverXP = RealmOptional<Double>()
     dynamic var driveTrain: String?
-    dynamic var isInPickList = true
+    
+    ///DO  NOT USE, Deprecated
+    dynamic var isInPickList = true {
+        didSet {
+            assertionFailure()
+        }
+    }
     
     ///Game Based Values
     dynamic var scaleCapability: String?

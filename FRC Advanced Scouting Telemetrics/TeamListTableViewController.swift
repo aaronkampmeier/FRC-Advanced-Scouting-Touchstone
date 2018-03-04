@@ -242,6 +242,25 @@ class TeamListTableViewController: UITableViewController, TeamListDetailDataSour
         
         cell.rankLabel.text = "\(currentEventTeams.index(where: {$0 == team})! as Int + 1)"
         
+        //Show a red X over the rank label if they have been picked
+        cell.rankLabel.textColor = .black
+        if let event = selectedEvent {
+            if let eventRanker = realmController.getTeamRanker(forEvent: event) {
+                if eventRanker.isInPickList(team: team) {
+                    //Show indicator that it is still in pick list
+//                    cell.accessoryType = .none
+                    cell.accessoryView = nil
+                } else {
+                    //Show indicator that it is not in pick list
+//                    cell.accessoryType = .checkmark
+                    let crossImage = UIImageView(image: #imageLiteral(resourceName: "Cross"))
+                    crossImage.frame = CGRect(x: 0, y: 0, width: 20, height: 20)
+                    cell.accessoryView = crossImage
+                    
+                }
+            }
+        }
+        
         if let image = teamImages[team.key] {
             cell.frontImage.image = image
         } else {
@@ -273,17 +292,89 @@ class TeamListTableViewController: UITableViewController, TeamListDetailDataSour
     // Override to support conditional editing of the table view.
     override func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
         // Return false if you do not want the specified item to be editable.
-        return true
+        //Only allow editing in an event
+        if let _ = self.selectedEvent {
+            return true
+        } else {
+            return false
+        }
     }
     
     override func tableView(_ tableView: UITableView, editingStyleForRowAt indexPath: IndexPath) -> UITableViewCellEditingStyle {
         return .none
     }
+    
+    override func tableView(_ tableView: UITableView, editActionsForRowAt indexPath: IndexPath) -> [UITableViewRowAction]? {
+        if #available(iOS 11.0, *) {
+            //Don't use these, instead use UISwipeActions
+            return nil
+        } else {
+            if let event = selectedEvent {
+                
+                guard let ranker = RealmController.realmController.getTeamRanker(forEvent: event) else {
+                    return nil
+                }
+                let team = self.currentTeamsToDisplay[indexPath.row]
+                
+                let markAsPickedAction = UITableViewRowAction(style: .normal, title: "Mark Picked") {rowAction, indexPath in
+                    
+                    RealmController.realmController.genericWrite(onRealm: .Synced) {
+                        ranker.setIsInPickList(!ranker.isInPickList(team: team), team: team)
+                    }
+                    
+                    //Reload that row
+                    tableView.reloadRows(at: [indexPath], with: UITableViewRowAnimation.right)
+                }
+                
+                markAsPickedAction.backgroundColor = ranker.isInPickList(team: team) ? .purple : .red
+                markAsPickedAction.title = ranker.isInPickList(team: team) ? "Mark As Picked" : "Unmark as Picked"
+                
+                return [markAsPickedAction]
+            }
+            return []
+        }
+    }
+    
+    //For selecting which teams have been picked
+    @available(iOS 11.0, *)
+    override func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
+        
+        if let event = selectedEvent {
+            
+            guard let ranker = RealmController.realmController.getTeamRanker(forEvent: event) else {
+                return nil
+            }
+            let team = self.currentTeamsToDisplay[indexPath.row]
+            
+            let markAsPicked = UIContextualAction(style: .normal, title: "Mark Picked") {(contextAction: UIContextualAction, sourceView: UIView, completionHandler: (Bool) -> Void) in
+                
+                RealmController.realmController.genericWrite(onRealm: .Synced) {
+                    ranker.setIsInPickList(!ranker.isInPickList(team: team), team: team)
+                }
+                
+                completionHandler(true)
+                
+                //Reload that row
+                tableView.reloadRows(at: [indexPath], with: UITableViewRowAnimation.right)
+            }
+            
+            markAsPicked.backgroundColor = ranker.isInPickList(team: team) ? .purple : .red
+            markAsPicked.title = ranker.isInPickList(team: team) ? "Mark As Picked" : "Unmark as Picked"
+            
+            let swipeConfig = UISwipeActionsConfiguration(actions: [markAsPicked])
+            return swipeConfig
+        }
+        
+        return nil
+    }
+    
 
     // Override to support rearranging the table view.
     override func tableView(_ tableView: UITableView, moveRowAt fromIndexPath: IndexPath, to toIndexPath: IndexPath) {
         //Move the team in the array and in Core Data
-        //TODO: Move a team in the ranking when the user moves it
+        guard let _ = selectedEvent else {
+            return
+        }
         realmController.moveTeam(from: fromIndexPath.row, to: toIndexPath.row, inEvent: selectedEvent)
         
         let movedTeam = currentEventTeams[fromIndexPath.row]
@@ -294,7 +385,7 @@ class TeamListTableViewController: UITableViewController, TeamListDetailDataSour
     // Override to support conditional rearranging of the table view.
     override func tableView(_ tableView: UITableView, canMoveRowAt indexPath: IndexPath) -> Bool {
         // Return false if you do not want the item to be re-orderable.
-        return true
+        return selectedEvent != nil
     }
     
     override func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
@@ -305,27 +396,8 @@ class TeamListTableViewController: UITableViewController, TeamListDetailDataSour
         }
     }
     
+    //MARK: Editing
     //Function for setting the editing of the teams
-    @IBAction func editTeamsPressed(_ sender: UIBarButtonItem) {
-        
-        tableView.beginUpdates()
-        //When the edit button is pressed...
-        if self.isEditing {
-            //Stop editing
-            self.setEditing(false, animated: true)
-            //Change the label back
-//            editTeamsButton.title = "Edit Teams"
-            
-            tableView.reloadRows(at: tableView.indexPathsForVisibleRows!, with: .none)
-        } else {
-            self.setEditing(true, animated: true)
-//            editTeamsButton.title = "Finish Editing"
-            
-            tableView.reloadRows(at: tableView.indexPathsForVisibleRows!, with: .none)
-        }
-        tableView.endUpdates()
-    }
-    
     override func setEditing(_ editing: Bool, animated: Bool) {
         super.setEditing(editing, animated: animated)
         
@@ -345,7 +417,6 @@ class TeamListTableViewController: UITableViewController, TeamListDetailDataSour
             setEditing(true, animated: true)
         }
     }
-    
     
     // MARK: - Navigation
 
