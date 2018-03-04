@@ -11,8 +11,14 @@ import Crashlytics
 import AWSAuthUI
 import RealmSwift
 
+class EventSelectionTitleButton: UIButton {
+    override var intrinsicContentSize: CGSize {
+        return UILayoutFittingExpandedSize
+    }
+}
+
 class TeamListTableViewController: UITableViewController, TeamListDetailDataSource {
-    @IBOutlet weak var eventSelectionButton: UIButton!
+    @IBOutlet weak var eventSelectionButton: EventSelectionTitleButton!
     @IBOutlet weak var editButton: UIBarButtonItem!
     @IBOutlet weak var matchesButton: UIBarButtonItem!
     
@@ -119,6 +125,8 @@ class TeamListTableViewController: UITableViewController, TeamListDetailDataSour
         self.clearsSelectionOnViewWillAppear = false
         
         teamListSplitVC.teamListTableVC = self
+        
+        eventSelectionButton.widthAnchor.constraint(equalToConstant: CGFloat.greatestFiniteMagnitude - (navigationItem.leftBarButtonItem?.width)! - (navigationItem.rightBarButtonItem?.width)!)
         
         //Set up the searching capabilities and the search bar. At the time of coding, Storyboards do not support the new UISearchController, so this is done programatically.
         searchController = UISearchController(searchResultsController: nil)

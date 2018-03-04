@@ -2583,10 +2583,10 @@
                             </connections>
                         </barButtonItem>
                     </toolbarItems>
-                    <navigationItem key="navigationItem" id="ObO-4k-BR5">
+                    <navigationItem key="navigationItem" largeTitleDisplayMode="always" id="ObO-4k-BR5">
                         <nil key="title"/>
                         <barButtonItem key="leftBarButtonItem" image="Chart" id="uWw-oI-VvP"/>
-                        <button key="titleView" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" id="bD3-zr-aia">
+                        <button key="titleView" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" id="bD3-zr-aia" customClass="EventSelectionTitleButton" customModule="FRC_Advanced_Scouting_Touchstone" customModuleProvider="target">
                             <rect key="frame" x="104" y="5.5" width="112" height="33"/>
                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                             <fontDescription key="fontDescription" style="UICTFontTextStyleHeadline"/>
@@ -2608,7 +2608,7 @@
                     <size key="freeformSize" width="320" height="600"/>
                     <connections>
                         <outlet property="editButton" destination="ija-jy-05E" id="5Ah-N9-W0n"/>
-                        <outlet property="eventSelectionButton" destination="bD3-zr-aia" id="kFo-nF-Omf"/>
+                        <outlet property="eventSelectionButton" destination="bD3-zr-aia" id="zz7-uZ-Yf3"/>
                         <outlet property="matchesButton" destination="C4B-l4-9PZ" id="ZD0-2g-ldG"/>
                     </connections>
                 </tableViewController>
