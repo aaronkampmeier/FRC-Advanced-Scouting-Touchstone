@@ -2239,6 +2239,84 @@
             </objects>
             <point key="canvasLocation" x="2027" y="2106"/>
         </scene>
+        <!--Event Stat Graphing-->
+        <scene sceneID="Njh-OC-698">
+            <objects>
+                <viewController storyboardIdentifier="eventStatsGraph" id="Geo-k1-fcC" customClass="EventStatsGraphViewController" customModule="FRC_Advanced_Scouting_Touchstone" customModuleProvider="target" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="nvw-kl-GPL"/>
+                        <viewControllerLayoutGuide type="bottom" id="9GO-hr-cmH"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="qj2-pl-gt7">
+                        <rect key="frame" x="0.0" y="0.0" width="500" height="400"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                    </view>
+                    <navigationItem key="navigationItem" title="Event Stat Graphing" id="Hxu-Gx-VUu">
+                        <barButtonItem key="leftBarButtonItem" style="done" systemItem="done" id="lh1-85-tgw">
+                            <connections>
+                                <action selector="donePressed:" destination="Geo-k1-fcC" id="FL5-Fe-qZk"/>
+                            </connections>
+                        </barButtonItem>
+                        <barButtonItem key="rightBarButtonItem" title="Select Stats" id="fQ4-JN-UG2">
+                            <connections>
+                                <action selector="selectStatsPressed:" destination="Geo-k1-fcC" id="Lnc-j6-rUO"/>
+                            </connections>
+                        </barButtonItem>
+                    </navigationItem>
+                    <simulatedNavigationBarMetrics key="simulatedTopBarMetrics" prompted="NO"/>
+                    <size key="freeformSize" width="500" height="400"/>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="xcB-0M-Jm2" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="1458" y="1120"/>
+        </scene>
+        <!--All Stats-->
+        <scene sceneID="EDy-eh-NjS">
+            <objects>
+                <tableViewController storyboardIdentifier="selectStatsVC" id="hvy-Pf-6fF" customClass="SelectStatsTableViewController" customModule="FRC_Advanced_Scouting_Touchstone" customModuleProvider="target" sceneMemberID="viewController">
+                    <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" id="OSU-dV-g1D">
+                        <rect key="frame" x="0.0" y="0.0" width="400" height="400"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        <prototypes>
+                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="cell" textLabel="nqi-oX-qEQ" style="IBUITableViewCellStyleDefault" id="V0f-Zu-7RI">
+                                <rect key="frame" x="0.0" y="28" width="400" height="44"/>
+                                <autoresizingMask key="autoresizingMask"/>
+                                <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="V0f-Zu-7RI" id="KWV-mi-8gD">
+                                    <rect key="frame" x="0.0" y="0.0" width="400" height="43.5"/>
+                                    <autoresizingMask key="autoresizingMask"/>
+                                    <subviews>
+                                        <label opaque="NO" multipleTouchEnabled="YES" contentMode="left" insetsLayoutMarginsFromSafeArea="NO" text="Title" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="nqi-oX-qEQ">
+                                            <rect key="frame" x="20" y="0.0" width="360" height="43.5"/>
+                                            <autoresizingMask key="autoresizingMask"/>
+                                            <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                            <nil key="textColor"/>
+                                            <nil key="highlightedColor"/>
+                                        </label>
+                                    </subviews>
+                                </tableViewCellContentView>
+                            </tableViewCell>
+                        </prototypes>
+                        <connections>
+                            <outlet property="dataSource" destination="hvy-Pf-6fF" id="N4u-Xu-GIw"/>
+                            <outlet property="delegate" destination="hvy-Pf-6fF" id="Xcc-oo-TxO"/>
+                        </connections>
+                    </tableView>
+                    <navigationItem key="navigationItem" title="All Stats" prompt="Select Stats to Graph" id="jQt-4c-bhy">
+                        <barButtonItem key="leftBarButtonItem" style="done" systemItem="done" id="lja-Sb-s2H">
+                            <connections>
+                                <action selector="donePressed:" destination="hvy-Pf-6fF" id="llH-Hv-hLt"/>
+                            </connections>
+                        </barButtonItem>
+                    </navigationItem>
+                    <simulatedNavigationBarMetrics key="simulatedTopBarMetrics" prompted="NO"/>
+                    <size key="freeformSize" width="400" height="400"/>
+                </tableViewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="7FC-DM-LPZ" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="1774" y="880"/>
+        </scene>
         <!--Navigation Controller-->
         <scene sceneID="VaL-Ah-9Pk">
             <objects>
@@ -2585,7 +2663,11 @@
                     </toolbarItems>
                     <navigationItem key="navigationItem" largeTitleDisplayMode="always" id="ObO-4k-BR5">
                         <nil key="title"/>
-                        <barButtonItem key="leftBarButtonItem" image="Chart" id="uWw-oI-VvP"/>
+                        <barButtonItem key="leftBarButtonItem" enabled="NO" image="Chart" id="uWw-oI-VvP">
+                            <connections>
+                                <action selector="chartButtonPressed:" destination="has-i4-dJU" id="tTj-26-BID"/>
+                            </connections>
+                        </barButtonItem>
                         <button key="titleView" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" id="bD3-zr-aia" customClass="EventSelectionTitleButton" customModule="FRC_Advanced_Scouting_Touchstone" customModuleProvider="target">
                             <rect key="frame" x="104" y="5.5" width="112" height="33"/>
                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
@@ -2609,6 +2691,7 @@
                     <connections>
                         <outlet property="editButton" destination="ija-jy-05E" id="5Ah-N9-W0n"/>
                         <outlet property="eventSelectionButton" destination="bD3-zr-aia" id="zz7-uZ-Yf3"/>
+                        <outlet property="graphButton" destination="uWw-oI-VvP" id="mSD-A3-ohZ"/>
                         <outlet property="matchesButton" destination="C4B-l4-9PZ" id="ZD0-2g-ldG"/>
                     </connections>
                 </tableViewController>
@@ -3411,19 +3494,19 @@
                         <viewControllerLayoutGuide type="bottom" id="cZE-eS-nvD"/>
                     </layoutGuides>
                     <view key="view" contentMode="scaleToFill" id="XsV-IM-t14">
-                        <rect key="frame" x="0.0" y="0.0" width="1000" height="700"/>
+                        <rect key="frame" x="0.0" y="0.0" width="600" height="400"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                     </view>
                     <navigationItem key="navigationItem" title="Chart" id="lBW-Cb-koe">
-                        <barButtonItem key="leftBarButtonItem" systemItem="done" id="1nc-yN-Ijy">
+                        <barButtonItem key="leftBarButtonItem" style="done" systemItem="done" id="1nc-yN-Ijy">
                             <connections>
                                 <action selector="donePressed:" destination="j5E-KD-Zhp" id="a89-J3-fR6"/>
                             </connections>
                         </barButtonItem>
                     </navigationItem>
                     <simulatedNavigationBarMetrics key="simulatedTopBarMetrics" prompted="NO"/>
-                    <size key="freeformSize" width="1000" height="700"/>
+                    <size key="freeformSize" width="600" height="400"/>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="sYI-yv-P7c" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>

@@ -18,6 +18,7 @@ class EventSelectionTitleButton: UIButton {
 }
 
 class TeamListTableViewController: UITableViewController, TeamListDetailDataSource {
+    @IBOutlet weak var graphButton: UIBarButtonItem!
     @IBOutlet weak var eventSelectionButton: EventSelectionTitleButton!
     @IBOutlet weak var editButton: UIBarButtonItem!
     @IBOutlet weak var matchesButton: UIBarButtonItem!
@@ -87,10 +88,12 @@ class TeamListTableViewController: UITableViewController, TeamListDetailDataSour
                 eventSelectionButton.setTitle(event.name, for: UIControlState())
                 
                 matchesButton.isEnabled = true
+                graphButton.isEnabled = true
             } else {
                 eventSelectionButton.setTitle("All Teams", for: UIControlState())
                 
                 matchesButton.isEnabled = false
+                graphButton.isEnabled = false
             }
             
             reloadEventRankerObserver()
@@ -544,6 +547,19 @@ class TeamListTableViewController: UITableViewController, TeamListDetailDataSour
         present(matchesSplitVC, animated: true, completion: nil)
         
         Answers.logCustomEvent(withName: "Opened Matches Overview", customAttributes: nil)
+    }
+    
+    @IBAction func chartButtonPressed(_ sender: UIBarButtonItem) {
+        if let event = selectedEvent {
+            let eventStatGraphVC = storyboard?.instantiateViewController(withIdentifier: "eventStatsGraph") as! EventStatsGraphViewController
+            let navVC = UINavigationController(rootViewController: eventStatGraphVC)
+            
+            navVC.modalPresentationStyle = .fullScreen
+            
+            eventStatGraphVC.setUp(forEvent: event)
+            
+            present(navVC, animated: true, completion: nil)
+        }
     }
     
     @IBAction func returnToTeamList(_ segue: UIStoryboardSegue) {

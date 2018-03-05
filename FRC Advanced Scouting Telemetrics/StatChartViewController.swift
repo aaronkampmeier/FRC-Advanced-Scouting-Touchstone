@@ -43,8 +43,10 @@ class StatChartViewController: UIViewController {
         barChart.xAxis.drawGridLinesEnabled = false
         barChart.xAxis.granularity = 1
         barChart.xAxis.labelPosition = .bottom
+        barChart.leftAxis.gridLineDashLengths = [4]
         barChart.leftAxis.axisMinimum = 0
         barChart.leftAxis.valueFormatter = self
+        barChart.leftAxis.drawAxisLineEnabled = false
         
         barChart.legend.enabled = false
         barChart.doubleTapToZoomEnabled = false
@@ -61,12 +63,12 @@ class StatChartViewController: UIViewController {
             barChart.frame.origin.x = view.safeAreaInsets.left
             barChart.frame.origin.y = view.safeAreaInsets.top
             barChart.frame.size.width = view.bounds.width - view.safeAreaInsets.left - view.safeAreaInsets.right
-            barChart.frame.size.height = view.bounds.height - view.safeAreaInsets.top - view.safeAreaInsets.bottom
+            barChart.frame.size.height = view.bounds.height - view.safeAreaInsets.top - view.safeAreaInsets.bottom - 5
         } else {
             barChart.frame.origin.x = view.frame.origin.x
             barChart.frame.origin.y = view.frame.origin.y
             barChart.frame.size.width = view.bounds.width
-            barChart.frame.size.height = view.bounds.height
+            barChart.frame.size.height = view.bounds.height - 5
         }
     }
     
