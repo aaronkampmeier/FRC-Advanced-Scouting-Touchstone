@@ -184,6 +184,9 @@ class TeamListTableViewController: UITableViewController, TeamListDetailDataSour
             case .update(_, let deletions, let insertions, _):
                 if insertions.count > 0 || deletions.count > 0 {
                     DispatchQueue.main.async {
+                        if deletions.count > 0 {
+                            self?.selectedEvent = nil
+                        }
                         self?.currentEventTeams = RealmController.realmController.teamRanking(self?.selectedEvent)
                     }
                 }
