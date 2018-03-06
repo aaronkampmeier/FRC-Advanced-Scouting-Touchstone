@@ -469,31 +469,32 @@ extension TeamEventPerformance {
 
 }
 
-///Evaluates OPR using YCMatrix and the algorithm published by Ether located here: https://www.chiefdelphi.com/forums/showpost.php?p=1119150&postcount=36
 private let matrixAReuseKey = NSString(string: "CCWMAndOPRMatrixA")
-private let oprCache = NSCache<Event, Matrix>()
+///Evaluates OPR and stores it in ComputedStats using YCMatrix and the algorithm published by Ether located here: https://www.chiefdelphi.com/forums/showpost.php?p=1119150&postcount=36
 private func evaluateOPR(forTeamPerformance teamPerformance: TeamEventPerformance) -> Double? {
-    let eventPerformances = suitableEventPerformances(forEvent: teamPerformance.event!)
-    let numOfTeams = eventPerformances.count
-    
-    if numOfTeams < 3 {
-        return nil
-    }
-    
-    //Now also check that all the matches have scores
-    for match in teamPerformance.event!.matches {
-        if match.scouted.redScore.value == nil || match.scouted.redScore.value == nil {
+    //Check if it has been computed before
+    if let computedStatValue = teamPerformance.team?.scouted.computedStats(forEvent: teamPerformance.event!)?.opr.value {
+        return computedStatValue
+    } else { //Else compute it
+        
+        let eventPerformances = suitableEventPerformances(forEvent: teamPerformance.event!)
+        let numOfTeams = eventPerformances.count
+        
+        if !eventPerformances.contains(teamPerformance) {
+            //The team performance is not a suitable teamEventPerf
             return nil
         }
-    }
-    
-    if let cachedOPR = oprCache.object(forKey: teamPerformance.event!) {
-        if let index = eventPerformances.index(of: teamPerformance) {
-            return (cachedOPR.i(Int32(index), j: 0))
-        } else {
+        
+        if numOfTeams < 3 {
             return nil
         }
-    } else {
+        
+        //Now also check that all the matches have scores
+        for match in teamPerformance.event!.matches {
+            if match.scouted.redScore.value == nil || match.scouted.redScore.value == nil {
+                return nil
+            }
+        }
         
         let matrixA = createMatrixA(forEventPerformances: eventPerformances, withReuseKey: matrixAReuseKey)
         
@@ -510,8 +511,14 @@ private func evaluateOPR(forTeamPerformance teamPerformance: TeamEventPerformanc
         //TODO: Decide best way to solve opr
         let oprMatrix = matrixA.solve(matrixB!)
         
-        //Cache it because these calculations are expensive
-        oprCache.setObject(oprMatrix!, forKey: teamPerformance.event!)
+        //Store the values in a computed stats for performance's sake
+        RealmController.realmController.genericWrite(onRealm: .Synced) {
+            for (index, eventPerformance) in eventPerformances.enumerated() {
+                let computedStats = eventPerformance.team?.scouted.computedStats(forEvent: eventPerformance.event!)
+                
+                computedStats?.opr.value = oprMatrix?.i(Int32(index), j: 0)
+            }
+        }
         
         if let index = eventPerformances.index(of: teamPerformance) {
             return (oprMatrix?.i(Int32(index), j: 0))!
@@ -521,29 +528,28 @@ private func evaluateOPR(forTeamPerformance teamPerformance: TeamEventPerformanc
     }
 }
 
-private let ccwmCache = NSCache<Event, Matrix>()
 private func evaluateCCWM(forTeamPerformance teamPerformance: TeamEventPerformance) -> Double? {
-    let eventPerformances = suitableEventPerformances(forEvent: teamPerformance.event!)
-    let numOfTeams = eventPerformances.count
-    
-    if numOfTeams < 3 {
-        return nil
-    }
-    
-    //Now also check that all the matches have scores
-    for match in teamPerformance.event!.matches {
-        if match.scouted.redScore.value == nil || match.scouted.blueScore.value == nil {
-            return nil
-        }
-    }
-    
-    if let cachedCCWM = ccwmCache.object(forKey: teamPerformance.event!) {
-        if let index = eventPerformances.index(of: teamPerformance) {
-            return (cachedCCWM.i(Int32(index), j: 0))
-        } else {
-            return nil
-        }
+    if let computedStatValue = teamPerformance.team?.scouted.computedStats(forEvent: teamPerformance.event!)?.ccwm.value {
+        return computedStatValue
     } else {
+        let eventPerformances = suitableEventPerformances(forEvent: teamPerformance.event!)
+        let numOfTeams = eventPerformances.count
+        
+        if !eventPerformances.contains(teamPerformance) {
+            return nil
+        }
+        
+        if numOfTeams < 3 {
+            return nil
+        }
+        
+        //Now also check that all the matches have scores
+        for match in teamPerformance.event!.matches {
+            if match.scouted.redScore.value == nil || match.scouted.blueScore.value == nil {
+                return nil
+            }
+        }
+        
         let matrixA = createMatrixA(forEventPerformances: eventPerformances, withReuseKey: matrixAReuseKey)
         
         //Matrix B for CCWM is the same as DPR's Matrix B except for the values are your alliance's scores minus the opposing alliance's scores (the winning margin)
@@ -559,7 +565,14 @@ private func evaluateCCWM(forTeamPerformance teamPerformance: TeamEventPerforman
         
         let ccwmMatrix = matrixA.solve(matrixB)
         
-        ccwmCache.setObject(ccwmMatrix!, forKey: teamPerformance.event!)
+        //Store the values in a computed stats for performance's sake
+        RealmController.realmController.genericWrite(onRealm: .Synced) {
+            for (index, eventPerformance) in eventPerformances.enumerated() {
+                let computedStats = eventPerformance.team?.scouted.computedStats(forEvent: eventPerformance.event!)
+                
+                computedStats?.ccwm.value = ccwmMatrix?.i(Int32(index), j: 0)
+            }
+        }
         
         if let index = eventPerformances.index(of: teamPerformance) {
             return (ccwmMatrix?.i(Int32(index), j: 0))!
@@ -573,16 +586,19 @@ private func evaluateCCWM(forTeamPerformance teamPerformance: TeamEventPerforman
 private func suitableEventPerformances(forEvent event: Event) -> [TeamEventPerformance] {
     let allEventPerformances = event.teamEventPerformances
     
+    //TODO: Get back to this
+//    return Array(allEventPerformances)
+    
     let eventPerformances = allEventPerformances.filter() {teamEventPerformance in
         //Check to see the number of match performances that have been scouted
-        
+
         if (teamEventPerformance.matchPerformances.count) == 0 {
             return false
         } else {
             return true
         }
     }
-    
+
     return Array(eventPerformances)
 }
 

@@ -285,11 +285,32 @@ class CloudEventImportManager {
                 matchObjects.append(match)
             }
             
-            finalize()
+            cloudConnection.oprs(withEventKey: frcEvent.key, withCompletionHandler: setCalculatedStats)
         } else {
             //TODO: Send an error saying the match data isn't up yet and to check back later
             throwError(error: .ErrorLoadingMatches)
         }
+    }
+    
+    fileprivate func setCalculatedStats(fromOPRs oprs: FRCOPRs?) {
+        //This is not a required thing to have, if it fails then it's okay and we will still finalize
+        if let oprs = oprs {
+            //Go through all the teams in this event
+            let teams = realmController.teamRanking(eventObject!)
+            
+            for team in teams {
+                //Get the computed stats
+                if let computedStats = team.scouted.computedStats(forEvent: eventObject!) {
+                    Answers.logCustomEvent(withName: "Loaded OPRs from TBA", customAttributes: nil)
+                    computedStats.opr.value = oprs.oprs[team.key]
+                    computedStats.dpr.value = oprs.dprs[team.key]
+                    computedStats.ccwm.value = oprs.ccwms[team.key]
+                    computedStats.areFromTBA = true
+                }
+            }
+        }
+        
+        finalize()
     }
     
     private func throwError(error: ImportError) {

@@ -59,7 +59,7 @@ class RealmController {
         var scoutedRealmConfig = Realm.Configuration(syncConfiguration: scoutedSyncConfig)
         
         //Set the object types to be used in the Synced Realm to keep it separate from the other realm
-        scoutedRealmConfig.objectTypes = [GeneralRanker.self, EventRanker.self, ScoutedTeam.self, ScoutedMatch.self, ScoutedMatchPerformance.self, TimeMarker.self]
+        scoutedRealmConfig.objectTypes = [GeneralRanker.self, EventRanker.self, ScoutedTeam.self, ScoutedMatch.self, ScoutedMatchPerformance.self, TimeMarker.self, ComputedStats.self]
         
         //Now for the general realm
         let generalStructureRealmURL = URL(string: "realms://\(rosServerAddress)/~/general_structure")!

@@ -61,6 +61,18 @@ struct FRCEvent: Codable {
     
 }
 
+struct FRCOPRs: Codable {
+    let oprs: [String:Double]
+    let dprs: [String:Double]
+    let ccwms: [String:Double]
+    
+    private enum CodingKeys: String, CodingKey {
+        case oprs
+        case dprs
+        case ccwms
+    }
+}
+
 struct FRCTeam: Codable {
     
     let website: String?

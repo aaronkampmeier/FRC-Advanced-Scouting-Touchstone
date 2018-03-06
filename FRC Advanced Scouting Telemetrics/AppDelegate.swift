@@ -32,7 +32,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             displayLogin()
         }
         
-        
         Crashlytics.sharedInstance().setUserIdentifier(UIDevice.current.identifierForVendor?.uuidString ?? "Unknown")
         
         return AWSMobileClient.sharedInstance().interceptApplication(application, didFinishLaunchingWithOptions: launchOptions)

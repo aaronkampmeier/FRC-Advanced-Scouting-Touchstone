@@ -23,10 +23,12 @@ import Crashlytics
 @objcMembers class EventRanker: Object {
     dynamic var key = "" //One for each event. Follows "ranker_(event code)"
     
-    dynamic let rankedTeams = List<ScoutedTeam>()
+    let rankedTeams = List<ScoutedTeam>()
     
     ///Teams that have been picked; the ones that are no longer in pick list
-    dynamic let pickedTeams = List<ScoutedTeam>()
+    let pickedTeams = List<ScoutedTeam>()
+    
+    let computedStats = List<ComputedStats>()
     
     func isInPickList(team: Team) -> Bool {
         return !pickedTeams.contains(team.scouted)
@@ -59,6 +61,32 @@ import Crashlytics
     
     override static func primaryKey() -> String {
         return "key"
+    }
+}
+
+@objcMembers class ComputedStats: Object {
+    dynamic var scoutedTeam: ScoutedTeam?
+    dynamic var eventRanker: EventRanker?
+    
+    //"computedStats_\(ranker.key)_\(self.key)"
+    dynamic var key = ""
+    
+    override static func primaryKey() -> String {
+        return "key"
+    }
+    
+    let opr = RealmOptional<Double>()
+    let dpr = RealmOptional<Double>()
+    let ccwm = RealmOptional<Double>()
+    
+    dynamic var areFromTBA = false
+    
+    ///Must be called from write transaction
+    func invalidateValues() {
+        opr.value = nil
+        dpr.value = nil
+        ccwm.value = nil
+        self.areFromTBA = false
     }
 }
 
@@ -114,6 +142,34 @@ import Crashlytics
     
     override static func ignoredProperties() -> [String] {
         return ["cache"]
+    }
+    
+    func computedStats(forEvent event: Event) -> ComputedStats? {
+        if let ranker = RealmController.realmController.getTeamRanker(forEvent: event) {
+            //Find the computed stats that has this team and this ranker
+            let proposedKey = "computedStats_\(ranker.key)_\(self.key)"
+            
+            if let computedStats = RealmController.realmController.syncedRealm.object(ofType: ComputedStats.self, forPrimaryKey: proposedKey) {
+                return computedStats
+            } else {
+                //Create one and return it
+                CLSNSLogv("Creating new computed stats object", getVaList([]))
+                let computedStats = ComputedStats()
+                computedStats.key = proposedKey
+                
+                computedStats.scoutedTeam = self
+                computedStats.eventRanker = ranker
+                
+                RealmController.realmController.genericWrite(onRealm: .Synced) {
+                    RealmController.realmController.syncedRealm.add(computedStats)
+                }
+                
+                return computedStats
+            }
+        } else {
+            Crashlytics.sharedInstance().recordCustomExceptionName("No Event Ranker", reason: "No ranker for event when trying to get Computed Stats", frameArray: [])
+            return nil
+        }
     }
 }
 

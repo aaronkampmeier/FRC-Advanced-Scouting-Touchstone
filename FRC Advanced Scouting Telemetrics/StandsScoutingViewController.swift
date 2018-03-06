@@ -111,11 +111,13 @@ class StandsScoutingViewController: UIViewController {
 		}
 	}
 	func getFinalScore(_ action: UIAlertAction) {
+        var hasDifferentScores = false
 		for textField in finalScorePrompt.textFields! {
 			switch textField {
 			case finalScorePrompt.textFields![0]:
 				//Red Final Score
                 if let intValue = Int(textField.text ?? "") {
+                    hasDifferentScores = ssDataManager?.scoutedMatch.scouted.redScore.value != intValue
                     ssDataManager?.scoutedMatch.scouted.redScore.value = intValue
                 }
 			case finalScorePrompt.textFields![1]:
@@ -126,6 +128,7 @@ class StandsScoutingViewController: UIViewController {
 			case finalScorePrompt.textFields![2]:
 				//Blue Final Score
                 if let intValue = Int(textField.text ?? "") {
+                    hasDifferentScores = ssDataManager?.scoutedMatch.scouted.blueScore.value != intValue
                     ssDataManager?.scoutedMatch.scouted.blueScore.value = intValue
                 }
 			case finalScorePrompt.textFields![3]:
@@ -137,6 +140,17 @@ class StandsScoutingViewController: UIViewController {
 				break
 			}
 		}
+        
+        if hasDifferentScores {
+            //Get all the computed stats of this event and invalidate them
+            let computedStats = RealmController.realmController.syncedRealm.objects(ComputedStats.self).filter {
+                $0.eventRanker == RealmController.realmController.getTeamRanker(forEvent: self.teamEventPerformance!.event!)
+            }
+            
+            for computedStat in computedStats {
+                computedStat.invalidateValues()
+            }
+        }
 	}
 	
     //Child view controllers

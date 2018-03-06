@@ -163,12 +163,14 @@ class TeamListTableViewController: UITableViewController, TeamListDetailDataSour
             }
         }
         
-        //Track if an event was added or delted (redundant most of the time with the following team observer except for when an event doesn't have any teams)
+        //Track if an event was added or deleted (redundant most of the time with the following team observer except for when an event doesn't have any teams)
         eventsObserverToken = realmController.generalRealm.objects(Event.self).observe {[weak self] eventsChanges in
             switch eventsChanges {
             case .update(_, let deletions,_,_):
                 if deletions.count > 0 {
-                    self?.selectedEvent = nil
+                    DispatchQueue.main.async {
+                        self?.selectedEvent = nil
+                    }
                 }
             default:
                 break
@@ -212,11 +214,13 @@ class TeamListTableViewController: UITableViewController, TeamListDetailDataSour
                 self.eventRankerObserverToken = eventRanker.observe {[weak self] objectChange in
                     switch objectChange {
                     case .change(let changes):
-                        for change in changes {
-                            if change.name == "pickedTeams" {
-                                //Reload all visible rows
-                                if let visibleRows = self?.tableView.indexPathsForVisibleRows {
-                                    self?.tableView.reloadRows(at: visibleRows, with: UITableViewRowAnimation.none)
+                        DispatchQueue.main.async {
+                            for change in changes {
+                                if change.name == "pickedTeams" {
+                                    //Reload all visible rows
+                                    if let visibleRows = self?.tableView.indexPathsForVisibleRows {
+                                        self?.tableView.reloadRows(at: visibleRows, with: UITableViewRowAnimation.none)
+                                    }
                                 }
                             }
                         }
