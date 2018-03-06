@@ -146,6 +146,10 @@ class TeamListTableViewController: UITableViewController, TeamListDetailDataSour
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         
+        if selectedEvent?.isInvalidated ?? false {
+            selectedEvent = nil
+        }
+        
         currentEventTeams = realmController.teamRanking(selectedEvent)
         if isSearching {
             //Upon returning to a search we won't update the teams and re-read from the model like normally. We will just use the original event teams for simplicity's sake.

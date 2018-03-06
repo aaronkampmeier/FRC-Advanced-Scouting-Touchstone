@@ -255,8 +255,10 @@ class StandsScoutingViewController: UIViewController {
 	}
 	
 	func close(andSave shouldSave: Bool) {
-        //Wait 3 seconds for all the climb data to be in
-        DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + 2.1) {
+        //Wait 2 seconds for all the climb data to be in
+        self.view.isUserInteractionEnabled = false
+        DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + 2) {
+            self.view.isUserInteractionEnabled = true
             if shouldSave {
                 self.ssDataManager?.save()
             } else {
