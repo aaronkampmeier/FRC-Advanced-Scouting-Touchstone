@@ -173,6 +173,8 @@ class EventStatsGraphViewController: UIViewController {
             barChart.leftAxis.resetCustomAxisMin()
         }
         
+        barChart.animate(xAxisDuration: 0.5, yAxisDuration: 0.7, easingOption: .easeInOutQuart)
+        
         barChart.data = barChartData
         
         if let key = self.teamEventPerformances.first?.event?.key {

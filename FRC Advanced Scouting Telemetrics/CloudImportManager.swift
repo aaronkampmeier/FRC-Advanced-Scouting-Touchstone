@@ -312,13 +312,15 @@ class CloudEventImportManager {
             for team in teams {
                 //Get the computed stats
                 if let computedStats = team.scouted.computedStats(forEvent: eventObject!) {
-                    Answers.logCustomEvent(withName: "Loaded OPRs from TBA", customAttributes: nil)
+                    
                     computedStats.opr.value = oprs.oprs[team.key]
                     computedStats.dpr.value = oprs.dprs[team.key]
                     computedStats.ccwm.value = oprs.ccwms[team.key]
                     computedStats.areFromTBA = true
                 }
             }
+            
+            Answers.logCustomEvent(withName: "Loaded OPRs from TBA", customAttributes: nil)
         }
         
         finalize()

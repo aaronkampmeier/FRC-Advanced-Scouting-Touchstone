@@ -623,6 +623,8 @@ extension TeamListTableViewController: UISearchResultsUpdating, UISearchControll
     func updateSearchResults(for searchController: UISearchController) {
         if isSearching {
             if let searchText = searchController.searchBar.text {
+                Answers.logSearch(withQuery: searchText, customAttributes: nil)
+                
                 //For the new realm database
                 var universalPredicates: [NSPredicate] = []
                 universalPredicates.append(NSPredicate(format: "location CONTAINS[cd] %@", argumentArray: [searchText]))
