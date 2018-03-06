@@ -22,6 +22,8 @@ class CloudEventRemovalManager {
     }
     
     func remove() {
+        realmController.generalRealm.beginWrite()
+        realmController.syncedRealm.beginWrite()
         CLSNSLogv("Beginning removal of event: %@", getVaList([eventToRemove.key]))
         
         //Start by going through the teams and finding the ones that will need to be removed. A team will be removed if the event being removed is the only event it is a part of.
@@ -36,10 +38,8 @@ class CloudEventRemovalManager {
         realmController.delete(objects: teamsToRemove)
         
         //Won't actually remove the local team. It will stay in the database in case the user adds it back and wants to access their old data. The local team is simply removed from the local team ranking so it doesn't show up in the team list.
-        realmController.genericWrite(onRealm: .Synced) {
-            for scoutedTeam in scoutedTeamsToRemove {
-                scoutedTeam.ranker?.rankedTeams.remove(at: (scoutedTeam.ranker?.rankedTeams.index(of: scoutedTeam))!)
-            }
+        for scoutedTeam in scoutedTeamsToRemove {
+            scoutedTeam.ranker?.rankedTeams.remove(at: (scoutedTeam.ranker?.rankedTeams.index(of: scoutedTeam))!)
         }
         
         let matchesToDelete = Array(eventToRemove.matches)
@@ -53,9 +53,20 @@ class CloudEventRemovalManager {
         realmController.delete(objects: teamEventPerformances)
         
         realmController.delete(object: eventToRemove)
-        CLSNSLogv("Finished removal of event", getVaList([]))
-        NotificationCenter.default.post(Notification(name: Notification.Name(rawValue: "UpdatedTeams")))
         
-        completionHandler(true)
+        do {
+            try realmController.syncedRealm.commitWrite()
+            try realmController.generalRealm.commitWrite()
+            
+            CLSNSLogv("Finished removal of event", getVaList([]))
+            NotificationCenter.default.post(Notification(name: Notification.Name(rawValue: "UpdatedTeams")))
+            
+            completionHandler(true)
+        } catch {
+            CLSNSLogv("Error removing event: \(error)", getVaList([]))
+            Crashlytics.sharedInstance().recordError(error)
+            
+            completionHandler(false)
+        }
     }
 }

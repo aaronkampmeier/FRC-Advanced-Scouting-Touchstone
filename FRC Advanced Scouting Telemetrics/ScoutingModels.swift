@@ -153,7 +153,6 @@ import Crashlytics
                 return computedStats
             } else {
                 //Create one and return it
-                CLSNSLogv("Creating new computed stats object", getVaList([]))
                 let computedStats = ComputedStats()
                 computedStats.key = proposedKey
                 

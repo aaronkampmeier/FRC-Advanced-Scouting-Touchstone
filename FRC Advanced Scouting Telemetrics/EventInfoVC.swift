@@ -97,7 +97,6 @@ class EventInfoVC: UIViewController, UITableViewDataSource {
     func finishedImport(didComplete: Bool, withError error: CloudEventImportManager.ImportError?) {
         //Reenable user interaction
         self.view.isUserInteractionEnabled = true
-        self.view.isUserInteractionEnabled = true
         
         if didComplete {
             CLSNSLogv("Did complete event import", getVaList([]))

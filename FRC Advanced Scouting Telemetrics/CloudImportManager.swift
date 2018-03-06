@@ -157,6 +157,17 @@ class CloudEventImportManager {
                 teamObjects.append(team)
             }
             
+            //Now check the event ranker to make sure it doesn't have any teams not part of this event
+            for scoutedTeam in scoutedEventRanker!.rankedTeams {
+                //Check that that team is in frcTeams
+                if !frcTeams.contains(where: {frcTeam in
+                    return frcTeam.key == scoutedTeam.key
+                }) {
+                    //Remove it from the ranker
+                    scoutedEventRanker?.rankedTeams.remove(at: scoutedEventRanker!.rankedTeams.index(of: scoutedTeam)!)
+                }
+            }
+            
             //Now get the matches
             cloudConnection.matches(forEventKey: frcEvent.key, withCompletionHandler: importMatches)
         } else {

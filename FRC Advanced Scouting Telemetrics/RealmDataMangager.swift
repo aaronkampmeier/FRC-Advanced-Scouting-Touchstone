@@ -105,28 +105,29 @@ class RealmController {
     }
     
     func delete(object: Object) {
-        do {
-            try object.realm?.write {
-                object.realm?.delete(object)
-            }
-        } catch {
-            CLSNSLogv("Unable to delete object", getVaList([]))
-            Crashlytics.sharedInstance().recordError(error)
-        }
+        delete(objects: [object])
     }
     
     func delete<T: Object>(objects: [T]) {
         let realm = objects.first?.realm
-        realm?.beginWrite()
+        
+        var didStartWrite = false
+        if !(realm?.isInWriteTransaction ?? false) {
+            didStartWrite = true
+            realm?.beginWrite()
+        }
+        
         for object in objects {
             realm?.delete(object)
         }
         
-        do {
-            try realm?.commitWrite()
-        } catch {
-            CLSNSLogv("Unable to delete objects", getVaList([]))
-            Crashlytics.sharedInstance().recordError(error)
+        if didStartWrite {
+            do {
+                try realm?.commitWrite()
+            } catch {
+                CLSNSLogv("Unable to delete objects", getVaList([]))
+                Crashlytics.sharedInstance().recordError(error)
+            }
         }
     }
     
@@ -230,13 +231,19 @@ class RealmController {
         }
     }
     @discardableResult func genericWrite(onRealm realm: RealmType, blockToWrite: (() throws ->Void)) -> Bool {
-        do {
-            try realm.realm.write(blockToWrite)
+        if realm.realm.isInWriteTransaction {
+            //If it's already in a write transaction just execute it
+            try? blockToWrite()
             return true
-        } catch {
-            CLSNSLogv("Failed to write to realm with error: \(error)", getVaList([]))
-            Crashlytics.sharedInstance().recordError(error)
-            return false
+        } else {
+            do {
+                try realm.realm.write(blockToWrite)
+                return true
+            } catch {
+                CLSNSLogv("Failed to write to realm with error: \(error)", getVaList([]))
+                Crashlytics.sharedInstance().recordError(error)
+                return false
+            }
         }
     }
 }
