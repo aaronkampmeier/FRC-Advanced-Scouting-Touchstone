@@ -176,9 +176,7 @@ class CloudData {
                         let oprs = try self.jsonDecoder.decode(FRCOPRs.self, from: responseData)
                         completionHandler(oprs)
                     } catch {
-                        CLSNSLogv("Failed to decode json data with error: \(error)", getVaList([]))
                         completionHandler(nil)
-                        Crashlytics.sharedInstance().recordError(error)
                     }
                 case .failure(let error):
                     CLSNSLogv("Failed to retrieve oprs from cloud with error: \(error)", getVaList([]))
