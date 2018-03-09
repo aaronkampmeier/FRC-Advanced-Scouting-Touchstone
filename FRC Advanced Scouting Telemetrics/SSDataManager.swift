@@ -80,7 +80,7 @@ class SSDataManager {
             try RealmController.realmController.syncedRealm.commitWrite()
             CLSNSLogv("Saved Stands Scouting Data", getVaList([]))
         } catch {
-            CLSNSLogv("Error commiting write of stands scouting data", getVaList([]))
+            CLSNSLogv("Error commiting write of stands scouting data: \(error)", getVaList([]))
             Crashlytics.sharedInstance().recordError(error)
         }
     }

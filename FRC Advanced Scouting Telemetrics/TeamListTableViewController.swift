@@ -143,6 +143,7 @@ class TeamListTableViewController: UITableViewController, TeamListDetailDataSour
         tableView.allowsSelectionDuringEditing = true
     }
     
+    //For some reason this is called when moving the app to the background during stands scouting, not sure if this a beta issue or what but it does cause crash
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         

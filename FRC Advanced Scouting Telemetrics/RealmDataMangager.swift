@@ -74,6 +74,7 @@ class RealmController {
             self.syncedRealm = try Realm(configuration: scoutedRealmConfig)
             NotificationCenter.default.post(name: DidLogIntoSyncServerNotification, object: self)
             CLSNSLogv("Did log into and open realms", getVaList([]))
+            Answers.logLogin(withMethod: "ROS", success: true, customAttributes: nil)
             
             //Now perform sanity checks quickly
             syncedRealm.beginWrite()
@@ -101,6 +102,7 @@ class RealmController {
         } catch {
             CLSNSLogv("Error opening realms: \(error)", getVaList([]))
             Crashlytics.sharedInstance().recordError(error)
+            Answers.logLogin(withMethod: "ROS", success: false, customAttributes: nil)
         }
     }
     
@@ -168,8 +170,11 @@ class RealmController {
     }
     
     func teamRanking(forEvent event: Event) -> [ScoutedTeam] {
-        let eventRanker = getTeamRanker(forEvent: event)
-        return Array(eventRanker!.rankedTeams)
+        if let eventRanker = getTeamRanker(forEvent: event) {
+            return Array(eventRanker.rankedTeams)
+        } else {
+            return []
+        }
     }
     
     func teamRanking(forEvent event: Event) -> [Team] {

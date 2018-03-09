@@ -64,7 +64,7 @@ extension TeamEventPerformance: HasStats {
                     
                     let matchPerformances = self.matchPerformances
                     for matchPerformance in matchPerformances {
-                        if matchPerformance.winningMargin > 0 {
+                        if matchPerformance.winningMargin ?? 0 > 0 {
                             winCount += 1
                         }
                     }
@@ -76,7 +76,7 @@ extension TeamEventPerformance: HasStats {
                     
                     let matchPerformances = self.matchPerformances
                     for matchPerformance in matchPerformances {
-                        if matchPerformance.winningMargin < 0 {
+                        if matchPerformance.winningMargin ?? 0 < 0 {
                             lossCount += 1
                         }
                     }
@@ -557,7 +557,7 @@ private func evaluateCCWM(forTeamPerformance teamPerformance: TeamEventPerforman
         for eventPerformance in eventPerformances {
             let _matchPerformances = matchPerformances(fromEventPerformance: eventPerformance)
             let sumOfWinningMargins = _matchPerformances.reduce(0) {(partialResult, matchPerformance) in
-                return partialResult + matchPerformance.winningMargin
+                return partialResult + (matchPerformance.winningMargin ?? 0)
             }
             rowsB.append(sumOfWinningMargins)
         }

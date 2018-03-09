@@ -138,6 +138,7 @@ class EventStatsGraphViewController: UIViewController {
                 case .String:
                     //TODO: Show warning for graphing strings
                     statDouble = 0
+                    isNoValue = true
                 case .NoValue:
                     statDouble = 0
                     isNoValue = true

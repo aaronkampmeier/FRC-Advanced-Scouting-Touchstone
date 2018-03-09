@@ -76,17 +76,26 @@ import RealmSwift
         }
     }
     
-    var winningMargin: Int {
-        let selfFinalScore = finalScore ?? 0
+    var winningMargin: Int? {
+        guard let selfFinalScore = finalScore else {
+            return nil
+        }
+        let otherScore: Int?
         switch allianceColor {
         case "Blue":
-            return selfFinalScore - (match?.scouted.redScore.value ?? 0)
+            otherScore = match?.scouted.redScore.value
         case "Red":
-            return selfFinalScore - (match?.scouted.blueScore.value ?? 0)
+            otherScore = match?.scouted.blueScore.value
         default:
             assertionFailure()
             return -1
         }
+        
+        if otherScore == nil {
+            return nil
+        }
+        
+        return selfFinalScore - otherScore!
     }
 }
 
