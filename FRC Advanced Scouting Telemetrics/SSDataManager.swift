@@ -39,8 +39,6 @@ class SSDataManager {
         //Start the write session
         RealmController.realmController.syncedRealm.beginWrite()
         
-        self.scoutID = UUID().uuidString
-        
         self.stopwatch = stopwatch
         
         scoutedTeam = teamBeingScouted
@@ -65,7 +63,9 @@ class SSDataManager {
         }
         
         //TODO: Don't believe this lines up with good use of scout IDs
+        self.scoutID = UUID().uuidString
         scoutedMatchPerformance.scouted.defaultScoutID = scoutID
+        scoutedMatchPerformance.scouted.trackedScoutIDs.append(scoutID)
         
         SSDataManager.mostRecentSSDataManager = self
         

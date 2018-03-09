@@ -197,8 +197,36 @@ import Crashlytics
     
     //--- Maybe try to remove
     dynamic var defaultScoutID: String = "default"
-//    let scoutIDs = List<String>()
-    //---
+    var prefferedScoutID: String {
+        if defaultScoutID != "default" {
+            return defaultScoutID
+        } else {
+            //Choose the first scout id to use
+            return scoutIDs.last ?? ""
+        }
+    }
+    var scoutIDs: [String] {
+        var ids = [String]()
+        for marker in timeMarkers {
+            if !ids.contains(marker.scoutID) {
+                ids.append(marker.scoutID)
+            }
+        }
+        
+        //Make sure all of them are represented
+        var doesNotHaveAll = false
+        for id in ids {
+            if !trackedScoutIDs.contains(id) {
+                RealmController.realmController.genericWrite(onRealm: .Synced) {
+                    trackedScoutIDs.append(id)
+                }
+                doesNotHaveAll = true
+            }
+        }
+        
+        return Array(trackedScoutIDs)
+    }
+    dynamic let trackedScoutIDs = List<String>()
     
     dynamic var climbStatus: String? = nil
     dynamic var climbAssistStatus: String? = nil
@@ -218,41 +246,12 @@ import Crashlytics
     
     var hasBeenScouted: Bool {
         get {
-            let scoutIDs = (self.scoutIDs ?? [])
+            let scoutIDs = Array(self.scoutIDs)
             if scoutIDs.count >= 1 {
                 return true
             } else {
                 return false
             }
-        }
-    }
-    
-    ///TODO: Seems to be random and not very helpful
-    var preferredScoutID: String {
-        get {
-            if self.defaultScoutID != "default" {
-                return self.defaultScoutID
-            } else if timeMarkers.count > 0 {
-                for marker in timeMarkers {
-                    return marker.scoutID
-                }
-                return "default"
-            } else {
-                return "default"
-            }
-        }
-    }
-    
-    var scoutIDs: [String]? {
-        get {
-            var ids = [String]()
-            for marker in timeMarkers {
-                if !ids.contains(marker.scoutID) {
-                    ids.append(marker.scoutID)
-                }
-            }
-            
-            return ids
         }
     }
     

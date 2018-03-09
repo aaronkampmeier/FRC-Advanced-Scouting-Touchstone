@@ -144,7 +144,7 @@ extension TeamMatchPerformance: HasStats {
                 },
                 StatName.TotalGrabbedCubes: {
                     if self.scouted.hasBeenScouted {
-                        let timeMarkers = self.scouted.timeMarkers(forScoutID: self.scouted.defaultScoutID).filter {$0.timeMarkerEventType == .GrabbedCube}
+                        let timeMarkers = self.scouted.timeMarkers(forScoutID: self.scouted.prefferedScoutID).filter {$0.timeMarkerEventType == .GrabbedCube}
                         return StatValue.Integer(timeMarkers.count)
                     } else {
                         return StatValue.NoValue
@@ -172,7 +172,7 @@ extension TeamMatchPerformance: HasStats {
                 },
                 StatName.TotalPlacedCubes: {
                     if self.scouted.hasBeenScouted {
-                        let timeMarkers = self.scouted.timeMarkers(forScoutID: self.scouted.defaultScoutID).filter {$0.timeMarkerEventType == .PlacedCube && $0.associatedLocation != CubeDestination.Dropped.rawValue}
+                        let timeMarkers = self.scouted.timeMarkers(forScoutID: self.scouted.prefferedScoutID).filter {$0.timeMarkerEventType == .PlacedCube && $0.associatedLocation != CubeDestination.Dropped.rawValue}
                         return StatValue.Integer(timeMarkers.count)
                     } else {
                         return StatValue.NoValue
@@ -187,11 +187,11 @@ extension TeamMatchPerformance: HasStats {
     }
     
     func getTimeMarkers(withAssociatedLocation assocLocation: String) -> [TimeMarker] {
-        return self.scouted.timeMarkers(forScoutID: self.scouted.defaultScoutID).filter {$0.associatedLocation == assocLocation}
+        return self.scouted.timeMarkers(forScoutID: self.scouted.prefferedScoutID).filter {$0.associatedLocation == assocLocation}
     }
     
     func getTimeMarkers(forEvent event: TimeMarkerEvent) -> [TimeMarker] {
-        return self.scouted.timeMarkers(forScoutID: self.scouted.defaultScoutID).filter {$0.timeMarkerEventType == event}
+        return self.scouted.timeMarkers(forScoutID: self.scouted.prefferedScoutID).filter {$0.timeMarkerEventType == event}
     }
     
     enum StatName: String, CustomStringConvertible, StatNameable {
