@@ -12,7 +12,7 @@ class SuperNotesCollectionViewCell: UICollectionViewCell {
     @IBOutlet weak var teamLabel: UILabel!
     
     var team: Team?
-    var notesVC: NotesViewController!
+    var notesVC: TeamCommentsTableViewController!
     
     func setUp(forTeam team: Team) {
         notesVC.dataSource = self
@@ -20,18 +20,12 @@ class SuperNotesCollectionViewCell: UICollectionViewCell {
         self.team = team
         teamLabel.text = "\(team.teamNumber)"
         
-        notesVC.reload()
+        notesVC.load()
     }
-    
 }
 
 extension SuperNotesCollectionViewCell: NotesDataSource {
     func currentTeamContext() -> Team {
         return team!
-    }
-    
-    func notesShouldSave() -> Bool {
-        //TODO: Hmm figure this out with realm writes
-        return false
     }
 }

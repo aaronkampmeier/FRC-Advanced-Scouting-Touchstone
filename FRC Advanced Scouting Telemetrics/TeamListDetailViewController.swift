@@ -301,13 +301,16 @@ class TeamListDetailViewController: UIViewController {
     }
     
     @IBAction func notesButtonPressed(_ sender: UIButton) {
-        let notesNavVC = storyboard?.instantiateViewController(withIdentifier: "notesNavVC") as! UINavigationController
-        (notesNavVC.topViewController as! NotesViewController).dataSource = self
+        let notesVC = storyboard?.instantiateViewController(withIdentifier: "commentNotesVC") as! TeamCommentsTableViewController
         
-        notesNavVC.modalPresentationStyle = .popover
-        notesNavVC.popoverPresentationController?.sourceView = sender
+        let navVC = UINavigationController(rootViewController: notesVC)
         
-        present(notesNavVC, animated: true, completion: nil)
+        notesVC.dataSource = self
+        
+        navVC.modalPresentationStyle = .popover
+        navVC.popoverPresentationController?.sourceView = sender
+        
+        present(navVC, animated: true, completion: nil)
     }
     
     var selectedMatch: Match?
@@ -486,10 +489,6 @@ extension TeamListDetailViewController: UITableViewDelegate, UITableViewDataSour
 extension TeamListDetailViewController: NotesDataSource {
     func currentTeamContext() -> Team {
         return selectedTeam!
-    }
-    
-    func notesShouldSave() -> Bool {
-        return true
     }
 }
 

@@ -114,7 +114,17 @@ class MatchOverviewDetailViewController: UIViewController {
     @objc func donePressed(_ sender: UIBarButtonItem) {
         self.dismiss(animated: true, completion: nil)
     }
-
+    
+    func presentNotes(_ sender: Any) {
+        let superNotesVC = storyboard?.instantiateViewController(withIdentifier: "superNotes") as! SuperNotesCollectionViewController
+        let navVC = UINavigationController(rootViewController: superNotesVC)
+        
+        navVC.modalPresentationStyle = .pageSheet
+        
+        
+        present(navVC, animated: true, completion: nil)
+    }
+    
     /*
     // MARK: - Navigation
 
@@ -125,6 +135,16 @@ class MatchOverviewDetailViewController: UIViewController {
     }
     */
 
+}
+
+extension MatchOverviewDetailViewController: SuperNotesDataSource {
+    func superNotesForTeams() -> [Team]? {
+        return nil
+    }
+    
+    func superNotesForMatch() -> Match? {
+        return displayedMatch
+    }
 }
 
 extension MatchOverviewDetailViewController: MatchOverviewPerformanceDetailDataSource {

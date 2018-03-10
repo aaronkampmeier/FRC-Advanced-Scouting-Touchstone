@@ -241,17 +241,19 @@ class PitScoutingViewController: UIViewController, UICollectionViewDataSource, U
     }
 
     @IBAction func notes(_ sender: UIBarButtonItem) {
-        let notesNavVC = storyboard?.instantiateViewController(withIdentifier: "notesNavVC") as! UINavigationController
-        let notesVC = notesNavVC.topViewController as! NotesViewController
+        let notesVC = storyboard?.instantiateViewController(withIdentifier: "commentNotesVC") as! TeamCommentsTableViewController
+        
+        let navVC = UINavigationController(rootViewController: notesVC)
+        
         notesVC.dataSource = self
         
-        notesNavVC.modalPresentationStyle = .popover
+        navVC.modalPresentationStyle = .popover
         
-        let popoverPresController = notesNavVC.popoverPresentationController
+        let popoverPresController = navVC.popoverPresentationController
         popoverPresController?.permittedArrowDirections = .up
         popoverPresController?.barButtonItem = sender
         
-        present(notesNavVC, animated: true, completion: nil)
+        present(navVC, animated: true, completion: nil)
     }
     /*
     // MARK: - Navigation

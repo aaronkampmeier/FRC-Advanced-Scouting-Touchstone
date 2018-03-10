@@ -107,7 +107,11 @@ import Crashlytics
     
     ///Cross Year Values
     dynamic var key = ""
+    
+    ///DEPRECATED: DON'T USE, Use Comments instead.
     dynamic var notes = ""
+    let comments = List<TeamComment>()
+    
     dynamic var programmingLanguage: String?
     dynamic var computerVisionCapability: String?
     let robotHeight = RealmOptional<Double>()
@@ -170,6 +174,22 @@ import Crashlytics
             return nil
         }
     }
+    
+    ///Makes a comment. Must be called from within a write transaction.
+//    func makeComment(withBody bodyText: String) {
+//        let comment = TeamComment()
+//        comment.bodyText = bodyText
+//        comment.datePosted = Date()
+//        
+//        RealmController.realmController.syncedRealm.add(comment)
+//        self.comments.append(comment)
+//    }
+}
+
+@objcMembers class TeamComment: Object {
+    dynamic var bodyText: String = ""
+    dynamic var datePosted = Date()
+    
 }
 
 @objcMembers class ScoutedMatch: Object, HasGeneralEquivalent {
@@ -213,7 +233,7 @@ import Crashlytics
             }
         }
         
-        //Make sure all of them are represented
+        //Make sure all of them are represented, TAKE OUT LATER
         var doesNotHaveAll = false
         for id in ids {
             if !trackedScoutIDs.contains(id) {
@@ -226,7 +246,7 @@ import Crashlytics
         
         return Array(trackedScoutIDs)
     }
-    dynamic let trackedScoutIDs = List<String>()
+    let trackedScoutIDs = List<String>()
     
     dynamic var climbStatus: String? = nil
     dynamic var climbAssistStatus: String? = nil

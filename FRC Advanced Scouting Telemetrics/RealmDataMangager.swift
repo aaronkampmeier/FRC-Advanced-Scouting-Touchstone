@@ -59,7 +59,7 @@ class RealmController {
         var scoutedRealmConfig = Realm.Configuration(syncConfiguration: scoutedSyncConfig)
         
         //Set the object types to be used in the Synced Realm to keep it separate from the other realm
-        scoutedRealmConfig.objectTypes = [GeneralRanker.self, EventRanker.self, ScoutedTeam.self, ScoutedMatch.self, ScoutedMatchPerformance.self, TimeMarker.self, ComputedStats.self]
+        scoutedRealmConfig.objectTypes = [GeneralRanker.self, EventRanker.self, ScoutedTeam.self, ScoutedMatch.self, ScoutedMatchPerformance.self, TimeMarker.self, ComputedStats.self, TeamComment.self]
         
         //Now for the general realm
         let generalStructureRealmURL = URL(string: "realms://\(rosServerAddress)/~/general_structure")!
@@ -78,6 +78,8 @@ class RealmController {
             
             //Now perform sanity checks quickly
             syncedRealm.beginWrite()
+            
+            //First remove duplicates
             let ranker = getGeneralTeamRanker()
             var seen = [ScoutedTeam]()
             var didRemoveDuplicates = false
@@ -93,10 +95,27 @@ class RealmController {
                 CLSNSLogv("Removing duplicates in general ranker", getVaList([]))
                 Crashlytics.sharedInstance().recordCustomExceptionName("Did have to remove duplicate teams from ranker", reason: "There were duplicate teams in the ranker", frameArray: [])
             }
+            
+            //- FIXME: Now migrate notes if necessary,
+            let scoutedTeams = syncedRealm.objects(ScoutedTeam.self)
+            for scoutedTeam in scoutedTeams {
+                if scoutedTeam.notes != "" && scoutedTeam.comments.count == 0 {
+                    //There are old style notes and no comments so migrate these notes over
+                    let comment = TeamComment()
+                    comment.bodyText = scoutedTeam.notes
+                    comment.datePosted = Date()
+                    
+                    syncedRealm.add(comment)
+                    scoutedTeam.comments.append(comment)
+                    
+                    scoutedTeam.notes = "-UPDATE APP TO ADD/VIEW NOTES-"
+                }
+            }
+            
             do {
                 try syncedRealm.commitWrite()
             } catch {
-                CLSNSLogv("Unable to remove duplicate ranked teams: \(error)", getVaList([]))
+                CLSNSLogv("Unable to commit sanity checks: \(error)", getVaList([]))
                 Crashlytics.sharedInstance().recordError(error)
             }
         } catch {

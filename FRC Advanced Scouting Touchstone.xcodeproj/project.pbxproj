@@ -35,6 +35,7 @@
 		1FDC1BD11CD69F5F00ABE327 /* TeamListTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FDC1BD01CD69F5F00ABE327 /* TeamListTableViewController.swift */; };
 		1FDC1BD31CD6A35F00ABE327 /* TeamListDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FDC1BD21CD6A35F00ABE327 /* TeamListDetailViewController.swift */; };
 		1FE2C12D1C81875A00CECBF1 /* ImageScalingFunctions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FE2C12C1C81875A00CECBF1 /* ImageScalingFunctions.swift */; };
+		9300196C20537B0C00E10CDC /* TeamCommentsTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9300196B20537B0C00E10CDC /* TeamCommentsTableViewController.swift */; };
 		930B965C1E4548F700E385D3 /* PitSegmentedSelectorCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 930B965B1E4548F700E385D3 /* PitSegmentedSelectorCollectionViewCell.swift */; };
 		930B96621E456D3000E385D3 /* PitTableViewSelectorCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 930B96611E456D3000E385D3 /* PitTableViewSelectorCollectionViewCell.swift */; };
 		930B96641E456D6C00E385D3 /* PitImageSelectorCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 930B96631E456D6C00E385D3 /* PitImageSelectorCollectionViewCell.swift */; };
@@ -100,7 +101,6 @@
 		93C5B47C1E53FC9C007D309F /* TeamInfoScrollView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93C5B47B1E53FC9C007D309F /* TeamInfoScrollView.swift */; };
 		93C609241E67D035007A689D /* MatchOverviewDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93C609231E67D035007A689D /* MatchOverviewDetailViewController.swift */; };
 		93C609281E67D0CC007A689D /* MatchOverviewMasterViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93C609271E67D0CC007A689D /* MatchOverviewMasterViewController.swift */; };
-		93CE1BF71E403A97004165BE /* NotesViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93CE1BF61E403A97004165BE /* NotesViewController.swift */; };
 		93CEA6302041ED0600C5B357 /* ForgotPasswordViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93CEA62F2041ED0600C5B357 /* ForgotPasswordViewController.swift */; };
 		93CEA6322041FB5300C5B357 /* ConfirmForgotPasswordViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93CEA6312041FB5300C5B357 /* ConfirmForgotPasswordViewController.swift */; };
 		93D75B641E5D0866002CBED2 /* FieldLocationDisplayViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93D75B631E5D0866002CBED2 /* FieldLocationDisplayViewController.swift */; };
@@ -221,6 +221,7 @@
 		1FDC1BD21CD6A35F00ABE327 /* TeamListDetailViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TeamListDetailViewController.swift; sourceTree = "<group>"; };
 		1FDE56921CCD376B009042CD /* opencv2.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = opencv2.framework; path = "FRC Advanced Scouting Telemetrics/swix/objc/opencv2.framework"; sourceTree = "<group>"; };
 		1FE2C12C1C81875A00CECBF1 /* ImageScalingFunctions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ImageScalingFunctions.swift; sourceTree = "<group>"; };
+		9300196B20537B0C00E10CDC /* TeamCommentsTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TeamCommentsTableViewController.swift; sourceTree = "<group>"; };
 		930B965B1E4548F700E385D3 /* PitSegmentedSelectorCollectionViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PitSegmentedSelectorCollectionViewCell.swift; sourceTree = "<group>"; };
 		930B96611E456D3000E385D3 /* PitTableViewSelectorCollectionViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PitTableViewSelectorCollectionViewCell.swift; sourceTree = "<group>"; };
 		930B96631E456D6C00E385D3 /* PitImageSelectorCollectionViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PitImageSelectorCollectionViewCell.swift; sourceTree = "<group>"; };
@@ -285,7 +286,6 @@
 		93C5B47B1E53FC9C007D309F /* TeamInfoScrollView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TeamInfoScrollView.swift; sourceTree = "<group>"; };
 		93C609231E67D035007A689D /* MatchOverviewDetailViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MatchOverviewDetailViewController.swift; sourceTree = "<group>"; };
 		93C609271E67D0CC007A689D /* MatchOverviewMasterViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MatchOverviewMasterViewController.swift; sourceTree = "<group>"; };
-		93CE1BF61E403A97004165BE /* NotesViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NotesViewController.swift; sourceTree = "<group>"; };
 		93CEA62F2041ED0600C5B357 /* ForgotPasswordViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ForgotPasswordViewController.swift; sourceTree = "<group>"; };
 		93CEA6312041FB5300C5B357 /* ConfirmForgotPasswordViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConfirmForgotPasswordViewController.swift; sourceTree = "<group>"; };
 		93D75B631E5D0866002CBED2 /* FieldLocationDisplayViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FieldLocationDisplayViewController.swift; sourceTree = "<group>"; };
@@ -690,7 +690,7 @@
 		93EA7FF11E46A36E002EC8C7 /* Notes */ = {
 			isa = PBXGroup;
 			children = (
-				93CE1BF61E403A97004165BE /* NotesViewController.swift */,
+				9300196B20537B0C00E10CDC /* TeamCommentsTableViewController.swift */,
 				937E9C951E40468300D0ED76 /* SuperNotesCollectionViewController.swift */,
 				932354451E41686B0039386A /* SuperNotesCollectionViewCell.swift */,
 			);
@@ -1040,6 +1040,7 @@
 				932C344C1E12DC2600A23203 /* EventInfoVC.swift in Sources */,
 				932CB3F21E305E8200712725 /* SSOffenseWhereViewController.swift in Sources */,
 				9353ADC21E57B09D00120F1A /* MatchListTableViewCell.swift in Sources */,
+				9300196C20537B0C00E10CDC /* TeamCommentsTableViewController.swift in Sources */,
 				93633B23200DAAEF000EC83A /* ScoutingModels.swift in Sources */,
 				93610E3D1E42F8D400856BE2 /* PitScoutingViewController.swift in Sources */,
 				93483E8B20291AC400E9AC82 /* LoginViewController.swift in Sources */,
@@ -1062,7 +1063,6 @@
 				93483E8D20291AC400E9AC82 /* StatusBarUnderlayView.swift in Sources */,
 				1FD0A09B1C95093600013A18 /* TeamListTableViewCell.swift in Sources */,
 				9369681A1E502AC8001DB15D /* TeamDetailKeyValueSpreadCollectionViewCell.swift in Sources */,
-				93CE1BF71E403A97004165BE /* NotesViewController.swift in Sources */,
 				930B96621E456D3000E385D3 /* PitTableViewSelectorCollectionViewCell.swift in Sources */,
 				1F1C23C21E07487C008885A1 /* Team.swift in Sources */,
 				1FBB426D1C9A29FC0017E36C /* Statistics.swift in Sources */,

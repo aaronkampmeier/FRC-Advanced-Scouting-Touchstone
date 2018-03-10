@@ -329,20 +329,22 @@ class StandsScoutingViewController: UIViewController {
 	}
     
     @IBAction func shortPressOnNotesButton(_ sender: UITapGestureRecognizer) {
-        let notesNavVC = storyboard?.instantiateViewController(withIdentifier: "notesNavVC") as! UINavigationController
-        let notesVC = notesNavVC.topViewController as! NotesViewController
+        let notesVC = storyboard?.instantiateViewController(withIdentifier: "commentNotesVC") as! TeamCommentsTableViewController
+        
+        let navVC = UINavigationController(rootViewController: notesVC)
+        
         notesVC.dataSource = self
 		
-		notesNavVC.modalPresentationStyle = .popover
-		let popoverController = notesNavVC.popoverPresentationController
+		navVC.modalPresentationStyle = .popover
+		let popoverController = navVC.popoverPresentationController
 		popoverController?.permittedArrowDirections = .any
         popoverController?.sourceView = notesButton
 //		popoverController?.sourceRect = CGRect(x: notesButton.frame.maxX, y: notesButton.frame.midY, width: 5, height: 5)
-		notesNavVC.preferredContentSize = CGSize(width: 400, height: 600)
-		present(notesNavVC, animated: true, completion: nil)
+		navVC.preferredContentSize = CGSize(width: 400, height: 600)
+		present(navVC, animated: true, completion: nil)
         
         NotificationCenter.default.addObserver(forName: NSNotification.Name(rawValue: "StandsScoutingEnded"), object: self, queue: nil) {notification in
-            notesNavVC.dismiss(animated: true, completion: nil)
+            navVC.dismiss(animated: true, completion: nil)
         }
     }
     
