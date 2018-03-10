@@ -650,6 +650,19 @@ extension TeamListTableViewController: UISearchResultsUpdating, UISearchControll
                         
                         //Now create predicate with limits
                         universalPredicates.append(NSPredicate(format: "teamNumber BETWEEN {%@,%@}", argumentArray: [lowerTeamNumLimit, upperTeamNumLimit]))
+                        
+                        //And for three number teams (like team 931)
+                        var upperTeamNumLimit3 = inputtedNum
+                        while upperTeamNumLimit3 < 100 {
+                            upperTeamNumLimit3 = (upperTeamNumLimit3 * 10) + 9
+                        }
+                        
+                        var lowerTeamNumLimit3 = inputtedNum
+                        while lowerTeamNumLimit3 < 100 {
+                            lowerTeamNumLimit3 = lowerTeamNumLimit3 * 10
+                        }
+                        
+                        universalPredicates.append(NSPredicate(format: "teamNumber BETWEEN {%@,%@}", argumentArray: [lowerTeamNumLimit3, upperTeamNumLimit3]))
                     }
                 }
                 universalPredicates.append(NSPredicate(format: "website CONTAINS[cd] %@", argumentArray: [searchText]))
