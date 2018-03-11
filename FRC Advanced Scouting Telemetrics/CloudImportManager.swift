@@ -209,7 +209,11 @@ class CloudEventImportManager {
                     return
                 }
                 match.setNumber.value = frcMatch.setNumber
-                match.time = frcMatch.scheduledTime
+                if let actualTime = frcMatch.actualTime {
+                    match.time = actualTime
+                } else {
+                    match.time = frcMatch.scheduledTime
+                }
                 
                 match.event = eventObject
                 
