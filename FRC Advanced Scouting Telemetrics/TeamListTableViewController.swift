@@ -81,15 +81,19 @@ class TeamListTableViewController: UITableViewController, TeamListDetailDataSour
             selectedTeam = nil
             
             statToSortBy = Team.StatName.LocalRank.rawValue
-            currentEventTeams = realmController.teamRanking(selectedEvent)
+            
             
             if let event = selectedEvent {
+                currentEventTeams = realmController.teamRanking(event)
+                
                 eventSelectionButton.setTitle(event.name, for: UIControlState())
                 
                 matchesButton.isEnabled = true
                 graphButton.isEnabled = true
             } else {
-                eventSelectionButton.setTitle("All Teams", for: UIControlState())
+                currentEventTeams = []
+                
+                eventSelectionButton.setTitle("Select Event", for: UIControlState())
                 
                 matchesButton.isEnabled = false
                 graphButton.isEnabled = false
@@ -123,7 +127,6 @@ class TeamListTableViewController: UITableViewController, TeamListDetailDataSour
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        // Uncomment the following line to preserve selection between presentations
         self.clearsSelectionOnViewWillAppear = false
         
         teamListSplitVC.teamListTableVC = self
@@ -140,6 +143,10 @@ class TeamListTableViewController: UITableViewController, TeamListDetailDataSour
         tableView.tableHeaderView = searchController.searchBar
         
         tableView.allowsSelectionDuringEditing = true
+        
+        //Set background view of table view
+        let noEventView = NoEventSelectedView(frame: CGRect(x: 0, y: 0, width: tableView.frame.width, height: tableView.frame.height))
+        tableView.backgroundView = noEventView
     }
     
     //For some reason this is called when moving the app to the background during stands scouting, not sure if this a beta issue or what but it does cause crash
@@ -265,12 +272,22 @@ class TeamListTableViewController: UITableViewController, TeamListDetailDataSour
     // MARK: - Table view data source
 
     override func numberOfSections(in tableView: UITableView) -> Int {
-        // #warning Incomplete implementation, return the number of sections
-        return 1
+        if let _ = selectedEvent {
+            //Hide the show event text
+            tableView.backgroundView?.isHidden = true
+            tableView.separatorStyle = .singleLine
+            tableView.tableHeaderView?.isHidden = false
+            return 1
+        } else {
+            //Show the select event text
+            tableView.backgroundView?.isHidden = false
+            tableView.tableHeaderView?.isHidden = true
+            tableView.separatorStyle = .none
+            return 0
+        }
     }
 
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        // #warning Incomplete implementation, return the number of rows
         return currentTeamsToDisplay.count
     }
 
