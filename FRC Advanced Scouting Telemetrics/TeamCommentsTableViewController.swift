@@ -135,6 +135,43 @@ class TeamCommentsTableViewController: UITableViewController {
         }
     }
     
+    @available(iOS 11.0, *)
+    override func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
+        if indexPath.row != teamComments.count {
+            //Is a comment row, add the delete action
+            let deleteAction = UIContextualAction(style: .destructive, title: "Delete") {(action, view, completionHandler) in
+                //Delete the comment
+                
+                if RealmController.realmController.syncedRealm.isInWriteTransaction {
+                    let commentToDelete = self.teamComments[indexPath.row]
+                    self.teamComments.remove(at: indexPath.row)
+                    RealmController.realmController.syncedRealm.delete(commentToDelete)
+                } else {
+                    RealmController.realmController.syncedRealm.beginWrite()
+                    
+                    let commentToDelete = self.teamComments[indexPath.row]
+                    self.teamComments.remove(at: indexPath.row)
+                    RealmController.realmController.syncedRealm.delete(commentToDelete)
+                    
+                    do {
+                        try RealmController.realmController.syncedRealm.commitWrite(withoutNotifying: self.commentNotificationToken == nil ? [] : [self.commentNotificationToken!])
+                    } catch {
+                        CLSNSLogv("Error deleting comment: \(error)", getVaList([]))
+                        Crashlytics.sharedInstance().recordError(error)
+                    }
+                }
+                
+                completionHandler(true)
+                
+                tableView.deleteRows(at: [indexPath], with: .top)
+            }
+            
+            return UISwipeActionsConfiguration(actions: [deleteAction])
+        } else {
+            return nil
+        }
+    }
+    
     @objc func postComment(_ sender: UIButton) {
         let comment = TeamComment()
         comment.bodyText = self.currentlyWrittenCommentText

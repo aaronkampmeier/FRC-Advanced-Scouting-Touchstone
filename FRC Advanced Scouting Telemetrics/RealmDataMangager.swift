@@ -96,22 +96,6 @@ class RealmController {
                 Crashlytics.sharedInstance().recordCustomExceptionName("Did have to remove duplicate teams from ranker", reason: "There were duplicate teams in the ranker", frameArray: [])
             }
             
-            //- FIXME: Now migrate notes if necessary,
-            let scoutedTeams = syncedRealm.objects(ScoutedTeam.self)
-            for scoutedTeam in scoutedTeams {
-                if scoutedTeam.notes != "" && scoutedTeam.comments.count == 0 {
-                    //There are old style notes and no comments so migrate these notes over
-                    let comment = TeamComment()
-                    comment.bodyText = scoutedTeam.notes
-                    comment.datePosted = Date()
-                    
-                    syncedRealm.add(comment)
-                    scoutedTeam.comments.append(comment)
-                    
-                    scoutedTeam.notes = "-UPDATE APP TO ADD/VIEW NOTES-"
-                }
-            }
-            
             do {
                 try syncedRealm.commitWrite()
             } catch {
