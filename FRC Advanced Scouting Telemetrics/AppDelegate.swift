@@ -50,11 +50,13 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         loginVC.authenticationProvider = AWSCognitoAuthenticationProvider()
         
         loginVC.loginSuccessfulHandler = {user,teamNumber in
-            RealmController.realmController.currentSyncUser = user
-            RealmController.realmController.openSyncedRealm(withSyncUser: user)
-            
             let mainStoryboard = UIStoryboard(name: "Main", bundle: nil)
-            self.window?.rootViewController = mainStoryboard.instantiateInitialViewController()
+            let loader = mainStoryboard.instantiateViewController(withIdentifier: "realmLoader") as! RealmLoaderViewController
+            
+            RealmController.realmController.currentSyncUser = user
+            RealmController.realmController.openSyncedRealm(withSyncUser: user, shouldOpenSyncedRealmAsync: true, completionHandler: loader.realmAsyncOpenHandler)
+            
+            self.window?.rootViewController = loader
         }
         self.window?.rootViewController = loginVC
     }

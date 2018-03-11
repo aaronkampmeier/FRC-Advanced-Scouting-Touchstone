@@ -37,7 +37,7 @@ class RealmController {
         if let currentUser = SyncUser.current {
             //Use this user to log in
             currentSyncUser = currentUser
-            openSyncedRealm(withSyncUser: currentUser)
+            openSyncedRealm(withSyncUser: currentUser, shouldOpenSyncedRealmAsync: false)
         } else {
             //Is not logged in
             currentSyncUser = nil
@@ -49,7 +49,7 @@ class RealmController {
         }
     }
     
-    func openSyncedRealm(withSyncUser syncUser: SyncUser) {
+    func openSyncedRealm(withSyncUser syncUser: SyncUser, shouldOpenSyncedRealmAsync: Bool, completionHandler:  ((Error?) -> Void)? = nil) {
         
         let scoutedRealmURL = URL(string: "realms://\(rosServerAddress)/~/scouted_data")!
         syncedRealmURL = scoutedRealmURL
@@ -68,45 +68,87 @@ class RealmController {
         var generalRealmConfig = Realm.Configuration(syncConfiguration: generalSyncConfig)
         generalRealmConfig.objectTypes = [Team.self,Match.self,TeamEventPerformance.self,Event.self,TeamMatchPerformance.self]
         
-        do {
-            //Attempt to open the realm
-            self.generalRealm = try Realm(configuration: generalRealmConfig)
-            self.syncedRealm = try Realm(configuration: scoutedRealmConfig)
-            NotificationCenter.default.post(name: DidLogIntoSyncServerNotification, object: self)
-            CLSNSLogv("Did log into and open realms", getVaList([]))
-            Answers.logLogin(withMethod: "ROS", success: true, customAttributes: nil)
-            
-            //Now perform sanity checks quickly
-            syncedRealm.beginWrite()
-            
-            //First remove duplicates
-            let ranker = getGeneralTeamRanker()
-            var seen = [ScoutedTeam]()
-            var didRemoveDuplicates = false
-            for team in ranker.rankedTeams {
-                if seen.contains(team) {
-                    ranker.rankedTeams.remove(at: ranker.rankedTeams.index(of: team)!)
-                    didRemoveDuplicates = true
-                } else {
-                    seen.append(team)
-                }
-            }
-            if didRemoveDuplicates {
-                CLSNSLogv("Removing duplicates in general ranker", getVaList([]))
-                Crashlytics.sharedInstance().recordCustomExceptionName("Did have to remove duplicate teams from ranker", reason: "There were duplicate teams in the ranker", frameArray: [])
-            }
-            
-            do {
-                try syncedRealm.commitWrite()
-            } catch {
-                CLSNSLogv("Unable to commit sanity checks: \(error)", getVaList([]))
-                Crashlytics.sharedInstance().recordError(error)
-            }
-        } catch {
+        let realmErrorHandler: (Error) -> Void = { (error: Error) in
             CLSNSLogv("Error opening realms: \(error)", getVaList([]))
             Crashlytics.sharedInstance().recordError(error)
             Answers.logLogin(withMethod: "ROS", success: false, customAttributes: nil)
         }
+        
+        do {
+            //Attempt to open the realm
+            self.generalRealm = try Realm(configuration: generalRealmConfig)
+            
+            let syncedRealmCompletionHandler: () -> Void = {
+                NotificationCenter.default.post(name: DidLogIntoSyncServerNotification, object: self)
+                CLSNSLogv("Did log into and open realms", getVaList([]))
+                Answers.logLogin(withMethod: "ROS", success: true, customAttributes: nil)
+                
+                self.performSanityChecks()
+            }
+            
+            if shouldOpenSyncedRealmAsync {
+                Realm.asyncOpen(configuration: scoutedRealmConfig) {realm, error in
+                    if let realm = realm {
+                        self.syncedRealm = realm
+                        syncedRealmCompletionHandler()
+                    } else if let error = error {
+                        realmErrorHandler(error)
+                    }
+                    
+                    completionHandler?(error)
+                }
+            } else {
+                //Not async (Normal)
+                self.syncedRealm = try Realm(configuration: scoutedRealmConfig)
+                syncedRealmCompletionHandler()
+            }
+        } catch {
+            realmErrorHandler(error)
+        }
+    }
+    
+    func performSanityChecks() {
+        //Now perform sanity checks quickly
+        syncedRealm.beginWrite()
+        
+        //First remove duplicates
+        let ranker = getGeneralTeamRanker()
+        var seen = [ScoutedTeam]()
+        var didRemoveDuplicates = false
+        for team in ranker.rankedTeams {
+            if seen.contains(team) {
+                ranker.rankedTeams.remove(at: ranker.rankedTeams.index(of: team)!)
+                didRemoveDuplicates = true
+            } else {
+                seen.append(team)
+            }
+        }
+        if didRemoveDuplicates {
+            CLSNSLogv("Removing duplicates in general ranker", getVaList([]))
+            Crashlytics.sharedInstance().recordCustomExceptionName("Did have to remove duplicate teams from ranker", reason: "There were duplicate teams in the ranker", frameArray: [])
+        }
+        
+        do {
+            try syncedRealm.commitWrite()
+        } catch {
+            CLSNSLogv("Unable to commit sanity checks: \(error)", getVaList([]))
+            Crashlytics.sharedInstance().recordError(error)
+        }
+    }
+    
+    func closeSyncedRealms() {
+        let loggedInTeam: String = UserDefaults.standard.value(forKey: "LoggedInTeam") as? String ?? "Unknown"
+        Answers.logCustomEvent(withName: "Sign Out", customAttributes: ["Team":loggedInTeam])
+        
+        //Remove user default
+        UserDefaults.standard.setValue(nil, forKeyPath: "LoggedInTeam")
+        
+        //Logout button pressed
+        currentSyncUser?.logOut()
+        currentSyncUser = nil
+        
+        //Now return to the log in screen
+        (UIApplication.shared.delegate as! AppDelegate).displayLogin()
     }
     
     func delete(object: Object) {

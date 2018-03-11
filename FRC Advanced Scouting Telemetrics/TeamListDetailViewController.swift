@@ -126,24 +126,8 @@ class TeamListDetailViewController: UIViewController {
         frontImageButton.setTitle(nil, for: .normal)
         
         contentScrollView.delegate = self
-//        if teamSelectedBeforeViewLoading?.local.frontImage != nil {
-//            frontImageHeightConstraint.isActive = true
-//            
-//            contentScrollView.contentInset = contentViewInsets
-//            contentScrollView.scrollIndicatorInsets = contentViewInsets
-//            
-//            contentScrollView.contentOffset = CGPoint(x: 0, y: -frontImageHeightConstraint.constant)
-//        } else {
-//            frontImageHeightConstraint.isActive = false
-//            
-//            contentScrollView.contentInset = noContentInsets
-//            contentScrollView.scrollIndicatorInsets = noContentInsets
-//            
-//            contentScrollView.contentOffset = CGPoint(x: 0, y: 0)
-//        }
 		
 		let displayModeButtonItem = teamListSplitVC.displayModeButtonItem
-//		displayModeButtonItem.title = "Teams"
 		
 		if navigationItem.leftBarButtonItems?.isEmpty ?? true {
 			navigationItem.leftBarButtonItems = [displayModeButtonItem]

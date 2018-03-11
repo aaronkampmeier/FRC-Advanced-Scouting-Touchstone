@@ -48,7 +48,6 @@ class TeamListTableViewController: UITableViewController, TeamListDetailDataSour
     }
     var currentSortedTeams: [Team] = [] {
         didSet {
-//            currentTeamsToDisplay = currentSortedTeams
             self.updateSearchResults(for: searchController)
         }
     }
@@ -154,10 +153,8 @@ class TeamListTableViewController: UITableViewController, TeamListDetailDataSour
         currentEventTeams = realmController.teamRanking(selectedEvent)
         if isSearching {
             //Upon returning to a search we won't update the teams and re-read from the model like normally. We will just use the original event teams for simplicity's sake.
-//            self.updateSearchResults(for: searchController)
             self.navigationController?.setToolbarHidden(true, animated: true) //Set hidden if we are returning to a search
         } else {
-//            currentEventTeams = realmController.teamRanking(selectedEvent)
             self.navigationController?.setToolbarHidden(false, animated: true)
         }
         
@@ -305,7 +302,6 @@ class TeamListTableViewController: UITableViewController, TeamListDetailDataSour
             if let eventRanker = realmController.getTeamRanker(forEvent: event) {
                 if !eventRanker.isInPickList(team: team) {
                     //Show indicator that it is not in pick list
-//                    cell.accessoryType = .checkmark
                     let crossImage = UIImageView(image: #imageLiteral(resourceName: "Cross"))
                     crossImage.frame = CGRect(x: 0, y: 0, width: 20, height: 20)
                     cell.accessoryView = crossImage
@@ -333,10 +329,12 @@ class TeamListTableViewController: UITableViewController, TeamListDetailDataSour
     }
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        let pressedTeam = currentTeamsToDisplay[(indexPath as NSIndexPath).row]
+        
         let teamListDetailVC: TeamListDetailViewController = teamListSplitVC.teamListDetailVC
         
         //Set the selected team (and alert the delegate)
-        selectedTeam = currentTeamsToDisplay[(indexPath as NSIndexPath).row]
+        selectedTeam = pressedTeam
         
         //Show the detail vc
         splitViewController?.showDetailViewController(teamListDetailVC, sender: self)

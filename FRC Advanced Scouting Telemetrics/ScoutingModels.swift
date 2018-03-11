@@ -175,15 +175,6 @@ import Crashlytics
         }
     }
     
-    ///Makes a comment. Must be called from within a write transaction.
-//    func makeComment(withBody bodyText: String) {
-//        let comment = TeamComment()
-//        comment.bodyText = bodyText
-//        comment.datePosted = Date()
-//        
-//        RealmController.realmController.syncedRealm.add(comment)
-//        self.comments.append(comment)
-//    }
 }
 
 @objcMembers class TeamComment: Object {
@@ -221,7 +212,7 @@ import Crashlytics
         if defaultScoutID != "default" {
             return defaultScoutID
         } else {
-            //Choose the first scout id to use
+            //Choose the last scout id to use
             return scoutIDs.last ?? ""
         }
     }

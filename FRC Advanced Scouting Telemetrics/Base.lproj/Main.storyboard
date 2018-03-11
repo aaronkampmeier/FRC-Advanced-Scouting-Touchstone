@@ -2668,6 +2668,58 @@
             </objects>
             <point key="canvasLocation" x="3724.2187499999995" y="217.96875"/>
         </scene>
+        <!--Realm Loader View Controller-->
+        <scene sceneID="93w-XR-hPB">
+            <objects>
+                <viewController storyboardIdentifier="realmLoader" id="Hh9-0b-coo" customClass="RealmLoaderViewController" customModule="FRC_Advanced_Scouting_Touchstone" customModuleProvider="target" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="7eg-Ec-NJZ"/>
+                        <viewControllerLayoutGuide type="bottom" id="hP3-zf-iLu"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="fby-ML-sJ2">
+                        <rect key="frame" x="0.0" y="0.0" width="1024" height="768"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Please wait while the scouted data is being downloaded" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="2oc-p5-az3">
+                                <rect key="frame" x="181.5" y="340" width="662" height="88.5"/>
+                                <fontDescription key="fontDescription" type="system" weight="heavy" pointSize="37"/>
+                                <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <progressView opaque="NO" contentMode="scaleToFill" verticalHuggingPriority="750" progress="0.5" translatesAutoresizingMaskIntoConstraints="NO" id="yX0-10-kbJ">
+                                <rect key="frame" x="20" y="448.5" width="984" height="2"/>
+                            </progressView>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="hQG-PB-rsF">
+                                <rect key="frame" x="22" y="5" width="48" height="30"/>
+                                <state key="normal" title="Cancel"/>
+                                <connections>
+                                    <action selector="cancelPressed:" destination="Hh9-0b-coo" eventType="touchUpInside" id="HDf-b3-UQe"/>
+                                </connections>
+                            </button>
+                        </subviews>
+                        <color key="backgroundColor" white="0.14999999999999999" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        <constraints>
+                            <constraint firstItem="2oc-p5-az3" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="fby-ML-sJ2" secondAttribute="leadingMargin" id="BI5-t3-HjB"/>
+                            <constraint firstItem="2oc-p5-az3" firstAttribute="centerX" secondItem="fby-ML-sJ2" secondAttribute="centerX" id="G0D-Io-EOo"/>
+                            <constraint firstItem="yX0-10-kbJ" firstAttribute="top" secondItem="2oc-p5-az3" secondAttribute="bottom" constant="20" id="JcR-P4-ilG"/>
+                            <constraint firstItem="yX0-10-kbJ" firstAttribute="leading" secondItem="fby-ML-sJ2" secondAttribute="leadingMargin" id="Kau-rg-XmW"/>
+                            <constraint firstItem="2oc-p5-az3" firstAttribute="centerY" secondItem="fby-ML-sJ2" secondAttribute="centerY" id="XPg-AH-6ce"/>
+                            <constraint firstItem="hQG-PB-rsF" firstAttribute="leading" secondItem="fby-ML-sJ2" secondAttribute="leading" constant="22" id="Y7P-7o-kmH"/>
+                            <constraint firstAttribute="trailingMargin" secondItem="yX0-10-kbJ" secondAttribute="trailing" id="bq3-eh-7Sj"/>
+                            <constraint firstItem="yX0-10-kbJ" firstAttribute="centerX" secondItem="fby-ML-sJ2" secondAttribute="centerX" id="dJN-sv-eLz"/>
+                            <constraint firstItem="hQG-PB-rsF" firstAttribute="top" secondItem="fby-ML-sJ2" secondAttribute="top" constant="5" id="dPg-On-ble"/>
+                            <constraint firstAttribute="trailingMargin" relation="greaterThanOrEqual" secondItem="2oc-p5-az3" secondAttribute="trailing" id="x7y-Tu-oQN"/>
+                        </constraints>
+                    </view>
+                    <connections>
+                        <outlet property="cancelButton" destination="hQG-PB-rsF" id="V9u-tE-K8f"/>
+                        <outlet property="downloadProgressView" destination="yX0-10-kbJ" id="k9T-Mc-HkK"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="77c-8C-9pZ" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="126.56249999999999" y="154.6875"/>
+        </scene>
         <!--Team List Table View Controller-->
         <scene sceneID="8W7-88-PdG">
             <objects>
@@ -2926,7 +2978,7 @@
                 </splitViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Xiv-eq-Nwc" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-1547" y="1338"/>
+            <point key="canvasLocation" x="-1482" y="1337"/>
         </scene>
         <!--Syncing Conflict View Controller-->
         <scene sceneID="Nxc-yN-7J2">

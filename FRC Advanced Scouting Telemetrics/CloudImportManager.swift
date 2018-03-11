@@ -209,7 +209,7 @@ class CloudEventImportManager {
                     return
                 }
                 match.setNumber.value = frcMatch.setNumber
-                match.time = frcMatch.actualTime
+                match.time = frcMatch.scheduledTime
                 
                 match.event = eventObject
                 

@@ -7,13 +7,14 @@
 //
 
 import UIKit
+import RealmSwift
 
 class EventPickerViewController: UIViewController, UIPickerViewDelegate, UIPickerViewDataSource {
     @IBOutlet weak var eventPicker: UIPickerView!
     
     @IBOutlet weak var introText: UILabel!
     var delegate: EventSelection?
-    fileprivate var events: [Event]?
+    fileprivate var events: Results<Event>?
     fileprivate var currentEvent: Event?
     fileprivate var chosenEvent: Event?
 
@@ -25,7 +26,7 @@ class EventPickerViewController: UIViewController, UIPickerViewDelegate, UIPicke
         eventPicker.delegate = self
         
         //Load all the events
-        events = Array(RealmController.realmController.generalRealm.objects(Event.self))
+        events = RealmController.realmController.generalRealm.objects(Event.self)
         
         if events?.count == 0 {
             introText.isHidden = false

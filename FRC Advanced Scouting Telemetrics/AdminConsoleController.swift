@@ -135,18 +135,8 @@ class AdminConsoleController: UIViewController, UITableViewDataSource, UITableVi
                     assertionFailure()
                 }
             } else if indexPath.row == 2 {
-                let loggedInTeam: String = UserDefaults.standard.value(forKey: "LoggedInTeam") as? String ?? "Unknown"
-                Answers.logCustomEvent(withName: "Sign Out", customAttributes: ["Team":loggedInTeam])
-                
-                //Remove user default
-                UserDefaults.standard.setValue(nil, forKeyPath: "LoggedInTeam")
-                
-                //Logout button pressed
-                RealmController.realmController.currentSyncUser?.logOut()
-                RealmController.realmController.currentSyncUser = nil
-                
-                //Now return to the log in screen
-                (UIApplication.shared.delegate as! AppDelegate).displayLogin()
+                //Logout
+                RealmController.realmController.closeSyncedRealms()
             }
         default:
             break
