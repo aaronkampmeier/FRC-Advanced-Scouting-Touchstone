@@ -355,6 +355,26 @@ class TeamListTableViewController: UITableViewController, TeamListDetailDataSour
         return .none
     }
     
+//    override func tableView(_ tableView: UITableView, editActionsForRowAt indexPath: IndexPath) -> [UITableViewRowAction]? {
+//        if let event = selectedEvent {
+//            guard let ranker = RealmController.realmController.getTeamRanker(forEvent: event) else {
+//                return nil
+//            }
+//            let team = self.currentTeamsToDisplay[indexPath.row]
+//
+//            let markAsPicked = UITableViewRowAction(style: .default, title: "Mark Picked") {action, indexPath in
+//
+//            }
+//
+//        }
+//
+//        return nil
+//    }
+//
+//    func markAsPicked(atIndexPath indexPath: IndexPath, inTableView tableView: UITableView) {
+//
+//    }
+    
     //For selecting which teams have been picked
     @available(iOS 11.0, *)
     override func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
