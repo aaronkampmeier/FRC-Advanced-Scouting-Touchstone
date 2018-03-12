@@ -75,6 +75,7 @@ class TeamListTableViewController: UITableViewController, TeamListDetailDataSour
             teamListSplitVC.teamListDetailVC.reloadData()
         }
     }
+    let lastSelectedEventStorageKey = "Last-Selected-Event"
     var selectedEvent: Event? {
         didSet {
             //Set to nil, because the selected team might not be in the new event
@@ -82,8 +83,8 @@ class TeamListTableViewController: UITableViewController, TeamListDetailDataSour
             
             statToSortBy = Team.StatName.LocalRank.rawValue
             
-            
             if let event = selectedEvent {
+                UserDefaults.standard.set(event.key, forKey: lastSelectedEventStorageKey)
                 currentEventTeams = realmController.teamRanking(event)
                 
                 eventSelectionButton.setTitle(event.name, for: UIControlState())
@@ -115,10 +116,13 @@ class TeamListTableViewController: UITableViewController, TeamListDetailDataSour
         }
     }
     
-    var generalRealmObserverToken: NotificationToken?
-    var initialProgressNotification: NotificationToken?
     var eventsObserverToken: NotificationToken?
     var eventRankerObserverToken: NotificationToken? {
+        didSet {
+            oldValue?.invalidate()
+        }
+    }
+    var eventPickedTeamsObserverToken: NotificationToken? {
         didSet {
             oldValue?.invalidate()
         }
@@ -147,6 +151,14 @@ class TeamListTableViewController: UITableViewController, TeamListDetailDataSour
         //Set background view of table view
         let noEventView = NoEventSelectedView(frame: CGRect(x: 0, y: 0, width: tableView.frame.width, height: tableView.frame.height))
         tableView.backgroundView = noEventView
+        
+        //Set last selected event
+        if let lastSelectedEventKey = UserDefaults.standard.value(forKey: lastSelectedEventStorageKey) as? String {
+            //Get event
+            if let event = realmController.generalRealm.object(ofType: Event.self, forPrimaryKey: lastSelectedEventKey) {
+                selectedEvent = event
+            }
+        }
     }
     
     //For some reason this is called when moving the app to the background during stands scouting, not sure if this a beta issue or what but it does cause crash
@@ -154,7 +166,11 @@ class TeamListTableViewController: UITableViewController, TeamListDetailDataSour
         super.viewWillAppear(animated)
         
         if selectedEvent?.isInvalidated ?? false {
-            selectedEvent = nil
+            if let eventKey = UserDefaults.standard.value(forKey: lastSelectedEventStorageKey) as? String {
+                selectedEvent = realmController.generalRealm.object(ofType: Event.self, forPrimaryKey: eventKey)
+            } else {
+                selectedEvent = nil
+            }
         }
         
         currentEventTeams = realmController.teamRanking(selectedEvent)
@@ -172,46 +188,22 @@ class TeamListTableViewController: UITableViewController, TeamListDetailDataSour
             }
         }
         
-        //Track if an event was added or deleted (redundant most of the time with the following team observer except for when an event doesn't have any teams)
+        //Track if an event was added or deleted
         eventsObserverToken = realmController.generalRealm.objects(Event.self).observe {[weak self] eventsChanges in
             switch eventsChanges {
-            case .update(_, let deletions,_,_):
-                if deletions.count > 0 {
+            case .update(_, let deletions, let insertions,_):
+                if deletions.count > 0 || insertions.count > 0 {
                     DispatchQueue.main.async {
-                        self?.selectedEvent = nil
+                        //Attempt to keep in the match in the case that it was reloaded, if not then just move to no selected event
+                        if let eventKey = UserDefaults.standard.value(forKey: self?.lastSelectedEventStorageKey ?? "") as? String {
+                            self?.selectedEvent = RealmController.realmController.generalRealm.object(ofType: Event.self, forPrimaryKey: eventKey)
+                        } else {
+                            self?.selectedEvent = nil
+                        }
                     }
                 }
             default:
                 break
-            }
-        }
-        //Add responder for notification about changes in the amount of teams
-        generalRealmObserverToken = realmController.generalRealm.objects(Team.self).observe {[weak self] collectionChange in
-            switch collectionChange {
-            case .initial:
-                break
-            case .update(_, let deletions, let insertions, _):
-                if insertions.count > 0 || deletions.count > 0 {
-                    DispatchQueue.main.async {
-                        if deletions.count > 0 {
-                            self?.selectedEvent = nil
-                        }
-                        self?.currentEventTeams = RealmController.realmController.teamRanking(self?.selectedEvent)
-                    }
-                }
-            case .error(let error):
-                CLSNSLogv("Error observing general realm in team list table view: %@", getVaList([error as CVarArg]))
-                Crashlytics.sharedInstance().recordError(error)
-            }
-        }
-        
-        //Add a monitor to check when all new information is downloaded
-        initialProgressNotification = realmController.currentSyncUser?.session(for: realmController.syncedRealmURL!)?.addProgressNotification(for: .download, mode: .forCurrentlyOutstandingWork) {[weak self] progress in
-            if progress.isTransferComplete {
-                //It is complete, reload the data
-                DispatchQueue.main.async {
-                    self?.currentEventTeams = RealmController.realmController.teamRanking(self?.selectedEvent)
-                }
             }
         }
         
@@ -221,19 +213,31 @@ class TeamListTableViewController: UITableViewController, TeamListDetailDataSour
     func reloadEventRankerObserver() {
         //Add observer to listen for changes in the pick list
         eventRankerObserverToken = nil
+        eventPickedTeamsObserverToken = nil
+        
         if let event = selectedEvent {
             if let eventRanker = realmController.getTeamRanker(forEvent: event) {
-                self.eventRankerObserverToken = eventRanker.observe {[weak self] objectChange in
-                    switch objectChange {
-                    case .change(let changes):
+                
+                self.eventRankerObserverToken = eventRanker.rankedTeams.observe {[weak self] collectionChange in
+                    switch collectionChange {
+                    case .update(_, let deletions, let insertions,_):
                         DispatchQueue.main.async {
-                            for change in changes {
-                                if change.name == "pickedTeams" {
-                                    //Reload all visible rows
-                                    if let visibleRows = self?.tableView.indexPathsForVisibleRows {
-                                        self?.tableView.reloadRows(at: visibleRows, with: UITableViewRowAnimation.none)
-                                    }
-                                }
+                            if deletions.count > 0 || insertions.count > 0 {
+                                self?.currentEventTeams = self!.realmController.teamRanking(event)
+                            }
+                        }
+                    default:
+                        break
+                    }
+                }
+                
+                self.eventPickedTeamsObserverToken = eventRanker.pickedTeams.observe {[weak self] collectionChange in
+                    switch collectionChange {
+                    case .update:
+                        //Reload all visible rows
+                        DispatchQueue.main.async {
+                            if let visibleRows = self?.tableView.indexPathsForVisibleRows {
+                                self?.tableView.reloadRows(at: visibleRows, with: UITableViewRowAnimation.none)
                             }
                         }
                     default:
@@ -247,8 +251,6 @@ class TeamListTableViewController: UITableViewController, TeamListDetailDataSour
     override func viewDidDisappear(_ animated: Bool) {
         super.viewDidDisappear(animated)
         
-        generalRealmObserverToken?.invalidate()
-        initialProgressNotification?.invalidate()
         eventsObserverToken?.invalidate()
         eventRankerObserverToken?.invalidate()
     }
@@ -408,7 +410,7 @@ class TeamListTableViewController: UITableViewController, TeamListDetailDataSour
                 RealmController.realmController.syncedRealm.beginWrite()
                 ranker.setIsInPickList(!ranker.isInPickList(team: team), team: team)
                 do {
-                    try RealmController.realmController.syncedRealm.commitWrite(withoutNotifying: [self.eventRankerObserverToken ?? NotificationToken()])
+                    try RealmController.realmController.syncedRealm.commitWrite(withoutNotifying: [self.eventPickedTeamsObserverToken ?? NotificationToken()])
                 } catch {
                     CLSNSLogv("Error saving write of change to pick list: \(error)", getVaList([]))
                     Crashlytics.sharedInstance().recordError(error)
@@ -437,11 +439,12 @@ class TeamListTableViewController: UITableViewController, TeamListDetailDataSour
         guard let _ = selectedEvent else {
             return
         }
+        
         realmController.moveTeam(from: fromIndexPath.row, to: toIndexPath.row, inEvent: selectedEvent)
         
-        let movedTeam = currentEventTeams[fromIndexPath.row]
-        currentEventTeams.remove(at: fromIndexPath.row)
-        currentEventTeams.insert(movedTeam, at: toIndexPath.row)
+//        let movedTeam = currentEventTeams[fromIndexPath.row]
+//        currentEventTeams.remove(at: fromIndexPath.row)
+//        currentEventTeams.insert(movedTeam, at: toIndexPath.row)
     }
 
     // Override to support conditional rearranging of the table view.

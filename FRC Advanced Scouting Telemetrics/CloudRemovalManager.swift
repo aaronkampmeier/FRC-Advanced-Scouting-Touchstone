@@ -21,9 +21,11 @@ class CloudEventRemovalManager {
         self.completionHandler = completionHandler
     }
     
-    func remove() {
-        realmController.generalRealm.beginWrite()
-        realmController.syncedRealm.beginWrite()
+    func remove(shouldEnterWrite: Bool = true) {
+        if shouldEnterWrite {
+            realmController.generalRealm.beginWrite()
+            realmController.syncedRealm.beginWrite()
+        }
         CLSNSLogv("Beginning removal of event: %@", getVaList([eventToRemove.key]))
         
         //Start by going through the teams and finding the ones that will need to be removed. A team will be removed if the event being removed is the only event it is a part of.
@@ -54,19 +56,23 @@ class CloudEventRemovalManager {
         
         realmController.delete(object: eventToRemove)
         
-        do {
-            try realmController.syncedRealm.commitWrite()
-            try realmController.generalRealm.commitWrite()
-            
-            CLSNSLogv("Finished removal of event", getVaList([]))
-            NotificationCenter.default.post(Notification(name: Notification.Name(rawValue: "UpdatedTeams")))
-            
+        if shouldEnterWrite {
+            do {
+                try realmController.syncedRealm.commitWrite()
+                try realmController.generalRealm.commitWrite()
+                
+                CLSNSLogv("Finished removal of event", getVaList([]))
+                NotificationCenter.default.post(Notification(name: Notification.Name(rawValue: "UpdatedTeams")))
+                
+                completionHandler(true)
+            } catch {
+                CLSNSLogv("Error removing event: \(error)", getVaList([]))
+                Crashlytics.sharedInstance().recordError(error)
+                
+                completionHandler(false)
+            }
+        } else {
             completionHandler(true)
-        } catch {
-            CLSNSLogv("Error removing event: \(error)", getVaList([]))
-            Crashlytics.sharedInstance().recordError(error)
-            
-            completionHandler(false)
         }
     }
 }

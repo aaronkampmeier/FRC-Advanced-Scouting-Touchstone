@@ -25,19 +25,49 @@ class CloudReloadingManager {
     
     func reload() {
         //To reload, it removes the event and then calls a CloudImportManager to re-import it
-        cloudConnection.event(forKey: eventToReload.key, withCompletionHandler: reloadEvent)
+        
+        realmController.generalRealm.beginWrite()
+        realmController.syncedRealm.beginWrite()
+        
+        let eventKey = eventToReload.key
         realmController.delete(object: eventToReload)
+        cloudConnection.event(forKey: eventKey, withCompletionHandler: reloadEvent)
     }
     
     private func reloadEvent(frcEvent: FRCEvent?) {
         if let frcEvent = frcEvent {
             CLSNSLogv("Beginning event reload", getVaList([]))
-            CloudEventImportManager(shouldPreload: false, forEvent: frcEvent) {(successful, importError) in
-                self.completionHandler(successful)
+            CloudEventImportManager(shouldPreload: false, shouldEnterWrite: false, forEvent: frcEvent) {(successful, importError) in
+                if let importError = importError {
+                    RealmController.realmController.syncedRealm.cancelWrite()
+                    RealmController.realmController.generalRealm.cancelWrite()
+                    
+                    self.completionHandler(false)
+                    
+                    CLSNSLogv("Cancelled reloading writes because of error: \(importError)", getVaList([]))
+                } else {
+                    do {
+                        try RealmController.realmController.syncedRealm.commitWrite()
+                        try RealmController.realmController.generalRealm.commitWrite()
+                        
+                        self.completionHandler(successful)
+                        
+                        CLSNSLogv("Finished re-imported (reloaded) cloud event: \(frcEvent.key), withError: \(String(describing: importError))", getVaList([]))
+                    } catch {
+                        CLSNSLogv("Failed to commit reloading writes with error: \(error)", getVaList([]))
+                        Crashlytics.sharedInstance().recordError(error)
+                        self.completionHandler(false)
+                    }
+                }
                 
-                CLSNSLogv("Finished re-imported (reloaded) cloud event: \(frcEvent.key), withError: \(String(describing: importError))", getVaList([]))
             }
                 .import()
+        } else {
+            //Did not return an frc event
+            RealmController.realmController.syncedRealm.cancelWrite()
+            RealmController.realmController.generalRealm.cancelWrite()
+            
+            self.completionHandler(false)
         }
     }
 }

@@ -17,6 +17,8 @@ class EventPickerViewController: UIViewController, UIPickerViewDelegate, UIPicke
     fileprivate var events: Results<Event>?
     fileprivate var currentEvent: Event?
     fileprivate var chosenEvent: Event?
+    
+    fileprivate var eventUpdaterToken: NotificationToken?
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -24,15 +26,6 @@ class EventPickerViewController: UIViewController, UIPickerViewDelegate, UIPicke
         // Do any additional setup after loading the view.
         eventPicker.dataSource = self
         eventPicker.delegate = self
-        
-        //Load all the events
-        events = RealmController.realmController.generalRealm.objects(Event.self)
-        
-        if events?.count == 0 {
-            introText.isHidden = false
-        } else {
-            introText.isHidden = true
-        }
     }
 
     override func didReceiveMemoryWarning() {
@@ -43,12 +36,33 @@ class EventPickerViewController: UIViewController, UIPickerViewDelegate, UIPicke
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         
+        //Load all the events
+        events = RealmController.realmController.generalRealm.objects(Event.self)
+        
+        if events?.count == 0 {
+            introText.isHidden = false
+        } else {
+            introText.isHidden = true
+        }
+        
         currentEvent = delegate?.currentEvent()
         
         if let current = currentEvent {
-            let index = (events?.index(of: current))! + 1
+            let index = (events?.index(of: current))!
             eventPicker.selectRow(index, inComponent: 0, animated: false)
-            pickerView(eventPicker, didSelectRow: index, inComponent: 0)
+            self.chosenEvent = events![index]
+        } else {
+            self.chosenEvent = nil
+        }
+        
+        eventUpdaterToken = events?.observe {[weak self] collectionChange in
+            switch collectionChange {
+            case .update:
+                self?.eventPicker.reloadAllComponents()
+                self?.chosenEvent = nil
+            default:
+                break
+            }
         }
     }
     
@@ -61,6 +75,8 @@ class EventPickerViewController: UIViewController, UIPickerViewDelegate, UIPicke
         super.viewWillDisappear(animated)
         
         delegate?.eventSelected(chosenEvent)
+        
+        eventUpdaterToken?.invalidate()
     }
     
     func numberOfComponents(in pickerView: UIPickerView) -> Int {
@@ -68,25 +84,16 @@ class EventPickerViewController: UIViewController, UIPickerViewDelegate, UIPicke
     }
     
     func pickerView(_ pickerView: UIPickerView, numberOfRowsInComponent component: Int) -> Int {
-        return events!.count + 1
+        return events!.count
     }
     
     func pickerView(_ pickerView: UIPickerView, titleForRow row: Int, forComponent component: Int) -> String? {
-        switch row {
-        case 0:
-            return "All Teams (Default)"
-        default:
-            let event = events![row-1]
-            return "\(event.name) (\(event.year))"
-        }
+        let event = events![row]
+        return "\(event.name) (\(event.year))"
     }
     
     func pickerView(_ pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {
-        if row == 0 {
-            chosenEvent = nil
-        } else {
-            chosenEvent = events![row-1]
-        }
+        chosenEvent = events![row]
     }
 
     /*

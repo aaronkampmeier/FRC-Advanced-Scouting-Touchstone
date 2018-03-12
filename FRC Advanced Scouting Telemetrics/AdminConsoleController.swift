@@ -6,19 +6,19 @@
 //  Copyright © 2016 Kampfire Technologies. All rights reserved.
 //
 
-import Foundation
 import UIKit
+import RealmSwift
 import Crashlytics
 import VTAcknowledgementsViewController
 
 class AdminConsoleController: UIViewController, UITableViewDataSource, UITableViewDelegate {
     @IBOutlet weak var tableView: UITableView!
     
-    var events = [Event]()
+    var events: Results<Event>!
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        events = Array(RealmController.realmController.generalRealm.objects(Event.self))
+        events = RealmController.realmController.generalRealm.objects(Event.self)
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -179,7 +179,7 @@ class AdminConsoleController: UIViewController, UITableViewDataSource, UITableVi
         }
     }
     
-    func reloadAt(indexPath: IndexPath, inTableView tableView: UITableView) {
+    func reloadAt(indexPath: IndexPath, inTableView tableView: UITableView, withCompletionHandler onCompletion: (() -> Void)? = nil) {
         //Create a loading view
         let spinnerView = UIActivityIndicatorView(activityIndicatorStyle: UIActivityIndicatorViewStyle.whiteLarge)
         let grayView = UIView(frame: CGRect(x: self.tableView.frame.width / 2 - 50, y: self.tableView.frame.height / 2 - 50, width: 120, height: 120))
@@ -202,7 +202,8 @@ class AdminConsoleController: UIViewController, UITableViewDataSource, UITableVi
             
             grayView.removeFromSuperview()
             
-            self.events = Array(RealmController.realmController.generalRealm.objects(Event.self))
+            onCompletion?()
+            
             tableView.reloadData()
             }
             .reload()
@@ -218,7 +219,6 @@ class AdminConsoleController: UIViewController, UITableViewDataSource, UITableVi
             } else {
                 tableView.beginUpdates()
                 tableView.deleteRows(at: [indexPath], with: .left)
-                self.events.remove(at: indexPath.row)
                 tableView.endUpdates()
             }
             
@@ -268,7 +268,6 @@ class AdminConsoleController: UIViewController, UITableViewDataSource, UITableVi
     
     @IBAction func rewindToAdminConsole(withSegue segue: UIStoryboardSegue) {
         if segue.identifier == "unwindToAdminConsoleFromEventAdd" {
-            events = Array(RealmController.realmController.generalRealm.objects(Event.self))
             tableView.reloadData()
         }
         

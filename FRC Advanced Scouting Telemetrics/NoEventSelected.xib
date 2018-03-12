@@ -20,8 +20,8 @@
             <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
             <subviews>
-                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Select an event from the &quot;Select Event&quot; button above" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="cah-d4-Xiq">
-                    <rect key="frame" x="34" y="366.5" width="305.5" height="41"/>
+                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Select an event from the &quot;Select Event&quot; button above or add an event by clicking the gear" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="cah-d4-Xiq">
+                    <rect key="frame" x="16" y="366.5" width="343.5" height="61"/>
                     <fontDescription key="fontDescription" type="system" pointSize="17"/>
                     <color key="textColor" white="0.66666666666666663" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                     <nil key="highlightedColor"/>
@@ -36,10 +36,10 @@
             <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
             <constraints>
                 <constraint firstItem="RRY-qt-JbF" firstAttribute="centerX" secondItem="vUN-kp-3ea" secondAttribute="centerX" id="09m-w1-EXL"/>
-                <constraint firstItem="cah-d4-Xiq" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="vUN-kp-3ea" secondAttribute="leading" constant="5" id="6dU-b3-wQD"/>
+                <constraint firstItem="cah-d4-Xiq" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="vUN-kp-3ea" secondAttribute="leading" constant="10" id="6dU-b3-wQD"/>
                 <constraint firstItem="cah-d4-Xiq" firstAttribute="centerX" secondItem="vUN-kp-3ea" secondAttribute="centerX" id="CMn-Kz-fog"/>
                 <constraint firstItem="RRY-qt-JbF" firstAttribute="centerY" secondItem="vUN-kp-3ea" secondAttribute="centerY" id="Tv3-ZH-YoG"/>
-                <constraint firstItem="vUN-kp-3ea" firstAttribute="trailing" relation="greaterThanOrEqual" secondItem="cah-d4-Xiq" secondAttribute="trailing" constant="5" id="Tyv-xs-nIK"/>
+                <constraint firstItem="vUN-kp-3ea" firstAttribute="trailing" relation="greaterThanOrEqual" secondItem="cah-d4-Xiq" secondAttribute="trailing" constant="10" id="Tyv-xs-nIK"/>
                 <constraint firstItem="cah-d4-Xiq" firstAttribute="top" secondItem="RRY-qt-JbF" secondAttribute="bottom" constant="10" id="Wue-tH-kSo"/>
             </constraints>
             <viewLayoutGuide key="safeArea" id="vUN-kp-3ea"/>

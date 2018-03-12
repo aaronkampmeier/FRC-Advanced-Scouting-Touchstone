@@ -33,7 +33,7 @@ class CloudEventImportManager {
     fileprivate var matchObjects: [Match] = []
     fileprivate var teamMatchPerformanceObjects: [TeamMatchPerformance] = []
     
-    init(shouldPreload: Bool, forEvent frcEvent: FRCEvent, withCompletionHandler completionHandler: @escaping (Bool, ImportError?) -> Void) {
+    init(shouldPreload: Bool, shouldEnterWrite: Bool = true, forEvent frcEvent: FRCEvent, withCompletionHandler completionHandler: @escaping (Bool, ImportError?) -> Void) {
         if shouldPreload {
             
         }
@@ -45,13 +45,13 @@ class CloudEventImportManager {
         currentMatches = realmController.generalRealm.objects(Match.self)
         currentScoutedMatchPerformances = realmController.syncedRealm.objects(ScoutedMatchPerformance.self)
         currentScoutedMatches = realmController.syncedRealm.objects(ScoutedMatch.self)
+        self.shouldEnterWrite = shouldEnterWrite
         self.frcEvent = frcEvent
     }
     
+    let shouldEnterWrite: Bool
     ///Takes an FRCEvent and creates core data objects in the database
     func `import`() {
-        
-        
         //First make sure the event being added is not already in the database
         if currentEvents.contains(where: {event in
             return event.key == frcEvent.key
@@ -63,8 +63,10 @@ class CloudEventImportManager {
         CLSNSLogv("Beginning import of event: %@", getVaList([frcEvent.key]))
         
         ///Begin the Write
-        realmController.generalRealm.beginWrite()
-        realmController.syncedRealm.beginWrite()
+        if shouldEnterWrite {
+            realmController.generalRealm.beginWrite()
+            realmController.syncedRealm.beginWrite()
+        }
         
         //Create an event object
         let event: Event = Event()
@@ -339,12 +341,14 @@ class CloudEventImportManager {
     private func finalize() {
         CLSNSLogv("Finalizing event import", getVaList([]))
         
-        do {
-            try realmController.syncedRealm.commitWrite()
-            try realmController.generalRealm.commitWrite()
-        } catch {
-            CLSNSLogv("Failed to commit import writes: \(error)", getVaList([]))
-            Crashlytics.sharedInstance().recordError(error)
+        if shouldEnterWrite {
+            do {
+                try realmController.syncedRealm.commitWrite()
+                try realmController.generalRealm.commitWrite()
+            } catch {
+                CLSNSLogv("Failed to commit import writes: \(error)", getVaList([]))
+                Crashlytics.sharedInstance().recordError(error)
+            }
         }
         
         NotificationCenter.default.post(Notification(name: Notification.Name(rawValue: "UpdatedTeams"), object: self))

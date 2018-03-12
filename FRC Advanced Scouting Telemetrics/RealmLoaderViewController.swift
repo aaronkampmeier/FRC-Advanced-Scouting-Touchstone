@@ -33,11 +33,6 @@ class RealmLoaderViewController: UIViewController {
                 self?.downloadProgressView.setProgress(Float(progress.fractionTransferred), animated: true)
             }
         }
-        
-        //Set a loading listener to update progress
-        DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + 1) {
-            
-        }
     }
     
     override func viewDidDisappear(_ animated: Bool) {
