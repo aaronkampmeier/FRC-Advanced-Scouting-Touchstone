@@ -22,7 +22,6 @@ class RealmController {
     static var realmController: RealmController = RealmController()
     
     var generalRealm: Realm!
-    
     var syncedRealm: Realm!
     
     let syncAuthURL = URL(string: "https://\(rosServerAddress)")!
@@ -88,6 +87,9 @@ class RealmController {
                 Answers.logLogin(withMethod: "ROS", success: true, customAttributes: nil)
                 
                 self.performSanityChecks()
+                
+                self.tbaUpdatingReloader = TBAUpdatingDataReloader(withSyncedRealmConfig: self.scoutedRealmConfig!, andGeneralRealmConfig: self.generalRealmConfig!)
+                self.tbaUpdatingReloader?.setGeneralUpdaters()
             }
             
             if shouldOpenSyncedRealmAsync {
@@ -143,6 +145,8 @@ class RealmController {
     func closeSyncedRealms() {
         let loggedInTeam: String = UserDefaults.standard.value(forKey: "LoggedInTeam") as? String ?? "Unknown"
         Answers.logCustomEvent(withName: "Sign Out", customAttributes: ["Team":loggedInTeam])
+        
+        self.tbaUpdatingReloader = nil
         
         //Remove user default
         UserDefaults.standard.setValue(nil, forKeyPath: "LoggedInTeam")
