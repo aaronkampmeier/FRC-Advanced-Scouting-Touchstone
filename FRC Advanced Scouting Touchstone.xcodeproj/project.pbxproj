@@ -91,6 +91,7 @@
 		937C682E204C86DB00FAEDE8 /* SelectStatsTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 937C682D204C86DB00FAEDE8 /* SelectStatsTableViewController.swift */; };
 		937E9C961E40468300D0ED76 /* SuperNotesCollectionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 937E9C951E40468300D0ED76 /* SuperNotesCollectionViewController.swift */; };
 		938B50E52055AF430075C416 /* RealmLoaderViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 938B50E42055AF430075C416 /* RealmLoaderViewController.swift */; };
+		938E0B3C2056D85C00666FA7 /* TBAAsyncManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 938E0B3B2056D85C00666FA7 /* TBAAsyncManager.swift */; };
 		9391EA6C1E4852D2008E17A1 /* PitStringFieldCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9391EA6B1E4852D2008E17A1 /* PitStringFieldCollectionViewCell.swift */; };
 		93A15E921F05E9A00057C965 /* JSONModels.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93A15E911F05E9A00057C965 /* JSONModels.swift */; };
 		93A38B3A2055EBA400B8B692 /* NoEventSelected.xib in Resources */ = {isa = PBXBuildFile; fileRef = 93A38B392055EBA400B8B692 /* NoEventSelected.xib */; };
@@ -282,6 +283,7 @@
 		937E9C951E40468300D0ED76 /* SuperNotesCollectionViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SuperNotesCollectionViewController.swift; sourceTree = "<group>"; };
 		938B50E42055AF430075C416 /* RealmLoaderViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RealmLoaderViewController.swift; sourceTree = "<group>"; };
 		938D9CB01E1B05BA00A5E522 /* FASTTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FASTTests.swift; sourceTree = "<group>"; };
+		938E0B3B2056D85C00666FA7 /* TBAAsyncManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TBAAsyncManager.swift; sourceTree = "<group>"; };
 		9391EA6B1E4852D2008E17A1 /* PitStringFieldCollectionViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PitStringFieldCollectionViewCell.swift; sourceTree = "<group>"; };
 		93A15E911F05E9A00057C965 /* JSONModels.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JSONModels.swift; sourceTree = "<group>"; };
 		93A38B392055EBA400B8B692 /* NoEventSelected.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = NoEventSelected.xib; sourceTree = "<group>"; };
@@ -505,6 +507,7 @@
 		9332F2AD1E22C8C300AB3EA6 /* Cloud Data */ = {
 			isa = PBXGroup;
 			children = (
+				938E0B3B2056D85C00666FA7 /* TBAAsyncManager.swift */,
 				1F718F791E085BD900BD1951 /* CloudConnectionManager.swift */,
 				932C344D1E12F7C400A23203 /* CloudImportManager.swift */,
 				936572D81E14E52100439728 /* CloudRemovalManager.swift */,
@@ -1048,6 +1051,7 @@
 				9353ADCA1E58EDF800120F1A /* CloudReloadingManager.swift in Sources */,
 				930B965C1E4548F700E385D3 /* PitSegmentedSelectorCollectionViewCell.swift in Sources */,
 				93A15E921F05E9A00057C965 /* JSONModels.swift in Sources */,
+				938E0B3C2056D85C00666FA7 /* TBAAsyncManager.swift in Sources */,
 				930B96671E45A91A00E385D3 /* PitButtonCollectionViewCell.swift in Sources */,
 				935A2B0A1E6E6968008FEF9D /* TimeMarkerDetailViewController.swift in Sources */,
 				932354461E41686B0039386A /* SuperNotesCollectionViewCell.swift in Sources */,

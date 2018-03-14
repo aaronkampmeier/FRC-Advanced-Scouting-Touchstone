@@ -28,7 +28,11 @@ class RealmController {
     let syncAuthURL = URL(string: "https://\(rosServerAddress)")!
     var syncedRealmURL: URL?
     var generalRealmURL: URL?
+    var scoutedRealmConfig: Realm.Configuration?
+    var generalRealmConfig: Realm.Configuration?
     var currentSyncUser: SyncUser?
+    
+    var tbaUpdatingReloader: TBAUpdatingDataReloader?
     
     private init() {
         generalRealm = nil
@@ -56,17 +60,17 @@ class RealmController {
         
         //Create sync config with sync user
         let scoutedSyncConfig = SyncConfiguration(user: syncUser, realmURL: scoutedRealmURL)
-        var scoutedRealmConfig = Realm.Configuration(syncConfiguration: scoutedSyncConfig)
+        scoutedRealmConfig = Realm.Configuration(syncConfiguration: scoutedSyncConfig)
         
         //Set the object types to be used in the Synced Realm to keep it separate from the other realm
-        scoutedRealmConfig.objectTypes = [GeneralRanker.self, EventRanker.self, ScoutedTeam.self, ScoutedMatch.self, ScoutedMatchPerformance.self, TimeMarker.self, ComputedStats.self, TeamComment.self]
+        scoutedRealmConfig?.objectTypes = [GeneralRanker.self, EventRanker.self, ScoutedTeam.self, ScoutedMatch.self, ScoutedMatchPerformance.self, TimeMarker.self, ComputedStats.self, TeamComment.self]
         
         //Now for the general realm
         let generalStructureRealmURL = URL(string: "realms://\(rosServerAddress)/~/general_structure")!
         generalRealmURL = generalStructureRealmURL
         let generalSyncConfig = SyncConfiguration(user: syncUser, realmURL: generalStructureRealmURL)
-        var generalRealmConfig = Realm.Configuration(syncConfiguration: generalSyncConfig)
-        generalRealmConfig.objectTypes = [Team.self,Match.self,TeamEventPerformance.self,Event.self,TeamMatchPerformance.self]
+        generalRealmConfig = Realm.Configuration(syncConfiguration: generalSyncConfig)
+        generalRealmConfig?.objectTypes = [Team.self,Match.self,TeamEventPerformance.self,Event.self,TeamMatchPerformance.self]
         
         let realmErrorHandler: (Error) -> Void = { (error: Error) in
             CLSNSLogv("Error opening realms: \(error)", getVaList([]))
@@ -76,7 +80,7 @@ class RealmController {
         
         do {
             //Attempt to open the realm
-            self.generalRealm = try Realm(configuration: generalRealmConfig)
+            self.generalRealm = try Realm(configuration: generalRealmConfig!)
             
             let syncedRealmCompletionHandler: () -> Void = {
                 NotificationCenter.default.post(name: DidLogIntoSyncServerNotification, object: self)
@@ -87,7 +91,7 @@ class RealmController {
             }
             
             if shouldOpenSyncedRealmAsync {
-                Realm.asyncOpen(configuration: scoutedRealmConfig) {realm, error in
+                Realm.asyncOpen(configuration: scoutedRealmConfig!) {realm, error in
                     if let realm = realm {
                         self.syncedRealm = realm
                         syncedRealmCompletionHandler()
@@ -99,7 +103,7 @@ class RealmController {
                 }
             } else {
                 //Not async (Normal)
-                self.syncedRealm = try Realm(configuration: scoutedRealmConfig)
+                self.syncedRealm = try Realm(configuration: scoutedRealmConfig!)
                 syncedRealmCompletionHandler()
             }
         } catch {

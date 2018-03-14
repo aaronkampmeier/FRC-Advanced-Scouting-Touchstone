@@ -132,3 +132,56 @@ struct FRCMatch: Codable {
         case winningAlliance = "winning_alliance"
     }
 }
+
+//MARK: - Statuses
+
+struct FRCTeamEventStatus: Codable {
+    let qual: FRCEventStatusRank
+//    let alliance: FRCEventStatusAlliance
+//    let playoff: FRCEventStatusPlayoff
+    let allianceStatus: String
+    let playoffStatus: String
+    let overallStatus: String
+    let nextMatchKey: String
+    let lastMatchKey: String
+    
+    private enum CodingKeys: String, CodingKey {
+        case qual
+        case allianceStatus = "alliance_status_str"
+        case playoffStatus = "playoff_status_str"
+        case overallStatus = "overall_status_str"
+        case nextMatchKey = "next_match_key"
+        case lastMatchKey = "last_match_key"
+    }
+}
+
+struct FRCEventStatusRank: Codable {
+    let numOfTeams: String
+    let ranking: FRCRanking
+//    let sortOrderInfo:
+    let status: String
+    
+    private enum CodingKeys: String, CodingKey {
+        case numOfTeams = "num_teams"
+        case ranking
+        case status
+    }
+}
+
+struct FRCRanking: Codable {
+    let dq: Int?
+    let matchesPlayed: Int?
+    let qualAverage: Double?
+    let rank: Int
+//    let record:  -- Win-Loss-Tie record
+//    let sortOrders:
+    let teamKey: String
+    
+    private enum CodingKeys: String, CodingKey {
+        case dq
+        case matchesPlayed = "matches_played"
+        case qualAverage = "qual_average"
+        case rank
+        case teamKey = "team_key"
+    }
+}

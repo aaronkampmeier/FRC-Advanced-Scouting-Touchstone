@@ -171,13 +171,13 @@ class CloudEventImportManager {
             }
             
             //Now get the matches
-            cloudConnection.matches(forEventKey: frcEvent.key, withCompletionHandler: importMatches)
+            cloudConnection.matches(forEventKey: frcEvent.key, shouldUseModificationValues: false, withCompletionHandler: importMatches)
         } else {
             throwError(error: .ErrorLoadingTeams)
         }
     }
     
-    fileprivate func importMatches(fromMatches matches: [FRCMatch]?) {
+    fileprivate func importMatches(fromMatches matches: [FRCMatch]?, withError error: Error?) {
         CLSNSLogv("Beginning import of matches from event", getVaList([]))
         if let frcMatches = matches {
             for frcMatch in frcMatches {
@@ -309,7 +309,7 @@ class CloudEventImportManager {
         }
     }
     
-    fileprivate func setCalculatedStats(fromOPRs oprs: FRCOPRs?) {
+    fileprivate func setCalculatedStats(fromOPRs oprs: FRCOPRs?, withError error: Error?) {
         //This is not a required thing to have, if it fails then it's okay and we will still finalize
         if let oprs = oprs {
             //Go through all the teams in this event
@@ -333,8 +333,10 @@ class CloudEventImportManager {
     }
     
     private func throwError(error: ImportError) {
-        realmController.syncedRealm.cancelWrite()
-        realmController.generalRealm.cancelWrite()
+        if shouldEnterWrite {
+            realmController.syncedRealm.cancelWrite()
+            realmController.generalRealm.cancelWrite()
+        }
         completionHandler(false, error)
     }
     

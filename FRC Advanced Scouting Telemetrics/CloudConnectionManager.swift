@@ -40,8 +40,6 @@ class CloudData {
         }
     }
     
-    fileprivate let dataCache = NSCache<NSString, TBAResponseCache<Any>>()
-    
     let jsonDecoder = JSONDecoder()
     
     init() {
@@ -94,28 +92,60 @@ class CloudData {
         }
     }
     
-    func matches(forEventKey eventKey: String, withCompletionHandler completionHandler: @escaping ([FRCMatch]?) -> Void) {
-        //Check if there is something in the cache
-        let cachedData = dataCache.object(forKey: "MatchesInEvent\(eventKey)" as NSString)
+    func matches(forEventKey eventKey: String, shouldUseModificationValues: Bool, withCompletionHandler completionHandler: @escaping ([FRCMatch]?, Error?) -> Void) {
+        var eventRanker: EventRanker?
+        var lastModified: String? = nil
+        if shouldUseModificationValues {
+            if let event = RealmController.realmController.generalRealm.object(ofType: Event.self, forPrimaryKey: eventKey) {
+                if let ranker = RealmController.realmController.getTeamRanker(forEvent: event) {
+                    eventRanker = ranker
+                    if let lastModifiedString = ranker.matchesLastModified {
+                        lastModified = lastModifiedString
+                    }
+                }
+            }
+        }
         
-        Alamofire.request(baseApi + "event/\(eventKey)/matches", method: .get, headers: header(withLastModified: cachedData?.lastModified))
-            .validate(statusCode: [200,304])
+        Alamofire.request(baseApi + "event/\(eventKey)/matches", method: .get, headers: header(withLastModified: lastModified))
+            .validate(statusCode: 200...200)
             .responseData {response in
                 switch response.result {
                 case .success(let responseData):
                     //Take data and decode it using JSON decoder
                     do {
                         let matches = try self.jsonDecoder.decode([FRCMatch].self, from: responseData)
-                        completionHandler(matches)
+                        
+                        var didStarWrite = false
+                        if !RealmController.realmController.syncedRealm.isInWriteTransaction {
+                            RealmController.realmController.syncedRealm.beginWrite()
+                            didStarWrite = true
+                        }
+                        if let lastModifiedHeader = response.response?.allHeaderFields["Last-Modified"] as? String {
+                            eventRanker?.matchesLastModified = lastModifiedHeader
+                        }
+                        if didStarWrite {
+                            do {
+                                try RealmController.realmController.syncedRealm.commitWrite()
+                            } catch {
+                                CLSNSLogv("Error saving match last modified header: \(error)", getVaList([]))
+                                Crashlytics.sharedInstance().recordError(error)
+                            }
+                        }
+                        
+                        completionHandler(matches, nil)
                     } catch {
                         CLSNSLogv("Failed to decode json data with error: \(error)", getVaList([]))
-                        completionHandler(nil)
+                        completionHandler(nil, error)
                         Crashlytics.sharedInstance().recordError(error)
                     }
                 case .failure(let error):
-                    CLSNSLogv("Failed to retrieve matches from cloud with error: \(error)", getVaList([]))
-                    completionHandler(nil)
-                    Crashlytics.sharedInstance().recordError(error)
+                    if response.response?.statusCode == 304 {
+                        completionHandler(nil,nil)
+                    } else {
+                        CLSNSLogv("Failed to retrieve matches from cloud with error: \(error)", getVaList([]))
+                        completionHandler(nil, error)
+                        Crashlytics.sharedInstance().recordError(error)
+                    }
                 }
         }
     }
@@ -166,27 +196,66 @@ class CloudData {
         }
     }
     
-    func oprs(withEventKey eventKey: String, withCompletionHandler completionHandler: @escaping (FRCOPRs?) -> Void) {
-        Alamofire.request(baseApi + "event/\(eventKey)/oprs", method: .get, headers: headers)
+    func oprs(withEventKey eventKey: String, withCompletionHandler completionHandler: @escaping (FRCOPRs?, _ withError: Error?) -> Void) {
+        var lastModified: String? = nil
+        //Add the last modified header
+        var eventRanker: EventRanker?
+        if let event = RealmController.realmController.generalRealm.object(ofType: Event.self, forPrimaryKey: eventKey) {
+            if let ranker = RealmController.realmController.getTeamRanker(forEvent: event) {
+                eventRanker = ranker
+                
+                if let lastModifiedDate = ranker.oprLastModified {
+                    lastModified = lastModifiedDate
+                }
+            }
+        }
+        
+        Alamofire.request(baseApi + "event/\(eventKey)/oprs", method: .get, headers: header(withLastModified: lastModified))
             .validate(statusCode: 200...200)
             .responseData {response in
                 switch response.result {
                 case .success(let responseData):
                     do {
                         let oprs = try self.jsonDecoder.decode(FRCOPRs.self, from: responseData)
-                        completionHandler(oprs)
+                        
+                        //Store the last modified value for future calls
+                        var didStartWrite = false
+                        if !RealmController.realmController.syncedRealm.isInWriteTransaction {
+                            RealmController.realmController.syncedRealm.beginWrite()
+                            didStartWrite = true
+                        }
+                        if let lastModifiedString = response.response?.allHeaderFields["Last-Modified"] as? String {
+                            eventRanker?.oprLastModified = lastModifiedString
+                        }
+                        
+                        if didStartWrite {
+                            do {
+                                try RealmController.realmController.syncedRealm.commitWrite()
+                            } catch {
+                                CLSNSLogv("Error writing last modified and cache control values for OPR: \(error)", getVaList([]))
+                                Crashlytics.sharedInstance().recordError(error)
+                            }
+                        }
+                        
+                        completionHandler(oprs, nil)
                     } catch {
-                        completionHandler(nil)
+                        CLSNSLogv("Error serializing opr json: \(error)", getVaList([]))
+                        completionHandler(nil, error)
+                        Crashlytics.sharedInstance().recordError(error)
                     }
                 case .failure(let error):
-                    CLSNSLogv("Failed to retrieve oprs from cloud with error: \(error)", getVaList([]))
-                    completionHandler(nil)
-                    Crashlytics.sharedInstance().recordError(error)
+                    if response.response?.statusCode == 304 {
+                        completionHandler(nil, nil)
+                    } else {
+                        CLSNSLogv("Failed to retrieve oprs from cloud with error: \(error)", getVaList([]))
+                        completionHandler(nil, error)
+                        Crashlytics.sharedInstance().recordError(error)
+                    }
                 }
         }
     }
     
-    func preloadEventMatches() {
+    func teamStatus(forTeamKey teamKey: String, inEvent eventKey: String, withCompletionHandler completionHandler: (FRCTeamEventStatus?,Error?) -> Void) {
         
     }
 }

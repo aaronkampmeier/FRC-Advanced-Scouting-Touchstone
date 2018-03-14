@@ -23,6 +23,9 @@ import Crashlytics
 @objcMembers class EventRanker: Object {
     dynamic var key = "" //One for each event. Follows "ranker_(event code)"
     
+    dynamic var oprLastModified: String?
+    dynamic var matchesLastModified: String?
+    
     let rankedTeams = List<ScoutedTeam>()
     
     ///Teams that have been picked; the ones that are no longer in pick list
@@ -64,6 +67,7 @@ import Crashlytics
     }
 }
 
+//Stuff from TBA or cached locally
 @objcMembers class ComputedStats: Object {
     dynamic var scoutedTeam: ScoutedTeam?
     dynamic var eventRanker: EventRanker?
@@ -88,6 +92,12 @@ import Crashlytics
         ccwm.value = nil
         self.areFromTBA = false
     }
+    
+    ///--Rank and Team Status
+    dynamic var rank = RealmOptional<Int>()
+    dynamic var overallStatusString: String?
+    
+    dynamic var statusLastModified: String?
 }
 
 @objcMembers class ScoutedTeam: Object, HasGeneralEquivalent {
@@ -180,7 +190,6 @@ import Crashlytics
 @objcMembers class TeamComment: Object {
     dynamic var bodyText: String = ""
     dynamic var datePosted = Date()
-    
 }
 
 @objcMembers class ScoutedMatch: Object, HasGeneralEquivalent {
