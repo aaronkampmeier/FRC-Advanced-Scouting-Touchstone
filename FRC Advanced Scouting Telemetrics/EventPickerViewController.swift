@@ -93,7 +93,9 @@ class EventPickerViewController: UIViewController, UIPickerViewDelegate, UIPicke
     }
     
     func pickerView(_ pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {
-        chosenEvent = events![row]
+        if (events?.count ?? 0) > 0 {
+            chosenEvent = events![row]
+        }
     }
 
     /*
