@@ -20,7 +20,7 @@ class TeamListSplitViewController: UISplitViewController, UISplitViewControllerD
                 teamListMasterVC = master
                 return master
             } else {
-                teamListMasterVC = storyboard?.instantiateViewController(withIdentifier: "teamListTableView") as! TeamListTableViewController
+                teamListMasterVC = storyboard?.instantiateViewController(withIdentifier: "teamListTableView") as? TeamListTableViewController
                 return teamListMasterVC!
             }
         }
