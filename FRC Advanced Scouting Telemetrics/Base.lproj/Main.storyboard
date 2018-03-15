@@ -1899,6 +1899,30 @@
                                                             </constraints>
                                                         </tableViewCellContentView>
                                                     </tableViewCell>
+                                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="statusCell" id="drT-mZ-Hdq">
+                                                        <rect key="frame" x="0.0" y="116" width="663.5" height="44"/>
+                                                        <autoresizingMask key="autoresizingMask"/>
+                                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="drT-mZ-Hdq" id="agX-Z3-CvF">
+                                                            <rect key="frame" x="0.0" y="0.0" width="663.5" height="44"/>
+                                                            <autoresizingMask key="autoresizingMask"/>
+                                                            <subviews>
+                                                                <label opaque="NO" userInteractionEnabled="NO" tag="1" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Team Status" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="v9l-ba-Kw0">
+                                                                    <rect key="frame" x="284.5" y="12.5" width="95" height="20.5"/>
+                                                                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                                                    <nil key="textColor"/>
+                                                                    <nil key="highlightedColor"/>
+                                                                </label>
+                                                            </subviews>
+                                                            <constraints>
+                                                                <constraint firstItem="v9l-ba-Kw0" firstAttribute="top" relation="greaterThanOrEqual" secondItem="agX-Z3-CvF" secondAttribute="top" constant="5" id="2ON-aL-zpu"/>
+                                                                <constraint firstItem="v9l-ba-Kw0" firstAttribute="centerX" secondItem="agX-Z3-CvF" secondAttribute="centerX" id="Du9-Sp-NS2"/>
+                                                                <constraint firstItem="v9l-ba-Kw0" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="agX-Z3-CvF" secondAttribute="leading" id="IoY-2O-bVb"/>
+                                                                <constraint firstAttribute="trailing" relation="greaterThanOrEqual" secondItem="v9l-ba-Kw0" secondAttribute="trailing" id="UB9-bR-bVw"/>
+                                                                <constraint firstItem="v9l-ba-Kw0" firstAttribute="centerY" secondItem="agX-Z3-CvF" secondAttribute="centerY" id="aZW-Op-niN"/>
+                                                                <constraint firstAttribute="bottom" relation="greaterThanOrEqual" secondItem="v9l-ba-Kw0" secondAttribute="bottom" constant="5" id="hwr-Py-VjB"/>
+                                                            </constraints>
+                                                        </tableViewCellContentView>
+                                                    </tableViewCell>
                                                 </prototypes>
                                             </tableView>
                                             <containerView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Oqo-hQ-mlm">
