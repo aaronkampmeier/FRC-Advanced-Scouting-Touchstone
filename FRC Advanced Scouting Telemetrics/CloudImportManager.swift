@@ -333,8 +333,10 @@ class CloudEventImportManager {
     }
     
     private func throwError(error: ImportError) {
-        realmController.syncedRealm.cancelWrite()
-        realmController.generalRealm.cancelWrite()
+        if shouldEnterWrite {
+            realmController.syncedRealm.cancelWrite()
+            realmController.generalRealm.cancelWrite()
+        }
         completionHandler(false, error)
     }
     

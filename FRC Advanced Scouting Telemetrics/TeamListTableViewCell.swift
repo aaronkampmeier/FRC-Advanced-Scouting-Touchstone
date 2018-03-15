@@ -13,7 +13,8 @@ class TeamListTableViewCell: UITableViewCell {
 	@IBOutlet weak var frontImage: UIImageView!
 	@IBOutlet weak var teamLabel: UILabel!
 	@IBOutlet weak var statLabel: UILabel!
-
+    @IBOutlet weak var teamNameLabel: UILabel!
+    
     override func awakeFromNib() {
         super.awakeFromNib()
         // Initialization code

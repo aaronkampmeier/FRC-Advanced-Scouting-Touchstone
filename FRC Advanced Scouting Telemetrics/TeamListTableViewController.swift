@@ -299,6 +299,7 @@ class TeamListTableViewController: UITableViewController, TeamListDetailDataSour
         let team = currentTeamsToDisplay[(indexPath as NSIndexPath).row]
         
         cell.teamLabel.text = "Team \(team.teamNumber)"
+        cell.teamNameLabel.text = team.nickname
         if isSorted {
             let statValue: StatValue
             if let stat = Team.StatName(rawValue: statToSortBy) {
