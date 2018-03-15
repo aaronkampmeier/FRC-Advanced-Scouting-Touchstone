@@ -392,11 +392,20 @@ extension TeamListDetailViewController: MatchOverviewDetailDataSource {
 extension TeamListDetailViewController: UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         if let team = selectedTeam {
+            var numOfRows = 2
             if let _ = team.website {
-                return 4
-            } else {
-                return 3
+                numOfRows += 1
             }
+            
+            if let event = self.selectedEvent {
+                if let statusStr = team.scouted.computedStats(forEvent: event)?.overallStatusString {
+                    if statusStr != "--" {
+                        numOfRows += 1
+                    }
+                }
+            }
+            
+            return numOfRows
         } else {
             return 0
         }
@@ -426,38 +435,47 @@ extension TeamListDetailViewController: UITableViewDelegate, UITableViewDataSour
             (cell?.contentView.viewWithTag(2) as! UILabel).text = selectedTeam?.rookieYear.description
             
             return cell!
-            //TODO: Find something better than Attending Events becuase an event that is not tracked on device but the team is still attending would not be listed
-//        case 2:
-//            let cell = tableView.dequeueReusableCell(withIdentifier: "nameValue")
-//            let keyLabel = cell?.contentView.viewWithTag(1) as! UILabel
+        case 2,3:
+            var hasStatus = false
+            var hasWebsite = false
+            if let _ = selectedTeam?.website {
+                //There is a website
+                hasWebsite = true
+            }
+            
+            var statusString = ""
+            if let event = self.selectedEvent {
+                if let statusStr = selectedTeam?.scouted.computedStats(forEvent: event)?.overallStatusString {
+                    if statusStr != "--" {
+                        //There is a status string
+                        hasStatus = true
+                        statusString = statusStr
+                    }
+                }
+            }
+            
+            if hasStatus {
+                if indexPath.row == 2 {
+                    //Status
+                    let cell = tableView.dequeueReusableCell(withIdentifier: "statusCell")
+                    
+//                    let attrStr = try? NSMutableAttributedString(data: statusString.data(using: String.Encoding.unicode)!, options: [NSAttributedString.DocumentReadingOptionKey.documentType: NSAttributedString.DocumentType.html], documentAttributes: nil)
 //
-//            keyLabel.text = "Attending Events"
-//            let textWidth = keyLabel.intrinsicContentSize.width
-//            keyLabel.constraints.filter({$0.identifier == "keyWidth"}).first?.constant = textWidth
+//                    attrStr?.addAttribute(NSAttributedStringKey.font, value: UIFont.systemFont(ofSize: 17), range: NSRange.init(location: 0, length: attrStr!.length))
 //
-//            let attendingEvents = Array(selectedTeam!.eventPerformances).map() {eventPerformance in
-//                return eventPerformance.event
-//            }
-//            //Create a string of all the attending events
-//            var eventString = ""
-//
-//            for (index, event) in attendingEvents.enumerated() {
-//                eventString += "\(event.name!)"
-//
-//                if !(attendingEvents.count - 1 == index) {
-//                    eventString += ", "
-//                }
-//            }
-//
-//            (cell?.contentView.viewWithTag(2) as! UILabel).text = eventString
-//
-//            return cell!
-        case 3:
+                    (cell?.viewWithTag(1) as! UILabel).setHTMLFromString(htmlText: statusString)
+                    
+                    return cell!
+                }
+            }
+            
+            //Website
             let cell = tableView.dequeueReusableCell(withIdentifier: "websiteButton")
             
             (cell?.contentView.viewWithTag(1) as! UIButton).addTarget(self, action: #selector(websiteButtonPressed(_:)), for: .touchUpInside)
             
             return cell!
+            
         default:
             return UITableViewCell()
         }
@@ -467,6 +485,23 @@ extension TeamListDetailViewController: UITableViewDelegate, UITableViewDataSour
         if let url = URL(string: selectedTeam?.website ?? "") {
             UIApplication.shared.openURL(url)
         }
+    }
+}
+
+//MARK: - String Helper function from https://stackoverflow.com/questions/19921972/parsing-html-into-nsattributedtext-how-to-set-font
+extension UILabel {
+    func setHTMLFromString(htmlText: String) {
+        let modifiedFont = String(format:"<span style=\"font-family: '-apple-system', 'HelveticaNeue'; font-size: \(self.font!.pointSize)\">%@</span>", htmlText)
+        
+        
+        //process collection values
+        let attrStr = try! NSAttributedString(
+            data: modifiedFont.data(using: .unicode, allowLossyConversion: true)!,
+            options: [NSAttributedString.DocumentReadingOptionKey.documentType: NSAttributedString.DocumentType.html, NSAttributedString.DocumentReadingOptionKey.characterEncoding: String.Encoding.utf8.rawValue],
+            documentAttributes: nil)
+        
+        
+        self.attributedText = attrStr
     }
 }
 

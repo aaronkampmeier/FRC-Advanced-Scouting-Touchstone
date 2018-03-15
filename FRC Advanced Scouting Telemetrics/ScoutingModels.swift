@@ -25,6 +25,7 @@ import Crashlytics
     
     dynamic var oprLastModified: String?
     dynamic var matchesLastModified: String?
+    dynamic var statusesLastModified: String?
     
     let rankedTeams = List<ScoutedTeam>()
     
@@ -95,9 +96,10 @@ import Crashlytics
     
     ///--Rank and Team Status
     dynamic var rank = RealmOptional<Int>()
+    ///An HTML formatted string from TBA about Team's status at an event
     dynamic var overallStatusString: String?
     
-    dynamic var statusLastModified: String?
+//    dynamic var statusLastModified: String?
 }
 
 @objcMembers class ScoutedTeam: Object, HasGeneralEquivalent {

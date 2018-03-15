@@ -136,14 +136,14 @@ struct FRCMatch: Codable {
 //MARK: - Statuses
 
 struct FRCTeamEventStatus: Codable {
-    let qual: FRCEventStatusRank
+    let qual: FRCEventStatusRank?
 //    let alliance: FRCEventStatusAlliance
 //    let playoff: FRCEventStatusPlayoff
-    let allianceStatus: String
-    let playoffStatus: String
-    let overallStatus: String
-    let nextMatchKey: String
-    let lastMatchKey: String
+    let allianceStatus: String?
+    let playoffStatus: String?
+    let overallStatus: String?
+    let nextMatchKey: String?
+    let lastMatchKey: String?
     
     private enum CodingKeys: String, CodingKey {
         case qual
@@ -156,8 +156,8 @@ struct FRCTeamEventStatus: Codable {
 }
 
 struct FRCEventStatusRank: Codable {
-    let numOfTeams: String
-    let ranking: FRCRanking
+    let numOfTeams: Int
+    let ranking: FRCRanking?
 //    let sortOrderInfo:
     let status: String
     
@@ -172,7 +172,7 @@ struct FRCRanking: Codable {
     let dq: Int?
     let matchesPlayed: Int?
     let qualAverage: Double?
-    let rank: Int
+    let rank: Int?
 //    let record:  -- Win-Loss-Tie record
 //    let sortOrders:
     let teamKey: String

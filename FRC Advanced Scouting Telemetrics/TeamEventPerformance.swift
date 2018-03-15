@@ -59,6 +59,15 @@ extension TeamEventPerformance: HasStats {
                     
                     return StatValue.NoValue
                 },
+                StatName.Rank: {
+                    if let event = self.event {
+                        if let computedStats = self.team?.scouted.computedStats(forEvent: event) {
+                            return StatValue.initWithOptional(value: computedStats.rank.value)
+                        }
+                    }
+                    
+                    return StatValue.NoValue
+                },
                 StatName.TotalWins: {
                     var winCount = 0
                     
@@ -377,6 +386,8 @@ extension TeamEventPerformance: HasStats {
         case DPR = "DPR"
         case CCWM = "CCWM"
         
+        case Rank = "Event Rank"
+        
         case MajorityClimbStatus = "Climb Status (Majority)"
         case SuccessfulClimbCount = "Successful Climb Count"
         case ClimbSuccessRate = "Climb Success Rate"
@@ -415,7 +426,7 @@ extension TeamEventPerformance: HasStats {
             }
         }
         
-        static let allValues: [StatName] = [.OPR, .DPR, .CCWM, .ScoutedMatches, .NumberOfMatches, .TotalMatchPoints, .TotalRankingPoints, .RankingScore, .TotalWins, .TotalLosses, .TotalTies, .MajorityClimbStatus, .SuccessfulClimbCount, .ClimbSuccessRate, .MajorityClimbAssistStatus, .ClimbAssistAttempts,
+        static let allValues: [StatName] = [.OPR, .DPR, .CCWM, .Rank, .ScoutedMatches, .NumberOfMatches, .TotalMatchPoints, .TotalRankingPoints, .RankingScore, .TotalWins, .TotalLosses, .TotalTies, .MajorityClimbStatus, .SuccessfulClimbCount, .ClimbSuccessRate, .MajorityClimbAssistStatus, .ClimbAssistAttempts,
             
             .AutoLineCrossCount, .TotalGrabbedCubes, .AverageGrabbedCubes, .PercentCubesFromPile, .PercentCubesFromLine, .PercentCubesFromPortal,
             .TotalPlacedCubes, .AveragePlacedCubes, .StandardDeviationPlacedCubes, .PercentCubesInScale, .PercentCubesInSwitch, .PercentCubesInOpponentSwitch, .PercentCubesInVault, .PercentCubesDropped
