@@ -32,7 +32,7 @@ class MatchOverviewPerformanceDetailViewController: UIViewController {
                 } else {
                     hideMatchContentViews()
                 }
-                availableScoutIDs = matchPerformance.scouted.scoutIDs ?? ["default"]
+                availableScoutIDs = matchPerformance.scouted.scoutIDs
                 
                 //Get all the stats
                 let availableStats = TeamMatchPerformance.StatName.allValues
