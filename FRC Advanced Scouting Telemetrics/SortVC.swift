@@ -10,9 +10,9 @@ import UIKit
 import Crashlytics
 
 protocol SortDelegate {
-	func selectedStat(_ stat: String, isAscending: Bool)
+	func selectedStat(_ stat: String?, isAscending: Bool)
     func statsToDisplay() -> [String]
-    func currentStat() -> String
+    func currentStat() -> String?
     func isAscending() -> Bool
 }
 
@@ -36,7 +36,11 @@ class SortVC: UIViewController, UIPickerViewDelegate, UIPickerViewDataSource {
 		
 		statsToDisplay = delegate?.statsToDisplay() ?? []
         selectedStat = delegate?.currentStat()
-        sortTypePicker.selectRow(statsToDisplay.index(of: selectedStat!)!, inComponent: 0, animated: false)
+        if let stat = selectedStat {
+            if let index = statsToDisplay.index(of: stat) {
+                sortTypePicker.selectRow(index + 1, inComponent: 0, animated: false)
+            }
+        }
         
         if delegate?.isAscending() ?? false {
             orderSegementedControl.selectedSegmentIndex = 1
@@ -47,7 +51,7 @@ class SortVC: UIViewController, UIPickerViewDelegate, UIPickerViewDataSource {
 	
 	override func viewWillDisappear(_ animated: Bool) {
 		super.viewWillDisappear(animated)
-		delegate?.selectedStat(selectedStat!, isAscending: isAscending)
+		delegate?.selectedStat(selectedStat, isAscending: isAscending)
         Answers.logCustomEvent(withName: "Sort Team List", customAttributes: ["Stat":selectedStat as Any, "Ascending":isAscending.description])
     }
 	
@@ -61,7 +65,7 @@ class SortVC: UIViewController, UIPickerViewDelegate, UIPickerViewDataSource {
     }
     
     func pickerView(_ pickerView: UIPickerView, numberOfRowsInComponent component: Int) -> Int {
-		return statsToDisplay.count
+		return statsToDisplay.count + 1
     }
     
     func numberOfComponents(in pickerView: UIPickerView) -> Int {
@@ -69,11 +73,19 @@ class SortVC: UIViewController, UIPickerViewDelegate, UIPickerViewDataSource {
     }
     
     func pickerView(_ pickerView: UIPickerView, titleForRow row: Int, forComponent component: Int) -> String? {
-        return statsToDisplay[row]
+        if row == 0 {
+            return "No Sorting"
+        } else {
+            return statsToDisplay[row - 1]
+        }
     }
     
     func pickerView(_ pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {
-        selectedStat = statsToDisplay[row]
+        if row == 0 {
+            selectedStat = nil
+        } else {
+            selectedStat = statsToDisplay[row - 1]
+        }
     }
     
     @IBAction func segmentedControlChanged(_ sender: UISegmentedControl) {

@@ -68,15 +68,9 @@ class StandsScoutingViewController: UIViewController {
             
             //Ask for the final score if it lasted longer than 2:15
             if stopwatch.elapsedTime >= 135 {
-                finalScorePrompt = UIAlertController(title: "Final Scores", message: "Enter the final score for the alliances.", preferredStyle: .alert)
-                finalScorePrompt.addTextField() {
-                    self.configureTextField($0, label: 0)
-                }
+                finalScorePrompt = UIAlertController(title: "Final Scores", message: "Enter the ranking points for the alliances.", preferredStyle: .alert)
                 finalScorePrompt.addTextField() {
                     self.configureTextField($0, label: 1)
-                }
-                finalScorePrompt.addTextField() {
-                    self.configureTextField($0, label: 2)
                 }
                 finalScorePrompt.addTextField() {
                     self.configureTextField($0, label: 3)
@@ -98,12 +92,8 @@ class StandsScoutingViewController: UIViewController {
 		textField.keyboardType = .numberPad
 		
         switch label {
-		case 0:
-			textField.placeholder = "Red Final Score"
 		case 1:
 			textField.placeholder = "Red Ranking Points"
-		case 2:
-			textField.placeholder = "Blue Final Score"
 		case 3:
 			textField.placeholder = "Blue Ranking Points"
 		default:
@@ -111,27 +101,14 @@ class StandsScoutingViewController: UIViewController {
 		}
 	}
 	func getFinalScore(_ action: UIAlertAction) {
-        var hasDifferentScores = false
 		for textField in finalScorePrompt.textFields! {
 			switch textField {
 			case finalScorePrompt.textFields![0]:
-				//Red Final Score
-                if let intValue = Int(textField.text ?? "") {
-                    hasDifferentScores = ssDataManager?.scoutedMatch.scouted.redScore.value != intValue
-                    ssDataManager?.scoutedMatch.scouted.redScore.value = intValue
-                }
-			case finalScorePrompt.textFields![1]:
 				//Red Ranking Points
                 if let intValue = Int(textField.text ?? "") {
                     ssDataManager?.scoutedMatch.scouted.redRP.value = intValue
                 }
-			case finalScorePrompt.textFields![2]:
-				//Blue Final Score
-                if let intValue = Int(textField.text ?? "") {
-                    hasDifferentScores = ssDataManager?.scoutedMatch.scouted.blueScore.value != intValue
-                    ssDataManager?.scoutedMatch.scouted.blueScore.value = intValue
-                }
-			case finalScorePrompt.textFields![3]:
+			case finalScorePrompt.textFields![1]:
 				//Blue Ranking Points
                 if let intValue = Int(textField.text ?? "") {
                     ssDataManager?.scoutedMatch.scouted.blueRP.value = intValue
@@ -140,17 +117,6 @@ class StandsScoutingViewController: UIViewController {
 				break
 			}
 		}
-        
-        if hasDifferentScores {
-            //Get all the computed stats of this event and invalidate them
-            let computedStats = RealmController.realmController.syncedRealm.objects(ComputedStats.self).filter {
-                $0.eventRanker == RealmController.realmController.getTeamRanker(forEvent: self.teamEventPerformance!.event!)
-            }
-            
-            for computedStat in computedStats {
-                computedStat.invalidateValues()
-            }
-        }
 	}
 	
     //Child view controllers

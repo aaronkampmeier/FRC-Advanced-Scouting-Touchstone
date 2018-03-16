@@ -480,7 +480,7 @@ extension TeamEventPerformance {
 
 }
 
-///Evaluates OPR and stores it in ComputedStats using YCMatrix and the algorithm published by Ether located here: https://www.chiefdelphi.com/forums/showpost.php?p=1119150&postcount=36
+///Retrieves OPR as stored in the Computed Stats object (from TBA as of now)
 private func evaluateOPR(forTeamPerformance teamPerformance: TeamEventPerformance) -> Double? {
     //Check if it has been computed before
     if let computedStatValue = teamPerformance.team?.scouted.computedStats(forEvent: teamPerformance.event!)?.opr.value {

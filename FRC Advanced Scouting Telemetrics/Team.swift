@@ -36,14 +36,6 @@ extension Team: HasStats {
     var stats: [StatName:()->StatValue] {
         get {
             return [
-                StatName.LocalRank: {
-                    let teamRanking = RealmController.realmController.teamRanking()
-                    if let index = teamRanking.index(of: self) {
-                        return StatValue.Integer(index + 1)
-                    } else {
-                        return StatValue.NoValue
-                    }
-                },
                 StatName.TeamNumber: {
                     return StatValue.Integer(self.teamNumber)
                 },
@@ -103,7 +95,6 @@ extension Team: HasStats {
     }
     
     enum StatName: String, CustomStringConvertible, StatNameable {
-        case LocalRank = "Local Rank"
         case TeamNumber = "Team Number"
         case RookieYear = "Rookie Year"
         case RobotLength = "Robot Length"
@@ -129,7 +120,7 @@ extension Team: HasStats {
             }
         }
         
-        static let allValues: [StatName] = [.LocalRank, .TeamNumber, .RookieYear, .DriverXP, .RobotLength, .RobotWidth, .RobotHeight, .RobotWeight, .GamePlayStrategy, .VisionTrackingCapability, .DriveTrain, .ProgrammingLanguage, .ScaleCapability, .SwitchCapability, .VaultCapability, .ClimberCapability]
+        static let allValues: [StatName] = [.TeamNumber, .RookieYear, .DriverXP, .RobotLength, .RobotWidth, .RobotHeight, .RobotWeight, .GamePlayStrategy, .VisionTrackingCapability, .DriveTrain, .ProgrammingLanguage, .ScaleCapability, .SwitchCapability, .VaultCapability, .ClimberCapability]
         
         static let teamDetailValues: [StatName] = [.DriverXP, .RobotLength, .RobotWidth, .RobotHeight, .RobotWeight, .GamePlayStrategy, .VisionTrackingCapability, .DriveTrain, .ProgrammingLanguage, .ScaleCapability, .SwitchCapability, .VaultCapability, .ClimberCapability]
     }

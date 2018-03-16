@@ -73,7 +73,7 @@ import Crashlytics
     dynamic var scoutedTeam: ScoutedTeam?
     dynamic var eventRanker: EventRanker?
     
-    //"computedStats_\(ranker.key)_\(self.key)"
+    //"computedStats_\(ranker.key)_\(team.key)"
     dynamic var key = ""
     
     override static func primaryKey() -> String {
@@ -83,16 +83,6 @@ import Crashlytics
     let opr = RealmOptional<Double>()
     let dpr = RealmOptional<Double>()
     let ccwm = RealmOptional<Double>()
-    
-    dynamic var areFromTBA = false
-    
-    ///Must be called from write transaction
-    func invalidateValues() {
-        opr.value = nil
-        dpr.value = nil
-        ccwm.value = nil
-        self.areFromTBA = false
-    }
     
     ///--Rank and Team Status
     dynamic var rank = RealmOptional<Int>()

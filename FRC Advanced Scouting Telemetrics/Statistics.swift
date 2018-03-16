@@ -294,6 +294,7 @@ extension HasStats {
         return Array(stats.keys)
     }
     
+    ///Does not guarantee the same order as allStats
     func statsAndValues() -> [StatName : StatValue?] {
         return stats.map {$0()}
     }

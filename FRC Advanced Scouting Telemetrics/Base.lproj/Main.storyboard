@@ -2367,7 +2367,19 @@
                     <view key="view" contentMode="scaleToFill" id="qj2-pl-gt7">
                         <rect key="frame" x="0.0" y="0.0" width="500" height="400"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Pinch to zoom in" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="pQP-ff-yDI">
+                                <rect key="frame" x="213.5" y="389" width="73.5" height="11"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="9"/>
+                                <color key="textColor" white="0.66666666666666663" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                        </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        <constraints>
+                            <constraint firstAttribute="bottomMargin" secondItem="pQP-ff-yDI" secondAttribute="bottom" id="2Ph-cO-bhZ"/>
+                            <constraint firstItem="pQP-ff-yDI" firstAttribute="centerX" secondItem="qj2-pl-gt7" secondAttribute="centerX" id="TpF-WJ-1MT"/>
+                        </constraints>
                     </view>
                     <navigationItem key="navigationItem" title="Event Stat Graphing" id="Hxu-Gx-VUu">
                         <barButtonItem key="leftBarButtonItem" style="done" systemItem="done" id="lh1-85-tgw">
@@ -2386,7 +2398,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="xcB-0M-Jm2" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1458" y="1120"/>
+            <point key="canvasLocation" x="1458" y="1070"/>
         </scene>
         <!--All Stats-->
         <scene sceneID="EDy-eh-NjS">
@@ -2432,7 +2444,7 @@
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="7FC-DM-LPZ" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1774" y="880"/>
+            <point key="canvasLocation" x="1768" y="1070"/>
         </scene>
         <!--Navigation Controller-->
         <scene sceneID="VaL-Ah-9Pk">

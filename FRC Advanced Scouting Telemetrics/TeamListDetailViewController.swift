@@ -10,6 +10,7 @@ import UIKit
 import NYTPhotoViewer
 import Crashlytics
 import RealmSwift
+import SafariServices
 
 protocol TeamListDetailDataSource {
     func team() -> Team?
@@ -483,7 +484,8 @@ extension TeamListDetailViewController: UITableViewDelegate, UITableViewDataSour
     
     @objc func websiteButtonPressed(_ sender: UIButton) {
         if let url = URL(string: selectedTeam?.website ?? "") {
-            UIApplication.shared.openURL(url)
+            let safariVC = SFSafariViewController(url: url)
+            self.present(safariVC, animated: true, completion: nil)
         }
     }
 }
@@ -491,7 +493,7 @@ extension TeamListDetailViewController: UITableViewDelegate, UITableViewDataSour
 //MARK: - String Helper function from https://stackoverflow.com/questions/19921972/parsing-html-into-nsattributedtext-how-to-set-font
 extension UILabel {
     func setHTMLFromString(htmlText: String) {
-        let modifiedFont = String(format:"<span style=\"font-family: '-apple-system', 'HelveticaNeue'; font-size: \(self.font!.pointSize)\">%@</span>", htmlText)
+        let modifiedFont = String(format:"<span style=\"font-family: '-apple-system'; font-size: \(self.font!.pointSize); text-align:center\">%@</span>", htmlText)
         
         
         //process collection values

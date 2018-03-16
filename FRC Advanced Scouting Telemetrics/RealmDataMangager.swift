@@ -11,8 +11,6 @@
 import Foundation
 import RealmSwift
 import Crashlytics
-import AWSCognitoIdentityProvider
-import AWSMobileClient
 
 let DidLogIntoSyncServerNotification = NSNotification.Name(rawValue: "DidLogIntoSyncServer")
 private let rosServerAddress = "fastapp.tech:9443"

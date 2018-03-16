@@ -322,7 +322,6 @@ class CloudEventImportManager {
                     computedStats.opr.value = oprs.oprs[team.key]
                     computedStats.dpr.value = oprs.dprs[team.key]
                     computedStats.ccwm.value = oprs.ccwms[team.key]
-                    computedStats.areFromTBA = true
                 }
             }
             

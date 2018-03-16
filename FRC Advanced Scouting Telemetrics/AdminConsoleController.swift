@@ -89,7 +89,7 @@ class AdminConsoleController: UIViewController, UITableViewDataSource, UITableVi
     func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
         switch section {
         case 0:
-            return "Events"
+            return "Events (swipe left to reload/export)"
         default:
             return ""
         }
@@ -172,7 +172,13 @@ class AdminConsoleController: UIViewController, UITableViewDataSource, UITableVi
                     self.deleteAt(indexPath: indexPath, inTableView: tableView)
                 }
                 
-                return [reloadAction, delete]
+                let exportToCSV = UITableViewRowAction(style: .default, title: "CSV Export") {(rowAction, indexPath) in
+                    self.exportToCSV(event: self.events[indexPath.row], withSourceView: nil) {_ in
+                    }
+                }
+                exportToCSV.backgroundColor = .purple
+                
+                return [reloadAction, exportToCSV, delete]
             }
         default:
             return nil
@@ -180,33 +186,44 @@ class AdminConsoleController: UIViewController, UITableViewDataSource, UITableVi
     }
     
     func reloadAt(indexPath: IndexPath, inTableView tableView: UITableView, withCompletionHandler onCompletion: (() -> Void)? = nil) {
-        //Create a loading view
-        let spinnerView = UIActivityIndicatorView(activityIndicatorStyle: UIActivityIndicatorViewStyle.whiteLarge)
-        let grayView = UIView(frame: CGRect(x: self.tableView.frame.width / 2 - 50, y: self.tableView.frame.height / 2 - 50, width: 120, height: 120))
-        grayView.backgroundColor = UIColor.lightGray
-        grayView.backgroundColor?.withAlphaComponent(0.7)
-        grayView.layer.cornerRadius = 10
-        spinnerView.frame = CGRect(x: grayView.frame.width / 2 - 25, y: grayView.frame.height / 2 - 25, width: 50, height: 50)
-        grayView.addSubview(spinnerView)
-        spinnerView.startAnimating()
-        self.tableView.addSubview(grayView)
-        
-        //Prevent user interaction
-        self.view.isUserInteractionEnabled = false
-        self.navigationController?.navigationBar.isUserInteractionEnabled = false
+        showLoadingIndicator()
         
         CloudReloadingManager(eventToReload: self.events[indexPath.row]) {successful in
-            //Return user interaction
-            self.view.isUserInteractionEnabled = true
-            self.navigationController?.navigationBar.isUserInteractionEnabled = true
-            
-            grayView.removeFromSuperview()
+            self.removeLoadingIndicator()
             
             onCompletion?()
             
             tableView.reloadData()
             }
             .reload()
+    }
+    
+    var grayView: UIView?
+    func showLoadingIndicator() {
+        //Create a loading view
+        let spinnerView = UIActivityIndicatorView(activityIndicatorStyle: UIActivityIndicatorViewStyle.whiteLarge)
+        grayView = UIView(frame: CGRect(x: self.tableView.frame.width / 2 - 50, y: self.tableView.frame.height / 2 - 50, width: 120, height: 120))
+        grayView?.backgroundColor = UIColor.lightGray
+        grayView?.backgroundColor?.withAlphaComponent(0.7)
+        grayView?.layer.cornerRadius = 10
+        spinnerView.frame = CGRect(x: grayView!.frame.width / 2 - 25, y: grayView!.frame.height / 2 - 25, width: 50, height: 50)
+        grayView?.addSubview(spinnerView)
+        spinnerView.startAnimating()
+        self.tableView.addSubview(grayView!)
+        
+        //Prevent user interaction
+        self.view.isUserInteractionEnabled = false
+        self.navigationController?.navigationBar.isUserInteractionEnabled = false
+    }
+    
+    func removeLoadingIndicator() {
+        //Return user interaction
+        self.view.isUserInteractionEnabled = true
+        self.navigationController?.navigationBar.isUserInteractionEnabled = true
+        
+        grayView?.removeFromSuperview()
+        
+        grayView = nil
     }
     
     func deleteAt(indexPath: IndexPath, inTableView tableView: UITableView) {
@@ -245,10 +262,112 @@ class AdminConsoleController: UIViewController, UITableViewDataSource, UITableVi
                 }
                 reloadAction.backgroundColor = .blue
                 
-                return UISwipeActionsConfiguration(actions: [reloadAction, deleteAction])
+                let exportToCSVAction = UIContextualAction(style: .normal, title: "CSV Export") {action, view, completionHandler in
+                    self.exportToCSV(event: self.events[indexPath.row], withSourceView: view) {successful in
+                        completionHandler(true)
+                    }
+                }
+                exportToCSVAction.backgroundColor = .purple
+                
+                return UISwipeActionsConfiguration(actions: [reloadAction, exportToCSVAction, deleteAction])
             }
         default:
             return nil
+        }
+    }
+    
+    func exportToCSV(event: Event, withSourceView view: UIView?, onCompletion: @escaping (Bool) -> Void) {
+        showLoadingIndicator()
+        
+        let finishingActions: (URL?, Error?) -> Void = {path, error in
+            self.removeLoadingIndicator()
+            DispatchQueue.main.async {
+                if let error = error {
+                    let alert = UIAlertController(title: "Export Failed", message: "There was an error exporting to CSV: \(error)", preferredStyle: .alert)
+                    alert.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
+                    self.present(alert, animated: true, completion: nil)
+                    
+                    onCompletion(false)
+                    
+                    CLSNSLogv("Failed to write csv text to file: \(error)", getVaList([]))
+                    Crashlytics.sharedInstance().recordError(error)
+                } else if let path = path {
+                    let activityVC = UIActivityViewController(activityItems: [path], applicationActivities: [])
+                    
+                    activityVC.excludedActivityTypes = [UIActivityType.addToReadingList, UIActivityType.assignToContact, UIActivityType.openInIBooks, UIActivityType.postToFacebook, UIActivityType.postToVimeo, UIActivityType.postToWeibo, UIActivityType.postToFlickr, UIActivityType.postToTwitter, UIActivityType.postToTencentWeibo, UIActivityType.saveToCameraRoll]
+                    
+                    activityVC.popoverPresentationController?.sourceView = self.tableView
+                    if let index = self.events.index(of: event) {
+                        if let tableViewCell = self.tableView.cellForRow(at: IndexPath(row: index, section: 0)) {
+                            activityVC.popoverPresentationController?.sourceView = tableViewCell
+                        }
+                    }
+                    
+                    onCompletion(true)
+                    self.present(activityVC, animated: true, completion: nil)
+                }
+            }
+        }
+        
+        DispatchQueue.main.async {
+            let filename = "\(event.key).csv"
+            let path = URL(fileURLWithPath: NSTemporaryDirectory()).appendingPathComponent(filename)
+            
+            let teamStats = Team.StatName.allValues
+            let teamEventStats = TeamEventPerformance.StatName.allValues
+            
+            var csvText = ""
+            //First add in the header row of all stat names
+            //        csvText += "Team Number,"
+            for statName in teamStats {
+                csvText += statName.description
+                csvText += ","
+            }
+            for (index, statName) in teamEventStats.enumerated() {
+                csvText += statName.description
+                
+                if index == teamEventStats.count - 1 {
+                    //End index
+                    csvText += "\n"
+                } else {
+                    csvText += ","
+                }
+            }
+            
+            //Now for all the stat values
+            for teamEventPerformance in event.teamEventPerformances {
+                let team = teamEventPerformance.team!
+                //Start with the team number in column 1
+                //            csvText += "\(teamEventPerformance.team!.teamNumber),"
+                
+                //Next the team stats
+                for statName in teamStats {
+                    let value = team.statValue(forStat: statName)
+                    csvText += "\(value)"
+                    csvText += ","
+                }
+                
+                //Next all the performance stat values seperated by commas
+                for (index, statName) in teamEventStats.enumerated() {
+                    let value = teamEventPerformance.statValue(forStat: statName)
+                    csvText += "\(value)"
+                    
+                    if index == teamEventStats.count - 1 {
+                        //End index
+                        csvText += "\n"
+                    } else {
+                        csvText += ","
+                    }
+                }
+            }
+            
+            do {
+                try csvText.write(to: path, atomically: true, encoding: String.Encoding.utf8)
+                
+                finishingActions(path, nil)
+            } catch {
+                finishingActions(nil, error)
+            }
         }
     }
     

@@ -32,10 +32,9 @@ class TeamListTableViewController: UITableViewController, TeamListDetailDataSour
         }
     }
     
-    //Local Rank is not considered sorted
-    var statToSortBy: String = Team.StatName.LocalRank.rawValue
+    var statToSortBy: String?
     //Should move functionality in here to a setSortingState func
-    var isSorted = false
+//    var isSorted = false
     var isSortingAscending: Bool = false
     
     var isSearching = false
@@ -81,7 +80,7 @@ class TeamListTableViewController: UITableViewController, TeamListDetailDataSour
             //Set to nil, because the selected team might not be in the new event
             selectedTeam = nil
             
-            statToSortBy = Team.StatName.LocalRank.rawValue
+            statToSortBy = nil
             
             if let event = selectedEvent {
                 UserDefaults.standard.set(event.key, forKey: lastSelectedEventStorageKey)
@@ -223,7 +222,11 @@ class TeamListTableViewController: UITableViewController, TeamListDetailDataSour
                     case .update(_, let deletions, let insertions,_):
                         DispatchQueue.main.async {
                             if deletions.count > 0 || insertions.count > 0 {
-                                self?.currentEventTeams = self!.realmController.teamRanking(event)
+                                if !event.isInvalidated {
+                                    self?.currentEventTeams = self!.realmController.teamRanking(event)
+                                } else {
+                                    Crashlytics.sharedInstance().recordCustomExceptionName("Unable to update view of team list rank (non fatal)", reason: "Event is invalidated", frameArray: [])
+                                }
                             }
                         }
                     default:
@@ -300,11 +303,11 @@ class TeamListTableViewController: UITableViewController, TeamListDetailDataSour
         
         cell.teamLabel.text = "Team \(team.teamNumber)"
         cell.teamNameLabel.text = team.nickname
-        if isSorted {
+        if let statName = statToSortBy {
             let statValue: StatValue
-            if let stat = Team.StatName(rawValue: statToSortBy) {
+            if let stat = Team.StatName(rawValue: statName) {
                 statValue = team.statValue(forStat: stat)
-            } else if let stat = TeamEventPerformance.StatName(rawValue: statToSortBy) {
+            } else if let stat = TeamEventPerformance.StatName(rawValue: statName) {
                 statValue = realmController.eventPerformance(forTeam: team, atEvent: selectedEvent!).statValue(forStat: stat)
             } else {
                 statValue = .NoValue
@@ -534,19 +537,16 @@ class TeamListTableViewController: UITableViewController, TeamListDetailDataSour
         present(sortNavVC, animated: true, completion: nil)
     }
     
-    func sortList(withStat statName: String, isAscending ascending: Bool) {
+    func sortList(withStat statName: String?, isAscending ascending: Bool) {
         self.isSortingAscending = ascending
         
-        let teamStat = Team.StatName(rawValue: statName)
-        let eventPerformanceStat = TeamEventPerformance.StatName(rawValue: statName)
+        statToSortBy = statName
         
-        if let stat = teamStat {
-            statToSortBy = stat.rawValue
-            switch stat {
-            case Team.StatName.LocalRank:
-                currentSortedTeams = currentEventTeams
-                isSorted = false
-            default:
+        if let newStat = statName {
+            let teamStat = Team.StatName(rawValue: newStat)
+            let eventPerformanceStat = TeamEventPerformance.StatName(rawValue: newStat)
+            
+            if let stat = teamStat {
                 currentSortedTeams = currentEventTeams.sorted {team1, team2 in
                     let isBefore = team1.statValue(forStat: stat) > team2.statValue(forStat: stat)
                     if ascending {
@@ -555,33 +555,30 @@ class TeamListTableViewController: UITableViewController, TeamListDetailDataSour
                         return isBefore
                     }
                 }
+            } else if let stat = eventPerformanceStat {
                 
-                isSorted = true
-            }
-        } else if let stat = eventPerformanceStat {
-            statToSortBy = stat.rawValue
-            
-            currentSortedTeams = currentEventTeams.sorted {team1, team2 in
-                let firstTeamEventPerformance: TeamEventPerformance = realmController.eventPerformance(forTeam: team1, atEvent: selectedEvent!)
-                let secondTeamEventPerformance: TeamEventPerformance = realmController.eventPerformance(forTeam: team2, atEvent: selectedEvent!)
-                
-                let firstStatValue = firstTeamEventPerformance.statValue(forStat: stat)
-                let secondStatValue = secondTeamEventPerformance.statValue(forStat: stat)
-                
-                let isBefore = firstStatValue > secondStatValue
-                if ascending {
-                    return !isBefore
-                } else {
-                    return isBefore
+                currentSortedTeams = currentEventTeams.sorted {team1, team2 in
+                    let firstTeamEventPerformance: TeamEventPerformance = realmController.eventPerformance(forTeam: team1, atEvent: selectedEvent!)
+                    let secondTeamEventPerformance: TeamEventPerformance = realmController.eventPerformance(forTeam: team2, atEvent: selectedEvent!)
+                    
+                    let firstStatValue = firstTeamEventPerformance.statValue(forStat: stat)
+                    let secondStatValue = secondTeamEventPerformance.statValue(forStat: stat)
+                    
+                    let isBefore = firstStatValue > secondStatValue
+                    if ascending {
+                        return !isBefore
+                    } else {
+                        return isBefore
+                    }
                 }
+            } else {
+                assertionFailure()
             }
-            
-            isSorted = true
         } else {
-            assertionFailure()
+            currentSortedTeams = currentEventTeams
         }
         
-        if isSorted {
+        if statToSortBy != nil {
             setEditing(false, animated: true)
             editButton.isEnabled = false
         } else {
@@ -645,7 +642,7 @@ extension TeamListTableViewController: EventSelection {
 }
 
 extension TeamListTableViewController: SortDelegate {
-    func selectedStat(_ stat: String, isAscending: Bool) {
+    func selectedStat(_ stat: String?, isAscending: Bool) {
         sortList(withStat: stat, isAscending: isAscending)
     }
     
@@ -654,7 +651,7 @@ extension TeamListTableViewController: SortDelegate {
         return Team.StatName.allValues.map {$0.rawValue} + (selectedEvent != nil ? TeamEventPerformance.StatName.allValues.map {$0.rawValue} : [])
     }
     
-    func currentStat() -> String {
+    func currentStat() -> String? {
         return statToSortBy
     }
     

@@ -186,6 +186,8 @@ class TeamCommentsTableViewController: UITableViewController {
             RealmController.realmController.syncedRealm.add(comment)
             teamComments.append(comment)
             
+            Answers.logCustomEvent(withName: "Posted team comment", customAttributes: nil)
+            
             do {
                 if let token = commentNotificationToken {
                     try RealmController.realmController.syncedRealm.commitWrite(withoutNotifying: [token])

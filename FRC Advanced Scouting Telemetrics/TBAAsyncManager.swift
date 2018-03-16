@@ -68,12 +68,12 @@ class TBAUpdatingDataReloader {
     //Meant to be called on background threads to create the relams for that thread and return it
     func getRealms() -> (generalRealm: Realm, scoutedRealm: Realm)? {
         let generalRealm: Realm
-        let syncedRelam: Realm
+        let syncedRealm: Realm
         do {
             generalRealm = try Realm(configuration: generalRealmConfig)
-            syncedRelam = try Realm(configuration: scoutedRealmConfig)
+            syncedRealm = try Realm(configuration: scoutedRealmConfig)
             
-            return (generalRealm, syncedRelam)
+            return (generalRealm, syncedRealm)
         } catch {
             CLSNSLogv("Unable to open realms on tba background thread with error: \(error)", getVaList([]))
             Crashlytics.sharedInstance().recordError(error)
@@ -156,9 +156,8 @@ class TBAUpdatingDataReloader {
     
     func reloadOPRs(forEventKey eventKey: String, withCompletionHandler completionHandler: @escaping (_ wasUpdated: Bool) -> Void) {
         cloudConnection.oprs(withEventKey: eventKey) {frcOPRs, error in
-            var didUpdate = false
             if let oprs = frcOPRs {
-                self.backgroundQueue.sync {
+                self.backgroundQueue.async {
                     autoreleasepool {
                         if let realms = self.getRealms() {
                             realms.scoutedRealm.beginWrite()
@@ -169,42 +168,40 @@ class TBAUpdatingDataReloader {
                                 //Go through all the teams in this event
                                 for team in teams {
                                     //Get the computed stats
-                                    if let computedStats = team.scouted.computedStats(forEvent: event) {
-                                        
+                                    if let computedStats = realms.scoutedRealm.object(ofType: ComputedStats.self, forPrimaryKey: "computedStats_\(event.key)_\(team.key)") {
                                         computedStats.opr.value = oprs.oprs[team.key]
                                         computedStats.dpr.value = oprs.dprs[team.key]
                                         computedStats.ccwm.value = oprs.ccwms[team.key]
-                                        computedStats.areFromTBA = true
                                     }
                                 }
                                 
                                 Answers.logCustomEvent(withName: "Background Loaded OPRs from TBA", customAttributes: nil)
-                            } else {
-                                //There is no event for this event key, remove an observer if there is one
-                                self.removeOPRUpdaters(forEventKey: eventKey)
                             }
                             
                             do {
                                 try realms.scoutedRealm.commitWrite()
-                                didUpdate = true
+                                completionHandler(true)
                             } catch {
                                 CLSNSLogv("Error commiting write of background OPR loading: \(error)", getVaList([]))
+                                completionHandler(false)
                                 Crashlytics.sharedInstance().recordError(error)
                             }
+                        } else {
+                            completionHandler(false)
                         }
                     }
                 }
+            } else {
+                completionHandler(false)
             }
-            completionHandler(didUpdate)
         }
     }
     
     ///Reloads match scores and times
     func reloadMatchInfo(forEventKey eventKey: String, withCompletionHandler completionHandler: @escaping (_ wasUpdated: Bool) -> Void) {
         cloudConnection.matches(forEventKey: eventKey, shouldUseModificationValues: true) {frcMatches, error in
-            var didUpdate = false
             if let frcMatches = frcMatches {
-                self.backgroundQueue.sync {
+                self.backgroundQueue.async {
                     autoreleasepool {
                         if let realms = self.getRealms() {
                             realms.generalRealm.beginWrite()
@@ -214,27 +211,30 @@ class TBAUpdatingDataReloader {
                                 let matches = event.matches
                                 
                                 for match in matches {
-                                    if let frcMatch = frcMatches.first(where: {$0.key == match.key}){
-                                        if let redScore = frcMatch.alliances?["red"]?.score {
-                                            if redScore != -1 {
-                                                match.scouted.redScore.value = redScore
+                                    if let scoutedMatch = realms.scoutedRealm.object(ofType: ScoutedMatch.self, forPrimaryKey: match.key) {
+                                        if let frcMatch = frcMatches.first(where: {$0.key == match.key}){
+                                            if let redScore = frcMatch.alliances?["red"]?.score {
+                                                if redScore != -1 {
+                                                    scoutedMatch.redScore.value = redScore
+                                                }
                                             }
-                                        }
-                                        
-                                        if let blueScore = frcMatch.alliances?["blue"]?.score {
-                                            if blueScore != -1 {
-                                                match.scouted.blueScore.value = blueScore
+                                            
+                                            if let blueScore = frcMatch.alliances?["blue"]?.score {
+                                                if blueScore != -1 {
+                                                    scoutedMatch.blueScore.value = blueScore
+                                                }
                                             }
-                                        }
-                                        
-                                        if let actualTime = frcMatch.actualTime {
-                                            match.time = actualTime
-                                        } else if let predictedTime = frcMatch.predictedTime {
-                                            match.time = predictedTime
-                                        } else {
-                                            match.time = frcMatch.scheduledTime
+                                            
+                                            if let actualTime = frcMatch.actualTime {
+                                                match.time = actualTime
+                                            } else if let predictedTime = frcMatch.predictedTime {
+                                                match.time = predictedTime
+                                            } else {
+                                                match.time = frcMatch.scheduledTime
+                                            }
                                         }
                                     }
+                                    
                                 }
                             }
                             
@@ -242,25 +242,28 @@ class TBAUpdatingDataReloader {
                                 try realms.scoutedRealm.commitWrite()
                                 try realms.generalRealm.commitWrite()
                                 
-                                didUpdate = true
+                                completionHandler(true)
                             } catch {
                                 CLSNSLogv("Error commiting background write of match updates: \(error)", getVaList([]))
+                                completionHandler(false)
                                 Crashlytics.sharedInstance().recordError(error)
                             }
+                        } else {
+                            completionHandler(false)
                         }
                     }
                 }
+            } else {
+                completionHandler(false)
             }
-            completionHandler(didUpdate)
         }
     }
     
     ///Reloads team status string and rank (in Computed Stats)
     func reloadTeamStatuses(forEventKey eventKey: String, withCompletionHandler completionHandler: @escaping (_ wasUpdated: Bool) -> Void) {
         cloudConnection.teamStatuses(forEvent: eventKey) {frcStatuses, error in
-            var didUpdate = false
             if let frcStatuses = frcStatuses {
-                self.backgroundQueue.sync {
+                self.backgroundQueue.async {
                     autoreleasepool {
                         if let realms = self.getRealms() {
                             realms.scoutedRealm.beginWrite()
@@ -277,20 +280,22 @@ class TBAUpdatingDataReloader {
                                 }
                             }
                             
-                            
                             do {
                                 try realms.scoutedRealm.commitWrite()
-                                didUpdate = true
+                                completionHandler(true)
                             } catch {
                                 CLSNSLogv("Error commiting background write of ststuses updates: \(error)", getVaList([]))
+                                completionHandler(false)
                                 Crashlytics.sharedInstance().recordError(error)
                             }
+                        } else {
+                            completionHandler(false)
                         }
                     }
                 }
+            } else {
+                completionHandler(false)
             }
-            
-            completionHandler(didUpdate)
         }
     }
 }
