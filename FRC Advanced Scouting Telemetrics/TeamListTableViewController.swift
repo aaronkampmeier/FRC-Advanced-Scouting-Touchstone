@@ -347,6 +347,16 @@ class TeamListTableViewController: UITableViewController, TeamListDetailDataSour
                 cell.frontImage.image = UIImage(named: "FRC-Logo")
             }
         }
+        
+        //Show the indicator if this is the team that is currently logged in
+        cell.myTeamIndicatorImageView.isHidden = true
+        if let loggedInTeam = UserDefaults.standard.value(forKey: "LoggedInTeam") as? String {
+            if let teamInt = Int(loggedInTeam) {
+                if teamInt == team.teamNumber {
+                    cell.myTeamIndicatorImageView.isHidden = false
+                }
+            }
+        }
 
         return cell
     }
@@ -454,10 +464,10 @@ class TeamListTableViewController: UITableViewController, TeamListDetailDataSour
     }
     
     override func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
-        if let event = selectedEvent {
+        if let event = selectedEvent, event.isInvalidated == false {
             return "Event: \(event.name)"
         } else {
-            return "All Teams"
+            return "Teams"
         }
     }
     

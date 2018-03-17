@@ -72,7 +72,7 @@ class RealmController {
         let realmErrorHandler: (Error) -> Void = { (error: Error) in
             CLSNSLogv("Error opening realms: \(error)", getVaList([]))
             Crashlytics.sharedInstance().recordError(error)
-            Answers.logLogin(withMethod: "ROS", success: false, customAttributes: nil)
+            Answers.logCustomEvent(withName: "Opened Realms", customAttributes: ["Success":false])
         }
         
         do {
@@ -82,7 +82,7 @@ class RealmController {
             let syncedRealmCompletionHandler: () -> Void = {
                 NotificationCenter.default.post(name: DidLogIntoSyncServerNotification, object: self)
                 CLSNSLogv("Did log into and open realms", getVaList([]))
-                Answers.logLogin(withMethod: "ROS", success: true, customAttributes: nil)
+                Answers.logCustomEvent(withName: "Opened Realms", customAttributes: ["Success":true])
                 
                 self.performSanityChecks()
                 

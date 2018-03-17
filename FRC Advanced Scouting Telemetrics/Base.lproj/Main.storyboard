@@ -2802,15 +2802,24 @@
                                             <color key="textColor" white="0.66666666666666663" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                             <nil key="highlightedColor"/>
                                         </label>
+                                        <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="My Team Indicator" translatesAutoresizingMaskIntoConstraints="NO" id="gS4-By-dGh">
+                                            <rect key="frame" x="155" y="8.5" width="15" height="15"/>
+                                            <constraints>
+                                                <constraint firstAttribute="width" secondItem="gS4-By-dGh" secondAttribute="height" multiplier="1:1" id="lG1-7i-huF"/>
+                                                <constraint firstAttribute="width" constant="15" id="sU6-7k-Ed0"/>
+                                            </constraints>
+                                        </imageView>
                                     </subviews>
                                     <constraints>
                                         <constraint firstItem="qUn-Zq-bnr" firstAttribute="leading" secondItem="ECb-cw-os9" secondAttribute="leadingMargin" id="0Tc-S9-pdP"/>
                                         <constraint firstItem="KHZ-yj-ObQ" firstAttribute="centerY" secondItem="ECb-cw-os9" secondAttribute="centerY" id="205-pa-DKV"/>
                                         <constraint firstItem="VHW-e8-GdM" firstAttribute="centerY" secondItem="ECb-cw-os9" secondAttribute="centerY" constant="-5" id="32f-Bi-0bu"/>
+                                        <constraint firstItem="gS4-By-dGh" firstAttribute="centerY" secondItem="VHW-e8-GdM" secondAttribute="centerY" id="3pK-1z-Q4k"/>
                                         <constraint firstItem="veR-tm-P65" firstAttribute="top" secondItem="VHW-e8-GdM" secondAttribute="bottom" constant="-3.5" id="ENa-8P-Rzn"/>
                                         <constraint firstItem="veR-tm-P65" firstAttribute="leading" secondItem="VHW-e8-GdM" secondAttribute="leading" constant="1" id="FBD-YA-IdJ"/>
                                         <constraint firstItem="VHW-e8-GdM" firstAttribute="leading" secondItem="zxA-RL-tSZ" secondAttribute="trailing" constant="10" id="Pdg-m7-ACf"/>
                                         <constraint firstItem="zxA-RL-tSZ" firstAttribute="leading" secondItem="ECb-cw-os9" secondAttribute="leadingMargin" constant="30" id="VZx-mP-Z79"/>
+                                        <constraint firstItem="gS4-By-dGh" firstAttribute="leading" secondItem="VHW-e8-GdM" secondAttribute="trailing" constant="3" id="Vif-iP-s1n"/>
                                         <constraint firstItem="zxA-RL-tSZ" firstAttribute="top" secondItem="ECb-cw-os9" secondAttribute="top" id="ZId-lb-dwd"/>
                                         <constraint firstItem="zxA-RL-tSZ" firstAttribute="centerY" secondItem="ECb-cw-os9" secondAttribute="centerY" id="aGF-kt-XTp"/>
                                         <constraint firstAttribute="bottom" secondItem="veR-tm-P65" secondAttribute="bottom" constant="2" id="ePt-bf-jNu"/>
@@ -2821,6 +2830,7 @@
                                 </tableViewCellContentView>
                                 <connections>
                                     <outlet property="frontImage" destination="zxA-RL-tSZ" id="dmv-SN-kr0"/>
+                                    <outlet property="myTeamIndicatorImageView" destination="gS4-By-dGh" id="pTT-Bo-O45"/>
                                     <outlet property="rankLabel" destination="qUn-Zq-bnr" id="Hcq-J2-KsN"/>
                                     <outlet property="statLabel" destination="KHZ-yj-ObQ" id="iEd-Vv-xbw"/>
                                     <outlet property="teamLabel" destination="VHW-e8-GdM" id="48i-bs-FOo"/>
@@ -2889,7 +2899,7 @@
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="gBL-gX-UjV" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="336" y="944"/>
+            <point key="canvasLocation" x="335.7421875" y="943.75"/>
         </scene>
         <!--Forgot Password-->
         <scene sceneID="JmE-hV-T5F">
@@ -4094,6 +4104,7 @@
         <image name="Camera" width="30" height="30"/>
         <image name="Chart" width="27" height="27"/>
         <image name="Edit" width="27" height="27"/>
+        <image name="My Team Indicator" width="50" height="50"/>
         <image name="Pit Scouting" width="31" height="31"/>
         <image name="Plus Math Filled-100" width="100" height="100"/>
         <image name="Settings-50" width="27" height="27"/>

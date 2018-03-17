@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import Crashlytics
 
 typealias PitScoutingUpdateHandler = ((Any?)->Void)
 typealias PitScoutingCurrentValue = ()->Any?
@@ -197,6 +198,8 @@ class PitScoutingViewController: UIViewController, UICollectionViewDataSource, U
         updateTimer?.invalidate()
         
         NotificationCenter.default.post(name: PitScoutingUpdatedTeamDetail, object: self)
+        
+        Answers.logCustomEvent(withName: "Closed Pit Scouting", customAttributes: nil)
     }
 
     override func didReceiveMemoryWarning() {

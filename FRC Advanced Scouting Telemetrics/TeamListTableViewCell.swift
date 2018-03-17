@@ -14,6 +14,7 @@ class TeamListTableViewCell: UITableViewCell {
 	@IBOutlet weak var teamLabel: UILabel!
 	@IBOutlet weak var statLabel: UILabel!
     @IBOutlet weak var teamNameLabel: UILabel!
+    @IBOutlet weak var myTeamIndicatorImageView: UIImageView!
     
     override func awakeFromNib() {
         super.awakeFromNib()
