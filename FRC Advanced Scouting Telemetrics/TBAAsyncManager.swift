@@ -101,9 +101,9 @@ class TBAUpdatingDataReloader {
     
     func setOPRUpdater(forEventKey eventKey: String) {
         backgroundQueue.sync {
-            let timer = FASTBackgroundTimer(withInterval: 60 * 8) {
+            let timer = FASTBackgroundTimer(withInterval: 60 * 8) {[weak self] in
                 //Reload OPR
-                self.reloadOPRs(forEventKey: eventKey) {wasUpdated in
+                self?.reloadOPRs(forEventKey: eventKey) {wasUpdated in
                     CLSNSLogv("Background reload of OPR for event \(eventKey) completed with updates: \(wasUpdated)", getVaList([]))
                 }
             }
@@ -120,8 +120,8 @@ class TBAUpdatingDataReloader {
     
     func setMatchUpdater(forEventKey eventKey: String) {
         backgroundQueue.sync {
-            let timer = FASTBackgroundTimer(withInterval: 60 * 3) {
-                self.reloadMatchInfo(forEventKey: eventKey) {didUpdate in
+            let timer = FASTBackgroundTimer(withInterval: 60 * 3) { [weak self] in
+                self?.reloadMatchInfo(forEventKey: eventKey) {didUpdate in
                     CLSNSLogv("Background reload of matches for event \(eventKey) completed with updates: \(didUpdate)", getVaList([]))
                 }
             }
@@ -138,8 +138,8 @@ class TBAUpdatingDataReloader {
     
     func setStatusesUpdater(forEvent eventKey: String) {
         backgroundQueue.sync {
-            let timer = FASTBackgroundTimer(withInterval: 60 * 4) {
-                self.reloadTeamStatuses(forEventKey: eventKey) {didUpdate in
+            let timer = FASTBackgroundTimer(withInterval: 60 * 4) { [weak self] in
+                self?.reloadTeamStatuses(forEventKey: eventKey) {didUpdate in
                     CLSNSLogv("Background reload of statuses for event \(eventKey) completed with updates: \(didUpdate)", getVaList([]))
                 }
             }

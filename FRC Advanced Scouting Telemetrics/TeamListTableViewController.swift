@@ -352,7 +352,7 @@ class TeamListTableViewController: UITableViewController, TeamListDetailDataSour
     }
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        let pressedTeam = currentTeamsToDisplay[(indexPath as NSIndexPath).row]
+        let pressedTeam = currentTeamsToDisplay[indexPath.row]
         
         let teamListDetailVC: TeamListDetailViewController = teamListSplitVC.teamListDetailVC
         
@@ -445,10 +445,6 @@ class TeamListTableViewController: UITableViewController, TeamListDetailDataSour
         }
         
         realmController.moveTeam(from: fromIndexPath.row, to: toIndexPath.row, inEvent: selectedEvent)
-        
-//        let movedTeam = currentEventTeams[fromIndexPath.row]
-//        currentEventTeams.remove(at: fromIndexPath.row)
-//        currentEventTeams.insert(movedTeam, at: toIndexPath.row)
     }
 
     // Override to support conditional rearranging of the table view.

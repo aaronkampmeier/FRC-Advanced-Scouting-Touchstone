@@ -360,6 +360,8 @@ extension HasScoutedEquivalent {
                     //There is no scouted equivalent, this is a problem
                     assertionFailure("No scouted object for local object")
                     Crashlytics.sharedInstance().recordCustomExceptionName("No scouted object for local object", reason: "Key: \(self.key)", frameArray: [])
+                    
+//                    return nil
                     exit(EXIT_FAILURE)
                 }
             }

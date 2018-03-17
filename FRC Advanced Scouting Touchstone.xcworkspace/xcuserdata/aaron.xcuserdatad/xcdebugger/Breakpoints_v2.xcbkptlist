@@ -10,7 +10,7 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "FRC Advanced Scouting Telemetrics/CloudImportManager.swift"
-            timestampString = "542870708.585254"
+            timestampString = "542948344.568996"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "86"
@@ -42,7 +42,7 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "FRC Advanced Scouting Telemetrics/CloudImportManager.swift"
-            timestampString = "542870708.585573"
+            timestampString = "542948344.569157"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "116"
@@ -170,11 +170,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "FRC Advanced Scouting Telemetrics/TeamListTableViewController.swift"
-            timestampString = "542870708.585737"
+            timestampString = "542948344.5693181"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "530"
-            endingLineNumber = "530"
+            startingLineNumber = "526"
+            endingLineNumber = "526"
             landmarkName = "sortPressed(_:)"
             landmarkType = "7">
          </BreakpointContent>
@@ -616,7 +616,7 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "FRC Advanced Scouting Telemetrics/TeamListDetailViewController.swift"
-            timestampString = "542870708.586249"
+            timestampString = "542948344.569999"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "73"
@@ -664,7 +664,7 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "FRC Advanced Scouting Telemetrics/TeamListDetailViewController.swift"
-            timestampString = "542870708.586434"
+            timestampString = "542948344.570051"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "74"
@@ -680,7 +680,7 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "FRC Advanced Scouting Telemetrics/TeamListDetailViewController.swift"
-            timestampString = "542870708.58648"
+            timestampString = "542948344.5700949"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "105"
@@ -744,7 +744,7 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "FRC Advanced Scouting Telemetrics/CloudImportManager.swift"
-            timestampString = "542870708.5866131"
+            timestampString = "542948344.570184"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "72"
@@ -872,7 +872,7 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "FRC Advanced Scouting Telemetrics/TeamListTableViewController.swift"
-            timestampString = "542870708.5872771"
+            timestampString = "542948344.570326"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "355"
@@ -888,7 +888,7 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "FRC Advanced Scouting Telemetrics/RealmDataMangager.swift"
-            timestampString = "542870708.587325"
+            timestampString = "542948344.5706"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "324"
@@ -904,7 +904,7 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "FRC Advanced Scouting Telemetrics/RealmDataMangager.swift"
-            timestampString = "542870708.587504"
+            timestampString = "542948344.570887"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "327"
@@ -920,7 +920,7 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "FRC Advanced Scouting Telemetrics/RealmDataMangager.swift"
-            timestampString = "542870708.587554"
+            timestampString = "542948344.571125"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "325"
@@ -952,7 +952,7 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "FRC Advanced Scouting Telemetrics/TeamListTableViewController.swift"
-            timestampString = "542870708.58762"
+            timestampString = "542948344.571384"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "167"
@@ -984,7 +984,7 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "FRC Advanced Scouting Telemetrics/CloudImportManager.swift"
-            timestampString = "542870708.587847"
+            timestampString = "542948344.571661"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "314"
@@ -1032,7 +1032,7 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "FRC Advanced Scouting Telemetrics/TBAAsyncManager.swift"
-            timestampString = "542870708.587984"
+            timestampString = "542948344.571749"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "107"
@@ -1048,7 +1048,7 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "FRC Advanced Scouting Telemetrics/TBAAsyncManager.swift"
-            timestampString = "542870708.588472"
+            timestampString = "542948344.572016"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "125"
@@ -1064,7 +1064,7 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "FRC Advanced Scouting Telemetrics/TBAAsyncManager.swift"
-            timestampString = "542870708.5887409"
+            timestampString = "542948344.572242"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "158"
@@ -1112,7 +1112,7 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "FRC Advanced Scouting Telemetrics/TBAAsyncManager.swift"
-            timestampString = "542870708.588991"
+            timestampString = "542948344.572462"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "162"
@@ -1128,7 +1128,7 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "FRC Advanced Scouting Telemetrics/TBAAsyncManager.swift"
-            timestampString = "542870708.58924"
+            timestampString = "542948344.572678"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "94"
@@ -1150,22 +1150,6 @@
             startingLineNumber = "118"
             endingLineNumber = "118"
             landmarkName = "matches(forEventKey:shouldUseModificationValues:withCompletionHandler:)"
-            landmarkType = "7">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            shouldBeEnabled = "Yes"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "FRC Advanced Scouting Telemetrics/TBAAsyncManager.swift"
-            timestampString = "542870708.589535"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "136"
-            endingLineNumber = "136"
-            landmarkName = "removeMatchUpdater(forEventKey:)"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
@@ -1208,7 +1192,7 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "FRC Advanced Scouting Telemetrics/TBAAsyncManager.swift"
-            timestampString = "542870708.589852"
+            timestampString = "542948344.572943"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "204"
@@ -1247,6 +1231,22 @@
                   offsetFromSymbolStart = "216">
                </Location>
             </Locations>
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "FRC Advanced Scouting Telemetrics/RealmLoaderViewController.swift"
+            timestampString = "542911823.196876"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "62"
+            endingLineNumber = "62"
+            landmarkName = "didCompleteSync()"
+            landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
    </Breakpoints>

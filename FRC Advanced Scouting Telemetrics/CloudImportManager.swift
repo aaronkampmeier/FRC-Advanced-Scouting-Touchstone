@@ -256,13 +256,13 @@ class CloudEventImportManager {
                             }) {
                                 eventPerformance = teamEventPerformanceObjects[index]
                             } else {
-                                //For some reason, this team in the match does was not included in the total teams list of all the teams at this event (TBA's fault). Add the team seperately.
+                                //For some reason, this team in the match does was not included in the total teams list of all the teams at this event (TBA's fault). Add the team separately.
                                 cloudConnection.team(withTeamKey: teamString) {(frcTeam) in
                                     if let team = frcTeam {
                                         self.importTeams(fromTeams: [team])
                                     } else {
-                                        self.throwError(error: .MatchTeamNotInRoster)
                                         CLSNSLogv("Match (\(frcMatch.key)) team \(teamString) not in roster for event \(self.frcEvent.key)", getVaList([]))
+                                        self.throwError(error: .MatchTeamNotInRoster)
                                     }
                                 }
                                 //By calling import teams again, it will return back to the matches
@@ -332,6 +332,7 @@ class CloudEventImportManager {
     }
     
     private func throwError(error: ImportError) {
+        CLSNSLogv("Import error: \(error)", getVaList([]))
         if shouldEnterWrite {
             realmController.syncedRealm.cancelWrite()
             realmController.generalRealm.cancelWrite()
