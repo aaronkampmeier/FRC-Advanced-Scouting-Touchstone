@@ -37,10 +37,10 @@ class MatchOverviewDetailViewController: UIViewController {
             if let match = displayedMatch {
                 matchTitleLabel.text = match.description
                 
-                redPointsLabel.text = "\(match.scouted.redScore.value?.description ?? "-") Pts."
-                redRankingPointsLabel.text = "\(match.scouted.redRP.value?.description ?? "-") RP"
-                bluePointsLabel.text = "\(match.scouted.blueScore.value?.description ?? "-") Pts."
-                blueRankingPointsLabel.text = "\(match.scouted.blueRP.value?.description ?? "-") RP"
+                redPointsLabel.text = "\(match.scouted?.redScore.value?.description ?? "-") Pts."
+                redRankingPointsLabel.text = "\(match.scouted?.redRP.value?.description ?? "-") RP"
+                bluePointsLabel.text = "\(match.scouted?.blueScore.value?.description ?? "-") Pts."
+                blueRankingPointsLabel.text = "\(match.scouted?.blueRP.value?.description ?? "-") RP"
                 
                 //Set the teams in the segmented control
                 for teamMatchPerformance in match.teamPerformances {

@@ -64,12 +64,12 @@ class SSDataManager {
         
         //TODO: Don't believe this lines up with good use of scout IDs
         self.scoutID = UUID().uuidString
-        scoutedMatchPerformance.scouted.defaultScoutID = scoutID
-        scoutedMatchPerformance.scouted.trackedScoutIDs.append(scoutID)
+        scoutedMatchPerformance.scouted?.defaultScoutID = scoutID
+        scoutedMatchPerformance.scouted?.trackedScoutIDs.append(scoutID)
         
         SSDataManager.mostRecentSSDataManager = self
         
-        scoutedMatchPerformance.scouted.didCrossAutoLine = false
+        scoutedMatchPerformance.scouted?.didCrossAutoLine = false
         
         
         CLSNSLogv("Began Stands Scouting for key: \(teamMatchPerformance!.key)", getVaList([]))
@@ -92,7 +92,7 @@ class SSDataManager {
     }
     
     func setDidCrossAutoLine(didCross: Bool) {
-        scoutedMatchPerformance.scouted.didCrossAutoLine = didCross
+        scoutedMatchPerformance.scouted?.didCrossAutoLine = didCross
     }
     
     func saveTimeMarker(event: TimeMarkerEvent, atTime time: TimeInterval, withAssociatedLocation associatedLocation: String? = nil) {
@@ -111,10 +111,10 @@ class SSDataManager {
     
     //MARK: - Climb
     func recordClimb(_ successful: ClimbStatus.RawValue) {
-        scoutedMatchPerformance.scouted.climbStatus = successful
+        scoutedMatchPerformance.scouted?.climbStatus = successful
     }
     
     func recordAssist(_ assist: ClimbAssistStatus.RawValue) {
-        scoutedMatchPerformance.scouted.climbAssistStatus = assist
+        scoutedMatchPerformance.scouted?.climbAssistStatus = assist
     }
 }

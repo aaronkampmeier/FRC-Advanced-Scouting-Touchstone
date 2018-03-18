@@ -838,6 +838,23 @@
                                             </constraints>
                                         </tableViewCellContentView>
                                     </tableViewCell>
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="blue" accessoryType="disclosureIndicator" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="syncStatus" textLabel="OHR-Cu-KBY" style="IBUITableViewCellStyleDefault" id="avB-3V-ppY">
+                                        <rect key="frame" x="0.0" y="275.5" width="600" height="44"/>
+                                        <autoresizingMask key="autoresizingMask"/>
+                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="avB-3V-ppY" id="UoH-zg-aAD">
+                                            <rect key="frame" x="0.0" y="0.0" width="567" height="43.5"/>
+                                            <autoresizingMask key="autoresizingMask"/>
+                                            <subviews>
+                                                <label opaque="NO" multipleTouchEnabled="YES" contentMode="left" insetsLayoutMarginsFromSafeArea="NO" text="Sync Status" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="OHR-Cu-KBY">
+                                                    <rect key="frame" x="15" y="0.0" width="550" height="43.5"/>
+                                                    <autoresizingMask key="autoresizingMask"/>
+                                                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                                    <nil key="textColor"/>
+                                                    <nil key="highlightedColor"/>
+                                                </label>
+                                            </subviews>
+                                        </tableViewCellContentView>
+                                    </tableViewCell>
                                 </prototypes>
                                 <connections>
                                     <outlet property="dataSource" destination="R8L-nd-eva" id="ytg-ep-kKd"/>
@@ -878,7 +895,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="gC4-aX-KMf" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="3692" y="-1342"/>
+            <point key="canvasLocation" x="3691.9921874999995" y="-1342.1875"/>
         </scene>
         <!--Game Field Location Selector-->
         <scene sceneID="TOc-ah-3BF">
@@ -3548,7 +3565,7 @@
         <!--Sync Status-->
         <scene sceneID="HAW-aj-SiC">
             <objects>
-                <viewController id="5HT-ww-lBn" sceneMemberID="viewController">
+                <viewController id="5HT-ww-lBn" customClass="SyncStatusViewController" customModule="FRC_Advanced_Scouting_Touchstone" customModuleProvider="target" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="2F8-kx-H2l"/>
                         <viewControllerLayoutGuide type="bottom" id="WvB-RD-oEm"/>
@@ -3556,14 +3573,82 @@
                     <view key="view" contentMode="scaleToFill" id="MiV-ML-bfK">
                         <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <progressView opaque="NO" contentMode="scaleToFill" verticalHuggingPriority="750" progress="0.5" translatesAutoresizingMaskIntoConstraints="NO" id="VbS-6Q-5JR">
+                                <rect key="frame" x="40" y="130.5" width="520" height="2"/>
+                            </progressView>
+                            <progressView opaque="NO" contentMode="scaleToFill" verticalHuggingPriority="750" progress="0.5" translatesAutoresizingMaskIntoConstraints="NO" id="ELx-vT-t77">
+                                <rect key="frame" x="40" y="214.5" width="520" height="2"/>
+                            </progressView>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Uploads" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Rjl-PX-t75">
+                                <rect key="frame" x="259.5" y="84" width="82" height="26.5"/>
+                                <fontDescription key="fontDescription" type="system" weight="medium" pointSize="22"/>
+                                <nil key="textColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Downloads" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="PCz-d7-z1i">
+                                <rect key="frame" x="245" y="167.5" width="110" height="27"/>
+                                <fontDescription key="fontDescription" type="system" weight="medium" pointSize="22"/>
+                                <nil key="textColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="CorrectIcon" translatesAutoresizingMaskIntoConstraints="NO" id="xUb-pg-NIs">
+                                <rect key="frame" x="288.5" y="204" width="23" height="23"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="23" id="JmU-1Q-GJF"/>
+                                    <constraint firstAttribute="width" secondItem="xUb-pg-NIs" secondAttribute="height" multiplier="1:1" id="dkA-2c-ZC2"/>
+                                </constraints>
+                            </imageView>
+                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="CorrectIcon" translatesAutoresizingMaskIntoConstraints="NO" id="B3A-Vu-0BI">
+                                <rect key="frame" x="289" y="120" width="23" height="23"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" secondItem="B3A-Vu-0BI" secondAttribute="height" multiplier="1:1" id="pYZ-bb-2op"/>
+                                    <constraint firstAttribute="width" constant="23" id="rdw-GU-kq9"/>
+                                </constraints>
+                            </imageView>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="B3T-Ic-is6">
+                                <rect key="frame" x="20" y="266.5" width="560" height="61"/>
+                                <string key="text">It is recommended to have all of your scouts' devices in sync before attending an event in case of poor internet connection at the event. If you have problems syncing, try logging out and back in again.</string>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <nil key="textColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                        </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        <constraints>
+                            <constraint firstAttribute="trailingMargin" secondItem="VbS-6Q-5JR" secondAttribute="trailing" constant="20" id="2Mi-d9-Fww"/>
+                            <constraint firstItem="B3T-Ic-is6" firstAttribute="centerX" secondItem="MiV-ML-bfK" secondAttribute="centerX" id="4aH-3V-FkJ"/>
+                            <constraint firstItem="B3A-Vu-0BI" firstAttribute="centerY" secondItem="VbS-6Q-5JR" secondAttribute="centerY" id="6N4-T7-Vtg"/>
+                            <constraint firstItem="xUb-pg-NIs" firstAttribute="centerY" secondItem="ELx-vT-t77" secondAttribute="centerY" id="8bf-0d-YNs"/>
+                            <constraint firstItem="Rjl-PX-t75" firstAttribute="top" secondItem="MiV-ML-bfK" secondAttribute="topMargin" constant="20" id="B1a-D4-Ddm"/>
+                            <constraint firstItem="xUb-pg-NIs" firstAttribute="centerX" secondItem="MiV-ML-bfK" secondAttribute="centerX" id="Fr7-N1-uSG"/>
+                            <constraint firstItem="Rjl-PX-t75" firstAttribute="centerX" secondItem="MiV-ML-bfK" secondAttribute="centerX" id="NNu-UC-ffB"/>
+                            <constraint firstItem="PCz-d7-z1i" firstAttribute="top" secondItem="VbS-6Q-5JR" secondAttribute="bottom" constant="35" id="PFD-bk-nKK"/>
+                            <constraint firstItem="B3T-Ic-is6" firstAttribute="leading" secondItem="MiV-ML-bfK" secondAttribute="leadingMargin" id="W6I-T7-ZD7"/>
+                            <constraint firstItem="B3A-Vu-0BI" firstAttribute="width" secondItem="B3A-Vu-0BI" secondAttribute="height" multiplier="1:1" id="XcW-MU-cqb"/>
+                            <constraint firstItem="B3T-Ic-is6" firstAttribute="top" secondItem="ELx-vT-t77" secondAttribute="bottom" constant="50" id="Zd1-JE-L2d"/>
+                            <constraint firstItem="PCz-d7-z1i" firstAttribute="centerX" secondItem="MiV-ML-bfK" secondAttribute="centerX" id="dl4-cO-9ge"/>
+                            <constraint firstAttribute="trailingMargin" secondItem="ELx-vT-t77" secondAttribute="trailing" constant="20" id="ht9-Ht-957"/>
+                            <constraint firstItem="VbS-6Q-5JR" firstAttribute="leading" secondItem="MiV-ML-bfK" secondAttribute="leadingMargin" constant="20" id="kQL-qy-cPZ"/>
+                            <constraint firstItem="ELx-vT-t77" firstAttribute="leading" secondItem="MiV-ML-bfK" secondAttribute="leadingMargin" constant="20" id="l5Z-zl-hs6"/>
+                            <constraint firstAttribute="trailingMargin" secondItem="B3T-Ic-is6" secondAttribute="trailing" id="qbn-hM-dKQ"/>
+                            <constraint firstItem="VbS-6Q-5JR" firstAttribute="top" secondItem="Rjl-PX-t75" secondAttribute="bottom" constant="20" id="vaz-JD-nT1"/>
+                            <constraint firstItem="B3A-Vu-0BI" firstAttribute="centerX" secondItem="MiV-ML-bfK" secondAttribute="centerX" id="wJT-7o-acO"/>
+                            <constraint firstItem="ELx-vT-t77" firstAttribute="top" secondItem="PCz-d7-z1i" secondAttribute="bottom" constant="20" id="wML-t4-Xdd"/>
+                        </constraints>
                     </view>
                     <navigationItem key="navigationItem" title="Sync Status" id="vAJ-Cj-Def"/>
                     <size key="freeformSize" width="600" height="600"/>
+                    <connections>
+                        <outlet property="downloadCheckView" destination="xUb-pg-NIs" id="P0b-6n-05A"/>
+                        <outlet property="downloadProgressView" destination="ELx-vT-t77" id="69t-FN-6h9"/>
+                        <outlet property="uploadCheckView" destination="B3A-Vu-0BI" id="kCR-xc-Eb4"/>
+                        <outlet property="uploadProgressView" destination="VbS-6Q-5JR" id="H86-2e-8em"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="7Yf-11-8kO" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="4344" y="-1107"/>
+            <point key="canvasLocation" x="4259.765625" y="-1163.28125"/>
         </scene>
         <!--Navigation Controller-->
         <scene sceneID="Qlv-5H-GZu">
@@ -4103,6 +4188,7 @@
         <image name="Banana Filled" width="33" height="33"/>
         <image name="Camera" width="30" height="30"/>
         <image name="Chart" width="27" height="27"/>
+        <image name="CorrectIcon" width="512" height="512"/>
         <image name="Edit" width="27" height="27"/>
         <image name="My Team Indicator" width="50" height="50"/>
         <image name="Pit Scouting" width="31" height="31"/>

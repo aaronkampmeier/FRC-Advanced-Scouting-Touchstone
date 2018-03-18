@@ -106,12 +106,12 @@ class StandsScoutingViewController: UIViewController {
 			case finalScorePrompt.textFields![0]:
 				//Red Ranking Points
                 if let intValue = Int(textField.text ?? "") {
-                    ssDataManager?.scoutedMatch.scouted.redRP.value = intValue
+                    ssDataManager?.scoutedMatch.scouted?.redRP.value = intValue
                 }
 			case finalScorePrompt.textFields![1]:
 				//Blue Ranking Points
                 if let intValue = Int(textField.text ?? "") {
-                    ssDataManager?.scoutedMatch.scouted.blueRP.value = intValue
+                    ssDataManager?.scoutedMatch.scouted?.blueRP.value = intValue
                 }
 			default:
 				break

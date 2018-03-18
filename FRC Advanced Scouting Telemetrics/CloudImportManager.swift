@@ -18,7 +18,7 @@ class CloudEventImportManager {
     
     //Pre-existing objects
     fileprivate let currentEvents: Results<Event>
-    fileprivate let currentTeams: [Team]
+    fileprivate let currentTeams: Results<Team>
     fileprivate let currentScoutedTeams: Results<ScoutedTeam>
     fileprivate let currentMatches: Results<Match>
     fileprivate let currentScoutedMatchPerformances: Results<ScoutedMatchPerformance>
@@ -40,7 +40,7 @@ class CloudEventImportManager {
         
         self.completionHandler = completionHandler
         currentEvents = realmController.generalRealm.objects(Event.self)
-        currentTeams = realmController.teamRanking()
+        currentTeams = realmController.generalRealm.objects(Team.self)
         currentScoutedTeams = realmController.syncedRealm.objects(ScoutedTeam.self)
         currentMatches = realmController.generalRealm.objects(Match.self)
         currentScoutedMatchPerformances = realmController.syncedRealm.objects(ScoutedMatchPerformance.self)
@@ -142,10 +142,6 @@ class CloudEventImportManager {
                 if !(scoutedTeam.eventRankers.contains(scoutedEventRanker!)) {
                     scoutedEventRanker?.rankedTeams.append(scoutedTeam)
                 }
-                //Add the local team to the local ranking object
-                if !realmController.getGeneralTeamRanker().rankedTeams.contains(scoutedTeam) {
-                    realmController.getGeneralTeamRanker().rankedTeams.append(scoutedTeam)
-                }
                 
                 //Now create the TeamEventPerformance object
                 let teamEventPerformance = TeamEventPerformance()
@@ -229,7 +225,7 @@ class CloudEventImportManager {
                     scoutedMatch.key = match.key
                     realmController.syncedRealm.add(scoutedMatch, update: true)
                 } else {
-                    scoutedMatch = match.scouted
+                    scoutedMatch = match.scouted!
                 }
                 
                 let frcAlliances = frcMatch.alliances!
@@ -313,11 +309,11 @@ class CloudEventImportManager {
         //This is not a required thing to have, if it fails then it's okay and we will still finalize
         if let oprs = oprs {
             //Go through all the teams in this event
-            let teams = realmController.teamRanking(eventObject!)
+            let teams: [Team] = realmController.teamRanking(forEvent: eventObject!)
             
             for team in teams {
                 //Get the computed stats
-                if let computedStats = team.scouted.computedStats(forEvent: eventObject!) {
+                if let computedStats = team.scouted?.computedStats(forEvent: eventObject!) {
                     
                     computedStats.opr.value = oprs.oprs[team.key]
                     computedStats.dpr.value = oprs.dprs[team.key]

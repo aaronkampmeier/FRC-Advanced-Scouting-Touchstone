@@ -70,7 +70,7 @@ class TeamListDetailViewController: UIViewController {
             self.updateView(forTeam: selectedTeam)
             
             //Register for updates
-            teamUpdateToken = selectedTeam?.scouted.observe {[weak self] objectChange in
+            teamUpdateToken = selectedTeam?.scouted?.observe {[weak self] objectChange in
                 switch objectChange {
                 case .change:
                     self?.updateView(forTeam: self?.selectedTeam)
@@ -192,7 +192,7 @@ class TeamListDetailViewController: UIViewController {
             navBar.title = team.teamNumber.description
             teamLabel.text = team.nickname
             
-            if team.scouted.canBanana {
+            if team.scouted?.canBanana ?? false {
                 bananaImageView.image = #imageLiteral(resourceName: "Banana Filled")
                 bananaImageWidth.constant = 40
             } else {
@@ -201,7 +201,7 @@ class TeamListDetailViewController: UIViewController {
             }
             
             //Populate the images, if there are images
-            if let image = team.scouted.frontImage {
+            if let image = team.scouted?.frontImage {
                 frontImage = TeamImagePhoto(image: UIImage(data: image as Data), attributedCaptionTitle: NSAttributedString(string: "Team \(team.teamNumber): Front Image"))
                 frontImageHeightConstraint.isActive = true
                 
@@ -260,7 +260,7 @@ class TeamListDetailViewController: UIViewController {
         super.viewWillTransition(to: size, with: coordinator)
         //Reset the content insets
         coordinator.animate(alongsideTransition: {_ in
-            if self.selectedTeam?.scouted.frontImage != nil {
+            if self.selectedTeam?.scouted?.frontImage != nil {
                 self.contentScrollView.contentInset = self.contentViewInsets
                 self.contentScrollView.scrollIndicatorInsets = self.contentViewInsets
                 
@@ -399,7 +399,7 @@ extension TeamListDetailViewController: UITableViewDelegate, UITableViewDataSour
             }
             
             if let event = self.selectedEvent {
-                if let statusStr = team.scouted.computedStats(forEvent: event)?.overallStatusString {
+                if let statusStr = team.scouted?.computedStats(forEvent: event)?.overallStatusString {
                     if statusStr != "--" {
                         numOfRows += 1
                     }
@@ -446,7 +446,7 @@ extension TeamListDetailViewController: UITableViewDelegate, UITableViewDataSour
             
             var statusString = ""
             if let event = self.selectedEvent {
-                if let statusStr = selectedTeam?.scouted.computedStats(forEvent: event)?.overallStatusString {
+                if let statusStr = selectedTeam?.scouted?.computedStats(forEvent: event)?.overallStatusString {
                     if statusStr != "--" {
                         //There is a status string
                         hasStatus = true

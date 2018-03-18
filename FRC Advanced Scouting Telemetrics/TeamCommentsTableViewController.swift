@@ -75,7 +75,7 @@ class TeamCommentsTableViewController: UITableViewController {
     
     func load() {
         if let team = dataSource?.currentTeamContext() {
-            teamComments = team.scouted.comments
+            teamComments = team.scouted!.comments
             isLoaded = true
             self.tableView.reloadData()
         } else {

@@ -36,13 +36,13 @@ class CloudEventRemovalManager {
                 teamsToRemove.append(team!)
             }
         }
-        let scoutedTeamsToRemove = teamsToRemove.map {$0.scouted}
+//        let scoutedTeamsToRemove = teamsToRemove.map {$0.scouted}
         realmController.delete(objects: teamsToRemove)
         
         //Won't actually remove the local team. It will stay in the database in case the user adds it back and wants to access their old data. The local team is simply removed from the local team ranking so it doesn't show up in the team list.
-        for scoutedTeam in scoutedTeamsToRemove {
-            scoutedTeam.ranker?.rankedTeams.remove(at: (scoutedTeam.ranker?.rankedTeams.index(of: scoutedTeam))!)
-        }
+//        for scoutedTeam in scoutedTeamsToRemove {
+//            scoutedTeam.ranker?.rankedTeams.remove(at: (scoutedTeam.ranker?.rankedTeams.index(of: scoutedTeam))!)
+//        }
         
         let matchesToDelete = Array(eventToRemove.matches)
         let teamMatchPerformances = Array(eventToRemove.matches.reduce([TeamMatchPerformance]()) {partialArray, match in

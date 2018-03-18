@@ -84,6 +84,7 @@
 		936572E11E1610CA00439728 /* About.rtf in Resources */ = {isa = PBXBuildFile; fileRef = 936572E01E1610CA00439728 /* About.rtf */; };
 		9365947B1E441981008FF324 /* PitTextFieldCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9365947A1E441981008FF324 /* PitTextFieldCollectionViewCell.swift */; };
 		9366C5AD20490AAD00A84C47 /* StatChartViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9366C5AC20490AAD00A84C47 /* StatChartViewController.swift */; };
+		9368092E205E30400043B751 /* SyncStatusViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9368092D205E30400043B751 /* SyncStatusViewController.swift */; };
 		936967F11E4FB1F7001DB15D /* TeamDetailCollectionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 936967F01E4FB1F7001DB15D /* TeamDetailCollectionViewController.swift */; };
 		936967F71E4FD057001DB15D /* TeamDetailTableCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 936967F61E4FD057001DB15D /* TeamDetailTableCollectionViewCell.swift */; };
 		9369681A1E502AC8001DB15D /* TeamDetailKeyValueSpreadCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 936968191E502AC8001DB15D /* TeamDetailKeyValueSpreadCollectionViewCell.swift */; };
@@ -275,6 +276,7 @@
 		936572E01E1610CA00439728 /* About.rtf */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.rtf; path = About.rtf; sourceTree = "<group>"; };
 		9365947A1E441981008FF324 /* PitTextFieldCollectionViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PitTextFieldCollectionViewCell.swift; sourceTree = "<group>"; };
 		9366C5AC20490AAD00A84C47 /* StatChartViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StatChartViewController.swift; sourceTree = "<group>"; };
+		9368092D205E30400043B751 /* SyncStatusViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SyncStatusViewController.swift; sourceTree = "<group>"; };
 		936967F01E4FB1F7001DB15D /* TeamDetailCollectionViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TeamDetailCollectionViewController.swift; sourceTree = "<group>"; };
 		936967F61E4FD057001DB15D /* TeamDetailTableCollectionViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TeamDetailTableCollectionViewCell.swift; sourceTree = "<group>"; };
 		936968191E502AC8001DB15D /* TeamDetailKeyValueSpreadCollectionViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TeamDetailKeyValueSpreadCollectionViewCell.swift; sourceTree = "<group>"; };
@@ -367,6 +369,7 @@
 				1F1C23D91E07673E008885A1 /* AddEventTableViewController.swift */,
 				932C344B1E12DC2600A23203 /* EventInfoVC.swift */,
 				936572DE1E160EBB00439728 /* AboutViewController.swift */,
+				9368092D205E30400043B751 /* SyncStatusViewController.swift */,
 			);
 			name = "Admin Console";
 			sourceTree = "<group>";
@@ -1107,6 +1110,7 @@
 				1F9B782B1CD1A42400B4E5AE /* HiddenDebugViewController.swift in Sources */,
 				9317C039201E999200F1E907 /* TimeMarker.swift in Sources */,
 				936572DF1E160EBB00439728 /* AboutViewController.swift in Sources */,
+				9368092E205E30400043B751 /* SyncStatusViewController.swift in Sources */,
 				1F4534101C6FF916004EDDB9 /* StandsScoutingViewController.swift in Sources */,
 				936967F71E4FD057001DB15D /* TeamDetailTableCollectionViewCell.swift in Sources */,
 				1F665D721CB1DA91003CAC1D /* DataSyncingViewController.swift in Sources */,

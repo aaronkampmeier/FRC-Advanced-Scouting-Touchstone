@@ -27,12 +27,12 @@ class MatchOverviewPerformanceDetailViewController: UIViewController {
             scoutID = nil
             matchPerformanceStats = []
             if let matchPerformance = displayedTeamMatchPerformance {
-                if matchPerformance.scouted.hasBeenScouted {
+                if matchPerformance.scouted?.hasBeenScouted ?? false {
                     showMatchContentViews()
                 } else {
                     hideMatchContentViews()
                 }
-                availableScoutIDs = matchPerformance.scouted.scoutIDs
+                availableScoutIDs = matchPerformance.scouted?.scoutIDs ?? []
                 
                 //Get all the stats
                 let availableStats = TeamMatchPerformance.StatName.allValues
@@ -71,7 +71,7 @@ class MatchOverviewPerformanceDetailViewController: UIViewController {
     var scoutID: String? {
         didSet {
             if let id = scoutID {
-                timeMarkers = displayedTeamMatchPerformance?.scouted.timeMarkers(forScoutID: id) ?? []
+                timeMarkers = displayedTeamMatchPerformance?.scouted?.timeMarkers(forScoutID: id) ?? []
                 timeMarkers = timeMarkers.sorted {($0.time) < ($1.time)}
             }
             
@@ -136,7 +136,7 @@ class MatchOverviewPerformanceDetailViewController: UIViewController {
 
 extension MatchOverviewPerformanceDetailViewController: UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        if displayedTeamMatchPerformance?.scouted.hasBeenScouted ?? false {
+        if displayedTeamMatchPerformance?.scouted?.hasBeenScouted ?? false {
             return timeMarkers.count
         } else {
             return 0
@@ -144,7 +144,7 @@ extension MatchOverviewPerformanceDetailViewController: UITableViewDataSource {
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        if displayedTeamMatchPerformance?.scouted.hasBeenScouted ?? false {
+        if displayedTeamMatchPerformance?.scouted?.hasBeenScouted ?? false {
             let cell = tableView.dequeueReusableCell(withIdentifier: "timeMarker") as! MatchOverviewTimeMarkerTableViewCell
             let timeMarker = timeMarkers[indexPath.row]
             

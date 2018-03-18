@@ -18,6 +18,7 @@ class EventSelectionTitleButton: UIButton {
 }
 
 class TeamListTableViewController: UITableViewController, TeamListDetailDataSource {
+    @IBOutlet weak var incompleteEventView: UIView!
     @IBOutlet weak var graphButton: UIBarButtonItem!
     @IBOutlet weak var eventSelectionButton: EventSelectionTitleButton!
     @IBOutlet weak var editButton: UIBarButtonItem!
@@ -83,13 +84,22 @@ class TeamListTableViewController: UITableViewController, TeamListDetailDataSour
             statToSortBy = nil
             
             if let event = selectedEvent {
+                
                 UserDefaults.standard.set(event.key, forKey: lastSelectedEventStorageKey)
-                currentEventTeams = realmController.teamRanking(event)
+                currentEventTeams = realmController.teamRanking(forEvent: event)
                 
                 eventSelectionButton.setTitle(event.name, for: UIControlState())
                 
                 matchesButton.isEnabled = true
                 graphButton.isEnabled = true
+                
+                if !realmController.sanityCheckStructure(ofEvent: event) {
+                    //The event's structure is not there, wait for it to download
+                    
+                    let alert = UIAlertController(title: "Wait for Downloads to Finish", message: "This event is not fully loaded from the cloud and is unusable until it is. Wait for this event to finish downloading by checking status in the \"Sync Status\" page and making sure you have a steady internet connection. If the issue persits, try logging out and back in again. If you believe this was in error, please contact us.", preferredStyle: .alert)
+                    alert.addAction(UIAlertAction(title: "OK", style: .default, handler: {_ in self.selectedEvent = nil}))
+                    self.present(alert, animated: true, completion: nil)
+                }
             } else {
                 currentEventTeams = []
                 
@@ -155,7 +165,9 @@ class TeamListTableViewController: UITableViewController, TeamListDetailDataSour
         if let lastSelectedEventKey = UserDefaults.standard.value(forKey: lastSelectedEventStorageKey) as? String {
             //Get event
             if let event = realmController.generalRealm.object(ofType: Event.self, forPrimaryKey: lastSelectedEventKey) {
-                selectedEvent = event
+                if RealmController.realmController.sanityCheckStructure(ofEvent: event) {
+                    selectedEvent = event
+                }
             }
         }
     }
@@ -172,9 +184,13 @@ class TeamListTableViewController: UITableViewController, TeamListDetailDataSour
             }
         }
         
-        currentEventTeams = realmController.teamRanking(selectedEvent)
+        if let event = selectedEvent {
+            currentEventTeams = realmController.teamRanking(forEvent: event)
+        } else {
+            currentEventTeams = []
+        }
+        
         if isSearching {
-            //Upon returning to a search we won't update the teams and re-read from the model like normally. We will just use the original event teams for simplicity's sake.
             self.navigationController?.setToolbarHidden(true, animated: true) //Set hidden if we are returning to a search
         } else {
             self.navigationController?.setToolbarHidden(false, animated: true)
@@ -223,7 +239,7 @@ class TeamListTableViewController: UITableViewController, TeamListDetailDataSour
                         DispatchQueue.main.async {
                             if deletions.count > 0 || insertions.count > 0 {
                                 if !event.isInvalidated {
-                                    self?.currentEventTeams = self!.realmController.teamRanking(event)
+                                    self?.currentEventTeams = self!.realmController.teamRanking(forEvent: event)
                                 } else {
                                     Crashlytics.sharedInstance().recordCustomExceptionName("Unable to update view of team list rank (non fatal)", reason: "Event is invalidated", frameArray: [])
                                 }
@@ -336,7 +352,7 @@ class TeamListTableViewController: UITableViewController, TeamListDetailDataSour
         if let image = teamImages[team.key] {
             cell.frontImage.image = image
         } else {
-            if let imageData = team.scouted.frontImage {
+            if let imageData = team.scouted?.frontImage {
                 guard let uiImage = UIImage(data: imageData as Data) else {
                     Crashlytics.sharedInstance().recordCustomExceptionName("Image data corrupted", reason: "Attempt to create UIImage from data failed.", frameArray: [])
                     return cell
@@ -450,11 +466,11 @@ class TeamListTableViewController: UITableViewController, TeamListDetailDataSour
     // Override to support rearranging the table view.
     override func tableView(_ tableView: UITableView, moveRowAt fromIndexPath: IndexPath, to toIndexPath: IndexPath) {
         //Move the team in the array and in Core Data
-        guard let _ = selectedEvent else {
+        guard let event = selectedEvent else {
             return
         }
         
-        realmController.moveTeam(from: fromIndexPath.row, to: toIndexPath.row, inEvent: selectedEvent)
+        realmController.moveTeam(from: fromIndexPath.row, to: toIndexPath.row, inEvent: event)
     }
 
     // Override to support conditional rearranging of the table view.
@@ -500,7 +516,7 @@ class TeamListTableViewController: UITableViewController, TeamListDetailDataSour
         } else if touch.tapCount == 0 {
             //Long press
             if let frcEvent = selectedEvent {
-                let clearPickListAlert = UIAlertController(title: "Reset Picked Teams", message: "Would you like to reset what teams are picked or not? This will not affect any scouting data, just the Xs next to teams that were marked as picked. ", preferredStyle: .alert)
+                let clearPickListAlert = UIAlertController(title: "Reset Picked Teams", message: "Would you like to reset what teams are picked or not? This will not affect any scouting data, just the Xs next to teams that were marked as picked.", preferredStyle: .alert)
                 clearPickListAlert.addAction(UIAlertAction(title: "Reset", style: .default, handler: {_ in
                     //Reset the picked teams
                     let eventRanker = RealmController.realmController.getTeamRanker(forEvent: frcEvent)

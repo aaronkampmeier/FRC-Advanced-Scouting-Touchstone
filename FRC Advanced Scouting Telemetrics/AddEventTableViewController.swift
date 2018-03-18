@@ -74,7 +74,7 @@ class AddEventTableViewController: UITableViewController {
             } else {
                 NSLog("Events returned nil")
                 
-                let alert = UIAlertController(title: "Unable to Load Events", message: "There was an error loading events from the cloud.", preferredStyle: .alert)
+                let alert = UIAlertController(title: "Unable to Load Events", message: "There was an error loading events from the cloud. Make sure you are connected to the internet.", preferredStyle: .alert)
                 alert.addAction(UIAlertAction(title: "OK", style: .default, handler: {_ in self.performSegue(withIdentifier: "rewindToAdminConsole", sender: self)}))
                 self.present(alert, animated: true, completion: nil)
             }

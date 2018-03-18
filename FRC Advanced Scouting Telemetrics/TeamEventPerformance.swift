@@ -27,7 +27,7 @@ extension TeamEventPerformance: HasStats {
             return [
                 StatName.ScoutedMatches: {
                     let count = self.matchPerformances.reduce(0) {partialResult, matchPerformance in
-                        if matchPerformance.scouted.hasBeenScouted {
+                        if matchPerformance.scouted?.hasBeenScouted ?? false {
                             return partialResult + 1
                         } else {
                             return partialResult
@@ -61,7 +61,7 @@ extension TeamEventPerformance: HasStats {
                 },
                 StatName.Rank: {
                     if let event = self.event {
-                        if let computedStats = self.team?.scouted.computedStats(forEvent: event) {
+                        if let computedStats = self.team?.scouted?.computedStats(forEvent: event) {
                             return StatValue.initWithOptional(value: computedStats.rank.value)
                         }
                     }
@@ -113,7 +113,7 @@ extension TeamEventPerformance: HasStats {
                     
                     let matchPerformances = self.matchPerformances
                     for matchPerformance in matchPerformances {
-                        if matchPerformance.scouted.hasBeenScouted {
+                        if matchPerformance.scouted?.hasBeenScouted ?? false {
                             totalMatchPerformances += 1
                             totalRPs += matchPerformance.rankingPoints ?? 0
                         }
@@ -129,7 +129,7 @@ extension TeamEventPerformance: HasStats {
                     let matchPerformances = self.matchPerformances
                     
                     let successfulClimbCount = matchPerformances.reduce(0) {partialResult, matchPerformance in
-                        if (matchPerformance.scouted.hasBeenScouted) && matchPerformance.scouted.climbStatus == ClimbStatus.Successful.rawValue {
+                        if (matchPerformance.scouted?.hasBeenScouted ?? false) && matchPerformance.scouted!.climbStatus == ClimbStatus.Successful.rawValue {
                             return partialResult + 1
                         } else {
                             return partialResult
@@ -148,7 +148,7 @@ extension TeamEventPerformance: HasStats {
                     }
                     
                     let numOfScoutedMatches = (self.matchPerformances).reduce(0) {partialResult, matchPerformance in
-                        if matchPerformance.scouted.hasBeenScouted {
+                        if matchPerformance.scouted?.hasBeenScouted ?? false {
                             return partialResult + 1
                         } else {
                             return partialResult
@@ -172,7 +172,7 @@ extension TeamEventPerformance: HasStats {
                     let teamMatchPerformances = self.matchPerformances
                     
                     let climbAttemptCount = teamMatchPerformances.reduce(0) {partialResult, matchPerformance in
-                        if (matchPerformance.scouted.hasBeenScouted) && matchPerformance.scouted.climbAssistStatus == ClimbAssistStatus.AttemptedAssist.rawValue || matchPerformance.scouted.climbAssistStatus == ClimbAssistStatus.SuccessfullyAssisted.rawValue {
+                        if (matchPerformance.scouted?.hasBeenScouted ?? false) && matchPerformance.scouted!.climbAssistStatus == ClimbAssistStatus.AttemptedAssist.rawValue || matchPerformance.scouted!.climbAssistStatus == ClimbAssistStatus.SuccessfullyAssisted.rawValue {
                             return partialResult + 1
                         } else {
                             return partialResult
@@ -185,7 +185,7 @@ extension TeamEventPerformance: HasStats {
                 
                 StatName.AutoLineCrossCount: {
                     let crossCount = self.matchPerformances.reduce(0) {partialResult, matchPerformance in
-                        if matchPerformance.scouted.didCrossAutoLine {
+                        if matchPerformance.scouted?.didCrossAutoLine ?? false {
                             return partialResult + 1
                         } else {
                             return partialResult
@@ -483,7 +483,7 @@ extension TeamEventPerformance {
 ///Retrieves OPR as stored in the Computed Stats object (from TBA as of now)
 private func evaluateOPR(forTeamPerformance teamPerformance: TeamEventPerformance) -> Double? {
     //Check if it has been computed before
-    if let computedStatValue = teamPerformance.team?.scouted.computedStats(forEvent: teamPerformance.event!)?.opr.value {
+    if let computedStatValue = teamPerformance.team?.scouted?.computedStats(forEvent: teamPerformance.event!)?.opr.value {
         return computedStatValue
     } else {
         return nil
@@ -491,7 +491,7 @@ private func evaluateOPR(forTeamPerformance teamPerformance: TeamEventPerformanc
 }
 
 private func evaluateCCWM(forTeamPerformance teamPerformance: TeamEventPerformance) -> Double? {
-    if let computedStatValue = teamPerformance.team?.scouted.computedStats(forEvent: teamPerformance.event!)?.ccwm.value {
+    if let computedStatValue = teamPerformance.team?.scouted?.computedStats(forEvent: teamPerformance.event!)?.ccwm.value {
         return computedStatValue
     } else {
         return nil

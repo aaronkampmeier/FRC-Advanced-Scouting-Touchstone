@@ -43,52 +43,52 @@ extension Team: HasStats {
                     return StatValue.Integer(self.rookieYear)
                 },
                 StatName.RobotLength: {
-                    return StatValue.initWithOptional(value: self.scouted.robotLength.value)
+                    return StatValue.initWithOptional(value: self.scouted?.robotLength.value)
                 },
                 StatName.RobotWidth: {
-                    StatValue.initWithOptional(value: self.scouted.robotWidth.value)
+                    StatValue.initWithOptional(value: self.scouted?.robotWidth.value)
                 },
                 StatName.RobotHeight: {
-                    if let doubleValue = self.scouted.robotHeight.value {
+                    if let doubleValue = self.scouted?.robotHeight.value {
                         return StatValue.Double(doubleValue)
                     } else {
                         return StatValue.NoValue
                     }
                 },
                 StatName.RobotWeight: {
-                    if let doubleVal = self.scouted.robotWeight.value {
+                    if let doubleVal = self.scouted?.robotWeight.value {
                         return StatValue.Double(doubleVal)
                     } else {
                         return StatValue.NoValue
                     }
                 },
                 StatName.DriveTrain: {
-                    StatValue.initWithOptional(value: self.scouted.driveTrain)
+                    StatValue.initWithOptional(value: self.scouted?.driveTrain)
                 },
                 StatName.ClimberCapability: {
-                    StatValue.initWithOptional(value: self.scouted.climbCapability)
+                    StatValue.initWithOptional(value: self.scouted?.climbCapability)
                 },
                 StatName.GamePlayStrategy: {
-                    StatValue.initWithOptional(value: self.scouted.strategy)
+                    StatValue.initWithOptional(value: self.scouted?.strategy)
                 },
                 StatName.DriverXP: {
-                    StatValue.initWithOptional(value: self.scouted.driverXP.value)
+                    StatValue.initWithOptional(value: self.scouted?.driverXP.value)
                 },
                 StatName.ProgrammingLanguage: {
-                    StatValue.initWithOptional(value: self.scouted.programmingLanguage)
+                    StatValue.initWithOptional(value: self.scouted?.programmingLanguage)
                 },
                 StatName.VisionTrackingCapability: {
-                    StatValue.initWithOptional(value: self.scouted.computerVisionCapability)
+                    StatValue.initWithOptional(value: self.scouted?.computerVisionCapability)
                 },
                 
                 StatName.ScaleCapability: {
-                    StatValue.initWithOptional(value: self.scouted.scaleCapability)
+                    StatValue.initWithOptional(value: self.scouted?.scaleCapability)
                 },
                 StatName.SwitchCapability: {
-                    StatValue.initWithOptional(value: self.scouted.scaleCapability)
+                    StatValue.initWithOptional(value: self.scouted?.scaleCapability)
                 },
                 StatName.VaultCapability: {
-                    StatValue.initWithOptional(value: self.scouted.vaultCapability)
+                    StatValue.initWithOptional(value: self.scouted?.vaultCapability)
                 }
             ]
         }

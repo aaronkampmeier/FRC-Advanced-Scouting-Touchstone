@@ -101,7 +101,7 @@ class StatChartViewController: UIViewController {
             }
             
             //If the match is not scouted, don't show it in the graph
-            if matchPerformance.scouted.hasBeenScouted && !isNoValue {
+            if matchPerformance.scouted?.hasBeenScouted ?? false && !isNoValue {
                 //We have stat values put them in a stacked bar chart data entry
                 valueEntries.append(BarChartDataEntry(x: Double(index), y: statValues.first!))
                 matches.append(matchPerformance.match!)

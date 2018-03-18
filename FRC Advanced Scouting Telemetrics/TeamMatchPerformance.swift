@@ -55,9 +55,9 @@ import RealmSwift
     var rankingPoints: Int? {
         switch allianceColor {
         case "Blue":
-            return match?.scouted.blueRP.value
+            return match?.scouted?.blueRP.value
         case "Red":
-            return match?.scouted.redRP.value
+            return match?.scouted?.redRP.value
         default:
             assertionFailure()
             return -1
@@ -67,9 +67,9 @@ import RealmSwift
     var finalScore: Int? {
         switch allianceColor {
         case "Blue":
-            return match?.scouted.blueScore.value
+            return match?.scouted?.blueScore.value
         case "Red":
-            return match?.scouted.redScore.value
+            return match?.scouted?.redScore.value
         default:
             assertionFailure()
             return -1
@@ -83,9 +83,9 @@ import RealmSwift
         let otherScore: Int?
         switch allianceColor {
         case "Blue":
-            otherScore = match?.scouted.redScore.value
+            otherScore = match?.scouted?.redScore.value
         case "Red":
-            otherScore = match?.scouted.blueScore.value
+            otherScore = match?.scouted?.blueScore.value
         default:
             assertionFailure()
             return -1
@@ -118,17 +118,17 @@ extension TeamMatchPerformance: HasStats {
                     }
                 },
                 StatName.ClimbingStatus: {
-                    if self.scouted.hasBeenScouted {
-                        return StatValue.initWithOptional(value: self.scouted.climbStatus)
+                    if self.scouted?.hasBeenScouted ?? false {
+                        return StatValue.initWithOptional(value: self.scouted?.climbStatus)
                     } else {
                         return StatValue.NoValue
                     }
                 },
                 StatName.ClimbAssistStatus: {
-                    StatValue.initWithOptional(value: self.scouted.climbAssistStatus)
+                    StatValue.initWithOptional(value: self.scouted?.climbAssistStatus)
                 },
                 StatName.DidCrossAutoLine: {
-                    StatValue.initWithOptional(value: self.scouted.didCrossAutoLine)
+                    StatValue.initWithOptional(value: self.scouted?.didCrossAutoLine)
                 },
                 StatName.PercentCubesFromPile: {
                     let timeMarkers = self.getTimeMarkers(withAssociatedLocation: CubeSource.Pile.rawValue)
@@ -143,8 +143,8 @@ extension TeamMatchPerformance: HasStats {
                     return StatValue.Integer(timeMarkers.count) / self.statValue(forStat: .TotalGrabbedCubes)
                 },
                 StatName.TotalGrabbedCubes: {
-                    if self.scouted.hasBeenScouted {
-                        let timeMarkers = self.scouted.timeMarkers(forScoutID: self.scouted.prefferedScoutID).filter {$0.timeMarkerEventType == .GrabbedCube}
+                    if self.scouted?.hasBeenScouted ?? false {
+                        let timeMarkers = self.scouted!.timeMarkers(forScoutID: self.scouted!.prefferedScoutID).filter {$0.timeMarkerEventType == .GrabbedCube}
                         return StatValue.Integer(timeMarkers.count)
                     } else {
                         return StatValue.NoValue
@@ -171,8 +171,8 @@ extension TeamMatchPerformance: HasStats {
                     return StatValue.Integer(timeMarkers.count) / self.statValue(forStat: .AllPlacedCubes)
                 },
                 StatName.TotalPlacedCubes: {
-                    if self.scouted.hasBeenScouted {
-                        let timeMarkers = self.scouted.timeMarkers(forScoutID: self.scouted.prefferedScoutID).filter {$0.timeMarkerEventType == .PlacedCube && $0.associatedLocation != CubeDestination.Dropped.rawValue}
+                    if self.scouted?.hasBeenScouted ?? false {
+                        let timeMarkers = self.scouted!.timeMarkers(forScoutID: self.scouted!.prefferedScoutID).filter {$0.timeMarkerEventType == .PlacedCube && $0.associatedLocation != CubeDestination.Dropped.rawValue}
                         return StatValue.Integer(timeMarkers.count)
                     } else {
                         return StatValue.NoValue
@@ -187,11 +187,11 @@ extension TeamMatchPerformance: HasStats {
     }
     
     func getTimeMarkers(withAssociatedLocation assocLocation: String) -> [TimeMarker] {
-        return self.scouted.timeMarkers(forScoutID: self.scouted.prefferedScoutID).filter {$0.associatedLocation == assocLocation}
+        return self.scouted!.timeMarkers(forScoutID: self.scouted!.prefferedScoutID).filter {$0.associatedLocation == assocLocation}
     }
     
     func getTimeMarkers(forEvent event: TimeMarkerEvent) -> [TimeMarker] {
-        return self.scouted.timeMarkers(forScoutID: self.scouted.prefferedScoutID).filter {$0.timeMarkerEventType == event}
+        return self.scouted!.timeMarkers(forScoutID: self.scouted!.prefferedScoutID).filter {$0.timeMarkerEventType == event}
     }
     
     enum StatName: String, CustomStringConvertible, StatNameable {

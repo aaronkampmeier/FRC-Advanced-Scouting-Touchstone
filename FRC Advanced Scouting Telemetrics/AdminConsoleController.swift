@@ -44,7 +44,7 @@ class AdminConsoleController: UIViewController, UITableViewDataSource, UITableVi
             return events.count + 1
         case tableView.numberOfSections - 1:
             //About Section
-            return 3
+            return 4
         default:
             return 0
         }
@@ -72,6 +72,8 @@ class AdminConsoleController: UIViewController, UITableViewDataSource, UITableVi
             case 1:
                 return tableView.dequeueReusableCell(withIdentifier: "acknowledgments")!
             case 2:
+                return tableView.dequeueReusableCell(withIdentifier: "syncStatus")!
+            case 3:
                 let cell = tableView.dequeueReusableCell(withIdentifier: "logout")!
                 
                 let teamNumber: String = UserDefaults.standard.value(forKey: "LoggedInTeam") as? String ?? "?"
@@ -135,6 +137,8 @@ class AdminConsoleController: UIViewController, UITableViewDataSource, UITableVi
                     assertionFailure()
                 }
             } else if indexPath.row == 2 {
+                performSegue(withIdentifier: "syncStatus", sender: self)
+            } else if indexPath.row == 3 {
                 //Logout
                 RealmController.realmController.closeSyncedRealms()
             }
@@ -186,16 +190,24 @@ class AdminConsoleController: UIViewController, UITableViewDataSource, UITableVi
     }
     
     func reloadAt(indexPath: IndexPath, inTableView tableView: UITableView, withCompletionHandler onCompletion: (() -> Void)? = nil) {
-        showLoadingIndicator()
-        
-        CloudReloadingManager(eventToReload: self.events[indexPath.row]) {successful in
-            self.removeLoadingIndicator()
+        let event = self.events[indexPath.row]
+        if RealmController.realmController.sanityCheckStructure(ofEvent: event) {
+            showLoadingIndicator()
             
-            onCompletion?()
-            
-            tableView.reloadData()
-            }
-            .reload()
+            CloudReloadingManager(eventToReload: event) {successful in
+                self.removeLoadingIndicator()
+                
+                onCompletion?()
+                
+                tableView.reloadData()
+                }
+                .reload()
+        } else {
+            //The event is not fully loaded from cloud
+            let alert = UIAlertController(title: "Unable to Reload", message: "This event cannot be reloaded becuase it contains an incomplete object structure. Before reloading make sure to be fully in sync with the rest of your team by checking the \"Sync Status\" page. To force a reload, delete this event and then re-add it.", preferredStyle: .alert)
+            alert.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
+            self.present(alert, animated: true, completion: nil)
+        }
     }
     
     var grayView: UIView?

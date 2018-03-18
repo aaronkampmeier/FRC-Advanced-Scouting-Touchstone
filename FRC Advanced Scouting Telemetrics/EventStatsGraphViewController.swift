@@ -75,7 +75,7 @@ class EventStatsGraphViewController: UIViewController {
         
         let ranker = RealmController.realmController.getTeamRanker(forEvent: event)!
         self.teamEventPerformances = eventPerformances.sorted {first, second in
-            ranker.rankedTeams.index(of: first.team!.scouted)! < ranker.rankedTeams.index(of: second.team!.scouted)!
+            ranker.rankedTeams.index(of: first.team!.scouted!)! < ranker.rankedTeams.index(of: second.team!.scouted!)!
         }
     }
     

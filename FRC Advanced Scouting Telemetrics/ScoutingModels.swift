@@ -10,15 +10,15 @@ import Foundation
 import RealmSwift
 import Crashlytics
 
-@objcMembers class GeneralRanker: Object {
-    dynamic var key = "General Ranker" //Is a singleton
-    
-    dynamic let rankedTeams = List<ScoutedTeam>()
-    
-    override static func primaryKey() -> String {
-        return "key"
-    }
-}
+//@objcMembers class GeneralRanker: Object {
+//    dynamic var key = "General Ranker" //Is a singleton
+//
+//    dynamic let rankedTeams = List<ScoutedTeam>()
+//
+//    override static func primaryKey() -> String {
+//        return "key"
+//    }
+//}
 
 @objcMembers class EventRanker: Object {
     dynamic var key = "" //One for each event. Follows "ranker_(event code)"
@@ -35,31 +35,32 @@ import Crashlytics
     let computedStats = List<ComputedStats>()
     
     func isInPickList(team: Team) -> Bool {
-        return !pickedTeams.contains(team.scouted)
+        return !pickedTeams.contains(team.scouted!)
     }
     
     ///Must be within write transaction
     func setIsInPickList(_ isIn: Bool, team: Team) {
-        guard rankedTeams.contains(team.scouted) else {
+        guard rankedTeams.contains(team.scouted!) else {
             CLSNSLogv("Trying to set team in pick list that is not even part of the event", getVaList([]))
+            
             return
         }
         
         if isIn {
             //Remove it from the picked teams
-            if let index = pickedTeams.index(of: team.scouted) {
+            if let index = pickedTeams.index(of: team.scouted!) {
                 pickedTeams.remove(at: index)
             } else {
                 //Already not in
             }
         } else {
             //Add it to the picked teams
-            guard !pickedTeams.contains(team.scouted) else {
+            guard !pickedTeams.contains(team.scouted!) else {
                 //Already in the pick list so return
                 return
             }
             
-            pickedTeams.append(team.scouted)
+            pickedTeams.append(team.scouted!)
         }
     }
     
@@ -98,20 +99,18 @@ import Crashlytics
     
     typealias GeneralType = Team
     
-    var ranker: GeneralRanker? {
-        get {
-            let rankers = LinkingObjects(fromType: GeneralRanker.self, property: "rankedTeams")
-            return rankers.first
-        }
-    }
+//    var ranker: GeneralRanker? {
+//        get {
+//            let rankers = LinkingObjects(fromType: GeneralRanker.self, property: "rankedTeams")
+//            return rankers.first
+//        }
+//    }
     
     let eventRankers = LinkingObjects(fromType: EventRanker.self, property: "rankedTeams")
     
     ///Cross Year Values
     dynamic var key = ""
     
-    ///DEPRECATED: DON'T USE, Use Comments instead.
-    dynamic var notes = ""
     let comments = List<TeamComment>()
     
     dynamic var programmingLanguage: String?
