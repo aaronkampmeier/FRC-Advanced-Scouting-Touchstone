@@ -347,7 +347,6 @@
 				9353ADBB1E57ACF100120F1A /* MatchesTableViewController.swift */,
 				9353ADC11E57B09D00120F1A /* MatchListTableViewCell.swift */,
 				93EA7FF11E46A36E002EC8C7 /* Notes */,
-				1F9B782A1CD1A42400B4E5AE /* HiddenDebugViewController.swift */,
 				1FA6A73F1CD3B4E800772C63 /* Data Syncing */,
 				1F4178BF1CD02E4200801D5B /* Team List Detail */,
 				1F4534551C7276DE004EDDB9 /* EventPickerViewController.swift */,
@@ -370,6 +369,7 @@
 				932C344B1E12DC2600A23203 /* EventInfoVC.swift */,
 				936572DE1E160EBB00439728 /* AboutViewController.swift */,
 				9368092D205E30400043B751 /* SyncStatusViewController.swift */,
+				1F9B782A1CD1A42400B4E5AE /* HiddenDebugViewController.swift */,
 			);
 			name = "Admin Console";
 			sourceTree = "<group>";

@@ -21,7 +21,7 @@ import Crashlytics
 //}
 
 @objcMembers class EventRanker: Object {
-    dynamic var key = "" //One for each event. Follows "ranker_(event code)"
+    dynamic var key = "" //One for each event.
     
     dynamic var oprLastModified: String?
     dynamic var matchesLastModified: String?

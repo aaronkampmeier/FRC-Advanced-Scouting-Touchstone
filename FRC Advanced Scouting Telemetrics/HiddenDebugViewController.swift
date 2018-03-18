@@ -28,90 +28,21 @@ class HiddenDebugViewController: UIViewController {
         self.dismiss(animated: true, completion: nil)
     }
     
-    @IBAction func removeDuplicatesPressed(_ sender: UIButton) {
-        //Get all the localMatchPerformances
-//        do {
-//            let scoutedMatchPerformances = RealmController.realmController.syncedRealm.objects(ScoutedMatchPerformance.self)
-//
-//            for scoutedMatchPerformance in scoutedMatchPerformances {
-//                var accountedForIds = [(String, String?, TimeInterval?)]()
-//                //First the time markers
-//                let timeMarkers = scoutedMatchPerformance.timeMarkers
-//                for marker in timeMarkers {
-//                    let accountedId = ("TM", marker.scoutID, marker.time)
-//                    if accountedForIds.contains(where: {$0.0 == accountedId.0 && $0.1 == accountedId.1 && $0.2 == accountedId.2}) {
-//                        //There is already a time marker with this scout id and time, so remove this one
-//                        dataManager.delete(marker)
-//                    } else {
-//                        accountedForIds.append(accountedId)
-//                    }
-//                }
-//
-//                //Fuel Loading
-//                let floadings = scoutedMatchPerformance.fuelLoadings?.allObjects as! [FuelLoading]
-//                for object in floadings {
-//                    let accountedId = ("FL", object.scoutID, object.time?.doubleValue)
-//                    if accountedForIds.contains(where: {$0.0 == accountedId.0 && $0.1 == accountedId.1 && $0.2 == accountedId.2}) {
-//                        //There is already an object with this scout id and time, so remove this one
-//                        dataManager.delete(object)
-//                    } else {
-//                        accountedForIds.append(accountedId)
-//                    }
-//                }
-//
-//                //Fuel Scoring
-//                let fscorings = scoutedMatchPerformance.fuelScorings?.allObjects as! [FuelScoring]
-//                for object in fscorings {
-//                    let accountedId = ("FS", object.scoutID, object.time?.doubleValue)
-//                    if accountedForIds.contains(where: {$0.0 == accountedId.0 && $0.1 == accountedId.1 && $0.2 == accountedId.2}) {
-//                        //There is already an object with this scout id and time, so remove this one
-//                        dataManager.delete(object)
-//                    } else {
-//                        accountedForIds.append(accountedId)
-//                    }
-//                }
-//
-//                //Gear Loading
-//                let gloadings = scoutedMatchPerformance.gearLoadings?.allObjects as! [GearLoading]
-//                for object in gloadings {
-//                    let accountedId = ("GL", object.scoutID, object.time?.doubleValue)
-//                    if accountedForIds.contains(where: {$0.0 == accountedId.0 && $0.1 == accountedId.1 && $0.2 == accountedId.2}) {
-//                        //There is already a time marker with this scout id and time, so remove this one
-//                        dataManager.delete(object)
-//                    } else {
-//                        accountedForIds.append(accountedId)
-//                    }
-//                }
-//
-//                //Gear Scorings
-//                let gscorings = scoutedMatchPerformance.gearMountings?.allObjects as! [GearMounting]
-//                for object in gscorings {
-//                    let accountedId = ("GS", object.scoutID, object.time?.doubleValue)
-//                    if accountedForIds.contains(where: {$0.0 == accountedId.0 && $0.1 == accountedId.1 && $0.2 == accountedId.2}) {
-//                        //There is already a time marker with this scout id and time, so remove this one
-//                        dataManager.delete(object)
-//                    } else {
-//                        accountedForIds.append(accountedId)
-//                    }
-//                }
-//
-//                //Defendings
-//                let defendings = scoutedMatchPerformance.defendings?.allObjects as! [Defending]
-//                for object in defendings {
-//                    let accountedId = ("D", object.scoutID, object.time?.doubleValue)
-//                    if accountedForIds.contains(where: {$0.0 == accountedId.0 && $0.1 == accountedId.1 && $0.2 == accountedId.2}) {
-//                        //There is already a time marker with this scout id and time, so remove this one
-//                        dataManager.delete(object)
-//                    } else {
-//                        accountedForIds.append(accountedId)
-//                    }
-//                }
-//            }
-//
-//            CLSNSLogv("Removed Duplicates", getVaList([]))
-//        } catch {
-//            CLSNSLogv("Error removing duplicates: \(error)", getVaList([]))
-//        }
+    @IBAction func action1Pressed(_ sender: UIButton) {
+        //Lower all image quals
+        let stlEventRanker = RealmController.realmController.syncedRealm.object(ofType: EventRanker.self, forPrimaryKey: "2018ilpe")!
+        
+        RealmController.realmController.genericWrite(onRealm: .Synced) {
+            for team in stlEventRanker.rankedTeams {
+                if let teamImageData = team.frontImage {
+                    let teamImage = UIImage(data: teamImageData)!
+                    
+                    let newCompressedData = UIImageJPEGRepresentation(teamImage, 0.01)
+                    
+                    team.frontImage = newCompressedData
+                }
+            }
+        }
     }
     
     /*

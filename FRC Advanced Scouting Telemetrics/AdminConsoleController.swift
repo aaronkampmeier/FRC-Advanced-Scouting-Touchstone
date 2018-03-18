@@ -414,6 +414,7 @@ class AdminConsoleController: UIViewController, UITableViewDataSource, UITableVi
     }
     
     @IBAction func advancedPressed(_ sender: UIBarButtonItem) {
+        
 //        let advancedController = storyboard?.instantiateViewController(withIdentifier: "advancedControl") as! HiddenDebugViewController
 //        present(advancedController, animated: true, completion: nil)
     }

@@ -691,20 +691,20 @@
                                     <action selector="exitPressed:" destination="XAv-YL-6FN" eventType="touchUpInside" id="UDz-hd-vn3"/>
                                 </connections>
                             </button>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="4cY-MP-a9I">
-                                <rect key="frame" x="446" y="369" width="132" height="30"/>
-                                <state key="normal" title="Remove Duplicates"/>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="0MB-Bk-qDa">
+                                <rect key="frame" x="485" y="369" width="55" height="30"/>
+                                <state key="normal" title="Action 1"/>
                                 <connections>
-                                    <action selector="removeDuplicatesPressed:" destination="XAv-YL-6FN" eventType="touchUpInside" id="z5V-Mt-uNH"/>
+                                    <action selector="action1Pressed:" destination="XAv-YL-6FN" eventType="touchUpInside" id="crR-Pq-YzI"/>
                                 </connections>
                             </button>
                         </subviews>
                         <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <constraints>
                             <constraint firstItem="qdz-Ax-Bxe" firstAttribute="top" secondItem="unD-uZ-uZy" secondAttribute="bottom" id="5sH-yU-7fn"/>
-                            <constraint firstItem="4cY-MP-a9I" firstAttribute="centerX" secondItem="x1n-va-23H" secondAttribute="centerX" id="msx-LW-6wJ"/>
+                            <constraint firstItem="0MB-Bk-qDa" firstAttribute="centerY" secondItem="x1n-va-23H" secondAttribute="centerY" id="Xdj-0n-lRt"/>
+                            <constraint firstItem="0MB-Bk-qDa" firstAttribute="centerX" secondItem="x1n-va-23H" secondAttribute="centerX" id="luk-eD-tOi"/>
                             <constraint firstAttribute="leadingMargin" secondItem="qdz-Ax-Bxe" secondAttribute="leading" id="tBw-DF-pA9"/>
-                            <constraint firstItem="4cY-MP-a9I" firstAttribute="centerY" secondItem="x1n-va-23H" secondAttribute="centerY" id="ykA-0g-D8G"/>
                         </constraints>
                     </view>
                     <connections>
@@ -713,7 +713,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="zmc-do-lhb" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="3613" y="-2462"/>
+            <point key="canvasLocation" x="3640" y="-2145"/>
         </scene>
         <!--Admin Console-->
         <scene sceneID="Yzd-UE-rvJ">
@@ -2733,14 +2733,14 @@
                         <rect key="frame" x="0.0" y="0.0" width="1024" height="768"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Please wait while the scouted data is being downloaded" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="2oc-p5-az3">
-                                <rect key="frame" x="181.5" y="340" width="662" height="88.5"/>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Please wait while the scouted data is downloaded" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="2oc-p5-az3">
+                                <rect key="frame" x="70.5" y="362" width="883" height="44.5"/>
                                 <fontDescription key="fontDescription" type="system" weight="heavy" pointSize="37"/>
                                 <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <nil key="highlightedColor"/>
                             </label>
                             <progressView opaque="NO" contentMode="scaleToFill" verticalHuggingPriority="750" progress="0.5" translatesAutoresizingMaskIntoConstraints="NO" id="yX0-10-kbJ">
-                                <rect key="frame" x="20" y="448.5" width="984" height="2"/>
+                                <rect key="frame" x="20" y="426.5" width="984" height="2"/>
                             </progressView>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="hQG-PB-rsF">
                                 <rect key="frame" x="22" y="5" width="48" height="30"/>
