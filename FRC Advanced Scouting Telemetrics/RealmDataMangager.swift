@@ -114,32 +114,7 @@ class RealmController {
     }
     
     func performSanityChecks() {
-//        //Now perform sanity checks quickly
-//        syncedRealm.beginWrite()
-//
-//        //First remove duplicates
-//        let scoutedTeams = syncedRealm.objects(ScoutedTeam.self)
-//        var seen = [ScoutedTeam]()
-//        var didRemoveDuplicates = false
-//        for team in scoutedTeams {
-//            if seen.contains(team) {
-//                ranker.rankedTeams.remove(at: ranker.rankedTeams.index(of: team)!)
-//                didRemoveDuplicates = true
-//            } else {
-//                seen.append(team)
-//            }
-//        }
-//        if didRemoveDuplicates {
-//            CLSNSLogv("Removing duplicates in general ranker", getVaList([]))
-//            Crashlytics.sharedInstance().recordCustomExceptionName("Did have to remove duplicate teams from ranker", reason: "There were duplicate teams in the ranker", frameArray: [])
-//        }
-//
-//        do {
-//            try syncedRealm.commitWrite()
-//        } catch {
-//            CLSNSLogv("Unable to commit sanity checks: \(error)", getVaList([]))
-//            Crashlytics.sharedInstance().recordError(error)
-//        }
+        
     }
     
     func closeSyncedRealms() {
@@ -235,37 +210,6 @@ class RealmController {
     }
     
     //MARK: - Team Ranking
-//    func getGeneralTeamRanker() -> GeneralRanker {
-//        let generalRanker = syncedRealm.object(ofType: GeneralRanker.self, forPrimaryKey: "General Ranker")
-//
-//        if let ranker = generalRanker {
-//
-//            return ranker
-//        } else {
-//            //Create a ranker
-//            let newRanker = GeneralRanker()
-//
-//            if syncedRealm.isInWriteTransaction {
-//                syncedRealm.add(newRanker)
-//            } else {
-//                try! syncedRealm.write {
-//                    syncedRealm.add(newRanker)
-//                }
-//            }
-//
-//            return newRanker
-//        }
-//    }
-    
-//    private func simpleTeamRanking() -> [Team] {
-//        var  orderedTeams = Array(getGeneralTeamRanker().rankedTeams)
-//
-//        //TODO: Better managment of scouted teams that aren't tracked on device
-//        orderedTeams = orderedTeams.filter {$0.general != nil}
-//
-//        return orderedTeams.map {$0.general!}
-//    }
-    
     func getTeamRanker(forEvent event: Event) -> EventRanker? {
         return syncedRealm.object(ofType: EventRanker.self, forPrimaryKey: event.key)
     }
@@ -396,14 +340,7 @@ extension HasScoutedEquivalent {
                     self.cache = object
                     return object
                 } else {
-                    //There is no scouted equivalent, this is a problem
-//                    assertionFailure("No scouted object for local object")
-//                    Crashlytics.sharedInstance().recordCustomExceptionName("No scouted object for local object", reason: "Key: \(self.key)", frameArray: [])
-                    
-//                    let alert = UIAlertController(title: "Incomplete Database", message: "The database appears to have some incomplete data. This can be caused simply by not being fully in sync with the cloud. Make sure you have a steady internet connection and wait for the database to download fully.", preferredStyle: .alert)
-                    
                     return nil
-//                    exit(EXIT_FAILURE)
                 }
             }
         }

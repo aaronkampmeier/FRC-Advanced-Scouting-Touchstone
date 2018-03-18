@@ -76,6 +76,7 @@ class TeamListTableViewController: UITableViewController, TeamListDetailDataSour
         }
     }
     let lastSelectedEventStorageKey = "Last-Selected-Event"
+    var selectedEventRanker: EventRanker?
     var selectedEvent: Event? {
         didSet {
             //Set to nil, because the selected team might not be in the new event
@@ -93,15 +94,18 @@ class TeamListTableViewController: UITableViewController, TeamListDetailDataSour
                     self.present(alert, animated: true, completion: nil)
                 } else {
                     UserDefaults.standard.set(event.key, forKey: lastSelectedEventStorageKey)
+                    selectedEventRanker = realmController.getTeamRanker(forEvent: event)
                     currentEventTeams = realmController.teamRanking(forEvent: event)
                     
                     eventSelectionButton.setTitle(event.name, for: UIControlState())
                     
                     matchesButton.isEnabled = true
                     graphButton.isEnabled = true
+                    
                 }
             } else {
                 currentEventTeams = []
+                selectedEventRanker = nil
                 
                 eventSelectionButton.setTitle("Select Event", for: UIControlState())
                 
@@ -341,15 +345,13 @@ class TeamListTableViewController: UITableViewController, TeamListDetailDataSour
         
         //Show a red X over the rank label if they have been picked
         cell.accessoryView = nil
-        if let event = selectedEvent {
-            if let eventRanker = realmController.getTeamRanker(forEvent: event) {
-                if !eventRanker.isInPickList(team: team) {
-                    //Show indicator that it is not in pick list
-                    let crossImage = UIImageView(image: #imageLiteral(resourceName: "Cross"))
-                    crossImage.frame = CGRect(x: 0, y: 0, width: 20, height: 20)
-                    cell.accessoryView = crossImage
-                    
-                }
+        if let eventRanker = self.selectedEventRanker {
+            if !eventRanker.isInPickList(team: team) {
+                //Show indicator that it is not in pick list
+                let crossImage = UIImageView(image: #imageLiteral(resourceName: "Cross"))
+                crossImage.frame = CGRect(x: 0, y: 0, width: 20, height: 20)
+                cell.accessoryView = crossImage
+                
             }
         }
         

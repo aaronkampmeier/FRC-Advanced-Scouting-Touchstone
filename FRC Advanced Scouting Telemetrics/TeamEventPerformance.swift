@@ -246,6 +246,35 @@ extension TeamEventPerformance: HasStats {
                 },
                 StatName.PercentCubesDropped: {
                     self.findPercentOfPlacedCubes(withLocation: CubeDestination.Dropped.rawValue)
+                },
+                
+                StatName.MaxCubesInScale: {
+                    StatValue.Integer(self.maxCubes(for: CubeDestination.Scale.rawValue))
+                },
+                StatName.MaxCubesInSwitch: {
+                    StatValue.Integer(self.maxCubes(for: CubeDestination.Switch.rawValue))
+                },
+                StatName.MaxCubesInOpponentSwitch: {
+                    StatValue.Integer(self.maxCubes(for: CubeDestination.OpponentSwitch.rawValue))
+                },
+                StatName.MaxCubesInVault: {
+                    StatValue.Integer(self.maxCubes(for: CubeDestination.Vault.rawValue))
+                },
+                
+                StatName.AverageCubesInScale: {
+                    StatValue.initWithOptional(value: self.averageTimeMarkers(withLocation: CubeDestination.Scale.rawValue))
+                },
+                StatName.AverageCubesInSwitch: {
+                    StatValue.initWithOptional(value: self.averageTimeMarkers(withLocation: CubeDestination.Switch.rawValue))
+                },
+                StatName.AverageCubesInOpponentSwitch: {
+                    StatValue.initWithOptional(value: self.averageTimeMarkers(withLocation: CubeDestination.OpponentSwitch.rawValue))
+                },
+                StatName.AverageCubesInVault: {
+                    StatValue.initWithOptional(value: self.averageTimeMarkers(withLocation: CubeDestination.Vault.rawValue))
+                },
+                StatName.AverageCubesDropped: {
+                    StatValue.initWithOptional(value: self.averageTimeMarkers(withLocation: CubeDestination.Dropped.rawValue))
                 }
             ]
         }
@@ -366,6 +395,35 @@ extension TeamEventPerformance: HasStats {
         return timeMarkers
     }
     
+    func maxCubes(for location: String) -> Int {
+        var greatestCount = 0
+        for matchPerformance in self.matchPerformances {
+            let tmsCount = matchPerformance.getTimeMarkers(withAssociatedLocation: location).count
+            if tmsCount > greatestCount {
+                greatestCount = tmsCount
+            }
+        }
+        
+        return greatestCount
+    }
+    
+    func averageTimeMarkers(withLocation location: String) -> Double? {
+        var totalCount = 0.0
+        var numOfMatches = 0.0
+        for matchPerformance in self.matchPerformances {
+            if matchPerformance.scouted?.hasBeenScouted ?? false {
+                numOfMatches += 1
+                totalCount += Double(matchPerformance.getTimeMarkers(withAssociatedLocation: location).count)
+            }
+        }
+        
+        if numOfMatches == 0 {
+            return nil
+        } else {
+            return totalCount / numOfMatches
+        }
+    }
+    
     func findPercentOfGrabbedCubes(withLocation location: String) -> StatValue {
         return StatValue.Integer(self.timeMarkers(withAssociatedLocations: location).count) / self.sum(ofStat: .TotalGrabbedCubes)
     }
@@ -416,9 +474,17 @@ extension TeamEventPerformance: HasStats {
         case PercentCubesInOpponentSwitch = "Cubes in Opp. Switch"
         case PercentCubesInVault = "Percent Cubes in Vault"
         case PercentCubesDropped = "Percent Cubes Dropped"
-        
         case StandardDeviationPlacedCubes = "Std. Dev. Placed Cubes"
         
+        case MaxCubesInScale = "Max Cubes in Scale"
+        case MaxCubesInSwitch = "Max Cubes in Switch"
+        case MaxCubesInOpponentSwitch = "Max Cubes in Opp. Switch"
+        case MaxCubesInVault = "Max Cubes in Vault"
+        case AverageCubesInScale = "Average Cubes in Scale"
+        case AverageCubesInSwitch = "Average Cubes in Switch"
+        case AverageCubesInOpponentSwitch = "Average Cubes in Opp. Switch"
+        case AverageCubesInVault = "Average Cubes in Vault"
+        case AverageCubesDropped = "Average Cubes Dropped"
         
         var description: String {
             get {
@@ -429,7 +495,7 @@ extension TeamEventPerformance: HasStats {
         static let allValues: [StatName] = [.OPR, .DPR, .CCWM, .Rank, .ScoutedMatches, .NumberOfMatches, .TotalMatchPoints, .TotalRankingPoints, .RankingScore, .TotalWins, .TotalLosses, .TotalTies, .MajorityClimbStatus, .SuccessfulClimbCount, .ClimbSuccessRate, .MajorityClimbAssistStatus, .ClimbAssistAttempts,
             
             .AutoLineCrossCount, .TotalGrabbedCubes, .AverageGrabbedCubes, .PercentCubesFromPile, .PercentCubesFromLine, .PercentCubesFromPortal,
-            .TotalPlacedCubes, .AveragePlacedCubes, .StandardDeviationPlacedCubes, .PercentCubesInScale, .PercentCubesInSwitch, .PercentCubesInOpponentSwitch, .PercentCubesInVault, .PercentCubesDropped
+            .TotalPlacedCubes, .AveragePlacedCubes, .StandardDeviationPlacedCubes, .PercentCubesInScale, .MaxCubesInScale, .AverageCubesInScale, .PercentCubesInSwitch, .MaxCubesInSwitch, .AverageCubesInSwitch, .PercentCubesInOpponentSwitch, .MaxCubesInOpponentSwitch, .AverageCubesInOpponentSwitch, .PercentCubesInVault, .MaxCubesInVault, .AverageCubesInVault, .PercentCubesDropped, .AverageCubesDropped
         ]
         
         var visualizableAssociatedStats: [TeamMatchPerformance.StatName] {
