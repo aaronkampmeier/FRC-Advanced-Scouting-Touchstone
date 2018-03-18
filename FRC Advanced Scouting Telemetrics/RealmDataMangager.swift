@@ -160,15 +160,18 @@ class RealmController {
     }
     
     func sanityCheckStructure(ofEvent event: Event) -> Bool {
+        guard let eventRanker = syncedRealm.object(ofType: EventRanker.self, forPrimaryKey: event.key) else {
+            return false
+        }
+        
         //Check if the event and everything associated with it has a scouted object companion as well. If they do not then return false.
-        var allHaveScoutedCompanion = true
         
         //Matches
         let matches = event.matches
         
         for match in matches {
             if match.scouted == nil {
-                allHaveScoutedCompanion = false
+                return false
             }
         }
         
@@ -179,7 +182,7 @@ class RealmController {
         
         for matchPerformance in matchPerformances {
             if matchPerformance.scouted == nil {
-                allHaveScoutedCompanion = false
+                return false
             }
         }
         
@@ -190,11 +193,18 @@ class RealmController {
         
         for team in teams {
             if team.scouted == nil {
-                allHaveScoutedCompanion = false
+                return false
             }
         }
         
-        return allHaveScoutedCompanion
+        //Then check the event ranker
+        for scoutedTeam in eventRanker.rankedTeams {
+            if scoutedTeam.general == nil {
+                return false
+            }
+        }
+        
+        return true
     }
     
     func delete(object: Object) {
@@ -273,11 +283,6 @@ class RealmController {
         
         return rankedTeams.map {$0.general!}
     }
-    
-    ///Returns an array of Team objects ordered by their local ranking for specified event
-//    func teamRanking(_ event: Event? = nil) -> [Team] {
-//        return event != nil ? teamRanking(forEvent: event!) : simpleTeamRanking()
-//    }
     
     func moveTeam(from fromIndex: Int, to toIndex: Int, inEvent event: Event) {
         try! syncedRealm.write {

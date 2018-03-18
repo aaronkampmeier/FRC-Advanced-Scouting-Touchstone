@@ -3592,14 +3592,14 @@
                                 <nil key="textColor"/>
                                 <nil key="highlightedColor"/>
                             </label>
-                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="CorrectIcon" translatesAutoresizingMaskIntoConstraints="NO" id="xUb-pg-NIs">
+                            <imageView hidden="YES" userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="CorrectIcon" translatesAutoresizingMaskIntoConstraints="NO" id="xUb-pg-NIs">
                                 <rect key="frame" x="288.5" y="204" width="23" height="23"/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="23" id="JmU-1Q-GJF"/>
                                     <constraint firstAttribute="width" secondItem="xUb-pg-NIs" secondAttribute="height" multiplier="1:1" id="dkA-2c-ZC2"/>
                                 </constraints>
                             </imageView>
-                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="CorrectIcon" translatesAutoresizingMaskIntoConstraints="NO" id="B3A-Vu-0BI">
+                            <imageView hidden="YES" userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="CorrectIcon" translatesAutoresizingMaskIntoConstraints="NO" id="B3A-Vu-0BI">
                                 <rect key="frame" x="289" y="120" width="23" height="23"/>
                                 <constraints>
                                     <constraint firstAttribute="width" secondItem="B3A-Vu-0BI" secondAttribute="height" multiplier="1:1" id="pYZ-bb-2op"/>

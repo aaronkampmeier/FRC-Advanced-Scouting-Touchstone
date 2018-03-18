@@ -85,20 +85,20 @@ class TeamListTableViewController: UITableViewController, TeamListDetailDataSour
             
             if let event = selectedEvent {
                 
-                UserDefaults.standard.set(event.key, forKey: lastSelectedEventStorageKey)
-                currentEventTeams = realmController.teamRanking(forEvent: event)
-                
-                eventSelectionButton.setTitle(event.name, for: UIControlState())
-                
-                matchesButton.isEnabled = true
-                graphButton.isEnabled = true
-                
                 if !realmController.sanityCheckStructure(ofEvent: event) {
                     //The event's structure is not there, wait for it to download
                     
                     let alert = UIAlertController(title: "Wait for Downloads to Finish", message: "This event is not fully loaded from the cloud and is unusable until it is. Wait for this event to finish downloading by checking status in the \"Sync Status\" page and making sure you have a steady internet connection. If the issue persits, try logging out and back in again. If you believe this was in error, please contact us.", preferredStyle: .alert)
                     alert.addAction(UIAlertAction(title: "OK", style: .default, handler: {_ in self.selectedEvent = nil}))
                     self.present(alert, animated: true, completion: nil)
+                } else {
+                    UserDefaults.standard.set(event.key, forKey: lastSelectedEventStorageKey)
+                    currentEventTeams = realmController.teamRanking(forEvent: event)
+                    
+                    eventSelectionButton.setTitle(event.name, for: UIControlState())
+                    
+                    matchesButton.isEnabled = true
+                    graphButton.isEnabled = true
                 }
             } else {
                 currentEventTeams = []
@@ -185,7 +185,11 @@ class TeamListTableViewController: UITableViewController, TeamListDetailDataSour
         }
         
         if let event = selectedEvent {
-            currentEventTeams = realmController.teamRanking(forEvent: event)
+            if realmController.sanityCheckStructure(ofEvent: event) {
+                currentEventTeams = realmController.teamRanking(forEvent: event)
+            } else {
+                currentEventTeams = []
+            }
         } else {
             currentEventTeams = []
         }

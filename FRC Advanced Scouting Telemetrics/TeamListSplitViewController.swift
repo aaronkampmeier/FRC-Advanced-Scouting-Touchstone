@@ -40,7 +40,7 @@ class TeamListSplitViewController: UISplitViewController, UISplitViewControllerD
                 return secondary
             } else {
                 //There is none, create one
-                teamListSecondaryVC = storyboard?.instantiateViewController(withIdentifier: "teamListDetail") as! TeamListDetailViewController
+                teamListSecondaryVC = (storyboard?.instantiateViewController(withIdentifier: "teamListDetail") as! TeamListDetailViewController)
                 return teamListSecondaryVC!
             }
         }
