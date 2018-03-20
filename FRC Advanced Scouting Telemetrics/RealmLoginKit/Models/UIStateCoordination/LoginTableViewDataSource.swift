@@ -20,12 +20,11 @@ import UIKit
 
 /* The types of inputs cells may be */
 public enum LoginViewControllerCellType: Int {
-    case serverURL
     case email
     case teamEmail
+    case confirmTeamEmail
     case password
     case confirmPassword
-    case rememberLogin
 }
 
 public class LoginTableViewDataSource: NSObject, UITableViewDataSource {
@@ -37,21 +36,8 @@ public class LoginTableViewDataSource: NSObject, UITableViewDataSource {
 
     /** Whether to configure cells with the light or dark theme */
     public var isDarkStyle = false
-
-    /** Sets whether to show the Realm server URL or not */
-    public var isServerURLFieldHidden = false {
-        didSet { tableView?.reloadData() }
-    }
-
-    /** Sets whether the 'Remember these Details' field is visible. */
-    public var isRememberAccountDetailsFieldHidden: Bool = false {
-        didSet { tableView?.reloadData() }
-    }
-
-    /* Server Address */
-    public var serverURL: String? {
-        didSet { setTextFieldText(serverURL, for: .serverURL) }
-    }
+    
+    public var serverURL: String?
 
     /** Username */
     public var username: String? {
@@ -60,6 +46,10 @@ public class LoginTableViewDataSource: NSObject, UITableViewDataSource {
     
     public var teamEmail: String? {
         didSet {setTextFieldText(teamEmail, for: .teamEmail)}
+    }
+    
+    public var confirmTeamEmail: String? {
+        didSet { setTextFieldText(confirmTeamEmail, for: .confirmTeamEmail)}
     }
 
     /** Password */
@@ -70,11 +60,6 @@ public class LoginTableViewDataSource: NSObject, UITableViewDataSource {
     /** Confirm Password */
     public var confirmPassword: String? {
         didSet { setTextFieldText(confirmPassword, for: .confirmPassword) }
-    }
-
-    /** Remember login details */
-    public var rememberLogin = true {
-        didSet { setSwitchValue(rememberLogin, for: .rememberLogin) }
     }
 
     public var isRegistering: Bool {
@@ -99,9 +84,7 @@ public class LoginTableViewDataSource: NSObject, UITableViewDataSource {
     //MARK: - Table View Data Source -
 
     public func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        var numberOfRows = isRegistering ? 6 : 4
-        if isServerURLFieldHidden { numberOfRows -= 1 }
-        if isRememberAccountDetailsFieldHidden { numberOfRows -= 1 }
+        let numberOfRows = isRegistering ? 5 : 2
         return numberOfRows
     }
 
@@ -120,14 +103,6 @@ public class LoginTableViewDataSource: NSObject, UITableViewDataSource {
 
         // Configure cell content
         switch cellType(for: indexPath.row) {
-        case .serverURL:
-            cell?.type = .textField
-            cell?.imageView?.image = earthIcon
-            cell?.textField?.placeholder = "Server URL"
-            cell?.textField?.text = serverURL
-            cell?.textField?.keyboardType = .URL
-            cell?.textChangedHandler = { self.serverURL = cell?.textField?.text; self.formInputChangedHandler?() }
-            cell?.returnButtonTappedHandler = { self.makeFirstResponder(atRow: indexPath.row + 1) }
         case .email:
             cell?.type = .textField
             cell?.imageView?.image = earthIcon
@@ -144,6 +119,15 @@ public class LoginTableViewDataSource: NSObject, UITableViewDataSource {
             cell?.textField?.text = teamEmail
             cell?.textField?.keyboardType = .emailAddress
             cell?.textChangedHandler = { self.teamEmail = cell?.textField?.text; self.formInputChangedHandler?() }
+            cell?.returnButtonTappedHandler = { self.makeFirstResponder(atRow: indexPath.row + 1) }
+            
+        case .confirmTeamEmail:
+            cell?.type = .textField
+            cell?.imageView?.image = mailIcon
+            cell?.textField?.placeholder = "Confirm Email"
+            cell?.textField?.text = confirmTeamEmail
+            cell?.textField?.keyboardType = .emailAddress
+            cell?.textChangedHandler = { self.confirmTeamEmail = cell?.textField?.text; self.formInputChangedHandler?() }
             cell?.returnButtonTappedHandler = { self.makeFirstResponder(atRow: indexPath.row + 1) }
             
         case .password:
@@ -167,12 +151,6 @@ public class LoginTableViewDataSource: NSObject, UITableViewDataSource {
             cell?.textField?.returnKeyType = .done
             cell?.textChangedHandler = { self.confirmPassword = cell?.textField?.text; self.formInputChangedHandler?() }
             cell?.returnButtonTappedHandler = { self.didTapSubmitHandler?() }
-        case .rememberLogin:
-            cell?.type = .toggleSwitch
-            cell?.imageView?.image = tickIcon
-            cell?.textLabel!.text = "Remember My Account"
-            cell?.switch?.isOn = rememberLogin
-            cell?.switchChangedHandler = { self.rememberLogin = (cell?.switch?.isOn)!; self.formInputChangedHandler?() }
         }
 
         // Apply the theme after all cell configuration is done
@@ -210,126 +188,60 @@ public class LoginTableViewDataSource: NSObject, UITableViewDataSource {
     }
 
     private func cellType(for rowIndex: Int) -> LoginViewControllerCellType {
-        switch rowIndex {
-        case 0: return isServerURLFieldHidden ? .email : .serverURL
-        case 1:
-            if isServerURLFieldHidden && !isRegistering {
-                return .password
-            } else if isServerURLFieldHidden && isRegistering {
-                return .teamEmail
-            } else if !isServerURLFieldHidden && isRegistering {
+        if isRegistering {
+            switch rowIndex {
+            case 0:
                 return .email
-            } else {
+            case 1:
+                return .teamEmail
+            case 2:
+                return .confirmTeamEmail
+            case 3:
+                return .password
+            case 4:
+                return .confirmPassword
+            default:
+                assertionFailure()
                 return .email
             }
-            
-        case 2:
-            if isServerURLFieldHidden && !isRegistering {
-                return .rememberLogin
-            } else if isServerURLFieldHidden && isRegistering {
+        } else {
+            switch rowIndex {
+            case 0:
+                return .email
+            case 1:
                 return .password
-            } else if !isServerURLFieldHidden && isRegistering {
-                return .teamEmail
-            } else {
-                return .password
+            default:
+                assertionFailure()
+                return .email
             }
-            
-        case 3:
-            if isServerURLFieldHidden && !isRegistering {
-                assertionFailure()
-            } else if isServerURLFieldHidden && isRegistering {
-                return .confirmPassword
-            } else if !isServerURLFieldHidden && isRegistering {
-                return .password
-            } else {
-                return .rememberLogin
-            }
-            
-        case 4:
-            if isServerURLFieldHidden && !isRegistering {
-                assertionFailure()
-            } else if isServerURLFieldHidden && isRegistering {
-                return .rememberLogin
-            } else if !isServerURLFieldHidden && isRegistering {
-                return .confirmPassword
-            } else {
-                assertionFailure()
-            }
-            
-        case 5:
-            if isServerURLFieldHidden && !isRegistering {
-                assertionFailure()
-            } else if isServerURLFieldHidden && isRegistering {
-                assertionFailure()
-            } else if !isServerURLFieldHidden && isRegistering {
-                return .rememberLogin
-            } else {
-                assertionFailure()
-            }
-        default: return .email
         }
-        
-        return .email
 
     }
 
     private func tableIndexPath(for cellType: LoginViewControllerCellType) -> IndexPath? {
         var rowIndex = 0
-
-        switch cellType {
-        case .serverURL: rowIndex = isServerURLFieldHidden ? -1 : 0
-        case .email: rowIndex = isServerURLFieldHidden ? 0 : 1
-        case .teamEmail:
-            if isRegistering {
-                if isServerURLFieldHidden {
-                    rowIndex = 1
-                } else {
-                    rowIndex = 2
-                }
-            } else {
+        
+        if isRegistering {
+            switch cellType {
+            case .email:
+                rowIndex = 0
+            case .teamEmail:
+                rowIndex = 1
+            case .confirmTeamEmail:
+                rowIndex = 2
+            case .password:
+                rowIndex = 3
+            case .confirmPassword:
+                rowIndex = 4
+            }
+        } else {
+            switch cellType {
+            case .email:
+                rowIndex = 0
+            case .password:
+                rowIndex = 1
+            default:
                 rowIndex = -1
-            }
-        case .password:
-            if isRegistering {
-                if isServerURLFieldHidden {
-                    rowIndex = 2
-                } else {
-                    rowIndex = 3
-                }
-            } else {
-                if isServerURLFieldHidden {
-                    rowIndex = 1
-                } else {
-                    rowIndex = 2
-                }
-            }
-        case .confirmPassword:
-            if isRegistering {
-                if isServerURLFieldHidden {
-                    rowIndex = 3
-                } else {
-                    rowIndex = 4
-                }
-            } else {
-                if isServerURLFieldHidden {
-                    rowIndex = -1
-                } else {
-                    rowIndex = -1
-                }
-            }
-        case .rememberLogin:
-            if isRegistering {
-                if isServerURLFieldHidden {
-                    rowIndex = 4
-                } else {
-                    rowIndex = 5
-                }
-            } else {
-                if isServerURLFieldHidden {
-                    rowIndex = 2
-                } else {
-                    rowIndex = 3
-                }
             }
         }
 
@@ -362,14 +274,21 @@ public class LoginTableViewDataSource: NSObject, UITableViewDataSource {
         tableView?.beginUpdates()
         
         //Insert / Delete the 'team email' field
-        let teamEmailIndex = isServerURLFieldHidden ? 1 : 2
+        let teamEmailIndex = 1
         if _isRegistering {
             tableView?.insertRows(at: [IndexPath(row: teamEmailIndex, section: 0)], with: animated ? .fade : .none)
         } else {
             tableView?.deleteRows(at: [IndexPath(row: teamEmailIndex, section: 0)], with: animated ? .fade : .none)
         }
         
-        let rowIndex = isServerURLFieldHidden ? 3 : 4
+        let confirmTeamEmailIndex = 2
+        if _isRegistering {
+            tableView?.insertRows(at: [IndexPath(row: confirmTeamEmailIndex, section: 0)], with: animated ? .fade : .none)
+        } else {
+            tableView?.deleteRows(at: [IndexPath(row: confirmTeamEmailIndex, section: 0)], with: animated ? .fade : .none)
+        }
+        
+        let rowIndex = 4
         
         // Insert/Delete the 'confirm password' field
         if _isRegistering {

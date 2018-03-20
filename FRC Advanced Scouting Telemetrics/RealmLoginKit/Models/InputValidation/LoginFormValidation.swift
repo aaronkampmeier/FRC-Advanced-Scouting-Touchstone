@@ -36,6 +36,8 @@ import UIKit
     func isPassword(_ password: String?, matching confirmPassword: String?) -> Bool
     
     func isValidEmail(_ email: String?) -> Bool
+    
+    func isEmail(_ email: String?, matching confirmEmail: String?) -> Bool
 }
 
 @objc(RLMLoginCredentialsValidation)
@@ -79,5 +81,9 @@ public class LoginCredentialsValidation: NSObject, LoginCredentialsValidationPro
         
         let emailTest = NSPredicate(format:"SELF MATCHES %@", emailRegEx)
         return emailTest.evaluate(with: email)
+    }
+    
+    public func isEmail(_ email: String?, matching confirmEmail: String?) -> Bool {
+        return email == confirmEmail
     }
 }

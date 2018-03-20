@@ -148,6 +148,11 @@ public class LoginViewController: UIViewController {
         set { tableDataSource.teamEmail = newValue }
         get { return tableDataSource.teamEmail }
     }
+    
+    public var confirmTeamEmail: String? {
+        set {tableDataSource.confirmTeamEmail = newValue}
+        get {return tableDataSource.confirmTeamEmail}
+    }
 
     /**
      The pasword for this account that is being logged in, or registered. By default, there are
@@ -166,15 +171,6 @@ public class LoginViewController: UIViewController {
     public var confirmPassword: String? {
         set { tableDataSource.confirmPassword = newValue }
         get { return tableDataSource.confirmPassword }
-    }
-
-    /**
-     When true, the credentials of the last login will be persisted and will prefill the login form
-     the next time it is opened.
-     */
-    public var rememberLogin: Bool {
-        set { tableDataSource.rememberLogin = newValue }
-        get { return tableDataSource.rememberLogin }
     }
 
     /**
@@ -214,24 +210,6 @@ public class LoginViewController: UIViewController {
      providing the user account object that was returned by the server.
     */
     public var loginSuccessfulHandler: ((RLMSyncUser, String) -> Void)?
-    
-    /**
-     For cases where apps will be connecting to a pre-established server URL,
-     this option can be used to hide the 'server address' field
-    */
-    public var isServerURLFieldHidden: Bool {
-        set { tableDataSource.isServerURLFieldHidden = newValue }
-        get { return tableDataSource.isServerURLFieldHidden }
-    }
-    
-    /**
-     For cases where apps do not require logging in each time, the 'remember login'
-     field can be hidden
-    */
-    public var isRememberAccountDetailsFieldHidden: Bool {
-        set { tableDataSource.isRememberAccountDetailsFieldHidden = newValue }
-        get { return tableDataSource.isRememberAccountDetailsFieldHidden }
-    }
 
     /** 
      In cases where cancelling the login controller might be needed, show 
@@ -392,6 +370,7 @@ public class LoginViewController: UIViewController {
         if isRegistering {
             isFormValid = isFormValid && formValidationManager.isPassword(password, matching: confirmPassword)
             isFormValid = formValidationManager.isValidEmail(teamEmail) && isFormValid
+            isFormValid = formValidationManager.isEmail(teamEmail, matching: confirmTeamEmail) && isFormValid
         }
 
         // Enable the 'submit' button if all is valid
@@ -436,12 +415,6 @@ public class LoginViewController: UIViewController {
                     self.loginView.footerView.isSubmitting = false
                     self.showError(title: "Unable to Sign In", message: error.localizedDescription)
                     return
-                }
-
-                // Save the credentials so they can be re-used next time
-                if self.rememberLogin {
-                    try! self.savedCredentialsCoordinator.saveCredentials(serverURL: self.serverURL!, username: self.username!,
-                                                                          password: self.password!)
                 }
 
                 // Inform the parent that the login was successful
