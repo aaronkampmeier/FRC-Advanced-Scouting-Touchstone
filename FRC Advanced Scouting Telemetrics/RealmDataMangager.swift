@@ -14,6 +14,7 @@ import Crashlytics
 
 let DidLogIntoSyncServerNotification = NSNotification.Name(rawValue: "DidLogIntoSyncServer")
 private let rosServerAddress = "fastapp.tech:9443"
+let isLoggedInUserDefaultKey = "FAST-IsLoggedIn"
 
 class RealmController {
     
@@ -31,6 +32,12 @@ class RealmController {
     
     var tbaUpdatingReloader: TBAUpdatingDataReloader?
     
+    static var isLoggedIn: Bool {
+        get {
+            return UserDefaults.standard.value(forKey: isLoggedInUserDefaultKey) as? Bool ?? false
+        }
+    }
+    
     private init() {
         generalRealm = nil
         
@@ -46,6 +53,22 @@ class RealmController {
         
         SyncManager.shared.errorHandler = {error, session in
             CLSNSLogv("Realm Sync Error: \(error)", getVaList([]))
+            Crashlytics.sharedInstance().recordError(error)
+        }
+    }
+    
+    func openLocalRealm() {
+        var generalConfig = Realm.Configuration()
+        generalConfig.fileURL = generalConfig.fileURL?.deletingLastPathComponent().appendingPathComponent("LocalGeneralRealm.realm")
+        
+        var scoutedConfig = Realm.Configuration()
+        scoutedConfig.fileURL = scoutedConfig.fileURL?.deletingLastPathComponent().appendingPathComponent("LocalScoutedRealm.realm")
+        
+        do {
+            self.generalRealm = try Realm(configuration: generalConfig)
+            self.syncedRealm = try Realm(configuration: scoutedConfig)
+        } catch {
+            CLSNSLogv("Error opening local realms: \(error)", getVaList([]))
             Crashlytics.sharedInstance().recordError(error)
         }
     }

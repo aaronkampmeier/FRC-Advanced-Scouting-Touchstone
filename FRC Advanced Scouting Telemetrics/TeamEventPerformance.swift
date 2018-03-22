@@ -492,11 +492,19 @@ extension TeamEventPerformance: HasStats {
             }
         }
         
-        static let allValues: [StatName] = [.OPR, .DPR, .CCWM, .Rank, .ScoutedMatches, .NumberOfMatches, .TotalMatchPoints, .TotalRankingPoints, .RankingScore, .TotalWins, .TotalLosses, .TotalTies, .MajorityClimbStatus, .SuccessfulClimbCount, .ClimbSuccessRate, .MajorityClimbAssistStatus, .ClimbAssistAttempts,
-            
-            .AutoLineCrossCount, .TotalGrabbedCubes, .AverageGrabbedCubes, .PercentCubesFromPile, .PercentCubesFromLine, .PercentCubesFromPortal,
-            .TotalPlacedCubes, .AveragePlacedCubes, .StandardDeviationPlacedCubes, .PercentCubesInScale, .MaxCubesInScale, .AverageCubesInScale, .PercentCubesInSwitch, .MaxCubesInSwitch, .AverageCubesInSwitch, .PercentCubesInOpponentSwitch, .MaxCubesInOpponentSwitch, .AverageCubesInOpponentSwitch, .PercentCubesInVault, .MaxCubesInVault, .AverageCubesInVault, .PercentCubesDropped, .AverageCubesDropped
-        ]
+        static var allValues: [StatName] {
+            get {
+                if RealmController.isLoggedIn {
+                    return [.OPR, .DPR, .CCWM, .Rank, .ScoutedMatches, .NumberOfMatches, .TotalMatchPoints, .TotalRankingPoints, .RankingScore, .TotalWins, .TotalLosses, .TotalTies, .MajorityClimbStatus, .SuccessfulClimbCount, .ClimbSuccessRate, .MajorityClimbAssistStatus, .ClimbAssistAttempts,
+                            
+                            .AutoLineCrossCount, .TotalGrabbedCubes, .AverageGrabbedCubes, .PercentCubesFromPile, .PercentCubesFromLine, .PercentCubesFromPortal,
+                            .TotalPlacedCubes, .AveragePlacedCubes, .StandardDeviationPlacedCubes, .PercentCubesInScale, .MaxCubesInScale, .AverageCubesInScale, .PercentCubesInSwitch, .MaxCubesInSwitch, .AverageCubesInSwitch, .PercentCubesInOpponentSwitch, .MaxCubesInOpponentSwitch, .AverageCubesInOpponentSwitch, .PercentCubesInVault, .MaxCubesInVault, .AverageCubesInVault, .PercentCubesDropped, .AverageCubesDropped
+                    ]
+                } else {
+                    return [.OPR, .DPR, .CCWM, .Rank, .NumberOfMatches, .TotalMatchPoints, .TotalWins, .TotalLosses, .TotalTies]
+                }
+            }
+        }
         
         var visualizableAssociatedStats: [TeamMatchPerformance.StatName] {
             get {

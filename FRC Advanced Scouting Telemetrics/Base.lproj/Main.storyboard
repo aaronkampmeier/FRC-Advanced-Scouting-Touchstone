@@ -838,7 +838,7 @@
                                             </constraints>
                                         </tableViewCellContentView>
                                     </tableViewCell>
-                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="blue" accessoryType="disclosureIndicator" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="syncStatus" textLabel="OHR-Cu-KBY" style="IBUITableViewCellStyleDefault" id="avB-3V-ppY">
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" misplaced="YES" selectionStyle="blue" accessoryType="disclosureIndicator" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="syncStatus" textLabel="OHR-Cu-KBY" style="IBUITableViewCellStyleDefault" id="avB-3V-ppY">
                                         <rect key="frame" x="0.0" y="275.5" width="600" height="44"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="avB-3V-ppY" id="UoH-zg-aAD">
@@ -3053,6 +3053,24 @@
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Xiv-eq-Nwc" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="-1482" y="1337"/>
+        </scene>
+        <!--Intro Walkthrough View Controller-->
+        <scene sceneID="QgN-7i-i3U">
+            <objects>
+                <viewController id="PJ2-HV-fIr" customClass="IntroWalkthroughViewController" customModule="FRC_Advanced_Scouting_Touchstone" customModuleProvider="target" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="zLm-ff-rG4"/>
+                        <viewControllerLayoutGuide type="bottom" id="rKy-V6-e0U"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="6T3-sM-guM">
+                        <rect key="frame" x="0.0" y="0.0" width="1024" height="768"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                    </view>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="yCK-DH-eDR" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="-1293" y="2105"/>
         </scene>
         <!--Syncing Conflict View Controller-->
         <scene sceneID="Nxc-yN-7J2">

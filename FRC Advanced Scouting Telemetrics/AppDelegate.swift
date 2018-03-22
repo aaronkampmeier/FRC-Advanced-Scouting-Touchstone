@@ -64,9 +64,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         //Clear the temporary folder as it can build up lots of unneeded ensembles data. However, at this time Fabric is probably downloading some settings from the cloud so we need to avoid deleting those files.
         do {
             for file in try FileManager.default.contentsOfDirectory(atPath: NSTemporaryDirectory()) {
-                if !file.hasPrefix("CFNetworkDownload") {
-                    try FileManager.default.removeItem(atPath: NSTemporaryDirectory().appending(file))
-                }
+                try FileManager.default.removeItem(atPath: NSTemporaryDirectory().appending(file))
             }
         } catch {
             CLSNSLogv("Unable to clear temporary directory with error: \(error)", getVaList([]))
