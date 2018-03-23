@@ -27,9 +27,20 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             //We are logged in, switch to the team list view
             let teamNumber = UserDefaults.standard.value(forKey: "LoggedInTeam") as? String ?? "Unknown"
             Crashlytics.sharedInstance().setUserName(teamNumber)
+
+            let teamListVC = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "teamListMasterVC")
+
+            self.window?.rootViewController = teamListVC
         } else {
-            //Show log in page
-            displayLogin()
+            //Show Onboarding
+            //It is the initial vc
+            
+            if UserDefaults.standard.value(forKey: isSpectatorModeKey) as? Bool ?? false {
+                RealmController.realmController.openLocalRealm()
+                let teamListVC = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "teamListMasterVC")
+                
+                self.window?.rootViewController = teamListVC
+            }
         }
         
         Crashlytics.sharedInstance().setUserIdentifier(UIDevice.current.identifierForVendor?.uuidString ?? "Unknown")
@@ -37,7 +48,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         return AWSMobileClient.sharedInstance().interceptApplication(application, didFinishLaunchingWithOptions: launchOptions)
     }
     
-    func displayLogin() {
+    func displayLogin(isRegistering: Bool = false) {
         //Present log in screen
         let loginVC = LoginViewController(style: .darkOpaque)
         loginVC.isCancelButtonHidden = true
@@ -58,6 +69,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             self.window?.rootViewController = loader
         }
         self.window?.rootViewController = loginVC
+        loginVC.setRegistering(isRegistering, animated: false)
     }
     
     func clearTMPFolder() {

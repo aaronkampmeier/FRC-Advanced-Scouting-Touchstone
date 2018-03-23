@@ -88,7 +88,8 @@
 		936967F11E4FB1F7001DB15D /* TeamDetailCollectionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 936967F01E4FB1F7001DB15D /* TeamDetailCollectionViewController.swift */; };
 		936967F71E4FD057001DB15D /* TeamDetailTableCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 936967F61E4FD057001DB15D /* TeamDetailTableCollectionViewCell.swift */; };
 		9369681A1E502AC8001DB15D /* TeamDetailKeyValueSpreadCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 936968191E502AC8001DB15D /* TeamDetailKeyValueSpreadCollectionViewCell.swift */; };
-		937BFCEE2064074D006FB3E0 /* IntroWalkthroughViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 937BFCED2064074D006FB3E0 /* IntroWalkthroughViewController.swift */; };
+		937BFD022064D1B4006FB3E0 /* OnboardingPageViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 937BFD012064D1B4006FB3E0 /* OnboardingPageViewController.swift */; };
+		937BFD0420657E9E006FB3E0 /* OnboardingPathChooserViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 937BFD0320657E9E006FB3E0 /* OnboardingPathChooserViewController.swift */; };
 		937C682A204C852600FAEDE8 /* EventStatsGraphViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 937C6829204C852600FAEDE8 /* EventStatsGraphViewController.swift */; };
 		937C682E204C86DB00FAEDE8 /* SelectStatsTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 937C682D204C86DB00FAEDE8 /* SelectStatsTableViewController.swift */; };
 		937E9C961E40468300D0ED76 /* SuperNotesCollectionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 937E9C951E40468300D0ED76 /* SuperNotesCollectionViewController.swift */; };
@@ -281,7 +282,8 @@
 		936967F01E4FB1F7001DB15D /* TeamDetailCollectionViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TeamDetailCollectionViewController.swift; sourceTree = "<group>"; };
 		936967F61E4FD057001DB15D /* TeamDetailTableCollectionViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TeamDetailTableCollectionViewCell.swift; sourceTree = "<group>"; };
 		936968191E502AC8001DB15D /* TeamDetailKeyValueSpreadCollectionViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TeamDetailKeyValueSpreadCollectionViewCell.swift; sourceTree = "<group>"; };
-		937BFCED2064074D006FB3E0 /* IntroWalkthroughViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IntroWalkthroughViewController.swift; sourceTree = "<group>"; };
+		937BFD012064D1B4006FB3E0 /* OnboardingPageViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingPageViewController.swift; sourceTree = "<group>"; };
+		937BFD0320657E9E006FB3E0 /* OnboardingPathChooserViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingPathChooserViewController.swift; sourceTree = "<group>"; };
 		937C6829204C852600FAEDE8 /* EventStatsGraphViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventStatsGraphViewController.swift; sourceTree = "<group>"; };
 		937C682D204C86DB00FAEDE8 /* SelectStatsTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SelectStatsTableViewController.swift; sourceTree = "<group>"; };
 		937E9C951E40468300D0ED76 /* SuperNotesCollectionViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SuperNotesCollectionViewController.swift; sourceTree = "<group>"; };
@@ -343,7 +345,7 @@
 		1F21DF101C645D1F00C55D0E /* View Controllers */ = {
 			isa = PBXGroup;
 			children = (
-				937BFCED2064074D006FB3E0 /* IntroWalkthroughViewController.swift */,
+				937BFD0520657EA5006FB3E0 /* Onboarding */,
 				938B50E42055AF430075C416 /* RealmLoaderViewController.swift */,
 				93CEA6332041FB5900C5B357 /* Forgot Password */,
 				93D75B631E5D0866002CBED2 /* FieldLocationDisplayViewController.swift */,
@@ -662,6 +664,15 @@
 				936968191E502AC8001DB15D /* TeamDetailKeyValueSpreadCollectionViewCell.swift */,
 			);
 			name = "Team Detail Cells";
+			sourceTree = "<group>";
+		};
+		937BFD0520657EA5006FB3E0 /* Onboarding */ = {
+			isa = PBXGroup;
+			children = (
+				937BFD012064D1B4006FB3E0 /* OnboardingPageViewController.swift */,
+				937BFD0320657E9E006FB3E0 /* OnboardingPathChooserViewController.swift */,
+			);
+			name = Onboarding;
 			sourceTree = "<group>";
 		};
 		93A38B3D2055EBAA00B8B692 /* Views */ = {
@@ -1086,6 +1097,7 @@
 				932C344E1E12F7C400A23203 /* CloudImportManager.swift in Sources */,
 				938B50E52055AF430075C416 /* RealmLoaderViewController.swift in Sources */,
 				1F718F7A1E085BD900BD1951 /* CloudConnectionManager.swift in Sources */,
+				937BFD0420657E9E006FB3E0 /* OnboardingPathChooserViewController.swift in Sources */,
 				9353ADBC1E57ACF100120F1A /* MatchesTableViewController.swift in Sources */,
 				93C5B47C1E53FC9C007D309F /* TeamInfoScrollView.swift in Sources */,
 				93C609241E67D035007A689D /* MatchOverviewDetailViewController.swift in Sources */,
@@ -1101,9 +1113,9 @@
 				936967F11E4FB1F7001DB15D /* TeamDetailCollectionViewController.swift in Sources */,
 				93483E8220291AC400E9AC82 /* LoginKeyboardManager.swift in Sources */,
 				937C682E204C86DB00FAEDE8 /* SelectStatsTableViewController.swift in Sources */,
+				937BFD022064D1B4006FB3E0 /* OnboardingPageViewController.swift in Sources */,
 				93633B1F200D9B29000EC83A /* Match.swift in Sources */,
 				1FA6A73E1CD3B4DD00772C63 /* TransferInfoTableViewController.swift in Sources */,
-				937BFCEE2064074D006FB3E0 /* IntroWalkthroughViewController.swift in Sources */,
 				935A2B061E6CDC4C008FEF9D /* MatchOverviewPerformanceDetailViewController.swift in Sources */,
 				935A2B031E6CD1F0008FEF9D /* MatchOverviewSplitViewController.swift in Sources */,
 				1F1C23C61E07487C008885A1 /* Event.swift in Sources */,
