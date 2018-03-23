@@ -42,9 +42,9 @@ public class AWSCognitoAuthenticationProvider: NSObject, AuthenticationProvider,
     public override init() {
         // Capture the Cognito account tokens + settings
         self.serviceRegion = .USEast1
-        self.userPoolID = "us-east-1_FuyxJ3oI6"
-        self.clientID = "50a007212mgh063emptr07n5tu"
-        self.clientSecret = "i2ujhnqfmnfi0ishlme00qi0pms5s4auhi5p7hv8fc223afcchp"
+        self.userPoolID = Keys.userPoolID
+        self.clientID = Keys.appClientID
+        self.clientSecret = Keys.appClientSecret
 
         // Access the User Pool object containing our users
         let serviceConfiguration = AWSServiceConfiguration(region: self.serviceRegion, credentialsProvider: nil)

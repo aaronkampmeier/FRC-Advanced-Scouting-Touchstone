@@ -14,19 +14,9 @@ private let baseApi = "https://www.thebluealliance.com/api/v3/"
 private let baseApiUrl = try! baseApi.asURL()
 private let yearToDrawDataFrom = "2018"
 
-private class TBAResponseCache<T> {
-    let json: T
-    let lastModified: String
-    
-    init(json: T, lastModified: String) {
-        self.json = json
-        self.lastModified = lastModified
-    }
-}
-
 class CloudData {
     fileprivate let headers = [
-        "X-TBA-Auth-Key":"ZeCp1BpPQgxdhBrC1F3A8wue9mexDAnGw9akcjZiP95u4YMY6WrBjKxg7VLXWIww",
+        "X-TBA-Auth-Key":Keys.tbaApiKey,
         "Accept": "application/json"
     ]
     
