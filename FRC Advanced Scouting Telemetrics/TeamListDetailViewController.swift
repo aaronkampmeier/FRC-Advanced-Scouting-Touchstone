@@ -400,7 +400,7 @@ extension TeamListDetailViewController: UITableViewDelegate, UITableViewDataSour
             
             if let event = self.selectedEvent {
                 if let statusStr = team.scouted?.computedStats(forEvent: event)?.overallStatusString {
-                    if statusStr != "--" {
+                    if statusStr != "--" { //TBA puts a -- in for empty status strings
                         numOfRows += 1
                     }
                 }

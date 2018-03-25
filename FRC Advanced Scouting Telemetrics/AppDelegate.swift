@@ -39,6 +39,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
                 RealmController.realmController.openLocalRealm()
                 let teamListVC = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "teamListMasterVC")
                 
+                RealmController.realmController.openLocalRealm()
+                
                 self.window?.rootViewController = teamListVC
             }
         }
