@@ -572,6 +572,10 @@ class TeamListTableViewController: UITableViewController, TeamListDetailDataSour
     }
     
     func sortList(withStat statName: String?, isAscending ascending: Bool) {
+        guard let selectedEvent = selectedEvent else {
+            return
+        }
+        
         self.isSortingAscending = ascending
         
         statToSortBy = statName
@@ -592,8 +596,8 @@ class TeamListTableViewController: UITableViewController, TeamListDetailDataSour
             } else if let stat = eventPerformanceStat {
                 
                 currentSortedTeams = currentEventTeams.sorted {team1, team2 in
-                    let firstTeamEventPerformance: TeamEventPerformance = realmController.eventPerformance(forTeam: team1, atEvent: selectedEvent!)
-                    let secondTeamEventPerformance: TeamEventPerformance = realmController.eventPerformance(forTeam: team2, atEvent: selectedEvent!)
+                    let firstTeamEventPerformance: TeamEventPerformance = realmController.eventPerformance(forTeam: team1, atEvent: selectedEvent)
+                    let secondTeamEventPerformance: TeamEventPerformance = realmController.eventPerformance(forTeam: team2, atEvent: selectedEvent)
                     
                     let firstStatValue = firstTeamEventPerformance.statValue(forStat: stat)
                     let secondStatValue = secondTeamEventPerformance.statValue(forStat: stat)

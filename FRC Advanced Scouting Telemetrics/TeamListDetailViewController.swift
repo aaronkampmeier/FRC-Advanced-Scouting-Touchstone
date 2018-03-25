@@ -470,10 +470,6 @@ extension TeamListDetailViewController: UITableViewDelegate, UITableViewDataSour
                     //Status
                     let cell = tableView.dequeueReusableCell(withIdentifier: "statusCell")
                     
-//                    let attrStr = try? NSMutableAttributedString(data: statusString.data(using: String.Encoding.unicode)!, options: [NSAttributedString.DocumentReadingOptionKey.documentType: NSAttributedString.DocumentType.html], documentAttributes: nil)
-//
-//                    attrStr?.addAttribute(NSAttributedStringKey.font, value: UIFont.systemFont(ofSize: 17), range: NSRange.init(location: 0, length: attrStr!.length))
-//
                     (cell?.viewWithTag(1) as! UILabel).setHTMLFromString(htmlText: statusString)
                     
                     return cell!
