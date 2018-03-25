@@ -65,15 +65,25 @@ class TeamListDetailViewController: UIViewController {
 		}
 	}
 
-	var selectedTeam: Team? {
-		didSet {
+    var selectedTeam: Team? {
+        didSet {
+            guard !(selectedTeam?.isInvalidated ?? false) else {
+                selectedTeam = nil
+                return
+            }
+            
             self.updateView(forTeam: selectedTeam)
             
             //Register for updates
             teamUpdateToken = selectedTeam?.scouted?.observe {[weak self] objectChange in
                 switch objectChange {
                 case .change:
-                    self?.updateView(forTeam: self?.selectedTeam)
+                    if self?.selectedTeam?.isInvalidated ?? false {
+                        //Some crashes were caused after calling updateView after an object was invalidated
+                        self?.selectedTeam = nil
+                    } else {
+                        self?.updateView(forTeam: self?.selectedTeam)
+                    }
                 case .deleted:
                     //Welp, what now
                     self?.selectedTeam = nil

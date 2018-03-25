@@ -40,6 +40,7 @@
 		930B96621E456D3000E385D3 /* PitTableViewSelectorCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 930B96611E456D3000E385D3 /* PitTableViewSelectorCollectionViewCell.swift */; };
 		930B96641E456D6C00E385D3 /* PitImageSelectorCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 930B96631E456D6C00E385D3 /* PitImageSelectorCollectionViewCell.swift */; };
 		930B96671E45A91A00E385D3 /* PitButtonCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 930B96661E45A91A00E385D3 /* PitButtonCollectionViewCell.swift */; };
+		930CC83720673FD5009A44F3 /* awsconfiguration.json in Resources */ = {isa = PBXBuildFile; fileRef = 930CC83420673FD5009A44F3 /* awsconfiguration.json */; };
 		9317C039201E999200F1E907 /* TimeMarker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9317C038201E999200F1E907 /* TimeMarker.swift */; };
 		9317C03B201ECFEF00F1E907 /* SSGameScoutingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9317C03A201ECFEF00F1E907 /* SSGameScoutingViewController.swift */; };
 		932354461E41686B0039386A /* SuperNotesCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 932354451E41686B0039386A /* SuperNotesCollectionViewCell.swift */; };
@@ -231,6 +232,7 @@
 		930B96611E456D3000E385D3 /* PitTableViewSelectorCollectionViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PitTableViewSelectorCollectionViewCell.swift; sourceTree = "<group>"; };
 		930B96631E456D6C00E385D3 /* PitImageSelectorCollectionViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PitImageSelectorCollectionViewCell.swift; sourceTree = "<group>"; };
 		930B96661E45A91A00E385D3 /* PitButtonCollectionViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PitButtonCollectionViewCell.swift; sourceTree = "<group>"; };
+		930CC83420673FD5009A44F3 /* awsconfiguration.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = awsconfiguration.json; sourceTree = "<group>"; };
 		9317C038201E999200F1E907 /* TimeMarker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimeMarker.swift; sourceTree = "<group>"; };
 		9317C03A201ECFEF00F1E907 /* SSGameScoutingViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SSGameScoutingViewController.swift; sourceTree = "<group>"; };
 		932354451E41686B0039386A /* SuperNotesCollectionViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SuperNotesCollectionViewCell.swift; sourceTree = "<group>"; };
@@ -450,6 +452,7 @@
 				1F78E7911C3B469300221927 /* Info.plist */,
 				933D21501E609BF7008C8276 /* Additional Licenses.plist */,
 				933D214A1E609A04008C8276 /* Pods-acknowledgments.plist */,
+				930CC83420673FD5009A44F3 /* awsconfiguration.json */,
 			);
 			name = "FRC Advanced Scouting Touchstone";
 			path = "FRC Advanced Scouting Telemetrics";
@@ -906,6 +909,7 @@
 			files = (
 				1F78E7901C3B469300221927 /* LaunchScreen.storyboard in Resources */,
 				1F78E78D1C3B469300221927 /* Assets.xcassets in Resources */,
+				930CC83720673FD5009A44F3 /* awsconfiguration.json in Resources */,
 				933D21511E609BF7008C8276 /* Additional Licenses.plist in Resources */,
 				936572E11E1610CA00439728 /* About.rtf in Resources */,
 				93A38B3A2055EBA400B8B692 /* NoEventSelected.xib in Resources */,

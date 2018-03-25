@@ -211,22 +211,24 @@ class TeamListTableViewController: UITableViewController, TeamListDetailDataSour
             }
         }
         
-        //Track if an event was added or deleted
-        eventsObserverToken = realmController.generalRealm.objects(Event.self).observe {[weak self] eventsChanges in
-            switch eventsChanges {
-            case .update(_, let deletions, let insertions,_):
-                if deletions.count > 0 || insertions.count > 0 {
-                    DispatchQueue.main.async {
-                        //Attempt to keep in the match in the case that it was reloaded, if not then just move to no selected event
-                        if let eventKey = UserDefaults.standard.value(forKey: self?.lastSelectedEventStorageKey ?? "") as? String {
-                            self?.selectedEvent = RealmController.realmController.generalRealm.object(ofType: Event.self, forPrimaryKey: eventKey)
-                        } else {
-                            self?.selectedEvent = nil
+        if !realmController.generalRealm.isInWriteTransaction {
+            //Track if an event was added or deleted
+            eventsObserverToken = realmController.generalRealm.objects(Event.self).observe {[weak self] eventsChanges in
+                switch eventsChanges {
+                case .update(_, let deletions, let insertions,_):
+                    if deletions.count > 0 || insertions.count > 0 {
+                        DispatchQueue.main.async {
+                            //Attempt to keep in the match in the case that it was reloaded, if not then just move to no selected event
+                            if let eventKey = UserDefaults.standard.value(forKey: self?.lastSelectedEventStorageKey ?? "") as? String {
+                                self?.selectedEvent = RealmController.realmController.generalRealm.object(ofType: Event.self, forPrimaryKey: eventKey)
+                            } else {
+                                self?.selectedEvent = nil
+                            }
                         }
                     }
+                default:
+                    break
                 }
-            default:
-                break
             }
         }
         
@@ -234,6 +236,10 @@ class TeamListTableViewController: UITableViewController, TeamListDetailDataSour
     }
     
     func reloadEventRankerObserver() {
+        guard !realmController.syncedRealm.isInWriteTransaction else {
+            return
+        }
+        
         //Add observer to listen for changes in the pick list
         eventRankerObserverToken = nil
         eventPickedTeamsObserverToken = nil
