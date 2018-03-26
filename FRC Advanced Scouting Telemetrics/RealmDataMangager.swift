@@ -245,12 +245,10 @@ class RealmController {
         }
     }
     
-    func eventPerformance(forTeam team: Team, atEvent event: Event) -> TeamEventPerformance {
-        let eventPerformances = Set(event.teamEventPerformances)
-        let teamPerformances = Set(team.eventPerformances)
-        
-        let teamEventPerformance = eventPerformances.intersection(teamPerformances).first!
-        return teamEventPerformance
+    func eventPerformance(forTeam team: Team, atEvent event: Event) -> TeamEventPerformance? {
+        //Find the team event performance that ties to both the team and the event
+        let proposedKey = "\(team.key)_\(event.key)"
+        return generalRealm.object(ofType: TeamEventPerformance.self, forPrimaryKey: proposedKey)
     }
     
     //MARK: - Editing a realm

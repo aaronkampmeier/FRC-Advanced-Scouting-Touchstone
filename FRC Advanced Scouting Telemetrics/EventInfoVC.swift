@@ -66,14 +66,15 @@ class EventInfoVC: UIViewController, UITableViewDataSource {
                 //Create a cloud event import object and begin the import process
                 if let frcEvent = self.selectedEvent {
                     DispatchQueue.main.async {
-                        let cloudImport = CloudEventImportManager(shouldPreload: true, forEvent: frcEvent, withCompletionHandler: self.finishedImport)
-                        cloudImport.import()
                         self.activityIndicator.startAnimating()
                         self.loadingView.isHidden = false
                         
-                        //Prevent touches on the display so that the user can move out and make changes while the import is happening
+                        //Prevent touches on the display so that the user can't move out and make changes while the import is happening
                         self.view.isUserInteractionEnabled = false
                         self.navigationController?.navigationBar.isUserInteractionEnabled = false
+                        
+                        let cloudImport = CloudEventImportManager(shouldPreload: true, forEvent: frcEvent, withCompletionHandler: self.finishedImport)
+                        cloudImport.import()
                     }
                 }
             } else {
@@ -115,10 +116,16 @@ class EventInfoVC: UIViewController, UITableViewDataSource {
                 errorMessage = nil
             }
             
-            let alert = UIAlertController(title: "Unable to Add", message: "An error occurred when adding the event \(errorMessage ?? "")", preferredStyle: .alert)
+            let alert = UIAlertController(title: "Unable to Add", message: "An error occurred when adding the event: \(errorMessage ?? "__")", preferredStyle: .alert)
             alert.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
             present(alert, animated: true, completion: nil)
+            
+            self.loadingView.isHidden = true
+            self.view.isUserInteractionEnabled = true
+            self.navigationController?.navigationBar.isUserInteractionEnabled = true
         }
+        
+        Answers.logCustomEvent(withName: "Attempted Event Import", customAttributes: ["Successful":didComplete])
     }
     
     func receivedNoAllianceData(notification: Notification) {

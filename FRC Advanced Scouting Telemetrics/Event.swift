@@ -18,6 +18,8 @@ import RealmSwift
     dynamic var name = ""
     dynamic var year = 0
     
+    dynamic var lastReloaded: Date?
+    
     let teamEventPerformances = LinkingObjects(fromType: TeamEventPerformance.self, property: "event")
     let matches = LinkingObjects(fromType: Match.self, property: "event")
     

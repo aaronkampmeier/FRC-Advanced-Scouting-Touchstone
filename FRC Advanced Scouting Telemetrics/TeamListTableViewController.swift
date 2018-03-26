@@ -92,6 +92,8 @@ class TeamListTableViewController: UITableViewController, TeamListDetailDataSour
                     let alert = UIAlertController(title: "Wait for Downloads to Finish", message: "This event is not fully loaded from the cloud and is unusable until it is. Wait for this event to finish downloading by checking status in the \"Sync Status\" page and making sure you have a steady internet connection. If the issue persits, try logging out and back in again. If you believe this was in error, please contact us.", preferredStyle: .alert)
                     alert.addAction(UIAlertAction(title: "OK", style: .default, handler: {_ in self.selectedEvent = nil}))
                     self.present(alert, animated: true, completion: nil)
+                    
+                    Answers.logCustomEvent(withName: "Event selected before fully loaded", customAttributes: ["Event":event.key])
                 } else {
                     UserDefaults.standard.set(event.key, forKey: lastSelectedEventStorageKey)
                     selectedEventRanker = realmController.getTeamRanker(forEvent: event)
@@ -215,10 +217,10 @@ class TeamListTableViewController: UITableViewController, TeamListDetailDataSour
             //Track if an event was added or deleted
             eventsObserverToken = realmController.generalRealm.objects(Event.self).observe {[weak self] eventsChanges in
                 switch eventsChanges {
-                case .update(_, let deletions, let insertions,_):
-                    if deletions.count > 0 || insertions.count > 0 {
+                case .update(_, let deletions, let insertions, let modifications):
+                    if deletions.count > 0 || insertions.count > 0 || modifications.count > 0 {
                         DispatchQueue.main.async {
-                            //Attempt to keep in the match in the case that it was reloaded, if not then just move to no selected event
+                            //Attempt to keep in the event in the case that it was reloaded, if not then just move to no selected event
                             if let eventKey = UserDefaults.standard.value(forKey: self?.lastSelectedEventStorageKey ?? "") as? String {
                                 self?.selectedEvent = RealmController.realmController.generalRealm.object(ofType: Event.self, forPrimaryKey: eventKey)
                             } else {
@@ -338,7 +340,7 @@ class TeamListTableViewController: UITableViewController, TeamListDetailDataSour
             if let stat = Team.StatName(rawValue: statName) {
                 statValue = team.statValue(forStat: stat)
             } else if let stat = TeamEventPerformance.StatName(rawValue: statName) {
-                statValue = realmController.eventPerformance(forTeam: team, atEvent: selectedEvent!).statValue(forStat: stat)
+                statValue = realmController.eventPerformance(forTeam: team, atEvent: selectedEvent!)!.statValue(forStat: stat)
             } else {
                 statValue = .NoValue
             }
@@ -596,8 +598,8 @@ class TeamListTableViewController: UITableViewController, TeamListDetailDataSour
             } else if let stat = eventPerformanceStat {
                 
                 currentSortedTeams = currentEventTeams.sorted {team1, team2 in
-                    let firstTeamEventPerformance: TeamEventPerformance = realmController.eventPerformance(forTeam: team1, atEvent: selectedEvent)
-                    let secondTeamEventPerformance: TeamEventPerformance = realmController.eventPerformance(forTeam: team2, atEvent: selectedEvent)
+                    let firstTeamEventPerformance: TeamEventPerformance = realmController.eventPerformance(forTeam: team1, atEvent: selectedEvent)!
+                    let secondTeamEventPerformance: TeamEventPerformance = realmController.eventPerformance(forTeam: team2, atEvent: selectedEvent)!
                     
                     let firstStatValue = firstTeamEventPerformance.statValue(forStat: stat)
                     let secondStatValue = secondTeamEventPerformance.statValue(forStat: stat)

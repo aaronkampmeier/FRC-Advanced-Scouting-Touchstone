@@ -8,6 +8,7 @@
 
 import UIKit
 import RealmSwift
+import Crashlytics
 
 class SyncStatusViewController: UIViewController {
     @IBOutlet weak var uploadProgressView: UIProgressView!
@@ -22,6 +23,7 @@ class SyncStatusViewController: UIViewController {
         super.viewDidLoad()
 
         // Do any additional setup after loading the view.
+        Answers.logCustomEvent(withName: "Viewed Sync Status Page", customAttributes: nil)
     }
     
     override func viewWillAppear(_ animated: Bool) {

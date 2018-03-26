@@ -103,6 +103,9 @@ class TeamListDetailViewController: UIViewController {
 		get {
 			if let team = selectedTeam {
 				if let event = selectedEvent {
+                    guard !event.isInvalidated else {
+                        return nil
+                    }
 					return RealmController.realmController.eventPerformance(forTeam: team, atEvent: event)
 				}
 			}

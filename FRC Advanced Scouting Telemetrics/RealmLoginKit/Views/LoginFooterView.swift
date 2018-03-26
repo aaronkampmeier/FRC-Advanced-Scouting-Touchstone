@@ -17,6 +17,7 @@
 ////////////////////////////////////////////////////////////////////////////
 
 import UIKit
+import Crashlytics
 
 enum LoginFooterViewStyle {
     case light
@@ -205,6 +206,7 @@ class LoginFooterView: UIView {
     
     @objc func forgotPasswordPressed(sender: UIButton) {
         forgotPasswordTappedHandler?()
+        Answers.logCustomEvent(withName: "Forgot Password Pressed", customAttributes: nil)
     }
 
     private func updateButtonTitles() {

@@ -51,21 +51,23 @@ class CloudEventImportManager {
     
     let shouldEnterWrite: Bool
     ///Takes an FRCEvent and creates core data objects in the database
-    func `import`() {
-        //First make sure the event being added is not already in the database
-        if currentEvents.contains(where: {event in
-            return event.key == frcEvent.key
-        }) {
-            throwError(error: .EventAlreadyInDatabase)
-            return
-        }
-        
+    func `import`(omitPreCheck: Bool = false) {
         CLSNSLogv("Beginning import of event: %@", getVaList([frcEvent.key]))
         
         ///Begin the Write
         if shouldEnterWrite {
             realmController.generalRealm.beginWrite()
             realmController.syncedRealm.beginWrite()
+        }
+        
+        if !omitPreCheck {
+            //First make sure the event being added is not already in the database
+            if currentEvents.contains(where: {event in
+                return event.key == frcEvent.key
+            }) {
+                throwError(error: .EventAlreadyInDatabase)
+                return
+            }
         }
         
         //Create an event object
@@ -82,6 +84,8 @@ class CloudEventImportManager {
         event.name = frcEvent.name
         event.year = frcEvent.year
         event.location = frcEvent.locationName
+        
+        event.lastReloaded = Date()
         
         //Create the local one if there is no local object already
         if let eventRanker = realmController.getTeamRanker(forEvent: event) {
@@ -352,8 +356,6 @@ class CloudEventImportManager {
         NotificationCenter.default.post(Notification(name: Notification.Name(rawValue: "UpdatedTeams"), object: self))
         
         completionHandler(true, nil)
-        
-        Answers.logCustomEvent(withName: "Imported Event", customAttributes: ["Event Key":frcEvent.key])
     }
     
     enum ImportError: Error {

@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import Crashlytics
 
 class ConfirmForgotPasswordViewController: UIViewController {
     @IBOutlet weak var confirmationCodeField: UITextField!
@@ -47,6 +48,8 @@ class ConfirmForgotPasswordViewController: UIViewController {
                     let alert = UIAlertController(title: "Error", message: error.localizedDescription, preferredStyle: .alert)
                     alert.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
                     self.present(alert, animated: true, completion: nil)
+                    
+                    Answers.logCustomEvent(withName: "Forgot Password Reset Completed", customAttributes: ["Successful":false])
                 } else {
                     //No error
                     let alert = UIAlertController(title: "Success", message: "The password change was successful. Try logging in.", preferredStyle: .alert)
@@ -55,6 +58,7 @@ class ConfirmForgotPasswordViewController: UIViewController {
                         self.navigationController?.dismiss(animated: true, completion: nil)
                     }))
                     self.present(alert, animated: true, completion: nil)
+                    Answers.logCustomEvent(withName: "Forgot Password Reset Completed", customAttributes: ["Successful":true])
                 }
             }
         }

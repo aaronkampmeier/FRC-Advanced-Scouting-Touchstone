@@ -30,7 +30,6 @@ class CloudReloadingManager {
         realmController.syncedRealm.beginWrite()
         
         let eventKey = eventToReload.key
-        realmController.delete(object: eventToReload)
         cloudConnection.event(forKey: eventKey, withCompletionHandler: reloadEvent)
     }
     
@@ -61,7 +60,7 @@ class CloudReloadingManager {
                 }
                 
             }
-                .import()
+                .import(omitPreCheck: true)
         } else {
             //Did not return an frc event
             RealmController.realmController.syncedRealm.cancelWrite()

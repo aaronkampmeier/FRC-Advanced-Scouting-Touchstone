@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import Crashlytics
 
 class ForgotPasswordViewController: UIViewController {
     @IBOutlet weak var teamNumberField: UITextField!
@@ -41,9 +42,12 @@ class ForgotPasswordViewController: UIViewController {
                     let alert = UIAlertController(title: "Error", message: error.localizedDescription, preferredStyle: .alert)
                     alert.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
                     self.present(alert, animated: true, completion: nil)
+                    
+                    Answers.logCustomEvent(withName: "Forgot Password Reset Requested", customAttributes: ["Successful":false])
                 } else {
                     //It was successful, show the confirmation screen
                     self.performSegue(withIdentifier: "confirm", sender: self)
+                    Answers.logCustomEvent(withName: "Forgot Password Reset Requested", customAttributes: ["Successful":true])
                 }
             }
         }
