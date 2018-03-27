@@ -20,7 +20,8 @@ class MatchOverviewPerformanceDetailViewController: UIViewController {
     @IBOutlet weak var scoutIDViewHeight: NSLayoutConstraint!
     @IBOutlet weak var hasNotBeenScoutedHeight: NSLayoutConstraint!
     @IBOutlet weak var matchContentView: UIView!
-
+    @IBOutlet weak var standsScoutButton: UIButton!
+    
     var dataSource: MatchOverviewPerformanceDetailDataSource?
     var displayedTeamMatchPerformance: TeamMatchPerformance? {
         didSet {
@@ -81,12 +82,14 @@ class MatchOverviewPerformanceDetailViewController: UIViewController {
     
     func hideMatchContentViews() {
         hasNotBeenScoutedHeight.constant = 22
+        standsScoutButton.isHidden = false
         timeMarkerTableView.isHidden = true
         matchStatsCollectionView.isHidden = true
     }
     
     func showMatchContentViews() {
         hasNotBeenScoutedHeight.constant = 0
+        standsScoutButton.isHidden = true
         timeMarkerTableView.isHidden = false
         matchStatsCollectionView.isHidden = false
     }
@@ -107,6 +110,11 @@ class MatchOverviewPerformanceDetailViewController: UIViewController {
         
         displayedTeamMatchPerformance = nil
         hasNotBeenScoutedHeight.constant = 0
+        standsScoutButton.isHidden = true
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        self.reloadData()
     }
 
     override func didReceiveMemoryWarning() {
@@ -121,7 +129,19 @@ class MatchOverviewPerformanceDetailViewController: UIViewController {
     @IBAction func scoutingIDSelected(_ sender: UISegmentedControl) {
         scoutID = availableScoutIDs[sender.selectedSegmentIndex]
     }
-
+    
+    @IBAction func standsScoutPressed(_ sender: UIButton) {
+        //Pull up the stands scouting page
+        let standsScoutVC = storyboard?.instantiateViewController(withIdentifier: "standsScouting") as! StandsScoutingViewController
+        
+        if let matchPerformance = displayedTeamMatchPerformance {
+            standsScoutVC.teamEventPerformance = matchPerformance.teamEventPerformance
+            standsScoutVC.matchPerformance = matchPerformance
+            
+            present(standsScoutVC, animated: true, completion: nil)
+        }
+    }
+    
     /*
     // MARK: - Navigation
 

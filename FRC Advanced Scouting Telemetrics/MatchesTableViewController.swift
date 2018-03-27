@@ -22,6 +22,8 @@ class MatchesTableViewController: UITableViewController {
             tableView.reloadData()
         }
     }
+    
+    var noMatchesView: UIView!
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -32,6 +34,30 @@ class MatchesTableViewController: UITableViewController {
         tableView.rowHeight = UITableViewAutomaticDimension
         tableView.estimatedRowHeight = 62
         tableView.allowsSelection = delegate?.hasSelectionEnabled() ?? false
+        
+        noMatchesView = UIView()
+        noMatchesView.isHidden = true
+        let labelView = UILabel()
+        noMatchesView.addSubview(labelView)
+        labelView.text = "There are no matches currently loaded. This could be because the match schedule was not published yet. Try having you or one of your scouts reload the event by clicking the gear on the main screen and then swiping left on an event."
+        labelView.numberOfLines = 0
+        labelView.textAlignment = NSTextAlignment.center
+        labelView.textColor = UIColor.lightGray
+        labelView.font = labelView.font.withSize(20)
+        
+        labelView.translatesAutoresizingMaskIntoConstraints = false
+        labelView.centerXAnchor.constraint(equalTo: noMatchesView.centerXAnchor).isActive = true
+        labelView.centerYAnchor.constraint(equalTo: noMatchesView.centerYAnchor).isActive = true
+        if #available(iOS 11.0, *) {
+            labelView.leadingAnchor.constraint(greaterThanOrEqualTo: noMatchesView.safeAreaLayoutGuide.leadingAnchor, constant: 10).isActive = true
+            labelView.trailingAnchor.constraint(lessThanOrEqualTo: noMatchesView.safeAreaLayoutGuide.trailingAnchor, constant: 10).isActive = true
+        } else {
+            // Fallback on earlier versions
+            labelView.leadingAnchor.constraint(greaterThanOrEqualTo: noMatchesView.leadingAnchor, constant: 10).isActive = true
+            labelView.trailingAnchor.constraint(lessThanOrEqualTo: noMatchesView.trailingAnchor, constant: 10).isActive = true
+        }
+        
+        tableView.backgroundView = noMatchesView
     }
 
     override func didReceiveMemoryWarning() {
@@ -47,6 +73,7 @@ class MatchesTableViewController: UITableViewController {
         super.viewDidLayoutSubviews()
         
         self.preferredContentSize = tableView.contentSize
+        noMatchesView.frame = CGRect(x: 0, y: 0, width: tableView.frame.width, height: tableView.frame.height)
     }
     
     @IBAction func donePressed(_ sender: UIBarButtonItem) {
@@ -56,12 +83,18 @@ class MatchesTableViewController: UITableViewController {
     // MARK: - Table view data source
 
     override func numberOfSections(in tableView: UITableView) -> Int {
-        // #warning Incomplete implementation, return the number of sections
-        return 1
+        if matches.count > 0 {
+            noMatchesView.isHidden = true
+            tableView.separatorStyle = .singleLine
+            return 1
+        } else {
+            noMatchesView.isHidden = false
+            tableView.separatorStyle = .none
+            return 0
+        }
     }
 
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        // #warning Incomplete implementation, return the number of rows
         return matches.count
     }
     

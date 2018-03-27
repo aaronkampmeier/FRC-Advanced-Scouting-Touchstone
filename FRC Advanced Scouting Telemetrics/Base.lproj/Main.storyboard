@@ -4026,8 +4026,8 @@
                                     <constraint firstItem="K26-Ig-Wao" firstAttribute="leading" secondItem="cOp-xZ-vXD" secondAttribute="trailing" constant="20" id="kqx-4y-Ne1"/>
                                 </constraints>
                             </view>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Has Not Been Scouted" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="hwn-xT-lcr">
-                                <rect key="frame" x="230" y="71" width="179.5" height="21"/>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Has Not Been Scouted - " textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="hwn-xT-lcr">
+                                <rect key="frame" x="172" y="71" width="196" height="21"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="21" id="9IW-9j-I1S"/>
                                 </constraints>
@@ -4035,13 +4035,22 @@
                                 <nil key="textColor"/>
                                 <nil key="highlightedColor"/>
                             </label>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="jcF-2c-WlH">
+                                <rect key="frame" x="368" y="67" width="92" height="30"/>
+                                <state key="normal" title="Stands Scout"/>
+                                <connections>
+                                    <action selector="standsScoutPressed:" destination="rhI-5F-brq" eventType="touchUpInside" id="qmY-hg-Xbn"/>
+                                </connections>
+                            </button>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
-                            <constraint firstItem="hwn-xT-lcr" firstAttribute="centerX" secondItem="fVF-Ym-xjy" secondAttribute="centerX" id="4sQ-50-dAZ"/>
+                            <constraint firstItem="hwn-xT-lcr" firstAttribute="centerX" secondItem="fVF-Ym-xjy" secondAttribute="centerX" constant="-50" id="4sQ-50-dAZ"/>
                             <constraint firstItem="ez9-Sg-dXL" firstAttribute="leading" secondItem="fVF-Ym-xjy" secondAttribute="leadingMargin" id="W1x-et-Jt6"/>
                             <constraint firstItem="yjY-Wo-LyX" firstAttribute="top" secondItem="hwn-xT-lcr" secondAttribute="bottom" constant="8" id="WNc-NI-0pd"/>
+                            <constraint firstItem="jcF-2c-WlH" firstAttribute="centerY" secondItem="hwn-xT-lcr" secondAttribute="centerY" id="ZRV-d3-GKg"/>
                             <constraint firstItem="ez9-Sg-dXL" firstAttribute="top" secondItem="fVF-Ym-xjy" secondAttribute="topMargin" id="cQY-QG-RM6"/>
+                            <constraint firstItem="jcF-2c-WlH" firstAttribute="leading" secondItem="hwn-xT-lcr" secondAttribute="trailing" id="dEL-2P-oaa"/>
                             <constraint firstAttribute="bottomMargin" secondItem="yjY-Wo-LyX" secondAttribute="bottom" id="jJZ-CW-2Um"/>
                             <constraint firstAttribute="trailingMargin" secondItem="yjY-Wo-LyX" secondAttribute="trailing" id="mS8-xw-jPF"/>
                             <constraint firstAttribute="trailingMargin" secondItem="ez9-Sg-dXL" secondAttribute="trailing" id="pbY-a4-PHx"/>
@@ -4056,6 +4065,7 @@
                         <outlet property="scoutIDSegmentedSelector" destination="K26-Ig-Wao" id="VBb-TP-de7"/>
                         <outlet property="scoutIDView" destination="ez9-Sg-dXL" id="MRP-zn-RuE"/>
                         <outlet property="scoutIDViewHeight" destination="ODi-Y7-j8Q" id="w3u-Kp-1Gm"/>
+                        <outlet property="standsScoutButton" destination="jcF-2c-WlH" id="FFc-Ve-jCc"/>
                         <outlet property="timeMarkerTableView" destination="Cja-XQ-zj5" id="IGH-kP-rQf"/>
                     </connections>
                 </viewController>
