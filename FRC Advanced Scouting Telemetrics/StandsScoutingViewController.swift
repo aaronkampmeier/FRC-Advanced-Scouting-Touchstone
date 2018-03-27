@@ -212,8 +212,8 @@ class StandsScoutingViewController: UIViewController {
 		if 150 - stopwatch.elapsedTime > 15 {
 			let alert = UIAlertController(title: "Hold On, You're Not Finished", message: "It doesn't look like you've completed a full 2 minute 30 second match. Are you sure you want to close with this partial data?", preferredStyle: .alert)
 			alert.addAction(UIAlertAction(title: "No, don't close", style: .cancel, handler: nil))
-			alert.addAction(UIAlertAction(title: "Yes, close and save final data", style: .default, handler: {_ in self.close(andSave: true)}))
-			alert.addAction(UIAlertAction(title: "Yes, close but don't save final data", style: .destructive, handler: {_ in self.close(andSave: false)}))
+			alert.addAction(UIAlertAction(title: "Yes, close and save data", style: .default, handler: {_ in self.close(andSave: true)}))
+			alert.addAction(UIAlertAction(title: "Yes, close but don't save data", style: .destructive, handler: {_ in self.close(andSave: false)}))
 			present(alert, animated: true, completion: nil)
 		} else {
 			close(andSave: true)
