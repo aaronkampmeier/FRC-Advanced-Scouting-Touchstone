@@ -73,6 +73,11 @@ class RealmController {
             CLSNSLogv("Error opening realms: \(error)", getVaList([]))
             Crashlytics.sharedInstance().recordError(error)
             Answers.logCustomEvent(withName: "Opened Realms", customAttributes: ["Success":false])
+            
+            //Show an alert
+            let alert = UIAlertController(title: "Error Opening Databases", message: "There was an error opening the database files, this could be because your device is too low on storage space: \(error)", preferredStyle: .alert)
+            alert.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
+            (UIApplication.shared.delegate as! AppDelegate).presentViewControllerOnTop(alert, animated: true)
         }
         
         do {

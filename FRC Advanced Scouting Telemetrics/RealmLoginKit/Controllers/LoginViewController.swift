@@ -267,9 +267,6 @@ public class LoginViewController: UIViewController {
     /* A model object to manage receiving keyboard resize events from the system. */
     private let keyboardManager = LoginKeyboardManager()
 
-    /* A coordinator object for managing saving and retreiving previous login credential sets */
-    private let savedCredentialsCoordinator = LoginPersistedCredentialsCoordinator()
-
     /* State Convienience Methods */
     private var isTranslucent: Bool  {
         return style == .lightTranslucent || style == .darkTranslucent
@@ -343,16 +340,8 @@ public class LoginViewController: UIViewController {
             self.loginView.animateContentInsetTransition()
         }
 
-        loadLoginCredentials()
         prepareForSubmission()
         loginView.updateCloseButtonVisibility()
-    }
-
-    private func loadLoginCredentials() {
-        guard let credentials = self.savedCredentialsCoordinator.allCredentialsObjects?.firstObject() else { return }
-        self.serverURL = credentials.serverURL
-        self.username = credentials.username
-        self.password = credentials.password
     }
 
     //MARK: - Form Submission -

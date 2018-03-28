@@ -55,8 +55,6 @@
 		93483E8220291AC400E9AC82 /* LoginKeyboardManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93483E6A20291AC400E9AC82 /* LoginKeyboardManager.swift */; };
 		93483E8320291AC400E9AC82 /* LoginViewControllerTransitioning.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93483E6B20291AC400E9AC82 /* LoginViewControllerTransitioning.swift */; };
 		93483E8420291AC400E9AC82 /* AWSCognitoAuthenticationProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93483E6D20291AC400E9AC82 /* AWSCognitoAuthenticationProvider.swift */; };
-		93483E8520291AC400E9AC82 /* LoginPersistedCredentialsCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93483E6F20291AC400E9AC82 /* LoginPersistedCredentialsCoordinator.swift */; };
-		93483E8620291AC400E9AC82 /* LoginCredentials.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93483E7020291AC400E9AC82 /* LoginCredentials.swift */; };
 		93483E8720291AC400E9AC82 /* UIImage+Icons.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93483E7220291AC400E9AC82 /* UIImage+Icons.swift */; };
 		93483E8820291AC400E9AC82 /* FileManager+ApplicationFilePaths.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93483E7320291AC400E9AC82 /* FileManager+ApplicationFilePaths.swift */; };
 		93483E8920291AC400E9AC82 /* Realm+RLMSupport.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93483E7420291AC400E9AC82 /* Realm+RLMSupport.swift */; };
@@ -247,8 +245,6 @@
 		93483E6A20291AC400E9AC82 /* LoginKeyboardManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LoginKeyboardManager.swift; sourceTree = "<group>"; };
 		93483E6B20291AC400E9AC82 /* LoginViewControllerTransitioning.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LoginViewControllerTransitioning.swift; sourceTree = "<group>"; };
 		93483E6D20291AC400E9AC82 /* AWSCognitoAuthenticationProvider.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AWSCognitoAuthenticationProvider.swift; sourceTree = "<group>"; };
-		93483E6F20291AC400E9AC82 /* LoginPersistedCredentialsCoordinator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LoginPersistedCredentialsCoordinator.swift; sourceTree = "<group>"; };
-		93483E7020291AC400E9AC82 /* LoginCredentials.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LoginCredentials.swift; sourceTree = "<group>"; };
 		93483E7220291AC400E9AC82 /* UIImage+Icons.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIImage+Icons.swift"; sourceTree = "<group>"; };
 		93483E7320291AC400E9AC82 /* FileManager+ApplicationFilePaths.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "FileManager+ApplicationFilePaths.swift"; sourceTree = "<group>"; };
 		93483E7420291AC400E9AC82 /* Realm+RLMSupport.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Realm+RLMSupport.swift"; sourceTree = "<group>"; };
@@ -543,7 +539,6 @@
 				93483E6620291AC400E9AC82 /* InputValidation */,
 				93483E6820291AC400E9AC82 /* UIStateCoordination */,
 				93483E6C20291AC400E9AC82 /* AuthenticationProviders */,
-				93483E6E20291AC400E9AC82 /* CredentialsPersistence */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -572,15 +567,6 @@
 				93483E6D20291AC400E9AC82 /* AWSCognitoAuthenticationProvider.swift */,
 			);
 			path = AuthenticationProviders;
-			sourceTree = "<group>";
-		};
-		93483E6E20291AC400E9AC82 /* CredentialsPersistence */ = {
-			isa = PBXGroup;
-			children = (
-				93483E6F20291AC400E9AC82 /* LoginPersistedCredentialsCoordinator.swift */,
-				93483E7020291AC400E9AC82 /* LoginCredentials.swift */,
-			);
-			path = CredentialsPersistence;
 			sourceTree = "<group>";
 		};
 		93483E7120291AC400E9AC82 /* Extensions */ = {
@@ -1059,7 +1045,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				93483E8620291AC400E9AC82 /* LoginCredentials.swift in Sources */,
 				93483E8820291AC400E9AC82 /* FileManager+ApplicationFilePaths.swift in Sources */,
 				9365947B1E441981008FF324 /* PitTextFieldCollectionViewCell.swift in Sources */,
 				93483E9120291AC400E9AC82 /* LoginTableViewCell.swift in Sources */,
@@ -1146,7 +1131,6 @@
 				93483E8C20291AC400E9AC82 /* LoginFooterView.swift in Sources */,
 				93AE99801E3407A00000FB7C /* SSDataManager.swift in Sources */,
 				1FE2C12D1C81875A00CECBF1 /* ImageScalingFunctions.swift in Sources */,
-				93483E8520291AC400E9AC82 /* LoginPersistedCredentialsCoordinator.swift in Sources */,
 				93483E8E20291AC400E9AC82 /* LoginView.swift in Sources */,
 				935A2B081E6E5560008FEF9D /* MatchOverviewTimeMarkerTableViewCell.swift in Sources */,
 			);
