@@ -8,6 +8,7 @@
 
 import UIKit
 import RealmSwift
+import Crashlytics
 
 ///This is used right after login to load the realm
 class RealmLoaderViewController: UIViewController {
@@ -71,6 +72,8 @@ class RealmLoaderViewController: UIViewController {
     
     @IBAction func cancelPressed(_ sender: UIButton) {
         cancelSyncing()
+        
+        Answers.logCustomEvent(withName: "Canceled Loading Realm on Log In", customAttributes: nil)
     }
     
     /*
