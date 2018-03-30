@@ -349,7 +349,12 @@ class TeamListTableViewController: UITableViewController, TeamListDetailDataSour
             cell.statLabel.text = ""
         }
         
-        cell.rankLabel.text = "\(currentEventTeams.index(where: {$0 == team})! as Int + 1)"
+        if let index = currentEventTeams.index(where: {$0 == team}) {
+            cell.rankLabel.text = "\(index as Int + 1)"
+        } else {
+            cell.rankLabel.text = "?"
+            Crashlytics.sharedInstance().recordCustomExceptionName("Team Event Rank Failed", reason: "Team is not in currentEventTeams. Team: \(team.key), Event: \(selectedEvent?.key)", frameArray: [])
+        }
         
         //Show a red X over the rank label if they have been picked
         cell.accessoryView = nil
