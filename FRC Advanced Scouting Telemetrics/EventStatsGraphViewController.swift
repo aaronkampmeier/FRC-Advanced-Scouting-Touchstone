@@ -8,6 +8,7 @@
 
 import UIKit
 import Charts
+import Crashlytics
 
 class EventStatsGraphViewController: UIViewController {
     var barChart: BarChartView!
@@ -75,7 +76,13 @@ class EventStatsGraphViewController: UIViewController {
         
         let ranker = RealmController.realmController.getTeamRanker(forEvent: event)!
         self.teamEventPerformances = eventPerformances.sorted {first, second in
-            ranker.rankedTeams.index(of: first.team!.scouted!)! < ranker.rankedTeams.index(of: second.team!.scouted!)!
+            if let firstScouted = first.team?.scouted {
+                if let secondScouted = second.team?.scouted {
+                    return ranker.rankedTeams.index(of: firstScouted) ?? 0 < ranker.rankedTeams.index(of: secondScouted) ?? 0
+                }
+            }
+            Crashlytics.sharedInstance().recordCustomExceptionName("Event Stats Sorting Failed", reason: "Event: \(event.key)", frameArray: [])
+            return false
         }
     }
     
@@ -183,18 +190,7 @@ class EventStatsGraphViewController: UIViewController {
         } else {
             barChart.chartDescription?.text = "No Event"
         }
-    }
-    
-    /*
-    // MARK: - Navigation
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        // Get the new view controller using segue.destinationViewController.
-        // Pass the selected object to the new view controller.
-    }
-    */
-
+    } 
 }
 
 extension EventStatsGraphViewController: IAxisValueFormatter {
@@ -202,12 +198,6 @@ extension EventStatsGraphViewController: IAxisValueFormatter {
         //X-axis
         let groupNumber: Double
         groupNumber = value
-//        if statsToGraph.count > 1 {
-//            groupNumber = value //- 0.5
-//        } else {
-//            //If there's only one stat to graph then grouping is not applied and the entry indices are really 1,2,3...
-//            groupNumber = value
-//        }
         
         //Check it is a whole number
         if groupNumber - Double(Int(groupNumber)) == 0 {

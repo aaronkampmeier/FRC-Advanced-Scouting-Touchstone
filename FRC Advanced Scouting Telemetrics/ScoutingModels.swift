@@ -10,16 +10,6 @@ import Foundation
 import RealmSwift
 import Crashlytics
 
-//@objcMembers class GeneralRanker: Object {
-//    dynamic var key = "General Ranker" //Is a singleton
-//
-//    dynamic let rankedTeams = List<ScoutedTeam>()
-//
-//    override static func primaryKey() -> String {
-//        return "key"
-//    }
-//}
-
 @objcMembers class EventRanker: Object {
     dynamic var key = "" //One for each event.
     
