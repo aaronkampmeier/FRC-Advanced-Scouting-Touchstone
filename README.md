@@ -45,7 +45,7 @@ FAST puts making actionable decisions for team picking first. Everyone on your t
 - Scouts on the floor will pit scout all details of the teams attending the event
 - All data is instantly synced and visualizable on all team members’ devices
 
-##License
+## License
 GNU General Public License v3.0
 See License.txt
 
