@@ -356,7 +356,7 @@ class TeamListTableViewController: UITableViewController, TeamListDetailDataSour
             Crashlytics.sharedInstance().recordCustomExceptionName("Team Event Rank Failed", reason: "Team is not in currentEventTeams. Team: \(team.key), Event: \(selectedEvent?.key)", frameArray: [])
         }
         
-        //Show a red X over the rank label if they have been picked
+        //Show an X if they have been picked
         cell.accessoryView = nil
         if let eventRanker = self.selectedEventRanker {
             if !eventRanker.isInPickList(team: team) {
