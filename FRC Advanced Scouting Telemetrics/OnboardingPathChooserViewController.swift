@@ -12,6 +12,10 @@ import Crashlytics
 
 let isSpectatorModeKey = "FAST-IsInSpectatorMode"
 
+var isFASTInSpectatorMode: Bool {
+    return UserDefaults.standard.value(forKey: isSpectatorModeKey) as? Bool ?? false
+}
+
 class OnboardingPathChooserViewController: UIViewController {
     @IBOutlet weak var spectatorView: UIView!
     @IBOutlet weak var signUpView: UIView!
@@ -76,12 +80,7 @@ class OnboardingPathChooserViewController: UIViewController {
         // Dispose of any resources that can be recreated.
     }
     
-    func setOnboardingCompletion() {
-        UserDefaults.standard.set(true, forKey: onboardingCompletedStatusKey)
-    }
-    
     @objc func spectatorPressed() {
-        setOnboardingCompletion()
         
         //Switch to the team list
         let teamListVC = storyboard?.instantiateViewController(withIdentifier: "teamListMasterVC")
@@ -95,7 +94,6 @@ class OnboardingPathChooserViewController: UIViewController {
     }
     
     @objc func logInPressed() {
-        setOnboardingCompletion()
         
         (UIApplication.shared.delegate as! AppDelegate).displayLogin()
         
@@ -103,7 +101,6 @@ class OnboardingPathChooserViewController: UIViewController {
     }
     
     @objc func signUpPressed() {
-        setOnboardingCompletion()
         
         (UIApplication.shared.delegate as! AppDelegate).displayLogin(isRegistering: true)
         

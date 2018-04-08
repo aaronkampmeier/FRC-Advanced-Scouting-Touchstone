@@ -35,7 +35,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             //Show Onboarding
             //It is the initial vc
             
-            if UserDefaults.standard.value(forKey: isSpectatorModeKey) as? Bool ?? false {
+            if isFASTInSpectatorMode {
                 RealmController.realmController.openLocalRealm()
                 let teamListVC = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "teamListMasterVC")
                 

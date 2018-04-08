@@ -20,11 +20,13 @@ class OnboardingPageViewController: UIPageViewController, UIPageViewControllerDa
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        
 
         // Do any additional setup after loading the view.
         onboardingVCs = [viewController(forOnboardingIndex: 0)!, viewController(forOnboardingIndex: 1)!, viewController(forOnboardingIndex: 2)!, viewController(forOnboardingIndex: 3)!, viewController(forOnboardingIndex: 4)!]
         
-        setViewControllers([onboardingVCs.first!], direction: .forward, animated: true, completion: nil)
+        setPageIndex(index: 0, animated: false)
         
         self.dataSource = self
         
@@ -49,6 +51,13 @@ class OnboardingPageViewController: UIPageViewController, UIPageViewControllerDa
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
+    }
+    
+    func setPageIndex(index: Int, animated: Bool) {
+        guard index >= 0 && index < onboardingVCs.count else {
+            return
+        }
+        setViewControllers([onboardingVCs[index]], direction: .forward, animated: animated, completion: nil)
     }
     
     func viewController(forOnboardingIndex index: Int) -> UIViewController? {

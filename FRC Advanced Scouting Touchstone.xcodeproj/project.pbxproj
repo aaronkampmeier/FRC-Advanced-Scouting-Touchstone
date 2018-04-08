@@ -88,6 +88,9 @@
 		936967F11E4FB1F7001DB15D /* TeamDetailCollectionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 936967F01E4FB1F7001DB15D /* TeamDetailCollectionViewController.swift */; };
 		936967F71E4FD057001DB15D /* TeamDetailTableCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 936967F61E4FD057001DB15D /* TeamDetailTableCollectionViewCell.swift */; };
 		9369681A1E502AC8001DB15D /* TeamDetailKeyValueSpreadCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 936968191E502AC8001DB15D /* TeamDetailKeyValueSpreadCollectionViewCell.swift */; };
+		93780A2A20797487000B4565 /* WelcomePageViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93780A2920797487000B4565 /* WelcomePageViewController.swift */; };
+		93780A2E20799E7D000B4565 /* LoginPromotionalViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93780A2D20799E7D000B4565 /* LoginPromotionalViewController.swift */; };
+		93780A3020799F9C000B4565 /* LoginPromotionalText.rtf in Resources */ = {isa = PBXBuildFile; fileRef = 93780A2F20799F9C000B4565 /* LoginPromotionalText.rtf */; };
 		937BFD022064D1B4006FB3E0 /* OnboardingPageViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 937BFD012064D1B4006FB3E0 /* OnboardingPageViewController.swift */; };
 		937BFD0420657E9E006FB3E0 /* OnboardingPathChooserViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 937BFD0320657E9E006FB3E0 /* OnboardingPathChooserViewController.swift */; };
 		937C682A204C852600FAEDE8 /* EventStatsGraphViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 937C6829204C852600FAEDE8 /* EventStatsGraphViewController.swift */; };
@@ -282,6 +285,9 @@
 		936967F01E4FB1F7001DB15D /* TeamDetailCollectionViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TeamDetailCollectionViewController.swift; sourceTree = "<group>"; };
 		936967F61E4FD057001DB15D /* TeamDetailTableCollectionViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TeamDetailTableCollectionViewCell.swift; sourceTree = "<group>"; };
 		936968191E502AC8001DB15D /* TeamDetailKeyValueSpreadCollectionViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TeamDetailKeyValueSpreadCollectionViewCell.swift; sourceTree = "<group>"; };
+		93780A2920797487000B4565 /* WelcomePageViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WelcomePageViewController.swift; sourceTree = "<group>"; };
+		93780A2D20799E7D000B4565 /* LoginPromotionalViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginPromotionalViewController.swift; sourceTree = "<group>"; };
+		93780A2F20799F9C000B4565 /* LoginPromotionalText.rtf */ = {isa = PBXFileReference; lastKnownFileType = text.rtf; path = LoginPromotionalText.rtf; sourceTree = "<group>"; };
 		937BFD012064D1B4006FB3E0 /* OnboardingPageViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingPageViewController.swift; sourceTree = "<group>"; };
 		937BFD0320657E9E006FB3E0 /* OnboardingPathChooserViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingPathChooserViewController.swift; sourceTree = "<group>"; };
 		937C6829204C852600FAEDE8 /* EventStatsGraphViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventStatsGraphViewController.swift; sourceTree = "<group>"; };
@@ -670,7 +676,10 @@
 			isa = PBXGroup;
 			children = (
 				937BFD012064D1B4006FB3E0 /* OnboardingPageViewController.swift */,
+				93780A2920797487000B4565 /* WelcomePageViewController.swift */,
 				937BFD0320657E9E006FB3E0 /* OnboardingPathChooserViewController.swift */,
+				93780A2D20799E7D000B4565 /* LoginPromotionalViewController.swift */,
+				93780A2F20799F9C000B4565 /* LoginPromotionalText.rtf */,
 			);
 			name = Onboarding;
 			sourceTree = "<group>";
@@ -915,6 +924,7 @@
 				93A38B3A2055EBA400B8B692 /* NoEventSelected.xib in Resources */,
 				93483E98202937EE00E9AC82 /* awsconfiguration.json in Resources */,
 				933D214B1E609A04008C8276 /* Pods-acknowledgments.plist in Resources */,
+				93780A3020799F9C000B4565 /* LoginPromotionalText.rtf in Resources */,
 				1F78E7881C3B469300221927 /* Main.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -1130,6 +1140,7 @@
 				1F4534101C6FF916004EDDB9 /* StandsScoutingViewController.swift in Sources */,
 				936967F71E4FD057001DB15D /* TeamDetailTableCollectionViewCell.swift in Sources */,
 				1F665D721CB1DA91003CAC1D /* DataSyncingViewController.swift in Sources */,
+				93780A2A20797487000B4565 /* WelcomePageViewController.swift in Sources */,
 				93483E8A20291AC400E9AC82 /* String+URLComponents.swift in Sources */,
 				1FDC1BCE1CD69EBB00ABE327 /* TeamListSplitViewController.swift in Sources */,
 				93CEA6322041FB5300C5B357 /* ConfirmForgotPasswordViewController.swift in Sources */,
@@ -1138,6 +1149,7 @@
 				1F21DF121C66942200C55D0E /* SortVC.swift in Sources */,
 				9391EA6C1E4852D2008E17A1 /* PitStringFieldCollectionViewCell.swift in Sources */,
 				93483E8320291AC400E9AC82 /* LoginViewControllerTransitioning.swift in Sources */,
+				93780A2E20799E7D000B4565 /* LoginPromotionalViewController.swift in Sources */,
 				93483E8720291AC400E9AC82 /* UIImage+Icons.swift in Sources */,
 				9317C03B201ECFEF00F1E907 /* SSGameScoutingViewController.swift in Sources */,
 				1F4FEDAC1C4B686000F4016D /* AdminConsoleController.swift in Sources */,

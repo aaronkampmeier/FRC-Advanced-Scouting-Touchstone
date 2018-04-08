@@ -72,12 +72,26 @@ class AdminConsoleController: UIViewController, UITableViewDataSource, UITableVi
             case 1:
                 return tableView.dequeueReusableCell(withIdentifier: "acknowledgments")!
             case 2:
-                return tableView.dequeueReusableCell(withIdentifier: "syncStatus")!
+                let cell = tableView.dequeueReusableCell(withIdentifier: "syncStatus")!
+                
+                if isFASTInSpectatorMode {
+                    cell.isUserInteractionEnabled = false
+                    cell.textLabel?.isEnabled = false
+                } else {
+                    cell.isUserInteractionEnabled = true
+                    cell.textLabel?.isEnabled = true
+                }
+                
+                return cell
             case 3:
                 let cell = tableView.dequeueReusableCell(withIdentifier: "logout")!
                 
-                let teamNumber: String = UserDefaults.standard.value(forKey: "LoggedInTeam") as? String ?? "?"
-                (cell.viewWithTag(1) as! UILabel).text = "Log Out of Team \(teamNumber)"
+                if isFASTInSpectatorMode {
+                    (cell.viewWithTag(1) as! UILabel).text = "Exit Spectator Mode"
+                } else {
+                    let teamNumber: String = UserDefaults.standard.value(forKey: "LoggedInTeam") as? String ?? "?"
+                    (cell.viewWithTag(1) as! UILabel).text = "Log Out of Team \(teamNumber)"
+                }
                 
                 return cell
             default:
@@ -103,11 +117,15 @@ class AdminConsoleController: UIViewController, UITableViewDataSource, UITableVi
             //Events
             if indexPath.row == tableView.numberOfRows(inSection: 0) - 1 {
                 //Did select add event
-                //First present warning
-                let warning = UIAlertController(title: "Do Not Repeat", message: "Events need only be added to a team's FAST account once. This should be done by your scouting lead. Please make sure someone else has not already added the same event as this may cause data inconsistencies in rare cases.", preferredStyle: .alert)
-                warning.addAction(UIAlertAction(title: "I Understand", style: .default, handler: {_ in self.performSegue(withIdentifier: "addEvent", sender: tableView)}))
-                warning.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: {_ in self.viewWillAppear(false) /*This is just to clear the table view selection*/}))
-                self.present(warning, animated: true, completion: nil)
+                if isFASTInSpectatorMode {
+                    self.performSegue(withIdentifier: "addEvent", sender: tableView)
+                } else {
+                    //First present warning
+                    let warning = UIAlertController(title: "Do Not Repeat", message: "Events need only be added to a team's FAST account once. This should be done by your scouting lead. Please make sure someone else has not already added the same event as this may cause data inconsistencies in rare cases.", preferredStyle: .alert)
+                    warning.addAction(UIAlertAction(title: "I Understand", style: .default, handler: {_ in self.performSegue(withIdentifier: "addEvent", sender: tableView)}))
+                    warning.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: {_ in self.viewWillAppear(false) /*This is just to clear the table view selection*/}))
+                    self.present(warning, animated: true, completion: nil)
+                }
             } else {
                 //Did select event info
                 // TODO: Display event info
@@ -141,6 +159,7 @@ class AdminConsoleController: UIViewController, UITableViewDataSource, UITableVi
             } else if indexPath.row == 3 {
                 //Logout
                 RealmController.realmController.closeSyncedRealms()
+                UserDefaults.standard.setValue(false, forKey: isSpectatorModeKey)
             }
         default:
             break

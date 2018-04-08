@@ -101,7 +101,9 @@ class TeamDetailCollectionViewController: UICollectionViewController, UICollecti
     // MARK: UICollectionViewDataSource
 
     override func numberOfSections(in collectionView: UICollectionView) -> Int {
-        // #warning Incomplete implementation, return the number of sections
+//        if isFASTInSpectatorMode {
+//            return 1
+//        }
         if let _ = selectedTeamEventPerformance {
             return 2
         } else if let _ = selectedTeam {
@@ -112,9 +114,11 @@ class TeamDetailCollectionViewController: UICollectionViewController, UICollecti
     }
 
     override func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        // #warning Incomplete implementation, return the number of items
         switch section {
         case 0:
+            if isFASTInSpectatorMode {
+                return 0
+            }
             return detailValues.count
         case 1:
             return eventStats.count
@@ -204,9 +208,9 @@ class TeamDetailCollectionViewController: UICollectionViewController, UICollecti
             return headerView
         case (_, UICollectionElementKindSectionFooter):
             let footerView = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: "footer", for: indexPath)
-            (footerView.viewWithTag(1) as! UIButton).setTitle(nil, for: .normal)
-            (footerView.viewWithTag(1) as! UIButton).removeTarget(self, action: #selector(viewShotChartPressed(_:)), for: .touchUpInside)
-
+            (footerView.viewWithTag(1) as! UIButton).setTitle("Show Many More Stats by Signing In", for: .normal)
+            (footerView.viewWithTag(1) as! UIButton).addTarget(self, action: #selector(showFASTPromotional), for: .touchUpInside)
+            
             return footerView
         default:
             return UICollectionReusableView()
@@ -217,11 +221,29 @@ class TeamDetailCollectionViewController: UICollectionViewController, UICollecti
         return CGSize(width: 112, height: 65)
     }
     
-    @objc func viewShotChartPressed(_ sender: UIButton) {
-        let shotChartNav = storyboard?.instantiateViewController(withIdentifier: "shotChartNav") as! UINavigationController
-        (shotChartNav.topViewController as! ShotChartViewController).dataSource = self
-        
-        present(shotChartNav, animated: true, completion: nil)
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, referenceSizeForFooterInSection section: Int) -> CGSize {
+        if isFASTInSpectatorMode && section == 1 {
+            return CGSize(width: 100, height: 50)
+        } else {
+            return CGSize.zero
+        }
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, referenceSizeForHeaderInSection section: Int) -> CGSize {
+        if isFASTInSpectatorMode && section == 0 {
+            return CGSize.zero
+        } else if section == 0 {
+            return CGSize(width: 100, height: 50)
+        } else if section == 1 {
+            return CGSize(width: 100, height: 50)
+        } else {
+            return CGSize.zero
+        }
+    }
+    
+    @objc func showFASTPromotional() {
+        let loginPromotional = storyboard!.instantiateViewController(withIdentifier: "loginPromotional")
+        self.present(loginPromotional, animated: true, completion: nil)
     }
 
     // MARK: UICollectionViewDelegate
