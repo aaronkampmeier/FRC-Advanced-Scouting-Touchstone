@@ -121,6 +121,20 @@ class TeamListDetailViewController: UIViewController {
 		standsScoutingButton.isEnabled = false
         pitScoutingButton.isEnabled = false
         matchesButton.isEnabled = false
+        
+        if RealmController.isInSpectatorMode {
+            standsScoutingButton.tintColor = UIColor.purple
+            pitScoutingButton.tintColor = UIColor.purple
+            notesButton.tintColor = UIColor.purple
+            
+            let selector = #selector(showLoginPromotional)
+            
+            notesButton.addGestureRecognizer(UITapGestureRecognizer(target: self, action: selector))
+            standsScoutingButton.target = self
+            standsScoutingButton.action = selector
+            pitScoutingButton.target = self
+            pitScoutingButton.action = selector
+        }
 		
 		//Set the images(buttons) content sizing property
 		frontImageButton.imageView?.contentMode = .scaleAspectFill
@@ -228,8 +242,9 @@ class TeamListDetailViewController: UIViewController {
             }
             
             pitScoutingButton.isEnabled = true
-            
-            notesButton.isEnabled = true
+            if !RealmController.isInSpectatorMode {
+                notesButton.isEnabled = true
+            }
         } else {
             navBar.title = "Select Team"
             teamLabel.text = "Select Team"
@@ -283,6 +298,12 @@ class TeamListDetailViewController: UIViewController {
             selectedEvent = dataSource?.inEvent()
             selectedTeam = dataSource?.team()
         }
+    }
+    
+    @objc func showLoginPromotional() {
+        let loginPromotional = storyboard!.instantiateViewController(withIdentifier: "loginPromotional")
+        self.present(loginPromotional, animated: true, completion: nil)
+        Answers.logContentView(withName: "Login Promotional", contentType: nil, contentId: nil, customAttributes: ["Source":"Team Detail Notes/Scouting Buttons"])
     }
     
     @IBAction func notesButtonPressed(_ sender: UIButton) {
@@ -353,30 +374,39 @@ extension TeamListDetailViewController: MatchesTableViewControllerDelegate {
     
     func matchesTableViewController(_ matchesTableViewController: MatchesTableViewController, selectedMatchCell: UITableViewCell?, withAssociatedMatch associatedMatch: Match?) {
         selectedMatch = associatedMatch
-        //Present an action sheet to see if the user wants to view it or scout it
-        let actionSheet = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
         
-        actionSheet.addAction(UIAlertAction(title: "View Match", style: .default) {action in
+        let showMatchDetail = {() -> Void in
             let matchDetailNav = self.storyboard?.instantiateViewController(withIdentifier: "matchDetailNav") as! UINavigationController
             let matchDetail = matchDetailNav.topViewController as! MatchOverviewDetailViewController
             
             matchDetail.dataSource = self
             
             matchesTableViewController.present(matchDetailNav, animated: true, completion: nil)
-        })
-        actionSheet.addAction(UIAlertAction(title: "Stands Scout", style: .default) {action in
-            let standsScoutingVC = self.storyboard?.instantiateViewController(withIdentifier: "standsScouting") as! StandsScoutingViewController
-            standsScoutingVC.teamEventPerformance = self.teamEventPerformance
-            standsScoutingVC.matchPerformance = (associatedMatch?.teamPerformances)?.first {$0.teamEventPerformance == self.teamEventPerformance}
+        }
+        
+        if RealmController.isInSpectatorMode {
+            showMatchDetail()
+        } else {
+            //Present an action sheet to see if the user wants to view it or scout it
+            let actionSheet = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
             
-            matchesTableViewController.present(standsScoutingVC, animated: true, completion: nil)
-        })
-        actionSheet.addAction(UIAlertAction(title: "Cancel", style: .cancel) {action in
-            matchesTableViewController.tableView.deselectRow(at: matchesTableViewController.tableView.indexPathForSelectedRow ?? IndexPath(), animated: true)
-        })
-        
-        
-        matchesTableViewController.present(actionSheet, animated: true, completion: nil)
+            actionSheet.addAction(UIAlertAction(title: "View Match", style: .default) {action in
+                showMatchDetail()
+            })
+            actionSheet.addAction(UIAlertAction(title: "Stands Scout", style: .default) {action in
+                let standsScoutingVC = self.storyboard?.instantiateViewController(withIdentifier: "standsScouting") as! StandsScoutingViewController
+                standsScoutingVC.teamEventPerformance = self.teamEventPerformance
+                standsScoutingVC.matchPerformance = (associatedMatch?.teamPerformances)?.first {$0.teamEventPerformance == self.teamEventPerformance}
+                
+                matchesTableViewController.present(standsScoutingVC, animated: true, completion: nil)
+            })
+            actionSheet.addAction(UIAlertAction(title: "Cancel", style: .cancel) {action in
+                matchesTableViewController.tableView.deselectRow(at: matchesTableViewController.tableView.indexPathForSelectedRow ?? IndexPath(), animated: true)
+            })
+            
+            
+            matchesTableViewController.present(actionSheet, animated: true, completion: nil)
+        }
     }
 }
 
@@ -460,11 +490,9 @@ extension TeamListDetailViewController: UITableViewDelegate, UITableViewDataSour
                     //Status
                     let cell = tableView.dequeueReusableCell(withIdentifier: "statusCell")
                     
-//                    let attrStr = try? NSMutableAttributedString(data: statusString.data(using: String.Encoding.unicode)!, options: [NSAttributedString.DocumentReadingOptionKey.documentType: NSAttributedString.DocumentType.html], documentAttributes: nil)
-//
-//                    attrStr?.addAttribute(NSAttributedStringKey.font, value: UIFont.systemFont(ofSize: 17), range: NSRange.init(location: 0, length: attrStr!.length))
-//
-                    (cell?.viewWithTag(1) as! UILabel).setHTMLFromString(htmlText: statusString)
+                    let statusLabel = cell?.viewWithTag(1) as! UILabel
+                    statusLabel.setHTMLFromString(htmlText: statusString)
+                    statusLabel.textAlignment = .center
                     
                     return cell!
                 }
@@ -486,6 +514,7 @@ extension TeamListDetailViewController: UITableViewDelegate, UITableViewDataSour
         if let url = URL(string: selectedTeam?.website ?? "") {
             let safariVC = SFSafariViewController(url: url)
             self.present(safariVC, animated: true, completion: nil)
+            Answers.logContentView(withName: "Team Website View", contentType: "Website", contentId: "\(selectedTeam?.key ?? "unk")", customAttributes: nil)
         }
     }
 }

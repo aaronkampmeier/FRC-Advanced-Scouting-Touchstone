@@ -59,14 +59,14 @@ class RealmLoaderViewController: UIViewController {
     func didCompleteSync() {
         //Move on to the Team List
         
-        let teamList = storyboard?.instantiateInitialViewController()
+        let teamList = storyboard?.instantiateViewController(withIdentifier: "teamListMasterVC")
         self.view.window?.rootViewController = teamList
     }
     
     func cancelSyncing() {
         downloadProgressToken?.invalidate()
         
-        RealmController.realmController.closeSyncedRealms()
+        RealmController.realmController.closeRealms()
     }
     
     @IBAction func cancelPressed(_ sender: UIButton) {

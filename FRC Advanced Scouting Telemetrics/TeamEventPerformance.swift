@@ -494,7 +494,7 @@ extension TeamEventPerformance: HasStats {
         
         static var allValues: [StatName] {
             get {
-                if RealmController.isLoggedIn {
+                if !RealmController.isInSpectatorMode {
                     return [.OPR, .DPR, .CCWM, .Rank, .ScoutedMatches, .NumberOfMatches, .TotalMatchPoints, .TotalRankingPoints, .RankingScore, .TotalWins, .TotalLosses, .TotalTies, .MajorityClimbStatus, .SuccessfulClimbCount, .ClimbSuccessRate, .MajorityClimbAssistStatus, .ClimbAssistAttempts,
                             
                             .AutoLineCrossCount, .TotalGrabbedCubes, .AverageGrabbedCubes, .PercentCubesFromPile, .PercentCubesFromLine, .PercentCubesFromPortal,

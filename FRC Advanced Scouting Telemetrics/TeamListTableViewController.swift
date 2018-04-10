@@ -188,6 +188,14 @@ class TeamListTableViewController: UITableViewController, TeamListDetailDataSour
             }
         }
         
+        if selectedEvent == nil {
+            let events = RealmController.realmController.generalRealm.objects(Event.self)
+            if events.count > 0 {
+                //There is no selected event, but there are events to choose from, let's just pick a random one
+                selectedEvent = events.first
+            }
+        }
+        
         if let event = selectedEvent {
             if realmController.sanityCheckStructure(ofEvent: event) {
                 currentEventTeams = realmController.teamRanking(forEvent: event)
@@ -213,6 +221,9 @@ class TeamListTableViewController: UITableViewController, TeamListDetailDataSour
         
         //Track if an event was added or deleted
         eventsObserverToken = realmController.generalRealm.objects(Event.self).observe {[weak self] eventsChanges in
+            guard let _ = self else {
+                return
+            }
             switch eventsChanges {
             case .update(_, let deletions, let insertions,_):
                 if deletions.count > 0 || insertions.count > 0 {
@@ -222,6 +233,14 @@ class TeamListTableViewController: UITableViewController, TeamListDetailDataSour
                             self?.selectedEvent = RealmController.realmController.generalRealm.object(ofType: Event.self, forPrimaryKey: eventKey)
                         } else {
                             self?.selectedEvent = nil
+                        }
+                        
+                        if self?.selectedEvent == nil {
+                            let events = RealmController.realmController.generalRealm.objects(Event.self)
+                            if events.count > 0 {
+                                //There is no selected event, but there are events to choose from, let's just pick a random one
+                                self?.selectedEvent = events.first
+                            }
                         }
                     }
                 }
@@ -433,6 +452,10 @@ class TeamListTableViewController: UITableViewController, TeamListDetailDataSour
     //For selecting which teams have been picked
     @available(iOS 11.0, *)
     override func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
+        
+        guard !RealmController.isInSpectatorMode else {
+            return nil
+        }
         
         if let event = selectedEvent {
             
@@ -676,7 +699,7 @@ extension TeamListTableViewController: SortDelegate {
     
     ///Returns all the stats to be potentially sorted by. If there is a selected event, then also return stats for TeamEventPerformances.
     func statsToDisplay() -> [String] {
-        return Team.StatName.allValues.map {$0.rawValue} + (selectedEvent != nil ? TeamEventPerformance.StatName.allValues.map {$0.rawValue} : [])
+        return (RealmController.isInSpectatorMode ? [] : Team.StatName.allValues.map {$0.rawValue}) + (selectedEvent != nil ? TeamEventPerformance.StatName.allValues.map {$0.rawValue} : [])
     }
     
     func currentStat() -> String? {

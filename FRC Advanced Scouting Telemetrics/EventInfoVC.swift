@@ -44,7 +44,7 @@ class EventInfoVC: UIViewController, UITableViewDataSource {
     
     @IBAction func addButtonPressed(_ sender: UIBarButtonItem) {
         //Check if we are using syncing
-        if isFASTInSpectatorMode {
+        if RealmController.isInSpectatorMode {
             //Create a cloud event import object and begin the import process
             if let frcEvent = self.selectedEvent {
                 DispatchQueue.main.async {

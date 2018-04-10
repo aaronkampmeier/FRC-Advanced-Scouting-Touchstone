@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import Crashlytics
 
 let TeamDetailCollectionViewNeedsHeightResizing = NSNotification.Name("TeamDetailCollectionViewNeedsHeightResizing")
 
@@ -101,7 +102,7 @@ class TeamDetailCollectionViewController: UICollectionViewController, UICollecti
     // MARK: UICollectionViewDataSource
 
     override func numberOfSections(in collectionView: UICollectionView) -> Int {
-//        if isFASTInSpectatorMode {
+//        if RealmController.isInSpectatorMode {
 //            return 1
 //        }
         if let _ = selectedTeamEventPerformance {
@@ -116,7 +117,7 @@ class TeamDetailCollectionViewController: UICollectionViewController, UICollecti
     override func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         switch section {
         case 0:
-            if isFASTInSpectatorMode {
+            if RealmController.isInSpectatorMode {
                 return 0
             }
             return detailValues.count
@@ -208,7 +209,7 @@ class TeamDetailCollectionViewController: UICollectionViewController, UICollecti
             return headerView
         case (_, UICollectionElementKindSectionFooter):
             let footerView = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: "footer", for: indexPath)
-            (footerView.viewWithTag(1) as! UIButton).setTitle("Show Many More Stats by Signing In", for: .normal)
+            (footerView.viewWithTag(1) as! UIButton).setTitle("Show More Stats and Features by Signing In", for: .normal)
             (footerView.viewWithTag(1) as! UIButton).addTarget(self, action: #selector(showFASTPromotional), for: .touchUpInside)
             
             return footerView
@@ -222,7 +223,7 @@ class TeamDetailCollectionViewController: UICollectionViewController, UICollecti
     }
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, referenceSizeForFooterInSection section: Int) -> CGSize {
-        if isFASTInSpectatorMode && section == 1 {
+        if RealmController.isInSpectatorMode && section == 1 {
             return CGSize(width: 100, height: 50)
         } else {
             return CGSize.zero
@@ -230,7 +231,7 @@ class TeamDetailCollectionViewController: UICollectionViewController, UICollecti
     }
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, referenceSizeForHeaderInSection section: Int) -> CGSize {
-        if isFASTInSpectatorMode && section == 0 {
+        if RealmController.isInSpectatorMode && section == 0 {
             return CGSize.zero
         } else if section == 0 {
             return CGSize(width: 100, height: 50)
@@ -244,6 +245,7 @@ class TeamDetailCollectionViewController: UICollectionViewController, UICollecti
     @objc func showFASTPromotional() {
         let loginPromotional = storyboard!.instantiateViewController(withIdentifier: "loginPromotional")
         self.present(loginPromotional, animated: true, completion: nil)
+        Answers.logContentView(withName: "Login Promotional", contentType: nil, contentId: nil, customAttributes: ["Source":"Team Detail Stats Collection View"])
     }
 
     // MARK: UICollectionViewDelegate

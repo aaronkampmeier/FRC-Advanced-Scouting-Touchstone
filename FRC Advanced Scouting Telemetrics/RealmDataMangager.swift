@@ -14,7 +14,6 @@ import Crashlytics
 
 let DidLogIntoSyncServerNotification = NSNotification.Name(rawValue: "DidLogIntoSyncServer")
 private let rosServerAddress = "fastapp.tech:9443"
-let isLoggedInUserDefaultKey = "FAST-IsLoggedIn"
 
 class RealmController {
     
@@ -32,10 +31,9 @@ class RealmController {
     
     var tbaUpdatingReloader: TBAUpdatingDataReloader?
     
-    static var isLoggedIn: Bool {
-        get {
-            return UserDefaults.standard.value(forKey: isLoggedInUserDefaultKey) as? Bool ?? false
-        }
+    static let isSpectatorModeKey = "FAST-IsInSpectatorMode"
+    static var isInSpectatorMode: Bool {
+        return UserDefaults.standard.value(forKey: isSpectatorModeKey) as? Bool ?? false
     }
     
     private init() {
@@ -67,6 +65,9 @@ class RealmController {
         do {
             self.generalRealm = try Realm(configuration: generalConfig)
             self.syncedRealm = try Realm(configuration: scoutedConfig)
+            
+            self.tbaUpdatingReloader = TBAUpdatingDataReloader(withScoutedRealmConfig: scoutedConfig, andGeneralRealmConfig: generalConfig)
+            self.tbaUpdatingReloader?.setGeneralUpdaters()
         } catch {
             CLSNSLogv("Error opening local realms: \(error)", getVaList([]))
             Crashlytics.sharedInstance().recordError(error)
@@ -109,7 +110,7 @@ class RealmController {
                 
                 self.performSanityChecks()
                 
-                self.tbaUpdatingReloader = TBAUpdatingDataReloader(withSyncedRealmConfig: self.scoutedRealmConfig!, andGeneralRealmConfig: self.generalRealmConfig!)
+                self.tbaUpdatingReloader = TBAUpdatingDataReloader(withScoutedRealmConfig: self.scoutedRealmConfig!, andGeneralRealmConfig: self.generalRealmConfig!)
                 self.tbaUpdatingReloader?.setGeneralUpdaters()
             }
             
@@ -140,7 +141,7 @@ class RealmController {
         
     }
     
-    func closeSyncedRealms() {
+    func closeRealms() {
         let loggedInTeam: String = UserDefaults.standard.value(forKey: "LoggedInTeam") as? String ?? "Unknown"
         Answers.logCustomEvent(withName: "Sign Out", customAttributes: ["Team":loggedInTeam])
         

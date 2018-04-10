@@ -74,7 +74,7 @@ class AdminConsoleController: UIViewController, UITableViewDataSource, UITableVi
             case 2:
                 let cell = tableView.dequeueReusableCell(withIdentifier: "syncStatus")!
                 
-                if isFASTInSpectatorMode {
+                if RealmController.isInSpectatorMode {
                     cell.isUserInteractionEnabled = false
                     cell.textLabel?.isEnabled = false
                 } else {
@@ -86,7 +86,7 @@ class AdminConsoleController: UIViewController, UITableViewDataSource, UITableVi
             case 3:
                 let cell = tableView.dequeueReusableCell(withIdentifier: "logout")!
                 
-                if isFASTInSpectatorMode {
+                if RealmController.isInSpectatorMode {
                     (cell.viewWithTag(1) as! UILabel).text = "Exit Spectator Mode"
                 } else {
                     let teamNumber: String = UserDefaults.standard.value(forKey: "LoggedInTeam") as? String ?? "?"
@@ -105,7 +105,7 @@ class AdminConsoleController: UIViewController, UITableViewDataSource, UITableVi
     func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
         switch section {
         case 0:
-            return "Events (swipe left to reload/export)"
+            return "Events (swipe left to reload/export/remove)"
         default:
             return ""
         }
@@ -117,7 +117,7 @@ class AdminConsoleController: UIViewController, UITableViewDataSource, UITableVi
             //Events
             if indexPath.row == tableView.numberOfRows(inSection: 0) - 1 {
                 //Did select add event
-                if isFASTInSpectatorMode {
+                if RealmController.isInSpectatorMode {
                     self.performSegue(withIdentifier: "addEvent", sender: tableView)
                 } else {
                     //First present warning
@@ -158,8 +158,8 @@ class AdminConsoleController: UIViewController, UITableViewDataSource, UITableVi
                 performSegue(withIdentifier: "syncStatus", sender: self)
             } else if indexPath.row == 3 {
                 //Logout
-                RealmController.realmController.closeSyncedRealms()
-                UserDefaults.standard.setValue(false, forKey: isSpectatorModeKey)
+                RealmController.realmController.closeRealms()
+                UserDefaults.standard.setValue(false, forKey: RealmController.isSpectatorModeKey)
             }
         default:
             break

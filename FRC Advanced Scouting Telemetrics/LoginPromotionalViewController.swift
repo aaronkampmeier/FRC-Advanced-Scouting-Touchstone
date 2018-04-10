@@ -33,7 +33,7 @@ class LoginPromotionalViewController: UIViewController {
         loginButton.setTitleColor(UIColor.white, for: .normal)
         loginButton.layer.cornerRadius = 10
         
-        Answers.logContentView(withName: "Login Promotional", contentType: "Promotional Page", contentId: nil, customAttributes: nil)
+//        Answers.logContentView(withName: "Login Promotional", contentType: "Promotional Page", contentId: nil, customAttributes: nil)
     }
     
     override func viewWillAppear(_ animated: Bool) {

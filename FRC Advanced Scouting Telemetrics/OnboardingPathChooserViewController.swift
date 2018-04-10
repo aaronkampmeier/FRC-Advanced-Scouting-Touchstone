@@ -10,12 +10,6 @@ import UIKit
 import SSBouncyButton
 import Crashlytics
 
-let isSpectatorModeKey = "FAST-IsInSpectatorMode"
-
-var isFASTInSpectatorMode: Bool {
-    return UserDefaults.standard.value(forKey: isSpectatorModeKey) as? Bool ?? false
-}
-
 class OnboardingPathChooserViewController: UIViewController {
     @IBOutlet weak var spectatorView: UIView!
     @IBOutlet weak var signUpView: UIView!
@@ -86,7 +80,7 @@ class OnboardingPathChooserViewController: UIViewController {
         let teamListVC = storyboard?.instantiateViewController(withIdentifier: "teamListMasterVC")
         
         RealmController.realmController.openLocalRealm()
-        UserDefaults.standard.setValue(true, forKey: isSpectatorModeKey)
+        UserDefaults.standard.setValue(true, forKey: RealmController.isSpectatorModeKey)
         
         self.view.window?.rootViewController = teamListVC
         

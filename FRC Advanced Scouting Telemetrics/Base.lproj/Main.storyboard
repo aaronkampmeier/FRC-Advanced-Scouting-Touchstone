@@ -683,14 +683,14 @@
                         <rect key="frame" x="0.0" y="0.0" width="1024" height="768"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Create a Team Account" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ybx-RC-NCe">
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Create a Team Account" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ybx-RC-NCe">
                                 <rect key="frame" x="322" y="50" width="380" height="41"/>
                                 <fontDescription key="fontDescription" type="system" weight="heavy" pointSize="34"/>
                                 <nil key="textColor"/>
                                 <nil key="highlightedColor"/>
                             </label>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" verticalCompressionResistancePriority="1000" text="Create a team FAST account to scout, store, and sync data and to see many more event statistics giving you a competitive edge." textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="rW1-2o-Gv4">
-                                <rect key="frame" x="162.5" y="121" width="700" height="48"/>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" verticalCompressionResistancePriority="1000" text="Create a team FAST account to scout, store, and sync data and to see more team statistics." textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="rW1-2o-Gv4">
+                                <rect key="frame" x="162" y="121" width="700" height="48"/>
                                 <constraints>
                                     <constraint firstAttribute="width" priority="750" constant="700" id="pfQ-Uz-EKP"/>
                                 </constraints>
@@ -705,13 +705,13 @@
                                     <action selector="cancelPressed:" destination="BDY-F1-rP9" eventType="touchUpInside" id="ZNk-Rt-rkW"/>
                                 </connections>
                             </button>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="e17-Gr-Ao5">
-                                <rect key="frame" x="352" y="683" width="320" height="60"/>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="tailTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="e17-Gr-Ao5">
+                                <rect key="frame" x="342" y="683" width="340" height="60"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="60" id="Y7S-gP-5qF"/>
-                                    <constraint firstAttribute="width" constant="320" id="iAF-OG-8eh"/>
+                                    <constraint firstAttribute="width" priority="750" constant="340" id="iAF-OG-8eh"/>
                                 </constraints>
-                                <state key="normal" title="Login or Sign Up with a Team Account"/>
+                                <state key="normal" title="Login or Sign Up with a Free Team Account"/>
                                 <connections>
                                     <action selector="loginPressed:" destination="BDY-F1-rP9" eventType="touchUpInside" id="9pL-Ps-Mhc"/>
                                 </connections>
@@ -739,11 +739,13 @@
                             <constraint firstItem="rW1-2o-Gv4" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="oov-PP-CVn" secondAttribute="leadingMargin" id="Dfw-9B-dip"/>
                             <constraint firstItem="ybx-RC-NCe" firstAttribute="top" secondItem="G1d-xo-7Z6" secondAttribute="bottom" constant="30" id="HGk-yp-XVK"/>
                             <constraint firstItem="e17-Gr-Ao5" firstAttribute="centerX" secondItem="oov-PP-CVn" secondAttribute="centerX" id="JEt-Zc-HBi"/>
+                            <constraint firstItem="e17-Gr-Ao5" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="oov-PP-CVn" secondAttribute="leading" id="JKw-gM-zuS"/>
                             <constraint firstItem="e17-Gr-Ao5" firstAttribute="top" secondItem="eDv-6K-01c" secondAttribute="bottom" constant="30" id="KZ8-Rp-1AP"/>
                             <constraint firstItem="yyV-QE-jBY" firstAttribute="top" secondItem="G1d-xo-7Z6" secondAttribute="bottom" constant="5" id="Qhw-Yq-Xwh"/>
                             <constraint firstItem="eDv-6K-01c" firstAttribute="top" secondItem="rW1-2o-Gv4" secondAttribute="bottom" constant="20" id="TiL-Jx-TKD"/>
                             <constraint firstItem="eDv-6K-01c" firstAttribute="centerX" secondItem="oov-PP-CVn" secondAttribute="centerX" id="Wh5-6z-4co"/>
                             <constraint firstItem="yyV-QE-jBY" firstAttribute="leading" secondItem="oov-PP-CVn" secondAttribute="leadingMargin" id="bwc-9K-RXv"/>
+                            <constraint firstItem="ybx-RC-NCe" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="oov-PP-CVn" secondAttribute="leadingMargin" id="gud-OF-yfO"/>
                             <constraint firstAttribute="bottomMargin" secondItem="e17-Gr-Ao5" secondAttribute="bottom" constant="25" id="jMc-Ey-bHZ"/>
                             <constraint firstItem="ybx-RC-NCe" firstAttribute="centerX" secondItem="oov-PP-CVn" secondAttribute="centerX" id="rPf-XD-yvW"/>
                             <constraint firstItem="eDv-6K-01c" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="oov-PP-CVn" secondAttribute="leadingMargin" constant="10" id="t2K-NJ-klJ"/>
@@ -926,7 +928,7 @@
                                             </constraints>
                                         </tableViewCellContentView>
                                     </tableViewCell>
-                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="blue" accessoryType="disclosureIndicator" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="syncStatus" textLabel="OHR-Cu-KBY" style="IBUITableViewCellStyleDefault" id="avB-3V-ppY">
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" misplaced="YES" selectionStyle="blue" accessoryType="disclosureIndicator" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="syncStatus" textLabel="OHR-Cu-KBY" style="IBUITableViewCellStyleDefault" id="avB-3V-ppY">
                                         <rect key="frame" x="0.0" y="275.5" width="600" height="44"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="avB-3V-ppY" id="UoH-zg-aAD">
@@ -2226,8 +2228,10 @@
                             <autoresizingMask key="autoresizingMask"/>
                             <subviews>
                                 <button opaque="NO" tag="1" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="fHB-yp-6PT">
-                                    <rect key="frame" x="276" y="10" width="112" height="30"/>
-                                    <state key="normal" title="View Shot Chart"/>
+                                    <rect key="frame" x="269" y="10" width="127" height="30"/>
+                                    <state key="normal" title="Footer Button Text">
+                                        <color key="titleColor" red="0.57919406890000003" green="0.1280144453" blue="0.57268613580000005" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                    </state>
                                 </button>
                             </subviews>
                             <constraints>
