@@ -300,6 +300,20 @@ class TeamListTableViewController: UITableViewController, TeamListDetailDataSour
         eventsObserverToken?.invalidate()
         eventRankerObserverToken?.invalidate()
     }
+    
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        
+        let previousOpenKey = "FAST-HasBeenOpened"
+        //Show a choose event screen if we are in spectator mode and is the first time opening
+        if RealmController.isInSpectatorMode && !(UserDefaults.standard.value(forKey: previousOpenKey) as? Bool ?? false) {
+            let chooseEventScreen = storyboard?.instantiateViewController(withIdentifier: "addEvent") as! AddEventTableViewController
+            
+            self.present(UINavigationController(rootViewController: chooseEventScreen), animated: true) {
+                UserDefaults.standard.setValue(true, forKey: previousOpenKey)
+            }
+        }
+    }
 
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()

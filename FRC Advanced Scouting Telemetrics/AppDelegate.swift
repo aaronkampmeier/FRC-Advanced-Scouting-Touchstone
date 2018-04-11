@@ -36,7 +36,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             //It is the initial vc
             
             if RealmController.isInSpectatorMode {
-                RealmController.realmController.openLocalRealm()
                 let teamListVC = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "teamListMasterVC")
                 
                 RealmController.realmController.openLocalRealm()

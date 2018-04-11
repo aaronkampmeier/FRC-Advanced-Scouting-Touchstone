@@ -142,8 +142,6 @@ class RealmController {
     }
     
     func closeRealms() {
-        let loggedInTeam: String = UserDefaults.standard.value(forKey: "LoggedInTeam") as? String ?? "Unknown"
-        Answers.logCustomEvent(withName: "Sign Out", customAttributes: ["Team":loggedInTeam])
         
         self.tbaUpdatingReloader = nil
         
@@ -155,7 +153,8 @@ class RealmController {
         currentSyncUser = nil
         
         //Now return to the log in screen
-        (UIApplication.shared.delegate as! AppDelegate).displayLogin()
+        let onboarding = UIStoryboard(name: "Main", bundle: nil).instantiateInitialViewController()
+        UIApplication.shared.delegate!.window??.rootViewController = onboarding
     }
     
     func sanityCheckStructure(ofEvent event: Event) -> Bool {

@@ -1,4 +1,4 @@
-{\rtf1\ansi\ansicpg1252\cocoartf1561\cocoasubrtf200
+{\rtf1\ansi\ansicpg1252\cocoartf1561\cocoasubrtf400
 {\fonttbl\f0\fswiss\fcharset0 Helvetica;\f1\fswiss\fcharset0 ArialMT;}
 {\colortbl;\red255\green255\blue255;}
 {\*\expandedcolortbl;;}
@@ -8,23 +8,20 @@
 \f0\fs24 \cf0 FRC Advanced Scouting Touchstone was developed by Aaron Kampmeier in conjunction with FRC Team 4256 (The Cyborg Cats). If you have an enhancement request, bug report, need help with something, or just want to say hi, email {\field{\*\fldinst{HYPERLINK "mailto:frcfastapp@gmail.com"}}{\fldrslt frcfastapp@gmail.com}}. We'd love to hear from you.\
 \pard\tx720\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\pardirnatural\partightenfactor0
 \cf0 \
+FAST connects to The Blue Alliance's public database ({\field{\*\fldinst{HYPERLINK "https://www.thebluealliance.com/apidocs"}}{\fldrslt https://www.thebluealliance.com/apidocs}}) to gather FRC team, event, and match data.\
+\
 
 \b Note on OPR (and DPR and CCWM)\
 
-\b0 OPR stands for Offensive Power Rating. Basically it's a rating of how much a team contributes to offense of the alliances they were on (how much they contributed to their alliances' scores). There have been many proposed calculation algorithms for OPR, many (if not all) being correct. That is because in the process of solving for a team's OPR mathematically, one ends up with an 
-\i overdetermined 
-\i0 matrix system. This means there is more than one answer (OPR) to satisfy the set-up equation (it is only possible to find an approximate). Therefore, different calculation strategies and computational power can yield slightly different results. Do not be alarmed if the OPR shown in FAST is slightly different than the OPR shown elsewhere, both can be (and probably are) right; take each with a grain of salt. FAST uses Cholesky Factorization to solve the overdetermined system and find the least squares solution (as outlined {\field{\*\fldinst{HYPERLINK "https://www.chiefdelphi.com/forums/showpost.php?p=1119150&postcount=36"}}{\fldrslt here}}).\
-DPR stands for Defensive Power Rating. CCWM stands for Calculated Contribution to the Winning Margin. Both are calculated very similarly to OPR and again can vary slightly depending on calculation strategy. For more info, there are an abundance of resources describing them online.\
+\b0 OPR stands for Offensive Power Rating. Basically it's a rating of how much a team contributes to offense of the alliances they were on (how much they contributed to their alliances' scores). DPR stands for Defensive Power Rating. CCWM stands for Calculated Contribution to the Winning Margin. For more info, there are an abundance of resources describing them online.\
 
-\i Local calculation of OPR Requires that all matches in an event have final scores for both alliances. 
-\i0 However, FAST will pull down and use OPR stats from TBA whenever an event is reloaded.\
-\
-FAST connects to The Blue Alliance's public database ({\field{\*\fldinst{HYPERLINK "https://www.thebluealliance.com/apidocs"}}{\fldrslt https://www.thebluealliance.com/apidocs}}) to gather FRC team, event, and match data.\
+\i FAST periodically refreshes all OPR, DPR, and CCWM data from The Blue Alliance. It is not calculated locally.
+\i0 \
 \
 
 \b Privacy\
 
-\b0 By using this app, your team's scouted data is automatically uploaded and processed by FAST's servers to sync it across all of your team members. If you would like to know, FAST uses Realm and the Realm Object Server to store and sync data; this is how your data is stored in the cloud. Your scouted data is never made publicly available or shared with other teams without your consent. To further improve and better this app, FAST collects general usage data on how users are using the app (this never includes your scouted data) and similarly collects crash and error reports. Please note that crash reports will include your team number so that the developers can contact you if they need to follow up on an issue.\
+\b0 By using this app, your team's scouted data is automatically uploaded and processed by FAST's servers to sync it to all of your team members. If you would like to know, FAST uses Realm and the Realm Object Server to store and sync data; this is how your data is stored in the cloud. Your scouted data is never made publicly available or shared with other teams without your consent. To further improve and better this app, FAST collects general usage data on how users are using the app (this never includes your scouted data) and similarly collects crash and error reports. Please note that crash reports will include your team number so that the developers can contact you if they need to follow up on an issue.\
 \
 
 \b Credit

@@ -16,6 +16,8 @@ class AdminConsoleController: UIViewController, UITableViewDataSource, UITableVi
     
     var events: Results<Event>!
     
+    var notificationToken: NotificationToken?
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         events = RealmController.realmController.generalRealm.objects(Event.self)
@@ -26,6 +28,31 @@ class AdminConsoleController: UIViewController, UITableViewDataSource, UITableVi
         if let selectedIndexPath = tableView.indexPathForSelectedRow {
             tableView.deselectRow(at: selectedIndexPath, animated: true)
         }
+        
+        //Reload the table view
+        tableView.reloadData()
+        
+        //Set the observer
+        notificationToken = events.observe {[weak self] collectionChange in
+            switch collectionChange {
+            case .update(_, deletions: let deletions, insertions: let insertions, _):
+                if deletions.count > 0 || insertions.count > 0 {
+                    self?.tableView.beginUpdates()
+                    self?.tableView.deleteRows(at: deletions.map {IndexPath(row: $0, section: 0)}, with: .automatic)
+                    self?.tableView.insertRows(at: insertions.map {IndexPath(row: $0, section: 0)}, with: .automatic)
+                    self?.tableView.endUpdates()
+                }
+            default:
+                break
+            }
+        }
+    }
+    
+    override func viewDidDisappear(_ animated: Bool) {
+        super.viewDidDisappear(animated)
+        
+        notificationToken?.invalidate()
+        self.notificationToken = nil
     }
     
     enum adminConsoleSections: Int {
@@ -158,6 +185,12 @@ class AdminConsoleController: UIViewController, UITableViewDataSource, UITableVi
                 performSegue(withIdentifier: "syncStatus", sender: self)
             } else if indexPath.row == 3 {
                 //Logout
+                if RealmController.isInSpectatorMode {
+                    Answers.logCustomEvent(withName: "Exit Spectator Mode", customAttributes: nil)
+                } else {
+                    let loggedInTeam: String = UserDefaults.standard.value(forKey: "LoggedInTeam") as? String ?? "Unknown"
+                    Answers.logCustomEvent(withName: "Sign Out", customAttributes: ["Team":loggedInTeam])
+                }
                 RealmController.realmController.closeRealms()
                 UserDefaults.standard.setValue(false, forKey: RealmController.isSpectatorModeKey)
             }
@@ -217,8 +250,6 @@ class AdminConsoleController: UIViewController, UITableViewDataSource, UITableVi
                 self.removeLoadingIndicator()
                 
                 onCompletion?()
-                
-                tableView.reloadData()
                 }
                 .reload()
         } else {
@@ -272,7 +303,7 @@ class AdminConsoleController: UIViewController, UITableViewDataSource, UITableVi
             
             tableView.reloadData()
         }
-        removalManager.remove()
+        removalManager.remove(withoutNotifying: notificationToken ?? NotificationToken())
     }
     
     @available(iOS 11.0, *)
@@ -414,14 +445,6 @@ class AdminConsoleController: UIViewController, UITableViewDataSource, UITableVi
         default:
             return indexPath
         }
-    }
-    
-    @IBAction func rewindToAdminConsole(withSegue segue: UIStoryboardSegue) {
-        if segue.identifier == "unwindToAdminConsoleFromEventAdd" {
-            tableView.reloadData()
-        }
-        
-        viewWillAppear(true)
     }
     
     @IBAction func donePressed(_ sender: UIBarButtonItem) {

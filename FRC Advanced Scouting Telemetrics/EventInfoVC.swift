@@ -121,7 +121,8 @@ class EventInfoVC: UIViewController, UITableViewDataSource {
                 CLSNSLogv("With error: \(error)", getVaList([]))
             }
             
-            performSegue(withIdentifier: "unwindToAdminConsoleFromEventAdd", sender: self)
+            //Close the view. Use both methods to support the admin console 
+            self.dismiss(animated: true, completion: nil)
         } else {
             let errorMessage: String?
             if let error = error {

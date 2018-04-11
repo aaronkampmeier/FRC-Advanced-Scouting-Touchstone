@@ -3488,7 +3488,7 @@
         <!--Add Event-->
         <scene sceneID="jpp-ek-mic">
             <objects>
-                <tableViewController id="LAQ-xr-vbW" customClass="AddEventTableViewController" customModule="FRC_Advanced_Scouting_Touchstone" customModuleProvider="target" sceneMemberID="viewController">
+                <tableViewController storyboardIdentifier="addEvent" id="LAQ-xr-vbW" customClass="AddEventTableViewController" customModule="FRC_Advanced_Scouting_Touchstone" customModuleProvider="target" sceneMemberID="viewController">
                     <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="28" sectionFooterHeight="28" id="2gk-bh-0MW">
                         <rect key="frame" x="0.0" y="0.0" width="300" height="200"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -3539,11 +3539,9 @@
                     </navigationItem>
                     <connections>
                         <segue destination="RLv-7C-Wo7" kind="show" identifier="eventInfo" id="YTP-te-1Oe"/>
-                        <segue destination="tZL-dh-Fau" kind="unwind" identifier="rewindToAdminConsole" unwindAction="rewindToAdminConsoleWithSegue:" id="Mb9-hL-TJb"/>
                     </connections>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="xOY-Fz-scK" userLabel="First Responder" sceneMemberID="firstResponder"/>
-                <exit id="tZL-dh-Fau" userLabel="Exit" sceneMemberID="exit"/>
             </objects>
             <point key="canvasLocation" x="4378" y="-1727"/>
         </scene>
