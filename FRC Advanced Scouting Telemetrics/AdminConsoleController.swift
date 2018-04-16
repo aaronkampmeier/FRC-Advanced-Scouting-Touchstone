@@ -16,6 +16,8 @@ class AdminConsoleController: UIViewController, UITableViewDataSource, UITableVi
     
     var events: Results<Event>!
     
+    var notificationToken: NotificationToken?
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         events = RealmController.realmController.generalRealm.objects(Event.self)
@@ -26,6 +28,31 @@ class AdminConsoleController: UIViewController, UITableViewDataSource, UITableVi
         if let selectedIndexPath = tableView.indexPathForSelectedRow {
             tableView.deselectRow(at: selectedIndexPath, animated: true)
         }
+        
+        //Reload the table view
+        tableView.reloadData()
+        
+        //Set the observer
+        notificationToken = events.observe {[weak self] collectionChange in
+            switch collectionChange {
+            case .update(_, deletions: let deletions, insertions: let insertions, _):
+                if deletions.count > 0 || insertions.count > 0 {
+                    self?.tableView.beginUpdates()
+                    self?.tableView.deleteRows(at: deletions.map {IndexPath(row: $0, section: 0)}, with: .automatic)
+                    self?.tableView.insertRows(at: insertions.map {IndexPath(row: $0, section: 0)}, with: .automatic)
+                    self?.tableView.endUpdates()
+                }
+            default:
+                break
+            }
+        }
+    }
+    
+    override func viewDidDisappear(_ animated: Bool) {
+        super.viewDidDisappear(animated)
+        
+        notificationToken?.invalidate()
+        self.notificationToken = nil
     }
     
     enum adminConsoleSections: Int {
@@ -72,12 +99,26 @@ class AdminConsoleController: UIViewController, UITableViewDataSource, UITableVi
             case 1:
                 return tableView.dequeueReusableCell(withIdentifier: "acknowledgments")!
             case 2:
-                return tableView.dequeueReusableCell(withIdentifier: "syncStatus")!
+                let cell = tableView.dequeueReusableCell(withIdentifier: "syncStatus")!
+                
+                if RealmController.isInSpectatorMode {
+                    cell.isUserInteractionEnabled = false
+                    cell.textLabel?.isEnabled = false
+                } else {
+                    cell.isUserInteractionEnabled = true
+                    cell.textLabel?.isEnabled = true
+                }
+                
+                return cell
             case 3:
                 let cell = tableView.dequeueReusableCell(withIdentifier: "logout")!
                 
-                let teamNumber: String = UserDefaults.standard.value(forKey: "LoggedInTeam") as? String ?? "?"
-                (cell.viewWithTag(1) as! UILabel).text = "Log Out of Team \(teamNumber)"
+                if RealmController.isInSpectatorMode {
+                    (cell.viewWithTag(1) as! UILabel).text = "Exit Spectator Mode"
+                } else {
+                    let teamNumber: String = UserDefaults.standard.value(forKey: "LoggedInTeam") as? String ?? "?"
+                    (cell.viewWithTag(1) as! UILabel).text = "Log Out of Team \(teamNumber)"
+                }
                 
                 return cell
             default:
@@ -91,7 +132,7 @@ class AdminConsoleController: UIViewController, UITableViewDataSource, UITableVi
     func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
         switch section {
         case 0:
-            return "Events (swipe left to reload/export)"
+            return "Events (swipe left to reload/export/remove)"
         default:
             return ""
         }
@@ -103,11 +144,15 @@ class AdminConsoleController: UIViewController, UITableViewDataSource, UITableVi
             //Events
             if indexPath.row == tableView.numberOfRows(inSection: 0) - 1 {
                 //Did select add event
-                //First present warning
-                let warning = UIAlertController(title: "Do Not Repeat", message: "Events need only be added to a team's FAST account once. This should be done by your scouting lead. Please make sure someone else has not already added the same event as this may cause data inconsistencies in rare cases.", preferredStyle: .alert)
-                warning.addAction(UIAlertAction(title: "I Understand", style: .default, handler: {_ in self.performSegue(withIdentifier: "addEvent", sender: tableView)}))
-                warning.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: {_ in self.viewWillAppear(false) /*This is just to clear the table view selection*/}))
-                self.present(warning, animated: true, completion: nil)
+                if RealmController.isInSpectatorMode {
+                    self.performSegue(withIdentifier: "addEvent", sender: tableView)
+                } else {
+                    //First present warning
+                    let warning = UIAlertController(title: "Do Not Repeat", message: "Events need only be added to a team's FAST account once. This should be done by your scouting lead. Please make sure someone else has not already added the same event as this may cause data inconsistencies in rare cases.", preferredStyle: .alert)
+                    warning.addAction(UIAlertAction(title: "I Understand", style: .default, handler: {_ in self.performSegue(withIdentifier: "addEvent", sender: tableView)}))
+                    warning.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: {_ in self.viewWillAppear(false) /*This is just to clear the table view selection*/}))
+                    self.present(warning, animated: true, completion: nil)
+                }
             } else {
                 //Did select event info
                 // TODO: Display event info
@@ -140,7 +185,14 @@ class AdminConsoleController: UIViewController, UITableViewDataSource, UITableVi
                 performSegue(withIdentifier: "syncStatus", sender: self)
             } else if indexPath.row == 3 {
                 //Logout
-                RealmController.realmController.closeSyncedRealms()
+                if RealmController.isInSpectatorMode {
+                    Answers.logCustomEvent(withName: "Exit Spectator Mode", customAttributes: nil)
+                } else {
+                    let loggedInTeam: String = UserDefaults.standard.value(forKey: "LoggedInTeam") as? String ?? "Unknown"
+                    Answers.logCustomEvent(withName: "Sign Out", customAttributes: ["Team":loggedInTeam])
+                }
+                RealmController.realmController.closeRealms()
+                UserDefaults.standard.setValue(false, forKey: RealmController.isSpectatorModeKey)
             }
         default:
             break
@@ -198,8 +250,6 @@ class AdminConsoleController: UIViewController, UITableViewDataSource, UITableVi
                 self.removeLoadingIndicator()
                 
                 onCompletion?()
-                
-                tableView.reloadData()
                 }
                 .reload()
         } else {
@@ -253,7 +303,7 @@ class AdminConsoleController: UIViewController, UITableViewDataSource, UITableVi
             
             tableView.reloadData()
         }
-        removalManager.remove()
+        removalManager.remove(withoutNotifying: notificationToken ?? NotificationToken())
     }
     
     @available(iOS 11.0, *)
@@ -395,14 +445,6 @@ class AdminConsoleController: UIViewController, UITableViewDataSource, UITableVi
         default:
             return indexPath
         }
-    }
-    
-    @IBAction func rewindToAdminConsole(withSegue segue: UIStoryboardSegue) {
-        if segue.identifier == "unwindToAdminConsoleFromEventAdd" {
-            tableView.reloadData()
-        }
-        
-        viewWillAppear(true)
     }
     
     @IBAction func donePressed(_ sender: UIBarButtonItem) {

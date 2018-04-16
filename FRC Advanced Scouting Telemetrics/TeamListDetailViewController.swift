@@ -18,11 +18,11 @@ protocol TeamListDetailDataSource {
 }
 
 class TeamListDetailViewController: UIViewController {
-	@IBOutlet weak var frontImageButton: UIButton!
-	@IBOutlet weak var teamLabel: UILabel!
-	@IBOutlet weak var standsScoutingButton: UIBarButtonItem!
+    @IBOutlet weak var frontImageButton: UIButton!
+    @IBOutlet weak var teamLabel: UILabel!
+    @IBOutlet weak var standsScoutingButton: UIBarButtonItem!
     @IBOutlet weak var pitScoutingButton: UIBarButtonItem!
-	@IBOutlet weak var navBar: UINavigationItem!
+    @IBOutlet weak var navBar: UINavigationItem!
     @IBOutlet var frontImageHeightConstraint: NSLayoutConstraint!
     @IBOutlet weak var notesButton: UIButton!
     @IBOutlet weak var generalInfoTableView: UITableView?
@@ -58,12 +58,12 @@ class TeamListDetailViewController: UIViewController {
             return UIEdgeInsetsMake(0, 0, 0, 0)
         }
     }
-	
-	var frontImage: TeamImagePhoto? {
-		didSet {
-			frontImageButton.setImage(frontImage?.image, for: .normal)
-		}
-	}
+    
+    var frontImage: TeamImagePhoto? {
+        didSet {
+            frontImageButton.setImage(frontImage?.image, for: .normal)
+        }
+    }
 
     var selectedTeam: Team? {
         didSet {
@@ -93,61 +93,75 @@ class TeamListDetailViewController: UIViewController {
                     Crashlytics.sharedInstance().recordError(error)
                 }
             }
-			
-			NotificationCenter.default.post(name: Notification.Name(rawValue: "TeamSelectedChanged"), object: self)
-		}
-	}
+            
+            NotificationCenter.default.post(name: Notification.Name(rawValue: "TeamSelectedChanged"), object: self)
+        }
+    }
     
-	var selectedEvent: Event?
-	var teamEventPerformance: TeamEventPerformance? {
-		get {
-			if let team = selectedTeam {
-				if let event = selectedEvent {
+    var selectedEvent: Event?
+    var teamEventPerformance: TeamEventPerformance? {
+        get {
+            if let team = selectedTeam {
+                if let event = selectedEvent {
                     guard !event.isInvalidated else {
                         return nil
                     }
-					return RealmController.realmController.eventPerformance(forTeam: team, atEvent: event)
-				}
-			}
-			return nil
-		}
-	}
+                    return RealmController.realmController.eventPerformance(forTeam: team, atEvent: event)
+                }
+            }
+            return nil
+        }
+    }
     
     var teamUpdateToken: NotificationToken? {
         didSet {
             oldValue?.invalidate()
         }
     }
-	
+    
     override func viewDidLoad() {
         super.viewDidLoad()
 
         // Do any additional setup after loading the view.
-		
-		teamListSplitVC.teamListDetailVC = self
-		
+        
+        teamListSplitVC.teamListDetailVC = self
+        
         self.dataSource = teamListSplitVC.teamListTableVC
         
-		navigationItem.leftItemsSupplementBackButton = true
-		
-		//Set the stands scouting button to not selectable since there is no team selected
-		standsScoutingButton.isEnabled = false
+        navigationItem.leftItemsSupplementBackButton = true
+        
+        //Set the stands scouting button to not selectable since there is no team selected
+        standsScoutingButton.isEnabled = false
         pitScoutingButton.isEnabled = false
         matchesButton.isEnabled = false
-		
-		//Set the images(buttons) content sizing property
-		frontImageButton.imageView?.contentMode = .scaleAspectFill
+        
+        if RealmController.isInSpectatorMode {
+            standsScoutingButton.tintColor = UIColor.purple
+            pitScoutingButton.tintColor = UIColor.purple
+            notesButton.tintColor = UIColor.purple
+            
+            let selector = #selector(showLoginPromotional)
+            
+            notesButton.addGestureRecognizer(UITapGestureRecognizer(target: self, action: selector))
+            standsScoutingButton.target = self
+            standsScoutingButton.action = selector
+            pitScoutingButton.target = self
+            pitScoutingButton.action = selector
+        }
+        
+        //Set the images(buttons) content sizing property
+        frontImageButton.imageView?.contentMode = .scaleAspectFill
         frontImageButton.setTitle(nil, for: .normal)
         
         contentScrollView.delegate = self
-		
-		let displayModeButtonItem = teamListSplitVC.displayModeButtonItem
-		
-		if navigationItem.leftBarButtonItems?.isEmpty ?? true {
-			navigationItem.leftBarButtonItems = [displayModeButtonItem]
-		} else {
-			navigationItem.leftBarButtonItems?.insert(displayModeButtonItem, at: 0)
-		}
+        
+        let displayModeButtonItem = teamListSplitVC.displayModeButtonItem
+        
+        if navigationItem.leftBarButtonItems?.isEmpty ?? true {
+            navigationItem.leftBarButtonItems = [displayModeButtonItem]
+        } else {
+            navigationItem.leftBarButtonItems?.insert(displayModeButtonItem, at: 0)
+        }
         
         generalInfoTableView?.delegate = self
         generalInfoTableView?.dataSource = self
@@ -161,11 +175,11 @@ class TeamListDetailViewController: UIViewController {
         self.reloadData()
     }
     
-	override func viewWillAppear(_ animated: Bool) {
-		super.viewWillAppear(animated)
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
         
         self.navigationController?.setToolbarHidden(true, animated: true)
-	}
+    }
     
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
@@ -180,20 +194,20 @@ class TeamListDetailViewController: UIViewController {
         
         self.resizeDetailViewHeights()
     }
-	
-	override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-		super.prepare(for: segue, sender: sender)
-		
-		if segue.identifier == "standsScouting" {
-			let destinationVC = segue.destination as! StandsScoutingViewController
-			destinationVC.teamEventPerformance = teamEventPerformance
+    
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        super.prepare(for: segue, sender: sender)
+        
+        if segue.identifier == "standsScouting" {
+            let destinationVC = segue.destination as! StandsScoutingViewController
+            destinationVC.teamEventPerformance = teamEventPerformance
         } else if segue.identifier == "pitScouting" {
             let pitScoutingVC = segue.destination as! PitScoutingViewController
             pitScoutingVC.scoutedTeam = selectedTeam
         } else if segue.identifier == "teamDetailCollection" {
             detailCollectionVC = (segue.destination as! TeamDetailCollectionViewController)
         }
-	}
+    }
 
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
@@ -241,8 +255,9 @@ class TeamListDetailViewController: UIViewController {
             }
             
             pitScoutingButton.isEnabled = true
-            
-            notesButton.isEnabled = true
+            if !RealmController.isInSpectatorMode {
+                notesButton.isEnabled = true
+            }
         } else {
             navBar.title = "Select Team"
             teamLabel.text = "Select Team"
@@ -268,7 +283,7 @@ class TeamListDetailViewController: UIViewController {
         self.detailCollectionViewHeight.constant = self.detailCollectionVC?.collectionView?.collectionViewLayout.collectionViewContentSize.height ?? 10
         self.detailTableViewHeight.constant = self.generalInfoTableView?.contentSize.height ?? 10
     }
-	
+    
     override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
         super.viewWillTransition(to: size, with: coordinator)
         //Reset the content insets
@@ -296,6 +311,12 @@ class TeamListDetailViewController: UIViewController {
             selectedEvent = dataSource?.inEvent()
             selectedTeam = dataSource?.team()
         }
+    }
+    
+    @objc func showLoginPromotional() {
+        let loginPromotional = storyboard!.instantiateViewController(withIdentifier: "loginPromotional")
+        self.present(loginPromotional, animated: true, completion: nil)
+        Answers.logContentView(withName: "Login Promotional", contentType: nil, contentId: nil, customAttributes: ["Source":"Team Detail Notes/Scouting Buttons"])
     }
     
     @IBAction func notesButtonPressed(_ sender: UIButton) {
@@ -332,31 +353,31 @@ class TeamListDetailViewController: UIViewController {
         
         Answers.logCustomEvent(withName: "Opened Team Matches View", customAttributes: nil)
     }
-	
-	//MARK: Displaying full screen photos
-	@IBAction func selectedImage(_ sender: UIButton) {
-		let photo: NYTPhoto
-		var photosArray: [NYTPhoto] = []
-		switch sender {
-		case frontImageButton:
-			if let image = frontImage {
-				photo = image
-			} else {return}
-//		case sideImageButton:
-//			if let image = sideImage {
-//				photo = image
-//			} else {return}
-		default:
-			return
-		}
-		
-		if let image = frontImage {
-			photosArray.append(image)
-		}
-		
-		let photoVC = NYTPhotosViewController(photos: photosArray, initialPhoto: photo, delegate: self)
-		present(photoVC, animated: true, completion: nil)
-	}
+    
+    //MARK: Displaying full screen photos
+    @IBAction func selectedImage(_ sender: UIButton) {
+        let photo: NYTPhoto
+        var photosArray: [NYTPhoto] = []
+        switch sender {
+        case frontImageButton:
+            if let image = frontImage {
+                photo = image
+            } else {return}
+//        case sideImageButton:
+//            if let image = sideImage {
+//                photo = image
+//            } else {return}
+        default:
+            return
+        }
+        
+        if let image = frontImage {
+            photosArray.append(image)
+        }
+        
+        let photoVC = NYTPhotosViewController(photos: photosArray, initialPhoto: photo, delegate: self)
+        present(photoVC, animated: true, completion: nil)
+    }
 }
 
 extension TeamListDetailViewController: MatchesTableViewControllerDelegate {
@@ -366,30 +387,39 @@ extension TeamListDetailViewController: MatchesTableViewControllerDelegate {
     
     func matchesTableViewController(_ matchesTableViewController: MatchesTableViewController, selectedMatchCell: UITableViewCell?, withAssociatedMatch associatedMatch: Match?) {
         selectedMatch = associatedMatch
-        //Present an action sheet to see if the user wants to view it or scout it
-        let actionSheet = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
         
-        actionSheet.addAction(UIAlertAction(title: "View Match", style: .default) {action in
+        let showMatchDetail = {() -> Void in
             let matchDetailNav = self.storyboard?.instantiateViewController(withIdentifier: "matchDetailNav") as! UINavigationController
             let matchDetail = matchDetailNav.topViewController as! MatchOverviewDetailViewController
             
             matchDetail.dataSource = self
             
             matchesTableViewController.present(matchDetailNav, animated: true, completion: nil)
-        })
-        actionSheet.addAction(UIAlertAction(title: "Stands Scout", style: .default) {action in
-            let standsScoutingVC = self.storyboard?.instantiateViewController(withIdentifier: "standsScouting") as! StandsScoutingViewController
-            standsScoutingVC.teamEventPerformance = self.teamEventPerformance
-            standsScoutingVC.matchPerformance = (associatedMatch?.teamPerformances)?.first {$0.teamEventPerformance == self.teamEventPerformance}
+        }
+        
+        if RealmController.isInSpectatorMode {
+            showMatchDetail()
+        } else {
+            //Present an action sheet to see if the user wants to view it or scout it
+            let actionSheet = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
             
-            matchesTableViewController.present(standsScoutingVC, animated: true, completion: nil)
-        })
-        actionSheet.addAction(UIAlertAction(title: "Cancel", style: .cancel) {action in
-            matchesTableViewController.tableView.deselectRow(at: matchesTableViewController.tableView.indexPathForSelectedRow ?? IndexPath(), animated: true)
-        })
-        
-        
-        matchesTableViewController.present(actionSheet, animated: true, completion: nil)
+            actionSheet.addAction(UIAlertAction(title: "View Match", style: .default) {action in
+                showMatchDetail()
+            })
+            actionSheet.addAction(UIAlertAction(title: "Stands Scout", style: .default) {action in
+                let standsScoutingVC = self.storyboard?.instantiateViewController(withIdentifier: "standsScouting") as! StandsScoutingViewController
+                standsScoutingVC.teamEventPerformance = self.teamEventPerformance
+                standsScoutingVC.matchPerformance = (associatedMatch?.teamPerformances)?.first {$0.teamEventPerformance == self.teamEventPerformance}
+                
+                matchesTableViewController.present(standsScoutingVC, animated: true, completion: nil)
+            })
+            actionSheet.addAction(UIAlertAction(title: "Cancel", style: .cancel) {action in
+                matchesTableViewController.tableView.deselectRow(at: matchesTableViewController.tableView.indexPathForSelectedRow ?? IndexPath(), animated: true)
+            })
+            
+            
+            matchesTableViewController.present(actionSheet, animated: true, completion: nil)
+        }
     }
 }
 
@@ -413,7 +443,7 @@ extension TeamListDetailViewController: UITableViewDelegate, UITableViewDataSour
             
             if let event = self.selectedEvent {
                 if let statusStr = team.scouted?.computedStats(forEvent: event)?.overallStatusString {
-                    if statusStr != "--" {
+                    if statusStr != "--" { //TBA puts a -- in for empty status strings
                         numOfRows += 1
                     }
                 }
@@ -473,7 +503,9 @@ extension TeamListDetailViewController: UITableViewDelegate, UITableViewDataSour
                     //Status
                     let cell = tableView.dequeueReusableCell(withIdentifier: "statusCell")
                     
-                    (cell?.viewWithTag(1) as! UILabel).setHTMLFromString(htmlText: statusString)
+                    let statusLabel = cell?.viewWithTag(1) as! UILabel
+                    statusLabel.setHTMLFromString(htmlText: statusString)
+                    statusLabel.textAlignment = .center
                     
                     return cell!
                 }
@@ -495,6 +527,7 @@ extension TeamListDetailViewController: UITableViewDelegate, UITableViewDataSour
         if let url = URL(string: selectedTeam?.website ?? "") {
             let safariVC = SFSafariViewController(url: url)
             self.present(safariVC, animated: true, completion: nil)
+            Answers.logContentView(withName: "Team Website View", contentType: "Website", contentId: "\(selectedTeam?.key ?? "unk")", customAttributes: nil)
         }
     }
 }
@@ -523,48 +556,48 @@ extension TeamListDetailViewController: NotesDataSource {
 }
 
 class TeamImagePhoto: NSObject, NYTPhoto {
-	var image: UIImage?
-	var imageData: Data?
-	var placeholderImage: UIImage?
-	var attributedCaptionTitle: NSAttributedString?
-	var attributedCaptionCredit: NSAttributedString?
-	var attributedCaptionSummary: NSAttributedString?
-	
-	init(image: UIImage?, imageData: Data? = nil, attributedCaptionTitle: NSAttributedString) {
-		self.image = image
-		self.imageData = imageData
-		self.attributedCaptionTitle = attributedCaptionTitle
-	}
+    var image: UIImage?
+    var imageData: Data?
+    var placeholderImage: UIImage?
+    var attributedCaptionTitle: NSAttributedString?
+    var attributedCaptionCredit: NSAttributedString?
+    var attributedCaptionSummary: NSAttributedString?
+    
+    init(image: UIImage?, imageData: Data? = nil, attributedCaptionTitle: NSAttributedString) {
+        self.image = image
+        self.imageData = imageData
+        self.attributedCaptionTitle = attributedCaptionTitle
+    }
 }
 
 extension TeamListDetailViewController: NYTPhotosViewControllerDelegate {
-	func photosViewController(_ photosViewController: NYTPhotosViewController, captionViewFor photo: NYTPhoto) -> UIView? {
-		return nil
-	}
-	
-	func photosViewController(_ photosViewController: NYTPhotosViewController, referenceViewFor photo: NYTPhoto) -> UIView? {
-		if let photo = photo as? TeamImagePhoto {
-			if photo == frontImage {
-				return frontImageButton
-			} else {
-				return nil
-			}
-		} else {
-			return nil
-		}
-	}
-	
-	func photosViewController(_ photosViewController: NYTPhotosViewController, titleFor photo: NYTPhoto, at photoIndex: UInt, totalPhotoCount: UInt) -> String? {
-		return nil
-	}
-	
-	func photosViewController(_ photosViewController: NYTPhotosViewController, maximumZoomScaleFor photo: NYTPhoto) -> CGFloat {
-		return CGFloat(2)
-	}
-	
-	func photosViewController(_ photosViewController: NYTPhotosViewController, actionCompletedWithActivityType activityType: String?) {
-		NSLog("Completed Action: \(activityType ?? "Unknown")")
-		Answers.logShare(withMethod: activityType, contentName: "Team Photos", contentType: "Photo", contentId: nil, customAttributes: nil)
-	}
+    func photosViewController(_ photosViewController: NYTPhotosViewController, captionViewFor photo: NYTPhoto) -> UIView? {
+        return nil
+    }
+    
+    func photosViewController(_ photosViewController: NYTPhotosViewController, referenceViewFor photo: NYTPhoto) -> UIView? {
+        if let photo = photo as? TeamImagePhoto {
+            if photo == frontImage {
+                return frontImageButton
+            } else {
+                return nil
+            }
+        } else {
+            return nil
+        }
+    }
+    
+    func photosViewController(_ photosViewController: NYTPhotosViewController, titleFor photo: NYTPhoto, at photoIndex: UInt, totalPhotoCount: UInt) -> String? {
+        return nil
+    }
+    
+    func photosViewController(_ photosViewController: NYTPhotosViewController, maximumZoomScaleFor photo: NYTPhoto) -> CGFloat {
+        return CGFloat(2)
+    }
+    
+    func photosViewController(_ photosViewController: NYTPhotosViewController, actionCompletedWithActivityType activityType: String?) {
+        NSLog("Completed Action: \(activityType ?? "Unknown")")
+        Answers.logShare(withMethod: activityType, contentName: "Team Photos", contentType: "Photo", contentId: nil, customAttributes: nil)
+    }
 }
 

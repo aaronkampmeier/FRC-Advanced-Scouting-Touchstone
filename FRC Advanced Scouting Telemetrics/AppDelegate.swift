@@ -28,18 +28,36 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             //We are logged in, switch to the team list view
             let teamNumber = UserDefaults.standard.value(forKey: "LoggedInTeam") as? String ?? "Unknown"
             Crashlytics.sharedInstance().setUserName(teamNumber)
+
+            let teamListVC = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "teamListMasterVC")
+
+            self.window?.rootViewController = teamListVC
         } else {
-            //Show log in page
-            displayLogin()
+            //Show Onboarding
+            //It is the initial vc
+            
+            if RealmController.isInSpectatorMode {
+                let teamListVC = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "teamListMasterVC")
+                
+                RealmController.realmController.openLocalRealm()
+                
+                self.window?.rootViewController = teamListVC
+            }
         }
         
         return AWSMobileClient.sharedInstance().interceptApplication(application, didFinishLaunchingWithOptions: launchOptions)
     }
     
-    func displayLogin() {
+    func displayLogin(isRegistering: Bool = false) {
         //Present log in screen
+        let loginVC = logInViewController()
+        self.window?.rootViewController = loginVC
+        loginVC.setRegistering(isRegistering, animated: false)
+    }
+    
+    func logInViewController() -> LoginViewController {
         let loginVC = LoginViewController(style: .darkOpaque)
-        loginVC.isCancelButtonHidden = true
+        loginVC.isCancelButtonHidden = false
         loginVC.serverURL = RealmController.realmController.syncAuthURL.absoluteString
         loginVC.isSecureConnection = true
         loginVC.isCopyrightLabelHidden = true
@@ -54,18 +72,19 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             RealmController.realmController.currentSyncUser = user
             RealmController.realmController.openSyncedRealm(withSyncUser: user, shouldOpenSyncedRealmAsync: true, completionHandler: loader.realmAsyncOpenHandler)
             
+            UserDefaults.standard.set(false, forKey: RealmController.isSpectatorModeKey)
+            
             self.window?.rootViewController = loader
         }
-        self.window?.rootViewController = loginVC
+        
+        return loginVC
     }
     
     func clearTMPFolder() {
         //Clear the temporary folder as it can build up lots of unneeded ensembles data. However, at this time Fabric is probably downloading some settings from the cloud so we need to avoid deleting those files.
         do {
             for file in try FileManager.default.contentsOfDirectory(atPath: NSTemporaryDirectory()) {
-                if !file.hasPrefix("CFNetworkDownload") {
-                    try FileManager.default.removeItem(atPath: NSTemporaryDirectory().appending(file))
-                }
+                try FileManager.default.removeItem(atPath: NSTemporaryDirectory().appending(file))
             }
         } catch {
             CLSNSLogv("Unable to clear temporary directory with error: \(error)", getVaList([]))

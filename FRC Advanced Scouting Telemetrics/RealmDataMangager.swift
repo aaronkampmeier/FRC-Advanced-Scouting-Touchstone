@@ -31,6 +31,11 @@ class RealmController {
     
     var tbaUpdatingReloader: TBAUpdatingDataReloader?
     
+    static let isSpectatorModeKey = "FAST-IsInSpectatorMode"
+    static var isInSpectatorMode: Bool {
+        return UserDefaults.standard.value(forKey: isSpectatorModeKey) as? Bool ?? false
+    }
+    
     private init() {
         generalRealm = nil
         
@@ -46,6 +51,25 @@ class RealmController {
         
         SyncManager.shared.errorHandler = {error, session in
             CLSNSLogv("Realm Sync Error: \(error)", getVaList([]))
+            Crashlytics.sharedInstance().recordError(error)
+        }
+    }
+    
+    func openLocalRealm() {
+        var generalConfig = Realm.Configuration()
+        generalConfig.fileURL = generalConfig.fileURL?.deletingLastPathComponent().appendingPathComponent("LocalGeneralRealm.realm")
+        
+        var scoutedConfig = Realm.Configuration()
+        scoutedConfig.fileURL = scoutedConfig.fileURL?.deletingLastPathComponent().appendingPathComponent("LocalScoutedRealm.realm")
+        
+        do {
+            self.generalRealm = try Realm(configuration: generalConfig)
+            self.syncedRealm = try Realm(configuration: scoutedConfig)
+            
+            self.tbaUpdatingReloader = TBAUpdatingDataReloader(withScoutedRealmConfig: scoutedConfig, andGeneralRealmConfig: generalConfig)
+            self.tbaUpdatingReloader?.setGeneralUpdaters()
+        } catch {
+            CLSNSLogv("Error opening local realms: \(error)", getVaList([]))
             Crashlytics.sharedInstance().recordError(error)
         }
     }
@@ -91,7 +115,7 @@ class RealmController {
                 
                 self.performSanityChecks()
                 
-                self.tbaUpdatingReloader = TBAUpdatingDataReloader(withSyncedRealmConfig: self.scoutedRealmConfig!, andGeneralRealmConfig: self.generalRealmConfig!)
+                self.tbaUpdatingReloader = TBAUpdatingDataReloader(withScoutedRealmConfig: self.scoutedRealmConfig!, andGeneralRealmConfig: self.generalRealmConfig!)
                 self.tbaUpdatingReloader?.setGeneralUpdaters()
             }
             
@@ -122,9 +146,7 @@ class RealmController {
         
     }
     
-    func closeSyncedRealms() {
-        let loggedInTeam: String = UserDefaults.standard.value(forKey: "LoggedInTeam") as? String ?? "Unknown"
-        Answers.logCustomEvent(withName: "Sign Out", customAttributes: ["Team":loggedInTeam])
+    func closeRealms() {
         
         self.tbaUpdatingReloader = nil
         
@@ -136,7 +158,8 @@ class RealmController {
         currentSyncUser = nil
         
         //Now return to the log in screen
-        (UIApplication.shared.delegate as! AppDelegate).displayLogin()
+        let onboarding = UIStoryboard(name: "Main", bundle: nil).instantiateInitialViewController()
+        UIApplication.shared.delegate!.window??.rootViewController = onboarding
     }
     
     func sanityCheckStructure(ofEvent event: Event) -> Bool {

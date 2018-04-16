@@ -12,15 +12,6 @@ import Crashlytics
 
 ///For loading async OPRs, ranks, team statuses, match scores, and eventually insights
 
-///
-class TBAEventUpdatingData {
-    
-    
-    init() {
-        
-    }
-}
-
 ///Sole job is to reload data from cloud not retrieve
 class TBAUpdatingDataReloader {
     
@@ -39,7 +30,7 @@ class TBAUpdatingDataReloader {
     
     private var eventsNotificationToken: NotificationToken?
     
-    init(withSyncedRealmConfig scoutedRealmConfig: Realm.Configuration, andGeneralRealmConfig generalRealmConfig: Realm.Configuration) {
+    init(withScoutedRealmConfig scoutedRealmConfig: Realm.Configuration, andGeneralRealmConfig generalRealmConfig: Realm.Configuration) {
         //Create background thread for updating
 //        backgroundQueue = DispatchQueue.global(qos: .background)
         backgroundQueue = DispatchQueue(label: TBAUpdatingDataReloader.backgroundQueueID, qos: .background)
@@ -87,6 +78,7 @@ class TBAUpdatingDataReloader {
     func setGeneralUpdaters() {
         oprTimedUpdaters.removeAll()
         matchTimedUpdaters.removeAll()
+        statusTimedUpdaters.removeAll()
         
         if let realms = self.getRealms() {
             let events = realms.generalRealm.objects(Event.self)

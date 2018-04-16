@@ -19,8 +19,10 @@ class AboutViewController: UIViewController {
         aboutTextView.text = ""
         if let rtf = Bundle.main.url(forResource: "About", withExtension: "rtf") {
             do {
-            let attributedString = try NSAttributedString(url: rtf, options: [NSAttributedString.DocumentReadingOptionKey.documentType:NSAttributedString.DocumentType.rtf], documentAttributes: nil)
-            aboutTextView.attributedText = attributedString
+                let attributedString = try NSAttributedString(url: rtf, options: [NSAttributedString.DocumentReadingOptionKey.documentType:NSAttributedString.DocumentType.rtf], documentAttributes: nil)
+                //Disable scroll and then re-enable it after view did load because it will mess with the text being behind the nav bar if it is enabled
+                aboutTextView.isScrollEnabled = false
+                aboutTextView.attributedText = attributedString
             } catch {
                 CLSNSLogv("Unable to read About.rtf file", getVaList([]))
             }
@@ -35,6 +37,11 @@ class AboutViewController: UIViewController {
         if #available(iOS 11.0, *) {
             aboutTextView.contentInset = self.additionalSafeAreaInsets
         }
+    }
+    
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        aboutTextView.isScrollEnabled = true
     }
 
     override func didReceiveMemoryWarning() {

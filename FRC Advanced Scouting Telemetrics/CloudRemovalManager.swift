@@ -7,7 +7,7 @@
 //
 
 import Foundation
-import CoreData
+import RealmSwift
 import Crashlytics
 
 class CloudEventRemovalManager {
@@ -21,7 +21,7 @@ class CloudEventRemovalManager {
         self.completionHandler = completionHandler
     }
     
-    func remove(shouldEnterWrite: Bool = true) {
+    func remove(shouldEnterWrite: Bool = true, withoutNotifying exemptToken: NotificationToken) {
         if shouldEnterWrite {
             realmController.generalRealm.beginWrite()
             realmController.syncedRealm.beginWrite()
@@ -59,7 +59,7 @@ class CloudEventRemovalManager {
         if shouldEnterWrite {
             do {
                 try realmController.syncedRealm.commitWrite()
-                try realmController.generalRealm.commitWrite()
+                try realmController.generalRealm.commitWrite(withoutNotifying: [exemptToken])
                 
                 CLSNSLogv("Finished removal of event", getVaList([]))
                 NotificationCenter.default.post(Notification(name: Notification.Name(rawValue: "UpdatedTeams")))

@@ -36,6 +36,12 @@ class RealmLoaderViewController: UIViewController {
         }
     }
     
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        
+        UIApplication.shared.sendAction(#selector(UIResponder.resignFirstResponder), to: nil, from: nil, for: nil)
+    }
+    
     override func viewDidDisappear(_ animated: Bool) {
         super.viewDidDisappear(animated)
         
@@ -60,14 +66,14 @@ class RealmLoaderViewController: UIViewController {
     func didCompleteSync() {
         //Move on to the Team List
         
-        let teamList = storyboard?.instantiateInitialViewController()
+        let teamList = storyboard?.instantiateViewController(withIdentifier: "teamListMasterVC")
         self.view.window?.rootViewController = teamList
     }
     
     func cancelSyncing() {
         downloadProgressToken?.invalidate()
         
-        RealmController.realmController.closeSyncedRealms()
+        RealmController.realmController.closeRealms()
     }
     
     @IBAction func cancelPressed(_ sender: UIButton) {

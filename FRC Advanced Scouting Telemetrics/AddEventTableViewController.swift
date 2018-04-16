@@ -46,6 +46,8 @@ class AddEventTableViewController: UITableViewController {
         searchController?.dimsBackgroundDuringPresentation = false
         definesPresentationContext = true
         tableView.tableHeaderView = searchController?.searchBar
+        
+        self.navigationItem.prompt = "Choose an event to add and track"
     }
     
     func setUp(withYear year: String? = nil) {
@@ -87,7 +89,7 @@ class AddEventTableViewController: UITableViewController {
     }
 
     @IBAction func cancelPressed(_ sender: UIBarButtonItem) {
-        performSegue(withIdentifier: "rewindToAdminConsole", sender: self)
+        self.dismiss(animated: true, completion: nil)
     }
     
     @IBAction func yearButtonPressed(_ sender: UIBarButtonItem) {
