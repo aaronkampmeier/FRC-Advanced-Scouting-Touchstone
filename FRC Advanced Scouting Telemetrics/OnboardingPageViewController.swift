@@ -21,16 +21,12 @@ class OnboardingPageViewController: UIPageViewController, UIPageViewControllerDa
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        
-
         // Do any additional setup after loading the view.
-        onboardingVCs = [viewController(forOnboardingIndex: 0)!, viewController(forOnboardingIndex: 1)!, viewController(forOnboardingIndex: 2)!, viewController(forOnboardingIndex: 3)!, viewController(forOnboardingIndex: 4)!]
+        onboardingVCs = [viewController(forOnboardingIndex: 0)!/*, viewController(forOnboardingIndex: 1)!, viewController(forOnboardingIndex: 2)!, viewController(forOnboardingIndex: 3)!*/, viewController(forOnboardingIndex: 4)!]
         
         setPageIndex(index: 0, animated: false)
         
         self.dataSource = self
-        
-//        addStationaryCyborgCat()
         
         view.backgroundColor = UIColor.white
     }
@@ -77,6 +73,7 @@ class OnboardingPageViewController: UIPageViewController, UIPageViewControllerDa
         }
     }
     
+    //To show the page indicator
 //    func presentationCount(for pageViewController: UIPageViewController) -> Int {
 //        return 5
 //    }

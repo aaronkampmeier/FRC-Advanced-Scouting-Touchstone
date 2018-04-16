@@ -51,8 +51,14 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     
     func displayLogin(isRegistering: Bool = false) {
         //Present log in screen
+        let loginVC = logInViewController()
+        self.window?.rootViewController = loginVC
+        loginVC.setRegistering(isRegistering, animated: false)
+    }
+    
+    func logInViewController() -> LoginViewController {
         let loginVC = LoginViewController(style: .darkOpaque)
-        loginVC.isCancelButtonHidden = true
+        loginVC.isCancelButtonHidden = false
         loginVC.serverURL = RealmController.realmController.syncAuthURL.absoluteString
         loginVC.isSecureConnection = true
         loginVC.isCopyrightLabelHidden = true
@@ -67,10 +73,12 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             RealmController.realmController.currentSyncUser = user
             RealmController.realmController.openSyncedRealm(withSyncUser: user, shouldOpenSyncedRealmAsync: true, completionHandler: loader.realmAsyncOpenHandler)
             
+            UserDefaults.standard.set(false, forKey: RealmController.isSpectatorModeKey)
+            
             self.window?.rootViewController = loader
         }
-        self.window?.rootViewController = loginVC
-        loginVC.setRegistering(isRegistering, animated: false)
+        
+        return loginVC
     }
     
     func clearTMPFolder() {

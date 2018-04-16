@@ -309,7 +309,10 @@ class TeamListTableViewController: UITableViewController, TeamListDetailDataSour
         if RealmController.isInSpectatorMode && !(UserDefaults.standard.value(forKey: previousOpenKey) as? Bool ?? false) {
             let chooseEventScreen = storyboard?.instantiateViewController(withIdentifier: "addEvent") as! AddEventTableViewController
             
-            self.present(UINavigationController(rootViewController: chooseEventScreen), animated: true) {
+            let nav = UINavigationController(rootViewController: chooseEventScreen)
+            nav.modalPresentationStyle = .formSheet
+            
+            self.present(nav, animated: true) {
                 UserDefaults.standard.setValue(true, forKey: previousOpenKey)
             }
         }

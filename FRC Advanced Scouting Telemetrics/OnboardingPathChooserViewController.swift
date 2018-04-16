@@ -89,14 +89,17 @@ class OnboardingPathChooserViewController: UIViewController {
     
     @objc func logInPressed() {
         
-        (UIApplication.shared.delegate as! AppDelegate).displayLogin()
+        let loginVC = (UIApplication.shared.delegate as! AppDelegate).logInViewController()
+        self.present(loginVC, animated: true, completion: nil)
         
         Answers.logCustomEvent(withName: "Onboarding Completed", customAttributes: ["Onboarded Route":"Log In"])
     }
     
     @objc func signUpPressed() {
         
-        (UIApplication.shared.delegate as! AppDelegate).displayLogin(isRegistering: true)
+        let loginVC = (UIApplication.shared.delegate as! AppDelegate).logInViewController()
+        self.present(loginVC, animated: true, completion: nil)
+        loginVC.setRegistering(true, animated: false)
         
         Answers.logCustomEvent(withName: "Onboarding Completed", customAttributes: ["Onboarded Route":"Sign Up"])
     }

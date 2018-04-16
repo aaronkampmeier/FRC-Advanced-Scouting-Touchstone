@@ -325,7 +325,21 @@ public class LoginViewController: UIViewController {
         tableDataSource.formInputChangedHandler = { self.prepareForSubmission() }
 
         // Set callbacks for the accessory view buttons
-        loginView.didTapCloseHandler = { self.dismiss(animated: true, completion: nil) }
+        loginView.didTapCloseHandler = {[weak self] in
+            let mainStoryboard = UIStoryboard(name: "Main", bundle: nil)
+            if self?.presentingViewController != nil {
+                self?.dismiss(animated: true, completion: nil)
+            } else if RealmController.isInSpectatorMode || RealmController.realmController.currentSyncUser != nil {
+                //Is Logged in, show the team list
+                let teamList = mainStoryboard.instantiateViewController(withIdentifier: "teamListMasterVC")
+                
+                self?.loginView.window?.rootViewController = teamList
+            } else {
+                let onboardingVC = mainStoryboard.instantiateInitialViewController() as! OnboardingPageViewController
+                
+                self?.loginView.window?.rootViewController = onboardingVC
+            }
+        }
         loginView.didTapLogInHandler = { self.submitLoginRequest() }
         loginView.didTapRegisterHandler = { self.setRegistering(!self.isRegistering, animated: true) }
         

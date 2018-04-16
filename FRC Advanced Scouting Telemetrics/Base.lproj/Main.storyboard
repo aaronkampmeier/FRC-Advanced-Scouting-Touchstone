@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="14109" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="48F-9f-Lof">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="14111" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="48F-9f-Lof">
     <device id="ipad9_7" orientation="landscape">
         <adaptation id="fullscreen"/>
     </device>
@@ -674,7 +674,7 @@
         <!--Login Promotional View Controller-->
         <scene sceneID="fab-Ql-wqF">
             <objects>
-                <viewController storyboardIdentifier="loginPromotional" id="BDY-F1-rP9" customClass="LoginPromotionalViewController" customModule="FRC_Advanced_Scouting_Touchstone" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="loginPromotional" modalPresentationStyle="formSheet" id="BDY-F1-rP9" customClass="LoginPromotionalViewController" customModule="FRC_Advanced_Scouting_Touchstone" customModuleProvider="target" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="G1d-xo-7Z6"/>
                         <viewControllerLayoutGuide type="bottom" id="afe-vY-7gs"/>
@@ -711,7 +711,7 @@
                                     <constraint firstAttribute="height" constant="60" id="Y7S-gP-5qF"/>
                                     <constraint firstAttribute="width" priority="750" constant="340" id="iAF-OG-8eh"/>
                                 </constraints>
-                                <state key="normal" title="Login or Sign Up with a Free Team Account"/>
+                                <state key="normal" title="Log in or Sign Up with a Free Team Account"/>
                                 <connections>
                                     <action selector="loginPressed:" destination="BDY-F1-rP9" eventType="touchUpInside" id="9pL-Ps-Mhc"/>
                                 </connections>
@@ -3191,13 +3191,6 @@
                                     <constraint firstAttribute="width" constant="260" id="hKs-Ml-KfB"/>
                                 </constraints>
                             </imageView>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="4Ld-0n-e8m">
-                                <rect key="frame" x="969" y="25" width="30" height="30"/>
-                                <state key="normal" title="Skip"/>
-                                <connections>
-                                    <action selector="skipPressed:" destination="bQ4-PF-FDB" eventType="touchUpInside" id="5xD-7b-Pss"/>
-                                </connections>
-                            </button>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <constraints>
@@ -3207,10 +3200,8 @@
                             <constraint firstItem="YBU-Tv-Pcp" firstAttribute="centerX" secondItem="eHt-le-7Q8" secondAttribute="centerX" id="K8T-rp-fG9"/>
                             <constraint firstAttribute="trailingMargin" relation="greaterThanOrEqual" secondItem="ial-Sp-zgQ" secondAttribute="trailing" id="UwB-Bs-X3S"/>
                             <constraint firstItem="ial-Sp-zgQ" firstAttribute="centerX" secondItem="eHt-le-7Q8" secondAttribute="centerX" id="VQZ-Vo-4ts"/>
-                            <constraint firstAttribute="trailingMargin" secondItem="4Ld-0n-e8m" secondAttribute="trailing" constant="5" id="YqP-Qf-hJ7"/>
                             <constraint firstItem="ial-Sp-zgQ" firstAttribute="top" secondItem="YBU-Tv-Pcp" secondAttribute="bottom" constant="10" id="b4M-ZA-mBJ"/>
                             <constraint firstAttribute="trailingMargin" relation="greaterThanOrEqual" secondItem="YBU-Tv-Pcp" secondAttribute="trailing" id="cZf-rc-Pov"/>
-                            <constraint firstItem="4Ld-0n-e8m" firstAttribute="top" secondItem="cTF-9F-xUe" secondAttribute="bottom" constant="5" id="cba-It-CPY"/>
                             <constraint firstItem="YBU-Tv-Pcp" firstAttribute="top" secondItem="cTF-9F-xUe" secondAttribute="bottom" constant="30" id="jeA-yj-uwH"/>
                             <constraint firstItem="LV3-ir-VpN" firstAttribute="centerX" secondItem="eHt-le-7Q8" secondAttribute="centerX" id="wHb-9f-TeZ"/>
                         </constraints>
@@ -3301,9 +3292,9 @@
                                 <nil key="textColor"/>
                                 <nil key="highlightedColor"/>
                             </label>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="h6m-Aq-S70">
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" minimumFontSize="12" translatesAutoresizingMaskIntoConstraints="NO" id="h6m-Aq-S70">
                                 <rect key="frame" x="20" y="105" width="985.5" height="45.5"/>
-                                <string key="text">If you're a spectator (anyone who isn't scouting data), just use FAST without logging in. To use FAST to scout teams, log in or sign up for a team account.</string>
+                                <string key="text">If you're a spectator (anyone who isn't scouting data), just use FAST without logging in. To use FAST to scout teams, track performance statistics, and sync data across all of your team, log in or sign up for a team account.</string>
                                 <fontDescription key="fontDescription" type="system" pointSize="19"/>
                                 <nil key="textColor"/>
                                 <nil key="highlightedColor"/>
@@ -3321,6 +3312,7 @@
                             <constraint firstItem="h6m-Aq-S70" firstAttribute="top" secondItem="Top-4g-eLW" secondAttribute="bottom" constant="23" id="a7k-wl-AUC"/>
                             <constraint firstItem="h6m-Aq-S70" firstAttribute="centerX" secondItem="eP6-Ya-WuQ" secondAttribute="centerX" id="c5c-SQ-SeF"/>
                             <constraint firstAttribute="bottomMargin" secondItem="fk3-kT-5JM" secondAttribute="bottom" constant="20" id="dls-rL-udx"/>
+                            <constraint firstItem="ylp-2w-MAM" firstAttribute="top" relation="greaterThanOrEqual" secondItem="h6m-Aq-S70" secondAttribute="bottom" constant="5" id="e6q-iD-PNp"/>
                             <constraint firstItem="Top-4g-eLW" firstAttribute="top" secondItem="eP6-Ya-WuQ" secondAttribute="topMargin" constant="30" id="hUj-zU-nql"/>
                             <constraint firstItem="ylp-2w-MAM" firstAttribute="centerX" secondItem="eP6-Ya-WuQ" secondAttribute="centerX" id="yY1-CV-keg"/>
                         </constraints>

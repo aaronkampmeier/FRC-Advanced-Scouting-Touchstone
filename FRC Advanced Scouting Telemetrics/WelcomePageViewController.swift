@@ -21,13 +21,6 @@ class WelcomePageViewController: UIViewController {
         // Dispose of any resources that can be recreated.
     }
     
-    @IBAction func skipPressed(_ sender: UIButton) {
-        //Skip to the end vc
-        if let pageVC = self.parent as? OnboardingPageViewController {
-            pageVC.setPageIndex(index: pageVC.onboardingVCs.endIndex - 1, animated: true)
-        }
-    }
-    
     /*
     // MARK: - Navigation
 
