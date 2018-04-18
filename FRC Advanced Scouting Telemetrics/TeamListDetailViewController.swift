@@ -75,23 +75,27 @@ class TeamListDetailViewController: UIViewController {
             self.updateView(forTeam: selectedTeam)
             
             //Register for updates
-            teamUpdateToken = selectedTeam?.scouted?.observe {[weak self] objectChange in
-                switch objectChange {
-                case .change:
-                    if self?.selectedTeam?.isInvalidated ?? false {
-                        //Some crashes were caused after calling updateView after an object was invalidated
+            if !RealmController.realmController.syncedRealm.isInWriteTransaction {
+                teamUpdateToken = selectedTeam?.scouted?.observe {[weak self] objectChange in
+                    switch objectChange {
+                    case .change:
+                        if self?.selectedTeam?.isInvalidated ?? false {
+                            //Some crashes were caused after calling updateView after an object was invalidated
+                            self?.selectedTeam = nil
+                        } else {
+                            self?.updateView(forTeam: self?.selectedTeam)
+                        }
+                    case .deleted:
+                        //Welp, what now
                         self?.selectedTeam = nil
-                    } else {
-                        self?.updateView(forTeam: self?.selectedTeam)
+                    case .error(let error):
+                        //Hmm why would this happen
+                        CLSNSLogv("Error monitoring team detail view updates: %@", getVaList([error]))
+                        Crashlytics.sharedInstance().recordError(error)
                     }
-                case .deleted:
-                    //Welp, what now
-                    self?.selectedTeam = nil
-                case .error(let error):
-                    //Hmm why would this happen
-                    CLSNSLogv("Error monitoring team detail view updates: %@", getVaList([error]))
-                    Crashlytics.sharedInstance().recordError(error)
                 }
+            } else {
+                CLSNSLogv("Not registering team detail updates because Realm is in write.", getVaList([]))
             }
             
             NotificationCenter.default.post(name: Notification.Name(rawValue: "TeamSelectedChanged"), object: self)
@@ -201,6 +205,9 @@ class TeamListDetailViewController: UIViewController {
         if segue.identifier == "standsScouting" {
             let destinationVC = segue.destination as! StandsScoutingViewController
             destinationVC.teamEventPerformance = teamEventPerformance
+            
+            Answers.logCustomEvent(withName: "Opened Stands Scouting", customAttributes: ["Source":"Team Detail Button"])
+            CLSNSLogv("Opening Stands Scouting from Team Detail Button", getVaList([]))
         } else if segue.identifier == "pitScouting" {
             let pitScoutingVC = segue.destination as! PitScoutingViewController
             pitScoutingVC.scoutedTeam = selectedTeam
@@ -412,6 +419,10 @@ extension TeamListDetailViewController: MatchesTableViewControllerDelegate {
                 standsScoutingVC.matchPerformance = (associatedMatch?.teamPerformances)?.first {$0.teamEventPerformance == self.teamEventPerformance}
                 
                 matchesTableViewController.present(standsScoutingVC, animated: true, completion: nil)
+                
+                Answers.logCustomEvent(withName: "Opened Stands Scouting", customAttributes: ["Source":"Team Matches List"])
+                
+                CLSNSLogv("Opening Stands Scouting from Team Matches List", getVaList([]))
             })
             actionSheet.addAction(UIAlertAction(title: "Cancel", style: .cancel) {action in
                 matchesTableViewController.tableView.deselectRow(at: matchesTableViewController.tableView.indexPathForSelectedRow ?? IndexPath(), animated: true)

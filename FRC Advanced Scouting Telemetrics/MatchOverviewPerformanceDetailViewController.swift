@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import Crashlytics
 
 protocol MatchOverviewPerformanceDetailDataSource {
     func teamMatchPerformance() -> TeamMatchPerformance?
@@ -139,6 +140,9 @@ class MatchOverviewPerformanceDetailViewController: UIViewController {
             standsScoutVC.matchPerformance = matchPerformance
             
             present(standsScoutVC, animated: true, completion: nil)
+            
+            Answers.logCustomEvent(withName: "Opened Stands Scouting", customAttributes: ["Source":"Match Overview Detail"])
+            CLSNSLogv("Opening Stands Scouting from Match Overview Detail", getVaList([]))
         }
     }
     
