@@ -58,9 +58,21 @@ class RealmController {
     func openLocalRealm() {
         var generalConfig = Realm.Configuration()
         generalConfig.fileURL = generalConfig.fileURL?.deletingLastPathComponent().appendingPathComponent("LocalGeneralRealm.realm")
+        generalConfig.schemaVersion = 1
+        generalConfig.migrationBlock = { migration, oldSchemaVersion in
+            if oldSchemaVersion < 1 {
+                
+            }
+        }
         
         var scoutedConfig = Realm.Configuration()
         scoutedConfig.fileURL = scoutedConfig.fileURL?.deletingLastPathComponent().appendingPathComponent("LocalScoutedRealm.realm")
+        scoutedConfig.schemaVersion = 1
+        scoutedConfig.migrationBlock = { migration, oldSchemaVersion in
+            if oldSchemaVersion < 1 {
+                
+            }
+        }
         
         do {
             self.generalRealm = try Realm(configuration: generalConfig)
@@ -188,6 +200,9 @@ class RealmController {
         //Logout button pressed
         currentSyncUser?.logOut()
         currentSyncUser = nil
+        
+        syncedRealm = nil
+        generalRealm = nil
         
         //Now return to the log in screen
         let onboarding = UIStoryboard(name: "Main", bundle: nil).instantiateInitialViewController()
