@@ -170,11 +170,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "FRC Advanced Scouting Telemetrics/TeamListTableViewController.swift"
-            timestampString = "545540397.59705"
+            timestampString = "545625244.080761"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "604"
-            endingLineNumber = "604"
+            startingLineNumber = "625"
+            endingLineNumber = "625"
             landmarkName = "unknown"
             landmarkType = "0">
          </BreakpointContent>
@@ -648,13 +648,13 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "FRC Advanced Scouting Telemetrics/RealmLoginKit/Controllers/LoginViewController.swift"
-            timestampString = "545540397.59772"
+            timestampString = "545772731.3314871"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "412"
             endingLineNumber = "412"
-            landmarkName = "unknown"
-            landmarkType = "0">
+            landmarkName = "submitLoginRequest()"
+            landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -664,13 +664,13 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "FRC Advanced Scouting Telemetrics/RealmLoginKit/Controllers/LoginViewController.swift"
-            timestampString = "545540397.598006"
+            timestampString = "545772731.33181"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "415"
             endingLineNumber = "415"
-            landmarkName = "unknown"
-            landmarkType = "0">
+            landmarkName = "submitLoginRequest()"
+            landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -760,7 +760,7 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "FRC Advanced Scouting Telemetrics/ScoutingModels.swift"
-            timestampString = "544829900.690503"
+            timestampString = "545770052.6505539"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "161"
@@ -792,7 +792,7 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "FRC Advanced Scouting Telemetrics/TeamCommentsTableViewController.swift"
-            timestampString = "543809330.999418"
+            timestampString = "545772731.332105"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "102"
@@ -808,11 +808,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "FRC Advanced Scouting Telemetrics/TeamListTableViewController.swift"
-            timestampString = "545540397.598366"
+            timestampString = "545625244.082373"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "429"
-            endingLineNumber = "429"
+            startingLineNumber = "440"
+            endingLineNumber = "440"
             landmarkName = "unknown"
             landmarkType = "0">
          </BreakpointContent>
@@ -824,13 +824,13 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "FRC Advanced Scouting Telemetrics/RealmDataMangager.swift"
-            timestampString = "545148298.53664"
+            timestampString = "545772731.332167"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "310"
-            endingLineNumber = "310"
-            landmarkName = "genericWrite(onRealm:blockToWrite:)"
-            landmarkType = "7">
+            startingLineNumber = "375"
+            endingLineNumber = "375"
+            landmarkName = "general"
+            landmarkType = "24">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -840,13 +840,13 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "FRC Advanced Scouting Telemetrics/RealmDataMangager.swift"
-            timestampString = "545148298.53669"
+            timestampString = "545772731.332211"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "313"
-            endingLineNumber = "313"
-            landmarkName = "unknown"
-            landmarkType = "0">
+            startingLineNumber = "378"
+            endingLineNumber = "378"
+            landmarkName = "general"
+            landmarkType = "24">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -856,13 +856,13 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "FRC Advanced Scouting Telemetrics/RealmDataMangager.swift"
-            timestampString = "545148298.536737"
+            timestampString = "545772731.332251"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "311"
-            endingLineNumber = "311"
-            landmarkName = "RealmController"
-            landmarkType = "3">
+            startingLineNumber = "376"
+            endingLineNumber = "376"
+            landmarkName = "general"
+            landmarkType = "24">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -888,11 +888,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "FRC Advanced Scouting Telemetrics/TeamListTableViewController.swift"
-            timestampString = "545540397.598676"
+            timestampString = "545625244.083051"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "185"
-            endingLineNumber = "185"
+            startingLineNumber = "187"
+            endingLineNumber = "187"
             landmarkName = "unknown"
             landmarkType = "0">
          </BreakpointContent>
@@ -968,7 +968,7 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "FRC Advanced Scouting Telemetrics/TBAAsyncManager.swift"
-            timestampString = "545148298.536916"
+            timestampString = "545772731.3323621"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "99"
@@ -984,7 +984,7 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "FRC Advanced Scouting Telemetrics/TBAAsyncManager.swift"
-            timestampString = "545148298.536967"
+            timestampString = "545772731.3324029"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "117"
@@ -1000,7 +1000,7 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "FRC Advanced Scouting Telemetrics/TBAAsyncManager.swift"
-            timestampString = "545148298.537014"
+            timestampString = "545772731.33244"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "150"
@@ -1048,7 +1048,7 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "FRC Advanced Scouting Telemetrics/TBAAsyncManager.swift"
-            timestampString = "545148298.53706"
+            timestampString = "545772731.332477"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "154"
@@ -1064,7 +1064,7 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "FRC Advanced Scouting Telemetrics/TBAAsyncManager.swift"
-            timestampString = "545148298.537106"
+            timestampString = "545772731.332512"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "86"
@@ -1128,7 +1128,7 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "FRC Advanced Scouting Telemetrics/TBAAsyncManager.swift"
-            timestampString = "545148298.5372"
+            timestampString = "545772731.3325861"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "196"
@@ -1176,7 +1176,7 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "FRC Advanced Scouting Telemetrics/RealmLoaderViewController.swift"
-            timestampString = "545540397.5990731"
+            timestampString = "545543958.961753"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "68"
@@ -1192,12 +1192,12 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "FRC Advanced Scouting Telemetrics/RealmDataMangager.swift"
-            timestampString = "545148298.5373009"
+            timestampString = "545772731.332638"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "149"
-            endingLineNumber = "149"
-            landmarkName = "closeRealms()"
+            startingLineNumber = "214"
+            endingLineNumber = "214"
+            landmarkName = "sanityCheckStructure(ofEvent:)"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>

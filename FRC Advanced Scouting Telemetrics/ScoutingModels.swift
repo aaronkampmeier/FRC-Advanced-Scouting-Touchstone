@@ -171,6 +171,7 @@ import Crashlytics
 @objcMembers class TeamComment: Object {
     dynamic var bodyText: String = ""
     dynamic var datePosted = Date()
+    dynamic var author: String = ""
 }
 
 @objcMembers class ScoutedMatch: Object, HasGeneralEquivalent {

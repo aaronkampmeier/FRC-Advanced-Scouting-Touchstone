@@ -127,7 +127,8 @@ class TeamCommentsTableViewController: UITableViewController {
             dateFormatter.locale = Locale.current
             
             dateFormatter.dateFormat = "EEE dd, HH:mm"
-            (commentCell.viewWithTag(1) as! UILabel).text = dateFormatter.string(from: comment.datePosted)
+            let dateString = dateFormatter.string(from: comment.datePosted)
+            (commentCell.viewWithTag(1) as! UILabel).text = "\(dateString)\(comment.author != "" ? " by \(comment.author)" : "")"
             
             (commentCell.viewWithTag(2) as! UITextView).text = comment.bodyText
             
@@ -176,6 +177,7 @@ class TeamCommentsTableViewController: UITableViewController {
         let comment = TeamComment()
         comment.bodyText = self.currentlyWrittenCommentText
         comment.datePosted = Date()
+        comment.author = UIDevice.current.name
         
         if RealmController.realmController.syncedRealm.isInWriteTransaction {
             RealmController.realmController.syncedRealm.add(comment)
@@ -185,8 +187,6 @@ class TeamCommentsTableViewController: UITableViewController {
             
             RealmController.realmController.syncedRealm.add(comment)
             teamComments.append(comment)
-            
-            Answers.logCustomEvent(withName: "Posted team comment", customAttributes: nil)
             
             do {
                 if let token = commentNotificationToken {
@@ -200,7 +200,9 @@ class TeamCommentsTableViewController: UITableViewController {
             }
         }
         
-        currentlyWrittenCommentText = ""
+        Answers.logCustomEvent(withName: "Posted team comment", customAttributes: nil)
+        
+        self.currentlyWrittenCommentText = ""
         
         tableView.insertRows(at: [IndexPath(row: teamComments.count - 1, section: 0)], with: .top)
         tableView.reloadRows(at: [IndexPath(row: teamComments.count, section: 0)], with: .fade)

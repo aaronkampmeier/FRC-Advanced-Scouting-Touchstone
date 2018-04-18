@@ -30,7 +30,6 @@ import RealmSwift
         return ["cache"]
     }
     
-    ///
     var competitionLevelEnum: CompetitionLevel {
         return CompetitionLevel(rawValue: self.competitionLevel)!
     }
@@ -93,6 +92,10 @@ import RealmSwift
     }
     
     public static func >(lhs: Match, rhs: Match) -> Bool {
+        if let firstDate = lhs.time, let secondDate = rhs.time {
+            return firstDate > secondDate
+        }
+        
         if lhs.competitionLevelEnum.rankedPosition == rhs.competitionLevelEnum.rankedPosition {
             if lhs.setNumber.value == rhs.setNumber.value {
                 return lhs.matchNumber > rhs.matchNumber
@@ -105,6 +108,10 @@ import RealmSwift
     }
     
     public static func >=(lhs: Match, rhs: Match) -> Bool {
+        if let firstDate = lhs.time, let secondDate = rhs.time {
+            return firstDate >= secondDate
+        }
+        
         if lhs.competitionLevelEnum.rankedPosition == rhs.competitionLevelEnum.rankedPosition {
             if lhs.setNumber.value == rhs.setNumber.value {
                 return lhs.matchNumber >= rhs.matchNumber
@@ -117,6 +124,10 @@ import RealmSwift
     }
     
     public static func <(lhs: Match, rhs: Match) -> Bool {
+        if let firstDate = lhs.time, let secondDate = rhs.time {
+            return firstDate < secondDate
+        }
+        
         if lhs.competitionLevelEnum.rankedPosition == rhs.competitionLevelEnum.rankedPosition {
             if lhs.setNumber.value == rhs.setNumber.value {
                 return lhs.matchNumber < rhs.matchNumber
@@ -129,6 +140,10 @@ import RealmSwift
     }
     
     public static func <=(lhs: Match, rhs: Match) -> Bool {
+        if let firstDate = lhs.time, let secondDate = rhs.time {
+            return firstDate <= secondDate
+        }
+        
         if lhs.competitionLevelEnum.rankedPosition == rhs.competitionLevelEnum.rankedPosition {
             if lhs.setNumber.value == rhs.setNumber.value {
                 return lhs.matchNumber <= rhs.matchNumber

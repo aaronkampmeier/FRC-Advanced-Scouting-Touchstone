@@ -21,7 +21,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
         // Override point for customization after application launch.
         Fabric.with([Answers.self, Crashlytics.self])
-        Crashlytics.sharedInstance().setUserIdentifier(UIDevice.current.identifierForVendor?.uuidString ?? "Unknown")
+        Crashlytics.sharedInstance().setUserIdentifier(UIDevice.current.name)
         
         //Check if the user is logged in
         if RealmController.realmController.currentSyncUser != nil {
