@@ -162,6 +162,7 @@ class PitScoutingViewController: UIViewController, UICollectionViewDataSource, U
             PitScoutingParameter(type: .SegmentedSelector, label: "Climb Capability", options: Capability.allStringValues, currentValue: {self.scoutedTeam?.scouted?.climbCapability}, updateHandler: {newValue in
                 self.scoutedTeam?.scouted?.climbCapability = newValue as? String
             }),
+            PitScoutingParameter(type: .TableViewSelector, label: "Climber Type", options: ClimberType.allValues.map({$0.rawValue}), currentValue: {self.scoutedTeam?.scouted?.climberType}, updateHandler: {newValue in self.scoutedTeam?.scouted?.climberType = newValue as? String}),
             
             ///Banana
             PitScoutingParameter(type: .Button, label: "", options: nil, currentValue: {self.scoutedTeam?.scouted?.canBanana}, updateHandler: {newValue in

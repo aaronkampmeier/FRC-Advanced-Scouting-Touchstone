@@ -115,18 +115,13 @@ import Crashlytics
     let driverXP = RealmOptional<Double>()
     dynamic var driveTrain: String?
     
-    ///DO  NOT USE, Deprecated
-    dynamic var isInPickList = true {
-        didSet {
-            assertionFailure()
-        }
-    }
-    
     ///Game Based Values
     dynamic var scaleCapability: String?
     dynamic var switchCapability: String?
     dynamic var vaultCapability: String?
     dynamic var climbCapability: String?
+    
+    dynamic var climberType: String?
     
     override static func primaryKey() -> String {
         return "key"

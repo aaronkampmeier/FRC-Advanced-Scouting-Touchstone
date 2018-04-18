@@ -15,9 +15,14 @@ class PitTableViewSelectorCollectionViewCell: PitScoutingCell, UITableViewDataSo
     
     var updateHandler: PitScoutingUpdateHandler?
     var options: [String] = []
-    var selectedOptions = [String]() {
+//    var selectedOptions = [String]() {
+//        didSet {
+//            pitScoutingVC?.register(update: updateHandler, withValue: selectedOptions)
+//        }
+//    }
+    var selectedOption: String? {
         didSet {
-            pitScoutingVC?.register(update: updateHandler, withValue: selectedOptions)
+            pitScoutingVC?.register(update: updateHandler, withValue: selectedOption)
         }
     }
     
@@ -28,23 +33,14 @@ class PitTableViewSelectorCollectionViewCell: PitScoutingCell, UITableViewDataSo
         
         tableView.dataSource = self
         tableView.delegate = self
+        tableView.rowHeight = 40
+        tableView.layer.cornerRadius = 9
         tableView.reloadData()
-        tableView.allowsMultipleSelection = true
+        tableView.allowsMultipleSelection = false
         
-        for indexPath in tableView.indexPathsForSelectedRows ?? [] {
-            tableView.deselectRow(at: indexPath, animated: false)
-            tableView.cellForRow(at: indexPath)?.accessoryType = .none
-        }
-        
-        //Set current values
-        if let currentValues = parameter.currentValue() as? [String] {
-            for value in currentValues {
-                if let index = options.index(of: value) {
-                    tableView.selectRow(at: IndexPath.init(row: index, section: 0), animated: false, scrollPosition: .none)
-                    tableView.cellForRow(at: IndexPath.init(row: index, section: 0))?.accessoryType = .checkmark
-                }
-            }
-            selectedOptions = currentValues
+        selectedOption = parameter.currentValue() as? String
+        if let index = options.index(of: selectedOption ?? "") {
+            tableView.selectRow(at: IndexPath(row: index, section: 0), animated: false, scrollPosition: .bottom)
         }
     }
     
@@ -60,7 +56,7 @@ class PitTableViewSelectorCollectionViewCell: PitScoutingCell, UITableViewDataSo
         let cell = tableView.dequeueReusableCell(withIdentifier: "cell")
         
         cell?.textLabel?.text = options[indexPath.row]
-        if selectedOptions.contains(options[indexPath.row]) {
+        if options[indexPath.row] == selectedOption {
             cell?.accessoryType = .checkmark
         } else {
             cell?.accessoryType = .none
@@ -70,12 +66,24 @@ class PitTableViewSelectorCollectionViewCell: PitScoutingCell, UITableViewDataSo
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        selectedOptions.append(options[indexPath.row])
+        selectedOption = options[indexPath.row]
         tableView.cellForRow(at: indexPath)?.accessoryType = .checkmark
     }
     
     func tableView(_ tableView: UITableView, didDeselectRowAt indexPath: IndexPath) {
-        selectedOptions.remove(at: selectedOptions.index(of: options[indexPath.row])!)
+        selectedOption = nil
         tableView.cellForRow(at: indexPath)?.accessoryType = .none
+    }
+    
+    func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
+        return "Single Select List"
+    }
+    
+    func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
+        return 30
+    }
+    
+    func tableView(_ tableView: UITableView, heightForFooterInSection section: Int) -> CGFloat {
+        return 30
     }
 }

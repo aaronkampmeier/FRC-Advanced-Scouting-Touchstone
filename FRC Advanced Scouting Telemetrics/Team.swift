@@ -89,6 +89,9 @@ extension Team: HasStats {
                 },
                 StatName.VaultCapability: {
                     StatValue.initWithOptional(value: self.scouted?.vaultCapability)
+                },
+                StatName.ClimberType: {
+                    StatValue.initWithOptional(value: self.scouted?.climberType)
                 }
             ]
         }
@@ -113,6 +116,7 @@ extension Team: HasStats {
         case ScaleCapability = "Scale Capability"
         case SwitchCapability = "Switch Capability"
         case VaultCapability = "Vault Capability"
+        case ClimberType = "Climber Type"
         
         var description: String {
             get {
@@ -120,9 +124,9 @@ extension Team: HasStats {
             }
         }
         
-        static let allValues: [StatName] = [.TeamNumber, .RookieYear, .DriverXP, .RobotLength, .RobotWidth, .RobotHeight, .RobotWeight, .GamePlayStrategy, .VisionTrackingCapability, .DriveTrain, .ProgrammingLanguage, .ScaleCapability, .SwitchCapability, .VaultCapability, .ClimberCapability]
+        static let allValues: [StatName] = [.TeamNumber, .RookieYear, .DriverXP, .RobotLength, .RobotWidth, .RobotHeight, .RobotWeight, .GamePlayStrategy, .VisionTrackingCapability, .DriveTrain, .ProgrammingLanguage, .ScaleCapability, .SwitchCapability, .VaultCapability, .ClimberCapability, .ClimberType]
         
-        static let teamDetailValues: [StatName] = [.DriverXP, .RobotLength, .RobotWidth, .RobotHeight, .RobotWeight, .GamePlayStrategy, .VisionTrackingCapability, .DriveTrain, .ProgrammingLanguage, .ScaleCapability, .SwitchCapability, .VaultCapability, .ClimberCapability]
+        static let teamDetailValues: [StatName] = [.DriverXP, .RobotLength, .RobotWidth, .RobotHeight, .RobotWeight, .GamePlayStrategy, .VisionTrackingCapability, .DriveTrain, .ProgrammingLanguage, .ScaleCapability, .SwitchCapability, .VaultCapability, .ClimberCapability, .ClimberType]
     }
 }
 

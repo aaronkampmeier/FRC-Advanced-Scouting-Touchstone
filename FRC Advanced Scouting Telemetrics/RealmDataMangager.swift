@@ -58,18 +58,23 @@ class RealmController {
     func openLocalRealm() {
         var generalConfig = Realm.Configuration()
         generalConfig.fileURL = generalConfig.fileURL?.deletingLastPathComponent().appendingPathComponent("LocalGeneralRealm.realm")
-        generalConfig.schemaVersion = 1
+        generalRealmConfig?.objectTypes = [Team.self,Match.self,TeamEventPerformance.self,Event.self,TeamMatchPerformance.self]
+        generalConfig.schemaVersion = 2
         generalConfig.migrationBlock = { migration, oldSchemaVersion in
-            if oldSchemaVersion < 1 {
+            if oldSchemaVersion < 2 {
                 
             }
         }
         
         var scoutedConfig = Realm.Configuration()
         scoutedConfig.fileURL = scoutedConfig.fileURL?.deletingLastPathComponent().appendingPathComponent("LocalScoutedRealm.realm")
-        scoutedConfig.schemaVersion = 1
+        scoutedRealmConfig?.objectTypes = [EventRanker.self, ScoutedTeam.self, ScoutedMatch.self, ScoutedMatchPerformance.self, TimeMarker.self, ComputedStats.self, TeamComment.self]
+        scoutedConfig.schemaVersion = 2
         scoutedConfig.migrationBlock = { migration, oldSchemaVersion in
             if oldSchemaVersion < 1 {
+                
+            }
+            if oldSchemaVersion < 2 {
                 
             }
         }
@@ -96,7 +101,7 @@ class RealmController {
         scoutedRealmConfig = Realm.Configuration(syncConfiguration: scoutedSyncConfig)
         
         //Set the object types to be used in the Synced Realm to keep it separate from the other realm
-        scoutedRealmConfig?.objectTypes = [/*GeneralRanker.self,*/ EventRanker.self, ScoutedTeam.self, ScoutedMatch.self, ScoutedMatchPerformance.self, TimeMarker.self, ComputedStats.self, TeamComment.self]
+        scoutedRealmConfig?.objectTypes = [EventRanker.self, ScoutedTeam.self, ScoutedMatch.self, ScoutedMatchPerformance.self, TimeMarker.self, ComputedStats.self, TeamComment.self]
         
         //Now for the general realm
         let generalStructureRealmURL = URL(string: "realms://\(rosServerAddress)/~/general_structure")!
@@ -578,4 +583,20 @@ enum CubeDestination: String, CustomStringConvertible {
     }
     
     static let allValues: [CubeDestination] = [.Scale, .Switch, .OpponentSwitch, .Vault, .Dropped]
+}
+
+enum ClimberType: String, CustomStringConvertible {
+    case None
+    case SlideBar = "Slide Bar"
+    case HalfBar = "Half Bar"
+    case FullBar = "Full Bar"
+    case Deployable
+    case BuddyDouble = "Buddy Double"
+    case BuddyTriple = "Buddy Triple"
+    
+    var description: String {
+        return self.rawValue
+    }
+    
+    static let allValues: [ClimberType] = [.None, .SlideBar, .HalfBar, .FullBar, .Deployable, .BuddyDouble, .BuddyTriple]
 }
