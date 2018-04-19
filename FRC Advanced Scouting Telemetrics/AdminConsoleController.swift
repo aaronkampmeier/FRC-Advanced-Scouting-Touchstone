@@ -149,8 +149,8 @@ class AdminConsoleController: UIViewController, UITableViewDataSource, UITableVi
                 } else {
                     //First present warning
                     let warning = UIAlertController(title: "Do Not Repeat", message: "Events need only be added to a team's FAST account once. This should be done by your scouting lead. Please make sure someone else has not already added the same event as this may cause data inconsistencies in rare cases.", preferredStyle: .alert)
-                    warning.addAction(UIAlertAction(title: "I Understand", style: .default, handler: {_ in self.performSegue(withIdentifier: "addEvent", sender: tableView)}))
-                    warning.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: {_ in self.viewWillAppear(false) /*This is just to clear the table view selection*/}))
+                    warning.addAction(UIAlertAction(title: "I Understand", style: .default, handler: {_ in self.performSegue(withIdentifier: "addEvent", sender: tableView); Answers.logCustomEvent(withName: "Add Event Pressed", customAttributes: ["Route":"I Understand"])}))
+                    warning.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: {_ in self.viewWillAppear(false) /*This is just to clear the table view selection*/ ; Answers.logCustomEvent(withName: "Add Event Pressed", customAttributes: ["Route":"Cancel"])}))
                     self.present(warning, animated: true, completion: nil)
                 }
             } else {
@@ -178,6 +178,7 @@ class AdminConsoleController: UIViewController, UITableViewDataSource, UITableVi
                     }
                     
                     self.navigationController?.pushViewController(ackVC, animated: true)
+                    Answers.logContentView(withName: "Acknowledgements", contentType: "App Informational", contentId: nil, customAttributes: nil)
                 } else {
                     assertionFailure()
                 }
@@ -353,6 +354,8 @@ class AdminConsoleController: UIViewController, UITableViewDataSource, UITableVi
                     
                     CLSNSLogv("Failed to write csv text to file: \(error)", getVaList([]))
                     Crashlytics.sharedInstance().recordError(error)
+                    
+                    Answers.logCustomEvent(withName: "Export Event to CSV", customAttributes: ["Event":event.key, "Successful":false])
                 } else if let path = path {
                     let activityVC = UIActivityViewController(activityItems: [path], applicationActivities: [])
                     
@@ -365,8 +368,21 @@ class AdminConsoleController: UIViewController, UITableViewDataSource, UITableVi
                         }
                     }
                     
+                    activityVC.completionWithItemsHandler = {(activityType: UIActivityType?, completed: Bool, returnedItems: [Any]?, error: Error?) in
+                        if let activityType = activityType {
+                            Answers.logShare(withMethod: activityType.rawValue, contentName: path.lastPathComponent, contentType: "CSV Event Export", contentId: "csv_\(event.key)", customAttributes: nil)
+                        }
+                        
+                        if let error = error {
+                            CLSNSLogv("Activity share of csv export failed with error: \(error)", getVaList([]))
+                            Crashlytics.sharedInstance().recordError(error)
+                        }
+                    }
+                    
                     onCompletion(true)
                     self.present(activityVC, animated: true, completion: nil)
+                    
+                    Answers.logCustomEvent(withName: "Export Event to CSV", customAttributes: ["Event":event.key, "Successful":true])
                 }
             }
         }

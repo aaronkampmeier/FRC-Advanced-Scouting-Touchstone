@@ -190,7 +190,9 @@ class EventStatsGraphViewController: UIViewController {
         } else {
             barChart.chartDescription?.text = "No Event"
         }
-    } 
+        
+        Answers.logContentView(withName: "Event Stats Graph", contentType: "Graph", contentId: nil, customAttributes: ["Num of Stats Graphed":statsToGraph.count])
+    }
 }
 
 extension EventStatsGraphViewController: IAxisValueFormatter {

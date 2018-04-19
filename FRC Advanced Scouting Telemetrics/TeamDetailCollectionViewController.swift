@@ -194,6 +194,8 @@ class TeamDetailCollectionViewController: UICollectionViewController, UICollecti
             let navController = UINavigationController(rootViewController: chartVC)
             navController.modalPresentationStyle = .pageSheet
             present(navController, animated: true, completion: nil)
+            
+            Answers.logContentView(withName: "Team Stat Graph", contentType: "Graph", contentId: nil, customAttributes: ["Stat Graphed":stat.name]) 
         }
     }
     

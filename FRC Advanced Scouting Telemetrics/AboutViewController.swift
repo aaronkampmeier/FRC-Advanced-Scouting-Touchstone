@@ -28,7 +28,7 @@ class AboutViewController: UIViewController {
             }
         }
         
-        Answers.logContentView(withName: "FAST About Page", contentType: nil, contentId: nil, customAttributes: nil)
+        Answers.logContentView(withName: "FAST About Page", contentType: "App Informational", contentId: nil, customAttributes: nil)
     }
     
     override func viewWillAppear(_ animated: Bool) {

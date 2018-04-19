@@ -23,7 +23,7 @@ class SyncStatusViewController: UIViewController {
         super.viewDidLoad()
 
         // Do any additional setup after loading the view.
-        Answers.logCustomEvent(withName: "Viewed Sync Status Page", customAttributes: nil)
+        Answers.logContentView(withName: "Sync Status Page", contentType: "Account Informational", contentId: nil, customAttributes: nil)
     }
     
     override func viewWillAppear(_ animated: Bool) {

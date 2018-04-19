@@ -692,6 +692,8 @@ class TeamListTableViewController: UITableViewController, TeamListDetailDataSour
             eventStatGraphVC.setUp(forEvent: event)
             
             present(navVC, animated: true, completion: nil)
+            
+            Answers.logCustomEvent(withName: "Event Stats Grapher Button Pressed", customAttributes: nil)
         }
     }
     
