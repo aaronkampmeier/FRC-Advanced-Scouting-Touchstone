@@ -102,10 +102,6 @@ extension MatchOverviewMasterViewController: MatchesTableViewControllerDelegate 
     }
 
     func hasSelectionEnabled() -> Bool {
-        if RealmController.isInSpectatorMode {
-            return false
-        } else {
-            return true
-        }
+        return true
     }
 }
