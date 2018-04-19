@@ -112,6 +112,10 @@ class MatchOverviewPerformanceDetailViewController: UIViewController {
         displayedTeamMatchPerformance = nil
         hasNotBeenScoutedHeight.constant = 0
         standsScoutButton.isHidden = true
+        
+        if RealmController.isInSpectatorMode {
+            standsScoutButton.tintColor = UIColor.purple
+        }
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -132,17 +136,24 @@ class MatchOverviewPerformanceDetailViewController: UIViewController {
     }
     
     @IBAction func standsScoutPressed(_ sender: UIButton) {
-        //Pull up the stands scouting page
-        let standsScoutVC = storyboard?.instantiateViewController(withIdentifier: "standsScouting") as! StandsScoutingViewController
-        
-        if let matchPerformance = displayedTeamMatchPerformance {
-            standsScoutVC.teamEventPerformance = matchPerformance.teamEventPerformance
-            standsScoutVC.matchPerformance = matchPerformance
+        if RealmController.isInSpectatorMode {
+            //Show the sign up thing
+            let loginPromotional = storyboard!.instantiateViewController(withIdentifier: "loginPromotional")
+            self.present(loginPromotional, animated: true, completion: nil)
+            Answers.logContentView(withName: "Login Promotional", contentType: nil, contentId: nil, customAttributes: ["Source":"Match Overview Scout Button"])
+        } else {
+            //Pull up the stands scouting page
+            let standsScoutVC = storyboard?.instantiateViewController(withIdentifier: "standsScouting") as! StandsScoutingViewController
             
-            present(standsScoutVC, animated: true, completion: nil)
-            
-            Answers.logCustomEvent(withName: "Opened Stands Scouting", customAttributes: ["Source":"Match Overview Detail"])
-            CLSNSLogv("Opening Stands Scouting from Match Overview Detail", getVaList([]))
+            if let matchPerformance = displayedTeamMatchPerformance {
+                standsScoutVC.teamEventPerformance = matchPerformance.teamEventPerformance
+                standsScoutVC.matchPerformance = matchPerformance
+                
+                present(standsScoutVC, animated: true, completion: nil)
+                
+                Answers.logCustomEvent(withName: "Opened Stands Scouting", customAttributes: ["Source":"Match Overview Detail"])
+                CLSNSLogv("Opening Stands Scouting from Match Overview Detail", getVaList([]))
+            }
         }
     }
     
