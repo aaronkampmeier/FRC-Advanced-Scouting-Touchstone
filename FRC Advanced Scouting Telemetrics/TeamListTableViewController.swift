@@ -331,7 +331,7 @@ class TeamListTableViewController: UITableViewController, TeamListDetailDataSour
             //Wait until the user has finished adding the first event
             if selectedEvent != nil {
                 //Now show it
-                let alert = UIAlertController(title: "Important Tip", message: "The edit button on the bottom left allows you to reorder the team list however you would like in order to bring your favorite teams to the top. The rank numbers on the left correspond to this order and not the event playoff ranking. To find the playoff ranking of a team, click into that team's detail page or use the sort menu.", preferredStyle: .alert)
+                let alert = UIAlertController(title: "Important Tip", message: "The edit button on the bottom left allows you to reorder the team list however you would like in order to bring your favorite teams to the top. The rank numbers on the left correspond to this order and not the event qualification ranking. To find the qualification ranking of a team, click into that team's detail page or use the sort menu.", preferredStyle: .alert)
                 alert.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
                 self.present(alert, animated: true, completion: nil)
                 
