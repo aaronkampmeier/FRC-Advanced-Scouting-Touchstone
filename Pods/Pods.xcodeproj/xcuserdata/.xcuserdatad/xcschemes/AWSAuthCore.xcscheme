@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Scheme
-   LastUpgradeVersion = "0700"
+   LastUpgradeVersion = "0930"
    version = "1.3">
    <BuildAction
       parallelizeBuildables = "YES"
@@ -13,11 +13,11 @@
             buildForProfiling = "YES"
             buildForArchiving = "YES">
             <BuildableReference
-               BuildableIdentifier = 'primary'
-               BlueprintIdentifier = '1646CBD253AEDE4D9D17CE05B758F781'
-               BlueprintName = 'AWSAuthCore'
-               ReferencedContainer = 'container:Pods.xcodeproj'
-               BuildableName = 'AWSAuthCore.framework'>
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "1646CBD253AEDE4D9D17CE05B758F781"
+               BlueprintName = "AWSAuthCore"
+               ReferencedContainer = "container:Pods.xcodeproj"
+               BuildableName = "AWSAuthCore.framework">
             </BuildableReference>
          </BuildActionEntry>
       </BuildActionEntries>

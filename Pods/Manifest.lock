@@ -25,33 +25,57 @@ PODS:
     - FLAnimatedImage (~> 1.0.8)
     - NYTPhotoViewer/Core
   - NYTPhotoViewer/Core (1.1.0)
-  - Realm (3.1.1):
-    - Realm/Headers (= 3.1.1)
-  - Realm/Headers (3.1.1)
-  - RealmSwift (3.1.1):
-    - Realm (= 3.1.1)
+  - Realm (3.7.6):
+    - Realm/Headers (= 3.7.6)
+  - Realm/Headers (3.7.6)
+  - RealmSwift (3.7.6):
+    - Realm (= 3.7.6)
   - SSBouncyButton (1.0.7):
     - BRYSerialAnimationQueue (~> 1.0)
     - UIColor-Hex (~> 0.1)
-    - UIImage+BetterAdditions (~> 2.0)
+    - "UIImage+BetterAdditions (~> 2.0)"
   - TORoundedTableView (0.1.3)
   - UICircularProgressRing (1.2.1)
   - UIColor-Hex (0.1.1)
-  - UIImage+BetterAdditions (2.0.3)
+  - "UIImage+BetterAdditions (2.0.3)"
   - VTAcknowledgementsViewController (1.2.1)
 
 DEPENDENCIES:
   - Alamofire
   - AWSAuthUI
+  - AWSCore
   - AWSMobileClient
   - AWSUserPoolsSignIn
   - GMStepper (~> 2.1)
   - NYTPhotoViewer (~> 1.1.0)
-  - RealmSwift (~> 3.1.1)
+  - RealmSwift (~> 3.7.1)
   - SSBouncyButton (~> 1.0)
   - TORoundedTableView
   - UICircularProgressRing
   - VTAcknowledgementsViewController
+
+SPEC REPOS:
+  https://github.com/cocoapods/specs.git:
+    - Alamofire
+    - AWSAuthCore
+    - AWSAuthUI
+    - AWSCognitoIdentityProvider
+    - AWSCognitoIdentityProviderASF
+    - AWSCore
+    - AWSMobileClient
+    - AWSUserPoolsSignIn
+    - BRYSerialAnimationQueue
+    - FLAnimatedImage
+    - GMStepper
+    - NYTPhotoViewer
+    - Realm
+    - RealmSwift
+    - SSBouncyButton
+    - TORoundedTableView
+    - UICircularProgressRing
+    - UIColor-Hex
+    - "UIImage+BetterAdditions"
+    - VTAcknowledgementsViewController
 
 SPEC CHECKSUMS:
   Alamofire: f41a599bd63041760b26d393ec1069d9d7b917f4
@@ -66,15 +90,15 @@ SPEC CHECKSUMS:
   FLAnimatedImage: 4a0b56255d9b05f18b6dd7ee06871be5d3b89e31
   GMStepper: 8994824040d57d952134e409b7724d05a1a41c18
   NYTPhotoViewer: e80e8767f3780d2df37c6f72cbab15d6c7232911
-  Realm: 42d1c38a5b1bbcc828b48a7ce702cb86fc68adf4
-  RealmSwift: d31937ca6a6ee54acde64ec839523c0a3c04924b
+  Realm: 9eaecad54712d6246d08ba34c10f354e4715d7d3
+  RealmSwift: 1fe08b4ebaeeaacf17f9ba0343f7b25c9fc31fa6
   SSBouncyButton: 90f6da63da6c6d32f9dab4928b80632b427d871a
   TORoundedTableView: cd1437ef81ab3888dea8c06d2dfe4795bcaac768
   UICircularProgressRing: 8eca1c123d323dcef59ba3ca86b81c8d7e751ae4
   UIColor-Hex: 77e80f383c6b3a63c5e95a9a4a7f4a71976e38a5
-  UIImage+BetterAdditions: 185cbe06059747dd4a65562c1b0c560e761d030c
+  "UIImage+BetterAdditions": 185cbe06059747dd4a65562c1b0c560e761d030c
   VTAcknowledgementsViewController: e1de80f2c0ce31cc7e1c6f1c8aaeec2770371f09
 
-PODFILE CHECKSUM: c5663160255bc996e03d83fb91f354fa314a2a90
+PODFILE CHECKSUM: 08521eed908874ca45287dd7e7fbe11057926087
 
-COCOAPODS: 1.4.0
+COCOAPODS: 1.5.2

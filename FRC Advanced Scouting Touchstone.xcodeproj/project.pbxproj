@@ -766,7 +766,6 @@
 				93610E301E42E2B200856BE2 /* Increment Build Number */,
 				1F7AE4DF1DCC2DC80029B420 /* Embed Frameworks */,
 				9249D9412C5ADECA54FC1C30 /* [CP] Embed Pods Frameworks */,
-				6E93FD200EC5692A4D299EFE /* [CP] Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -975,21 +974,6 @@
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
-			showEnvVarsInLog = 0;
-		};
-		6E93FD200EC5692A4D299EFE /* [CP] Copy Pods Resources */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-			);
-			name = "[CP] Copy Pods Resources";
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-FRC Advanced Scouting Touchstone/Pods-FRC Advanced Scouting Touchstone-resources.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
 		9249D9412C5ADECA54FC1C30 /* [CP] Embed Pods Frameworks */ = {
