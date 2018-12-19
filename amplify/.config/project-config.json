@@ -1,0 +1,11 @@
+{
+    "projectName": "FAST",
+    "projectPath": "/Users/aaron/Documents/Xcode Projects/FRC Advanced Scouting Telemetrics",
+    "defaultEditor": "sublime",
+    "frontendHandler": {
+        "ios": "/Users/aaron/.nvm/versions/node/v8.9.4/lib/node_modules/@aws-amplify/cli/node_modules/amplify-frontend-ios"
+    },
+    "providers": {
+        "awscloudformation": "/Users/aaron/.nvm/versions/node/v8.9.4/lib/node_modules/@aws-amplify/cli/node_modules/amplify-provider-awscloudformation"
+    }
+}

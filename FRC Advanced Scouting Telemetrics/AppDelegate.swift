@@ -9,6 +9,7 @@ import UIKit
 import CoreData
 import Fabric
 import Crashlytics
+import AWSAppSync
 import AWSMobileClient
 
 let appDelegate = UIApplication.shared.delegate as! AppDelegate
@@ -17,6 +18,8 @@ let appDelegate = UIApplication.shared.delegate as! AppDelegate
 class AppDelegate: UIResponder, UIApplicationDelegate {
 
     var window: UIWindow?
+    
+    var appSyncClient: AWSAppSyncClient?
     
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
         // Override point for customization after application launch.
@@ -45,7 +48,31 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             }
         }
         
-        return AWSMobileClient.sharedInstance().interceptApplication(application, didFinishLaunchingWithOptions: launchOptions)
+        ///AWS App Sync Config
+        let databaseURL = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0].appendingPathComponent("FASTAppSyncDatabase")
+        do {
+            let appSyncConfig = try AWSAppSyncClientConfiguration(appSyncClientInfo: AWSAppSyncClientInfo(), databaseURL: databaseURL)
+            appSyncClient = try AWSAppSyncClient(appSyncConfig: appSyncConfig)
+        } catch {
+            CLSNSLogv("Error starting AppSync: \(error)", getVaList([]))
+            Crashlytics.sharedInstance().recordError(error)
+            assertionFailure()
+        }
+        
+        AWSMobileClient.sharedInstance().initialize {userState, error in
+            if let userState = userState {
+                CLSNSLogv("User State: \(userState)", getVaList([]))
+            } else if let error = error {
+                CLSNSLogv("Error: \(error)", getVaList([]))
+                Crashlytics.sharedInstance().recordError(error)
+            } else {
+                assertionFailure()
+            }
+        }
+        
+        return true
+        
+//        return AWSMobileClient.sharedInstance().interceptApplication(application, didFinishLaunchingWithOptions: launchOptions)
     }
     
     func displayLogin(isRegistering: Bool = false) {

@@ -1,0 +1,118 @@
+# this is an auto generated file. This will be overwritten
+mutation CreateEvent($input: CreateEventInput!) {
+  createEvent(input: $input) {
+    id
+    code
+    eventType
+    eventTypeString
+    location
+    name
+    year
+    lastReloaded
+    oprLastModified
+    matchesLastModified
+    statusesLastModified
+  }
+}
+mutation UpdateEvent($input: UpdateEventInput!) {
+  updateEvent(input: $input) {
+    id
+    code
+    eventType
+    eventTypeString
+    location
+    name
+    year
+    lastReloaded
+    oprLastModified
+    matchesLastModified
+    statusesLastModified
+  }
+}
+mutation DeleteEvent($input: DeleteEventInput!) {
+  deleteEvent(input: $input) {
+    id
+    code
+    eventType
+    eventTypeString
+    location
+    name
+    year
+    lastReloaded
+    oprLastModified
+    matchesLastModified
+    statusesLastModified
+  }
+}
+mutation CreateTeam($input: CreateTeamInput!) {
+  createTeam(input: $input) {
+    id
+    location
+    name
+    nickname
+    rookieYear
+    teamNumber
+    website
+    isPicked
+    programmingLanguage
+    computerVisionCapability
+    robotHeight
+    robotLength
+    robotWidth
+    robotWeight
+    frontImage
+    strategy
+    canBanana
+    driverXP
+    driveTrain
+    otherAttributes
+  }
+}
+mutation UpdateTeam($input: UpdateTeamInput!) {
+  updateTeam(input: $input) {
+    id
+    location
+    name
+    nickname
+    rookieYear
+    teamNumber
+    website
+    isPicked
+    programmingLanguage
+    computerVisionCapability
+    robotHeight
+    robotLength
+    robotWidth
+    robotWeight
+    frontImage
+    strategy
+    canBanana
+    driverXP
+    driveTrain
+    otherAttributes
+  }
+}
+mutation DeleteTeam($input: DeleteTeamInput!) {
+  deleteTeam(input: $input) {
+    id
+    location
+    name
+    nickname
+    rookieYear
+    teamNumber
+    website
+    isPicked
+    programmingLanguage
+    computerVisionCapability
+    robotHeight
+    robotLength
+    robotWidth
+    robotWeight
+    frontImage
+    strategy
+    canBanana
+    driverXP
+    driveTrain
+    otherAttributes
+  }
+}

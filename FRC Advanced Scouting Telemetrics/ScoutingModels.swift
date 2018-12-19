@@ -228,7 +228,7 @@ import Crashlytics
     dynamic var climbStatus: String? = nil
     dynamic var climbAssistStatus: String? = nil
     
-    dynamic var didCrossAutoLine: Bool = false
+    dynamic var didCrossAutoLine: Bool = false ///TODO: Make a TimeMarker instead
     
     override static func primaryKey() -> String {
         return "key"

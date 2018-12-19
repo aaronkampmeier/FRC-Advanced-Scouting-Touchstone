@@ -8,7 +8,6 @@
 
 import XCTest
 //@testable import FRC_Advanced_Scouting_Touchstone
-import YCMatrix
 
 class FASTTests: XCTestCase {
     

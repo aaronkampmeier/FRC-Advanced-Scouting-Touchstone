@@ -8,7 +8,6 @@
 
 import UIKit
 import Crashlytics
-import AWSAuthUI
 import RealmSwift
 
 class EventSelectionTitleButton: UIButton {

@@ -1,0 +1,190 @@
+# this is an auto generated file. This will be overwritten
+subscription OnCreateEvent(
+  $id: ID
+  $code: String
+  $eventType: Int
+  $eventTypeString: String
+  $location: String
+) {
+  onCreateEvent(
+    id: $id
+    code: $code
+    eventType: $eventType
+    eventTypeString: $eventTypeString
+    location: $location
+  ) {
+    id
+    code
+    eventType
+    eventTypeString
+    location
+    name
+    year
+    lastReloaded
+    oprLastModified
+    matchesLastModified
+    statusesLastModified
+  }
+}
+subscription OnUpdateEvent(
+  $id: ID
+  $code: String
+  $eventType: Int
+  $eventTypeString: String
+  $location: String
+) {
+  onUpdateEvent(
+    id: $id
+    code: $code
+    eventType: $eventType
+    eventTypeString: $eventTypeString
+    location: $location
+  ) {
+    id
+    code
+    eventType
+    eventTypeString
+    location
+    name
+    year
+    lastReloaded
+    oprLastModified
+    matchesLastModified
+    statusesLastModified
+  }
+}
+subscription OnDeleteEvent(
+  $id: ID
+  $code: String
+  $eventType: Int
+  $eventTypeString: String
+  $location: String
+) {
+  onDeleteEvent(
+    id: $id
+    code: $code
+    eventType: $eventType
+    eventTypeString: $eventTypeString
+    location: $location
+  ) {
+    id
+    code
+    eventType
+    eventTypeString
+    location
+    name
+    year
+    lastReloaded
+    oprLastModified
+    matchesLastModified
+    statusesLastModified
+  }
+}
+subscription OnCreateTeam(
+  $id: ID
+  $location: String
+  $name: String
+  $nickname: String
+  $rookieYear: Int
+) {
+  onCreateTeam(
+    id: $id
+    location: $location
+    name: $name
+    nickname: $nickname
+    rookieYear: $rookieYear
+  ) {
+    id
+    location
+    name
+    nickname
+    rookieYear
+    teamNumber
+    website
+    isPicked
+    programmingLanguage
+    computerVisionCapability
+    robotHeight
+    robotLength
+    robotWidth
+    robotWeight
+    frontImage
+    strategy
+    canBanana
+    driverXP
+    driveTrain
+    otherAttributes
+  }
+}
+subscription OnUpdateTeam(
+  $id: ID
+  $location: String
+  $name: String
+  $nickname: String
+  $rookieYear: Int
+) {
+  onUpdateTeam(
+    id: $id
+    location: $location
+    name: $name
+    nickname: $nickname
+    rookieYear: $rookieYear
+  ) {
+    id
+    location
+    name
+    nickname
+    rookieYear
+    teamNumber
+    website
+    isPicked
+    programmingLanguage
+    computerVisionCapability
+    robotHeight
+    robotLength
+    robotWidth
+    robotWeight
+    frontImage
+    strategy
+    canBanana
+    driverXP
+    driveTrain
+    otherAttributes
+  }
+}
+subscription OnDeleteTeam(
+  $id: ID
+  $location: String
+  $name: String
+  $nickname: String
+  $rookieYear: Int
+) {
+  onDeleteTeam(
+    id: $id
+    location: $location
+    name: $name
+    nickname: $nickname
+    rookieYear: $rookieYear
+  ) {
+    id
+    location
+    name
+    nickname
+    rookieYear
+    teamNumber
+    website
+    isPicked
+    programmingLanguage
+    computerVisionCapability
+    robotHeight
+    robotLength
+    robotWidth
+    robotWeight
+    frontImage
+    strategy
+    canBanana
+    driverXP
+    driveTrain
+    otherAttributes
+  }
+}

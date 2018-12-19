@@ -1,20 +1,21 @@
 source 'https://github.com/CocoaPods/Specs.git'
-platform :ios, '9.2'
+platform :ios, '10'
 use_frameworks!
 
 target 'FRC Advanced Scouting Touchstone' do
 pod 'Alamofire'
-pod 'NYTPhotoViewer', '~> 1.1.0'
-pod "GMStepper", '~> 2.1'
+pod 'NYTPhotoViewer'
+pod "GMStepper"
 pod 'SSBouncyButton', '~> 1.0'
 pod 'UICircularProgressRing'
 pod 'VTAcknowledgementsViewController'
-pod 'RealmSwift', '~> 3.7.1'
+pod 'RealmSwift'
 pod 'TORoundedTableView'
-pod 'AWSCore'
+pod 'AWSCore', '~> 2.7.0'
 pod 'AWSMobileClient'
 pod 'AWSUserPoolsSignIn'
 pod 'AWSAuthUI'
+pod 'AWSAppSync', '~> 2.6.24'
 end
 
 post_install do | installer |

@@ -1,7 +1,7 @@
 //
 // VTAcknowledgementsParser.m
 //
-// Copyright (c) 2013-2017 Vincent Tourraine (http://www.vtourraine.net)
+// Copyright (c) 2013-2018 Vincent Tourraine (http://www.vtourraine.net)
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -38,13 +38,11 @@
 
 @implementation VTAcknowledgementsParser
 
-- (instancetype)init
-{
+- (instancetype)init {
     @throw nil;
 }
 
-- (nonnull instancetype)initWithAcknowledgementsPlistPath:(nonnull NSString *)acknowledgementsPlistPath
-{
+- (nonnull instancetype)initWithAcknowledgementsPlistPath:(nonnull NSString *)acknowledgementsPlistPath {
     self = [super init];
 
     if (self) {
@@ -64,10 +62,7 @@
 
         NSMutableArray <VTAcknowledgement *> *acknowledgements = [NSMutableArray array];
         for (NSDictionary *preferenceSpecifier in preferenceSpecifiers) {
-            VTAcknowledgement *acknowledgement = [[VTAcknowledgement alloc]
-                                                  initWithTitle:preferenceSpecifier[@"Title"]
-                                                  text:preferenceSpecifier[@"FooterText"]
-                                                  license:preferenceSpecifier[@"License"]];
+            VTAcknowledgement *acknowledgement = [VTAcknowledgementsParser acknowledgementFromPreferenceSpecifier:preferenceSpecifier];
             [acknowledgements addObject:acknowledgement];
         }
 
@@ -77,6 +72,32 @@
     }
 
     return self;
+}
+
++ (nonnull VTAcknowledgement *)acknowledgementFromPreferenceSpecifier:(nonnull NSDictionary *)preferenceSpecifier {
+    NSString *title = preferenceSpecifier[@"Title"];
+    NSString *text = [VTAcknowledgementsParser stringByFilteringOutPrematureLineBreaksFromString:preferenceSpecifier[@"FooterText"]];
+    NSString *license = preferenceSpecifier[@"License"];
+    return [[VTAcknowledgement alloc] initWithTitle:title text:text license:license];
+}
+
++ (nonnull NSString *)stringByFilteringOutPrematureLineBreaksFromString:(nonnull NSString *)string {
+    // This regex replaces single newlines with spaces, while preserving multiple newlines used for formatting.
+    // This prevents issues such as https://github.com/vtourraine/AcknowList/issues/41
+    //
+    // The issue arises when licenses contain premature line breaks in the middle of a sentance, often used
+    // to limit license texts to 80 characters. When applied on an iPad, the resulting licenses are misaligned.
+    //
+    // The expression (?<=.)(\h)*(\R)(\h)*(?=.) can be broken down as:
+    //
+    //    (?<=.)  Positive lookbehind matching any non-newline character (matches but does not capture)
+    //    (\h)*   Matches and captures zero or more horizontal spaces (trailing newlines)
+    //    (\R)    Matches and captures any single Unicode-compliant newline character
+    //    (\h)*   Matches and captures zero or more horizontal spaces (leading newlines)
+    //    (?=.)   Positive lookahead matching any non-newline character (matches but does not capture)
+    NSRegularExpression *singleNewLineFinder = [[NSRegularExpression alloc] initWithPattern:@"(?<=.)(\\h)*(\\R)(\\h)*(?=.)" options:kNilOptions error:nil];
+
+    return [singleNewLineFinder stringByReplacingMatchesInString:string options:kNilOptions range:NSMakeRange(0, string.length) withTemplate:@" "];
 }
 
 @end

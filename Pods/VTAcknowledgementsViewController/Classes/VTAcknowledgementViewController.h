@@ -1,7 +1,7 @@
 //
 // VTAcknowledgementViewController.h
 //
-// Copyright (c) 2013-2017 Vincent Tourraine (http://www.vtourraine.net)
+// Copyright (c) 2013-2018 Vincent Tourraine (http://www.vtourraine.net)
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -28,14 +28,11 @@
 #endif
 
 /**
- `VTAcknowledgementViewController` is a subclass of `UIViewController` that displays
- a single acknowledgement.
+ `VTAcknowledgementViewController` is a subclass of `UIViewController` that displays a single acknowledgement.
  */
 @interface VTAcknowledgementViewController : UIViewController
 
-/**
- The main text view.
- */
+/// The main text view.
 @property (nonatomic, weak, nullable) UITextView *textView;
 
 /**
