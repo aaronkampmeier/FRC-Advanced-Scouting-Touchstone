@@ -29,7 +29,7 @@ extension FASTSSButtonable {
 class SSOffenseWhereViewController: UIViewController {
     @IBOutlet weak var stackView: UIStackView?
     @IBOutlet weak var prompt: UILabel!
-    @IBOutlet weak var timerView: UICircularProgressRingView!
+    @IBOutlet weak var timerView: UICircularProgressRing!
     
     var promptText: String?
     
@@ -104,7 +104,7 @@ class SSOffenseWhereViewController: UIViewController {
         for button in ssBouncyButtons {
             button.isSelected = false
         }
-        timerView.setProgress(value: 0, animationDuration: 0)
+        timerView.startProgress(to: 0, duration: 0)
         timerView.isHidden = true
     }
     
@@ -142,8 +142,8 @@ class SSOffenseWhereViewController: UIViewController {
             buttonToSelect.isSelected = true
             
             timerView.isHidden = false
-            timerView.setProgress(value: 0, animationDuration: 0)
-            timerView.setProgress(value: 3, animationDuration: 3)
+            timerView.startProgress(to: 0, duration: 0)
+            timerView.startProgress(to: 3, duration: 3)
             
             currentScheduledTask?.cancel()
             
