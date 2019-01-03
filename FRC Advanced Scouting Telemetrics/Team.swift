@@ -9,28 +9,28 @@
 import Foundation
 import RealmSwift
 
-@objcMembers class Team: Object, HasScoutedEquivalent {
-    dynamic var key = ""
-    dynamic var location: String?
-    dynamic var name = ""
-    dynamic var nickname = ""
-    dynamic var rookieYear = 0
-    dynamic var teamNumber = 0
-    dynamic var website: String?
-    
-    let eventPerformances = LinkingObjects(fromType: TeamEventPerformance.self, property: "team")
-    
-    override static func primaryKey() -> String? {
-        return "key"
-    }
-    
-    typealias SelfObject = Team
-    typealias LocalType = ScoutedTeam
-    @objc dynamic var cache: ScoutedTeam?
-    override static func ignoredProperties() -> [String] {
-        return ["cache"]
-    }
-}
+//@objcMembers class Team: Object, HasScoutedEquivalent {
+//    dynamic var key = ""
+//    dynamic var location: String?
+//    dynamic var name = ""
+//    dynamic var nickname = ""
+//    dynamic var rookieYear = 0
+//    dynamic var teamNumber = 0
+//    dynamic var website: String?
+//
+//    let eventPerformances = LinkingObjects(fromType: TeamEventPerformance.self, property: "team")
+//
+//    override static func primaryKey() -> String? {
+//        return "key"
+//    }
+//
+//    typealias SelfObject = Team
+//    typealias LocalType = ScoutedTeam
+//    @objc dynamic var cache: ScoutedTeam?
+//    override static func ignoredProperties() -> [String] {
+//        return ["cache"]
+//    }
+//}
 
 extension Team: HasStats {
     var stats: [StatName:()->StatValue] {

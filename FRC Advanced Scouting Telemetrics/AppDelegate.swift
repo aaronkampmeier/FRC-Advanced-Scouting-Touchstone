@@ -11,8 +11,11 @@ import Fabric
 import Crashlytics
 import AWSAppSync
 import AWSMobileClient
+import AWSPinpoint
 
-let appDelegate = UIApplication.shared.delegate as! AppDelegate
+internal struct Globals {
+    static unowned let appDelegate = UIApplication.shared.delegate as! AppDelegate
+}
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
@@ -20,48 +23,58 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     var window: UIWindow?
     
     var appSyncClient: AWSAppSyncClient?
+    var pinpoint: AWSPinpoint?
     
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
         // Override point for customization after application launch.
         Fabric.with([Answers.self, Crashlytics.self])
         Crashlytics.sharedInstance().setUserIdentifier(UIDevice.current.name)
         
-        //Check if the user is logged in
-        if RealmController.realmController.currentSyncUser != nil {
-            //We are logged in, switch to the team list view
-            let teamNumber = UserDefaults.standard.value(forKey: "LoggedInTeam") as? String ?? "Unknown"
-            Crashlytics.sharedInstance().setUserName(teamNumber)
-
-            let teamListVC = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "teamListMasterVC")
-
-            self.window?.rootViewController = teamListVC
-        } else {
-            //Show Onboarding
-            //It is the initial vc
-            
-            if RealmController.isInSpectatorMode {
-                let teamListVC = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "teamListMasterVC")
-                
-                RealmController.realmController.openLocalRealm()
-                
-                self.window?.rootViewController = teamListVC
-            }
-        }
+//        //Check if the user is logged in
+//        if RealmController.realmController.currentSyncUser != nil {
+//            //We are logged in, switch to the team list view
+//            let teamNumber = UserDefaults.standard.value(forKey: "LoggedInTeam") as? String ?? "Unknown"
+//            Crashlytics.sharedInstance().setUserName(teamNumber)
+//
+//            let teamListVC = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "teamListMasterVC")
+//
+//            self.window?.rootViewController = teamListVC
+//        } else {
+//            //Show Onboarding
+//            //It is the initial vc
+//
+//            if RealmController.isInSpectatorMode {
+//                let teamListVC = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "teamListMasterVC")
+//
+//                RealmController.realmController.openLocalRealm()
+//
+//                self.window?.rootViewController = teamListVC
+//            }
+//        }
         
-        ///AWS App Sync Config
-        let databaseURL = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0].appendingPathComponent("FASTAppSyncDatabase")
-        do {
-            let appSyncConfig = try AWSAppSyncClientConfiguration(appSyncClientInfo: AWSAppSyncClientInfo(), databaseURL: databaseURL)
-            appSyncClient = try AWSAppSyncClient(appSyncConfig: appSyncConfig)
-        } catch {
-            CLSNSLogv("Error starting AppSync: \(error)", getVaList([]))
-            Crashlytics.sharedInstance().recordError(error)
-            assertionFailure()
-        }
+        ///Start up Pinpoint
+        let pinpointConfiguration = AWSPinpointConfiguration.defaultPinpointConfiguration(launchOptions: launchOptions)
+        pinpoint = AWSPinpoint(configuration: pinpointConfiguration)
         
+        ///AWS Cognito Initialization
         AWSMobileClient.sharedInstance().initialize {userState, error in
             if let userState = userState {
                 CLSNSLogv("User State: \(userState)", getVaList([]))
+                
+                switch userState {
+                case .signedOut:
+                    //Let the onboarding show to sign in
+                    break
+                case .signedIn:
+                    ///TODO:
+                    break
+                case .guest:
+                    ///TODO:
+                    break
+                default:
+                    CLSNSLogv("Signing out due to invalid userState", getVaList([]))
+                    AWSMobileClient.sharedInstance().signOut()
+                }
             } else if let error = error {
                 CLSNSLogv("Error: \(error)", getVaList([]))
                 Crashlytics.sharedInstance().recordError(error)
@@ -70,9 +83,19 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             }
         }
         
-        return true
+        ///AWS App Sync Config
+        let databaseURL = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0].appendingPathComponent("FASTAppSyncDatabase")
+        do {
+            let appSyncConfig = try AWSAppSyncClientConfiguration(appSyncClientInfo: AWSAppSyncClientInfo(), userPoolsAuthProvider: FASTCognitoUserPoolsAuthProvider(), databaseURL: databaseURL)
+            appSyncClient = try AWSAppSyncClient(appSyncConfig: appSyncConfig)
+            appSyncClient?.apolloClient?.cacheKeyForObject = {$0["id"]}
+        } catch {
+            CLSNSLogv("Error starting AppSync: \(error)", getVaList([]))
+            Crashlytics.sharedInstance().recordError(error)
+            assertionFailure()
+        }
         
-//        return AWSMobileClient.sharedInstance().interceptApplication(application, didFinishLaunchingWithOptions: launchOptions)
+        return AWSMobileClient.sharedInstance().interceptApplication(application, didFinishLaunchingWithOptions: launchOptions)
     }
     
     func displayLogin(isRegistering: Bool = false) {

@@ -19,6 +19,7 @@
 import UIKit
 import Realm
 import AWSCognitoIdentityProvider
+import AWSMobileClient
 import Crashlytics
 
 public class AWSCognitoAuthenticationProvider: NSObject, AuthenticationProvider, AWSCognitoIdentityInteractiveAuthenticationDelegate {
@@ -151,6 +152,21 @@ public class AWSCognitoAuthenticationProvider: NSObject, AuthenticationProvider,
             DispatchQueue.main.async { getUserSessionBlock(task) }
             return nil
         }, cancellationToken: cancellationTokenSource!.token)
+        
+        //Added for new stuff
+        AWSMobileClient.sharedInstance().signIn(username: username!, password: password!) {signInResult, error in
+            if let error = error {
+                CLSNSLogv("Error Signing In: \(error)", getVaList([]))
+                Crashlytics.sharedInstance().recordError(error)
+            } else if let signInResult = signInResult {
+                switch signInResult.signInState {
+                case .signedIn:
+                    CLSNSLogv("Now Signed In", getVaList([]))
+                default:
+                    CLSNSLogv("New User State: \(signInResult)", getVaList([]))
+                }
+            }
+        }
     }
     
     

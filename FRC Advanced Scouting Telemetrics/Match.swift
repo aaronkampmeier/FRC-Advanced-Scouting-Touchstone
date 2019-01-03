@@ -9,71 +9,72 @@
 import Foundation
 import RealmSwift
 
-@objcMembers class Match: Object, HasScoutedEquivalent {
-    dynamic var competitionLevel = ""
-    dynamic var key = ""
-    dynamic var matchNumber = 0
-    let setNumber = RealmOptional<Int>()
-    dynamic var time: Date?
-    
-    let teamPerformances = LinkingObjects(fromType: TeamMatchPerformance.self, property: "match")
-    dynamic var event: Event?
-    
-    override static func primaryKey() -> String {
-        return "key"
-    }
-    
-    typealias SelfObject = Match
-    typealias LocalType = ScoutedMatch
-    dynamic var cache: ScoutedMatch?
-    override static func ignoredProperties() -> [String] {
-        return ["cache"]
-    }
-    
-    var competitionLevelEnum: CompetitionLevel {
-        return CompetitionLevel(rawValue: self.competitionLevel)!
-    }
-    
-    enum CompetitionLevel: String, CustomStringConvertible {
-        case Qualifier
-        case Eliminator
-        case QuarterFinal = "Quarter Finals"
-        case SemiFinal = "Semi Final"
-        case Final
-        
-        var description: String {
-            get {
-                return self.rawValue
-            }
-        }
-        
-        var rankedPosition: Int {
-            get {
-                switch self {
-                case .Qualifier:
-                    return 0
-                case .Eliminator:
-                    return 1
-                case .QuarterFinal:
-                    return 2
-                case .SemiFinal:
-                    return 3
-                case .Final:
-                    return 4
-                }
-            }
-        }
-    }
-    
-    func teamMatchPerformance(forColor color: TeamMatchPerformance.Alliance, andSlot slot: TeamMatchPerformance.Slot) -> TeamMatchPerformance {
-        let performances = (self.teamPerformances).filter({$0.alliance == color && $0.slot == slot})
-        
-        assert(performances.count == 1)
-        
-        return performances.first!
-    }
-    
-    override open var description: String {
+//@objcMembers class Match: Object, HasScoutedEquivalent {
+//    dynamic var competitionLevel = ""
+//    dynamic var key = ""
+//    dynamic var matchNumber = 0
+//    let setNumber = RealmOptional<Int>()
+//    dynamic var time: Date?
+//
+//    let teamPerformances = LinkingObjects(fromType: TeamMatchPerformance.self, property: "match")
+//    dynamic var event: Event?
+//
+//    override static func primaryKey() -> String {
+//        return "key"
+//    }
+//
+//    typealias SelfObject = Match
+//    typealias LocalType = ScoutedMatch
+//    dynamic var cache: ScoutedMatch?
+//    override static func ignoredProperties() -> [String] {
+//        return ["cache"]
+//    }
+//
+//    var competitionLevelEnum: CompetitionLevel {
+//        return CompetitionLevel(rawValue: self.competitionLevel)!
+//    }
+//
+//    enum CompetitionLevel: String, CustomStringConvertible {
+//        case Qualifier
+//        case Eliminator
+//        case QuarterFinal = "Quarter Finals"
+//        case SemiFinal = "Semi Final"
+//        case Final
+//
+//        var description: String {
+//            get {
+//                return self.rawValue
+//            }
+//        }
+//
+//        var rankedPosition: Int {
+//            get {
+//                switch self {
+//                case .Qualifier:
+//                    return 0
+//                case .Eliminator:
+//                    return 1
+//                case .QuarterFinal:
+//                    return 2
+//                case .SemiFinal:
+//                    return 3
+//                case .Final:
+//                    return 4
+//                }
+//            }
+//        }
+//    }
+//
+//    func teamMatchPerformance(forColor color: TeamMatchPerformance.Alliance, andSlot slot: TeamMatchPerformance.Slot) -> TeamMatchPerformance {
+//        let performances = (self.teamPerformances).filter({$0.alliance == color && $0.slot == slot})
+//
+//        assert(performances.count == 1)
+//
+//        return performances.first!
+//    }
+
+extension Match {
+    var description: String {
         get {
             if let setNumber = self.setNumber.value {
                 if self.competitionLevelEnum == .QuarterFinal || self.competitionLevelEnum == .SemiFinal {

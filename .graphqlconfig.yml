@@ -2,7 +2,7 @@ projects:
   FAST AppSync API:
     schemaPath: graphql/schema.json
     includes:
-      - graphql/**/*.graphql
+      - graphql/*.graphql
     excludes:
       - ./amplify/**
     extensions:

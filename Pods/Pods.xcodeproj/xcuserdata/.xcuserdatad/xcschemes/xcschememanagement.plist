@@ -44,6 +44,11 @@
 			<key>isShown</key>
 			<false/>
 		</dict>
+		<key>AWSPinpoint.xcscheme</key>
+		<dict>
+			<key>isShown</key>
+			<false/>
+		</dict>
 		<key>AWSUserPoolsSignIn-AWSUserPoolsSignIn.xcscheme</key>
 		<dict>
 			<key>isShown</key>

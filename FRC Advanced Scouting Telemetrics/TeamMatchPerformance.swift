@@ -8,96 +8,96 @@
 
 import Foundation
 import RealmSwift
-
-@objcMembers class TeamMatchPerformance: Object, HasScoutedEquivalent {
-    dynamic var allianceColor = ""
-    dynamic var allianceTeam = 0
-    dynamic var key = ""
-    
-    dynamic var match: Match?
-    
-    dynamic var teamEventPerformance: TeamEventPerformance?
-    
-    override static func primaryKey() -> String {
-        return "key"
-    }
-    
-    typealias SelfObject = TeamMatchPerformance
-    typealias LocalType = ScoutedMatchPerformance
-    dynamic var cache: ScoutedMatchPerformance?
-    override static func ignoredProperties() -> [String] {
-        return ["cache"]
-    }
-    
-    enum Alliance: String {
-        case Red = "Red"
-        case Blue = "Blue"
-    }
-    
-    enum Slot: Int {
-        case One = 1
-        case Two = 2
-        case Three = 3
-    }
-    
-    var alliance: Alliance {
-        get {
-            return Alliance(rawValue: self.allianceColor)!
-        }
-    }
-    
-    var slot: Slot {
-        get {
-            return Slot(rawValue: self.allianceTeam)!
-        }
-    }
-    
-    var rankingPoints: Int? {
-        switch allianceColor {
-        case "Blue":
-            return match?.scouted?.blueRP.value
-        case "Red":
-            return match?.scouted?.redRP.value
-        default:
-            assertionFailure()
-            return -1
-        }
-    }
-    
-    var finalScore: Int? {
-        switch allianceColor {
-        case "Blue":
-            return match?.scouted?.blueScore.value
-        case "Red":
-            return match?.scouted?.redScore.value
-        default:
-            assertionFailure()
-            return -1
-        }
-    }
-    
-    var winningMargin: Int? {
-        guard let selfFinalScore = finalScore else {
-            return nil
-        }
-        let otherScore: Int?
-        switch allianceColor {
-        case "Blue":
-            otherScore = match?.scouted?.redScore.value
-        case "Red":
-            otherScore = match?.scouted?.blueScore.value
-        default:
-            assertionFailure()
-            return -1
-        }
-        
-        if otherScore == nil {
-            return nil
-        }
-        
-        return selfFinalScore - otherScore!
-    }
-}
+//
+//@objcMembers class TeamMatchPerformance: Object, HasScoutedEquivalent {
+//    dynamic var allianceColor = ""
+//    dynamic var allianceTeam = 0
+//    dynamic var key = ""
+//    
+//    dynamic var match: Match?
+//
+//    dynamic var teamEventPerformance: TeamEventPerformance?
+//
+//    override static func primaryKey() -> String {
+//        return "key"
+//    }
+//
+//    typealias SelfObject = TeamMatchPerformance
+//    typealias LocalType = ScoutedMatchPerformance
+//    dynamic var cache: ScoutedMatchPerformance?
+//    override static func ignoredProperties() -> [String] {
+//        return ["cache"]
+//    }
+//
+//    enum Alliance: String {
+//        case Red = "Red"
+//        case Blue = "Blue"
+//    }
+//
+//    enum Slot: Int {
+//        case One = 1
+//        case Two = 2
+//        case Three = 3
+//    }
+//
+//    var alliance: Alliance {
+//        get {
+//            return Alliance(rawValue: self.allianceColor)!
+//        }
+//    }
+//
+//    var slot: Slot {
+//        get {
+//            return Slot(rawValue: self.allianceTeam)!
+//        }
+//    }
+//
+//    var rankingPoints: Int? {
+//        switch allianceColor {
+//        case "Blue":
+//            return match?.scouted?.blueRP.value
+//        case "Red":
+//            return match?.scouted?.redRP.value
+//        default:
+//            assertionFailure()
+//            return -1
+//        }
+//    }
+//
+//    var finalScore: Int? {
+//        switch allianceColor {
+//        case "Blue":
+//            return match?.scouted?.blueScore.value
+//        case "Red":
+//            return match?.scouted?.redScore.value
+//        default:
+//            assertionFailure()
+//            return -1
+//        }
+//    }
+//
+//    var winningMargin: Int? {
+//        guard let selfFinalScore = finalScore else {
+//            return nil
+//        }
+//        let otherScore: Int?
+//        switch allianceColor {
+//        case "Blue":
+//            otherScore = match?.scouted?.redScore.value
+//        case "Red":
+//            otherScore = match?.scouted?.blueScore.value
+//        default:
+//            assertionFailure()
+//            return -1
+//        }
+//
+//        if otherScore == nil {
+//            return nil
+//        }
+//
+//        return selfFinalScore - otherScore!
+//    }
+//}
 
 extension TeamMatchPerformance: HasStats {
     var stats: [StatName:()->StatValue] {

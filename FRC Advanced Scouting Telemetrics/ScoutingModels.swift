@@ -83,85 +83,78 @@ import Crashlytics
 //    dynamic var statusLastModified: String?
 }
 
-@objcMembers class ScoutedTeam: Object, HasGeneralEquivalent {
-    
-    typealias SelfObject = ScoutedTeam
-    
-    typealias GeneralType = Team
-    
-//    var ranker: GeneralRanker? {
-//        get {
-//            let rankers = LinkingObjects(fromType: GeneralRanker.self, property: "rankedTeams")
-//            return rankers.first
+//@objcMembers class ScoutedTeam: Object, HasGeneralEquivalent {
+//
+//    typealias SelfObject = ScoutedTeam
+//
+//    typealias GeneralType = Team
+//
+//    let eventRankers = LinkingObjects(fromType: EventRanker.self, property: "rankedTeams")
+//
+//    ///Cross Year Values
+//    dynamic var key = ""
+//
+//    let comments = List<TeamComment>()
+//
+//    dynamic var programmingLanguage: String?
+//    dynamic var computerVisionCapability: String?
+//    let robotHeight = RealmOptional<Double>()
+//    let robotWeight = RealmOptional<Double>()
+//    let robotLength = RealmOptional<Double>()
+//    let robotWidth = RealmOptional<Double>()
+//    dynamic var frontImage: Data?
+//    dynamic var strategy: String?
+//    dynamic var canBanana = false
+//    let driverXP = RealmOptional<Double>()
+//    dynamic var driveTrain: String?
+//
+//    ///Game Based Values
+//    dynamic var scaleCapability: String?
+//    dynamic var switchCapability: String?
+//    dynamic var vaultCapability: String?
+//    dynamic var climbCapability: String?
+//
+//    dynamic var climberType: String?
+//
+//    override static func primaryKey() -> String {
+//        return "key"
+//    }
+//
+//    //To connect to the general team
+//    dynamic var cache: GeneralType?
+//
+//    override static func ignoredProperties() -> [String] {
+//        return ["cache"]
+//    }
+//
+//    func computedStats(forEvent event: Event) -> ComputedStats? {
+//        if let ranker = RealmController.realmController.getTeamRanker(forEvent: event) {
+//            //Find the computed stats that has this team and this ranker
+//            let proposedKey = "computedStats_\(ranker.key)_\(self.key)"
+//
+//            if let computedStats = RealmController.realmController.syncedRealm.object(ofType: ComputedStats.self, forPrimaryKey: proposedKey) {
+//                return computedStats
+//            } else {
+//                //Create one and return it
+//                let computedStats = ComputedStats()
+//                computedStats.key = proposedKey
+//
+//                computedStats.scoutedTeam = self
+//                computedStats.eventRanker = ranker
+//
+//                RealmController.realmController.genericWrite(onRealm: .Synced) {
+//                    RealmController.realmController.syncedRealm.add(computedStats)
+//                }
+//
+//                return computedStats
+//            }
+//        } else {
+//            Crashlytics.sharedInstance().recordCustomExceptionName("No Event Ranker", reason: "No ranker for event when trying to get Computed Stats", frameArray: [])
+//            return nil
 //        }
 //    }
-    
-    let eventRankers = LinkingObjects(fromType: EventRanker.self, property: "rankedTeams")
-    
-    ///Cross Year Values
-    dynamic var key = ""
-    
-    let comments = List<TeamComment>()
-    
-    dynamic var programmingLanguage: String?
-    dynamic var computerVisionCapability: String?
-    let robotHeight = RealmOptional<Double>()
-    let robotWeight = RealmOptional<Double>()
-    let robotLength = RealmOptional<Double>()
-    let robotWidth = RealmOptional<Double>()
-    dynamic var frontImage: Data?
-    dynamic var strategy: String?
-    dynamic var canBanana = false
-    let driverXP = RealmOptional<Double>()
-    dynamic var driveTrain: String?
-    
-    ///Game Based Values
-    dynamic var scaleCapability: String?
-    dynamic var switchCapability: String?
-    dynamic var vaultCapability: String?
-    dynamic var climbCapability: String?
-    
-    dynamic var climberType: String?
-    
-    override static func primaryKey() -> String {
-        return "key"
-    }
-    
-    //To connect to the general team
-    dynamic var cache: GeneralType?
-    
-    override static func ignoredProperties() -> [String] {
-        return ["cache"]
-    }
-    
-    func computedStats(forEvent event: Event) -> ComputedStats? {
-        if let ranker = RealmController.realmController.getTeamRanker(forEvent: event) {
-            //Find the computed stats that has this team and this ranker
-            let proposedKey = "computedStats_\(ranker.key)_\(self.key)"
-            
-            if let computedStats = RealmController.realmController.syncedRealm.object(ofType: ComputedStats.self, forPrimaryKey: proposedKey) {
-                return computedStats
-            } else {
-                //Create one and return it
-                let computedStats = ComputedStats()
-                computedStats.key = proposedKey
-                
-                computedStats.scoutedTeam = self
-                computedStats.eventRanker = ranker
-                
-                RealmController.realmController.genericWrite(onRealm: .Synced) {
-                    RealmController.realmController.syncedRealm.add(computedStats)
-                }
-                
-                return computedStats
-            }
-        } else {
-            Crashlytics.sharedInstance().recordCustomExceptionName("No Event Ranker", reason: "No ranker for event when trying to get Computed Stats", frameArray: [])
-            return nil
-        }
-    }
-    
-}
+//
+//}
 
 @objcMembers class TeamComment: Object {
     dynamic var bodyText: String = ""

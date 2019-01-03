@@ -25,22 +25,6 @@
             shouldBeEnabled = "No"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
-            filePath = "FRC Advanced Scouting Telemetrics/DataManager.swift"
-            timestampString = "530589620.460054"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "612"
-            endingLineNumber = "612"
-            landmarkName = "convertToLocal()"
-            landmarkType = "7">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            shouldBeEnabled = "No"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
             filePath = "FRC Advanced Scouting Telemetrics/CloudImportManager.swift"
             timestampString = "543809737.077027"
             startingColumnNumber = "9223372036854775807"
@@ -65,22 +49,6 @@
             endingLineNumber = "329"
             landmarkName = "evaluateOPR(forTeamPerformance:)"
             landmarkType = "9">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            shouldBeEnabled = "No"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "FRC Advanced Scouting Telemetrics/DataManager.swift"
-            timestampString = "530589620.460278"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "626"
-            endingLineNumber = "626"
-            landmarkName = "convertToLocal()"
-            landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -161,22 +129,6 @@
             endingLineNumber = "408"
             landmarkName = "solveForX(_:matrixB:)"
             landmarkType = "9">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            shouldBeEnabled = "No"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "FRC Advanced Scouting Telemetrics/TeamListTableViewController.swift"
-            timestampString = "545797371.9299999"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "639"
-            endingLineNumber = "639"
-            landmarkName = "sortList(withStat:isAscending:)"
-            landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -335,22 +287,6 @@
             endingLineNumber = "304"
             landmarkName = "evaluateOPR(forTeamPerformance:)"
             landmarkType = "9">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            shouldBeEnabled = "No"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "FRC Advanced Scouting Telemetrics/DataManager.swift"
-            timestampString = "530589620.460644"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "127"
-            endingLineNumber = "127"
-            landmarkName = "moveTeam(from:to:inEvent:)"
-            landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -600,13 +536,13 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "FRC Advanced Scouting Telemetrics/RealmLoginKit/Models/AuthenticationProviders/AWSCognitoAuthenticationProvider.swift"
-            timestampString = "543540339.390391"
+            timestampString = "566962127.0783859"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "101"
-            endingLineNumber = "101"
-            landmarkName = "unknown"
-            landmarkType = "0">
+            startingLineNumber = "102"
+            endingLineNumber = "102"
+            landmarkName = "registerNewAccount(onCompletion:)"
+            landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -695,22 +631,6 @@
             shouldBeEnabled = "No"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
-            filePath = "FRC Advanced Scouting Telemetrics/Statistics.swift"
-            timestampString = "542870708.586689"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "227"
-            endingLineNumber = "227"
-            landmarkName = "/(_:_:)"
-            landmarkType = "9">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            shouldBeEnabled = "No"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
             filePath = "FRC Advanced Scouting Telemetrics/EventStatsGraphViewController.swift"
             timestampString = "545797371.931432"
             startingColumnNumber = "9223372036854775807"
@@ -718,22 +638,6 @@
             startingLineNumber = "34"
             endingLineNumber = "34"
             landmarkName = "viewDidLoad()"
-            landmarkType = "7">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            shouldBeEnabled = "No"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "FRC Advanced Scouting Telemetrics/ScoutingModels.swift"
-            timestampString = "545783097.157802"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "156"
-            endingLineNumber = "156"
-            landmarkName = "computedStats(forEvent:)"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
@@ -775,70 +679,6 @@
             shouldBeEnabled = "No"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
-            filePath = "FRC Advanced Scouting Telemetrics/TeamListTableViewController.swift"
-            timestampString = "545797371.931531"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "454"
-            endingLineNumber = "454"
-            landmarkName = "tableView(_:didSelectRowAt:)"
-            landmarkType = "7">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            shouldBeEnabled = "No"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "FRC Advanced Scouting Telemetrics/RealmDataMangager.swift"
-            timestampString = "545785310.413525"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "395"
-            endingLineNumber = "395"
-            landmarkName = "unknown"
-            landmarkType = "0">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            shouldBeEnabled = "No"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "FRC Advanced Scouting Telemetrics/RealmDataMangager.swift"
-            timestampString = "545785310.413805"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "398"
-            endingLineNumber = "398"
-            landmarkName = "unknown"
-            landmarkType = "0">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            shouldBeEnabled = "No"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "FRC Advanced Scouting Telemetrics/RealmDataMangager.swift"
-            timestampString = "545785310.414036"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "396"
-            endingLineNumber = "396"
-            landmarkName = "unknown"
-            landmarkType = "0">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            shouldBeEnabled = "No"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
             filePath = "FRC Advanced Scouting Telemetrics/CloudReloadingManager.swift"
             timestampString = "543809737.078669"
             startingColumnNumber = "9223372036854775807"
@@ -846,22 +686,6 @@
             startingLineNumber = "38"
             endingLineNumber = "38"
             landmarkName = "reloadEvent(frcEvent:)"
-            landmarkType = "7">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            shouldBeEnabled = "No"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "FRC Advanced Scouting Telemetrics/TeamListTableViewController.swift"
-            timestampString = "545797371.931863"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "187"
-            endingLineNumber = "187"
-            landmarkName = "viewWillAppear(_:)"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
@@ -935,118 +759,6 @@
             shouldBeEnabled = "No"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
-            filePath = "FRC Advanced Scouting Telemetrics/TBAAsyncManager.swift"
-            timestampString = "545773951.184971"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "99"
-            endingLineNumber = "99"
-            landmarkName = "setOPRUpdater(forEventKey:)"
-            landmarkType = "7">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            shouldBeEnabled = "No"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "FRC Advanced Scouting Telemetrics/TBAAsyncManager.swift"
-            timestampString = "545773951.1850539"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "117"
-            endingLineNumber = "117"
-            landmarkName = "setMatchUpdater(forEventKey:)"
-            landmarkType = "7">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            shouldBeEnabled = "No"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "FRC Advanced Scouting Telemetrics/TBAAsyncManager.swift"
-            timestampString = "545773951.185117"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "150"
-            endingLineNumber = "150"
-            landmarkName = "reloadOPRs(forEventKey:withCompletionHandler:)"
-            landmarkType = "7">
-            <Locations>
-               <Location
-                  shouldBeEnabled = "No"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "FRC_Advanced_Scouting_Touchstone.TBAUpdatingDataReloader.reloadOPRs(forEventKey: Swift.String, withCompletionHandler: (Swift.Bool) -&gt; ()) -&gt; ()"
-                  moduleName = "FRC Advanced Scouting Touchstone"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/aaron/Documents/Xcode%20Projects/FRC%20Advanced%20Scouting%20Telemetrics/FRC%20Advanced%20Scouting%20Telemetrics/TBAAsyncManager.swift"
-                  timestampString = "542780080.187932"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "121"
-                  endingLineNumber = "121"
-                  offsetFromSymbolStart = "48">
-               </Location>
-               <Location
-                  shouldBeEnabled = "No"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "closure #1 (Swift.Optional&lt;FRC_Advanced_Scouting_Touchstone.FRCOPRs&gt;, Swift.Optional&lt;Swift.Error&gt;) -&gt; () in FRC_Advanced_Scouting_Touchstone.TBAUpdatingDataReloader.reloadOPRs(forEventKey: Swift.String, withCompletionHandler: (Swift.Bool) -&gt; ()) -&gt; ()"
-                  moduleName = "FRC Advanced Scouting Touchstone"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/aaron/Documents/Xcode%20Projects/FRC%20Advanced%20Scouting%20Telemetrics/FRC%20Advanced%20Scouting%20Telemetrics/TBAAsyncManager.swift"
-                  timestampString = "542780080.190202"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "122"
-                  endingLineNumber = "122"
-                  offsetFromSymbolStart = "76">
-               </Location>
-            </Locations>
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            shouldBeEnabled = "No"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "FRC Advanced Scouting Telemetrics/TBAAsyncManager.swift"
-            timestampString = "545773951.185177"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "154"
-            endingLineNumber = "154"
-            landmarkName = "reloadOPRs(forEventKey:withCompletionHandler:)"
-            landmarkType = "7">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            shouldBeEnabled = "No"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "FRC Advanced Scouting Telemetrics/TBAAsyncManager.swift"
-            timestampString = "545773951.185236"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "86"
-            endingLineNumber = "86"
-            landmarkName = "setGeneralUpdaters()"
-            landmarkType = "7">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            shouldBeEnabled = "No"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
             filePath = "FRC Advanced Scouting Telemetrics/CloudConnectionManager.swift"
             timestampString = "549910255.8409539"
             startingColumnNumber = "9223372036854775807"
@@ -1095,78 +807,14 @@
             shouldBeEnabled = "No"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
-            filePath = "FRC Advanced Scouting Telemetrics/TBAAsyncManager.swift"
-            timestampString = "545773951.1853549"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "196"
-            endingLineNumber = "196"
-            landmarkName = "reloadMatchInfo(forEventKey:withCompletionHandler:)"
-            landmarkType = "7">
-            <Locations>
-               <Location
-                  shouldBeEnabled = "No"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "closure #1 (Swift.Optional&lt;Swift.Array&lt;FRC_Advanced_Scouting_Touchstone.FRCMatch&gt;&gt;, Swift.Optional&lt;Swift.Error&gt;) -&gt; () in FRC_Advanced_Scouting_Touchstone.TBAUpdatingDataReloader.reloadMatchInfo(forEventKey: Swift.String, withCompletionHandler: (Swift.Bool) -&gt; ()) -&gt; ()"
-                  moduleName = "FRC Advanced Scouting Touchstone"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/aaron/Documents/Xcode%20Projects/FRC%20Advanced%20Scouting%20Telemetrics/FRC%20Advanced%20Scouting%20Telemetrics/TBAAsyncManager.swift"
-                  timestampString = "542863820.880473"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "204"
-                  endingLineNumber = "204"
-                  offsetFromSymbolStart = "120">
-               </Location>
-               <Location
-                  shouldBeEnabled = "No"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "closure #1 () -&gt; () in closure #1 (Swift.Optional&lt;Swift.Array&lt;FRC_Advanced_Scouting_Touchstone.FRCMatch&gt;&gt;, Swift.Optional&lt;Swift.Error&gt;) -&gt; () in FRC_Advanced_Scouting_Touchstone.TBAUpdatingDataReloader.reloadMatchInfo(forEventKey: Swift.String, withCompletionHandler: (Swift.Bool) -&gt; ()) -&gt; ()"
-                  moduleName = "FRC Advanced Scouting Touchstone"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/aaron/Documents/Xcode%20Projects/FRC%20Advanced%20Scouting%20Telemetrics/FRC%20Advanced%20Scouting%20Telemetrics/TBAAsyncManager.swift"
-                  timestampString = "542863820.8827699"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "205"
-                  endingLineNumber = "205"
-                  offsetFromSymbolStart = "216">
-               </Location>
-            </Locations>
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            shouldBeEnabled = "No"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
             filePath = "FRC Advanced Scouting Telemetrics/RealmLoaderViewController.swift"
-            timestampString = "545543958.961753"
+            timestampString = "566962127.080278"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "68"
             endingLineNumber = "68"
             landmarkName = "didCompleteSync()"
             landmarkType = "7">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            shouldBeEnabled = "No"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "FRC Advanced Scouting Telemetrics/RealmDataMangager.swift"
-            timestampString = "545785310.414466"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "234"
-            endingLineNumber = "234"
-            landmarkName = "unknown"
-            landmarkType = "0">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
