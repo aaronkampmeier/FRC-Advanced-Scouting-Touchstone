@@ -7,6 +7,8 @@
 //
 
 import UIKit
+import AWSAppSync
+import AWSMobileClient
 
 protocol MatchesTableViewControllerDelegate {
     func hasSelectionEnabled() -> Bool
@@ -66,11 +68,13 @@ class MatchesTableViewController: UITableViewController {
         //Scroll to the match that is up next according to the schedule, assuming they are in order by time
         var closestMatchAndTimeDistance: (match: Match, distance: TimeInterval)?
         for match in matches {
-            guard let matchTime = match.time else {
-                break
+            guard let t = match.time else {
+                return
             }
+            let matchTime = Double(t) as TimeInterval
+            let matchDate = Date(timeIntervalSince1970: matchTime)
             
-            let timeDifference = abs(matchTime.timeIntervalSince(Date()))
+            let timeDifference = abs(matchDate.timeIntervalSince(Date()))
             
             if timeDifference <= closestMatchAndTimeDistance?.distance ?? 0 || closestMatchAndTimeDistance == nil {
                 closestMatchAndTimeDistance = (match, abs(timeDifference))
@@ -78,7 +82,7 @@ class MatchesTableViewController: UITableViewController {
         }
         
         if let closest = closestMatchAndTimeDistance {
-            let index = matches.index(of: closest.match)!
+            let index = matches.firstIndex {$0.key == closest.match.key} ?? 0
             
             tableView.scrollToRow(at: IndexPath(row: index, section: 0), at: .middle, animated: false)
         }
@@ -89,8 +93,33 @@ class MatchesTableViewController: UITableViewController {
         // Dispose of any resources that can be recreated.
     }
     
-    func load(withMatches matches: [Match]) {
-        self.matches = matches
+    func load(forEventKey eventKey: String?, specifyingTeam teamKey: String? = nil) {
+        if let eventKey = eventKey {
+            //Get the matches
+            Globals.appDelegate.appSyncClient?.fetch(query: ListMatchesQuery(eventKey: eventKey), cachePolicy: .returnCacheDataAndFetch, resultHandler: {[weak self] (result, error) in
+                if Globals.handleAppSyncErrors(forQuery: "ListMatchesQuery", result: result, error: error) {
+                    let returnedMatches = (result?.data?.listMatches?.map {$0!.fragments.match} ?? []).sorted(by: { (match1, match2) -> Bool in
+                        return match1 < match2
+                    })
+                    if let teamKey = teamKey {
+                        self?.matches = returnedMatches.filter {match in
+                            if match.blueAlliance?.teamKeys?.contains(teamKey) ?? false || match.redAlliance?.teamKeys?.contains(teamKey) ?? false {
+                                return true
+                            } else {
+                                return false
+                            }
+                        }
+                    } else {
+                        self?.matches = returnedMatches
+                    }
+                } else {
+                    //TODO: Throw error
+                    
+                }
+            })
+        } else {
+            self.matches = []
+        }
     }
     
     override func viewDidLayoutSubviews() {
@@ -132,13 +161,16 @@ class MatchesTableViewController: UITableViewController {
             teamLabel.layer.borderColor = nil
         }
         
-        cell.red1.text = match.teamMatchPerformance(forColor: .Red, andSlot: .One).teamEventPerformance?.team?.teamNumber.description
-        cell.red2.text = match.teamMatchPerformance(forColor: .Red, andSlot: .Two).teamEventPerformance?.team?.teamNumber.description
-        cell.red3.text = match.teamMatchPerformance(forColor: .Red, andSlot: .Three).teamEventPerformance?.team?.teamNumber.description
-        
-        cell.blue1.text = match.teamMatchPerformance(forColor: .Blue, andSlot: .One).teamEventPerformance?.team?.teamNumber.description
-        cell.blue2.text = match.teamMatchPerformance(forColor: .Blue, andSlot: .Two).teamEventPerformance?.team?.teamNumber.description
-        cell.blue3.text = match.teamMatchPerformance(forColor: .Blue, andSlot: .Three).teamEventPerformance?.team?.teamNumber.description
+        //Get the team numbers
+        if match.redAlliance?.teamKeys?.count ?? 0 >= 3 && match.blueAlliance?.teamKeys?.count ?? 0 >= 3 {
+            cell.red1.text = match.redAlliance?.teamKeys?[0]?.trimmingCharacters(in: CharacterSet.letters)
+            cell.red2.text = match.redAlliance?.teamKeys?[1]?.trimmingCharacters(in: CharacterSet.letters)
+            cell.red3.text = match.redAlliance?.teamKeys?[2]?.trimmingCharacters(in: CharacterSet.letters)
+            
+            cell.blue1.text = match.blueAlliance?.teamKeys?[0]?.trimmingCharacters(in: CharacterSet.letters)
+            cell.blue2.text = match.blueAlliance?.teamKeys?[1]?.trimmingCharacters(in: CharacterSet.letters)
+            cell.blue3.text = match.blueAlliance?.teamKeys?[2]?.trimmingCharacters(in: CharacterSet.letters)
+        }
         
         
         if let date = match.time {
@@ -146,7 +178,7 @@ class MatchesTableViewController: UITableViewController {
             dateFormatter.locale = Locale.current
             
             dateFormatter.dateFormat = "EEE dd, HH:mm"
-            cell.timeLabel.text = dateFormatter.string(from: date)
+            cell.timeLabel.text = dateFormatter.string(from: Date(timeIntervalSince1970: TimeInterval(date)))
         } else {
             cell.timeLabel.text = ""
         }

@@ -88,7 +88,6 @@
 		937C682A204C852600FAEDE8 /* EventStatsGraphViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 937C6829204C852600FAEDE8 /* EventStatsGraphViewController.swift */; };
 		937C682E204C86DB00FAEDE8 /* SelectStatsTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 937C682D204C86DB00FAEDE8 /* SelectStatsTableViewController.swift */; };
 		937E9C961E40468300D0ED76 /* SuperNotesCollectionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 937E9C951E40468300D0ED76 /* SuperNotesCollectionViewController.swift */; };
-		938B50E52055AF430075C416 /* RealmLoaderViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 938B50E42055AF430075C416 /* RealmLoaderViewController.swift */; };
 		938E0B3C2056D85C00666FA7 /* TBAAsyncManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 938E0B3B2056D85C00666FA7 /* TBAAsyncManager.swift */; };
 		9391EA6C1E4852D2008E17A1 /* PitStringFieldCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9391EA6B1E4852D2008E17A1 /* PitStringFieldCollectionViewCell.swift */; };
 		93A38B3A2055EBA400B8B692 /* NoEventSelected.xib in Resources */ = {isa = PBXBuildFile; fileRef = 93A38B392055EBA400B8B692 /* NoEventSelected.xib */; };
@@ -278,7 +277,6 @@
 		937C6829204C852600FAEDE8 /* EventStatsGraphViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventStatsGraphViewController.swift; sourceTree = "<group>"; };
 		937C682D204C86DB00FAEDE8 /* SelectStatsTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SelectStatsTableViewController.swift; sourceTree = "<group>"; };
 		937E9C951E40468300D0ED76 /* SuperNotesCollectionViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SuperNotesCollectionViewController.swift; sourceTree = "<group>"; };
-		938B50E42055AF430075C416 /* RealmLoaderViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RealmLoaderViewController.swift; sourceTree = "<group>"; };
 		938D9CB01E1B05BA00A5E522 /* FASTTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FASTTests.swift; sourceTree = "<group>"; };
 		938E0B3B2056D85C00666FA7 /* TBAAsyncManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TBAAsyncManager.swift; sourceTree = "<group>"; };
 		9391EA6B1E4852D2008E17A1 /* PitStringFieldCollectionViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PitStringFieldCollectionViewCell.swift; sourceTree = "<group>"; };
@@ -338,7 +336,6 @@
 			isa = PBXGroup;
 			children = (
 				937BFD0520657EA5006FB3E0 /* Onboarding */,
-				938B50E42055AF430075C416 /* RealmLoaderViewController.swift */,
 				93CEA6332041FB5900C5B357 /* Forgot Password */,
 				93D75B631E5D0866002CBED2 /* FieldLocationDisplayViewController.swift */,
 				9353ADBB1E57ACF100120F1A /* MatchesTableViewController.swift */,
@@ -738,6 +735,7 @@
 				93610E301E42E2B200856BE2 /* Increment Build Number */,
 				1F7AE4DF1DCC2DC80029B420 /* Embed Frameworks */,
 				9249D9412C5ADECA54FC1C30 /* [CP] Embed Pods Frameworks */,
+				31A9D671EB4CE45CD58EF7CE /* [CP] Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -930,6 +928,21 @@
 			shellPath = /bin/sh;
 			shellScript = "./Fabric.framework/run 69885bcf9ab40dc49ae9c921bfc14f173744a153 96c2e8fbf7a62a41a095af4554fc38c60d5a509721db519cc7ab29ed326b4bfa";
 		};
+		31A9D671EB4CE45CD58EF7CE /* [CP] Copy Pods Resources */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "[CP] Copy Pods Resources";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-FRC Advanced Scouting Touchstone/Pods-FRC Advanced Scouting Touchstone-resources.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
 		640441D7758EDEEB15142D75 /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
@@ -1064,7 +1077,6 @@
 				93D75B6A1E5DE0F5002CBED2 /* ShotChartViewController.swift in Sources */,
 				934DDE462002B0510032095C /* RealmDataMangager.swift in Sources */,
 				1F78E7831C3B469300221927 /* AppDelegate.swift in Sources */,
-				938B50E52055AF430075C416 /* RealmLoaderViewController.swift in Sources */,
 				937BFD0420657E9E006FB3E0 /* OnboardingPathChooserViewController.swift in Sources */,
 				9353ADBC1E57ACF100120F1A /* MatchesTableViewController.swift in Sources */,
 				93C5B47C1E53FC9C007D309F /* TeamInfoScrollView.swift in Sources */,

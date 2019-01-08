@@ -14,7 +14,7 @@
             buildForAnalyzing = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "93AF1EF267257D467F31F4E341F76BDA"
+               BlueprintIdentifier = "E49972E1075B42113324B1B3C42F4EFB"
                BuildableName = "Pods_FRC_Advanced_Scouting_Touchstone.framework"
                BlueprintName = "Pods-FRC Advanced Scouting Touchstone"
                ReferencedContainer = "container:Pods.xcodeproj">
@@ -45,7 +45,7 @@
       <MacroExpansion>
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "93AF1EF267257D467F31F4E341F76BDA"
+            BlueprintIdentifier = "E49972E1075B42113324B1B3C42F4EFB"
             BuildableName = "Pods_FRC_Advanced_Scouting_Touchstone.framework"
             BlueprintName = "Pods-FRC Advanced Scouting Touchstone"
             ReferencedContainer = "container:Pods.xcodeproj">

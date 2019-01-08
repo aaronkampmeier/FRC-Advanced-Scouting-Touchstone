@@ -39,7 +39,7 @@ import RealmSwift
 //        case Eliminator
 //        case QuarterFinal = "Quarter Finals"
 //        case SemiFinal = "Semi Final"
-//        case Final
+//        case Fin/Users/aaron/Documents/Xcode Projects/FRC Advanced Scouting Telemetrics/FRC Advanced Scouting Telemetrics/Event.swiftal
 //
 //        var description: String {
 //            get {

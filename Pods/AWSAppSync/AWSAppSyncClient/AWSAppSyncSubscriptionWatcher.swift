@@ -16,11 +16,12 @@
 import Dispatch
 import os.log
 
-@objc protocol MQTTSubscritionWatcher: AnyObject {
+@objc protocol MQTTSubscriptionWatcher: AnyObject {
     func getIdentifier() -> Int
     func getTopics() -> [String]
     func messageCallbackDelegate(data: Data)
     func disconnectCallbackDelegate(error: Error)
+    func connectedCallbackDelegate()
 }
 
 class SubscriptionsOrderHelper {
@@ -32,7 +33,7 @@ class SubscriptionsOrderHelper {
     static let sharedInstance = SubscriptionsOrderHelper()
     
     func getLatestCount() -> Int {
-        count = count + 1
+        count += 1
         waitDictionary[count] = false
         return count
     }
@@ -42,10 +43,8 @@ class SubscriptionsOrderHelper {
     }
     
     func shouldWait(id: Int) -> Bool {
-        for i in 0..<id {
-            if (waitDictionary[i] == false) {
-                return true
-            }
+        for i in 0..<id where waitDictionary[i] == false {
+            return true
         }
         return false
     }
@@ -53,30 +52,34 @@ class SubscriptionsOrderHelper {
 }
 
 /// A `AWSAppSyncSubscriptionWatcher` is responsible for watching the subscription, and calling the result handler with a new result whenever any of the data is published on the MQTT topic. It also normalizes the cache before giving the callback to customer.
-public final class AWSAppSyncSubscriptionWatcher<Subscription: GraphQLSubscription>: MQTTSubscritionWatcher, Cancellable {
+public final class AWSAppSyncSubscriptionWatcher<Subscription: GraphQLSubscription>: MQTTSubscriptionWatcher, Cancellable {
     
     weak var client: AppSyncMQTTClient?
     weak var httpClient: AWSNetworkTransport?
     var subscription: Subscription?
+    let handlerQueue: DispatchQueue
     var resultHandler: SubscriptionResultHandler<Subscription>?
+    var connectedCallback: (() -> Void)?
     internal var subscriptionTopic: [String]?
     let store: ApolloStore
     public let uniqueIdentifier = SubscriptionsOrderHelper.sharedInstance.getLatestCount()
     internal var isCancelled: Bool = false
     
-    init(client: AppSyncMQTTClient, httpClient: AWSNetworkTransport, store: ApolloStore, subscriptionsQueue: DispatchQueue, subscription: Subscription, handlerQueue: DispatchQueue, resultHandler: @escaping SubscriptionResultHandler<Subscription>) {
+    init(client: AppSyncMQTTClient, httpClient: AWSNetworkTransport, store: ApolloStore, subscriptionsQueue: DispatchQueue, subscription: Subscription, handlerQueue: DispatchQueue, connectedCallback: (() -> Void)? = nil, resultHandler: @escaping SubscriptionResultHandler<Subscription>) {
         self.client = client
         self.httpClient = httpClient
         self.store = store
         self.subscription = subscription
+        self.handlerQueue = handlerQueue
+        self.connectedCallback = connectedCallback
         self.resultHandler = { (result, transaction, error) in
             handlerQueue.async {
                 resultHandler(result, transaction, error)
             }
         }
         subscriptionsQueue.async { [weak self] in
-            guard let `self` = self else {return}
-            if (!self.isCancelled) {
+            guard let self = self else {return}
+            if !self.isCancelled {
                 self.startSubscription()
             }
         }
@@ -86,7 +89,7 @@ public final class AWSAppSyncSubscriptionWatcher<Subscription: GraphQLSubscripti
         return uniqueIdentifier
     }
     
-    private func startSubscription()  {
+    private func startSubscription() {
         let semaphore = DispatchSemaphore(value: 0)
         
         self.performSubscriptionRequest(completionHandler: { [weak self] (success, error) in
@@ -101,8 +104,8 @@ public final class AWSAppSyncSubscriptionWatcher<Subscription: GraphQLSubscripti
     
     private func performSubscriptionRequest(completionHandler: @escaping (Bool, Error?) -> Void) {
         do {
-            let _ = try self.httpClient?.sendSubscriptionRequest(operation: subscription!, completionHandler: {[weak self] (response, error) in
-                guard let `self` = self else {return}
+            _ = try self.httpClient?.sendSubscriptionRequest(operation: subscription!, completionHandler: {[weak self] (response, error) in
+                guard let self = self else {return}
                 guard self.isCancelled == false else {return}
                 if let response = response {
                     do {
@@ -133,11 +136,16 @@ public final class AWSAppSyncSubscriptionWatcher<Subscription: GraphQLSubscripti
         self.resultHandler?(nil, nil, error)
     }
     
+    func connectedCallbackDelegate() {
+        AppSyncLog.debug("DS: connectedCallback attempted. connected callback is null: \(connectedCallback == nil)")
+        connectedCallback?()
+    }
+    
     func messageCallbackDelegate(data: Data) {
         do {
             AppSyncLog.verbose("Received message in messageCallbackDelegate")
             
-            guard let _ = NSString(data: data, encoding: String.Encoding.utf8.rawValue) else {
+            guard String(data: data, encoding: .utf8) != nil else {
                 AppSyncLog.error("Unable to convert message data to String using UTF8 encoding")
                 AppSyncLog.debug("Message data is [\(data)]")
                 return
@@ -154,7 +162,7 @@ public final class AWSAppSyncSubscriptionWatcher<Subscription: GraphQLSubscripti
             firstly {
                 try response.parseResult(cacheKeyForObject: self.store.cacheKeyForObject)
                 }.andThen { (result, records) in
-                    let _ = self.store.withinReadWriteTransaction { transaction in
+                    _ = self.store.withinReadWriteTransaction { transaction in
                         self.resultHandler?(result, transaction, nil)
                     }
                     
@@ -187,4 +195,3 @@ public final class AWSAppSyncSubscriptionWatcher<Subscription: GraphQLSubscripti
         self.subscription = nil
     }
 }
-

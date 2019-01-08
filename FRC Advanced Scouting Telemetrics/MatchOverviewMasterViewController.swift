@@ -9,7 +9,7 @@
 import UIKit
 
 protocol MatchOverviewMasterDataSource {
-    func event() -> Event?
+    func eventKey() -> String?
 }
 
 class MatchOverviewMasterViewController: UIViewController, MatchOverviewDetailDataSource {
@@ -20,25 +20,7 @@ class MatchOverviewMasterViewController: UIViewController, MatchOverviewDetailDa
             return self.splitViewController as! MatchOverviewSplitViewController
         }
     }
-    var event: Event? {
-        didSet {
-            if let event = event {
-                let unsortedMatches = event.matches
-                let sortedMatches = unsortedMatches.sorted() {(firstMatch, secondMatch) in
-                    return firstMatch < secondMatch
-                }
-                
-                matchesInEvent = sortedMatches
-            } else {
-                matchesInEvent = []
-            }
-        }
-    }
-    var matchesInEvent: [Match] = [] {
-        didSet {
-            matchesTableVC?.load(withMatches: matchesInEvent)
-        }
-    }
+    var eventKey: String?
     var selectedMatch: Match? {
         didSet {
             matchOverviewSplitVC.matchesDetail?.reloadData()
@@ -53,17 +35,15 @@ class MatchOverviewMasterViewController: UIViewController, MatchOverviewDetailDa
         // Do any additional setup after loading the view.
         matchOverviewSplitVC.matchesMaster = self
         
-        self.load(withEvent: dataSource?.event())
+        self.load(withEventKey: dataSource?.eventKey())
         
         matchesTableVC = (self.childViewControllers.first as! MatchesTableViewController)
         matchesTableVC?.delegate = self
         matchesTableVC?.tableView.allowsSelection = true
-        
-        matchesTableVC?.load(withMatches: matchesInEvent)
     }
     
-    private func load(withEvent event: Event?) {
-        self.event = event
+    private func load(withEventKey eventKey: String?) {
+        matchesTableVC?.load(forEventKey: eventKey)
     }
     
     func match() -> Match? {

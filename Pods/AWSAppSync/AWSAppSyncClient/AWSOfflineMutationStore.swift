@@ -62,7 +62,7 @@ public class AWSAppSyncMutationRecord {
     var timestamp: Date
     var selections: [GraphQLSelection]?
     var operationTypeClass: String?
-    var inmemoryExecutor: InMemoryMutationDelegate?
+    weak var inmemoryExecutor: InMemoryMutationDelegate?
     var type: MutationType
     var s3ObjectInput: InternalS3ObjectDetails?
     var operationString: String?
@@ -87,7 +87,7 @@ public class AWSAppSyncOfflineMutationCache {
     }
     
     internal func loadPersistedData() throws {
-        let _ = try self.persistentCache?.getStoredMutationRecordsInQueue().map({ record in
+        _ = try self.persistentCache?.getStoredMutationRecordsInQueue().map({ record in
             recordQueue[record.recordIdentitifer] = record
             processQueue.append(record)
         })
@@ -96,15 +96,14 @@ public class AWSAppSyncOfflineMutationCache {
     internal func add(mutationRecord: AWSAppSyncMutationRecord) {
         do {
             try _add(mutationRecord: mutationRecord)
-        }
-        catch {
+        } catch {
         }
     }
     
     fileprivate func _add(mutationRecord: AWSAppSyncMutationRecord) throws {
         recordQueue[mutationRecord.recordIdentitifer] = mutationRecord
         do {
-        try persistentCache?.saveMutationRecord(record: mutationRecord)
+            try persistentCache?.saveMutationRecord(record: mutationRecord)
         } catch {
         }
     }
@@ -117,6 +116,7 @@ public class AWSAppSyncOfflineMutationCache {
         do {
             try persistentCache?.deleteMutationRecord(record: record)
         } catch {}
+
         if let index = processQueue.index(where: {$0.recordIdentitifer == record.recordIdentitifer}) {
             processQueue.remove(at: index)
         }
@@ -155,17 +155,18 @@ class MutationExecutor: NetworkConnectionNotification {
         self.appSyncClient = appSyncClient
         self.snapshotProcessController = snapshotProcessController
         if let fileURL = fileURL {
-        do {
-            self.persistentCache = try AWSMutationCache(fileURL: fileURL)
-            try self.loadPersistedData()
-        } catch {
-        }
+            do {
+                self.persistentCache = try AWSMutationCache(fileURL: fileURL)
+                try self.loadPersistedData()
+            } catch let error {
+                print("Error persisting cache: \(error.localizedDescription)")
+            }
         }
     }
     
     func onNetworkAvailabilityStatusChanged(isEndpointReachable: Bool) {
-        if (isEndpointReachable) {
-            if(listAllMuationRecords().count > 0 && autoSubmitOfflineMutations) {
+        if isEndpointReachable {
+            if !listAllMuationRecords().isEmpty && autoSubmitOfflineMutations {
                 resumeMutationExecutions()
             }
         } else {
@@ -175,7 +176,7 @@ class MutationExecutor: NetworkConnectionNotification {
     
     internal func loadPersistedData() throws {
         do {
-            let _ = try self.persistentCache?.getStoredMutationRecordsInQueue().map({ record in
+            _ = try self.persistentCache?.getStoredMutationRecordsInQueue().map({ record in
                 mutationQueue.append(record)
             })
         } catch {}
@@ -190,12 +191,12 @@ class MutationExecutor: NetworkConnectionNotification {
         }
 
         // if the record is just queued and we are online, immediately submit the record
-        if (snapshotProcessController.shouldExecuteOperation(operation: .mutation)
-            && self.listAllMuationRecords().count == 1) {
+        if snapshotProcessController.shouldExecuteOperation(operation: .mutation)
+            && self.listAllMuationRecords().count == 1 {
             self.mutationQueue.removeFirst()
             mutation.inmemoryExecutor?.performMutation(dispatchGroup: dispatchGroup)
-            do  {
-                let _ = try self.removeRecordFromQueue(record: mutation)
+            do {
+                _ = try self.removeRecordFromQueue(record: mutation)
             } catch {}
         }
         
@@ -220,7 +221,7 @@ class MutationExecutor: NetworkConnectionNotification {
             inMemoryMutationExecutor.performMutation(dispatchGroup: dispatchGroup)
             self.mutationQueue.removeFirst()
             do {
-                let _ = try self.removeRecordFromQueue(record: mutation)
+                _ = try self.removeRecordFromQueue(record: mutation)
             } catch {
             }
         } else {
@@ -241,7 +242,7 @@ class MutationExecutor: NetworkConnectionNotification {
             let record = self.mutationQueue.removeFirst()
             // remove from persistent store
             do {
-                let _ = try self.removeRecordFromQueue(record: record)
+                _ = try self.removeRecordFromQueue(record: record)
             } catch {
             }
         }
@@ -264,7 +265,7 @@ class MutationExecutor: NetworkConnectionNotification {
         if let s3Object = mutation.s3ObjectInput {
             
             self.appSyncClient?.s3ObjectManager!.upload(s3Object: s3Object) { (isSuccessful, error) in
-                if (isSuccessful) {
+                if isSuccessful {
                     sendDataRequest(mutation: mutation)
                 } else {
                     // give customer error callback with S3 as the error
@@ -292,7 +293,7 @@ class MutationExecutor: NetworkConnectionNotification {
         if !isExecuting {
             isExecuting = true
             while !mutationQueue.isEmpty {
-                if (shouldExecute) {
+                if shouldExecute {
                     executeMutation(mutation: mutationQueue.first!)
                     currentMutation = mutationQueue.first
                 } else {
@@ -305,4 +306,3 @@ class MutationExecutor: NetworkConnectionNotification {
         }
     }
 }
-

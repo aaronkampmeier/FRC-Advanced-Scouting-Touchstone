@@ -8,7 +8,7 @@
 
 import UIKit
 import SSBouncyButton
-import Crashlytics
+import AWSPinpoint
 
 class OnboardingPathChooserViewController: UIViewController {
     @IBOutlet weak var spectatorView: UIView!
@@ -20,6 +20,8 @@ class OnboardingPathChooserViewController: UIViewController {
     var signUpBouncyButton: UIButton!
     
     let buttonCornerRadius: CGFloat = 5
+    
+    let pinpoint = Globals.appDelegate.pinpoint
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -79,29 +81,41 @@ class OnboardingPathChooserViewController: UIViewController {
         //Switch to the team list
         let teamListVC = storyboard?.instantiateViewController(withIdentifier: "teamListMasterVC")
         
-        RealmController.realmController.openLocalRealm()
         UserDefaults.standard.setValue(true, forKey: RealmController.isSpectatorModeKey)
         
         self.view.window?.rootViewController = teamListVC
         
-        Answers.logCustomEvent(withName: "Onboarding Completed", customAttributes: ["Onboarded Route":"Spectator"])
+        //Pinpoint
+        let event = pinpoint?.analyticsClient.createEvent(withEventType: "Onboarding Completed")
+        event?.addAttribute("Spectator", forKey: "Onboarded Route")
+        pinpoint?.analyticsClient.record(event)
+        pinpoint?.analyticsClient.submitEvents()
     }
     
     @objc func logInPressed() {
         
-        let loginVC = (UIApplication.shared.delegate as! AppDelegate).logInViewController()
-        self.present(loginVC, animated: true, completion: nil)
+//        let loginVC = (UIApplication.shared.delegate as! AppDelegate).logInViewController()
+//        self.present(loginVC, animated: true, completion: nil)
+        Globals.appDelegate.displayLogin()
         
-        Answers.logCustomEvent(withName: "Onboarding Completed", customAttributes: ["Onboarded Route":"Log In"])
+        let event = pinpoint?.analyticsClient.createEvent(withEventType: "Onboarding Completed")
+        event?.addAttribute("Log In", forKey: "Onboarded Route")
+        pinpoint?.analyticsClient.record(event)
+        pinpoint?.analyticsClient.submitEvents()
     }
     
     @objc func signUpPressed() {
         
-        let loginVC = (UIApplication.shared.delegate as! AppDelegate).logInViewController()
-        self.present(loginVC, animated: true, completion: nil)
-        loginVC.setRegistering(true, animated: false)
+//        let loginVC = (UIApplication.shared.delegate as! AppDelegate).logInViewController()
+//        self.present(loginVC, animated: true, completion: nil)
+//        loginVC.setRegistering(true, animated: false)
         
-        Answers.logCustomEvent(withName: "Onboarding Completed", customAttributes: ["Onboarded Route":"Sign Up"])
+        Globals.appDelegate.displayLogin()
+        
+        let event = pinpoint?.analyticsClient.createEvent(withEventType: "Onboarding Completed")
+        event?.addAttribute("Sign Up", forKey: "Onboarded Route")
+        pinpoint?.analyticsClient.record(event)
+        pinpoint?.analyticsClient.submitEvents()
     }
 
     /*

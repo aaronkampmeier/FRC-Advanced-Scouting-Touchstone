@@ -15,6 +15,30 @@ import AWSPinpoint
 
 internal struct Globals {
     static unowned let appDelegate = UIApplication.shared.delegate as! AppDelegate
+    static let isSpectatorModeKey = "FAST-IsInSpectatorMode"
+    static var isInSpectatorMode: Bool {
+        return UserDefaults.standard.value(forKey: isSpectatorModeKey) as? Bool ?? false
+    }
+    
+    ///Handles AppSync errors inline by logging and recording them
+    ///- Returns: A bool signifiying if the query was successful or not
+    static func handleAppSyncErrors<T>(forQuery queryIdentifier: String, result: GraphQLResult<T>?, error: Error?) -> Bool {
+        var wereErrors = false
+        if let error = error {
+            CLSNSLogv("Error performing \(queryIdentifier): \(error)", getVaList([]))
+            Crashlytics.sharedInstance().recordError(error)
+            wereErrors = true
+        }
+        if let errors = result?.errors {
+            CLSNSLogv("GraphQL Erros performing \(queryIdentifier): \(errors)", getVaList([]))
+            for error in errors {
+                Crashlytics.sharedInstance().recordError(error)
+            }
+            wereErrors = true
+        }
+        
+        return !wereErrors
+    }
 }
 
 @UIApplicationMain
@@ -27,7 +51,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
         // Override point for customization after application launch.
-        Fabric.with([Answers.self, Crashlytics.self])
+        Fabric.with([Crashlytics.self])
         Crashlytics.sharedInstance().setUserIdentifier(UIDevice.current.name)
         
 //        //Check if the user is logged in
@@ -63,7 +87,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
                 
                 switch userState {
                 case .signedOut:
-                    //Let the onboarding show to sign in
+                    //Let the onboarding show to sign in; Do nothing
                     break
                 case .signedIn:
                     ///TODO:
@@ -88,7 +112,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         do {
             let appSyncConfig = try AWSAppSyncClientConfiguration(appSyncClientInfo: AWSAppSyncClientInfo(), userPoolsAuthProvider: FASTCognitoUserPoolsAuthProvider(), databaseURL: databaseURL)
             appSyncClient = try AWSAppSyncClient(appSyncConfig: appSyncConfig)
-            appSyncClient?.apolloClient?.cacheKeyForObject = {$0["id"]}
+            //TODO: - Fix the cache key
+            appSyncClient?.apolloClient?.cacheKeyForObject = {$0["key"]}
         } catch {
             CLSNSLogv("Error starting AppSync: \(error)", getVaList([]))
             Crashlytics.sharedInstance().recordError(error)
@@ -98,48 +123,41 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         return AWSMobileClient.sharedInstance().interceptApplication(application, didFinishLaunchingWithOptions: launchOptions)
     }
     
-    func displayLogin(isRegistering: Bool = false) {
+    func displayLogin() {
         //Present log in screen
-        let loginVC = logInViewController()
-        self.window?.rootViewController = loginVC
-        loginVC.setRegistering(isRegistering, animated: false)
-    }
-    
-    func logInViewController() -> LoginViewController {
-        let loginVC = LoginViewController(style: .darkOpaque)
-        loginVC.isCancelButtonHidden = false
-        loginVC.serverURL = RealmController.realmController.syncAuthURL.absoluteString
-        loginVC.isSecureConnection = true
-        loginVC.isCopyrightLabelHidden = true
-        
-        //TODO: Extract these into seperate file (or don't to make them harder to find)
-        loginVC.authenticationProvider = AWSCognitoAuthenticationProvider()
-        
-        loginVC.loginSuccessfulHandler = {user,teamNumber in
-            let mainStoryboard = UIStoryboard(name: "Main", bundle: nil)
-            let loader = mainStoryboard.instantiateViewController(withIdentifier: "realmLoader") as! RealmLoaderViewController
-            
-            RealmController.realmController.currentSyncUser = user
-            RealmController.realmController.openSyncedRealm(withSyncUser: user, shouldOpenSyncedRealmAsync: true, completionHandler: loader.realmAsyncOpenHandler)
-            
-            UserDefaults.standard.set(false, forKey: RealmController.isSpectatorModeKey)
-            
-            self.window?.rootViewController = loader
-        }
-        
-        return loginVC
-    }
-    
-    func clearTMPFolder() {
-        //Clear the temporary folder as it can build up lots of unneeded ensembles data. However, at this time Fabric is probably downloading some settings from the cloud so we need to avoid deleting those files.
-        do {
-            for file in try FileManager.default.contentsOfDirectory(atPath: NSTemporaryDirectory()) {
-                try FileManager.default.removeItem(atPath: NSTemporaryDirectory().appending(file))
+        let navController = UINavigationController()
+        self.window?.rootViewController = navController
+        //TODO: Add Logo image
+        let signInOptions = SignInUIOptions(canCancel: true, logoImage: nil, backgroundColor: nil)
+        AWSMobileClient.sharedInstance().showSignIn(navigationController: navController, signInUIOptions: signInOptions) {userState, error in
+            if let userState = userState {
+                switch userState! {
+                case .signedIn:
+                    //Show the team list
+                     UserDefaults.standard.set(false, forKey: Globals.isSpectatorModeKey)
+                    let mainStoryboard = UIStoryboard(name: "Main", bundle: nil)
+                    self.window?.rootViewController = mainStoryboard.instantiateViewController(withIdentifier: "teamListMasterVC")
+                
+                default:
+                    Crashlytics.sharedInstance().recordCustomExceptionName("Received sign-in state other than SignedIn", reason: "Recevied state: \(userState)", frameArray: [])
+                    assertionFailure()
+                }
+            } else {
+                Crashlytics.sharedInstance().recordError(error)
             }
-        } catch {
-            CLSNSLogv("Unable to clear temporary directory with error: \(error)", getVaList([]))
         }
     }
+    
+//    func clearTMPFolder() {
+//        //Clear the temporary folder as it can build up lots of unneeded ensembles data. However, at this time Fabric is probably downloading some settings from the cloud so we need to avoid deleting those files.
+//        do {
+//            for file in try FileManager.default.contentsOfDirectory(atPath: NSTemporaryDirectory()) {
+//                try FileManager.default.removeItem(atPath: NSTemporaryDirectory().appending(file))
+//            }
+//        } catch {
+//            CLSNSLogv("Unable to clear temporary directory with error: \(error)", getVaList([]))
+//        }
+//    }
 
     func applicationWillResignActive(_ application: UIApplication) {
         // Sent when the application is about to move from active to inactive state. This can occur for certain types of temporary interruptions (such as an incoming phone call or SMS message) or when the user quits the application and it begins the transition to the background state.

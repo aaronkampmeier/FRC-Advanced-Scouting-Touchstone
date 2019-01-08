@@ -9,6 +9,9 @@
 import UIKit
 import Crashlytics
 import RealmSwift
+import AWSCore
+import AWSAppSync
+import AWSMobileClient
 
 class EventSelectionTitleButton: UIButton {
     override var intrinsicContentSize: CGSize {
@@ -24,7 +27,6 @@ class TeamListTableViewController: UITableViewController, TeamListDetailDataSour
     @IBOutlet weak var matchesButton: UIBarButtonItem!
     
     var searchController: UISearchController!
-    let realmController = RealmController.realmController
     var teamImages = [String:UIImage]()
     var teamListSplitVC: TeamListSplitViewController {
         get {
@@ -39,6 +41,8 @@ class TeamListTableViewController: UITableViewController, TeamListDetailDataSour
     
     var isSearching = false
     
+    var unorderedTeamsInEvent: [Team] = []
+    
     //Is a hierarchy
     var currentEventTeams: [Team] = [Team]() {
         didSet {
@@ -51,7 +55,7 @@ class TeamListTableViewController: UITableViewController, TeamListDetailDataSour
         }
     }
     //Searching would happen right in between here
-    var currentTeamsToDisplay = [Team]() { //This is always eaxaclty the end what the table view will display
+    var currentTeamsToDisplay = [Team]() { //This is always exaclty the end what the table view will display
         didSet {
             tableView.reloadData()
         }
@@ -63,7 +67,7 @@ class TeamListTableViewController: UITableViewController, TeamListDetailDataSour
             if let sTeam = selectedTeam {
                 //Select row in table view
                 if let index = currentTeamsToDisplay.index(where: {team in
-                    return team == sTeam
+                    return team.key == sTeam.key
                 }) {
                     tableView.selectRow(at: IndexPath.init(row: index, section: 0), animated: false, scrollPosition: .none)
                 }
@@ -75,72 +79,18 @@ class TeamListTableViewController: UITableViewController, TeamListDetailDataSour
         }
     }
     let lastSelectedEventStorageKey = "Last-Selected-Event"
-    var selectedEventRanker: EventRanker?
-    var selectedEvent: Event? {
+    var selectedEventRanking: EventRanking?
+    
+    var selectedEventKey: String? {
         didSet {
-            //Set to nil, because the selected team might not be in the new event
-            selectedTeam = nil
-            
-            statToSortBy = nil
-            
-            if let event = selectedEvent {
-                
-                if !realmController.sanityCheckStructure(ofEvent: event) {
-                    //The event's structure is not there, wait for it to download
-                    
-                    let alert = UIAlertController(title: "Wait for Downloads to Finish", message: "This event is not fully loaded from the cloud and is unusable until it is. Wait for this event to finish downloading by checking status in the \"Sync Status\" page and making sure you have a steady internet connection. If the issue persits, try logging out and back in again. If you believe this was in error, please contact us.", preferredStyle: .alert)
-                    alert.addAction(UIAlertAction(title: "OK", style: .default, handler: {_ in self.selectedEvent = nil}))
-                    self.present(alert, animated: true, completion: nil)
-                    
-                    Answers.logCustomEvent(withName: "Event selected before fully loaded", customAttributes: ["Event":event.key])
-                } else {
-                    UserDefaults.standard.set(event.key, forKey: lastSelectedEventStorageKey)
-                    selectedEventRanker = realmController.getTeamRanker(forEvent: event)
-                    currentEventTeams = realmController.teamRanking(forEvent: event)
-                    
-                    eventSelectionButton.setTitle(event.name, for: UIControlState())
-                    
-                    matchesButton.isEnabled = true
-                    graphButton.isEnabled = true
-                    
-                }
-            } else {
-                currentEventTeams = []
-                selectedEventRanker = nil
-                
-                eventSelectionButton.setTitle("Select Event", for: UIControlState())
-                
-                matchesButton.isEnabled = false
-                graphButton.isEnabled = false
-            }
-            
-            reloadEventRankerObserver()
-            
-            teamListSplitVC.teamListDetailVC.reloadData()
-        }
-    }
-    var teamEventPerformance: TeamEventPerformance? {
-        get {
-            if let team = selectedTeam {
-                if let event = selectedEvent {
-                    return realmController.eventPerformance(forTeam: team, atEvent: event)
-                }
-            }
-            return nil
+            setUpForEvent()
+//            reloadEventRankerObserver()
         }
     }
     
-    var eventsObserverToken: NotificationToken?
-    var eventRankerObserverToken: NotificationToken? {
-        didSet {
-            oldValue?.invalidate()
-        }
-    }
-    var eventPickedTeamsObserverToken: NotificationToken? {
-        didSet {
-            oldValue?.invalidate()
-        }
-    }
+    var deleteTrackedEventSubscriber: AWSAppSync.AWSAppSyncSubscriptionWatcher<OnRemoveTrackedEventSubscription>?
+    var changeTeamRankSubscriber: AWSAppSync.AWSAppSyncSubscriptionWatcher<OnUpdateTeamRankSubscription>?
+    var pickedTeamSubscriber: AWSAppSync.AWSAppSyncSubscriptionWatcher<OnSetTeamPickedSubscription>?
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -169,11 +119,28 @@ class TeamListTableViewController: UITableViewController, TeamListDetailDataSour
         //Set last selected event
         if let lastSelectedEventKey = UserDefaults.standard.value(forKey: lastSelectedEventStorageKey) as? String {
             //Get event
-            if let event = realmController.generalRealm.object(ofType: Event.self, forPrimaryKey: lastSelectedEventKey) {
-                if RealmController.realmController.sanityCheckStructure(ofEvent: event) {
-                    selectedEvent = event
+            self.selectedEventKey = lastSelectedEventKey
+        }
+        
+        //Set up a subscriber to event deletions
+        do {
+            let subscription = OnRemoveTrackedEventSubscription(userID: AWSMobileClient.sharedInstance().username ?? "")
+            deleteTrackedEventSubscriber = try Globals.appDelegate.appSyncClient?.subscribe(subscription: subscription) {[weak self] (result, transaction, error) in
+                if let result = result {
+                    //Simply returns the event key
+                    let removedEventKey: String = result.data!.onRemoveTrackedEvent!
+                    if self?.selectedEventKey ?? "" == removedEventKey {
+                        //TODO: Use transaction to edit cache
+                        self?.selectedEventKey = nil
+                    }
+                } else if let error = error {
+                    CLSNSLogv("Error subscribing to OnDeleteTrackedEvent: \(error)", getVaList([]))
+                    Crashlytics.sharedInstance().recordError(error)
                 }
             }
+        } catch {
+            CLSNSLogv("Error starting subscriptions: \(error)", getVaList([]))
+            Crashlytics.sharedInstance().recordError(error)
         }
     }
     
@@ -181,30 +148,22 @@ class TeamListTableViewController: UITableViewController, TeamListDetailDataSour
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         
-        if selectedEvent?.isInvalidated ?? false {
-            if let eventKey = UserDefaults.standard.value(forKey: lastSelectedEventStorageKey) as? String {
-                selectedEvent = realmController.generalRealm.object(ofType: Event.self, forPrimaryKey: eventKey)
-            } else {
-                selectedEvent = nil
-            }
-        }
-        
-        if selectedEvent == nil {
-            let events = RealmController.realmController.generalRealm.objects(Event.self)
-            if events.count > 0 {
-                //There is no selected event, but there are events to choose from, let's just pick a random one
-                selectedEvent = events.first
-            }
-        }
-        
-        if let event = selectedEvent {
-            if realmController.sanityCheckStructure(ofEvent: event) {
-                currentEventTeams = realmController.teamRanking(forEvent: event)
-            } else {
-                currentEventTeams = []
+        if selectedEventKey == nil {
+            Globals.appDelegate.appSyncClient?.fetch(query: ListTrackedEventsQuery(), cachePolicy: .fetchIgnoringCacheData) {[weak self] result, error in
+                if let error = error {
+                    CLSNSLogv("Error ListTrackedEventsQuery: \(error)", getVaList([]))
+                    Crashlytics.sharedInstance().recordError(error)
+                } else if let errors = result?.errors {
+                    CLSNSLogv("Errors ListTrackedEventQuery (GraphQL): \(errors)", getVaList([]))
+                    for error in errors {
+                        Crashlytics.sharedInstance().recordError(error)
+                    }
+                } else {
+                    self?.selectedEventKey = result?.data?.listTrackedEvents?.first??.eventKey
+                }
             }
         } else {
-            currentEventTeams = []
+            setUpForEvent()
         }
         
         if isSearching {
@@ -219,84 +178,145 @@ class TeamListTableViewController: UITableViewController, TeamListDetailDataSour
                 tableView.deselectRow(at: indexPath, animated: true)
             }
         }
-        
-        if !realmController.generalRealm.isInWriteTransaction {
-            //Track if an event was added or deleted
-            eventsObserverToken = realmController.generalRealm.objects(Event.self).observe {[weak self] eventsChanges in
-                guard let _ = self else {
-                    return
-                }
-                switch eventsChanges {
-                case .update(_, let deletions, let insertions, let modifications):
-                    if deletions.count > 0 || insertions.count > 0 || modifications.count > 0 {
-                        DispatchQueue.main.async {
-                            //Attempt to keep in the event in the case that it was reloaded, if not then just move to no selected event
-                            if let eventKey = UserDefaults.standard.value(forKey: self?.lastSelectedEventStorageKey ?? "") as? String {
-                                self?.selectedEvent = RealmController.realmController.generalRealm.object(ofType: Event.self, forPrimaryKey: eventKey)
-                            } else {
-                                self?.selectedEvent = nil
-                            }
-                        }
-                        
-                        if self?.selectedEvent == nil {
-                            let events = RealmController.realmController.generalRealm.objects(Event.self)
-                            if events.count > 0 {
-                                //There is no selected event, but there are events to choose from, let's just pick a random one
-                                self?.selectedEvent = events.first
-                            }
-                        }
-                    }
-                default:
-                    break
-                }
-            }
-        }
-        
-        reloadEventRankerObserver()
     }
     
-    func reloadEventRankerObserver() {
-        guard !realmController.syncedRealm.isInWriteTransaction else {
-            return
+    fileprivate func setUpForEvent() {
+        //Set to nil, because the selected team might not be in the new event
+        selectedTeam = nil
+        statToSortBy = nil
+        
+        if let eventKey = selectedEventKey {
+            UserDefaults.standard.set(eventKey, forKey: lastSelectedEventStorageKey)
+            
+            //As a hold over until the event ranking loads
+            eventSelectionButton.setTitle(eventKey, for: UIControlState())
+            
+            Globals.appDelegate.appSyncClient?.fetch(query: ListTeamsQuery(eventKey: eventKey), cachePolicy: .returnCacheDataAndFetch, queue: DispatchQueue(label: "Team List Loading", qos: .userInteractive)) {[weak self] result, error in
+                if let error = error {
+                    CLSNSLogv("Error loading ListTeamsQuery: \(error)", getVaList([]))
+                    Crashlytics.sharedInstance().recordError(error)
+                } else if let errors = result?.errors {
+                    CLSNSLogv("Error loading ListTeamsQuery (GraphQL): \(errors)", getVaList([]))
+                    for error in errors {
+                        Crashlytics.sharedInstance().recordError(error)
+                    }
+                } else {
+                    
+                    //Get all of the info on teams in an event
+                    self?.unorderedTeamsInEvent = result?.data?.listTeams?.map {return $0!.fragments.team} ?? []
+                    
+                    //Now, go get the ranking of them
+                    Globals.appDelegate.appSyncClient?.fetch(query: GetEventRankingQuery(key: eventKey), cachePolicy: .returnCacheDataAndFetch) {[weak self] result, error in
+                        if let error = error {
+                            CLSNSLogv("Error loading GetEventRankingQuery: \(error)", getVaList([]))
+                            Crashlytics.sharedInstance().recordError(error)
+                        } else if let errors = result?.errors {
+                            CLSNSLogv("Error loading GetEventRankingQuery (GraphQL): \(error)", getVaList([]))
+                            for error in errors {
+                                Crashlytics.sharedInstance().recordError(error)
+                            }
+                        } else {
+                            self?.selectedEventRanking = result?.data?.getEventRanking?.fragments.eventRanking
+                            
+                            self?.eventSelectionButton.setTitle(self?.selectedEventRanking?.eventName, for: UIControlState())
+                            
+                            self?.orderTeamsUsingRanking()
+                        }
+                    }
+                    
+                }
+            }
+            
+            matchesButton.isEnabled = true
+            graphButton.isEnabled = true
+            
+            //Set up subscribers
+            do {
+                changeTeamRankSubscriber = try Globals.appDelegate.appSyncClient?.subscribe(subscription: OnUpdateTeamRankSubscription(userID: AWSMobileClient.sharedInstance().username ?? "", eventKey: eventKey)) {[weak self] result, transaction, error in
+                    if let result = result {
+                        self?.selectedEventRanking = result.data?.onUpdateTeamRank?.fragments.eventRanking
+                        self?.orderTeamsUsingRanking()
+                        
+                        //TODO: Edit the transaction cache
+                    } else if let error = error {
+                        CLSNSLogv("Error with rank subscription: \(error)", getVaList([]))
+                    }
+                }
+                
+                pickedTeamSubscriber = try Globals.appDelegate.appSyncClient?.subscribe(subscription: OnSetTeamPickedSubscription(userID: AWSMobileClient.sharedInstance().username ?? "", eventKey: eventKey)) {[weak self] result, transaction, error in
+                    if let result = result {
+                        //TODO: Update the cache
+                        
+                        self?.selectedEventRanking = result.data?.onSetTeamPicked?.fragments.eventRanking
+                        
+                        //Reload the cell
+                        if let visibleRows = self?.tableView.indexPathsForVisibleRows {
+                            self?.tableView.reloadRows(at: visibleRows, with: UITableViewRowAnimation.none)
+                        }
+                    } else if let error = error {
+                        CLSNSLogv("Error OnSetTeamPickedSubscription: \(error)", getVaList([]))
+                        Crashlytics.sharedInstance().recordError(error)
+                    }
+                }
+            } catch {
+                CLSNSLogv("Error starting subcriptions: \(error)", getVaList([]))
+                Crashlytics.sharedInstance().recordError(error)
+                //TODO: Handle this error
+            }
+        } else {
+            currentEventTeams = []
+            selectedEventRanking = nil
+            
+            eventSelectionButton.setTitle("Select Event", for: UIControlState())
+            
+            matchesButton.isEnabled = false
+            graphButton.isEnabled = false
         }
         
-        //Add observer to listen for changes in the pick list
-        eventRankerObserverToken = nil
-        eventPickedTeamsObserverToken = nil
-        
-        if let event = selectedEvent {
-            if let eventRanker = realmController.getTeamRanker(forEvent: event) {
-                
-                self.eventRankerObserverToken = eventRanker.rankedTeams.observe {[weak self] collectionChange in
-                    switch collectionChange {
-                    case .update(_, let deletions, let insertions,_):
-                        DispatchQueue.main.async {
-                            if deletions.count > 0 || insertions.count > 0 {
-                                if !event.isInvalidated {
-                                    self?.currentEventTeams = self!.realmController.teamRanking(forEvent: event)
-                                } else {
-                                    Crashlytics.sharedInstance().recordCustomExceptionName("Unable to update view of team list rank (non fatal)", reason: "Event is invalidated", frameArray: [])
-                                }
-                            }
-                        }
-                    default:
-                        break
-                    }
+        teamListSplitVC.teamListDetailVC.reloadData()
+    }
+    
+    func orderTeamsUsingRanking() {
+        //Orders the teams into the currentEventTeams using the selectedEventRanking
+        if let eventRanking = selectedEventRanking {
+            //Now order the teams according to the ranking
+            var shouldReload = false
+            self.currentEventTeams = self.unorderedTeamsInEvent.sorted {team1, team2 in
+                let firstIndex = eventRanking.rankedTeams?.firstIndex(where: {$0!.teamKey == team1.key})
+                let secondIndex = eventRanking.rankedTeams?.firstIndex(where: {$0!.teamKey == team2.key})
+                if let firstIndex = firstIndex , let secondIndex = secondIndex {
+                    return firstIndex < secondIndex
+                } else {
+                    //One of the teams does not exist in the ranking, reload the ranking
+                    shouldReload = true
+                    return false
                 }
-                
-                self.eventPickedTeamsObserverToken = eventRanker.pickedTeams.observe {[weak self] collectionChange in
-                    switch collectionChange {
-                    case .update:
-                        //Reload all visible rows
-                        DispatchQueue.main.async {
-                            if let visibleRows = self?.tableView.indexPathsForVisibleRows {
-                                self?.tableView.reloadRows(at: visibleRows, with: UITableViewRowAnimation.none)
-                            }
-                        }
-                    default:
-                        break
-                    }
+            }
+            
+            if shouldReload {
+                reloadEvent(eventKey: eventRanking.eventKey)
+            }
+        } else {
+            currentEventTeams = []
+        }
+    }
+    
+    ///Reloads the teams in an event in the cloud, use if a team does not exist in the ranking
+    func reloadEvent(eventKey: String) {
+        Globals.appDelegate.appSyncClient?.perform(mutation: AddTrackedEventMutation(userID: AWSMobileClient.sharedInstance().username ?? "", eventKey: eventKey), optimisticUpdate: {transaction in
+            //TODO: Add Optimistic update
+        }) {[weak self] result, error in
+            if let error = error {
+                CLSNSLogv("Error AddTrackedEvent: \(error)", getVaList([]))
+                Crashlytics.sharedInstance().recordError(error)
+            } else if let errors = result?.errors {
+                CLSNSLogv("Errors AddTrackedEvent: \(errors)", getVaList([]))
+                for error in errors {
+                    Crashlytics.sharedInstance().recordError(error)
                 }
+            } else {
+                self?.selectedEventRanking = result?.data?.addTrackedEvent?.fragments.eventRanking
+                self?.orderTeamsUsingRanking()
             }
         }
     }
@@ -304,8 +324,6 @@ class TeamListTableViewController: UITableViewController, TeamListDetailDataSour
     override func viewDidDisappear(_ animated: Bool) {
         super.viewDidDisappear(animated)
         
-        eventsObserverToken?.invalidate()
-        eventRankerObserverToken?.invalidate()
     }
     
     override func viewDidAppear(_ animated: Bool) {
@@ -313,7 +331,7 @@ class TeamListTableViewController: UITableViewController, TeamListDetailDataSour
         
         let previousOpenKey = "FAST-HasBeenOpened"
         //Show a choose event screen if we are in spectator mode and is the first time opening
-        if RealmController.isInSpectatorMode && !(UserDefaults.standard.value(forKey: previousOpenKey) as? Bool ?? false) {
+        if Globals.isInSpectatorMode && !(UserDefaults.standard.value(forKey: previousOpenKey) as? Bool ?? false) {
             let chooseEventScreen = storyboard?.instantiateViewController(withIdentifier: "addEvent") as! AddEventTableViewController
             
             let nav = UINavigationController(rootViewController: chooseEventScreen)
@@ -326,9 +344,9 @@ class TeamListTableViewController: UITableViewController, TeamListDetailDataSour
         
         let hasShownInstructionalAlertKey = "FAST-HasShownInstructionalAlert"
         //Show an instructional alert about the event ranks
-        if RealmController.isInSpectatorMode && !(UserDefaults.standard.value(forKey: hasShownInstructionalAlertKey) as? Bool ?? false) {
+        if Globals.isInSpectatorMode && !(UserDefaults.standard.value(forKey: hasShownInstructionalAlertKey) as? Bool ?? false) {
             //Wait until the user has finished adding the first event
-            if selectedEvent != nil {
+            if selectedEventKey != nil {
                 //Now show it
                 let alert = UIAlertController(title: "Important Tip", message: "The edit button on the bottom left allows you to reorder the team list however you would like in order to bring your favorite teams to the top. The rank numbers on the left correspond to this order and not the event qualification ranking. To find the qualification ranking of a team, click into that team's detail page or use the sort menu.", preferredStyle: .alert)
                 alert.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
@@ -351,14 +369,14 @@ class TeamListTableViewController: UITableViewController, TeamListDetailDataSour
         return selectedTeam
     }
     
-    func inEvent() -> Event? {
-        return selectedEvent
+    func inEventKey() -> String? {
+        return selectedEventKey
     }
 
     // MARK: - Table view data source
 
     override func numberOfSections(in tableView: UITableView) -> Int {
-        if let _ = selectedEvent {
+        if let _ = selectedEventKey {
             //Hide the show event text
             tableView.backgroundView?.isHidden = true
             tableView.separatorStyle = .singleLine
@@ -398,43 +416,45 @@ class TeamListTableViewController: UITableViewController, TeamListDetailDataSour
             cell.statLabel.text = ""
         }
         
-        if let index = currentEventTeams.index(where: {$0 == team}) {
+        if let index = currentEventTeams.index(where: {$0.key == team.key}) {
             cell.rankLabel.text = "\(index as Int + 1)"
         } else {
             cell.rankLabel.text = "?"
-            Crashlytics.sharedInstance().recordCustomExceptionName("Team Event Rank Failed", reason: "Team is not in currentEventTeams. Team: \(team.key), Event: \(selectedEvent?.key)", frameArray: [])
+            Crashlytics.sharedInstance().recordCustomExceptionName("Team Event Rank Failed", reason: "Team is not in currentEventTeams. Team: \(team.key), Event: \(selectedEventKey)", frameArray: [])
         }
         
         //Show an X if they have been picked
         cell.accessoryView = nil
-        if let eventRanker = self.selectedEventRanker {
-            if !eventRanker.isInPickList(team: team) {
-                //Show indicator that it is not in pick list
+        if let eventRanking = self.selectedEventRanking {
+            //Find the team in the ranking
+            let rankedTeam = eventRanking.rankedTeams?.first {$0!.teamKey == team.key}
+            if rankedTeam??.isPicked ?? false {
+                //Show indicator that it is picked
                 let crossImage = UIImageView(image: #imageLiteral(resourceName: "Cross"))
                 crossImage.frame = CGRect(x: 0, y: 0, width: 20, height: 20)
                 cell.accessoryView = crossImage
-                
             }
         }
         
-        if let image = teamImages[team.key] {
-            cell.frontImage.image = image
-        } else {
-            if let imageData = team.scouted?.frontImage {
-                guard let uiImage = UIImage(data: imageData as Data) else {
-                    Crashlytics.sharedInstance().recordCustomExceptionName("Image data corrupted", reason: "Attempt to create UIImage from data failed.", frameArray: [])
-                    return cell
-                }
-                cell.frontImage.image = uiImage
-                teamImages[team.key] = uiImage
-            } else {
-                cell.frontImage.image = UIImage(named: "FRC-Logo")
-            }
-        }
+        //TODO: Add image functionality
+//        if let image = teamImages[team.key] {
+//            cell.frontImage.image = image
+//        } else {
+//            if let imageData = team.scouted?.frontImage {
+//                guard let uiImage = UIImage(data: imageData as Data) else {
+//                    Crashlytics.sharedInstance().recordCustomExceptionName("Image data corrupted", reason: "Attempt to create UIImage from data failed.", frameArray: [])
+//                    return cell
+//                }
+//                cell.frontImage.image = uiImage
+//                teamImages[team.key] = uiImage
+//            } else {
+//                cell.frontImage.image = UIImage(named: "FRC-Logo")
+//            }
+//        }
         
         //Show the indicator if this is the team that is currently logged in
         cell.myTeamIndicatorImageView.isHidden = true
-        if let loggedInTeam = UserDefaults.standard.value(forKey: "LoggedInTeam") as? String {
+        if let loggedInTeam = AWSMobileClient.sharedInstance().username {
             if let teamInt = Int(loggedInTeam) {
                 if teamInt == team.teamNumber {
                     cell.myTeamIndicatorImageView.isHidden = false
@@ -461,7 +481,7 @@ class TeamListTableViewController: UITableViewController, TeamListDetailDataSour
     override func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
         // Return false if you do not want the specified item to be editable.
         //Only allow editing in an event
-        if let _ = self.selectedEvent {
+        if let _ = self.selectedEventKey {
             return true
         } else {
             return false
@@ -496,27 +516,31 @@ class TeamListTableViewController: UITableViewController, TeamListDetailDataSour
     @available(iOS 11.0, *)
     override func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
         
-        guard !RealmController.isInSpectatorMode else {
+        guard Globals.isInSpectatorMode else {
             return nil
         }
         
-        if let event = selectedEvent {
-            
-            guard let ranker = RealmController.realmController.getTeamRanker(forEvent: event) else {
-                return nil
-            }
+        if let eventKey = selectedEventKey {
             let team = self.currentTeamsToDisplay[indexPath.row]
             
             let markAsPicked = UIContextualAction(style: .normal, title: "Mark Picked") {(contextAction: UIContextualAction, sourceView: UIView, completionHandler: (Bool) -> Void) in
                 
-                RealmController.realmController.syncedRealm.beginWrite()
-                ranker.setIsInPickList(!ranker.isInPickList(team: team), team: team)
-                do {
-                    try RealmController.realmController.syncedRealm.commitWrite(withoutNotifying: [self.eventPickedTeamsObserverToken ?? NotificationToken()])
-                } catch {
-                    CLSNSLogv("Error saving write of change to pick list: \(error)", getVaList([]))
-                    Crashlytics.sharedInstance().recordError(error)
-                }
+                //Check if it is picked yet
+                let rankedTeam = self.selectedEventRanking?.rankedTeams?.first {$0!.teamKey == team.key}
+                let isPicked = rankedTeam??.isPicked ?? false
+                
+                Globals.appDelegate.appSyncClient?.perform(mutation: SetTeamPickedMutation(userID: AWSMobileClient.sharedInstance().username ?? "", eventKey: eventKey, teamKey: team.key, isPicked: !isPicked), optimisticUpdate: { (transaction) in
+                    //TODO: Optimistic update
+                }, conflictResolutionBlock: { (snapshot, source, result) in
+                    CLSNSLogv("Conflict resolution block ran", getVaList([]))
+                }, resultHandler: {[weak self] (result, error) in
+                    if let error = error {
+                        CLSNSLogv("Error setting team picked", getVaList([]))
+                        Crashlytics.sharedInstance().recordError(error)
+                    } else if let result = result {
+                        self?.selectedEventRanking = result.data?.setTeamPicked?.fragments.eventRanking
+                    }
+                })
                 
                 completionHandler(true)
                 
@@ -524,39 +548,52 @@ class TeamListTableViewController: UITableViewController, TeamListDetailDataSour
                 tableView.reloadRows(at: [indexPath], with: UITableViewRowAnimation.right)
             }
             
-            markAsPicked.backgroundColor = ranker.isInPickList(team: team) ? .purple : .red
-            markAsPicked.title = ranker.isInPickList(team: team) ? "Mark As Picked" : "Unmark as Picked"
+            //Check if it is picked yet
+            let rankedTeam = self.selectedEventRanking?.rankedTeams?.first {$0!.teamKey == team.key}
+            let isPicked = rankedTeam??.isPicked ?? false
+            
+            markAsPicked.backgroundColor = isPicked ? .purple : .red
+            markAsPicked.title = isPicked ? "Mark As Picked" : "Unmark as Picked"
             
             let swipeConfig = UISwipeActionsConfiguration(actions: [markAsPicked])
             return swipeConfig
+        } else {
+            return nil
         }
-        
-        return nil
     }
     
 
     // Override to support rearranging the table view.
     override func tableView(_ tableView: UITableView, moveRowAt fromIndexPath: IndexPath, to toIndexPath: IndexPath) {
         //Move the team in the array and in Core Data
-        guard let event = selectedEvent else {
+        guard let eventKey = selectedEventKey else {
             return
         }
         
-        realmController.moveTeam(from: fromIndexPath.row, to: toIndexPath.row, inEvent: event)
+        //Get the team key
+        let team = currentTeamsToDisplay[fromIndexPath.row]
+        
+        Globals.appDelegate.appSyncClient?.perform(mutation: MoveRankedTeamMutation(userID: AWSMobileClient.sharedInstance().username!, eventKey: eventKey, teamKey: team.key, toIndex: toIndexPath.row), optimisticUpdate: { (transaction) in
+            //TODO: Optimistic
+        }, conflictResolutionBlock: { (snapshot, source, result) in
+            
+        }, resultHandler: {[weak self] (result, error) in
+            if Globals.handleAppSyncErrors(forQuery: "MoveRankedTeamMutation", result: result, error: error) {
+                self?.selectedEventRanking = result?.data?.moveRankedTeam?.fragments.eventRanking
+            } else {
+                //TODO: Show Error
+            }
+        })
     }
 
     // Override to support conditional rearranging of the table view.
     override func tableView(_ tableView: UITableView, canMoveRowAt indexPath: IndexPath) -> Bool {
         // Return false if you do not want the item to be re-orderable.
-        return selectedEvent != nil
+        return selectedEventKey != nil
     }
     
     override func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
-        if let event = selectedEvent, event.isInvalidated == false {
-            return "Event: \(event.name)"
-        } else {
-            return "Teams"
-        }
+        return nil
     }
     
     //MARK: Editing
@@ -585,22 +622,23 @@ class TeamListTableViewController: UITableViewController, TeamListDetailDataSour
             } else {
                 setEditing(true, animated: true)
             }
-        } else if touch.tapCount == 0 {
-            //Long press
-            if let frcEvent = selectedEvent {
-                let clearPickListAlert = UIAlertController(title: "Reset Picked Teams", message: "Would you like to reset what teams are picked or not? This will not affect any scouting data, just the Xs next to teams that were marked as picked.", preferredStyle: .alert)
-                clearPickListAlert.addAction(UIAlertAction(title: "Reset", style: .default, handler: {_ in
-                    //Reset the picked teams
-                    let eventRanker = RealmController.realmController.getTeamRanker(forEvent: frcEvent)
-                    
-                    RealmController.realmController.genericWrite(onRealm: .Synced) {
-                        eventRanker?.pickedTeams.removeAll()
-                    }
-                }))
-                clearPickListAlert.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
-                self.present(clearPickListAlert, animated: true, completion: nil)
-            }
         }
+//        else if touch.tapCount == 0 {
+//            //Long press
+//            if let frcEvent = selectedEvent {
+//                let clearPickListAlert = UIAlertController(title: "Reset Picked Teams", message: "Would you like to reset what teams are picked or not? This will not affect any scouting data, just the Xs next to teams that were marked as picked.", preferredStyle: .alert)
+//                clearPickListAlert.addAction(UIAlertAction(title: "Reset", style: .default, handler: {_ in
+//                    //Reset the picked teams
+//                    let eventRanker = RealmController.realmController.getTeamRanker(forEvent: frcEvent)
+//
+//                    RealmController.realmController.genericWrite(onRealm: .Synced) {
+//                        eventRanker?.pickedTeams.removeAll()
+//                    }
+//                }))
+//                clearPickListAlert.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
+//                self.present(clearPickListAlert, animated: true, completion: nil)
+//            }
+//        }
     }
     
     // MARK: - Navigation
@@ -632,7 +670,7 @@ class TeamListTableViewController: UITableViewController, TeamListDetailDataSour
     }
     
     func sortList(withStat statName: String?, isAscending ascending: Bool) {
-        guard let selectedEvent = selectedEvent else {
+        guard let selectedEventKey = selectedEventKey else {
             return
         }
         
@@ -696,13 +734,13 @@ class TeamListTableViewController: UITableViewController, TeamListDetailDataSour
     }
     
     @IBAction func chartButtonPressed(_ sender: UIBarButtonItem) {
-        if let event = selectedEvent {
+        if let eventKey = selectedEventKey {
             let eventStatGraphVC = storyboard?.instantiateViewController(withIdentifier: "eventStatsGraph") as! EventStatsGraphViewController
             let navVC = UINavigationController(rootViewController: eventStatGraphVC)
             
             navVC.modalPresentationStyle = .fullScreen
             
-            eventStatGraphVC.setUp(forEvent: event)
+            eventStatGraphVC.setUp(forEventKey: eventKey)
             
             present(navVC, animated: true, completion: nil)
             
@@ -720,8 +758,8 @@ class TeamListTableViewController: UITableViewController, TeamListDetailDataSour
 }
 
 extension TeamListTableViewController: MatchOverviewMasterDataSource {
-    func event() -> Event? {
-        return selectedEvent
+    func eventKey() -> String? {
+        return selectedEventKey
     }
 }
 
@@ -732,12 +770,12 @@ extension TeamListTableViewController: UIPopoverPresentationControllerDelegate {
 }
 
 extension TeamListTableViewController: EventSelection {
-    func eventSelected(_ event: Event?) {
-        selectedEvent = event
+    func eventSelected(_ eventKey: String?) {
+        selectedEventKey = eventKey
     }
     
-    func currentEvent() -> Event? {
-        return selectedEvent
+    func currentEventKey() -> String? {
+        return selectedEventKey
     }
 }
 

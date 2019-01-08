@@ -14,11 +14,9 @@ class EventPickerViewController: UIViewController, UIPickerViewDelegate, UIPicke
     
     @IBOutlet weak var introText: UILabel!
     var delegate: EventSelection?
-    fileprivate var events: Results<Event>?
-    fileprivate var currentEvent: Event?
-    fileprivate var chosenEvent: Event?
-    
-    fileprivate var eventUpdaterToken: NotificationToken?
+    fileprivate var events: [(eventKey: String, eventName: String)]?
+    fileprivate var currentEvent: String?
+    fileprivate var chosenEvent: String?
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -26,6 +24,33 @@ class EventPickerViewController: UIViewController, UIPickerViewDelegate, UIPicke
         // Do any additional setup after loading the view.
         eventPicker.dataSource = self
         eventPicker.delegate = self
+        
+        //Load all the events
+        Globals.appDelegate.appSyncClient?.fetch(query: ListTrackedEventsQuery(), cachePolicy: .returnCacheDataAndFetch) {[weak self] result, error in
+            if Globals.handleAppSyncErrors(forQuery: "ListTrackedEventsQuery", result: result, error: error) {
+                self?.events = result?.data?.listTrackedEvents?.map {(eventKey: $0!.eventKey, eventName: $0!.eventName)} ?? []
+                self?.load()
+            } else {
+                //TODO: Show error
+            }
+        }
+    }
+    
+    fileprivate func load() {
+        if events?.count == 0 {
+            introText.isHidden = false
+        } else {
+            introText.isHidden = true
+        }
+        
+        currentEvent = delegate?.currentEventKey()
+        
+        self.chosenEvent = currentEvent
+        
+        if let current = currentEvent {
+            let index = events?.firstIndex(where: {$0.eventKey == current})
+            eventPicker.selectRow(index!, inComponent: 0, animated: false)
+        }
     }
 
     override func didReceiveMemoryWarning() {
@@ -36,34 +61,7 @@ class EventPickerViewController: UIViewController, UIPickerViewDelegate, UIPicke
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         
-        //Load all the events
-        events = RealmController.realmController.generalRealm.objects(Event.self)
-        
-        if events?.count == 0 {
-            introText.isHidden = false
-        } else {
-            introText.isHidden = true
-        }
-        
-        currentEvent = delegate?.currentEvent()
-        
-        if let current = currentEvent {
-            let index = (events?.index(of: current))!
-            eventPicker.selectRow(index, inComponent: 0, animated: false)
-            self.chosenEvent = events![index]
-        } else {
-            self.chosenEvent = nil
-        }
-        
-        eventUpdaterToken = events?.observe {[weak self] collectionChange in
-            switch collectionChange {
-            case .update:
-                self?.eventPicker.reloadAllComponents()
-                self?.chosenEvent = nil
-            default:
-                break
-            }
-        }
+        //TODO: Real time update
     }
     
     override func viewDidAppear(_ animated: Bool) {
@@ -75,8 +73,6 @@ class EventPickerViewController: UIViewController, UIPickerViewDelegate, UIPicke
         super.viewWillDisappear(animated)
         
         delegate?.eventSelected(chosenEvent)
-        
-        eventUpdaterToken?.invalidate()
     }
     
     func numberOfComponents(in pickerView: UIPickerView) -> Int {
@@ -89,12 +85,12 @@ class EventPickerViewController: UIViewController, UIPickerViewDelegate, UIPicke
     
     func pickerView(_ pickerView: UIPickerView, titleForRow row: Int, forComponent component: Int) -> String? {
         let event = events![row]
-        return "\(event.name) (\(event.year))"
+        return "\(event.eventName)"
     }
     
     func pickerView(_ pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {
         if (events?.count ?? 0) > 0 {
-            chosenEvent = events![row]
+            chosenEvent = events![row].eventKey
         }
     }
 
@@ -111,6 +107,6 @@ class EventPickerViewController: UIViewController, UIPickerViewDelegate, UIPicke
 }
 
 protocol EventSelection {
-    func eventSelected(_ event: Event?)
-    func currentEvent() -> Event?
+    func eventSelected(_ eventKey: String?)
+    func currentEventKey() -> String?
 }

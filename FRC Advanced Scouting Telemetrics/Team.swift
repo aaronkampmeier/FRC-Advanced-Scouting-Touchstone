@@ -40,7 +40,7 @@ extension Team: HasStats {
                     return StatValue.Integer(self.teamNumber)
                 },
                 StatName.RookieYear: {
-                    return StatValue.Integer(self.rookieYear)
+                    return StatValue.initWithOptional(value: self.rookieYear)
                 },
                 StatName.RobotLength: {
                     return StatValue.initWithOptional(value: self.scouted?.robotLength.value)

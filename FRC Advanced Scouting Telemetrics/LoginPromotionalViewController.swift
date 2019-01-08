@@ -58,8 +58,10 @@ class LoginPromotionalViewController: UIViewController {
     @IBAction func loginPressed(_ sender: UIButton) {
         Answers.logCustomEvent(withName: "Promotional -> Login", customAttributes: nil)
         
-        let loginVC = (UIApplication.shared.delegate as! AppDelegate).logInViewController()
-        self.present(loginVC, animated: true, completion: nil)
+//        let loginVC = (UIApplication.shared.delegate as! AppDelegate).logInViewController()
+//        self.present(loginVC, animated: true, completion: nil)
+        
+        Globals.appDelegate.displayLogin()
     }
     
     /*

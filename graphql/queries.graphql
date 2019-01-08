@@ -1,6 +1,9 @@
 # this is an auto generated file. This will be overwritten
 query ListTrackedEvents {
-  listTrackedEvents
+  listTrackedEvents {
+    eventKey
+    eventName
+  }
 }
 query GetEventRanking($key: ID!) {
   getEventRanking(key: $key) {

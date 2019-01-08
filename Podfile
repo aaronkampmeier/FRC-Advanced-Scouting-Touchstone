@@ -11,11 +11,11 @@ pod 'UICircularProgressRing'
 pod 'VTAcknowledgementsViewController'
 pod 'RealmSwift'
 pod 'TORoundedTableView'
-pod 'AWSCore', '~> 2.7.0'
+pod 'AWSCore'
 pod 'AWSMobileClient'
 pod 'AWSUserPoolsSignIn'
 pod 'AWSAuthUI'
-pod 'AWSAppSync', '~> 2.6.24'
+pod 'AWSAppSync'
 pod 'AWSPinpoint'
 end
 

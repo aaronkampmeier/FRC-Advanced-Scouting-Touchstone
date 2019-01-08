@@ -1,5 +1,6 @@
 fragment EventRanking on EventRanking {
 	eventKey
+	eventName
 	rankedTeams {
 		teamKey
 		isPicked
@@ -72,11 +73,15 @@ fragment ScoutSession on ScoutSession {
     teamKey
     eventKey
     timeMarkers {
-      event
-      time
-      isAuto
-      associatedLocation
+      ...TimeMarker
     }
+}
+
+fragment TimeMarker on TimeMarker {
+	event
+	time
+	isAuto
+	associatedLocation
 }
 
 fragment TeamEventOPR on TeamEventOPR {
