@@ -41,13 +41,13 @@ mutation UpdateScoutedTeam(
   $userID: ID!
   $eventKey: ID!
   $teamKey: ID!
-  $input: UpdateScoutedTeamInput
+  $attributes: AWSJSON!
 ) {
   updateScoutedTeam(
     userID: $userID
     eventKey: $eventKey
     teamKey: $teamKey
-    input: $input
+    attributes: $attributes
   ) {
     ...ScoutedTeam
   }
@@ -75,5 +75,17 @@ mutation RemoveScoutSession($userID: ID!, $eventKey: ID!, $key: ID!) {
     matchKey
     teamKey
     eventKey
+  }
+}
+
+mutation AddTeamComment($userID: ID!, $eventKey: String!, $teamKey: String!, $body: String!, $author: String!) {
+  addTeamComment(userID: $userID, eventKey: $eventKey, teamKey: $teamKey, body: $body, author: $author) {
+    ...TeamComment
+  }
+}
+
+mutation RemoveTeamComment($userID: ID!, $eventKey: String!, $key: String!) {
+  removeTeamComment(userID: $userID, eventKey: $eventKey, key: $key) {
+    key
   }
 }

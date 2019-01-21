@@ -53,3 +53,9 @@ subscription OnDeleteScoutSession(
     eventKey
   }
 }
+
+subscription OnAddTeamComment($userID: ID!, $teamKey: String!) {
+  onAddTeamComment(userID: $userID, teamKey: $teamKey) {
+    ...TeamComment
+  }
+}

@@ -10,7 +10,7 @@ query GetEventRanking($key: ID!) {
     ...EventRanking
   }
 }
-query ListAvailableEvents($year: String!) {
+query ListAvailableEvents($year: String) {
   listAvailableEvents(year: $year) {
     ...Event
   }
@@ -72,5 +72,11 @@ query ListEventOprs($eventKey: ID!) {
 query ListTeamEventStatuses($eventKey: ID!) {
   listTeamEventStatuses(eventKey: $eventKey) {
     ...TeamEventStatus
+  }
+}
+
+query ListTeamComments($eventKey: String!, $teamKey: String!) {
+  listTeamComments(eventKey: $eventKey, teamKey: $teamKey) {
+    ...TeamComment
   }
 }

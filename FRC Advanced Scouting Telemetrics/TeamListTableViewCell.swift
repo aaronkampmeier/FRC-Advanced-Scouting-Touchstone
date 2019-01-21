@@ -16,6 +16,9 @@ class TeamListTableViewCell: UITableViewCell {
     @IBOutlet weak var teamNameLabel: UILabel!
     @IBOutlet weak var myTeamIndicatorImageView: UIImageView!
     
+    //Used to keep track of the state of this cell (what team it is for and what stat it is displaying)
+    var stateID: String?
+    
     override func awakeFromNib() {
         super.awakeFromNib()
         // Initialization code

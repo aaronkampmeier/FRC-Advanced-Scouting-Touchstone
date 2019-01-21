@@ -8,6 +8,7 @@
 
 import UIKit
 import Crashlytics
+import AWSMobileClient
 
 typealias PitScoutingUpdateHandler = ((Any?)->Void)
 typealias PitScoutingCurrentValue = ()->Any?
@@ -22,22 +23,27 @@ class PitScoutingCell: UICollectionViewCell {
     }
 }
 
+protocol PitScoutingDataSource {
+    func requestedDataInputs(forScoutedTeam scoutedTeam: ScoutedTeam) -> [PitScoutingViewController.PitScoutingParameter]
+}
+
 class PitScoutingViewController: UIViewController, UICollectionViewDataSource, UICollectionViewDelegate {
     @IBOutlet weak var collectionView: UICollectionView?
     @IBOutlet weak var teamLabel: UILabel?
     @IBOutlet weak var teamNicknameLabel: UILabel?
     
-    var scoutedTeam: Team? {
+    var scoutedTeam: ScoutedTeam? {
         didSet {
             //Reload the data and change the labels for the new team
             collectionView?.reloadData()
-            teamLabel?.text = String(scoutedTeam?.teamNumber ?? -1)
-            teamNicknameLabel?.text = scoutedTeam?.nickname
+            teamLabel?.text = scoutedTeam?.teamKey.trimmingCharacters(in: CharacterSet.letters)
+//            teamNicknameLabel?.text = scoutedTeam?.nickname
         }
     }
     
     //PitScoutingParameter represents a value that should appear in pit scouting and can be saved
     var pitScoutingParameters: [PitScoutingParameter] = []
+    var dataSource: PitScoutingDataSource?
     
     enum PitScoutingParameterType: String {
         case TextField = "pitTextFieldCell"
@@ -59,29 +65,47 @@ class PitScoutingViewController: UIViewController, UICollectionViewDataSource, U
         //Options should be left nil for all types except Segmented Selector and Table View Multi Selector
         let options: [String]?
         let currentValue: PitScoutingCurrentValue
-        let updateHandler: PitScoutingUpdateHandler
+        let key: String
         
-        init(type: PitScoutingParameterType, label: String, options: [String]?, currentValue: @escaping PitScoutingCurrentValue, updateHandler: @escaping PitScoutingUpdateHandler) {
+        init(key: String, type: PitScoutingParameterType, label: String, options: [String]?, currentValue: @escaping PitScoutingCurrentValue) {
             self.type = type
+            self.key = key
             self.label = label
             self.options = options
             self.currentValue = currentValue
-            self.updateHandler = updateHandler
         }
     }
     
     //For updates we will keep them in a stack and then batch write them to save resources
     private var updateTimer: Timer?
-    var updates = [(updateHandler: PitScoutingUpdateHandler?, value: Any?)]()
-    func register(update: PitScoutingUpdateHandler?, withValue val: Any?) {
-        updates.append((update, val))
+    
+    private var updatedValues: [String:Any] = [:]
+    func registerUpdate(forKey key: String, value: Any?) {
+        updatedValues[key] = value
     }
     private func writeUpdates() {
-        RealmController.realmController.genericWrite(onRealm: .Synced) {
-            let updatesToResolve = self.updates
-            self.updates.removeAll()
-            for update in updatesToResolve {
-                update.updateHandler?(update.value)
+        if let scoutedTeam = scoutedTeam {
+            //Try to create the json
+            do {
+                let jsonData = try JSONSerialization.data(withJSONObject: updatedValues, options: [])
+                
+                let updateString = String(data: jsonData, encoding: .utf8)
+                let mutation = UpdateScoutedTeamMutation(userID: AWSMobileClient.sharedInstance().username!, eventKey: scoutedTeam.eventKey, teamKey: scoutedTeam.teamKey, attributes: updateString!)
+                
+                //Perform the mutation
+                Globals.appDelegate.appSyncClient?.perform(mutation: mutation, optimisticUpdate: { (transaction) in
+                    
+                }, conflictResolutionBlock: { (snapshot, taskCompletion, result) in
+                    
+                }) {result, error in
+                    if Globals.handleAppSyncErrors(forQuery: "UpdateScoutedTeam", result: result, error: error) {
+                        
+                    } else {
+                        //Show error
+                    }
+                }
+            } catch {
+                //TODO: Throw and Show Error
             }
         }
     }
@@ -93,82 +117,9 @@ class PitScoutingViewController: UIViewController, UICollectionViewDataSource, U
         super.viewDidLoad()
 
         // Do any additional setup after loading the view.
-        
-        do {
-            //TODO: Move these into data file
-        pitScoutingParameters = [
-            
-            PitScoutingParameter(type: .ImageSelector, label: "Front Image", options: nil, currentValue: {
-                if let imageData = self.scoutedTeam?.scouted?.frontImage {
-                    let image = UIImage(data: imageData as Data)
-                    return image
-                } else {
-                    return nil
-                }
-            }, updateHandler: {newValue in
-                if let image = newValue as? UIImage {
-                    //TODO: Lower the image quality to save space
-                    let imageData = UIImageJPEGRepresentation(image, 0.01)
-                    self.scoutedTeam?.scouted?.frontImage = imageData
-                }
-                
-                NotificationCenter.default.post(name: PitScoutingNewImageNotification, object: self, userInfo: ["ForTeam":self.scoutedTeam as Any])
-            }),
-            
-            PitScoutingParameter(type: .TextField, label: "Weight", options: nil, currentValue: {self.scoutedTeam?.scouted?.robotWeight.value}, updateHandler: {newValue in
-                self.scoutedTeam?.scouted?.robotWeight.value = newValue as? Double
-            }),
-            
-            PitScoutingParameter(type: .TextField, label: "Length", options: nil, currentValue: {self.scoutedTeam?.scouted?.robotLength.value}, updateHandler: {newValue in
-                self.scoutedTeam?.scouted?.robotLength.value = newValue as? Double
-            }),
-            PitScoutingParameter(type: .TextField, label: "Width", options: nil, currentValue: {self.scoutedTeam?.scouted?.robotWidth.value}, updateHandler: {newValue in
-                self.scoutedTeam?.scouted?.robotWidth.value = newValue as? Double
-            }),
-            PitScoutingParameter(type: .TextField, label: "Height", options: nil, currentValue: {self.scoutedTeam?.scouted?.robotHeight.value}, updateHandler: {newValue in
-                self.scoutedTeam?.scouted?.robotHeight.value = newValue as? Double
-            }),
-            
-            PitScoutingParameter(type: .TextField, label: "Driver XP", options: nil, currentValue: {self.scoutedTeam?.scouted?.driverXP.value}, updateHandler: {newValue in
-                self.scoutedTeam?.scouted?.driverXP.value = newValue as? Double
-            }),
-            
-            PitScoutingParameter(type: .StringField, label: "Drive Train", options: nil, currentValue: {self.scoutedTeam?.scouted?.driveTrain}, updateHandler: {newValue in
-                self.scoutedTeam?.scouted?.driveTrain = newValue as? String
-            }),
-            
-            PitScoutingParameter(type: .StringField, label: "Program. Lang.", options: nil, currentValue: {self.scoutedTeam?.scouted?.programmingLanguage}, updateHandler: {newValue in
-                self.scoutedTeam?.scouted?.programmingLanguage = newValue as? String
-            }),
-            
-            PitScoutingParameter(type: .SegmentedSelector, label: "Computer Vision Capability", options: Capability.allStringValues, currentValue: {self.scoutedTeam?.scouted?.computerVisionCapability}, updateHandler: {newValue in
-                self.scoutedTeam?.scouted?.computerVisionCapability = newValue as? String
-            }),
-            
-            PitScoutingParameter(type: .SegmentedSelector, label: "Game Strategy", options: GamePlayStrategy.allStringValues, currentValue: {self.scoutedTeam?.scouted?.strategy}, updateHandler: {newValue in
-                self.scoutedTeam?.scouted?.strategy = newValue as? String
-            }),
-            
-            //2018 Game Values
-            PitScoutingParameter(type: .SegmentedSelector, label: "Scale Capability", options: Capability.allStringValues, currentValue: {self.scoutedTeam?.scouted?.scaleCapability}, updateHandler: {newValue in
-                self.scoutedTeam?.scouted?.scaleCapability = newValue as? String
-            }),
-            PitScoutingParameter(type: .SegmentedSelector, label: "Switch Capability", options: Capability.allStringValues, currentValue: {self.scoutedTeam?.scouted?.switchCapability}, updateHandler: {newValue in
-                self.scoutedTeam?.scouted?.switchCapability = newValue as? String
-            }),
-            PitScoutingParameter(type: .SegmentedSelector, label: "Vault Capability", options: Capability.allStringValues, currentValue: {self.scoutedTeam?.scouted?.vaultCapability}, updateHandler: {newValue in
-                self.scoutedTeam?.scouted?.vaultCapability = newValue as? String
-            }),
-            PitScoutingParameter(type: .SegmentedSelector, label: "Climb Capability", options: Capability.allStringValues, currentValue: {self.scoutedTeam?.scouted?.climbCapability}, updateHandler: {newValue in
-                self.scoutedTeam?.scouted?.climbCapability = newValue as? String
-            }),
-            PitScoutingParameter(type: .TableViewSelector, label: "Climber Type", options: ClimberType.allValues.map({$0.rawValue}), currentValue: {self.scoutedTeam?.scouted?.climberType}, updateHandler: {newValue in self.scoutedTeam?.scouted?.climberType = newValue as? String}),
-            
-            ///Banana
-            PitScoutingParameter(type: .Button, label: "", options: nil, currentValue: {self.scoutedTeam?.scouted?.canBanana}, updateHandler: {newValue in
-                self.scoutedTeam?.scouted?.canBanana = newValue as? Bool ?? false
-            })
-        ]
+        dataSource = PitScoutingData()
+        if let scoutedTeam = scoutedTeam {
+            pitScoutingParameters = dataSource?.requestedDataInputs(forScoutedTeam: scoutedTeam) ?? []
         }
         
         collectionView?.dataSource = self
@@ -176,8 +127,8 @@ class PitScoutingViewController: UIViewController, UICollectionViewDataSource, U
         collectionView?.keyboardDismissMode = .interactive
         
         //Initially set the labels' values
-        teamLabel?.text = String(scoutedTeam?.teamNumber ?? -1)
-        teamNicknameLabel?.text = scoutedTeam?.nickname
+        teamLabel?.text = scoutedTeam?.teamKey.trimmingCharacters(in: CharacterSet.letters)
+//        teamNicknameLabel?.text = scoutedTeam?.nickname
     }
     
     override func viewWillAppear(_ animated: Bool) {

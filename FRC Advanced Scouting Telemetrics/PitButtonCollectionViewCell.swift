@@ -12,12 +12,12 @@ class PitButtonCollectionViewCell: PitScoutingCell {
     @IBOutlet weak var label: UILabel!
     @IBOutlet weak var button: UIButton!
     
-    var updateHandler: PitScoutingUpdateHandler?
+    var key: String?
     
     override func setUp(_ parameter: PitScoutingViewController.PitScoutingParameter) {
         button.imageView?.contentMode = .scaleAspectFit
         label.text = parameter.label
-        updateHandler = parameter.updateHandler
+        self.key = parameter.key
         
         if let value = parameter.currentValue() as? Bool {
             button.isSelected = value
@@ -27,6 +27,8 @@ class PitButtonCollectionViewCell: PitScoutingCell {
     @IBAction func buttonPressed(_ sender: UIButton) {
         sender.isSelected = !sender.isSelected
         
-        pitScoutingVC?.register(update: updateHandler, withValue: sender.isSelected)
+        if let key = key {
+            pitScoutingVC?.registerUpdate(forKey: key, value: sender.isSelected)
+        }
     }
 }

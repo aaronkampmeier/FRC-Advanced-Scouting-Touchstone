@@ -9,15 +9,15 @@
 import UIKit
 
 protocol SelectStatsDelegate {
-    func currentlySelectedStats() -> [TeamEventPerformance.StatName]
+    func currentlySelectedStats() -> [ScoutedTeamStat]
     
-    func selectStatsTableViewController(_ vc: SelectStatsTableViewController, didSelectStats selectedStats: [TeamEventPerformance.StatName])
+    func selectStatsTableViewController(_ vc: SelectStatsTableViewController, didSelectStats selectedStats: [ScoutedTeamStat])
 }
 
 class SelectStatsTableViewController: UITableViewController {
     
-    var allStats = [TeamEventPerformance.StatName]()
-    var selectedStats = [TeamEventPerformance.StatName]()
+    var allStats = [ScoutedTeamStat]()
+    var selectedStats = [ScoutedTeamStat]()
     
     var delegate: SelectStatsDelegate?
 
@@ -30,7 +30,7 @@ class SelectStatsTableViewController: UITableViewController {
         // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
         // self.navigationItem.rightBarButtonItem = self.editButtonItem
         
-        allStats = TeamEventPerformance.StatName.allValues
+        allStats = StatisticsDataSource().getStats(forType: ScoutedTeam.self)
         selectedStats = delegate?.currentlySelectedStats() ?? []
     }
 
@@ -65,7 +65,7 @@ class SelectStatsTableViewController: UITableViewController {
 
         let stat = allStats[indexPath.row]
         
-        cell.textLabel?.text = stat.description
+        cell.textLabel?.text = stat.name
         
         cell.accessoryType = selectedStats.contains(stat) ? .checkmark : .none
 

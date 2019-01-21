@@ -14,7 +14,7 @@ import SafariServices
 
 protocol TeamListDetailDataSource {
     func team() -> Team?
-    func inEvent() -> Event?
+    func inEventKey() -> String?
 }
 
 class TeamListDetailViewController: UIViewController {
@@ -23,7 +23,7 @@ class TeamListDetailViewController: UIViewController {
     @IBOutlet weak var standsScoutingButton: UIBarButtonItem!
     @IBOutlet weak var pitScoutingButton: UIBarButtonItem!
     @IBOutlet weak var navBar: UINavigationItem!
-    @IBOutlet var frontImageHeightConstraint: NSLayoutConstraint!
+    @IBOutlet weak var frontImageHeightConstraint: NSLayoutConstraint!
     @IBOutlet weak var notesButton: UIButton!
     @IBOutlet weak var generalInfoTableView: UITableView?
     @IBOutlet weak var contentScrollView: TeamInfoScrollView!
@@ -64,64 +64,12 @@ class TeamListDetailViewController: UIViewController {
             frontImageButton.setImage(frontImage?.image, for: .normal)
         }
     }
-
-    var selectedTeam: Team? {
-        didSet {
-            guard !(selectedTeam?.isInvalidated ?? false) else {
-                selectedTeam = nil
-                return
-            }
-            
-            self.updateView(forTeam: selectedTeam)
-            
-            //Register for updates
-            if !RealmController.realmController.syncedRealm.isInWriteTransaction {
-                teamUpdateToken = selectedTeam?.scouted?.observe {[weak self] objectChange in
-                    switch objectChange {
-                    case .change:
-                        if self?.selectedTeam?.isInvalidated ?? false {
-                            //Some crashes were caused after calling updateView after an object was invalidated
-                            self?.selectedTeam = nil
-                        } else {
-                            self?.updateView(forTeam: self?.selectedTeam)
-                        }
-                    case .deleted:
-                        //Welp, what now
-                        self?.selectedTeam = nil
-                    case .error(let error):
-                        //Hmm why would this happen
-                        CLSNSLogv("Error monitoring team detail view updates: %@", getVaList([error]))
-                        Crashlytics.sharedInstance().recordError(error)
-                    }
-                }
-            } else {
-                CLSNSLogv("Not registering team detail updates because Realm is in write.", getVaList([]))
-            }
-            
-            NotificationCenter.default.post(name: Notification.Name(rawValue: "TeamSelectedChanged"), object: self)
-        }
-    }
     
-    var selectedEvent: Event?
-    var teamEventPerformance: TeamEventPerformance? {
-        get {
-            if let team = selectedTeam {
-                if let event = selectedEvent {
-                    guard !event.isInvalidated else {
-                        return nil
-                    }
-                    return RealmController.realmController.eventPerformance(forTeam: team, atEvent: event)
-                }
-            }
-            return nil
-        }
-    }
+    var selectedTeam: Team?
+    var scoutedTeam: ScoutedTeam?
+    var selectedEventKey: String?
     
-    var teamUpdateToken: NotificationToken? {
-        didSet {
-            oldValue?.invalidate()
-        }
-    }
+    var statusString: String?
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -139,7 +87,7 @@ class TeamListDetailViewController: UIViewController {
         pitScoutingButton.isEnabled = false
         matchesButton.isEnabled = false
         
-        if RealmController.isInSpectatorMode {
+        if Globals.isInSpectatorMode {
             standsScoutingButton.tintColor = UIColor.purple
             pitScoutingButton.tintColor = UIColor.purple
             notesButton.tintColor = UIColor.purple
@@ -221,39 +169,46 @@ class TeamListDetailViewController: UIViewController {
         // Dispose of any resources that can be recreated.
     }
     
-    func updateView(forTeam team: Team?) {
-        if let team = team {
+    func set(input: (team: Team, eventKey: String)?) {
+        self.selectedEventKey = input?.eventKey
+        self.selectedTeam = input?.team
+        self.updateView()
+        
+        if let input = input {
+            //Grab the scouted data
+            Globals.appDelegate.appSyncClient?.fetch(query: GetScoutedTeamQuery(eventKey: self.selectedEventKey ?? "", teamKey: input.team.key), cachePolicy: .returnCacheDataAndFetch) {result, error in
+                if Globals.handleAppSyncErrors(forQuery: "GetScoutedTeamQuery", result: result, error: error) {
+                    self.scoutedTeam = result?.data?.getScoutedTeam?.fragments.scoutedTeam
+                    
+                    self.updateView()
+                } else {
+                    //TODO: Throw error
+                }
+            }
+            
+            //Status
+            Globals.appDelegate.appSyncClient?.fetch(query: ListTeamEventStatusesQuery(eventKey: input.eventKey), cachePolicy: .returnCacheDataElseFetch) {result, error in
+                if Globals.handleAppSyncErrors(forQuery: "TeamListDetail-ListTeamEventStatusesQuery", result: result, error: error) {
+                    let statuses = result?.data?.listTeamEventStatuses
+                    self.statusString = statuses?.first(where: {$0?.teamKey ?? "" == input.team.key})??.fragments.teamEventStatus.overallStatusStr
+                    self.generalInfoTableView?.reloadData()
+                } else {
+                    //TODO: - Show error
+                }
+            }
+        } else {
+            self.scoutedTeam = nil
+        }
+        
+        NotificationCenter.default.post(name: Notification.Name(rawValue: "TeamSelectedChanged"), object: self)
+    }
+    
+    private func updateView() {
+        if let team = self.selectedTeam {
             navBar.title = team.teamNumber.description
             teamLabel.text = team.nickname
             
-            if team.scouted?.canBanana ?? false {
-                bananaImageView.image = #imageLiteral(resourceName: "Banana Filled")
-                bananaImageWidth.constant = 40
-            } else {
-                bananaImageView.image = nil
-                bananaImageWidth.constant = 0
-            }
-            
-            //Populate the images, if there are images
-            if let image = team.scouted?.frontImage {
-                frontImage = TeamImagePhoto(image: UIImage(data: image as Data), attributedCaptionTitle: NSAttributedString(string: "Team \(team.teamNumber): Front Image"))
-                frontImageHeightConstraint.isActive = true
-                
-                contentScrollView.contentInset = contentViewInsets
-                contentScrollView.scrollIndicatorInsets = contentViewInsets
-                
-                contentScrollView.contentOffset = CGPoint(x: 0, y: -frontImageHeightConstraint.constant)
-            } else {
-                frontImage = nil
-                frontImageHeightConstraint.isActive = false
-                
-                contentScrollView.contentInset = noContentInsets
-                contentScrollView.scrollIndicatorInsets = noContentInsets
-                
-                contentScrollView.contentOffset = CGPoint(x: 0, y: 0)
-            }
-            
-            if let _ = selectedEvent {
+            if let _ = selectedEventKey {
                 standsScoutingButton.isEnabled = true
                 matchesButton.isEnabled = true
             } else {
@@ -262,7 +217,7 @@ class TeamListDetailViewController: UIViewController {
             }
             
             pitScoutingButton.isEnabled = true
-            if !RealmController.isInSpectatorMode {
+            if !Globals.isInSpectatorMode {
                 notesButton.isEnabled = true
             }
         } else {
@@ -278,8 +233,38 @@ class TeamListDetailViewController: UIViewController {
             notesButton.isEnabled = false
         }
         
+        if let scoutedTeam = scoutedTeam {
+            if scoutedTeam.canBanana ?? false {
+                bananaImageView.image = #imageLiteral(resourceName: "Banana Filled")
+                bananaImageWidth.constant = 40
+            } else {
+                bananaImageView.image = nil
+                bananaImageWidth.constant = 0
+            }
+            
+            //TODO: - Fix images
+//            Populate the images, if there are images
+            if let image = scoutedTeam.frontImage {
+                frontImage = TeamImagePhoto(image: image, attributedCaptionTitle: NSAttributedString(string: "Team \(self.selectedTeam?.teamNumber ?? 0): Front Image"))
+                frontImageHeightConstraint.isActive = true
+
+                contentScrollView.contentInset = contentViewInsets
+                contentScrollView.scrollIndicatorInsets = contentViewInsets
+
+                contentScrollView.contentOffset = CGPoint(x: 0, y: -frontImageHeightConstraint.constant)
+            } else {
+                frontImage = nil
+                frontImageHeightConstraint.isActive = false
+
+                contentScrollView.contentInset = noContentInsets
+                contentScrollView.scrollIndicatorInsets = noContentInsets
+
+                contentScrollView.contentOffset = CGPoint(x: 0, y: 0)
+            }
+        }
+        
         generalInfoTableView?.reloadData()
-        detailCollectionVC?.load(withTeam: selectedTeam, andEventPerformance: teamEventPerformance)
+        detailCollectionVC?.loadStats(forScoutedTeam: self.scoutedTeam)
         
         resizeDetailViewHeights()
     }
@@ -295,7 +280,7 @@ class TeamListDetailViewController: UIViewController {
         super.viewWillTransition(to: size, with: coordinator)
         //Reset the content insets
         coordinator.animate(alongsideTransition: {_ in
-            if self.selectedTeam?.scouted?.frontImage != nil {
+            if self.scoutedTeam?.frontImage != nil {
                 self.contentScrollView.contentInset = self.contentViewInsets
                 self.contentScrollView.scrollIndicatorInsets = self.contentViewInsets
                 
@@ -315,8 +300,11 @@ class TeamListDetailViewController: UIViewController {
     
     func reloadData() {
         if self.isViewLoaded {
-            selectedEvent = dataSource?.inEvent()
-            selectedTeam = dataSource?.team()
+            if let team = dataSource?.team(), let eventKey = dataSource?.inEventKey() {
+                self.set(input: (team, eventKey))
+            } else {
+                self.set(input: nil)
+            }
         }
     }
     
@@ -344,12 +332,7 @@ class TeamListDetailViewController: UIViewController {
         let matchListNav = storyboard?.instantiateViewController(withIdentifier: "matchesListNav") as! UINavigationController
         (matchListNav.topViewController as! MatchesTableViewController).delegate = self
         
-        let unsortedMatches = (self.teamEventPerformance?.matchPerformances)?.map({$0.match!}) ?? []
-        let sortedMatches = unsortedMatches.sorted() {(firstMatch, secondMatch) in
-            return firstMatch < secondMatch
-        }
-        
-        (matchListNav.topViewController as! MatchesTableViewController).load(withMatches: sortedMatches)
+        (matchListNav.topViewController as! MatchesTableViewController).load(forEventKey: self.selectedEventKey, specifyingTeam: self.selectedTeam?.key)
         
         matchListNav.modalPresentationStyle = .popover
         matchListNav.preferredContentSize = CGSize(width: 350, height: 500)
@@ -382,7 +365,8 @@ class TeamListDetailViewController: UIViewController {
             photosArray.append(image)
         }
         
-        let photoVC = NYTPhotosViewController(photos: photosArray, initialPhoto: photo, delegate: self)
+        let source = NYTPhotoViewerSinglePhotoDataSource(photo: photo)
+        let photoVC = NYTPhotosViewController(dataSource: source, initialPhotoIndex: 0, delegate: self)
         present(photoVC, animated: true, completion: nil)
     }
 }
@@ -404,7 +388,7 @@ extension TeamListDetailViewController: MatchesTableViewControllerDelegate {
             matchesTableViewController.present(matchDetailNav, animated: true, completion: nil)
         }
         
-        if RealmController.isInSpectatorMode {
+        if Globals.isInSpectatorMode {
             showMatchDetail()
         } else {
             //Present an action sheet to see if the user wants to view it or scout it
@@ -452,12 +436,8 @@ extension TeamListDetailViewController: UITableViewDelegate, UITableViewDataSour
                 numOfRows += 1
             }
             
-            if let event = self.selectedEvent {
-                if let statusStr = team.scouted?.computedStats(forEvent: event)?.overallStatusString {
-                    if statusStr != "--" { //TBA puts a -- in for empty status strings
-                        numOfRows += 1
-                    }
-                }
+            if statusString != nil && statusString != "--" { //TBA puts a -- in for empty status strings
+                numOfRows += 1
             }
             
             return numOfRows
@@ -476,7 +456,7 @@ extension TeamListDetailViewController: UITableViewDelegate, UITableViewDataSour
             let textWidth = keyLabel.intrinsicContentSize.width
             keyLabel.constraints.filter({$0.identifier == "keyWidth"}).first?.constant = textWidth
             
-            (cell?.contentView.viewWithTag(2) as! UILabel).text = selectedTeam?.location
+            (cell?.contentView.viewWithTag(2) as! UILabel).text = selectedTeam?.city
             
             return cell!
         case 1:
@@ -487,38 +467,23 @@ extension TeamListDetailViewController: UITableViewDelegate, UITableViewDataSour
             let textWidth = keyLabel.intrinsicContentSize.width
             keyLabel.constraints.filter({$0.identifier == "keyWidth"}).first?.constant = textWidth
             
-            (cell?.contentView.viewWithTag(2) as! UILabel).text = selectedTeam?.rookieYear.description
+            (cell?.contentView.viewWithTag(2) as! UILabel).text = selectedTeam?.rookieYear?.description
             
             return cell!
         case 2,3:
-            var hasStatus = false
-            var hasWebsite = false
-            if let _ = selectedTeam?.website {
-                //There is a website
-                hasWebsite = true
-            }
             
-            var statusString = ""
-            if let event = self.selectedEvent {
-                if let statusStr = selectedTeam?.scouted?.computedStats(forEvent: event)?.overallStatusString {
-                    if statusStr != "--" {
-                        //There is a status string
-                        hasStatus = true
-                        statusString = statusStr
+            if let statusString = statusString {
+                if statusString != "--" {
+                    if indexPath.row == 2 {
+                        //Status
+                        let cell = tableView.dequeueReusableCell(withIdentifier: "statusCell")
+                        
+                        let statusLabel = cell?.viewWithTag(1) as! UILabel
+                        statusLabel.setHTMLFromString(htmlText: statusString)
+                        statusLabel.textAlignment = .center
+                        
+                        return cell!
                     }
-                }
-            }
-            
-            if hasStatus {
-                if indexPath.row == 2 {
-                    //Status
-                    let cell = tableView.dequeueReusableCell(withIdentifier: "statusCell")
-                    
-                    let statusLabel = cell?.viewWithTag(1) as! UILabel
-                    statusLabel.setHTMLFromString(htmlText: statusString)
-                    statusLabel.textAlignment = .center
-                    
-                    return cell!
                 }
             }
             
@@ -598,7 +563,7 @@ extension TeamListDetailViewController: NYTPhotosViewControllerDelegate {
         }
     }
     
-    func photosViewController(_ photosViewController: NYTPhotosViewController, titleFor photo: NYTPhoto, at photoIndex: UInt, totalPhotoCount: UInt) -> String? {
+    private func photosViewController(_ photosViewController: NYTPhotosViewController, titleFor photo: NYTPhoto, at photoIndex: UInt, totalPhotoCount: UInt) -> String? {
         return nil
     }
     
@@ -611,4 +576,3 @@ extension TeamListDetailViewController: NYTPhotosViewControllerDelegate {
         Answers.logShare(withMethod: activityType, contentName: "Team Photos", contentType: "Photo", contentId: nil, customAttributes: nil)
     }
 }
-

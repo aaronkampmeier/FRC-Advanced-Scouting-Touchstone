@@ -10,9 +10,8 @@ import UIKit
 import Crashlytics
 
 protocol SortDelegate {
-	func selectedStat(_ stat: String?, isAscending: Bool)
-    func statsToDisplay() -> [String]
-    func currentStat() -> String?
+	func selectedStat(_ stat: Statistic<ScoutedTeam>?, isAscending: Bool)
+    func currentStat() -> Statistic<ScoutedTeam>?
     func isAscending() -> Bool
 }
 
@@ -21,8 +20,8 @@ class SortVC: UIViewController, UIPickerViewDelegate, UIPickerViewDataSource {
     @IBOutlet weak var sortTypePicker: UIPickerView!
     @IBOutlet weak var orderSegementedControl: UISegmentedControl!
 	
-    var statsToDisplay = [String]()
-    fileprivate var selectedStat: String?
+    var statsToDisplay = [Statistic<ScoutedTeam>]()
+    fileprivate var selectedStat: Statistic<ScoutedTeam>?
 	
     fileprivate var isAscending = false
 	
@@ -34,10 +33,11 @@ class SortVC: UIViewController, UIPickerViewDelegate, UIPickerViewDataSource {
 		sortTypePicker.dataSource = self
         sortTypePicker.delegate = self
 		
-		statsToDisplay = delegate?.statsToDisplay() ?? []
+        let statSource = StatisticsDataSource()
+		statsToDisplay = statSource.getStats(forType: ScoutedTeam.self)
         selectedStat = delegate?.currentStat()
         if let stat = selectedStat {
-            if let index = statsToDisplay.index(of: stat) {
+            if let index = statsToDisplay.firstIndex(where: {$0.id == stat.id}) {
                 sortTypePicker.selectRow(index + 1, inComponent: 0, animated: false)
             }
         }
@@ -52,7 +52,7 @@ class SortVC: UIViewController, UIPickerViewDelegate, UIPickerViewDataSource {
 	override func viewWillDisappear(_ animated: Bool) {
 		super.viewWillDisappear(animated)
 		delegate?.selectedStat(selectedStat, isAscending: isAscending)
-        Answers.logCustomEvent(withName: "Sort Team List", customAttributes: ["Stat":selectedStat as Any, "Ascending":isAscending.description])
+        Answers.logCustomEvent(withName: "Sort Team List", customAttributes: ["Stat":selectedStat?.id ?? "?", "Ascending":isAscending.description])
     }
 	
 	override func viewDidDisappear(_ animated: Bool) {
@@ -76,7 +76,7 @@ class SortVC: UIViewController, UIPickerViewDelegate, UIPickerViewDataSource {
         if row == 0 {
             return "No Sorting"
         } else {
-            return statsToDisplay[row - 1]
+            return statsToDisplay[row - 1].name
         }
     }
     

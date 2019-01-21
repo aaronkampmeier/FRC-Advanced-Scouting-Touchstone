@@ -20,7 +20,8 @@ class SuperNotesCollectionViewController: UICollectionViewController {
     
     var dataSource: SuperNotesDataSource?
     
-    var teams = [Team]()
+    var eventKey: String?
+    var teamKeys = [String]()
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -30,21 +31,17 @@ class SuperNotesCollectionViewController: UICollectionViewController {
 
         // Do any additional setup after loading the view.
         
-        
-        if let match = dataSource?.superNotesForMatch() {
-            teams = (match.teamPerformances).map() {teamMatchPerformance in
-                return teamMatchPerformance.teamEventPerformance!.team!
-            }
-        } else {
-            teams = dataSource?.superNotesForTeams() ?? []
-        }
-        
         Answers.logContentView(withName: "Super Notes", contentType: "Notes", contentId: nil, customAttributes: nil)
     }
 
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
+    }
+    
+    func load(forEventKey eventKey: String, withTeamKeys teamKeys: [String]) {
+        self.eventKey = eventKey
+        self.teamKeys = teamKeys
     }
     
     @IBAction func donePressed(_ sender: UIBarButtonItem) {
@@ -66,14 +63,15 @@ class SuperNotesCollectionViewController: UICollectionViewController {
     // MARK: UICollectionViewDataSource
 
     override func numberOfSections(in collectionView: UICollectionView) -> Int {
-        // #warning Incomplete implementation, return the number of sections
-        return 1
+        if eventKey != nil {
+            return 1
+        } else {
+            return 0
+        }
     }
 
-
     override func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        // #warning Incomplete implementation, return the number of items
-        return 6
+        return teamKeys.count
     }
 
     override func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
@@ -84,7 +82,7 @@ class SuperNotesCollectionViewController: UICollectionViewController {
         cell.notesVC = self.storyboard?.instantiateViewController(withIdentifier: "commentNotesVC") as! TeamCommentsTableViewController
         
         //Set up the cell and notes vc for the team
-        cell.setUp(forTeam: teams[indexPath.item])
+        cell.setUp(forEventKey: eventKey!, teamKey: teamKeys[indexPath.item])
         
         //2. Add the notesvc's view to the cell
         cell.notesVC.willMove(toParentViewController: self)

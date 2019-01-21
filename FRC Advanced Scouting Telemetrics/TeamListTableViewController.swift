@@ -34,7 +34,7 @@ class TeamListTableViewController: UITableViewController, TeamListDetailDataSour
         }
     }
     
-    var statToSortBy: String?
+    var statToSortBy: Statistic<ScoutedTeam>?
     //Should move functionality in here to a setSortingState func
 //    var isSorted = false
     var isSortingAscending: Bool = false
@@ -42,6 +42,7 @@ class TeamListTableViewController: UITableViewController, TeamListDetailDataSour
     var isSearching = false
     
     var unorderedTeamsInEvent: [Team] = []
+    var scoutedTeams: [Team] = []
     
     //Is a hierarchy
     var currentEventTeams: [Team] = [Team]() {
@@ -192,38 +193,32 @@ class TeamListTableViewController: UITableViewController, TeamListDetailDataSour
             eventSelectionButton.setTitle(eventKey, for: UIControlState())
             
             Globals.appDelegate.appSyncClient?.fetch(query: ListTeamsQuery(eventKey: eventKey), cachePolicy: .returnCacheDataAndFetch, queue: DispatchQueue(label: "Team List Loading", qos: .userInteractive)) {[weak self] result, error in
-                if let error = error {
-                    CLSNSLogv("Error loading ListTeamsQuery: \(error)", getVaList([]))
-                    Crashlytics.sharedInstance().recordError(error)
-                } else if let errors = result?.errors {
-                    CLSNSLogv("Error loading ListTeamsQuery (GraphQL): \(errors)", getVaList([]))
-                    for error in errors {
-                        Crashlytics.sharedInstance().recordError(error)
-                    }
-                } else {
+                if Globals.handleAppSyncErrors(forQuery: "ListTeams", result: result, error: error) {
                     
                     //Get all of the info on teams in an event
                     self?.unorderedTeamsInEvent = result?.data?.listTeams?.map {return $0!.fragments.team} ?? []
                     
                     //Now, go get the ranking of them
                     Globals.appDelegate.appSyncClient?.fetch(query: GetEventRankingQuery(key: eventKey), cachePolicy: .returnCacheDataAndFetch) {[weak self] result, error in
-                        if let error = error {
-                            CLSNSLogv("Error loading GetEventRankingQuery: \(error)", getVaList([]))
-                            Crashlytics.sharedInstance().recordError(error)
-                        } else if let errors = result?.errors {
-                            CLSNSLogv("Error loading GetEventRankingQuery (GraphQL): \(error)", getVaList([]))
-                            for error in errors {
-                                Crashlytics.sharedInstance().recordError(error)
-                            }
-                        } else {
+                        if Globals.handleAppSyncErrors(forQuery: "GetEventRanking", result: result, error: error) {
                             self?.selectedEventRanking = result?.data?.getEventRanking?.fragments.eventRanking
                             
                             self?.eventSelectionButton.setTitle(self?.selectedEventRanking?.eventName, for: UIControlState())
                             
                             self?.orderTeamsUsingRanking()
+                            
+                            //Now go fetch all of the scouted teams just to get them into the cache
+                            Globals.appDelegate.appSyncClient?.fetch(query: ListScoutedTeamsQuery(eventKey: eventKey), cachePolicy: .fetchIgnoringCacheData, resultHandler: { (result, error) in
+                                if Globals.handleAppSyncErrors(forQuery: "ListScoutedTeams", result: result, error: error) {
+                                    //Ta da
+                                }
+                            })
+                        } else {
+                            //TODO: - Show error
                         }
                     }
-                    
+                } else {
+                    //TODO: - Show error
                 }
             }
             
@@ -400,20 +395,33 @@ class TeamListTableViewController: UITableViewController, TeamListDetailDataSour
 
         let team = currentTeamsToDisplay[(indexPath as NSIndexPath).row]
         
+        let stateID = UUID().uuidString
+        cell.stateID = stateID
+        
         cell.teamLabel.text = "Team \(team.teamNumber)"
         cell.teamNameLabel.text = team.nickname
-        if let statName = statToSortBy {
-            let statValue: StatValue
-            if let stat = Team.StatName(rawValue: statName) {
-                statValue = team.statValue(forStat: stat)
-            } else if let stat = TeamEventPerformance.StatName(rawValue: statName) {
-                statValue = realmController.eventPerformance(forTeam: team, atEvent: selectedEvent!)!.statValue(forStat: stat)
-            } else {
-                statValue = .NoValue
+        cell.statLabel.text = ""
+        if let stat = statToSortBy {
+            //Get the scouted team
+            Globals.appDelegate.appSyncClient?.fetch(query: ListScoutedTeamsQuery(eventKey: self.selectedEventKey!), cachePolicy: .returnCacheDataElseFetch) {result, error in
+                if Globals.handleAppSyncErrors(forQuery: "ListScoutedTeams-CellStatValue", result: result, error: error) {
+                    let sTeam = (result?.data?.listScoutedTeams?.first {$0?.teamKey == team.key})??.fragments.scoutedTeam
+                    
+                    guard let scoutedTeam = sTeam else {
+                        //Error that no scouted team for team
+                        CLSNSLogv("No Scouted Team for Team: \(team.key)", getVaList([]))
+                        return
+                    }
+                    //Get the stat value also async
+                    stat.calculate(forObject: scoutedTeam) {value in
+                        //Check that the cell is the right state
+                        if stateID == cell.stateID {
+                            //Set the stat label
+                            cell.statLabel.text = "\(value)"
+                        }
+                    }
+                }
             }
-            cell.statLabel.text = "\(statValue)"
-        } else {
-            cell.statLabel.text = ""
         }
         
         if let index = currentEventTeams.index(where: {$0.key == team.key}) {
@@ -669,47 +677,68 @@ class TeamListTableViewController: UITableViewController, TeamListDetailDataSour
         present(sortNavVC, animated: true, completion: nil)
     }
     
-    func sortList(withStat statName: String?, isAscending ascending: Bool) {
+    func sortList(withStat stat: Statistic<ScoutedTeam>?, isAscending ascending: Bool) {
         guard let selectedEventKey = selectedEventKey else {
             return
         }
         
         self.isSortingAscending = ascending
         
-        statToSortBy = statName
+        statToSortBy = stat
         
-        if let newStat = statName {
-            let teamStat = Team.StatName(rawValue: newStat)
-            let eventPerformanceStat = TeamEventPerformance.StatName(rawValue: newStat)
-            
-            if let stat = teamStat {
-                currentSortedTeams = currentEventTeams.sorted {team1, team2 in
-                    let isBefore = team1.statValue(forStat: stat) > team2.statValue(forStat: stat)
-                    if ascending {
-                        return !isBefore
-                    } else {
-                        return isBefore
-                    }
-                }
-            } else if let stat = eventPerformanceStat {
-                
-                currentSortedTeams = currentEventTeams.sorted {team1, team2 in
-                    let firstTeamEventPerformance: TeamEventPerformance = realmController.eventPerformance(forTeam: team1, atEvent: selectedEvent)!
-                    let secondTeamEventPerformance: TeamEventPerformance = realmController.eventPerformance(forTeam: team2, atEvent: selectedEvent)!
+        if let newStat = stat {
+            //Grab the scouted teams
+            Globals.appDelegate.appSyncClient?.fetch(query: ListScoutedTeamsQuery(eventKey: selectedEventKey), cachePolicy: .returnCacheDataElseFetch, resultHandler: {[weak self] (result, error) in
+                if Globals.handleAppSyncErrors(forQuery: "ListScoutedTeams-StatSorting", result: result, error: error) {
+                    let scoutedTeams = result?.data?.listScoutedTeams?.map {$0!.fragments.scoutedTeam} ?? []
                     
-                    let firstStatValue = firstTeamEventPerformance.statValue(forStat: stat)
-                    let secondStatValue = secondTeamEventPerformance.statValue(forStat: stat)
-                    
-                    let isBefore = firstStatValue > secondStatValue
-                    if ascending {
-                        return !isBefore
-                    } else {
-                        return isBefore
+                    //Order the teams
+                    self?.currentSortedTeams = self!.currentEventTeams.sorted {team1, team2 in
+                        if let sTeam1 = scoutedTeams.first(where: {$0.teamKey == team1.key}), let sTeam2 = scoutedTeams.first(where: {$0.teamKey == team2.key}) {
+                            //Use dispatch groups to wait for both values to be calculated
+                            let group = DispatchGroup()
+                            
+                            group.enter()
+                            
+                            var value1: StatValue?
+                            var value2: StatValue?
+                            
+                            newStat.calculate(forObject: sTeam1) {value in
+                                value1 = value
+                                //Check if finished
+                                if value2 != nil {
+                                    group.leave()
+                                }
+                            }
+                            
+                            newStat.calculate(forObject: sTeam2) {value in
+                                value2 = value
+                                if value1 != nil {
+                                    group.leave()
+                                }
+                            }
+                            
+                            //Wait for the two values to be calculated
+                            group.wait()
+                            if let value1 = value1, let value2 = value2 {
+                                let isBefore = value1 < value2
+                                if ascending {
+                                    return isBefore
+                                } else {
+                                    return !isBefore
+                                }
+                            } else {
+                                //The values aren't there even though we waited for them to be calculated
+                                assertionFailure()
+                            }
+                        } else {
+                            return false
+                        }
                     }
+                } else {
+                    self?.currentSortedTeams = self!.currentEventTeams
                 }
-            } else {
-                assertionFailure()
-            }
+            })
         } else {
             currentSortedTeams = currentEventTeams
         }
@@ -780,16 +809,11 @@ extension TeamListTableViewController: EventSelection {
 }
 
 extension TeamListTableViewController: SortDelegate {
-    func selectedStat(_ stat: String?, isAscending: Bool) {
+    func selectedStat(_ stat: Statistic<ScoutedTeam>?, isAscending: Bool) {
         sortList(withStat: stat, isAscending: isAscending)
     }
     
-    ///Returns all the stats to be potentially sorted by. If there is a selected event, then also return stats for TeamEventPerformances.
-    func statsToDisplay() -> [String] {
-        return (RealmController.isInSpectatorMode ? [] : Team.StatName.allValues.map {$0.rawValue}) + (selectedEvent != nil ? TeamEventPerformance.StatName.allValues.map {$0.rawValue} : [])
-    }
-    
-    func currentStat() -> String? {
+    func currentStat() -> Statistic<ScoutedTeam>? {
         return statToSortBy
     }
     

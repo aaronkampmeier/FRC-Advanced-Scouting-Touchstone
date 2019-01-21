@@ -8,19 +8,17 @@
 
 import UIKit
 import Crashlytics
-import RealmSwift
-
-protocol NotesDataSource {
-    func currentTeamContext() -> Team
-}
+import AWSAppSync
+import AWSMobileClient
 
 class TeamCommentsTableViewController: UITableViewController {
     
-    var dataSource: NotesDataSource?
-    
-    var teamComments: List<TeamComment>!
-    var commentNotificationToken: NotificationToken?
+    var eventKey: String?
+    var teamKey: String?
+    var teamComments: [TeamComment]!
     var isLoaded = false
+    
+    var queryWatcher: GraphQLQueryWatcher<ListTeamCommentsQuery>?
     
     var currentlyWrittenCommentText = ""
 
@@ -41,31 +39,28 @@ class TeamCommentsTableViewController: UITableViewController {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         
-        load()
-        
-        if !RealmController.realmController.syncedRealm.isInWriteTransaction {
-            //Add in a listener
-            commentNotificationToken = teamComments.observe {[weak self] change in
-                switch change {
-                case .update(_, let deletions, let insertions, let modifications):
-                    self?.tableView.beginUpdates()
-                    
-                    self?.tableView.deleteRows(at: deletions.map({IndexPath(row: $0, section: 0)}), with: UITableViewRowAnimation.top)
-                    self?.tableView.insertRows(at: insertions.map({IndexPath(row: $0, section: 0)}), with: UITableViewRowAnimation.top)
-                    
-                    self?.tableView.reloadRows(at: modifications.map({IndexPath(row: $0, section: 0)}), with: .fade)
-                    
-                    self?.tableView.endUpdates()
-                default:
-                    break
-                }
-            }
-        }
+//        if !RealmController.realmController.syncedRealm.isInWriteTransaction {
+//            //Add in a listener
+//            commentNotificationToken = teamComments.observe {[weak self] change in
+//                switch change {
+//                case .update(_, let deletions, let insertions, let modifications):
+//                    self?.tableView.beginUpdates()
+//
+//                    self?.tableView.deleteRows(at: deletions.map({IndexPath(row: $0, section: 0)}), with: UITableViewRowAnimation.top)
+//                    self?.tableView.insertRows(at: insertions.map({IndexPath(row: $0, section: 0)}), with: UITableViewRowAnimation.top)
+//
+//                    self?.tableView.reloadRows(at: modifications.map({IndexPath(row: $0, section: 0)}), with: .fade)
+//
+//                    self?.tableView.endUpdates()
+//                default:
+//                    break
+//                }
+//            }
+//        }
     }
     
     override func viewDidDisappear(_ animated: Bool) {
         super.viewDidDisappear(animated)
-        commentNotificationToken?.invalidate()
     }
 
     override func didReceiveMemoryWarning() {
@@ -73,14 +68,18 @@ class TeamCommentsTableViewController: UITableViewController {
         // Dispose of any resources that can be recreated.
     }
     
-    func load() {
-        if let team = dataSource?.currentTeamContext() {
-            teamComments = team.scouted!.comments
-            isLoaded = true
-            self.tableView.reloadData()
-        } else {
-            isLoaded = false
-        }
+    func load(forEventKey eventKey: String, andTeamKey teamKey: String) {
+        self.eventKey = eventKey
+        self.teamKey = teamKey
+        queryWatcher = Globals.appDelegate.appSyncClient?.watch(query: ListTeamCommentsQuery(eventKey: eventKey, teamKey: teamKey), cachePolicy: .returnCacheDataAndFetch, resultHandler: {[weak self] (result, error) in
+            if Globals.handleAppSyncErrors(forQuery: "ListTeamComments", result: result, error: error) {
+                self?.teamComments = result?.data?.listTeamComments?.map({$0!.fragments.teamComment}).sorted {$0.datePosted < $1.datePosted}
+                self?.isLoaded = true
+                self?.tableView.reloadData()
+            } else {
+                //TODO: - Show error
+            }
+        })
     }
     
     @IBAction func donePressed(_ sender: UIBarButtonItem) {
@@ -127,10 +126,11 @@ class TeamCommentsTableViewController: UITableViewController {
             dateFormatter.locale = Locale.current
             
             dateFormatter.dateFormat = "EEE dd, HH:mm"
-            let dateString = dateFormatter.string(from: comment.datePosted)
+            let date = Date(timeIntervalSince1970: TimeInterval(comment.datePosted))
+            let dateString = dateFormatter.string(from: date)
             (commentCell.viewWithTag(1) as! UILabel).text = "\(dateString)\(comment.author != "" ? " by \(comment.author)" : "")"
             
-            (commentCell.viewWithTag(2) as! UITextView).text = comment.bodyText
+            (commentCell.viewWithTag(2) as! UITextView).text = comment.body
             
             return commentCell
         }
@@ -140,31 +140,18 @@ class TeamCommentsTableViewController: UITableViewController {
     override func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
         if indexPath.row != teamComments.count {
             //Is a comment row, add the delete action
-            let deleteAction = UIContextualAction(style: .destructive, title: "Delete") {(action, view, completionHandler) in
+            let deleteAction = UIContextualAction(style: .destructive, title: "Delete") {[weak self] (action, view, completionHandler) in
                 //Delete the comment
-                
-                if RealmController.realmController.syncedRealm.isInWriteTransaction {
-                    let commentToDelete = self.teamComments[indexPath.row]
-                    self.teamComments.remove(at: indexPath.row)
-                    RealmController.realmController.syncedRealm.delete(commentToDelete)
-                } else {
-                    RealmController.realmController.syncedRealm.beginWrite()
-                    
-                    let commentToDelete = self.teamComments[indexPath.row]
-                    self.teamComments.remove(at: indexPath.row)
-                    RealmController.realmController.syncedRealm.delete(commentToDelete)
-                    
-                    do {
-                        try RealmController.realmController.syncedRealm.commitWrite(withoutNotifying: self.commentNotificationToken == nil ? [] : [self.commentNotificationToken!])
-                    } catch {
-                        CLSNSLogv("Error deleting comment: \(error)", getVaList([]))
-                        Crashlytics.sharedInstance().recordError(error)
+                Globals.appDelegate.appSyncClient?.perform(mutation: RemoveTeamCommentMutation(userID: AWSMobileClient.sharedInstance().username!, eventKey: (self?.eventKey)!, key: (self?.teamKey)!), resultHandler: { (result, error) in
+                    if Globals.handleAppSyncErrors(forQuery: "RemoveTeamComment", result: result, error: error) {
+                        self?.teamComments.remove(at: indexPath.row)
+                        tableView.deleteRows(at: [indexPath], with: .top)
+                    } else {
+                        CLSNSLogv("Error deleting comment", getVaList([]))
                     }
-                }
-                
-                completionHandler(true)
-                
-                tableView.deleteRows(at: [indexPath], with: .top)
+                    
+                    completionHandler(true)
+                })
             }
             
             return UISwipeActionsConfiguration(actions: [deleteAction])
@@ -174,35 +161,19 @@ class TeamCommentsTableViewController: UITableViewController {
     }
     
     @objc func postComment(_ sender: UIButton) {
-        let comment = TeamComment()
-        comment.bodyText = self.currentlyWrittenCommentText
-        comment.datePosted = Date()
-        comment.author = UIDevice.current.name
-        
-        if RealmController.realmController.syncedRealm.isInWriteTransaction {
-            RealmController.realmController.syncedRealm.add(comment)
-            teamComments.append(comment)
-        } else {
-            RealmController.realmController.syncedRealm.beginWrite()
+        Globals.appDelegate.appSyncClient?.perform(mutation: AddTeamCommentMutation(userID: AWSMobileClient.sharedInstance().username!, eventKey: eventKey!, teamKey: teamKey!, body: self.currentlyWrittenCommentText, author: UIDevice.current.name), optimisticUpdate: { (transaction) in
+            //TODO: - Add optimistic update
+        }, conflictResolutionBlock: { (snapshot, taskSource, onCompletion) in
             
-            RealmController.realmController.syncedRealm.add(comment)
-            teamComments.append(comment)
-            
-            do {
-                if let token = commentNotificationToken {
-                    try RealmController.realmController.syncedRealm.commitWrite(withoutNotifying: [token])
-                } else {
-                    try RealmController.realmController.syncedRealm.commitWrite()
-                }
-            } catch {
-                CLSNSLogv("Unable to save new comment with error: \(error)", getVaList([]))
-                Crashlytics.sharedInstance().recordError(error)
+        }, resultHandler: { (result, error) in
+            if Globals.handleAppSyncErrors(forQuery: "AddTeamComment", result: result, error: error) {
+                self.currentlyWrittenCommentText = ""
+                Answers.logCustomEvent(withName: "Posted team comment", customAttributes: nil)
+            } else {
+                CLSNSLogv("Unable to save new comment", getVaList([]))
+                //TODO: - Show error
             }
-        }
-        
-        Answers.logCustomEvent(withName: "Posted team comment", customAttributes: nil)
-        
-        self.currentlyWrittenCommentText = ""
+        })
         
         tableView.insertRows(at: [IndexPath(row: teamComments.count - 1, section: 0)], with: .top)
         tableView.reloadRows(at: [IndexPath(row: teamComments.count, section: 0)], with: .fade)

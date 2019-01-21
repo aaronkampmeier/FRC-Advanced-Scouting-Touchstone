@@ -12,11 +12,11 @@ class PitStringFieldCollectionViewCell: PitScoutingCell {
     @IBOutlet weak var label: UILabel!
     @IBOutlet weak var textField: UITextField!
     
-    var updateHandler: PitScoutingUpdateHandler?
+    var key: String?
     
     override func setUp(_ parameter: PitScoutingViewController.PitScoutingParameter) {
         self.label.text = parameter.label
-        self.updateHandler = parameter.updateHandler
+        self.key = parameter.key
         
         if let value = parameter.currentValue() as? String {
             textField.text = value
@@ -25,6 +25,8 @@ class PitStringFieldCollectionViewCell: PitScoutingCell {
     
     @IBAction func textFieldValueChanged(_ sender: UITextField) {
         //TODO: Sanitize the data
-        pitScoutingVC?.register(update: updateHandler, withValue: sender.text)
+        if let key = key {
+            pitScoutingVC?.registerUpdate(forKey: key, value: sender.text)
+        }
     }
 }

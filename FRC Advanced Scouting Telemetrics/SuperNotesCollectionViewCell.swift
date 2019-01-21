@@ -11,21 +11,16 @@ import UIKit
 class SuperNotesCollectionViewCell: UICollectionViewCell {
     @IBOutlet weak var teamLabel: UILabel!
     
-    var team: Team?
+    var eventKey: String?
+    var teamKey: String?
     var notesVC: TeamCommentsTableViewController!
     
-    func setUp(forTeam team: Team) {
-        notesVC.dataSource = self
+    func setUp(forEventKey eventKey: String, teamKey: String) {
         
-        self.team = team
-        teamLabel.text = "\(team.teamNumber)"
+        self.eventKey = eventKey
+        self.teamKey = teamKey
+        teamLabel.text = teamKey.trimmingCharacters(in: CharacterSet.letters)
         
-        notesVC.load()
-    }
-}
-
-extension SuperNotesCollectionViewCell: NotesDataSource {
-    func currentTeamContext() -> Team {
-        return team!
+        notesVC.load(forEventKey: eventKey, andTeamKey: teamKey)
     }
 }

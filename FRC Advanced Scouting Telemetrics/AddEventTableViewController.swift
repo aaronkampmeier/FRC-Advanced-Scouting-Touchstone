@@ -12,8 +12,7 @@ class AddEventTableViewController: UITableViewController {
     var loadingView: UIView?
     var searchController: UISearchController?
 	
-	let cloudConnection = CloudData()
-    var events = [FRCEvent]() {
+    var events = [Event]() {
         didSet {
             loadingView?.isHidden = true
             filteredEvents = events
@@ -21,9 +20,9 @@ class AddEventTableViewController: UITableViewController {
         }
     }
     
-    var filteredEvents = [FRCEvent]()
+    var filteredEvents = [Event]()
     
-    var selectedEvent: FRCEvent? {
+    var selectedEvent: Event? {
         didSet {
             performSegue(withIdentifier: "eventInfo", sender: tableView)
         }
@@ -69,18 +68,17 @@ class AddEventTableViewController: UITableViewController {
         
         self.tableView.addSubview(loadingView!)
         
-        cloudConnection.events(fromYear: year) {
-            if let events = $0 {
-                NSLog("Successfully got FRCEvents")
-                self.events = events
+        Globals.appDelegate.appSyncClient?.fetch(query: ListAvailableEventsQuery(year: year), cachePolicy: .fetchIgnoringCacheData, resultHandler: {[weak self] (result, error) in
+            if Globals.handleAppSyncErrors(forQuery: "ListAvailableEvents", result: result, error: error) {
+                if let gotEvents = result?.data?.listAvailableEvents?.map({$0!.fragments.event}) {
+                    self?.events = gotEvents
+                }
             } else {
-                NSLog("Events returned nil")
-                
                 let alert = UIAlertController(title: "Unable to Load Events", message: "There was an error loading events from the cloud. Make sure you are connected to the internet.", preferredStyle: .alert)
-                alert.addAction(UIAlertAction(title: "OK", style: .default, handler: {_ in self.performSegue(withIdentifier: "rewindToAdminConsole", sender: self)}))
-                self.present(alert, animated: true, completion: nil)
+                alert.addAction(UIAlertAction(title: "OK", style: .default, handler: {_ in self?.performSegue(withIdentifier: "rewindToAdminConsole", sender: self)}))
+                self?.present(alert, animated: true, completion: nil)
             }
-        }
+        })
     }
 
     override func didReceiveMemoryWarning() {
@@ -122,7 +120,7 @@ class AddEventTableViewController: UITableViewController {
         let cell = tableView.dequeueReusableCell(withIdentifier: "event", for: indexPath)
 
         cell.textLabel?.text = filteredEvents[indexPath.row].name
-        cell.detailTextLabel?.text = filteredEvents[indexPath.row].locationName ?? ""
+        cell.detailTextLabel?.text = filteredEvents[indexPath.row].address
 
         return cell
     }
@@ -192,9 +190,9 @@ extension AddEventTableViewController: UISearchResultsUpdating {
         if searchController.isActive {
             filteredEvents = events.filter {frcEvent in
                 return frcEvent.name.lowercased().contains(searchText)
-                    || frcEvent.district?.displayName.lowercased().contains(searchText) ?? false
+//                    || frcEvent.district?.displayName.lowercased().contains(searchText) ?? false
                     || frcEvent.eventTypeString.lowercased().contains(searchText)
-                    || frcEvent.locationName?.lowercased().contains(searchText) ?? false
+                    || frcEvent.address?.lowercased().contains(searchText) ?? false
             }
         } else {
             filteredEvents = events

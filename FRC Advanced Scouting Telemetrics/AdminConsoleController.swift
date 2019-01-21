@@ -7,20 +7,26 @@
 //
 
 import UIKit
-import RealmSwift
 import Crashlytics
 import VTAcknowledgementsViewController
+import AWSMobileClient
 
 class AdminConsoleController: UIViewController, UITableViewDataSource, UITableViewDelegate {
     @IBOutlet weak var tableView: UITableView!
     
-    var events: Results<Event>!
-    
-    var notificationToken: NotificationToken?
+    var trackedEvents: [ListTrackedEventsQuery.Data.ListTrackedEvent] = []
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        events = RealmController.realmController.generalRealm.objects(Event.self)
+        //Get the tracked events
+        Globals.appDelegate.appSyncClient?.fetch(query: ListTrackedEventsQuery(), cachePolicy: .returnCacheDataAndFetch, resultHandler: {[weak self] (result, error) in
+            if Globals.handleAppSyncErrors(forQuery: "ListTrackedEventsQuery-AdminConsole", result: result, error: error) {
+                self?.trackedEvents = result?.data?.listTrackedEvents?.map({$0!}) ?? []
+                self?.tableView.reloadData()
+            } else {
+                //TODO: - Show error
+            }
+        })
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -33,26 +39,26 @@ class AdminConsoleController: UIViewController, UITableViewDataSource, UITableVi
         tableView.reloadData()
         
         //Set the observer
-        notificationToken = events.observe {[weak self] collectionChange in
-            switch collectionChange {
-            case .update(_, deletions: let deletions, insertions: let insertions, _):
-                if deletions.count > 0 || insertions.count > 0 {
-                    self?.tableView.beginUpdates()
-                    self?.tableView.deleteRows(at: deletions.map {IndexPath(row: $0, section: 0)}, with: .automatic)
-                    self?.tableView.insertRows(at: insertions.map {IndexPath(row: $0, section: 0)}, with: .automatic)
-                    self?.tableView.endUpdates()
-                }
-            default:
-                break
-            }
-        }
+//        notificationToken = events.observe {[weak self] collectionChange in
+//            switch collectionChange {
+//            case .update(_, deletions: let deletions, insertions: let insertions, _):
+//                if deletions.count > 0 || insertions.count > 0 {
+//                    self?.tableView.beginUpdates()
+//                    self?.tableView.deleteRows(at: deletions.map {IndexPath(row: $0, section: 0)}, with: .automatic)
+//                    self?.tableView.insertRows(at: insertions.map {IndexPath(row: $0, section: 0)}, with: .automatic)
+//                    self?.tableView.endUpdates()
+//                }
+//            default:
+//                break
+//            }
+//        }
     }
     
     override func viewDidDisappear(_ animated: Bool) {
         super.viewDidDisappear(animated)
         
-        notificationToken?.invalidate()
-        self.notificationToken = nil
+//        notificationToken?.invalidate()
+//        self.notificationToken = nil
     }
     
     enum adminConsoleSections: Int {
@@ -68,7 +74,7 @@ class AdminConsoleController: UIViewController, UITableViewDataSource, UITableVi
         switch section {
         case 0:
             //Events
-            return events.count + 1
+            return trackedEvents.count + 1
         case tableView.numberOfSections - 1:
             //About Section
             return 4
@@ -87,8 +93,8 @@ class AdminConsoleController: UIViewController, UITableViewDataSource, UITableVi
             } else {
                 //Return the event cell with event name and type
                 let cell = tableView.dequeueReusableCell(withIdentifier: "event")!
-                cell.textLabel?.text = "\(events[indexPath.row].name) (\(events[indexPath.row].year))"
-                cell.detailTextLabel?.text = events[indexPath.row].location
+                cell.textLabel?.text = "\(trackedEvents[indexPath.row].eventName) (\(trackedEvents[indexPath.row].eventKey.trimmingCharacters(in: CharacterSet.letters)))"
+//                cell.detailTextLabel?.text = events[indexPath.row].location
                 return cell
             }
         case tableView.numberOfSections - 1:
@@ -101,7 +107,7 @@ class AdminConsoleController: UIViewController, UITableViewDataSource, UITableVi
             case 2:
                 let cell = tableView.dequeueReusableCell(withIdentifier: "syncStatus")!
                 
-                if RealmController.isInSpectatorMode {
+                if Globals.isInSpectatorMode {
                     cell.isUserInteractionEnabled = false
                     cell.textLabel?.isEnabled = false
                 } else {
@@ -113,10 +119,10 @@ class AdminConsoleController: UIViewController, UITableViewDataSource, UITableVi
             case 3:
                 let cell = tableView.dequeueReusableCell(withIdentifier: "logout")!
                 
-                if RealmController.isInSpectatorMode {
+                if Globals.isInSpectatorMode {
                     (cell.viewWithTag(1) as! UILabel).text = "Exit Spectator Mode"
                 } else {
-                    let teamNumber: String = UserDefaults.standard.value(forKey: "LoggedInTeam") as? String ?? "?"
+                    let teamNumber: String = AWSMobileClient.sharedInstance().username ?? "?"
                     (cell.viewWithTag(1) as! UILabel).text = "Log Out of Team \(teamNumber)"
                 }
                 
@@ -144,7 +150,7 @@ class AdminConsoleController: UIViewController, UITableViewDataSource, UITableVi
             //Events
             if indexPath.row == tableView.numberOfRows(inSection: 0) - 1 {
                 //Did select add event
-                if RealmController.isInSpectatorMode {
+                if Globals.isInSpectatorMode {
                     self.performSegue(withIdentifier: "addEvent", sender: tableView)
                 } else {
                     //First present warning
@@ -186,14 +192,16 @@ class AdminConsoleController: UIViewController, UITableViewDataSource, UITableVi
                 performSegue(withIdentifier: "syncStatus", sender: self)
             } else if indexPath.row == 3 {
                 //Logout
-                if RealmController.isInSpectatorMode {
+                if Globals.isInSpectatorMode {
                     Answers.logCustomEvent(withName: "Exit Spectator Mode", customAttributes: nil)
                 } else {
-                    let loggedInTeam: String = UserDefaults.standard.value(forKey: "LoggedInTeam") as? String ?? "Unknown"
-                    Answers.logCustomEvent(withName: "Sign Out", customAttributes: ["Team":loggedInTeam])
+                    Answers.logCustomEvent(withName: "Sign Out", customAttributes: ["Team":AWSMobileClient.sharedInstance().username ?? "?"])
                 }
-                RealmController.realmController.closeRealms()
-                UserDefaults.standard.setValue(false, forKey: RealmController.isSpectatorModeKey)
+                
+                //Logout and show onboarding
+                AWSDataManager().signOut()
+                
+                UserDefaults.standard.setValue(false, forKey: Globals.isSpectatorModeKey)
             }
         default:
             break
@@ -230,7 +238,7 @@ class AdminConsoleController: UIViewController, UITableViewDataSource, UITableVi
                 }
                 
                 let exportToCSV = UITableViewRowAction(style: .default, title: "CSV Export") {(rowAction, indexPath) in
-                    self.exportToCSV(event: self.events[indexPath.row], withSourceView: nil) {_ in
+                    self.exportToCSV(eventKey: self.trackedEvents[indexPath.row].eventKey, withSourceView: nil) {_ in
                     }
                 }
                 exportToCSV.backgroundColor = .purple
@@ -243,22 +251,20 @@ class AdminConsoleController: UIViewController, UITableViewDataSource, UITableVi
     }
     
     func reloadAt(indexPath: IndexPath, inTableView tableView: UITableView, withCompletionHandler onCompletion: (() -> Void)? = nil) {
-        let event = self.events[indexPath.row]
-        if RealmController.realmController.sanityCheckStructure(ofEvent: event) {
-            showLoadingIndicator()
+        let event = self.trackedEvents[indexPath.row]
+        showLoadingIndicator()
+        
+        //Call to reload the event
+        Globals.appDelegate.appSyncClient?.perform(mutation: AddTrackedEventMutation(userID: AWSMobileClient.sharedInstance().username ?? "?", eventKey: event.eventKey), conflictResolutionBlock: { (snapshot, taskCompletionSource, result) in
             
-            CloudReloadingManager(eventToReload: event) {successful in
+        }, resultHandler: { (result, error) in
+            if Globals.handleAppSyncErrors(forQuery: "ReloadTrackedEvent-AdminConsole", result: result, error: error) {
                 self.removeLoadingIndicator()
-                
                 onCompletion?()
-                }
-                .reload()
-        } else {
-            //The event is not fully loaded from cloud
-            let alert = UIAlertController(title: "Unable to Reload", message: "This event cannot be reloaded becuase it contains an incomplete object structure. Before reloading make sure to be fully in sync with the rest of your team by checking the \"Sync Status\" page. To force a reload, delete this event and then re-add it.", preferredStyle: .alert)
-            alert.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
-            self.present(alert, animated: true, completion: nil)
-        }
+            } else {
+                //TODO: - Show error
+            }
+        })
     }
     
     var grayView: UIView?
@@ -290,21 +296,31 @@ class AdminConsoleController: UIViewController, UITableViewDataSource, UITableVi
     }
     
     func deleteAt(indexPath: IndexPath, inTableView tableView: UITableView) {
-        //Remove the event
-        let removalManager = CloudEventRemovalManager(eventToRemove: self.events[indexPath.row]) {finished in
-            if !finished {
-                let alert = UIAlertController(title: "Problem Removing Event", message: "An error occured when removing the event.", preferredStyle: .alert)
-                alert.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
-                self.present(alert, animated: true, completion: nil)
-            } else {
+        //Call to remove the event
+        let trackedEvent = trackedEvents[indexPath.row]
+        Globals.appDelegate.appSyncClient?.perform(mutation: RemoveTrackedEventMutation(userID: AWSMobileClient.sharedInstance().username ?? "?", eventKey: trackedEvent.eventKey), optimisticUpdate: { (transaction) in
+            do {
+                try transaction?.update(query: ListTrackedEventsQuery(), { (data) in
+                    if let index = data.listTrackedEvents?.firstIndex(where: {$0?.eventKey == trackedEvent.eventKey}) {
+                        data.listTrackedEvents?.remove(at: index)
+                    }
+                })
+            } catch {
+                CLSNSLogv("Error performing opitimistic update on RemoveTrackedEvent", getVaList([]))
+            }
+        }, conflictResolutionBlock: { (snapshot, taskCompletionSource, result) in
+            
+        }, resultHandler: { (result, error) in
+            if Globals.handleAppSyncErrors(forQuery: "RemoveTrackedEvent", result: result, error: error) {
                 tableView.beginUpdates()
                 tableView.deleteRows(at: [indexPath], with: .left)
                 tableView.endUpdates()
+            } else {
+                let alert = UIAlertController(title: "Problem Removing Event", message: "An error occured when removing the event.", preferredStyle: .alert)
+                alert.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
+                self.present(alert, animated: true, completion: nil)
             }
-            
-            tableView.reloadData()
-        }
-        removalManager.remove(withoutNotifying: notificationToken ?? NotificationToken())
+        })
     }
     
     @available(iOS 11.0, *)
@@ -326,7 +342,7 @@ class AdminConsoleController: UIViewController, UITableViewDataSource, UITableVi
                 reloadAction.backgroundColor = .blue
                 
                 let exportToCSVAction = UIContextualAction(style: .normal, title: "CSV Export") {action, view, completionHandler in
-                    self.exportToCSV(event: self.events[indexPath.row], withSourceView: view) {successful in
+                    self.exportToCSV(eventKey: self.trackedEvents[indexPath.row].eventKey, withSourceView: view) {successful in
                         completionHandler(true)
                     }
                 }
@@ -339,7 +355,7 @@ class AdminConsoleController: UIViewController, UITableViewDataSource, UITableVi
         }
     }
     
-    func exportToCSV(event: Event, withSourceView view: UIView?, onCompletion: @escaping (Bool) -> Void) {
+    func exportToCSV(eventKey: String, withSourceView view: UIView?, onCompletion: @escaping (Bool) -> Void) {
         showLoadingIndicator()
         
         let finishingActions: (URL?, Error?) -> Void = {path, error in
@@ -355,14 +371,14 @@ class AdminConsoleController: UIViewController, UITableViewDataSource, UITableVi
                     CLSNSLogv("Failed to write csv text to file: \(error)", getVaList([]))
                     Crashlytics.sharedInstance().recordError(error)
                     
-                    Answers.logCustomEvent(withName: "Export Event to CSV", customAttributes: ["Event":event.key, "Successful":false])
+                    Answers.logCustomEvent(withName: "Export Event to CSV", customAttributes: ["Event":eventKey, "Successful":false])
                 } else if let path = path {
                     let activityVC = UIActivityViewController(activityItems: [path], applicationActivities: [])
                     
                     activityVC.excludedActivityTypes = [UIActivityType.addToReadingList, UIActivityType.assignToContact, UIActivityType.openInIBooks, UIActivityType.postToFacebook, UIActivityType.postToVimeo, UIActivityType.postToWeibo, UIActivityType.postToFlickr, UIActivityType.postToTwitter, UIActivityType.postToTencentWeibo, UIActivityType.saveToCameraRoll]
                     
                     activityVC.popoverPresentationController?.sourceView = self.tableView
-                    if let index = self.events.index(of: event) {
+                    if let index = self.trackedEvents.firstIndex(where: {$0.eventKey == eventKey}) {
                         if let tableViewCell = self.tableView.cellForRow(at: IndexPath(row: index, section: 0)) {
                             activityVC.popoverPresentationController?.sourceView = tableViewCell
                         }
@@ -370,7 +386,7 @@ class AdminConsoleController: UIViewController, UITableViewDataSource, UITableVi
                     
                     activityVC.completionWithItemsHandler = {(activityType: UIActivityType?, completed: Bool, returnedItems: [Any]?, error: Error?) in
                         if let activityType = activityType {
-                            Answers.logShare(withMethod: activityType.rawValue, contentName: path.lastPathComponent, contentType: "CSV Event Export", contentId: "csv_\(event.key)", customAttributes: nil)
+                            Answers.logShare(withMethod: activityType.rawValue, contentName: path.lastPathComponent, contentType: "CSV Event Export", contentId: "csv_\(eventKey)", customAttributes: nil)
                         }
                         
                         if let error = error {
@@ -382,29 +398,23 @@ class AdminConsoleController: UIViewController, UITableViewDataSource, UITableVi
                     onCompletion(true)
                     self.present(activityVC, animated: true, completion: nil)
                     
-                    Answers.logCustomEvent(withName: "Export Event to CSV", customAttributes: ["Event":event.key, "Successful":true])
+                    Answers.logCustomEvent(withName: "Export Event to CSV", customAttributes: ["Event":eventKey, "Successful":true])
                 }
             }
         }
         
         DispatchQueue.main.async {
-            let filename = "\(event.key).csv"
+            let filename = "\(eventKey).csv"
             let path = URL(fileURLWithPath: NSTemporaryDirectory()).appendingPathComponent(filename)
             
-            let teamStats = Team.StatName.allValues
-            let teamEventStats = TeamEventPerformance.StatName.allValues
+            let stats = StatisticsDataSource().getStats(forType: ScoutedTeam.self)
             
             var csvText = ""
             //First add in the header row of all stat names
-            //        csvText += "Team Number,"
-            for statName in teamStats {
-                csvText += statName.description
-                csvText += ","
-            }
-            for (index, statName) in teamEventStats.enumerated() {
-                csvText += statName.description
+            for (index, stat) in stats.enumerated() {
+                csvText += stat.name
                 
-                if index == teamEventStats.count - 1 {
+                if index == stats.count - 1 {
                     //End index
                     csvText += "\n"
                 } else {
@@ -413,40 +423,70 @@ class AdminConsoleController: UIViewController, UITableViewDataSource, UITableVi
             }
             
             //Now for all the stat values
-            for teamEventPerformance in event.teamEventPerformances {
-                let team = teamEventPerformance.team!
-                //Start with the team number in column 1
-                //            csvText += "\(teamEventPerformance.team!.teamNumber),"
-                
-                //Next the team stats
-                for statName in teamStats {
-                    let value = team.statValue(forStat: statName)
-                    csvText += "\(value)"
-                    csvText += ","
-                }
-                
-                //Next all the performance stat values seperated by commas
-                for (index, statName) in teamEventStats.enumerated() {
-                    let value = teamEventPerformance.statValue(forStat: statName)
-                    csvText += "\(value)"
+            //Get the scouted teams
+            let queue = DispatchQueue(label: "CSV Export", qos: .userInitiated)
+            Globals.appDelegate.appSyncClient?.fetch(query: GetEventRankingQuery(key: eventKey), cachePolicy: .returnCacheDataElseFetch, queue: queue, resultHandler: { (result, error) in
+                if Globals.handleAppSyncErrors(forQuery: "GetEventRanking-CSVExport", result: result, error: error) {
+                    let eventRanking = result?.data?.getEventRanking?.fragments.eventRanking
                     
-                    if index == teamEventStats.count - 1 {
-                        //End index
-                        csvText += "\n"
-                    } else {
-                        csvText += ","
-                    }
+                    //Get the scouted teams
+                    Globals.appDelegate.appSyncClient?.fetch(query: ListScoutedTeamsQuery(eventKey: eventKey), cachePolicy: .returnCacheDataElseFetch, queue: queue, resultHandler: { (result, error) in
+                        if Globals.handleAppSyncErrors(forQuery: "ListScoutedTeams-CSVExport", result: result, error: error) {
+                            let scoutedTeams = result?.data?.listScoutedTeams?.map({$0!.fragments.scoutedTeam}) ?? []
+                            
+                            //Order the teams
+                            let orderedScoutedTeams = scoutedTeams.sorted(by: { (sTeam1, sTeam2) -> Bool in
+                                let index1 = eventRanking?.rankedTeams?.firstIndex(where: {$0?.teamKey == sTeam1.teamKey}) ?? 0
+                                let index2 = eventRanking?.rankedTeams?.firstIndex(where: {$0?.teamKey == sTeam2.teamKey}) ?? 0
+                                
+                                return index1 < index2
+                            })
+                            
+                            //Teams are ordered, now calculate the stats
+                            for scoutedTeam in orderedScoutedTeams {
+                                for (index, stat) in stats.enumerated() {
+                                    let group = DispatchGroup()
+                                    group.enter()
+                                    stat.calculate(forObject: scoutedTeam, callback: { (value) in
+                                        csvText += "\(value)"
+                                        
+                                        if index == stats.count - 1 {
+                                            //End index
+                                            csvText += "\n"
+                                        } else {
+                                            csvText += ","
+                                        }
+                                        
+                                        group.leave()
+                                    })
+                                    
+                                    group.wait()
+                                }
+                            }
+                            
+                            
+                            do {
+                                try csvText.write(to: path, atomically: true, encoding: String.Encoding.utf8)
+                                
+                                finishingActions(path, nil)
+                            } catch {
+                                finishingActions(nil, error)
+                            }
+                        } else {
+                            finishingActions(nil, CSVExportError.ScoutedTeamsLoadFailed)
+                        }
+                    })
+                } else {
+                    //Throw error
+                    finishingActions(nil, CSVExportError.RankedTeamLoadFailed)
                 }
-            }
-            
-            do {
-                try csvText.write(to: path, atomically: true, encoding: String.Encoding.utf8)
-                
-                finishingActions(path, nil)
-            } catch {
-                finishingActions(nil, error)
-            }
+            })
         }
+    }
+    
+    enum CSVExportError: Error {
+        case RankedTeamLoadFailed
+        case ScoutedTeamsLoadFailed
     }
     
     func tableView(_ tableView: UITableView, willSelectRowAt indexPath: IndexPath) -> IndexPath? {

@@ -12,11 +12,10 @@ class PitSwitchCollectionViewCell: PitScoutingCell {
     @IBOutlet weak var label: UILabel!
     @IBOutlet weak var `switch`: UISwitch!
     
-    var updateHandler: PitScoutingUpdateHandler?
+    var key: String?
     
     override func setUp(_ parameter: PitScoutingViewController.PitScoutingParameter) {
         label.text = parameter.label
-        updateHandler = parameter.updateHandler
         
         //Set current value
         if let currentValue = parameter.currentValue() as? Bool {
@@ -25,6 +24,8 @@ class PitSwitchCollectionViewCell: PitScoutingCell {
     }
     
     @IBAction func switchValueChanged(_ sender: UISwitch) {
-        pitScoutingVC?.register(update: updateHandler, withValue: sender.isOn)
+        if let key = key {
+            pitScoutingVC?.registerUpdate(forKey: key, value: sender.isOn)
+        }
     }
 }

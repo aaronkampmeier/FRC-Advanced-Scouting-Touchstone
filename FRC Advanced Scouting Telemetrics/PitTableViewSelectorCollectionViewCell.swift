@@ -13,7 +13,7 @@ class PitTableViewSelectorCollectionViewCell: PitScoutingCell, UITableViewDataSo
     @IBOutlet weak var label: UILabel!
     @IBOutlet weak var tableView: UITableView!
     
-    var updateHandler: PitScoutingUpdateHandler?
+    var key: String?
     var options: [String] = []
 //    var selectedOptions = [String]() {
 //        didSet {
@@ -22,13 +22,15 @@ class PitTableViewSelectorCollectionViewCell: PitScoutingCell, UITableViewDataSo
 //    }
     var selectedOption: String? {
         didSet {
-            pitScoutingVC?.register(update: updateHandler, withValue: selectedOption)
+            if let key = key {
+                pitScoutingVC?.registerUpdate(forKey: key, value: selectedOption)
+            }
         }
     }
     
     override func setUp(_ parameter: PitScoutingViewController.PitScoutingParameter) {
         label.text = parameter.label
-        updateHandler = parameter.updateHandler
+        self.key = parameter.key
         options = parameter.options!
         
         tableView.dataSource = self

@@ -13,6 +13,66 @@ import Foundation
 //Then another option to specify a stat that you would like calculated on an object (to be used for easy sorting without calculating all stats)
 //Or instead just add the stats as properties into the NSManagedObject Subclasses to call them directly and have them manage their own caching
 
+
+class StatisticsDataSource {
+    init() {
+        
+    }
+    
+    func getStats<T>(forType type: T.Type) -> [Statistic<T>] {
+        switch type {
+        case is ScoutedTeam.Type:
+            return ScoutedTeam.stats as! [Statistic<T>]
+        default:
+            return []
+        }
+    }
+}
+
+typealias StatValueCallback = ((StatValue) -> Void)
+typealias CompositeTrendCallback = (([(matchNumber: Int, value: StatValue)]) -> Void)
+
+class Statistic<T>: Equatable {
+    let name: String
+    let id: String
+    
+    private let compositeTrendFunction: ((T, CompositeTrendCallback) -> Void)?
+    var hasCompositeTrend: Bool {
+        get {
+            return compositeTrendFunction != nil
+        }
+    }
+    
+    private let calculationFunction: (T, StatValueCallback) -> Void
+    
+    init(name: String, id: String, compositeTrendFunction: ((T, CompositeTrendCallback) -> Void)? = nil, function: @escaping (T, StatValueCallback) -> Void) {
+        self.name = name
+        self.id = id
+        self.compositeTrendFunction = compositeTrendFunction
+        self.calculationFunction = function
+    }
+    
+    func calculate(forObject object: T, callback: StatValueCallback) {
+        calculationFunction(object, callback)
+    }
+    
+    func compositePoints(forObject object: T, callback: CompositeTrendCallback) {
+        if hasCompositeTrend {
+            compositeTrendFunction?(object, callback)
+        } else {
+            callback([])
+        }
+    }
+}
+
+func ==<T>(lhs: Statistic<T>, rhs: Statistic<T>) -> Bool  {
+    return lhs.id == rhs.id
+}
+
+func !=<T>(lhs: Statistic<T>, rhs: Statistic<T>) -> Bool  {
+    return lhs.id != rhs.id
+}
+
 enum StatValue: CustomStringConvertible, Equatable, Comparable {
     case Integer(Int)
     case Double(Double)
@@ -275,31 +335,4 @@ extension Array where Element: Numeric {
         let n = Double(self.count)
         return Element(sqrt(sss.1/n - (sss.0/n * sss.0/n)))
         }}
-}
-
-
-protocol HasStats {
-    associatedtype StatName: StatNameable, Hashable
-    var stats: [StatName:()->StatValue] {get} //A list of all the stats a class has and a function to compute it
-}
-
-protocol StatNameable {
-    associatedtype StatName: Hashable
-    static var allValues: [StatName] {get}
-}
-
-//This provides the basic stat functions to all stat-able classes using their stats property
-extension HasStats {
-    func allStats() -> [StatName] {
-        return Array(stats.keys)
-    }
-    
-    ///Does not guarantee the same order as allStats
-    func statsAndValues() -> [StatName : StatValue?] {
-        return stats.map {$0()}
-    }
-    
-    func statValue(forStat stat: StatName) -> StatValue {
-        return stats[stat]?() ?? StatValue.NoValue
-    }
 }

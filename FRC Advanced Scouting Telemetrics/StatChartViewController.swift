@@ -12,9 +12,8 @@ import Charts
 class StatChartViewController: UIViewController {
     var barChart: BarChartView!
     
-    private var teamMatchPerformances: [TeamMatchPerformance] = []
-    private var stats: [TeamMatchPerformance.StatName] = []
-    private var statAxisName: String?
+    private var statistic: ScoutedTeamStat?
+    private var scoutedTeam: ScoutedTeam?
     private var isPercent = false {
         didSet {
             if isPercent {
@@ -26,7 +25,7 @@ class StatChartViewController: UIViewController {
     }
     
     var valueEntries = [BarChartDataEntry]() //The y-axis values
-    var matches = [Match]() //The x-axis labels
+    var entries: [(matchNumber: Int, value: StatValue)] = []
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -72,65 +71,66 @@ class StatChartViewController: UIViewController {
         }
     }
     
-    override func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(animated)
-        
-        ///Load Data
-        valueEntries.removeAll()
-        matches.removeAll()
-        
-        var index = 0
-        for matchPerformance in teamMatchPerformances {
-            var statValues = [Double]()
-            var isNoValue = false
-            for stat in stats {
-                switch matchPerformance.statValue(forStat: stat) {
-                case .Double(let val):
-                    statValues.append(val)
-                case .Percent(let val):
-                    statValues.append(val)
-                    isPercent = true
-                case .Integer(let val):
-                    statValues.append(Double(val))
-                case .NoValue:
-                    isNoValue = true
-                default:
-                    //Should not be here
-                    break
-                }
-            }
-            
-            //If the match is not scouted, don't show it in the graph
-            if matchPerformance.scouted?.hasBeenScouted ?? false && !isNoValue {
-                //We have stat values put them in a stacked bar chart data entry
-                valueEntries.append(BarChartDataEntry(x: Double(index), y: statValues.first!))
-                matches.append(matchPerformance.match!)
-                index += 1
-            }
-        }
-        
-        //Now we have all the BarChartDataEntries, create the data set
-        let chartDataSet = BarChartDataSet(values: valueEntries, label: "")
-        chartDataSet.colors = [UIColor(red: 0.16, green: 0.50, blue: 0.73, alpha: 1)]
-//        chartDataSet.colors = ChartColorTemplates.vordiplom()
-        chartDataSet.valueFormatter = self
-        let chartData = BarChartData(dataSets: [chartDataSet])
-        
-        barChart.data = chartData
-        
-        //Set titles
-        barChart.chartDescription?.text = "No Data"
-        if let teamMatchPerformance = teamMatchPerformances.first {
-            if let team = teamMatchPerformance.teamEventPerformance?.team {
-                if let event = teamMatchPerformance.match?.event {
-                    if valueEntries.count > 0 {
-                        barChart.chartDescription?.text = "Team \(team.teamNumber), Event \(event.key)"
-                    }
-                }
-            }
-        }
-        self.navigationItem.title = statAxisName
-    }
+//    override func viewWillAppear(_ animated: Bool) {
+//        super.viewWillAppear(animated)
+//
+//        ///Load Data
+//        valueEntries.removeAll()
+//        matches.removeAll()
+//
+//        var index = 0
+//        for matchPerformance in teamMatchPerformances {
+//            var statValues = [Double]()
+//            var isNoValue = false
+//            for stat in stats {
+//                switch matchPerformance.statValue(forStat: stat) {
+//                case .Double(let val):
+//                    statValues.append(val)
+//                case .Percent(let val):
+//                    statValues.append(val)
+//                    isPercent = true
+//                case .Integer(let val):
+//                    statValues.append(Double(val))
+//                case .NoValue:
+//                    isNoValue = true
+//                default:
+//                    //Should not be here
+//                    break
+//                }
+//            }
+//
+//            //If the match is not scouted, don't show it in the graph
+//            if matchPerformance.scouted?.hasBeenScouted ?? false && !isNoValue {
+//                //We have stat values put them in a stacked bar chart data entry
+//                valueEntries.append(BarChartDataEntry(x: Double(index), y: statValues.first!))
+//                matches.append(matchPerformance.match!)
+//                index += 1
+//            }
+//        }
+//
+//        //Now we have all the BarChartDataEntries, create the data set
+//        let chartDataSet = BarChartDataSet(values: valueEntries, label: "")
+//        chartDataSet.colors = [UIColor(red: 0.16, green: 0.50, blue: 0.73, alpha: 1)]
+////        chartDataSet.colors = ChartColorTemplates.vordiplom()
+//        chartDataSet.valueFormatter = self
+//        let chartData = BarChartData(dataSets: [chartDataSet])
+//
+//        barChart.data = chartData
+//
+//        //Set titles
+//        //TODO: - Set the description
+////        barChart.chartDescription?.text = "No Data"
+////        if let teamMatchPerformance = teamMatchPerformances.first {
+////            if let team = teamMatchPerformance.teamEventPerformance?.team {
+////                if let event = teamMatchPerformance.match?.event {
+////                    if valueEntries.count > 0 {
+////                        barChart.chartDescription?.text = "Team \(team.teamNumber), Event \(event.key)"
+////                    }
+////                }
+////            }
+////        }
+//        self.navigationItem.title = statistic?.name
+//    }
     
     override func viewDidDisappear(_ animated: Bool) {
         super.viewDidDisappear(animated)
@@ -141,12 +141,42 @@ class StatChartViewController: UIViewController {
         // Dispose of any resources that can be recreated.
     }
     
-    func setUp(forTeamPerformances teamPerformances: [TeamMatchPerformance], withStats stats: [TeamMatchPerformance.StatName], andStatDescription statDescription: String) {
-        self.teamMatchPerformances = teamPerformances.sorted {(matchPerf1, matchPerf2) in
-            return matchPerf1.match!.matchNumber < matchPerf2.match!.matchNumber
+    func setUp(forStatistic stat: ScoutedTeamStat, andScoutedTeam scoutedTeam: ScoutedTeam) {
+        self.statistic = stat
+        self.scoutedTeam = scoutedTeam
+        
+        statistic?.compositePoints(forObject: scoutedTeam) {[weak self] entries in
+            self?.entries = entries
+            //Create all of the BarChartDataEntry objects
+            for entry in entries {
+                let value: Double
+                switch entry.value {
+                case .Double(let val):
+                    value = val
+                case .Integer(let val):
+                    value = Double(val)
+                case .Percent(let val):
+                    value = val
+                    self?.isPercent = true
+                default:
+                    assertionFailure()
+                    return
+                }
+                self?.valueEntries.append(BarChartDataEntry(x: Double(entry.matchNumber), y: value))
+            }
+            
+            //Now we have all the BarChartDataEntries, create the data set
+            let chartDataSet = BarChartDataSet(values: valueEntries, label: "")
+            chartDataSet.colors = [UIColor(red: 0.16, green: 0.50, blue: 0.73, alpha: 1)]
+            //        chartDataSet.colors = ChartColorTemplates.vordiplom()
+            chartDataSet.valueFormatter = self
+            let chartData = BarChartData(dataSets: [chartDataSet])
+            
+            self?.barChart.data = chartData
+            
+            barChart.chartDescription?.text = "\(scoutedTeam.teamKey) in \(scoutedTeam.eventKey)"
+            self?.navigationItem.title = statistic?.name
         }
-        self.stats = stats
-        self.statAxisName = statDescription
     }
     
     @IBAction func donePressed(_ sender: UIBarButtonItem) {
@@ -171,8 +201,10 @@ extension StatChartViewController: IAxisValueFormatter {
             switch axis {
             case barChart.xAxis:
                 //Convert from the x-axis double position to the name of the match
-                let match = matches[Int(value)]
-                return "Match \(match.matchNumber)"
+//                let match = matches[Int(value)]
+//                return "Match \(match.matchNumber)"
+                
+                return "Match \(value)"
             case barChart.leftAxis:
                 if isPercent {
                     return "\(value * 100)%"

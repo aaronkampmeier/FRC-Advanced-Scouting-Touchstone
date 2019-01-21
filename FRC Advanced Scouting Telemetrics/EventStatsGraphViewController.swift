@@ -13,8 +13,9 @@ import Crashlytics
 class EventStatsGraphViewController: UIViewController {
     var barChart: BarChartView!
     
-    private var statsToGraph = [TeamEventPerformance.StatName]()
-    private var teamEventPerformances = [TeamEventPerformance]()
+    var eventRanking: EventRanking?
+    private var statsToGraph = [Statistic<ScoutedTeam>]()
+    private var scoutedTeams: [ScoutedTeam]?
     
 //    let startSpace = 0.8
     let groupSpace = 0.12
@@ -70,20 +71,23 @@ class EventStatsGraphViewController: UIViewController {
         
     }
     
-    func setUp(forEvent event: Event) {
-        //Order the team performances according to pick list
-        let eventPerformances = Array(event.teamEventPerformances)
-        
-        let ranker = RealmController.realmController.getTeamRanker(forEvent: event)!
-        self.teamEventPerformances = eventPerformances.sorted {first, second in
-            if let firstScouted = first.team?.scouted {
-                if let secondScouted = second.team?.scouted {
-                    return ranker.rankedTeams.index(of: firstScouted) ?? 0 < ranker.rankedTeams.index(of: secondScouted) ?? 0
-                }
+    func setUp(forEventKey eventKey: String) {
+        //TODO: - Add a loading indicator and wait until both queries are completed before allowing access
+        //Get the team ranking
+        Globals.appDelegate.appSyncClient?.fetch(query: GetEventRankingQuery(key: eventKey), cachePolicy: .returnCacheDataElseFetch, resultHandler: {[weak self] (result, error) in
+            if Globals.handleAppSyncErrors(forQuery: "GetEventRanking-StatsGraph", result: result, error: error) {
+                self?.eventRanking = result?.data?.getEventRanking?.fragments.eventRanking
             }
-            Crashlytics.sharedInstance().recordCustomExceptionName("Event Stats Sorting Failed", reason: "Event: \(event.key)", frameArray: [])
-            return false
-        }
+        })
+        
+        //Get the scouted teams
+        Globals.appDelegate.appSyncClient?.fetch(query: ListScoutedTeamsQuery(eventKey: eventKey), cachePolicy: .returnCacheDataElseFetch, resultHandler: {[weak self] (result, error) in
+            if Globals.handleAppSyncErrors(forQuery: "ListScoutedTeams-StatsGraph", result: result, error: error) {
+                self?.scoutedTeams = result?.data?.listScoutedTeams?.map {$0!.fragments.scoutedTeam} ?? []
+            } else {
+                //Error
+            }
+        })
     }
     
     override func viewWillLayoutSubviews() {
@@ -121,17 +125,35 @@ class EventStatsGraphViewController: UIViewController {
     }
     
     func loadGraph() {
+        //TODO: - Make the loading async
         //Must create multiple BarChartDataSets for grouped bar charts
         var barChartDataSets = [BarChartDataSet]()
         
         for (index, stat) in statsToGraph.enumerated() {
             //Create a BarChartDataSet which takes in BarChartDataEntries
             var barChartDataEntries = [BarChartDataEntry]()
-            for (index, teamEventPerformance) in teamEventPerformances.enumerated() {
+            for (index, rankedTeam) in (eventRanking?.rankedTeams ?? []).enumerated() {
+                let dispatchGroup = DispatchGroup()
+                dispatchGroup.enter()
+                //Get the scouted team
+                //Calculate it
+                var value: StatValue
+                if let scoutedTeam = scoutedTeams?.first(where: {$0.teamKey == rankedTeam?.teamKey}) {
+                    stat.calculate(forObject: scoutedTeam) { (v) in
+                        value = v
+                        dispatchGroup.leave()
+                    }
+                } else {
+                    value = .NoValue
+                    dispatchGroup.leave()
+                }
+                
+                dispatchGroup.wait()
+                
                 //Create a BarChartDataEntry
                 var statDouble: Double
                 var isNoValue: Bool = false
-                switch teamEventPerformance.statValue(forStat: stat) {
+                switch value {
                 case .Double(let val):
                     statDouble = val
                 case .Integer(let val):
@@ -155,7 +177,7 @@ class EventStatsGraphViewController: UIViewController {
                 barChartDataEntries.append(entry)
             }
             
-            let dataSet = BarChartDataSet(values: barChartDataEntries, label: stat.description)
+            let dataSet = BarChartDataSet(values: barChartDataEntries, label: stat.name)
             dataSet.colors = [barColors[index % barColors.count]]
             dataSet.valueFormatter = self
             barChartDataSets.append(dataSet)
@@ -185,7 +207,7 @@ class EventStatsGraphViewController: UIViewController {
         
         barChart.data = barChartData
         
-        if let key = self.teamEventPerformances.first?.event?.key {
+        if let key = eventRanking?.eventKey {
             barChart.chartDescription?.text = "Event \(key)"
         } else {
             barChart.chartDescription?.text = "No Event"
@@ -204,8 +226,9 @@ extension EventStatsGraphViewController: IAxisValueFormatter {
         //Check it is a whole number
         if groupNumber - Double(Int(groupNumber)) == 0 {
             //It is whole number
-            if (teamEventPerformances.count > Int(groupNumber)) {
-                return "\(teamEventPerformances[Int(groupNumber)].team?.teamNumber ?? 0)"
+            if (eventRanking?.rankedTeams?.count ?? 0 > Int(groupNumber)) {
+                let teamKey = eventRanking?.rankedTeams?[Int(groupNumber)]?.teamKey
+                return "\(teamKey?.trimmingCharacters(in: CharacterSet.letters) ?? "?")"
             } else {
                 return ""
             }
@@ -252,11 +275,11 @@ extension EventStatsGraphViewController: ChartViewDelegate {
 }
 
 extension EventStatsGraphViewController: SelectStatsDelegate {
-    func currentlySelectedStats() -> [TeamEventPerformance.StatName] {
+    func currentlySelectedStats() -> [ScoutedTeamStat] {
         return statsToGraph
     }
     
-    func selectStatsTableViewController(_ vc: SelectStatsTableViewController, didSelectStats selectedStats: [TeamEventPerformance.StatName]) {
+    func selectStatsTableViewController(_ vc: SelectStatsTableViewController, didSelectStats selectedStats: [ScoutedTeamStat]) {
         self.statsToGraph = selectedStats
         loadGraph()
     }

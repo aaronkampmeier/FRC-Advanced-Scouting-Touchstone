@@ -15,11 +15,16 @@ fragment Event on Event {
     address
     name
     year
+    website
+	location_name
+  	short_name
 }
 
 fragment Team on Team {
 	key
     address
+    city
+    state_prov
     name
     nickname
     rookie_year
@@ -30,18 +35,7 @@ fragment Team on Team {
 fragment ScoutedTeam on ScoutedTeam {
 	teamKey
     eventKey
-    canBanana
-    computerVisionCapability
-    driveTrain
-    driverXP
-    frontImage
-    programmingLanguage
-    robotHeight
-    robotLength
-    robotWeight
-    robotWidth
-    strategy
-    otherAttributes
+    attributes
 }
 
 fragment Match on Match {
@@ -86,6 +80,7 @@ fragment TimeMarker on TimeMarker {
 
 fragment TeamEventOPR on TeamEventOPR {
 	teamKey
+	eventKey
     opr
     dpr
     ccwm
@@ -98,4 +93,13 @@ fragment TeamEventStatus on TeamEventStatus {
       status
     }
     overall_status_str
+}
+
+fragment TeamComment on TeamComment {
+	author
+	body
+	datePosted
+	key
+	teamKey
+	eventKey
 }

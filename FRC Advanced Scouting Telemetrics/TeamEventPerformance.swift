@@ -7,19 +7,6 @@
 //
 
 import Foundation
-import YCMatrix
-import RealmSwift
-
-@objcMembers class TeamEventPerformance: Object {
-    dynamic var event: Event?
-    dynamic var team: Team?
-    let matchPerformances = LinkingObjects(fromType: TeamMatchPerformance.self, property: "teamEventPerformance")
-    
-    dynamic var key = ""
-    override static func primaryKey() -> String {
-        return "key"
-    }
-}
 
 extension TeamEventPerformance: HasStats {
     var stats: [StatName:()->StatValue] {
@@ -535,23 +522,6 @@ extension TeamEventPerformance: HasStats {
             }
         }
     }
-}
-
-// MARK: Generated accessors for matchPerformances
-extension TeamEventPerformance {
-
-    @objc(addMatchPerformancesObject:)
-    @NSManaged public func addToMatchPerformances(_ value: TeamMatchPerformance)
-
-    @objc(removeMatchPerformancesObject:)
-    @NSManaged public func removeFromMatchPerformances(_ value: TeamMatchPerformance)
-
-    @objc(addMatchPerformances:)
-    @NSManaged public func addToMatchPerformances(_ values: NSSet)
-
-    @objc(removeMatchPerformances:)
-    @NSManaged public func removeFromMatchPerformances(_ values: NSSet)
-
 }
 
 ///Retrieves OPR as stored in the Computed Stats object (from TBA as of now)

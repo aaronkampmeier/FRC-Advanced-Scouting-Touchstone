@@ -16,12 +16,12 @@ class PitImageSelectorCollectionViewCell: PitScoutingCell {
     
     let appDelegate = UIApplication.shared.delegate as! AppDelegate
     
-    var updateHandler: PitScoutingUpdateHandler?
     let imageController = UIImagePickerController()
+    var key: String?
     
     override func setUp(_ parameter: PitScoutingViewController.PitScoutingParameter) {
         label.text = parameter.label
-        updateHandler = parameter.updateHandler
+        self.key = parameter.key
         
         //Set current value
         imageButton.imageView?.contentMode = .scaleAspectFit
@@ -93,8 +93,11 @@ extension PitImageSelectorCollectionViewCell: UIImagePickerControllerDelegate {
     func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String : Any]) {
         picker.dismiss(animated: true, completion: nil)
         if let image = info[UIImagePickerControllerOriginalImage] as? UIImage {
-            pitScoutingVC?.register(update: updateHandler, withValue: image)
-            imageButton.setImage(image, for: .normal)
+            if let key = key {
+                //TODO: -Hmm? Image?
+                pitScoutingVC?.registerUpdate(forKey: key, value: image)
+                imageButton.setImage(image, for: .normal)
+            }
         }
     }
     

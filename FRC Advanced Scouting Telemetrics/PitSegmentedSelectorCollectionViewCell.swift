@@ -12,7 +12,7 @@ class PitSegmentedSelectorCollectionViewCell: PitScoutingCell {
     @IBOutlet weak var label: UILabel!
     @IBOutlet weak var segmentedControl: UISegmentedControl!
     
-    var updateHandler: PitScoutingUpdateHandler?
+    var key: String?
     var options = [String]() {
         didSet {
             //Remove all the segments to reset it
@@ -26,7 +26,7 @@ class PitSegmentedSelectorCollectionViewCell: PitScoutingCell {
     
     override func setUp(_ parameter: PitScoutingViewController.PitScoutingParameter) {
         label.text = parameter.label
-        updateHandler = parameter.updateHandler
+        self.key = parameter.key
         options = parameter.options!
         
         
@@ -39,6 +39,8 @@ class PitSegmentedSelectorCollectionViewCell: PitScoutingCell {
     }
     
     @IBAction func segmentSelected(_ sender: UISegmentedControl) {
-        pitScoutingVC?.register(update: updateHandler, withValue: options[sender.selectedSegmentIndex])
+        if let key = key {
+            pitScoutingVC?.registerUpdate(forKey: key, value: options[sender.selectedSegmentIndex])
+        }
     }
 }

@@ -112,8 +112,20 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         do {
             let appSyncConfig = try AWSAppSyncClientConfiguration(appSyncClientInfo: AWSAppSyncClientInfo(), userPoolsAuthProvider: FASTCognitoUserPoolsAuthProvider(), databaseURL: databaseURL)
             appSyncClient = try AWSAppSyncClient(appSyncConfig: appSyncConfig)
-            //TODO: - Fix the cache key
-            appSyncClient?.apolloClient?.cacheKeyForObject = {$0["key"]}
+            appSyncClient?.apolloClient?.cacheKeyForObject = {
+                switch $0["__typename"] as! String {
+                case "EventRanking":
+                    return "ranking_\($0["eventKey"]!)"
+                case "ScoutedTeam":
+                    return "scouted_\($0["eventKey"]!)_\($0["teamKey"]!)"
+                case "TeamEventOPR":
+                    return "opr_\($0["eventKey"]!)_\($0["teamKey"]!)"
+                case "TeamEventStatus":
+                    return "status_\($0["eventKey"]!)_\($0["teamKey"]!)"
+                default:
+                    return $0["key"]
+                }
+            }
         } catch {
             CLSNSLogv("Error starting AppSync: \(error)", getVaList([]))
             Crashlytics.sharedInstance().recordError(error)
