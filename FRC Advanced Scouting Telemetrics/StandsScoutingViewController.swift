@@ -18,19 +18,9 @@ class StandsScoutingViewController: UIViewController {
     @IBOutlet weak var notesButton: UIButton!
     @IBOutlet weak var endAutonomousButton: UIButton!
     @IBOutlet weak var autonomousLabel: UILabel!
-	
-	var teamEventPerformance: TeamEventPerformance?
-	var matchPerformance: TeamMatchPerformance? {
-        willSet {
-            if self.isViewLoaded {
-                matchAndEventLabel.text = "\(teamEventPerformance!.event!.name)  \(newValue!.match!.competitionLevel) \(newValue!.match!.matchNumber)"
-                ssDataManager = SSDataManager(teamBeingScouted: team, matchBeingScouted: newValue!.match!, stopwatch: stopwatch)
-            }
-		}
-	}
-	var team: Team {
-		return teamEventPerformance!.team!
-	}
+    
+    var teamKey: String?
+    var match: Match?
     
     var ssDataManager: SSDataManager?
 	
@@ -66,19 +56,6 @@ class StandsScoutingViewController: UIViewController {
             //Cycle to the rope view controller
             cycleFromViewController(currentVC!, toViewController: climbVC!)
             
-            //Ask for the final score if it lasted longer than 2:15
-            if stopwatch.elapsedTime >= 135 {
-                finalScorePrompt = UIAlertController(title: "Final Scores", message: "Enter the ranking points for the alliances.", preferredStyle: .alert)
-                finalScorePrompt.addTextField() {
-                    self.configureTextField($0, label: 1)
-                }
-                finalScorePrompt.addTextField() {
-                    self.configureTextField($0, label: 3)
-                }
-                finalScorePrompt.addAction(UIAlertAction(title: "Save", style: .default, handler: getFinalScore))
-                present(finalScorePrompt, animated: true, completion: nil)
-            }
-            
             endAutonomousButton.isHidden = true
             autonomousLabel.isHidden = true
             
@@ -86,37 +63,6 @@ class StandsScoutingViewController: UIViewController {
             NotificationCenter.default.post(name: NSNotification.Name(rawValue: "StandsScoutingEnded"), object: self)
         }
         }
-	}
-	var finalScorePrompt: UIAlertController!
-	func configureTextField(_ textField: UITextField, label: Int) {
-		textField.keyboardType = .numberPad
-		
-        switch label {
-		case 1:
-			textField.placeholder = "Red Ranking Points"
-		case 3:
-			textField.placeholder = "Blue Ranking Points"
-		default:
-			break
-		}
-	}
-	func getFinalScore(_ action: UIAlertAction) {
-		for textField in finalScorePrompt.textFields! {
-			switch textField {
-			case finalScorePrompt.textFields![0]:
-				//Red Ranking Points
-                if let intValue = Int(textField.text ?? "") {
-                    ssDataManager?.scoutedMatch.scouted?.redRP.value = intValue
-                }
-			case finalScorePrompt.textFields![1]:
-				//Blue Ranking Points
-                if let intValue = Int(textField.text ?? "") {
-                    ssDataManager?.scoutedMatch.scouted?.blueRP.value = intValue
-                }
-			default:
-				break
-			}
-		}
 	}
 	
     //Child view controllers
@@ -129,16 +75,11 @@ class StandsScoutingViewController: UIViewController {
         super.viewDidLoad()
 
         // Do any additional setup after loading the view.
-		teamLabel.text = "Team \(teamEventPerformance!.team!.teamNumber)"
+		teamLabel.text = "Team \(teamKey?.trimmingCharacters(in: CharacterSet.letters) ?? "?")"
 		
 		//Get all the view controllers
         gameScoutVC = (storyboard?.instantiateViewController(withIdentifier: "ssGameScoutVC") as! SSGameScoutingViewController)
         climbVC = (storyboard?.instantiateViewController(withIdentifier: "ssClimbVC") as! SSClimbViewController)
-		
-        if let matchPerformance = matchPerformance {
-            matchAndEventLabel.text = "\(teamEventPerformance?.event?.name ?? "")  \(matchPerformance.match?.competitionLevel ?? "") \(matchPerformance.match?.matchNumber.description ?? "")"
-            ssDataManager = SSDataManager(teamBeingScouted: team, matchBeingScouted: matchPerformance.match!, stopwatch: stopwatch)
-        }
     }
     
     override func viewDidLayoutSubviews() {
@@ -165,8 +106,6 @@ class StandsScoutingViewController: UIViewController {
 	
 	override func viewWillAppear(_ animated: Bool) {
 		super.viewWillAppear(animated)
-		
-		setUpStandsScouting()
 	}
 	
 	override func viewDidAppear(_ animated: Bool) {
@@ -181,32 +120,59 @@ class StandsScoutingViewController: UIViewController {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
     }
-	
-	func setUpStandsScouting() {
-		if matchPerformance == nil {
-			//Ask for the match to use
-            let askAction = UIAlertController(title: "Select Match", message: "Select the match for Team \(teamEventPerformance!.team!.teamNumber) in the event \(teamEventPerformance!.event!.name) for stands scouting.", preferredStyle: .alert)
-            let sortedMatchPerformances = Array(teamEventPerformance!.matchPerformances).sorted() {(firstMatchPerformance, secondMatchPerformance) in
-                if firstMatchPerformance.match!.competitionLevelEnum.rankedPosition > secondMatchPerformance.match!.competitionLevelEnum.rankedPosition {
-                    return true
-                } else if firstMatchPerformance.match!.competitionLevelEnum.rankedPosition == secondMatchPerformance.match!.competitionLevelEnum.rankedPosition {
-                    return firstMatchPerformance.match!.matchNumber < secondMatchPerformance.match!.matchNumber
+    
+    func setUp(forTeamKey teamKey: String, andMatchKey matchKey: String, inEventKey eventKey: String) {
+        self.teamKey = teamKey
+        
+        //Get the match
+        Globals.appDelegate.appSyncClient?.fetch(query: ListMatchesQuery(eventKey: eventKey), cachePolicy: .returnCacheDataElseFetch, resultHandler: {[weak self] (result, error) in
+            if Globals.handleAppSyncErrors(forQuery: "ListMatches-SetUpStandsScout", result: result, error: error) {
+                self?.match = result?.data?.listMatches?.first(where: {$0?.key == matchKey})??.fragments.match
+                
+                if let match = self?.match {
+                    self?.matchAndEventLabel.text = "\(eventKey) \(match.compLevel.description) \(match.matchNumber)"
+                    self?.ssDataManager = SSDataManager(match: match, teamKey: teamKey)
+                    
                 } else {
-                    return false
+                    //Throw up an error that the match does not exist
+                    CLSNSLogv("Desired Match for stands scouting does not exist or is not stored in the cache", getVaList([]))
+                    self?.close(andSave: false)
+                    return
                 }
+            } else {
+                //TODO: - Show error
             }
-			for matchPerformance in sortedMatchPerformances {
-				askAction.addAction(UIAlertAction(title: "\(matchPerformance.match!.competitionLevel) \(matchPerformance.match!.matchNumber)", style: .default, handler: {_ in
-                    self.matchPerformance = matchPerformance
-                }))
-			}
-			
-			askAction.addAction(UIAlertAction(title: "Cancel", style: .cancel) {action in
-				self.close(andSave: false)
-			})
-			present(askAction, animated: true, completion: nil)
-		}
-	}
+        })
+    }
+    
+    func setUp(forTeamKey teamKey: String, andEventKey eventKey: String) {
+        //If no match key is specified, then get all of the matches and offer them up to be selected
+        //Eventually calls other setUp method
+        Globals.appDelegate.appSyncClient?.fetch(query: ListMatchesQuery(eventKey: eventKey), cachePolicy: .returnCacheDataElseFetch, resultHandler: {[weak self] (result, error) in
+            if Globals.handleAppSyncErrors(forQuery: "ListMatchesQuery-StandsScout", result: result, error: error) {
+                //Filter the matches to only be ones that this team is in
+                let filteredMatches = result?.data?.listMatches?.filter({
+                    return $0!.blueAlliance?.teamKeys?.contains(teamKey) ?? false || $0!.redAlliance?.teamKeys?.contains(teamKey) ?? false
+                }) .map({$0!.fragments.match}) ?? []
+                
+                let sortedMatches = filteredMatches.sorted(by: {$0 < $1})
+                
+                let askAction = UIAlertController(title: "Select Match", message: "Select the match for Team \(teamKey.trimmingCharacters(in: CharacterSet.letters)) to Stands Scout", preferredStyle: .alert)
+                for match in sortedMatches {
+                    askAction.addAction(UIAlertAction(title: "\(match.compLevel.description) \(match.matchNumber)", style: .default, handler: {_ in
+                        self?.setUp(forTeamKey: teamKey, andMatchKey: match.key, inEventKey: eventKey)
+                    }))
+                }
+                
+                askAction.addAction(UIAlertAction(title: "Cancel", style: .cancel) {action in
+                    self?.close(andSave: false)
+                })
+                self?.present(askAction, animated: true, completion: nil)
+            } else {
+                
+            }
+        })
+    }
 	
 	@IBAction func closePressed(_ sender: UIButton) {
 		if 150 - stopwatch.elapsedTime > 15 {
@@ -226,9 +192,7 @@ class StandsScoutingViewController: UIViewController {
         DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + 2) {
             self.view.isUserInteractionEnabled = true
             if shouldSave {
-                self.ssDataManager?.save()
-            } else {
-                self.ssDataManager?.rollback()
+                self.ssDataManager?.recordScoutSession()
             }
             
             self.dismiss(animated: true, completion: nil)
@@ -259,7 +223,7 @@ class StandsScoutingViewController: UIViewController {
 			timerLabel.text = stopwatch.elapsedTimeAsString
 			
             //Auto end Autonomous when timer hits 20 seconds
-            if stopwatch.elapsedTime > 20 && ssDataManager?.isAutonomous ?? false {
+            if stopwatch.elapsedTime > 20 {
                 endAutonomousPressed(endAutonomousButton)
             }
             
@@ -275,7 +239,8 @@ class StandsScoutingViewController: UIViewController {
 	}
     
     @IBAction func endAutonomousPressed(_ sender: UIButton) {
-        ssDataManager?.isAutonomous = false
+        ssDataManager?.endAutonomousPeriod()
+        
         endAutonomousButton.isHidden = true
         autonomousLabel.isHidden = true
     }
@@ -299,7 +264,9 @@ class StandsScoutingViewController: UIViewController {
         
         let navVC = UINavigationController(rootViewController: notesVC)
         
-        notesVC.dataSource = self
+        if let eventKey = self.match?.eventKey, let teamKey = self.teamKey {
+            notesVC.load(forEventKey: eventKey, andTeamKey: teamKey)
+        }
 		
 		navVC.modalPresentationStyle = .popover
 		let popoverController = navVC.popoverPresentationController
@@ -318,29 +285,13 @@ class StandsScoutingViewController: UIViewController {
         let superNotesNavVC = storyboard?.instantiateViewController(withIdentifier: "superNotesNavVC") as! UINavigationController
         let superNotesVC = superNotesNavVC.topViewController as! SuperNotesCollectionViewController
         
-        superNotesVC.dataSource = self
+        let redKeys = self.match?.redAlliance?.teamKeys?.map({$0!}) ?? []
+        let blueKeys = self.match?.blueAlliance?.teamKeys?.map({$0!}) ?? []
+        if let eventKey = self.match?.eventKey {
+            superNotesVC.load(forEventKey: eventKey, withTeamKeys: redKeys + blueKeys)
+        }
         
         present(superNotesNavVC, animated: true, completion: nil)
-    }
-}
-
-extension StandsScoutingViewController: NotesDataSource {
-    func currentTeamContext() -> Team {
-        return team
-    }
-    
-    func notesShouldSave() -> Bool {
-        return true
-    }
-}
-
-extension StandsScoutingViewController: SuperNotesDataSource {
-    func superNotesForMatch() -> Match? {
-        return ssDataManager!.scoutedMatch
-    }
-    
-    func superNotesForTeams() -> [Team]? {
-        return nil
     }
 }
 

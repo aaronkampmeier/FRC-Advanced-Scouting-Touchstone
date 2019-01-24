@@ -74,7 +74,6 @@ fragment ScoutSession on ScoutSession {
 fragment TimeMarker on TimeMarker {
 	event
 	time
-	isAuto
 	associatedLocation
 }
 

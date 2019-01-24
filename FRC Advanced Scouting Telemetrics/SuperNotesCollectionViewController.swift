@@ -9,16 +9,9 @@
 import UIKit
 import Crashlytics
 
-protocol SuperNotesDataSource {
-    func superNotesForMatch() -> Match?
-    func superNotesForTeams() -> [Team]?
-}
-
 private let reuseIdentifier = "notesCell"
 
 class SuperNotesCollectionViewController: UICollectionViewController {
-    
-    var dataSource: SuperNotesDataSource?
     
     var eventKey: String?
     var teamKeys = [String]()

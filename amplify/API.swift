@@ -50,8 +50,8 @@ public enum CompetitionLevel: RawRepresentable, Equatable, JSONDecodable, JSONEn
 public struct TimeMarkerInput: GraphQLMapConvertible {
   public var graphQLMap: GraphQLMap
 
-  public init(event: String, time: Double, isAuto: Bool, associatedLocation: String? = nil) {
-    graphQLMap = ["event": event, "time": time, "isAuto": isAuto, "associatedLocation": associatedLocation]
+  public init(event: String, time: Double, associatedLocation: String? = nil) {
+    graphQLMap = ["event": event, "time": time, "associatedLocation": associatedLocation]
   }
 
   public var event: String {
@@ -69,15 +69,6 @@ public struct TimeMarkerInput: GraphQLMapConvertible {
     }
     set {
       graphQLMap.updateValue(newValue, forKey: "time")
-    }
-  }
-
-  public var isAuto: Bool {
-    get {
-      return graphQLMap["isAuto"] as! Bool
-    }
-    set {
-      graphQLMap.updateValue(newValue, forKey: "isAuto")
     }
   }
 
@@ -794,7 +785,7 @@ public final class UpdateScoutedTeamMutation: GraphQLMutation {
 
 public final class CreateScoutSessionMutation: GraphQLMutation {
   public static let operationString =
-    "mutation CreateScoutSession($userID: ID!, $eventKey: ID!, $teamKey: ID!, $matchKey: ID!, $timeMarkers: [TimeMarkerInput]) {\n  createScoutSession(userID: $userID, eventKey: $eventKey, teamKey: $teamKey, matchKey: $matchKey, timeMarkers: $timeMarkers) {\n    __typename\n    ...ScoutSession\n  }\n}"
+    "mutation CreateScoutSession($userID: ID!, $eventKey: ID!, $teamKey: ID!, $matchKey: ID!, $timeMarkers: [TimeMarkerInput]!) {\n  createScoutSession(userID: $userID, eventKey: $eventKey, teamKey: $teamKey, matchKey: $matchKey, timeMarkers: $timeMarkers) {\n    __typename\n    ...ScoutSession\n  }\n}"
 
   public static var requestString: String { return operationString.appending(ScoutSession.fragmentString).appending(TimeMarker.fragmentString) }
 
@@ -802,9 +793,9 @@ public final class CreateScoutSessionMutation: GraphQLMutation {
   public var eventKey: GraphQLID
   public var teamKey: GraphQLID
   public var matchKey: GraphQLID
-  public var timeMarkers: [TimeMarkerInput?]?
+  public var timeMarkers: [TimeMarkerInput?]
 
-  public init(userID: GraphQLID, eventKey: GraphQLID, teamKey: GraphQLID, matchKey: GraphQLID, timeMarkers: [TimeMarkerInput?]? = nil) {
+  public init(userID: GraphQLID, eventKey: GraphQLID, teamKey: GraphQLID, matchKey: GraphQLID, timeMarkers: [TimeMarkerInput?]) {
     self.userID = userID
     self.eventKey = eventKey
     self.teamKey = teamKey
@@ -949,7 +940,6 @@ public final class CreateScoutSessionMutation: GraphQLMutation {
           GraphQLField("__typename", type: .nonNull(.scalar(String.self))),
           GraphQLField("event", type: .nonNull(.scalar(String.self))),
           GraphQLField("time", type: .nonNull(.scalar(Double.self))),
-          GraphQLField("isAuto", type: .nonNull(.scalar(Bool.self))),
           GraphQLField("associatedLocation", type: .scalar(String.self)),
         ]
 
@@ -959,8 +949,8 @@ public final class CreateScoutSessionMutation: GraphQLMutation {
           self.snapshot = snapshot
         }
 
-        public init(event: String, time: Double, isAuto: Bool, associatedLocation: String? = nil) {
-          self.init(snapshot: ["__typename": "TimeMarker", "event": event, "time": time, "isAuto": isAuto, "associatedLocation": associatedLocation])
+        public init(event: String, time: Double, associatedLocation: String? = nil) {
+          self.init(snapshot: ["__typename": "TimeMarker", "event": event, "time": time, "associatedLocation": associatedLocation])
         }
 
         public var __typename: String {
@@ -987,15 +977,6 @@ public final class CreateScoutSessionMutation: GraphQLMutation {
           }
           set {
             snapshot.updateValue(newValue, forKey: "time")
-          }
-        }
-
-        public var isAuto: Bool {
-          get {
-            return snapshot["isAuto"]! as! Bool
-          }
-          set {
-            snapshot.updateValue(newValue, forKey: "isAuto")
           }
         }
 
@@ -3460,7 +3441,6 @@ public final class ListScoutSessionsQuery: GraphQLQuery {
           GraphQLField("__typename", type: .nonNull(.scalar(String.self))),
           GraphQLField("event", type: .nonNull(.scalar(String.self))),
           GraphQLField("time", type: .nonNull(.scalar(Double.self))),
-          GraphQLField("isAuto", type: .nonNull(.scalar(Bool.self))),
           GraphQLField("associatedLocation", type: .scalar(String.self)),
         ]
 
@@ -3470,8 +3450,8 @@ public final class ListScoutSessionsQuery: GraphQLQuery {
           self.snapshot = snapshot
         }
 
-        public init(event: String, time: Double, isAuto: Bool, associatedLocation: String? = nil) {
-          self.init(snapshot: ["__typename": "TimeMarker", "event": event, "time": time, "isAuto": isAuto, "associatedLocation": associatedLocation])
+        public init(event: String, time: Double, associatedLocation: String? = nil) {
+          self.init(snapshot: ["__typename": "TimeMarker", "event": event, "time": time, "associatedLocation": associatedLocation])
         }
 
         public var __typename: String {
@@ -3498,15 +3478,6 @@ public final class ListScoutSessionsQuery: GraphQLQuery {
           }
           set {
             snapshot.updateValue(newValue, forKey: "time")
-          }
-        }
-
-        public var isAuto: Bool {
-          get {
-            return snapshot["isAuto"]! as! Bool
-          }
-          set {
-            snapshot.updateValue(newValue, forKey: "isAuto")
           }
         }
 
@@ -3696,7 +3667,6 @@ public final class GetScoutSessionQuery: GraphQLQuery {
           GraphQLField("__typename", type: .nonNull(.scalar(String.self))),
           GraphQLField("event", type: .nonNull(.scalar(String.self))),
           GraphQLField("time", type: .nonNull(.scalar(Double.self))),
-          GraphQLField("isAuto", type: .nonNull(.scalar(Bool.self))),
           GraphQLField("associatedLocation", type: .scalar(String.self)),
         ]
 
@@ -3706,8 +3676,8 @@ public final class GetScoutSessionQuery: GraphQLQuery {
           self.snapshot = snapshot
         }
 
-        public init(event: String, time: Double, isAuto: Bool, associatedLocation: String? = nil) {
-          self.init(snapshot: ["__typename": "TimeMarker", "event": event, "time": time, "isAuto": isAuto, "associatedLocation": associatedLocation])
+        public init(event: String, time: Double, associatedLocation: String? = nil) {
+          self.init(snapshot: ["__typename": "TimeMarker", "event": event, "time": time, "associatedLocation": associatedLocation])
         }
 
         public var __typename: String {
@@ -3734,15 +3704,6 @@ public final class GetScoutSessionQuery: GraphQLQuery {
           }
           set {
             snapshot.updateValue(newValue, forKey: "time")
-          }
-        }
-
-        public var isAuto: Bool {
-          get {
-            return snapshot["isAuto"]! as! Bool
-          }
-          set {
-            snapshot.updateValue(newValue, forKey: "isAuto")
           }
         }
 
@@ -5090,7 +5051,6 @@ public final class OnCreateScoutSessionSubscription: GraphQLSubscription {
           GraphQLField("__typename", type: .nonNull(.scalar(String.self))),
           GraphQLField("event", type: .nonNull(.scalar(String.self))),
           GraphQLField("time", type: .nonNull(.scalar(Double.self))),
-          GraphQLField("isAuto", type: .nonNull(.scalar(Bool.self))),
           GraphQLField("associatedLocation", type: .scalar(String.self)),
         ]
 
@@ -5100,8 +5060,8 @@ public final class OnCreateScoutSessionSubscription: GraphQLSubscription {
           self.snapshot = snapshot
         }
 
-        public init(event: String, time: Double, isAuto: Bool, associatedLocation: String? = nil) {
-          self.init(snapshot: ["__typename": "TimeMarker", "event": event, "time": time, "isAuto": isAuto, "associatedLocation": associatedLocation])
+        public init(event: String, time: Double, associatedLocation: String? = nil) {
+          self.init(snapshot: ["__typename": "TimeMarker", "event": event, "time": time, "associatedLocation": associatedLocation])
         }
 
         public var __typename: String {
@@ -5128,15 +5088,6 @@ public final class OnCreateScoutSessionSubscription: GraphQLSubscription {
           }
           set {
             snapshot.updateValue(newValue, forKey: "time")
-          }
-        }
-
-        public var isAuto: Bool {
-          get {
-            return snapshot["isAuto"]! as! Bool
-          }
-          set {
-            snapshot.updateValue(newValue, forKey: "isAuto")
           }
         }
 
@@ -6214,7 +6165,6 @@ public struct ScoutSession: GraphQLFragment {
       GraphQLField("__typename", type: .nonNull(.scalar(String.self))),
       GraphQLField("event", type: .nonNull(.scalar(String.self))),
       GraphQLField("time", type: .nonNull(.scalar(Double.self))),
-      GraphQLField("isAuto", type: .nonNull(.scalar(Bool.self))),
       GraphQLField("associatedLocation", type: .scalar(String.self)),
     ]
 
@@ -6224,8 +6174,8 @@ public struct ScoutSession: GraphQLFragment {
       self.snapshot = snapshot
     }
 
-    public init(event: String, time: Double, isAuto: Bool, associatedLocation: String? = nil) {
-      self.init(snapshot: ["__typename": "TimeMarker", "event": event, "time": time, "isAuto": isAuto, "associatedLocation": associatedLocation])
+    public init(event: String, time: Double, associatedLocation: String? = nil) {
+      self.init(snapshot: ["__typename": "TimeMarker", "event": event, "time": time, "associatedLocation": associatedLocation])
     }
 
     public var __typename: String {
@@ -6252,15 +6202,6 @@ public struct ScoutSession: GraphQLFragment {
       }
       set {
         snapshot.updateValue(newValue, forKey: "time")
-      }
-    }
-
-    public var isAuto: Bool {
-      get {
-        return snapshot["isAuto"]! as! Bool
-      }
-      set {
-        snapshot.updateValue(newValue, forKey: "isAuto")
       }
     }
 
@@ -6299,7 +6240,7 @@ public struct ScoutSession: GraphQLFragment {
 
 public struct TimeMarker: GraphQLFragment {
   public static let fragmentString =
-    "fragment TimeMarker on TimeMarker {\n  __typename\n  event\n  time\n  isAuto\n  associatedLocation\n}"
+    "fragment TimeMarker on TimeMarker {\n  __typename\n  event\n  time\n  associatedLocation\n}"
 
   public static let possibleTypes = ["TimeMarker"]
 
@@ -6307,7 +6248,6 @@ public struct TimeMarker: GraphQLFragment {
     GraphQLField("__typename", type: .nonNull(.scalar(String.self))),
     GraphQLField("event", type: .nonNull(.scalar(String.self))),
     GraphQLField("time", type: .nonNull(.scalar(Double.self))),
-    GraphQLField("isAuto", type: .nonNull(.scalar(Bool.self))),
     GraphQLField("associatedLocation", type: .scalar(String.self)),
   ]
 
@@ -6317,8 +6257,8 @@ public struct TimeMarker: GraphQLFragment {
     self.snapshot = snapshot
   }
 
-  public init(event: String, time: Double, isAuto: Bool, associatedLocation: String? = nil) {
-    self.init(snapshot: ["__typename": "TimeMarker", "event": event, "time": time, "isAuto": isAuto, "associatedLocation": associatedLocation])
+  public init(event: String, time: Double, associatedLocation: String? = nil) {
+    self.init(snapshot: ["__typename": "TimeMarker", "event": event, "time": time, "associatedLocation": associatedLocation])
   }
 
   public var __typename: String {
@@ -6345,15 +6285,6 @@ public struct TimeMarker: GraphQLFragment {
     }
     set {
       snapshot.updateValue(newValue, forKey: "time")
-    }
-  }
-
-  public var isAuto: Bool {
-    get {
-      return snapshot["isAuto"]! as! Bool
-    }
-    set {
-      snapshot.updateValue(newValue, forKey: "isAuto")
     }
   }
 

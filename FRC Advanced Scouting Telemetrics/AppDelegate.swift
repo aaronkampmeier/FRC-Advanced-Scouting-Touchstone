@@ -143,7 +143,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         let signInOptions = SignInUIOptions(canCancel: true, logoImage: nil, backgroundColor: nil)
         AWSMobileClient.sharedInstance().showSignIn(navigationController: navController, signInUIOptions: signInOptions) {userState, error in
             if let userState = userState {
-                switch userState! {
+                switch userState {
                 case .signedIn:
                     //Show the team list
                      UserDefaults.standard.set(false, forKey: Globals.isSpectatorModeKey)
@@ -154,7 +154,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
                     Crashlytics.sharedInstance().recordCustomExceptionName("Received sign-in state other than SignedIn", reason: "Recevied state: \(userState)", frameArray: [])
                     assertionFailure()
                 }
-            } else {
+            } else if let error = error {
                 Crashlytics.sharedInstance().recordError(error)
             }
         }

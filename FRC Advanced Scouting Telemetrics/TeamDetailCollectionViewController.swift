@@ -14,7 +14,8 @@ let TeamDetailCollectionViewNeedsHeightResizing = NSNotification.Name("TeamDetai
 
 class TeamDetailCollectionViewController: UICollectionViewController, UICollectionViewDelegateFlowLayout {
     
-    var eventStats = [Statistic]()
+    var eventStats = [ScoutedTeamStat]()
+    var scoutedTeam: ScoutedTeam?
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -49,7 +50,8 @@ class TeamDetailCollectionViewController: UICollectionViewController, UICollecti
         eventStats.removeAll()
         
         //Collect the stats
-        self.eventStats = scoutedTeam?.stats ?? []
+        self.eventStats = StatisticsDataSource().getStats(forType: ScoutedTeam.self)
+        self.scoutedTeam = scoutedTeam
         
         collectionView?.reloadData()
         collectionView?.layoutIfNeeded()
@@ -70,7 +72,7 @@ class TeamDetailCollectionViewController: UICollectionViewController, UICollecti
     // MARK: UICollectionViewDataSource
 
     override func numberOfSections(in collectionView: UICollectionView) -> Int {
-        return 1
+        return scoutedTeam != nil ? 1 : 0
     }
 
     override func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
@@ -85,7 +87,7 @@ class TeamDetailCollectionViewController: UICollectionViewController, UICollecti
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "keyValue", for: indexPath) as! TeamDetailStatisticCell
         
         let stat = self.eventStats[indexPath.item]
-        cell.load(forStatistic: stat)
+        cell.load(forStatistic: stat, andScoutedTeam: self.scoutedTeam!)
         
         return cell
     }
@@ -99,7 +101,7 @@ class TeamDetailCollectionViewController: UICollectionViewController, UICollecti
         
         //Present the stat chart vc
         let chartVC = storyboard?.instantiateViewController(withIdentifier: "chartVC") as! StatChartViewController
-        chartVC.setUp(forStatistic: stat)
+        chartVC.setUp(forStatistic: stat, andScoutedTeam: self.scoutedTeam!)
         let navController = UINavigationController(rootViewController: chartVC)
         navController.modalPresentationStyle = .pageSheet
         present(navController, animated: true, completion: nil)
@@ -144,21 +146,21 @@ class TeamDetailStatisticCell: UICollectionViewCell {
     @IBOutlet weak var valueLabel: UILabel!
     @IBOutlet weak var chartImageView: UIImageView!
     
-    var stat: Statistic?
-    var identifier: String?
+    var stat: ScoutedTeamStat?
+    var scoutedTeam: ScoutedTeam?
     
-    func load(forStatistic stat: Statistic) {
+    func load(forStatistic stat: ScoutedTeamStat, andScoutedTeam scoutedTeam: ScoutedTeam) {
         self.stat = stat
+        self.scoutedTeam = scoutedTeam
         titleLabel.text = nil
         valueLabel.text = nil
         hideImageView()
         
         titleLabel.text = stat.name
-        let id = UUID().description
-        self.identifier = id
-        stat.calculate {value in
+        
+        stat.calculate(forObject: scoutedTeam) {value in
             //Check if this cell hasn't already been moved on to be reused with something else
-            if self.identifier == id {
+            if self.scoutedTeam == scoutedTeam {
                 valueLabel.text = value.description
             }
         }

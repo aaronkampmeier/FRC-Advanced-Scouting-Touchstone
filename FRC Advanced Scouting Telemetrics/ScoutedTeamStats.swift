@@ -13,10 +13,11 @@ import Crashlytics
 struct ScoutedTeamAttributes: Codable {
     let robotWeight: Double?
     let robotLength: Double?
+    let canBanana: Bool?
 }
 
 typealias ScoutedTeamStat = Statistic<ScoutedTeam>
-extension ScoutedTeam {
+extension ScoutedTeam: Equatable {
     
     //TODO: - Cache this object
     var decodedAttributes: ScoutedTeamAttributes? {
@@ -52,4 +53,8 @@ extension ScoutedTeam {
             return nil
         }
     }
+}
+
+public func ==(lhs: ScoutedTeam, rhs: ScoutedTeam) -> Bool {
+    return lhs.eventKey == rhs.eventKey && lhs.teamKey == rhs.teamKey
 }

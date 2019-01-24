@@ -200,7 +200,7 @@ class PitScoutingViewController: UIViewController, UICollectionViewDataSource, U
         
         let navVC = UINavigationController(rootViewController: notesVC)
         
-        notesVC.dataSource = self
+        notesVC.load(forEventKey: self.scoutedTeam?.eventKey ?? "", andTeamKey: self.scoutedTeam?.eventKey ?? "")
         
         navVC.modalPresentationStyle = .popover
         
@@ -220,16 +220,6 @@ class PitScoutingViewController: UIViewController, UICollectionViewDataSource, U
     }
     */
 
-}
-
-extension PitScoutingViewController: NotesDataSource {
-    func currentTeamContext() -> Team {
-        return scoutedTeam!
-    }
-    
-    func notesShouldSave() -> Bool {
-        return true
-    }
 }
 
 extension PitScoutingViewController: UICollectionViewDelegateFlowLayout {

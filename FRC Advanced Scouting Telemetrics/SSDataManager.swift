@@ -7,114 +7,67 @@
 //
 
 import Foundation
-import CoreData
 import Crashlytics
-import UIKit
+import AWSMobileClient
+import AWSAppSync
 
 ///A data manager that tracks a team participating in a match. It is a singleton so when the stands scouting vc first initializes it, it saves itself and all the other stands scouting vcs use the same object.
 class SSDataManager {
-//    let scoutID: String
-//
-//    let scoutedTeam: Team
-//    let scoutedMatch: Match
-//    let scoutedMatchPerformance: TeamMatchPerformance
-//    let stopwatch: Stopwatch //A place for the stands scouting view controller to put the stopwatch so that other vcs can access it while it is running
-//
-//    var isAutonomous: Bool = true {
-//        didSet {
-//            if !isAutonomous {
-//                saveTimeMarker(event: .EndedAutonomous, atTime: stopwatch.elapsedTime)
-//            }
-//        }
-//    }
-//
-//    fileprivate weak static var mostRecentSSDataManager: SSDataManager?
-//    class func currentSSDataManager() -> SSDataManager? {
-//        return mostRecentSSDataManager
-//    }
-//
-//    var preloadedCube: Bool?
-//
-//    init(teamBeingScouted: Team, matchBeingScouted: Match, stopwatch: Stopwatch) {
-//        //Start the write session
-//        RealmController.realmController.syncedRealm.beginWrite()
-//
-//        self.stopwatch = stopwatch
-//
-//        scoutedTeam = teamBeingScouted
-//        scoutedMatch = matchBeingScouted
-//
-//        //Get the match performance that we are scouting
-//        var teamMatchPerformance: TeamMatchPerformance?
-//        for matchPerformance in scoutedMatch.teamPerformances {
-//            if matchPerformance.teamEventPerformance!.team == scoutedTeam {
-//                teamMatchPerformance = matchPerformance
-//            }
-//        }
-//
-//        if let matchPerformance = teamMatchPerformance {
-//            scoutedMatchPerformance = matchPerformance
-//        } else {
-//            Crashlytics.sharedInstance().recordCustomExceptionName("Stands Scouting Team Match Performance Does Not Exist", reason: nil, frameArray: [])
-//
-//            //TODO: Handle this error better
-//            assertionFailure()
-//            exit(EXIT_FAILURE)
-//        }
-//
-//        //TODO: Don't believe this lines up with good use of scout IDs
-//        self.scoutID = UUID().uuidString
-//        scoutedMatchPerformance.scouted?.defaultScoutID = scoutID
-//        scoutedMatchPerformance.scouted?.trackedScoutIDs.append(scoutID)
-//
-//        SSDataManager.mostRecentSSDataManager = self
-//
-//        scoutedMatchPerformance.scouted?.didCrossAutoLine = false
-//
-//
-//        CLSNSLogv("Began Stands Scouting for key: \(teamMatchPerformance!.key)", getVaList([]))
-//    }
-//
-//    func save() {
-//        do {
-//            try RealmController.realmController.syncedRealm.commitWrite()
-//            CLSNSLogv("Saved Stands Scouting Data", getVaList([]))
-//        } catch {
-//            CLSNSLogv("Error commiting write of stands scouting data: \(error)", getVaList([]))
-//            Crashlytics.sharedInstance().recordError(error)
-//        }
-//    }
-//
-//    func rollback() {
-//        //TODO: Implement a way to erase scouted data from a session
-//        RealmController.realmController.syncedRealm.cancelWrite()
-//        CLSNSLogv("Rolledback Stands Scouting Data", getVaList([]))
-//    }
-//
-//    func setDidCrossAutoLine(didCross: Bool) {
-//        scoutedMatchPerformance.scouted?.didCrossAutoLine = didCross
-//    }
-//
-//    func saveTimeMarker(event: TimeMarkerEvent, atTime time: TimeInterval, withAssociatedLocation associatedLocation: String? = nil) {
-//        let timeMarker = RealmController.realmController.syncedRealm.create(TimeMarker.self)
-//
-//        timeMarker.scoutedMatchPerformance = scoutedMatchPerformance.scouted
-//
-//        timeMarker.event = event.rawValue
-//        timeMarker.time = time
-//        timeMarker.isAuto = self.isAutonomous
-//
-//        timeMarker.associatedLocation = associatedLocation
-//
-//        timeMarker.scoutID = scoutID
-//    }
-//
-//    //MARK: - Climb
-//    func recordClimb(_ successful: ClimbStatus.RawValue) {
-//        scoutedMatchPerformance.scouted?.climbStatus = successful
-//    }
-//
-//    func recordAssist(_ assist: ClimbAssistStatus.RawValue) {
-//        scoutedMatchPerformance.scouted?.climbAssistStatus = assist
-//    }
+    let teamKey: String
+    let match: Match
+    
+    let stopwatch: Stopwatch
+    
+    static var currentSSDataManager: SSDataManager?
+    
+    var timeMarkers: [TimeMarkerInput] = []
+    
+    private(set) var hasPassedAutonomous: Bool = false
+    
+    init(match: Match, teamKey: String) {
+        self.match = match
+        self.teamKey = teamKey
+        
+        self.stopwatch = Stopwatch()
+        
+        SSDataManager.currentSSDataManager = self
+        
+        CLSNSLogv("Began Stands Scouting for key: \(teamKey) in \(match.key)", getVaList([]))
+    }
+    
+    func recordScoutSession() {
+        Globals.appDelegate.appSyncClient?.perform(mutation: CreateScoutSessionMutation(userID: AWSMobileClient.sharedInstance().username ?? "", eventKey: match.eventKey, teamKey: teamKey, matchKey: match.key, timeMarkers: timeMarkers), optimisticUpdate: { (transaction) in
+            //TODO: - Add optimistic update
+        }, conflictResolutionBlock: { (snapshot, taskCompletionSource, onCompletion) in
+            
+        }, resultHandler: { (result, error) in
+            if Globals.handleAppSyncErrors(forQuery: "CreateScoutSession", result: result, error: error) {
+                //TODO: - Handle this
+                CLSNSLogv("Successfully saved new scout session", getVaList([]))
+            } else {
+                //Show an alert that it failed to save
+                //TODO: - Handle this
+            }
+        })
+    }
+    
+    ///Stores a time marker that marks the end of the Autonomous/Sandstorm(2019) period
+    func endAutonomousPeriod() {
+        if hasPassedAutonomous {
+            return
+        } else {
+            hasPassedAutonomous = true
+            addTimeMarker(event: "endAutonomousPeriod", location: nil)
+        }
+    }
+    
+    func didCrossAutoLine() {
+        addTimeMarker(event: "didCrossAutoLine", location: nil)
+    }
+    
+    func addTimeMarker(event: String, location: String?) {
+        let newTM = TimeMarkerInput(event: event, time: stopwatch.elapsedTime, associatedLocation: location)
+        
+        timeMarkers.append(newTM)
+    }
 }

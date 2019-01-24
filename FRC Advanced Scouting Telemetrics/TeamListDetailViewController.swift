@@ -158,7 +158,7 @@ class TeamListDetailViewController: UIViewController {
             CLSNSLogv("Opening Stands Scouting from Team Detail Button", getVaList([]))
         } else if segue.identifier == "pitScouting" {
             let pitScoutingVC = segue.destination as! PitScoutingViewController
-            pitScoutingVC.scoutedTeam = selectedTeam
+            pitScoutingVC.scoutedTeam = scoutedTeam
         } else if segue.identifier == "teamDetailCollection" {
             detailCollectionVC = (segue.destination as! TeamDetailCollectionViewController)
         }
@@ -234,7 +234,7 @@ class TeamListDetailViewController: UIViewController {
         }
         
         if let scoutedTeam = scoutedTeam {
-            if scoutedTeam.canBanana ?? false {
+            if scoutedTeam.decodedAttributes?.canBanana ?? false {
                 bananaImageView.image = #imageLiteral(resourceName: "Banana Filled")
                 bananaImageWidth.constant = 40
             } else {
@@ -315,11 +315,15 @@ class TeamListDetailViewController: UIViewController {
     }
     
     @IBAction func notesButtonPressed(_ sender: UIButton) {
+        guard let eventKey = self.selectedEventKey, let teamkey = self.selectedTeam?.key else {
+            return
+        }
+        
         let notesVC = storyboard?.instantiateViewController(withIdentifier: "commentNotesVC") as! TeamCommentsTableViewController
         
         let navVC = UINavigationController(rootViewController: notesVC)
         
-        notesVC.dataSource = self
+        notesVC.load(forEventKey: eventKey, andTeamKey: teamkey)
         
         navVC.modalPresentationStyle = .popover
         navVC.popoverPresentationController?.sourceView = sender
@@ -522,12 +526,6 @@ extension UILabel {
         
         
         self.attributedText = attrStr
-    }
-}
-
-extension TeamListDetailViewController: NotesDataSource {
-    func currentTeamContext() -> Team {
-        return selectedTeam!
     }
 }
 

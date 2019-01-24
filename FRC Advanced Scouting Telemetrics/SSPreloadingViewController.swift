@@ -11,7 +11,7 @@ import UIKit
 class SSPreloadingViewController: UIViewController {
     @IBOutlet weak var cubeSwitch: UISwitch!
     
-    lazy var ssDataManager = SSDataManager.currentSSDataManager()!
+    lazy var ssDataManager = SSDataManager.currentSSDataManager
     
     override func viewDidLoad() {
         super.viewDidLoad()

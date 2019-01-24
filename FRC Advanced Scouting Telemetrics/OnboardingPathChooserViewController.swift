@@ -81,14 +81,14 @@ class OnboardingPathChooserViewController: UIViewController {
         //Switch to the team list
         let teamListVC = storyboard?.instantiateViewController(withIdentifier: "teamListMasterVC")
         
-        UserDefaults.standard.setValue(true, forKey: RealmController.isSpectatorModeKey)
+        UserDefaults.standard.setValue(true, forKey: Globals.isSpectatorModeKey)
         
         self.view.window?.rootViewController = teamListVC
         
         //Pinpoint
         let event = pinpoint?.analyticsClient.createEvent(withEventType: "Onboarding Completed")
         event?.addAttribute("Spectator", forKey: "Onboarded Route")
-        pinpoint?.analyticsClient.record(event)
+        pinpoint?.analyticsClient.record(event!)
         pinpoint?.analyticsClient.submitEvents()
     }
     
@@ -100,7 +100,7 @@ class OnboardingPathChooserViewController: UIViewController {
         
         let event = pinpoint?.analyticsClient.createEvent(withEventType: "Onboarding Completed")
         event?.addAttribute("Log In", forKey: "Onboarded Route")
-        pinpoint?.analyticsClient.record(event)
+        pinpoint?.analyticsClient.record(event!)
         pinpoint?.analyticsClient.submitEvents()
     }
     
@@ -114,7 +114,7 @@ class OnboardingPathChooserViewController: UIViewController {
         
         let event = pinpoint?.analyticsClient.createEvent(withEventType: "Onboarding Completed")
         event?.addAttribute("Sign Up", forKey: "Onboarded Route")
-        pinpoint?.analyticsClient.record(event)
+        pinpoint?.analyticsClient.record(event!)
         pinpoint?.analyticsClient.submitEvents()
     }
 

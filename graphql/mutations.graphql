@@ -57,7 +57,7 @@ mutation CreateScoutSession(
   $eventKey: ID!
   $teamKey: ID!
   $matchKey: ID!
-  $timeMarkers: [TimeMarkerInput]
+  $timeMarkers: [TimeMarkerInput]!
 ) {
   createScoutSession(
     userID: $userID
