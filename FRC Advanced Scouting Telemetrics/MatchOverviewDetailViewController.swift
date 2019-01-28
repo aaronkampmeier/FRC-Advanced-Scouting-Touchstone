@@ -8,20 +8,11 @@
 
 import UIKit
 
-protocol MatchOverviewDetailDataSource {
-    func match() -> Match?
-    func shouldShowExitButton() -> Bool
-}
-
 class MatchOverviewDetailViewController: UIViewController {
     @IBOutlet weak var matchTitleLabel: UILabel!
     @IBOutlet weak var redPointsLabel: UILabel!
-    @IBOutlet weak var redRankingPointsLabel: UILabel!
     @IBOutlet weak var bluePointsLabel: UILabel!
-    @IBOutlet weak var blueRankingPointsLabel: UILabel!
     @IBOutlet weak var segmentedControl: UISegmentedControl!
-    
-    var dataSource: MatchOverviewDetailDataSource?
     
     var matchOverviewSplitVC: MatchOverviewSplitViewController? {
         get {
@@ -32,33 +23,8 @@ class MatchOverviewDetailViewController: UIViewController {
             }
         }
     }
-    var displayedMatch: Match? {
-        didSet {
-            if let match = displayedMatch {
-                matchTitleLabel.text = match.description
-                
-                redPointsLabel.text = "\(match.scouted?.redScore.value?.description ?? "-") Pts."
-                redRankingPointsLabel.text = "\(match.scouted?.redRP.value?.description ?? "-") RP"
-                bluePointsLabel.text = "\(match.scouted?.blueScore.value?.description ?? "-") Pts."
-                blueRankingPointsLabel.text = "\(match.scouted?.blueRP.value?.description ?? "-") RP"
-                
-                //Set the teams in the segmented control
-                for teamMatchPerformance in match.teamPerformances {
-                    switch (teamMatchPerformance.alliance) {
-                    case .Red:
-                        segmentedControl.setTitle(teamMatchPerformance.teamEventPerformance?.team?.teamNumber.description, forSegmentAt: teamMatchPerformance.slot.rawValue - 1)
-                    case .Blue:
-                        segmentedControl.setTitle(teamMatchPerformance.teamEventPerformance?.team?.teamNumber.description, forSegmentAt: teamMatchPerformance.slot.rawValue + 2)
-                    }
-                }
-                
-                segmentedControl.selectedSegmentIndex = 0
-                self.selectedDifferentTeam(segmentedControl)
-            }
-        }
-    }
-    
-    var selectedMatchPerformance: TeamMatchPerformance?
+    var displayedMatch: Match?
+    var teamKeys = [String]()
     
     var matchPerformanceDetail: MatchOverviewPerformanceDetailViewController!
 
@@ -71,24 +37,7 @@ class MatchOverviewDetailViewController: UIViewController {
         self.navigationItem.leftItemsSupplementBackButton = true
         self.navigationItem.leftBarButtonItem = matchOverviewSplitVC?.displayModeButtonItem
         
-        if let master = matchOverviewSplitVC?.matchesMaster {
-            if dataSource == nil {
-                self.dataSource = master
-            }
-        }
-        
-        matchPerformanceDetail = self.childViewControllers.first! as! MatchOverviewPerformanceDetailViewController
-        matchPerformanceDetail.dataSource = self
-        
-        reloadData()
-        
-        if dataSource?.shouldShowExitButton() ?? false {
-            self.navigationItem.setRightBarButtonItems([], animated: false)
-            let doneButton = UIBarButtonItem(title: "Done", style: .done, target: self, action: #selector(donePressed(_:)))
-            self.navigationItem.setRightBarButtonItems([doneButton], animated: false)
-        } else {
-            self.navigationItem.setRightBarButtonItems([], animated: false)
-        }
+        matchPerformanceDetail = self.childViewControllers.first! as? MatchOverviewPerformanceDetailViewController
     }
 
     override func didReceiveMemoryWarning() {
@@ -96,19 +45,53 @@ class MatchOverviewDetailViewController: UIViewController {
         // Dispose of any resources that can be recreated.
     }
     
-    func reloadData() {
-        self.displayedMatch = dataSource?.match()
+    func load(forMatchKey matchKey: String, shouldShowExitButton: Bool) {
+        //Get the match
+        Globals.appDelegate.appSyncClient?.fetch(query: GetMatchQuery(matchKey: matchKey), cachePolicy: .returnCacheDataElseFetch, resultHandler: { (result, error) in
+            if Globals.handleAppSyncErrors(forQuery: "GetMatchQuery-MatchOverview", result: result, error: error) {
+                self.setUpForMatch(match: result?.data?.getMatch?.fragments.match)
+                
+                //TODO: - Also update the apollo cache for ListMatchesQuery with this result
+            } else {
+                //TODO: - Show error
+            }
+        })
+        
+        if shouldShowExitButton {
+            self.navigationItem.setRightBarButtonItems([], animated: false)
+            let doneButton = UIBarButtonItem(title: "Done", style: .done, target: self, action: #selector(donePressed(_:)))
+            self.navigationItem.setRightBarButtonItems([doneButton], animated: false)
+        } else {
+            self.navigationItem.setRightBarButtonItems([], animated: false)
+        }
+    }
+    
+    private func setUpForMatch(match: Match?) {
+        self.displayedMatch = match
+        
+        if let match = match {
+            matchTitleLabel.text = match.description
+            
+            redPointsLabel.text = "\(match.redAlliance?.score.description ?? "-") Pts."
+            bluePointsLabel.text = "\(match.blueAlliance?.score.description ?? "-") Pts."
+            
+            //Set the teams in the segmented control
+            teamKeys = match.redAlliance?.teamKeys as? [String] ?? []
+            teamKeys += match.blueAlliance?.teamKeys as? [String] ?? []
+            for key in teamKeys.enumerated() {
+                segmentedControl.setTitle(key.element, forSegmentAt: key.offset)
+            }
+            
+            segmentedControl.selectedSegmentIndex = 0
+            self.selectedDifferentTeam(segmentedControl)
+        }
     }
     
     @IBAction func selectedDifferentTeam(_ sender: UISegmentedControl) {
         //Set the selected match performance
-        if sender.selectedSegmentIndex <= 2 {
-            selectedMatchPerformance = displayedMatch?.teamMatchPerformance(forColor: .Red, andSlot: TeamMatchPerformance.Slot(rawValue: sender.selectedSegmentIndex + 1)!)
-        } else {
-            selectedMatchPerformance = displayedMatch?.teamMatchPerformance(forColor: .Blue, andSlot: TeamMatchPerformance.Slot(rawValue: sender.selectedSegmentIndex - 2)!)
+        if let match = self.displayedMatch {
+            matchPerformanceDetail.load(match: match, forTeamKey: teamKeys[sender.selectedSegmentIndex])
         }
-        
-        matchPerformanceDetail.reloadData()
     }
     
     @objc func donePressed(_ sender: UIBarButtonItem) {
@@ -135,20 +118,4 @@ class MatchOverviewDetailViewController: UIViewController {
     }
     */
 
-}
-
-extension MatchOverviewDetailViewController: SuperNotesDataSource {
-    func superNotesForTeams() -> [Team]? {
-        return nil
-    }
-    
-    func superNotesForMatch() -> Match? {
-        return displayedMatch
-    }
-}
-
-extension MatchOverviewDetailViewController: MatchOverviewPerformanceDetailDataSource {
-    func teamMatchPerformance() -> TeamMatchPerformance? {
-        return selectedMatchPerformance
-    }
 }

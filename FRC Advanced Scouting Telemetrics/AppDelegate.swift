@@ -159,17 +159,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             }
         }
     }
-    
-//    func clearTMPFolder() {
-//        //Clear the temporary folder as it can build up lots of unneeded ensembles data. However, at this time Fabric is probably downloading some settings from the cloud so we need to avoid deleting those files.
-//        do {
-//            for file in try FileManager.default.contentsOfDirectory(atPath: NSTemporaryDirectory()) {
-//                try FileManager.default.removeItem(atPath: NSTemporaryDirectory().appending(file))
-//            }
-//        } catch {
-//            CLSNSLogv("Unable to clear temporary directory with error: \(error)", getVaList([]))
-//        }
-//    }
 
     func applicationWillResignActive(_ application: UIApplication) {
         // Sent when the application is about to move from active to inactive state. This can occur for certain types of temporary interruptions (such as an incoming phone call or SMS message) or when the user quits the application and it begins the transition to the background state.

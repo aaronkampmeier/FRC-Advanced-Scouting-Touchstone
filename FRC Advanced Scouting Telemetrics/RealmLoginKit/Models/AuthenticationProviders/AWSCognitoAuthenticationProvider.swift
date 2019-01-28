@@ -17,7 +17,6 @@
 ////////////////////////////////////////////////////////////////////////////
 
 import UIKit
-import Realm
 import AWSCognitoIdentityProvider
 import AWSMobileClient
 import Crashlytics

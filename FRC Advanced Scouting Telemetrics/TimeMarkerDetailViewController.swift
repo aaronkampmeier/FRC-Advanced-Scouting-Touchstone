@@ -13,29 +13,29 @@ class TimeMarkerDetailViewController: UIViewController, UITableViewDataSource {
     @IBOutlet weak var autoLabel: UILabel!
     @IBOutlet weak var detailTableView: UITableView!
     
-    fileprivate var timeMarker: TimeMarker? {
+    fileprivate var timeMarker: TimeMarkerFragment? {
         didSet {
             detailValues = []
             if let timeMarker = timeMarker {
-                switch timeMarker.timeMarkerEventType {
-                case .EndedAutonomous:
-                    titleLabel.text = "Ended Autonomous"
-                    
-                    detailValues = [("Time", timeMarker.time.description(roundedAt: 2))]
-                    autoLabel.isHidden = true
-                case .GrabbedCube:
-                    titleLabel.text = "Grabbed Cube"
-                    
-                    detailValues = [("Time", timeMarker.time.description(roundedAt: 2)), ("Location", timeMarker.associatedLocation ?? "Unknown")]
-                    autoLabel.isHidden = !timeMarker.isAuto
-                case .PlacedCube:
-                    titleLabel.text = "Placed Cube"
-                    
-                    detailValues = [("Time", timeMarker.time.description(roundedAt: 2)), ("Location", timeMarker.associatedLocation ?? "Unknown")]
-                    autoLabel.isHidden = !timeMarker.isAuto
-                default:
-                    break
-                }
+//                switch timeMarker.timeMarkerEventType {
+//                case .EndedAutonomous:
+//                    titleLabel.text = "Ended Autonomous"
+//
+//                    detailValues = [("Time", timeMarker.time.description(roundedAt: 2))]
+//                    autoLabel.isHidden = true
+//                case .GrabbedCube:
+//                    titleLabel.text = "Grabbed Cube"
+//
+//                    detailValues = [("Time", timeMarker.time.description(roundedAt: 2)), ("Location", timeMarker.associatedLocation ?? "Unknown")]
+//                    autoLabel.isHidden = !timeMarker.isAuto
+//                case .PlacedCube:
+//                    titleLabel.text = "Placed Cube"
+//
+//                    detailValues = [("Time", timeMarker.time.description(roundedAt: 2)), ("Location", timeMarker.associatedLocation ?? "Unknown")]
+//                    autoLabel.isHidden = !timeMarker.isAuto
+//                default:
+//                    break
+//                }
             }
             
             detailTableView.reloadData()
@@ -53,8 +53,8 @@ class TimeMarkerDetailViewController: UIViewController, UITableViewDataSource {
         detailTableView.dataSource = self
     }
     
-    fileprivate var timeMarkerToLoad: TimeMarker?
-    func load(forTimeMarker timeMarker: TimeMarker) {
+    fileprivate var timeMarkerToLoad: TimeMarkerFragment?
+    func load(forTimeMarker timeMarker: TimeMarkerFragment) {
         timeMarkerToLoad = timeMarker
     }
 

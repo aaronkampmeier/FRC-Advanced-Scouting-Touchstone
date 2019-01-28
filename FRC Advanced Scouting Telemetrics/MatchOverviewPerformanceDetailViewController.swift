@@ -9,10 +9,6 @@
 import UIKit
 import Crashlytics
 
-protocol MatchOverviewPerformanceDetailDataSource {
-    func teamMatchPerformance() -> TeamMatchPerformance?
-}
-
 class MatchOverviewPerformanceDetailViewController: UIViewController {
     @IBOutlet weak var timeMarkerTableView: UITableView!
     @IBOutlet weak var matchStatsCollectionView: UICollectionView!
@@ -23,63 +19,37 @@ class MatchOverviewPerformanceDetailViewController: UIViewController {
     @IBOutlet weak var matchContentView: UIView!
     @IBOutlet weak var standsScoutButton: UIButton!
     
-    var dataSource: MatchOverviewPerformanceDetailDataSource?
-    var displayedTeamMatchPerformance: TeamMatchPerformance? {
+    var match: Match?
+    var teamKey: String?
+    
+    var availableScoutSessions: [ScoutSession] = [] {
         didSet {
-            scoutID = nil
-            matchPerformanceStats = []
-            if let matchPerformance = displayedTeamMatchPerformance {
-                if matchPerformance.scouted?.hasBeenScouted ?? false {
-                    showMatchContentViews()
-                } else {
-                    hideMatchContentViews()
-                }
-                availableScoutIDs = matchPerformance.scouted?.scoutIDs ?? []
-                
-                //Get all the stats
-                let availableStats = TeamMatchPerformance.StatName.allValues
-                
-                for statName in availableStats {
-                    matchPerformanceStats.append((statName.description, matchPerformance.statValue(forStat: statName).description))
-                }
-            } else {
-                availableScoutIDs = []
-                hideMatchContentViews()
-            }
-            
-            matchStatsCollectionView.reloadData()
-        }
-    }
-    var availableScoutIDs: [String] = [] {
-        didSet {
-            if availableScoutIDs.count == 1 {
+            if availableScoutSessions.count <= 1 {
                 scoutIDViewHeight.constant = 0
                 scoutIDView.isHidden = true
-                scoutID = availableScoutIDs.first
-            } else if availableScoutIDs.count > 1 {
+            } else {
                 scoutIDViewHeight.constant = 50
                 scoutIDView.isHidden = false
                 scoutIDSegmentedSelector.removeAllSegments()
-                for n in 0..<availableScoutIDs.count {
+                for n in 0..<availableScoutSessions.count {
                     scoutIDSegmentedSelector.insertSegment(withTitle: "\(n)", at: n, animated: false)
                 }
-            } else {
-                scoutIDViewHeight.constant = 0
-                scoutIDView.isHidden = true
-                scoutID = nil
             }
         }
     }
-    var scoutID: String? {
-        didSet {
-            if let id = scoutID {
-                timeMarkers = displayedTeamMatchPerformance?.scouted?.timeMarkers(forScoutID: id) ?? []
-                timeMarkers = timeMarkers.sorted {($0.time) < ($1.time)}
-            }
-            
-            timeMarkerTableView.reloadData()
-        }
-    }
+    var selectedScoutSession: ScoutSession?
+    var statistics: [Statistic<ScoutSession>] = []
+    
+//    var scoutID: String? {
+//        didSet {
+//            if let id = scoutID {
+//                timeMarkers = displayedTeamMatchPerformance?.scouted?.timeMarkers(forScoutID: id) ?? []
+//                timeMarkers = timeMarkers.sorted {($0.time) < ($1.time)}
+//            }
+//
+//            timeMarkerTableView.reloadData()
+//        }
+//    }
     
     func hideMatchContentViews() {
         hasNotBeenScoutedHeight.constant = 22
@@ -95,9 +65,6 @@ class MatchOverviewPerformanceDetailViewController: UIViewController {
         matchStatsCollectionView.isHidden = false
     }
     
-    var timeMarkers: [TimeMarker] = []
-    var matchPerformanceStats = [(String, String?)]()
-    
     override func viewDidLoad() {
         super.viewDidLoad()
 
@@ -109,17 +76,16 @@ class MatchOverviewPerformanceDetailViewController: UIViewController {
         matchStatsCollectionView.dataSource = self
         matchStatsCollectionView.delegate = self
         
-        displayedTeamMatchPerformance = nil
         hasNotBeenScoutedHeight.constant = 0
         standsScoutButton.isHidden = true
         
-        if RealmController.isInSpectatorMode {
+        if Globals.isInSpectatorMode {
             standsScoutButton.tintColor = UIColor.purple
         }
     }
     
     override func viewWillAppear(_ animated: Bool) {
-        self.reloadData()
+        super.viewWillAppear(animated)
     }
 
     override func didReceiveMemoryWarning() {
@@ -127,16 +93,48 @@ class MatchOverviewPerformanceDetailViewController: UIViewController {
         // Dispose of any resources that can be recreated.
     }
     
-    func reloadData() {
-        self.displayedTeamMatchPerformance = dataSource?.teamMatchPerformance()
+    func load(match: Match, forTeamKey teamKey: String?) {
+        self.match = match
+        self.teamKey = teamKey
+        
+        availableScoutSessions = []
+        selectScoutSession(scoutSession: nil)
+        
+        if let teamKey = teamKey {
+            //Get the scout sessions
+            Globals.appDelegate.appSyncClient?.fetch(query: ListScoutSessionsQuery(eventKey: match.eventKey, teamKey: teamKey), cachePolicy: .returnCacheDataAndFetch, resultHandler: {[weak self] (result, error) in
+                if Globals.handleAppSyncErrors(forQuery: "ListScoutSessions", result: result, error: error) {
+                    self?.availableScoutSessions = result?.data?.listScoutSessions?.map({$0!.fragments.scoutSession}) ?? []
+                    self?.selectScoutSession(scoutSession: self?.availableScoutSessions.first)
+                } else {
+                    //Uh oh
+                }
+            })
+        }
+    }
+    
+    
+    func selectScoutSession(scoutSession: ScoutSession?) {
+        statistics = []
+        if let _ = scoutSession {
+            showMatchContentViews()
+            
+            //Get the stats
+            self.statistics = StatisticsDataSource().getStats(forType: ScoutSession.self)
+        } else {
+            hideMatchContentViews()
+        }
+        
+        timeMarkerTableView.reloadData()
+        matchStatsCollectionView.reloadData()
     }
     
     @IBAction func scoutingIDSelected(_ sender: UISegmentedControl) {
-        scoutID = availableScoutIDs[sender.selectedSegmentIndex]
+        selectScoutSession(scoutSession: availableScoutSessions[sender.selectedSegmentIndex])
     }
     
     @IBAction func standsScoutPressed(_ sender: UIButton) {
-        if RealmController.isInSpectatorMode {
+        if Globals.isInSpectatorMode {
             //Show the sign up thing
             let loginPromotional = storyboard!.instantiateViewController(withIdentifier: "loginPromotional")
             self.present(loginPromotional, animated: true, completion: nil)
@@ -145,9 +143,8 @@ class MatchOverviewPerformanceDetailViewController: UIViewController {
             //Pull up the stands scouting page
             let standsScoutVC = storyboard?.instantiateViewController(withIdentifier: "standsScouting") as! StandsScoutingViewController
             
-            if let matchPerformance = displayedTeamMatchPerformance {
-                standsScoutVC.teamEventPerformance = matchPerformance.teamEventPerformance
-                standsScoutVC.matchPerformance = matchPerformance
+            if let teamKey = teamKey, let match = match {
+                standsScoutVC.setUp(forTeamKey: teamKey, andMatchKey: match.key, inEventKey: match.eventKey)
                 
                 present(standsScoutVC, animated: true, completion: nil)
                 
@@ -171,7 +168,7 @@ class MatchOverviewPerformanceDetailViewController: UIViewController {
 
 extension MatchOverviewPerformanceDetailViewController: UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        if displayedTeamMatchPerformance?.scouted?.hasBeenScouted ?? false {
+        if let timeMarkers = selectedScoutSession?.timeMarkers?.map({$0!}) {
             return timeMarkers.count
         } else {
             return 0
@@ -179,43 +176,33 @@ extension MatchOverviewPerformanceDetailViewController: UITableViewDataSource {
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        if displayedTeamMatchPerformance?.scouted?.hasBeenScouted ?? false {
-            let cell = tableView.dequeueReusableCell(withIdentifier: "timeMarker") as! MatchOverviewTimeMarkerTableViewCell
-            let timeMarker = timeMarkers[indexPath.row]
+        let cell = tableView.dequeueReusableCell(withIdentifier: "timeMarker") as! MatchOverviewTimeMarkerTableViewCell
+        if let scoutSession = selectedScoutSession {
+            let timeMarker = scoutSession.timeMarkers?[indexPath.row]
             
-            switch timeMarker.timeMarkerEventType {
-            case .EndedAutonomous:
-                cell.iconImageView.image = nil
-            case .Error:
-                cell.iconImageView.image = nil
-            default:
-                cell.iconImageView.image = nil
-            }
-            
-            cell.timeMarkerEventLabel.text = timeMarker.event
-            let elapsedTime = timeMarker.time
+            cell.timeMarkerEventLabel.text = timeMarker?.event
+            let elapsedTime = timeMarker?.time ?? 0
             cell.timeLabel.text = String.init(format: "%02d:%02d", Int(elapsedTime / 60), Int(elapsedTime.truncatingRemainder(dividingBy: 60)))
-            
-            return cell
         }
         
-        return UITableViewCell()
+        return cell
     }
 }
 
 extension MatchOverviewPerformanceDetailViewController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        let timeMarker = timeMarkers[indexPath.row]
-        
-        //Present a popover with a detail view on the time marker
-        let timeMarkerDetailVC = storyboard?.instantiateViewController(withIdentifier: "timeMarkerDetail") as! TimeMarkerDetailViewController
-        timeMarkerDetailVC.load(forTimeMarker: timeMarker)
-        
-        timeMarkerDetailVC.modalPresentationStyle = .popover
-        timeMarkerDetailVC.popoverPresentationController?.sourceView = (tableView.cellForRow(at: indexPath) as! MatchOverviewTimeMarkerTableViewCell).iconImageView
-        timeMarkerDetailVC.popoverPresentationController?.delegate = self
-        
-        present(timeMarkerDetailVC, animated: true, completion: nil)
+        if let timeMarker = selectedScoutSession?.timeMarkers?[indexPath.row]?.fragments.timeMarkerFragment {
+            
+            //Present a popover with a detail view on the time marker
+            let timeMarkerDetailVC = storyboard?.instantiateViewController(withIdentifier: "timeMarkerDetail") as! TimeMarkerDetailViewController
+            timeMarkerDetailVC.load(forTimeMarker: timeMarker)
+            
+            timeMarkerDetailVC.modalPresentationStyle = .popover
+            timeMarkerDetailVC.popoverPresentationController?.sourceView = (tableView.cellForRow(at: indexPath) as! MatchOverviewTimeMarkerTableViewCell).iconImageView
+            timeMarkerDetailVC.popoverPresentationController?.delegate = self
+            
+            present(timeMarkerDetailVC, animated: true, completion: nil)
+        }
     }
 }
 
@@ -231,15 +218,32 @@ extension MatchOverviewPerformanceDetailViewController: UIPopoverPresentationCon
 
 extension MatchOverviewPerformanceDetailViewController: UICollectionViewDataSource, UICollectionViewDelegateFlowLayout {
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return matchPerformanceStats.count
+        return statistics.count
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "keyValue", for: indexPath)
-        let performanceStat = matchPerformanceStats[indexPath.item]
         
-        (cell.viewWithTag(1) as! UILabel).text = performanceStat.0
-        (cell.viewWithTag(2) as! UILabel).text = performanceStat.1
+        if let scoutSession = selectedScoutSession {
+            let performanceStat = statistics[indexPath.item]
+            
+            let nameLabel = cell.viewWithTag(1) as! UILabel
+            let valueLabel = cell.viewWithTag(2) as! UILabel
+            nameLabel.text = performanceStat.name
+            valueLabel.text = "Loading"
+            
+            //Calculate the stat
+            let tk = self.teamKey
+            let mk = self.match?.key
+            performanceStat.calculate(forObject: scoutSession) {[weak self] (value) in
+                //Check if it is still the same cell
+                if self?.teamKey == tk && self?.match?.key == mk && nameLabel.text == performanceStat.name {
+                    //It is the same, write the value
+                    valueLabel.text = value.description
+                }
+            }
+            
+        }
         
         return cell
     }

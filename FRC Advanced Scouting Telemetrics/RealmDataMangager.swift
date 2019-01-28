@@ -9,38 +9,12 @@
 //NOTE: With realm, you can only use objects on the thread they were created! See Realm Swift Model docs. You can use ThreadSafeReference to pass objects.
 
 import Foundation
-import RealmSwift
 import Crashlytics
 import AWSAppSync
 
 //let DidLogIntoSyncServerNotification = NSNotification.Name(rawValue: "DidLogIntoSyncServer")
 //private let rosServerAddress = "fastapp.tech:9443"
 
-//class RealmController {
-//
-//    static var realmController: RealmController = RealmController()
-//
-//    var generalRealm: Realm!
-//    var syncedRealm: Realm!
-//
-//    let syncAuthURL = URL(string: "https://\(rosServerAddress)")!
-//    var syncedRealmURL: URL?
-//    var generalRealmURL: URL?
-//    var scoutedRealmConfig: Realm.Configuration?
-//    var generalRealmConfig: Realm.Configuration?
-//    var currentSyncUser: SyncUser?
-//
-//    var tbaUpdatingReloader: TBAUpdatingDataReloader?
-//
-//    static let isSpectatorModeKey = "FAST-IsInSpectatorMode"
-//    static var isInSpectatorMode: Bool {
-//        return UserDefaults.standard.value(forKey: isSpectatorModeKey) as? Bool ?? false
-//    }
-//
-//    private init() {
-//
-//    }
-//}
 
 //MARK: - Enums
 enum ProgrammingLanguage: String, CustomStringConvertible {

@@ -7,7 +7,6 @@
 //
 
 import Foundation
-import RealmSwift
 
 extension CompetitionLevel: CustomStringConvertible {
     public var description: String {

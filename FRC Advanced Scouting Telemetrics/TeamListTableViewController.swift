@@ -8,7 +8,6 @@
 
 import UIKit
 import Crashlytics
-import RealmSwift
 import AWSCore
 import AWSAppSync
 import AWSMobileClient
@@ -730,6 +729,8 @@ class TeamListTableViewController: UITableViewController, TeamListDetailDataSour
                             } else {
                                 //The values aren't there even though we waited for them to be calculated
                                 assertionFailure()
+                                Crashlytics.sharedInstance().recordCustomExceptionName("Calculated Stats Not There", reason: "Obviously i don't know why else would i be recording an exception", frameArray: [])
+                                exit(1)
                             }
                         } else {
                             return false

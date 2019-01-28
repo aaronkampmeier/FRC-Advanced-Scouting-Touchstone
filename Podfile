@@ -9,7 +9,6 @@ pod "GMStepper"
 pod 'SSBouncyButton', '~> 1.0'
 pod 'UICircularProgressRing'
 pod 'VTAcknowledgementsViewController'
-pod 'RealmSwift'
 pod 'TORoundedTableView'
 pod 'AWSCore'
 pod 'AWSMobileClient'

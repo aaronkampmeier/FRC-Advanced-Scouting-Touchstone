@@ -9,7 +9,6 @@
 import UIKit
 import NYTPhotoViewer
 import Crashlytics
-import RealmSwift
 import SafariServices
 
 protocol TeamListDetailDataSource {
@@ -152,7 +151,7 @@ class TeamListDetailViewController: UIViewController {
         
         if segue.identifier == "standsScouting" {
             let destinationVC = segue.destination as! StandsScoutingViewController
-            destinationVC.teamEventPerformance = teamEventPerformance
+            destinationVC.setUp(forTeamKey: self.scoutedTeam?.teamKey ?? "", andEventKey: self.selectedEventKey ?? "")
             
             Answers.logCustomEvent(withName: "Opened Stands Scouting", customAttributes: ["Source":"Team Detail Button"])
             CLSNSLogv("Opening Stands Scouting from Team Detail Button", getVaList([]))
@@ -383,11 +382,11 @@ extension TeamListDetailViewController: MatchesTableViewControllerDelegate {
     func matchesTableViewController(_ matchesTableViewController: MatchesTableViewController, selectedMatchCell: UITableViewCell?, withAssociatedMatch associatedMatch: Match?) {
         selectedMatch = associatedMatch
         
-        let showMatchDetail = {() -> Void in
-            let matchDetailNav = self.storyboard?.instantiateViewController(withIdentifier: "matchDetailNav") as! UINavigationController
+        let showMatchDetail = {[weak self]() -> Void in
+            let matchDetailNav = self?.storyboard?.instantiateViewController(withIdentifier: "matchDetailNav") as! UINavigationController
             let matchDetail = matchDetailNav.topViewController as! MatchOverviewDetailViewController
             
-            matchDetail.dataSource = self
+            matchDetail.load(forMatchKey: self?.selectedMatch?.key ?? "", shouldShowExitButton: true)
             
             matchesTableViewController.present(matchDetailNav, animated: true, completion: nil)
         }
@@ -403,8 +402,7 @@ extension TeamListDetailViewController: MatchesTableViewControllerDelegate {
             })
             actionSheet.addAction(UIAlertAction(title: "Stands Scout", style: .default) {action in
                 let standsScoutingVC = self.storyboard?.instantiateViewController(withIdentifier: "standsScouting") as! StandsScoutingViewController
-                standsScoutingVC.teamEventPerformance = self.teamEventPerformance
-                standsScoutingVC.matchPerformance = (associatedMatch?.teamPerformances)?.first {$0.teamEventPerformance == self.teamEventPerformance}
+                standsScoutingVC.setUp(forTeamKey: self.selectedTeam?.key ?? "", andMatchKey: self.selectedMatch?.key ?? "", inEventKey: self.selectedMatch?.eventKey ?? "")
                 
                 matchesTableViewController.present(standsScoutingVC, animated: true, completion: nil)
                 
@@ -419,16 +417,6 @@ extension TeamListDetailViewController: MatchesTableViewControllerDelegate {
             
             matchesTableViewController.present(actionSheet, animated: true, completion: nil)
         }
-    }
-}
-
-extension TeamListDetailViewController: MatchOverviewDetailDataSource {
-    func match() -> Match? {
-        return selectedMatch
-    }
-    
-    func shouldShowExitButton() -> Bool {
-        return true
     }
 }
 

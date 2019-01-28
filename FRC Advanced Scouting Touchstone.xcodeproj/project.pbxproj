@@ -7,7 +7,6 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		17B23A7C19409D43514119DF /* Pods_FRC_Advanced_Scouting_Touchstone.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FF590BD6742CA543F314D9DB /* Pods_FRC_Advanced_Scouting_Touchstone.framework */; };
 		1F12CF181C7A6CD70014200C /* Stopwatch.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F12CF171C7A6CD70014200C /* Stopwatch.swift */; };
 		1F1C23C21E07487C008885A1 /* Team.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F1C23AA1E07487C008885A1 /* Team.swift */; };
 		1F1C23C41E07487C008885A1 /* TeamMatchPerformance.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F1C23AC1E07487C008885A1 /* TeamMatchPerformance.swift */; };
@@ -42,22 +41,6 @@
 		933D214B1E609A04008C8276 /* Pods-acknowledgments.plist in Resources */ = {isa = PBXBuildFile; fileRef = 933D214A1E609A04008C8276 /* Pods-acknowledgments.plist */; };
 		933D21511E609BF7008C8276 /* Additional Licenses.plist in Resources */ = {isa = PBXBuildFile; fileRef = 933D21501E609BF7008C8276 /* Additional Licenses.plist */; };
 		933E794F1E385BB20033563B /* SSPreloadingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 933E794E1E385BB20033563B /* SSPreloadingViewController.swift */; };
-		93483E8020291AC400E9AC82 /* LoginFormValidation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93483E6720291AC400E9AC82 /* LoginFormValidation.swift */; };
-		93483E8120291AC400E9AC82 /* LoginTableViewDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93483E6920291AC400E9AC82 /* LoginTableViewDataSource.swift */; };
-		93483E8220291AC400E9AC82 /* LoginKeyboardManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93483E6A20291AC400E9AC82 /* LoginKeyboardManager.swift */; };
-		93483E8320291AC400E9AC82 /* LoginViewControllerTransitioning.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93483E6B20291AC400E9AC82 /* LoginViewControllerTransitioning.swift */; };
-		93483E8420291AC400E9AC82 /* AWSCognitoAuthenticationProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93483E6D20291AC400E9AC82 /* AWSCognitoAuthenticationProvider.swift */; };
-		93483E8720291AC400E9AC82 /* UIImage+Icons.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93483E7220291AC400E9AC82 /* UIImage+Icons.swift */; };
-		93483E8820291AC400E9AC82 /* FileManager+ApplicationFilePaths.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93483E7320291AC400E9AC82 /* FileManager+ApplicationFilePaths.swift */; };
-		93483E8920291AC400E9AC82 /* Realm+RLMSupport.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93483E7420291AC400E9AC82 /* Realm+RLMSupport.swift */; };
-		93483E8A20291AC400E9AC82 /* String+URLComponents.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93483E7520291AC400E9AC82 /* String+URLComponents.swift */; };
-		93483E8B20291AC400E9AC82 /* LoginViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93483E7720291AC400E9AC82 /* LoginViewController.swift */; };
-		93483E8C20291AC400E9AC82 /* LoginFooterView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93483E7920291AC400E9AC82 /* LoginFooterView.swift */; };
-		93483E8D20291AC400E9AC82 /* StatusBarUnderlayView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93483E7A20291AC400E9AC82 /* StatusBarUnderlayView.swift */; };
-		93483E8E20291AC400E9AC82 /* LoginView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93483E7B20291AC400E9AC82 /* LoginView.swift */; };
-		93483E8F20291AC400E9AC82 /* LoginHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93483E7C20291AC400E9AC82 /* LoginHeaderView.swift */; };
-		93483E9020291AC400E9AC82 /* RealmLogoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93483E7D20291AC400E9AC82 /* RealmLogoView.swift */; };
-		93483E9120291AC400E9AC82 /* LoginTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93483E7E20291AC400E9AC82 /* LoginTableViewCell.swift */; };
 		9349621F21E9A40500F761BD /* ScoutedTeamStats.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9349621E21E9A40500F761BD /* ScoutedTeamStats.swift */; };
 		934DDE462002B0510032095C /* RealmDataMangager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 934DDE452002B0510032095C /* RealmDataMangager.swift */; };
 		9351017021F42CD100D402FE /* DataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9351016F21F42CD100D402FE /* DataSource.swift */; };
@@ -93,8 +76,6 @@
 		93A3ABC321F1462F007831E3 /* PitScoutingData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93A3ABC221F1462F007831E3 /* PitScoutingData.swift */; };
 		93AE99801E3407A00000FB7C /* SSDataManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93AE997F1E3407A00000FB7C /* SSDataManager.swift */; };
 		93BA599E1E2C95F200171D72 /* FASTTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 938D9CB01E1B05BA00A5E522 /* FASTTests.swift */; };
-		93BA5A0C1E2F1EA200171D72 /* YCMatrix.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 93BA59F21E2EE7EF00171D72 /* YCMatrix.framework */; };
-		93BA5A0D1E2F1EA200171D72 /* YCMatrix.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 93BA59F21E2EE7EF00171D72 /* YCMatrix.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		93C5B47C1E53FC9C007D309F /* TeamInfoScrollView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93C5B47B1E53FC9C007D309F /* TeamInfoScrollView.swift */; };
 		93C609241E67D035007A689D /* MatchOverviewDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93C609231E67D035007A689D /* MatchOverviewDetailViewController.swift */; };
 		93C609281E67D0CC007A689D /* MatchOverviewMasterViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93C609271E67D0CC007A689D /* MatchOverviewMasterViewController.swift */; };
@@ -106,8 +87,8 @@
 		93E551E721C9FBEB006C79A8 /* Charts.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 93E551E321C9FBD2006C79A8 /* Charts.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		93E551F921CACDE0006C79A8 /* CognitoAuthProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93E551F821CACDE0006C79A8 /* CognitoAuthProvider.swift */; };
 		93EA7FEA1E4693C6002EC8C7 /* PitSwitchCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93EA7FE91E4693C6002EC8C7 /* PitSwitchCollectionViewCell.swift */; };
-		93FBC3961E3E624500FEB328 /* GameFieldLocationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93FBC3951E3E624500FEB328 /* GameFieldLocationViewController.swift */; };
 		93FBC39A1E3EEDEC00FEB328 /* SSClimbViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93FBC3991E3EEDEC00FEB328 /* SSClimbViewController.swift */; };
+		DEE3AA58734C2CCE9C06727F /* Pods_FRC_Advanced_Scouting_Touchstone.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E4D7923BBAD6512A9C4F3DBB /* Pods_FRC_Advanced_Scouting_Touchstone.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -124,27 +105,6 @@
 			proxyType = 1;
 			remoteGlobalIDString = 1F78E77E1C3B469300221927;
 			remoteInfo = "FRC Advanced Scouting Telemetrics";
-		};
-		93BA59F11E2EE7EF00171D72 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 93BA59EC1E2EE7EE00171D72 /* YCMatrix.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = CBBE02AC178F215000744F77;
-			remoteInfo = YCMatrix;
-		};
-		93BA59F31E2EE7EF00171D72 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 93BA59EC1E2EE7EE00171D72 /* YCMatrix.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = CBBE02C4178F215100744F77;
-			remoteInfo = YCMatrixTests;
-		};
-		93BA5A0E1E2F1EA200171D72 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 93BA59EC1E2EE7EE00171D72 /* YCMatrix.xcodeproj */;
-			proxyType = 1;
-			remoteGlobalIDString = CBBE02AB178F215000744F77;
-			remoteInfo = YCMatrix;
 		};
 		93E551E221C9FBD2006C79A8 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -176,7 +136,6 @@
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
-				93BA5A0D1E2F1EA200171D72 /* YCMatrix.framework in Embed Frameworks */,
 				93E551E721C9FBEB006C79A8 /* Charts.framework in Embed Frameworks */,
 			);
 			name = "Embed Frameworks";
@@ -215,6 +174,7 @@
 		1FDC1BD01CD69F5F00ABE327 /* TeamListTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TeamListTableViewController.swift; sourceTree = "<group>"; };
 		1FDC1BD21CD6A35F00ABE327 /* TeamListDetailViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TeamListDetailViewController.swift; sourceTree = "<group>"; };
 		1FDE56921CCD376B009042CD /* opencv2.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = opencv2.framework; path = "FRC Advanced Scouting Telemetrics/swix/objc/opencv2.framework"; sourceTree = "<group>"; };
+		789856AA1C2E7793DD302784 /* Pods-FRC Advanced Scouting Touchstone.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-FRC Advanced Scouting Touchstone.debug.xcconfig"; path = "Pods/Target Support Files/Pods-FRC Advanced Scouting Touchstone/Pods-FRC Advanced Scouting Touchstone.debug.xcconfig"; sourceTree = "<group>"; };
 		9300196B20537B0C00E10CDC /* TeamCommentsTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TeamCommentsTableViewController.swift; sourceTree = "<group>"; };
 		930B965B1E4548F700E385D3 /* PitSegmentedSelectorCollectionViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PitSegmentedSelectorCollectionViewCell.swift; sourceTree = "<group>"; };
 		930B96611E456D3000E385D3 /* PitTableViewSelectorCollectionViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PitTableViewSelectorCollectionViewCell.swift; sourceTree = "<group>"; };
@@ -228,23 +188,6 @@
 		933D214A1E609A04008C8276 /* Pods-acknowledgments.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "Pods-acknowledgments.plist"; sourceTree = "<group>"; };
 		933D21501E609BF7008C8276 /* Additional Licenses.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "Additional Licenses.plist"; sourceTree = "<group>"; };
 		933E794E1E385BB20033563B /* SSPreloadingViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SSPreloadingViewController.swift; sourceTree = "<group>"; };
-		93483E6720291AC400E9AC82 /* LoginFormValidation.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LoginFormValidation.swift; sourceTree = "<group>"; };
-		93483E6920291AC400E9AC82 /* LoginTableViewDataSource.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LoginTableViewDataSource.swift; sourceTree = "<group>"; };
-		93483E6A20291AC400E9AC82 /* LoginKeyboardManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LoginKeyboardManager.swift; sourceTree = "<group>"; };
-		93483E6B20291AC400E9AC82 /* LoginViewControllerTransitioning.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LoginViewControllerTransitioning.swift; sourceTree = "<group>"; };
-		93483E6D20291AC400E9AC82 /* AWSCognitoAuthenticationProvider.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AWSCognitoAuthenticationProvider.swift; sourceTree = "<group>"; };
-		93483E7220291AC400E9AC82 /* UIImage+Icons.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIImage+Icons.swift"; sourceTree = "<group>"; };
-		93483E7320291AC400E9AC82 /* FileManager+ApplicationFilePaths.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "FileManager+ApplicationFilePaths.swift"; sourceTree = "<group>"; };
-		93483E7420291AC400E9AC82 /* Realm+RLMSupport.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Realm+RLMSupport.swift"; sourceTree = "<group>"; };
-		93483E7520291AC400E9AC82 /* String+URLComponents.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "String+URLComponents.swift"; sourceTree = "<group>"; };
-		93483E7720291AC400E9AC82 /* LoginViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LoginViewController.swift; sourceTree = "<group>"; };
-		93483E7920291AC400E9AC82 /* LoginFooterView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LoginFooterView.swift; sourceTree = "<group>"; };
-		93483E7A20291AC400E9AC82 /* StatusBarUnderlayView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StatusBarUnderlayView.swift; sourceTree = "<group>"; };
-		93483E7B20291AC400E9AC82 /* LoginView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LoginView.swift; sourceTree = "<group>"; };
-		93483E7C20291AC400E9AC82 /* LoginHeaderView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LoginHeaderView.swift; sourceTree = "<group>"; };
-		93483E7D20291AC400E9AC82 /* RealmLogoView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RealmLogoView.swift; sourceTree = "<group>"; };
-		93483E7E20291AC400E9AC82 /* LoginTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LoginTableViewCell.swift; sourceTree = "<group>"; };
-		93483E7F20291AC400E9AC82 /* RealmLoginKit.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RealmLoginKit.h; sourceTree = "<group>"; };
 		9349621E21E9A40500F761BD /* ScoutedTeamStats.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScoutedTeamStats.swift; sourceTree = "<group>"; };
 		934DDE452002B0510032095C /* RealmDataMangager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RealmDataMangager.swift; sourceTree = "<group>"; };
 		9351016F21F42CD100D402FE /* DataSource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataSource.swift; sourceTree = "<group>"; };
@@ -280,7 +223,6 @@
 		93A38B3E2055F49F00B8B692 /* NoEventSelectedView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NoEventSelectedView.swift; sourceTree = "<group>"; };
 		93A3ABC221F1462F007831E3 /* PitScoutingData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PitScoutingData.swift; sourceTree = "<group>"; };
 		93AE997F1E3407A00000FB7C /* SSDataManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SSDataManager.swift; sourceTree = "<group>"; };
-		93BA59EC1E2EE7EE00171D72 /* YCMatrix.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = YCMatrix.xcodeproj; path = "YCMatrix-master/YCMatrix.xcodeproj"; sourceTree = "<group>"; };
 		93C5B47B1E53FC9C007D309F /* TeamInfoScrollView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TeamInfoScrollView.swift; sourceTree = "<group>"; };
 		93C609231E67D035007A689D /* MatchOverviewDetailViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MatchOverviewDetailViewController.swift; sourceTree = "<group>"; };
 		93C609271E67D0CC007A689D /* MatchOverviewMasterViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MatchOverviewMasterViewController.swift; sourceTree = "<group>"; };
@@ -291,11 +233,9 @@
 		93E551DD21C9FBD1006C79A8 /* Charts.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = Charts.xcodeproj; path = "Charts-master/Charts.xcodeproj"; sourceTree = "<group>"; };
 		93E551F821CACDE0006C79A8 /* CognitoAuthProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CognitoAuthProvider.swift; sourceTree = "<group>"; };
 		93EA7FE91E4693C6002EC8C7 /* PitSwitchCollectionViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PitSwitchCollectionViewCell.swift; sourceTree = "<group>"; };
-		93FBC3951E3E624500FEB328 /* GameFieldLocationViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GameFieldLocationViewController.swift; sourceTree = "<group>"; };
 		93FBC3991E3EEDEC00FEB328 /* SSClimbViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SSClimbViewController.swift; sourceTree = "<group>"; };
-		D5E09D382B48C9148EBC98C8 /* Pods-FRC Advanced Scouting Touchstone.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-FRC Advanced Scouting Touchstone.release.xcconfig"; path = "Pods/Target Support Files/Pods-FRC Advanced Scouting Touchstone/Pods-FRC Advanced Scouting Touchstone.release.xcconfig"; sourceTree = "<group>"; };
-		E41AD9671774068A9E097A14 /* Pods-FRC Advanced Scouting Touchstone.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-FRC Advanced Scouting Touchstone.debug.xcconfig"; path = "Pods/Target Support Files/Pods-FRC Advanced Scouting Touchstone/Pods-FRC Advanced Scouting Touchstone.debug.xcconfig"; sourceTree = "<group>"; };
-		FF590BD6742CA543F314D9DB /* Pods_FRC_Advanced_Scouting_Touchstone.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_FRC_Advanced_Scouting_Touchstone.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		D1EBA735BA885680C38C6749 /* Pods-FRC Advanced Scouting Touchstone.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-FRC Advanced Scouting Touchstone.release.xcconfig"; path = "Pods/Target Support Files/Pods-FRC Advanced Scouting Touchstone/Pods-FRC Advanced Scouting Touchstone.release.xcconfig"; sourceTree = "<group>"; };
+		E4D7923BBAD6512A9C4F3DBB /* Pods_FRC_Advanced_Scouting_Touchstone.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_FRC_Advanced_Scouting_Touchstone.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -304,10 +244,9 @@
 			buildActionMask = 2147483647;
 			files = (
 				1FBC9E6C1CC2F007005DB3F4 /* Crashlytics.framework in Frameworks */,
-				93BA5A0C1E2F1EA200171D72 /* YCMatrix.framework in Frameworks */,
 				93E551E621C9FBEB006C79A8 /* Charts.framework in Frameworks */,
 				1FBC9E691CC2EE11005DB3F4 /* Fabric.framework in Frameworks */,
-				17B23A7C19409D43514119DF /* Pods_FRC_Advanced_Scouting_Touchstone.framework in Frameworks */,
+				DEE3AA58734C2CCE9C06727F /* Pods_FRC_Advanced_Scouting_Touchstone.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -384,7 +323,6 @@
 				9317C03A201ECFEF00F1E907 /* SSGameScoutingViewController.swift */,
 				932CB3F11E305E8200712725 /* SSOffenseWhereViewController.swift */,
 				93FBC3991E3EEDEC00FEB328 /* SSClimbViewController.swift */,
-				93FBC3951E3E624500FEB328 /* GameFieldLocationViewController.swift */,
 				1F12CF171C7A6CD70014200C /* Stopwatch.swift */,
 			);
 			name = "Stands Scouting";
@@ -394,13 +332,12 @@
 			isa = PBXGroup;
 			children = (
 				93E551DD21C9FBD1006C79A8 /* Charts.xcodeproj */,
-				93BA59EC1E2EE7EE00171D72 /* YCMatrix.xcodeproj */,
 				1F78E7811C3B469300221927 /* FRC Advanced Scouting Touchstone */,
 				1F78E7991C3B469300221927 /* FRC Advanced Scouting TouchstoneTests */,
 				1F78E7A41C3B469300221927 /* FRC Advanced Scouting TouchstoneUITests */,
 				1F78E7801C3B469300221927 /* Products */,
 				247597E7D320F6FF4FC40A15 /* Frameworks */,
-				F57B032A41CFE9D404B09C72 /* Pods */,
+				4AB965E7B0147DAF334F9B64 /* Pods */,
 			);
 			sourceTree = "<group>";
 		};
@@ -417,7 +354,6 @@
 		1F78E7811C3B469300221927 /* FRC Advanced Scouting Touchstone */ = {
 			isa = PBXGroup;
 			children = (
-				93483E6420291AC400E9AC82 /* RealmLoginKit */,
 				1F78E7821C3B469300221927 /* AppDelegate.swift */,
 				93E551F821CACDE0006C79A8 /* CognitoAuthProvider.swift */,
 				93183B8421C8AB83008DC997 /* API.swift */,
@@ -473,9 +409,18 @@
 				1FBC9E6B1CC2F007005DB3F4 /* Crashlytics.framework */,
 				1FBC9E671CC2EE11005DB3F4 /* Fabric.framework */,
 				1C713CB13EB7BA66AC808E54 /* Pods.framework */,
-				FF590BD6742CA543F314D9DB /* Pods_FRC_Advanced_Scouting_Touchstone.framework */,
+				E4D7923BBAD6512A9C4F3DBB /* Pods_FRC_Advanced_Scouting_Touchstone.framework */,
 			);
 			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		4AB965E7B0147DAF334F9B64 /* Pods */ = {
+			isa = PBXGroup;
+			children = (
+				789856AA1C2E7793DD302784 /* Pods-FRC Advanced Scouting Touchstone.debug.xcconfig */,
+				D1EBA735BA885680C38C6749 /* Pods-FRC Advanced Scouting Touchstone.release.xcconfig */,
+			);
+			name = Pods;
 			sourceTree = "<group>";
 		};
 		9317C035201ADB6B00F1E907 /* General Models */ = {
@@ -494,86 +439,6 @@
 				938E0B3B2056D85C00666FA7 /* TBAAsyncManager.swift */,
 			);
 			name = Deprecated;
-			sourceTree = "<group>";
-		};
-		93483E6420291AC400E9AC82 /* RealmLoginKit */ = {
-			isa = PBXGroup;
-			children = (
-				93483E6520291AC400E9AC82 /* Models */,
-				93483E7120291AC400E9AC82 /* Extensions */,
-				93483E7620291AC400E9AC82 /* Controllers */,
-				93483E7820291AC400E9AC82 /* Views */,
-				93483E7F20291AC400E9AC82 /* RealmLoginKit.h */,
-			);
-			path = RealmLoginKit;
-			sourceTree = "<group>";
-		};
-		93483E6520291AC400E9AC82 /* Models */ = {
-			isa = PBXGroup;
-			children = (
-				93483E6620291AC400E9AC82 /* InputValidation */,
-				93483E6820291AC400E9AC82 /* UIStateCoordination */,
-				93483E6C20291AC400E9AC82 /* AuthenticationProviders */,
-			);
-			path = Models;
-			sourceTree = "<group>";
-		};
-		93483E6620291AC400E9AC82 /* InputValidation */ = {
-			isa = PBXGroup;
-			children = (
-				93483E6720291AC400E9AC82 /* LoginFormValidation.swift */,
-			);
-			path = InputValidation;
-			sourceTree = "<group>";
-		};
-		93483E6820291AC400E9AC82 /* UIStateCoordination */ = {
-			isa = PBXGroup;
-			children = (
-				93483E6920291AC400E9AC82 /* LoginTableViewDataSource.swift */,
-				93483E6A20291AC400E9AC82 /* LoginKeyboardManager.swift */,
-				93483E6B20291AC400E9AC82 /* LoginViewControllerTransitioning.swift */,
-			);
-			path = UIStateCoordination;
-			sourceTree = "<group>";
-		};
-		93483E6C20291AC400E9AC82 /* AuthenticationProviders */ = {
-			isa = PBXGroup;
-			children = (
-				93483E6D20291AC400E9AC82 /* AWSCognitoAuthenticationProvider.swift */,
-			);
-			path = AuthenticationProviders;
-			sourceTree = "<group>";
-		};
-		93483E7120291AC400E9AC82 /* Extensions */ = {
-			isa = PBXGroup;
-			children = (
-				93483E7220291AC400E9AC82 /* UIImage+Icons.swift */,
-				93483E7320291AC400E9AC82 /* FileManager+ApplicationFilePaths.swift */,
-				93483E7420291AC400E9AC82 /* Realm+RLMSupport.swift */,
-				93483E7520291AC400E9AC82 /* String+URLComponents.swift */,
-			);
-			path = Extensions;
-			sourceTree = "<group>";
-		};
-		93483E7620291AC400E9AC82 /* Controllers */ = {
-			isa = PBXGroup;
-			children = (
-				93483E7720291AC400E9AC82 /* LoginViewController.swift */,
-			);
-			path = Controllers;
-			sourceTree = "<group>";
-		};
-		93483E7820291AC400E9AC82 /* Views */ = {
-			isa = PBXGroup;
-			children = (
-				93483E7920291AC400E9AC82 /* LoginFooterView.swift */,
-				93483E7A20291AC400E9AC82 /* StatusBarUnderlayView.swift */,
-				93483E7B20291AC400E9AC82 /* LoginView.swift */,
-				93483E7C20291AC400E9AC82 /* LoginHeaderView.swift */,
-				93483E7D20291AC400E9AC82 /* RealmLogoView.swift */,
-				93483E7E20291AC400E9AC82 /* LoginTableViewCell.swift */,
-			);
-			path = Views;
 			sourceTree = "<group>";
 		};
 		93633B20200D9B35000EC83A /* Realm Database */ = {
@@ -647,15 +512,6 @@
 			name = Views;
 			sourceTree = "<group>";
 		};
-		93BA59ED1E2EE7EE00171D72 /* Products */ = {
-			isa = PBXGroup;
-			children = (
-				93BA59F21E2EE7EF00171D72 /* YCMatrix.framework */,
-				93BA59F41E2EE7EF00171D72 /* YCMatrixTests.xctest */,
-			);
-			name = Products;
-			sourceTree = "<group>";
-		};
 		93C609201E67CE9B007A689D /* Match Overview */ = {
 			isa = PBXGroup;
 			children = (
@@ -697,15 +553,6 @@
 			name = Notes;
 			sourceTree = "<group>";
 		};
-		F57B032A41CFE9D404B09C72 /* Pods */ = {
-			isa = PBXGroup;
-			children = (
-				E41AD9671774068A9E097A14 /* Pods-FRC Advanced Scouting Touchstone.debug.xcconfig */,
-				D5E09D382B48C9148EBC98C8 /* Pods-FRC Advanced Scouting Touchstone.release.xcconfig */,
-			);
-			name = Pods;
-			sourceTree = "<group>";
-		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -713,20 +560,19 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 1F78E7AA1C3B469300221927 /* Build configuration list for PBXNativeTarget "FRC Advanced Scouting Touchstone" */;
 			buildPhases = (
-				640441D7758EDEEB15142D75 /* [CP] Check Pods Manifest.lock */,
+				7029C9BB4A042B60DCDD86C4 /* [CP] Check Pods Manifest.lock */,
 				1F78E77B1C3B469300221927 /* Sources */,
 				1F78E77C1C3B469300221927 /* Frameworks */,
 				1F78E77D1C3B469300221927 /* Resources */,
 				1FBC9E661CC2ED09005DB3F4 /* Run Fabric Script */,
 				93610E301E42E2B200856BE2 /* Increment Build Number */,
 				1F7AE4DF1DCC2DC80029B420 /* Embed Frameworks */,
-				9249D9412C5ADECA54FC1C30 /* [CP] Embed Pods Frameworks */,
-				31A9D671EB4CE45CD58EF7CE /* [CP] Copy Pods Resources */,
+				57ABF9A67635DC59BFEDA095 /* [CP] Embed Pods Frameworks */,
+				ECA5FB1E0E989F29CAAC3792 /* [CP] Copy Pods Resources */,
 			);
 			buildRules = (
 			);
 			dependencies = (
-				93BA5A0F1E2F1EA200171D72 /* PBXTargetDependency */,
 				93E551E921C9FBEB006C79A8 /* PBXTargetDependency */,
 			);
 			name = "FRC Advanced Scouting Touchstone";
@@ -821,10 +667,6 @@
 					ProductGroup = 93E551DE21C9FBD1006C79A8 /* Products */;
 					ProjectRef = 93E551DD21C9FBD1006C79A8 /* Charts.xcodeproj */;
 				},
-				{
-					ProductGroup = 93BA59ED1E2EE7EE00171D72 /* Products */;
-					ProjectRef = 93BA59EC1E2EE7EE00171D72 /* YCMatrix.xcodeproj */;
-				},
 			);
 			projectRoot = "";
 			targets = (
@@ -836,20 +678,6 @@
 /* End PBXProject section */
 
 /* Begin PBXReferenceProxy section */
-		93BA59F21E2EE7EF00171D72 /* YCMatrix.framework */ = {
-			isa = PBXReferenceProxy;
-			fileType = wrapper.framework;
-			path = YCMatrix.framework;
-			remoteRef = 93BA59F11E2EE7EF00171D72 /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		93BA59F41E2EE7EF00171D72 /* YCMatrixTests.xctest */ = {
-			isa = PBXReferenceProxy;
-			fileType = wrapper.cfbundle;
-			path = YCMatrixTests.xctest;
-			remoteRef = 93BA59F31E2EE7EF00171D72 /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
 		93E551E321C9FBD2006C79A8 /* Charts.framework */ = {
 			isa = PBXReferenceProxy;
 			fileType = wrapper.framework;
@@ -914,40 +742,7 @@
 			shellPath = /bin/sh;
 			shellScript = "./Fabric.framework/run 69885bcf9ab40dc49ae9c921bfc14f173744a153 96c2e8fbf7a62a41a095af4554fc38c60d5a509721db519cc7ab29ed326b4bfa";
 		};
-		31A9D671EB4CE45CD58EF7CE /* [CP] Copy Pods Resources */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-			);
-			name = "[CP] Copy Pods Resources";
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-FRC Advanced Scouting Touchstone/Pods-FRC Advanced Scouting Touchstone-resources.sh\"\n";
-			showEnvVarsInLog = 0;
-		};
-		640441D7758EDEEB15142D75 /* [CP] Check Pods Manifest.lock */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
-				"${PODS_ROOT}/Manifest.lock",
-			);
-			name = "[CP] Check Pods Manifest.lock";
-			outputPaths = (
-				"$(DERIVED_FILE_DIR)/Pods-FRC Advanced Scouting Touchstone-checkManifestLockResult.txt",
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
-			showEnvVarsInLog = 0;
-		};
-		9249D9412C5ADECA54FC1C30 /* [CP] Embed Pods Frameworks */ = {
+		57ABF9A67635DC59BFEDA095 /* [CP] Embed Pods Frameworks */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -969,8 +764,6 @@
 				"${BUILT_PRODUCTS_DIR}/GMStepper/GMStepper.framework",
 				"${BUILT_PRODUCTS_DIR}/NYTPhotoViewer/NYTPhotoViewer.framework",
 				"${BUILT_PRODUCTS_DIR}/ReachabilitySwift/Reachability.framework",
-				"${BUILT_PRODUCTS_DIR}/Realm/Realm.framework",
-				"${BUILT_PRODUCTS_DIR}/RealmSwift/RealmSwift.framework",
 				"${BUILT_PRODUCTS_DIR}/SQLite.swift/SQLite.framework",
 				"${BUILT_PRODUCTS_DIR}/SSBouncyButton/SSBouncyButton.framework",
 				"${BUILT_PRODUCTS_DIR}/TORoundedTableView/TORoundedTableView.framework",
@@ -996,8 +789,6 @@
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/GMStepper.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/NYTPhotoViewer.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Reachability.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Realm.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/RealmSwift.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/SQLite.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/SSBouncyButton.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/TORoundedTableView.framework",
@@ -1009,6 +800,24 @@
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-FRC Advanced Scouting Touchstone/Pods-FRC Advanced Scouting Touchstone-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		7029C9BB4A042B60DCDD86C4 /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-FRC Advanced Scouting Touchstone-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
 			showEnvVarsInLog = 0;
 		};
 		93610E301E42E2B200856BE2 /* Increment Build Number */ = {
@@ -1023,7 +832,22 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "buildNumber=$(/usr/libexec/PlistBuddy -c \"Print CFBundleVersion\" \"${PROJECT_DIR}/${INFOPLIST_FILE}\")\nbuildNumber=$(($buildNumber + 1))\n/usr/libexec/PlistBuddy -c \"Set :CFBundleVersion $buildNumber\" \"${PROJECT_DIR}/${INFOPLIST_FILE}\"";
+			shellScript = "buildNumber=$(/usr/libexec/PlistBuddy -c \"Print CFBundleVersion\" \"${PROJECT_DIR}/${INFOPLIST_FILE}\")\nbuildNumber=$(($buildNumber + 1))\n/usr/libexec/PlistBuddy -c \"Set :CFBundleVersion $buildNumber\" \"${PROJECT_DIR}/${INFOPLIST_FILE}\"\n";
+		};
+		ECA5FB1E0E989F29CAAC3792 /* [CP] Copy Pods Resources */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "[CP] Copy Pods Resources";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-FRC Advanced Scouting Touchstone/Pods-FRC Advanced Scouting Touchstone-resources.sh\"\n";
+			showEnvVarsInLog = 0;
 		};
 /* End PBXShellScriptBuildPhase section */
 
@@ -1032,9 +856,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				93483E8820291AC400E9AC82 /* FileManager+ApplicationFilePaths.swift in Sources */,
 				9365947B1E441981008FF324 /* PitTextFieldCollectionViewCell.swift in Sources */,
-				93483E9120291AC400E9AC82 /* LoginTableViewCell.swift in Sources */,
 				930B96641E456D6C00E385D3 /* PitImageSelectorCollectionViewCell.swift in Sources */,
 				930B965C1E4548F700E385D3 /* PitSegmentedSelectorCollectionViewCell.swift in Sources */,
 				93E551F921CACDE0006C79A8 /* CognitoAuthProvider.swift in Sources */,
@@ -1052,12 +874,8 @@
 				9353ADC21E57B09D00120F1A /* MatchListTableViewCell.swift in Sources */,
 				9300196C20537B0C00E10CDC /* TeamCommentsTableViewController.swift in Sources */,
 				93610E3D1E42F8D400856BE2 /* PitScoutingViewController.swift in Sources */,
-				93483E8B20291AC400E9AC82 /* LoginViewController.swift in Sources */,
 				93C609281E67D0CC007A689D /* MatchOverviewMasterViewController.swift in Sources */,
-				93483E8020291AC400E9AC82 /* LoginFormValidation.swift in Sources */,
-				93483E8120291AC400E9AC82 /* LoginTableViewDataSource.swift in Sources */,
 				1F1C23DA1E07673E008885A1 /* AddEventTableViewController.swift in Sources */,
-				93FBC3961E3E624500FEB328 /* GameFieldLocationViewController.swift in Sources */,
 				1F1C23CE1E07487C008885A1 /* TeamEventPerformance.swift in Sources */,
 				934DDE462002B0510032095C /* RealmDataMangager.swift in Sources */,
 				1F78E7831C3B469300221927 /* AppDelegate.swift in Sources */,
@@ -1066,16 +884,13 @@
 				93C5B47C1E53FC9C007D309F /* TeamInfoScrollView.swift in Sources */,
 				93C609241E67D035007A689D /* MatchOverviewDetailViewController.swift in Sources */,
 				9366C5AD20490AAD00A84C47 /* StatChartViewController.swift in Sources */,
-				93483E8D20291AC400E9AC82 /* StatusBarUnderlayView.swift in Sources */,
 				1FD0A09B1C95093600013A18 /* TeamListTableViewCell.swift in Sources */,
 				9369681A1E502AC8001DB15D /* TeamDetailKeyValueSpreadCollectionViewCell.swift in Sources */,
 				930B96621E456D3000E385D3 /* PitTableViewSelectorCollectionViewCell.swift in Sources */,
 				1F1C23C21E07487C008885A1 /* Team.swift in Sources */,
 				1FBB426D1C9A29FC0017E36C /* Statistics.swift in Sources */,
-				93483E8420291AC400E9AC82 /* AWSCognitoAuthenticationProvider.swift in Sources */,
 				93D75B641E5D0866002CBED2 /* FieldLocationDisplayViewController.swift in Sources */,
 				936967F11E4FB1F7001DB15D /* TeamDetailCollectionViewController.swift in Sources */,
-				93483E8220291AC400E9AC82 /* LoginKeyboardManager.swift in Sources */,
 				937C682E204C86DB00FAEDE8 /* SelectStatsTableViewController.swift in Sources */,
 				937BFD022064D1B4006FB3E0 /* OnboardingPageViewController.swift in Sources */,
 				93633B1F200D9B29000EC83A /* Match.swift in Sources */,
@@ -1092,16 +907,11 @@
 				9351017421F42D6000D402FE /* AWSDataManager.swift in Sources */,
 				936967F71E4FD057001DB15D /* TeamDetailTableCollectionViewCell.swift in Sources */,
 				93780A2A20797487000B4565 /* WelcomePageViewController.swift in Sources */,
-				93483E8A20291AC400E9AC82 /* String+URLComponents.swift in Sources */,
 				1FDC1BCE1CD69EBB00ABE327 /* TeamListSplitViewController.swift in Sources */,
 				93CEA6322041FB5300C5B357 /* ConfirmForgotPasswordViewController.swift in Sources */,
-				93483E8F20291AC400E9AC82 /* LoginHeaderView.swift in Sources */,
-				93483E8920291AC400E9AC82 /* Realm+RLMSupport.swift in Sources */,
 				1F21DF121C66942200C55D0E /* SortVC.swift in Sources */,
 				9391EA6C1E4852D2008E17A1 /* PitStringFieldCollectionViewCell.swift in Sources */,
-				93483E8320291AC400E9AC82 /* LoginViewControllerTransitioning.swift in Sources */,
 				93780A2E20799E7D000B4565 /* LoginPromotionalViewController.swift in Sources */,
-				93483E8720291AC400E9AC82 /* UIImage+Icons.swift in Sources */,
 				9317C03B201ECFEF00F1E907 /* SSGameScoutingViewController.swift in Sources */,
 				1F4FEDAC1C4B686000F4016D /* AdminConsoleController.swift in Sources */,
 				937E9C961E40468300D0ED76 /* SuperNotesCollectionViewController.swift in Sources */,
@@ -1109,11 +919,8 @@
 				93EA7FEA1E4693C6002EC8C7 /* PitSwitchCollectionViewCell.swift in Sources */,
 				93183B8721C8AB84008DC997 /* API.swift in Sources */,
 				1F12CF181C7A6CD70014200C /* Stopwatch.swift in Sources */,
-				93483E9020291AC400E9AC82 /* RealmLogoView.swift in Sources */,
 				93A3ABC321F1462F007831E3 /* PitScoutingData.swift in Sources */,
-				93483E8C20291AC400E9AC82 /* LoginFooterView.swift in Sources */,
 				93AE99801E3407A00000FB7C /* SSDataManager.swift in Sources */,
-				93483E8E20291AC400E9AC82 /* LoginView.swift in Sources */,
 				935A2B081E6E5560008FEF9D /* MatchOverviewTimeMarkerTableViewCell.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -1146,11 +953,6 @@
 			isa = PBXTargetDependency;
 			target = 1F78E77E1C3B469300221927 /* FRC Advanced Scouting Touchstone */;
 			targetProxy = 1F78E7A21C3B469300221927 /* PBXContainerItemProxy */;
-		};
-		93BA5A0F1E2F1EA200171D72 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			name = YCMatrix;
-			targetProxy = 93BA5A0E1E2F1EA200171D72 /* PBXContainerItemProxy */;
 		};
 		93E551E921C9FBEB006C79A8 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
@@ -1287,7 +1089,7 @@
 		};
 		1F78E7AB1C3B469300221927 /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = E41AD9671774068A9E097A14 /* Pods-FRC Advanced Scouting Touchstone.debug.xcconfig */;
+			baseConfigurationReference = 789856AA1C2E7793DD302784 /* Pods-FRC Advanced Scouting Touchstone.debug.xcconfig */;
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = "$(inherited)";
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
@@ -1333,7 +1135,7 @@
 		};
 		1F78E7AC1C3B469300221927 /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = D5E09D382B48C9148EBC98C8 /* Pods-FRC Advanced Scouting Touchstone.release.xcconfig */;
+			baseConfigurationReference = D1EBA735BA885680C38C6749 /* Pods-FRC Advanced Scouting Touchstone.release.xcconfig */;
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = "$(inherited)";
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;

@@ -29,14 +29,17 @@ class MatchOverviewSplitViewController: UISplitViewController, UISplitViewContro
     }
     
     func splitViewController(_ splitViewController: UISplitViewController, collapseSecondary secondaryViewController: UIViewController, onto primaryViewController: UIViewController) -> Bool {
-        if let secondaryNav = secondaryViewController as? UINavigationController {
-            if let matchDetail = secondaryNav.topViewController as? MatchOverviewDetailViewController {
-                self.matchesDetail = matchDetail
-                if matchDetail.dataSource?.match() == nil {
-                    return true
-                }
-            }
+        if matchesMaster.selectedMatch == nil {
+            return true
         }
+//        if let secondaryNav = secondaryViewController as? UINavigationController {
+//            if let matchDetail = secondaryNav.topViewController as? MatchOverviewDetailViewController {
+//                self.matchesDetail = matchDetail
+//                if matchDetail.dataSource?.match() == nil {
+//                    return true
+//                }
+//            }
+//        }
         
         return false
     }

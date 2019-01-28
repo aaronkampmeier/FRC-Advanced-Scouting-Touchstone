@@ -67,11 +67,11 @@ fragment ScoutSession on ScoutSession {
     teamKey
     eventKey
     timeMarkers {
-      ...TimeMarker
+      ...TimeMarkerFragment
     }
 }
 
-fragment TimeMarker on TimeMarker {
+fragment TimeMarkerFragment on TimeMarker {
 	event
 	time
 	associatedLocation

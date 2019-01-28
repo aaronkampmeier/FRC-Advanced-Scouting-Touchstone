@@ -311,54 +311,6 @@
             shouldBeEnabled = "No"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
-            filePath = "FRC Advanced Scouting Telemetrics/MatchOverviewPerformanceDetailViewController.swift"
-            timestampString = "549910255.838151"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "77"
-            endingLineNumber = "77"
-            landmarkName = "scoutID"
-            landmarkType = "24">
-            <Locations>
-               <Location
-                  shouldBeEnabled = "No"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "FRC_Advanced_Scouting_Touchstone.MatchOverviewPerformanceDetailViewController.scoutID.didset : Swift.Optional&lt;Swift.String&gt;"
-                  moduleName = "FRC Advanced Scouting Touchstone"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/aaron/Documents/Xcode%20Projects/FRC%20Advanced%20Scouting%20Telemetrics/FRC%20Advanced%20Scouting%20Telemetrics/MatchOverviewPerformanceDetailViewController.swift"
-                  timestampString = "512110528.543512"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "76"
-                  endingLineNumber = "76"
-                  offsetFromSymbolStart = "632">
-               </Location>
-               <Location
-                  shouldBeEnabled = "No"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "FRC_Advanced_Scouting_Touchstone.MatchOverviewPerformanceDetailViewController.(scoutID.didset : Swift.Optional&lt;Swift.String&gt;).(closure #1)"
-                  moduleName = "FRC Advanced Scouting Touchstone"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/aaron/Documents/Xcode%20Projects/FRC%20Advanced%20Scouting%20Telemetrics/FRC%20Advanced%20Scouting%20Telemetrics/MatchOverviewPerformanceDetailViewController.swift"
-                  timestampString = "512110528.545253"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "76"
-                  endingLineNumber = "76"
-                  offsetFromSymbolStart = "20">
-               </Location>
-            </Locations>
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            shouldBeEnabled = "No"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
             filePath = "FRC Advanced Scouting Telemetrics/NotesViewController.swift"
             timestampString = "540445318.674762"
             startingColumnNumber = "9223372036854775807"

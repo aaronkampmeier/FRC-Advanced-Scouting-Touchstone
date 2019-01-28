@@ -787,7 +787,7 @@ public final class CreateScoutSessionMutation: GraphQLMutation {
   public static let operationString =
     "mutation CreateScoutSession($userID: ID!, $eventKey: ID!, $teamKey: ID!, $matchKey: ID!, $timeMarkers: [TimeMarkerInput]!) {\n  createScoutSession(userID: $userID, eventKey: $eventKey, teamKey: $teamKey, matchKey: $matchKey, timeMarkers: $timeMarkers) {\n    __typename\n    ...ScoutSession\n  }\n}"
 
-  public static var requestString: String { return operationString.appending(ScoutSession.fragmentString).appending(TimeMarker.fragmentString) }
+  public static var requestString: String { return operationString.appending(ScoutSession.fragmentString).appending(TimeMarkerFragment.fragmentString) }
 
   public var userID: GraphQLID
   public var eventKey: GraphQLID
@@ -1001,9 +1001,9 @@ public final class CreateScoutSessionMutation: GraphQLMutation {
         public struct Fragments {
           public var snapshot: Snapshot
 
-          public var timeMarker: TimeMarker {
+          public var timeMarkerFragment: TimeMarkerFragment {
             get {
-              return TimeMarker(snapshot: snapshot)
+              return TimeMarkerFragment(snapshot: snapshot)
             }
             set {
               snapshot += newValue.snapshot
@@ -3292,7 +3292,7 @@ public final class ListScoutSessionsQuery: GraphQLQuery {
   public static let operationString =
     "query ListScoutSessions($eventKey: ID!, $teamKey: ID!, $matchKey: ID) {\n  listScoutSessions(eventKey: $eventKey, teamKey: $teamKey, matchKey: $matchKey) {\n    __typename\n    ...ScoutSession\n  }\n}"
 
-  public static var requestString: String { return operationString.appending(ScoutSession.fragmentString).appending(TimeMarker.fragmentString) }
+  public static var requestString: String { return operationString.appending(ScoutSession.fragmentString).appending(TimeMarkerFragment.fragmentString) }
 
   public var eventKey: GraphQLID
   public var teamKey: GraphQLID
@@ -3502,9 +3502,9 @@ public final class ListScoutSessionsQuery: GraphQLQuery {
         public struct Fragments {
           public var snapshot: Snapshot
 
-          public var timeMarker: TimeMarker {
+          public var timeMarkerFragment: TimeMarkerFragment {
             get {
-              return TimeMarker(snapshot: snapshot)
+              return TimeMarkerFragment(snapshot: snapshot)
             }
             set {
               snapshot += newValue.snapshot
@@ -3520,7 +3520,7 @@ public final class GetScoutSessionQuery: GraphQLQuery {
   public static let operationString =
     "query GetScoutSession($eventKey: ID!, $key: ID!) {\n  getScoutSession(eventKey: $eventKey, key: $key) {\n    __typename\n    ...ScoutSession\n  }\n}"
 
-  public static var requestString: String { return operationString.appending(ScoutSession.fragmentString).appending(TimeMarker.fragmentString) }
+  public static var requestString: String { return operationString.appending(ScoutSession.fragmentString).appending(TimeMarkerFragment.fragmentString) }
 
   public var eventKey: GraphQLID
   public var key: GraphQLID
@@ -3728,9 +3728,9 @@ public final class GetScoutSessionQuery: GraphQLQuery {
         public struct Fragments {
           public var snapshot: Snapshot
 
-          public var timeMarker: TimeMarker {
+          public var timeMarkerFragment: TimeMarkerFragment {
             get {
-              return TimeMarker(snapshot: snapshot)
+              return TimeMarkerFragment(snapshot: snapshot)
             }
             set {
               snapshot += newValue.snapshot
@@ -4902,7 +4902,7 @@ public final class OnCreateScoutSessionSubscription: GraphQLSubscription {
   public static let operationString =
     "subscription OnCreateScoutSession($userID: ID!, $teamKey: String, $matchKey: String) {\n  onCreateScoutSession(userID: $userID, teamKey: $teamKey, matchKey: $matchKey) {\n    __typename\n    ...ScoutSession\n  }\n}"
 
-  public static var requestString: String { return operationString.appending(ScoutSession.fragmentString).appending(TimeMarker.fragmentString) }
+  public static var requestString: String { return operationString.appending(ScoutSession.fragmentString).appending(TimeMarkerFragment.fragmentString) }
 
   public var userID: GraphQLID
   public var teamKey: String?
@@ -5112,9 +5112,9 @@ public final class OnCreateScoutSessionSubscription: GraphQLSubscription {
         public struct Fragments {
           public var snapshot: Snapshot
 
-          public var timeMarker: TimeMarker {
+          public var timeMarkerFragment: TimeMarkerFragment {
             get {
-              return TimeMarker(snapshot: snapshot)
+              return TimeMarkerFragment(snapshot: snapshot)
             }
             set {
               snapshot += newValue.snapshot
@@ -6080,7 +6080,7 @@ public struct Match: GraphQLFragment {
 
 public struct ScoutSession: GraphQLFragment {
   public static let fragmentString =
-    "fragment ScoutSession on ScoutSession {\n  __typename\n  key\n  matchKey\n  teamKey\n  eventKey\n  timeMarkers {\n    __typename\n    ...TimeMarker\n  }\n}"
+    "fragment ScoutSession on ScoutSession {\n  __typename\n  key\n  matchKey\n  teamKey\n  eventKey\n  timeMarkers {\n    __typename\n    ...TimeMarkerFragment\n  }\n}"
 
   public static let possibleTypes = ["ScoutSession"]
 
@@ -6226,9 +6226,9 @@ public struct ScoutSession: GraphQLFragment {
     public struct Fragments {
       public var snapshot: Snapshot
 
-      public var timeMarker: TimeMarker {
+      public var timeMarkerFragment: TimeMarkerFragment {
         get {
-          return TimeMarker(snapshot: snapshot)
+          return TimeMarkerFragment(snapshot: snapshot)
         }
         set {
           snapshot += newValue.snapshot
@@ -6238,9 +6238,9 @@ public struct ScoutSession: GraphQLFragment {
   }
 }
 
-public struct TimeMarker: GraphQLFragment {
+public struct TimeMarkerFragment: GraphQLFragment {
   public static let fragmentString =
-    "fragment TimeMarker on TimeMarker {\n  __typename\n  event\n  time\n  associatedLocation\n}"
+    "fragment TimeMarkerFragment on TimeMarker {\n  __typename\n  event\n  time\n  associatedLocation\n}"
 
   public static let possibleTypes = ["TimeMarker"]
 

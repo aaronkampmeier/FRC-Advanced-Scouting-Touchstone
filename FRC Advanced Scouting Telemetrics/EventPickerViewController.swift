@@ -7,7 +7,6 @@
 //
 
 import UIKit
-import RealmSwift
 
 class EventPickerViewController: UIViewController, UIPickerViewDelegate, UIPickerViewDataSource {
     @IBOutlet weak var eventPicker: UIPickerView!

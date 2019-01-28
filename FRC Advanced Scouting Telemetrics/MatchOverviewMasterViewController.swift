@@ -12,7 +12,7 @@ protocol MatchOverviewMasterDataSource {
     func eventKey() -> String?
 }
 
-class MatchOverviewMasterViewController: UIViewController, MatchOverviewDetailDataSource {
+class MatchOverviewMasterViewController: UIViewController {
     var dataSource: MatchOverviewMasterDataSource?
 
     var matchOverviewSplitVC: MatchOverviewSplitViewController {
@@ -21,11 +21,7 @@ class MatchOverviewMasterViewController: UIViewController, MatchOverviewDetailDa
         }
     }
     var eventKey: String?
-    var selectedMatch: Match? {
-        didSet {
-            matchOverviewSplitVC.matchesDetail?.reloadData()
-        }
-    }
+    var selectedMatch: Match?
     
     var matchesTableVC: MatchesTableViewController?
     
@@ -44,14 +40,6 @@ class MatchOverviewMasterViewController: UIViewController, MatchOverviewDetailDa
     
     private func load(withEventKey eventKey: String?) {
         matchesTableVC?.load(forEventKey: eventKey)
-    }
-    
-    func match() -> Match? {
-        return selectedMatch
-    }
-    
-    func shouldShowExitButton() -> Bool {
-        return false
     }
 
     override func didReceiveMemoryWarning() {
@@ -79,6 +67,7 @@ extension MatchOverviewMasterViewController: MatchesTableViewControllerDelegate 
     func matchesTableViewController(_ matchesTableViewController: MatchesTableViewController, selectedMatchCell: UITableViewCell?, withAssociatedMatch associatedMatch: Match?) {
         matchOverviewSplitVC.showDetailViewController(matchOverviewSplitVC.matchesDetail!, sender: self)
         self.selectedMatch = associatedMatch
+        matchOverviewSplitVC.matchesDetail?.load(forMatchKey: associatedMatch?.key ?? "", shouldShowExitButton: false)
     }
 
     func hasSelectionEnabled() -> Bool {

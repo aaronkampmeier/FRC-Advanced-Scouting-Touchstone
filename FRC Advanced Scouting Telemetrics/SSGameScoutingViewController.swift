@@ -13,7 +13,7 @@ class SSGameScoutingViewController: UIViewController {
     var grabCubeVC: SSOffenseWhereViewController!
     var placeCubeVC: SSOffenseWhereViewController!
     
-    lazy var ssDataManager = SSDataManager.currentSSDataManager()
+    lazy var ssDataManager = SSDataManager.currentSSDataManager
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -62,7 +62,7 @@ class SSGameScoutingViewController: UIViewController {
     }
 
     @IBAction func didCrossAutoLineChanged(_ sender: UISwitch) {
-        ssDataManager?.setDidCrossAutoLine(didCross: sender.isOn)
+        ssDataManager?.didCrossAutoLine()
     }
     
     /*
