@@ -15,10 +15,8 @@ class TeamCommentsTableViewController: UITableViewController {
     
     var eventKey: String?
     var teamKey: String?
-    var teamComments: [TeamComment]!
+    var teamComments: [TeamComment] = []
     var isLoaded = false
-    
-    var queryWatcher: GraphQLQueryWatcher<ListTeamCommentsQuery>?
     
     var currentlyWrittenCommentText = ""
 
@@ -39,24 +37,6 @@ class TeamCommentsTableViewController: UITableViewController {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         
-//        if !RealmController.realmController.syncedRealm.isInWriteTransaction {
-//            //Add in a listener
-//            commentNotificationToken = teamComments.observe {[weak self] change in
-//                switch change {
-//                case .update(_, let deletions, let insertions, let modifications):
-//                    self?.tableView.beginUpdates()
-//
-//                    self?.tableView.deleteRows(at: deletions.map({IndexPath(row: $0, section: 0)}), with: UITableViewRowAnimation.top)
-//                    self?.tableView.insertRows(at: insertions.map({IndexPath(row: $0, section: 0)}), with: UITableViewRowAnimation.top)
-//
-//                    self?.tableView.reloadRows(at: modifications.map({IndexPath(row: $0, section: 0)}), with: .fade)
-//
-//                    self?.tableView.endUpdates()
-//                default:
-//                    break
-//                }
-//            }
-//        }
     }
     
     override func viewDidDisappear(_ animated: Bool) {
@@ -71,9 +51,9 @@ class TeamCommentsTableViewController: UITableViewController {
     func load(forEventKey eventKey: String, andTeamKey teamKey: String) {
         self.eventKey = eventKey
         self.teamKey = teamKey
-        queryWatcher = Globals.appDelegate.appSyncClient?.watch(query: ListTeamCommentsQuery(eventKey: eventKey, teamKey: teamKey), cachePolicy: .returnCacheDataAndFetch, resultHandler: {[weak self] (result, error) in
+        Globals.appDelegate.appSyncClient?.fetch(query: ListTeamCommentsQuery(eventKey: eventKey, teamKey: teamKey), cachePolicy: .returnCacheDataAndFetch, resultHandler: {[weak self] (result, error) in
             if Globals.handleAppSyncErrors(forQuery: "ListTeamComments", result: result, error: error) {
-                self?.teamComments = result?.data?.listTeamComments?.map({$0!.fragments.teamComment}).sorted {$0.datePosted < $1.datePosted}
+                self?.teamComments = result?.data?.listTeamComments?.map({$0!.fragments.teamComment}).sorted {$0.datePosted < $1.datePosted} ?? []
                 self?.isLoaded = true
                 self?.tableView.reloadData()
             } else {
@@ -140,12 +120,32 @@ class TeamCommentsTableViewController: UITableViewController {
     override func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
         if indexPath.row != teamComments.count {
             //Is a comment row, add the delete action
+            let comment = teamComments[indexPath.row]
             let deleteAction = UIContextualAction(style: .destructive, title: "Delete") {[weak self] (action, view, completionHandler) in
                 //Delete the comment
-                Globals.appDelegate.appSyncClient?.perform(mutation: RemoveTeamCommentMutation(userID: AWSMobileClient.sharedInstance().username!, eventKey: (self?.eventKey)!, key: (self?.teamKey)!), resultHandler: { (result, error) in
+                Globals.appDelegate.appSyncClient?.perform(mutation: RemoveTeamCommentMutation(eventKey: (self?.eventKey)!, key: comment.key), resultHandler: { (result, error) in
                     if Globals.handleAppSyncErrors(forQuery: "RemoveTeamComment", result: result, error: error) {
+                        self?.tableView.beginUpdates()
                         self?.teamComments.remove(at: indexPath.row)
-                        tableView.deleteRows(at: [indexPath], with: .top)
+                        self?.tableView.deleteRows(at: [indexPath], with: .top)
+                        
+                        //Remove it from the cache
+                        let _ = Globals.appDelegate.appSyncClient?.store?.withinReadWriteTransaction({ (transaction) -> Any in
+                            do {
+                                try transaction.update(query: ListTeamCommentsQuery(eventKey: self?.eventKey ?? "", teamKey: self?.teamKey ?? ""), { (selectionSet) in
+                                    if let index = selectionSet.listTeamComments?.firstIndex(where: {$0?.key == result?.data?.removeTeamComment?.key}) {
+                                        selectionSet.listTeamComments?.remove(at: index)
+                                    }
+                                })
+                            } catch {
+                                CLSNSLogv("Error deleting team comment from cache: \(error)", getVaList([]))
+                                Crashlytics.sharedInstance().recordError(error)
+                            }
+                            
+                            return 0
+                        })
+                        
+                        self?.tableView.endUpdates()
                     } else {
                         CLSNSLogv("Error deleting comment", getVaList([]))
                     }
@@ -161,24 +161,72 @@ class TeamCommentsTableViewController: UITableViewController {
     }
     
     @objc func postComment(_ sender: UIButton) {
-        Globals.appDelegate.appSyncClient?.perform(mutation: AddTeamCommentMutation(userID: AWSMobileClient.sharedInstance().username!, eventKey: eventKey!, teamKey: teamKey!, body: self.currentlyWrittenCommentText, author: UIDevice.current.name), optimisticUpdate: { (transaction) in
-            //TODO: - Add optimistic update
+        let body = self.currentlyWrittenCommentText
+        let uuid = UUID().uuidString
+        let date = Date().timeIntervalSince1970
+        Globals.appDelegate.appSyncClient?.perform(mutation: AddTeamCommentMutation(eventKey: eventKey!, teamKey: teamKey!, body: body, author: UIDevice.current.name), optimisticUpdate: { (transaction) in
+            do {
+                try transaction?.update(query: ListTeamCommentsQuery(eventKey: self.eventKey!, teamKey: self.teamKey!), { (selectionSet) in
+                    selectionSet.listTeamComments?.append(ListTeamCommentsQuery.Data.ListTeamComment(author: UIDevice.current.name, userId: AWSMobileClient.sharedInstance().username!, body: body, datePosted: Int(date), key: uuid, teamKey: self.teamKey!, eventKey: self.eventKey!))
+                })
+            } catch {
+                CLSNSLogv("Error performing optimistic update: \(error)", getVaList([]))
+                Crashlytics.sharedInstance().recordError(error)
+            }
         }, conflictResolutionBlock: { (snapshot, taskSource, onCompletion) in
             
         }, resultHandler: { (result, error) in
             if Globals.handleAppSyncErrors(forQuery: "AddTeamComment", result: result, error: error) {
-                self.currentlyWrittenCommentText = ""
                 Answers.logCustomEvent(withName: "Posted team comment", customAttributes: nil)
+                
+                if let comment = result?.data?.addTeamComment?.fragments.teamComment {
+                    
+                    //Find the old one
+                    if let index = self.teamComments.firstIndex(where: {$0.key == uuid}) {
+                        //Replace it
+                        self.teamComments.remove(at: index)
+                        self.teamComments.insert(comment, at: index)
+                        self.tableView.reloadRows(at: [IndexPath(row: index, section: 0)], with: .automatic)
+                    } else {
+                        self.teamComments.append(comment)
+                    }
+                    
+                    //Now fix the cache
+                    let _ = Globals.appDelegate.appSyncClient?.store?.withinReadWriteTransaction({ (transaction) -> Any in
+                        do {
+                            try transaction.update(query: ListTeamCommentsQuery(eventKey: self.eventKey!, teamKey: self.teamKey!), { (selectionSet) in
+                                if let index = selectionSet.listTeamComments?.firstIndex(where: { (comment) -> Bool in
+                                    return comment?.key == uuid
+                                }) {
+                                    selectionSet.listTeamComments?.remove(at: index)
+                                }
+                                
+                                //Add in the new team comment
+                                selectionSet.listTeamComments?.append(try ListTeamCommentsQuery.Data.ListTeamComment(comment))
+                            })
+                        } catch {
+                            //Didn't work, oof
+                            
+                        }
+                        
+                        return 0
+                    })
+                }
             } else {
-                CLSNSLogv("Unable to save new comment", getVaList([]))
-                //TODO: - Show error
+                //TODO: Show error
+                let alert = UIAlertController(title: "Error Saving Team Comment", message: "There was an error saving the team comment, please try again: \(error != nil ? (error as? AWSMobileClientError)?.message ?? "" : "")", preferredStyle: .alert)
+                alert.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
+                self.present(alert, animated: true, completion: nil)
             }
         })
         
+        tableView.beginUpdates()
+        teamComments.append(TeamComment(author: UIDevice.current.name, userId: AWSMobileClient.sharedInstance().username!, body: body, datePosted: Int(date), key: uuid, teamKey: teamKey ?? "", eventKey: eventKey ?? ""))
         tableView.insertRows(at: [IndexPath(row: teamComments.count - 1, section: 0)], with: .top)
+        self.currentlyWrittenCommentText = ""
+        tableView.endUpdates()
         tableView.reloadRows(at: [IndexPath(row: teamComments.count, section: 0)], with: .fade)
     }
-
 }
 
 extension TeamCommentsTableViewController: UITextViewDelegate {

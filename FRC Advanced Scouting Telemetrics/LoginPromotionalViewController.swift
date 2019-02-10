@@ -61,7 +61,7 @@ class LoginPromotionalViewController: UIViewController {
 //        let loginVC = (UIApplication.shared.delegate as! AppDelegate).logInViewController()
 //        self.present(loginVC, animated: true, completion: nil)
         
-        Globals.appDelegate.displayLogin()
+        Globals.appDelegate.displayLogin(isRegistering: true, onVC: self)
     }
     
     /*

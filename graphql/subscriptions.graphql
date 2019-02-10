@@ -1,11 +1,15 @@
 # this is an auto generated file. This will be overwritten
 subscription OnAddTrackedEvent($userID: ID!) {
   onAddTrackedEvent(userID: $userID) {
-    ...EventRanking
+    eventKey
+    eventName
   }
 }
 subscription OnRemoveTrackedEvent($userID: ID!) {
-  onRemoveTrackedEvent(userID: $userID)
+  onRemoveTrackedEvent(userID: $userID) {
+    eventKey
+    userID
+  }
 }
 subscription OnUpdateTeamRank($userID: ID!, $eventKey: String!) {
   onUpdateTeamRank(userID: $userID, eventKey: $eventKey) {
@@ -17,8 +21,8 @@ subscription OnSetTeamPicked($userID: ID!, $eventKey: String!) {
     ...EventRanking
   }
 }
-subscription OnUpdateScoutedTeam($userID: ID!, $key: String) {
-  onUpdateScoutedTeam(userID: $userID, key: $key) {
+subscription OnUpdateScoutedTeam($userID: ID!, $eventKey: ID!, $teamKey: ID!) {
+  onUpdateScoutedTeam(userID: $userID, eventKey: $eventKey, teamKey: $teamKey) {
     ...ScoutedTeam
   }
 }

@@ -32,14 +32,8 @@ class PitScoutingViewController: UIViewController, UICollectionViewDataSource, U
     @IBOutlet weak var teamLabel: UILabel?
     @IBOutlet weak var teamNicknameLabel: UILabel?
     
-    var scoutedTeam: ScoutedTeam? {
-        didSet {
-            //Reload the data and change the labels for the new team
-            collectionView?.reloadData()
-            teamLabel?.text = scoutedTeam?.teamKey.trimmingCharacters(in: CharacterSet.letters)
-//            teamNicknameLabel?.text = scoutedTeam?.nickname
-        }
-    }
+    var teamKey: String?
+    var eventKey: String?
     
     //PitScoutingParameter represents a value that should appear in pit scouting and can be saved
     var pitScoutingParameters: [PitScoutingParameter] = []
@@ -84,24 +78,26 @@ class PitScoutingViewController: UIViewController, UICollectionViewDataSource, U
         updatedValues[key] = value
     }
     private func writeUpdates() {
-        if let scoutedTeam = scoutedTeam {
+        if let teamKey = self.teamKey, let eventKey = self.eventKey {
             //Try to create the json
             do {
-                let jsonData = try JSONSerialization.data(withJSONObject: updatedValues, options: [])
-                
-                let updateString = String(data: jsonData, encoding: .utf8)
-                let mutation = UpdateScoutedTeamMutation(userID: AWSMobileClient.sharedInstance().username!, eventKey: scoutedTeam.eventKey, teamKey: scoutedTeam.teamKey, attributes: updateString!)
-                
-                //Perform the mutation
-                Globals.appDelegate.appSyncClient?.perform(mutation: mutation, optimisticUpdate: { (transaction) in
+                if updatedValues.count > 0 {
+                    let jsonData = try JSONSerialization.data(withJSONObject: updatedValues, options: [])
                     
-                }, conflictResolutionBlock: { (snapshot, taskCompletion, result) in
+                    let updateString = String(data: jsonData, encoding: .utf8)
+                    let mutation = UpdateScoutedTeamMutation(eventKey: eventKey, teamKey: teamKey, attributes: updateString!)
                     
-                }) {result, error in
-                    if Globals.handleAppSyncErrors(forQuery: "UpdateScoutedTeam", result: result, error: error) {
+                    //Perform the mutation
+                    Globals.appDelegate.appSyncClient?.perform(mutation: mutation, optimisticUpdate: { (transaction) in
                         
-                    } else {
-                        //Show error
+                    }, conflictResolutionBlock: { (snapshot, taskCompletion, result) in
+                        
+                    }) {result, error in
+                        if Globals.handleAppSyncErrors(forQuery: "UpdateScoutedTeam", result: result, error: error) {
+                            
+                        } else {
+                            //Show error
+                        }
                     }
                 }
             } catch {
@@ -118,17 +114,11 @@ class PitScoutingViewController: UIViewController, UICollectionViewDataSource, U
 
         // Do any additional setup after loading the view.
         dataSource = PitScoutingData()
-        if let scoutedTeam = scoutedTeam {
-            pitScoutingParameters = dataSource?.requestedDataInputs(forScoutedTeam: scoutedTeam) ?? []
-        }
         
         collectionView?.dataSource = self
         collectionView?.delegate = self
         collectionView?.keyboardDismissMode = .interactive
         
-        //Initially set the labels' values
-        teamLabel?.text = scoutedTeam?.teamKey.trimmingCharacters(in: CharacterSet.letters)
-//        teamNicknameLabel?.text = scoutedTeam?.nickname
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -157,6 +147,35 @@ class PitScoutingViewController: UIViewController, UICollectionViewDataSource, U
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
+    }
+    
+    func setUp(forTeamKey teamKey: String, inEvent eventKey: String) {
+        pitScoutingParameters = []
+        self.collectionView?.reloadData()
+        
+        self.teamKey = teamKey
+        self.eventKey = eventKey
+        self.teamLabel?.text = teamKey.trimmingCharacters(in: CharacterSet.letters)
+        self.teamNicknameLabel?.text = ""
+        
+        //Get the scouted team
+        Globals.appDelegate.appSyncClient?.fetch(query: ListScoutedTeamsQuery(eventKey: eventKey), cachePolicy: .returnCacheDataElseFetch, resultHandler: { (result, error) in
+            if Globals.handleAppSyncErrors(forQuery: "ListScoutedTeams-PitScouting", result: result, error: error) {
+                if let scoutedTeam = result?.data?.listScoutedTeams?.first(where: {$0?.teamKey == teamKey})??.fragments.scoutedTeam {
+                    self.pitScoutingParameters = self.dataSource?.requestedDataInputs(forScoutedTeam: scoutedTeam) ?? []
+                    self.collectionView?.reloadData()
+                }
+            } else {
+                //TODO: Show error
+            }
+        })
+        
+        Globals.appDelegate.appSyncClient?.fetch(query: ListTeamsQuery(eventKey: eventKey), cachePolicy: .returnCacheDataDontFetch, resultHandler: { (result, error) in
+            if Globals.handleAppSyncErrors(forQuery: "ListTeams-PitScouting", result: result, error: error) {
+                //If we get the cached team, put in its nickname
+                self.teamNicknameLabel?.text = result?.data?.listTeams?.first(where: {$0?.key == teamKey})??.fragments.team.nickname
+            }
+        })
     }
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
@@ -200,7 +219,7 @@ class PitScoutingViewController: UIViewController, UICollectionViewDataSource, U
         
         let navVC = UINavigationController(rootViewController: notesVC)
         
-        notesVC.load(forEventKey: self.scoutedTeam?.eventKey ?? "", andTeamKey: self.scoutedTeam?.eventKey ?? "")
+        notesVC.load(forEventKey: eventKey ?? "", andTeamKey: teamKey ?? "")
         
         navVC.modalPresentationStyle = .popover
         

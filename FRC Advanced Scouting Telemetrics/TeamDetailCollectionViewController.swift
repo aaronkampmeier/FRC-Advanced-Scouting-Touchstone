@@ -118,7 +118,11 @@ class TeamDetailCollectionViewController: UICollectionViewController, UICollecti
             
             return footerView
         default:
-            return UICollectionReusableView()
+            let footerView = collectionView.dequeueReusableSupplementaryView(ofKind: UICollectionElementKindSectionFooter, withReuseIdentifier: "footer", for: indexPath)
+            (footerView.viewWithTag(1) as! UIButton).setTitle(nil, for: .normal)
+            (footerView.viewWithTag(1) as! UIButton).removeTarget(self, action: #selector(showFASTPromotional), for: .touchUpInside)
+            footerView.isHidden = true
+            return footerView
         }
     }
     

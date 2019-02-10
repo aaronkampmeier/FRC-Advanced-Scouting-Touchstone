@@ -26,7 +26,7 @@ class SSPreloadingViewController: UIViewController {
     }
     
     @IBAction func cubeSwitchSwitched(_ sender: UISwitch) {
-        ssDataManager.preloadedCube = sender.isOn
+//        ssDataManager.preloadedCube = sender.isOn
     }
     
     /*

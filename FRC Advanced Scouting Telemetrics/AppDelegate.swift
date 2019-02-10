@@ -6,11 +6,12 @@
 //
 
 import UIKit
-import CoreData
 import Fabric
 import Crashlytics
 import AWSAppSync
 import AWSMobileClient
+import AWSAuthCore
+import AWSAuthUI
 import AWSPinpoint
 
 internal struct Globals {
@@ -25,12 +26,28 @@ internal struct Globals {
     static func handleAppSyncErrors<T>(forQuery queryIdentifier: String, result: GraphQLResult<T>?, error: Error?) -> Bool {
         var wereErrors = false
         if let error = error {
-            CLSNSLogv("Error performing \(queryIdentifier): \(error)", getVaList([]))
-            Crashlytics.sharedInstance().recordError(error)
-            wereErrors = true
+            if let error = error as? AWSAppSyncClientError {
+                switch error {
+                case .requestFailed(let data, let response, let err):
+                    if let nserr = err as? NSError {
+                        if nserr.code == -999 {
+                            //The error is that the operation was cancelled, do not treat as error
+                            CLSNSLogv("Operation \(queryIdentifier) cancelled", getVaList([]))
+                            break
+                        }
+                        fallthrough
+                    }
+                    fallthrough
+                default:
+                    CLSNSLogv("Error performing \(queryIdentifier): \(error)", getVaList([]))
+                    Crashlytics.sharedInstance().recordError(error)
+                    wereErrors = true
+                    break
+                }
+            }
         }
         if let errors = result?.errors {
-            CLSNSLogv("GraphQL Erros performing \(queryIdentifier): \(errors)", getVaList([]))
+            CLSNSLogv("GraphQL Errors performing \(queryIdentifier): \(errors)", getVaList([]))
             for error in errors {
                 Crashlytics.sharedInstance().recordError(error)
             }
@@ -49,7 +66,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     var appSyncClient: AWSAppSyncClient?
     var pinpoint: AWSPinpoint?
     
-    func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
+    func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         // Override point for customization after application launch.
         Fabric.with([Crashlytics.self])
         Crashlytics.sharedInstance().setUserIdentifier(UIDevice.current.name)
@@ -77,8 +94,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 //        }
         
         ///Start up Pinpoint
-        let pinpointConfiguration = AWSPinpointConfiguration.defaultPinpointConfiguration(launchOptions: launchOptions)
-        pinpoint = AWSPinpoint(configuration: pinpointConfiguration)
+//        let pinpointConfiguration = AWSPinpointConfiguration.defaultPinpointConfiguration(launchOptions: launchOptions)
+//        pinpoint = AWSPinpoint(configuration: pinpointConfiguration)
         
         ///AWS Cognito Initialization
         AWSMobileClient.sharedInstance().initialize {userState, error in
@@ -90,8 +107,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
                     //Let the onboarding show to sign in; Do nothing
                     break
                 case .signedIn:
-                    ///TODO:
-                    break
+                    let mainStoryboard = UIStoryboard(name: "Main", bundle: nil)
+                    self.window?.rootViewController = mainStoryboard.instantiateViewController(withIdentifier: "teamListMasterVC")
                 case .guest:
                     ///TODO:
                     break
@@ -126,38 +143,41 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
                     return $0["key"]
                 }
             }
+            
+            ///TODO: - REMOVE / TEMP
+//            appSyncClient?.clearCache()
         } catch {
             CLSNSLogv("Error starting AppSync: \(error)", getVaList([]))
             Crashlytics.sharedInstance().recordError(error)
             assertionFailure()
         }
         
-        return AWSMobileClient.sharedInstance().interceptApplication(application, didFinishLaunchingWithOptions: launchOptions)
+        AWSMobileClient.sharedInstance().addUserStateListener(self) { (state, attributes) in
+            CLSNSLogv("New User State: \(state)", getVaList([]))
+        }
+        
+        return true
+//        return AWSMobileClient.sharedInstance().interceptApplication(application, didFinishLaunchingWithOptions: launchOptions)
     }
     
-    func displayLogin() {
+    func displayLogin(isRegistering: Bool, onVC currentVC: UIViewController) {
         //Present log in screen
-        let navController = UINavigationController()
-        self.window?.rootViewController = navController
-        //TODO: Add Logo image
-        let signInOptions = SignInUIOptions(canCancel: true, logoImage: nil, backgroundColor: nil)
-        AWSMobileClient.sharedInstance().showSignIn(navigationController: navController, signInUIOptions: signInOptions) {userState, error in
-            if let userState = userState {
-                switch userState {
-                case .signedIn:
-                    //Show the team list
-                     UserDefaults.standard.set(false, forKey: Globals.isSpectatorModeKey)
-                    let mainStoryboard = UIStoryboard(name: "Main", bundle: nil)
-                    self.window?.rootViewController = mainStoryboard.instantiateViewController(withIdentifier: "teamListMasterVC")
-                
-                default:
-                    Crashlytics.sharedInstance().recordCustomExceptionName("Received sign-in state other than SignedIn", reason: "Recevied state: \(userState)", frameArray: [])
-                    assertionFailure()
-                }
-            } else if let error = error {
-                Crashlytics.sharedInstance().recordError(error)
-            }
+        let loginVC = LoginViewController(style: .darkOpaque)
+        loginVC.isCancelButtonHidden = false
+        loginVC.isCopyrightLabelHidden = true
+        
+        loginVC.authenticationProvider = AWSCognitoAuthenticationProvider()
+        
+        loginVC.loginSuccessfulHandler = {result in
+            UserDefaults.standard.set(false, forKey: Globals.isSpectatorModeKey)
+            loginVC.dismiss(animated: false, completion: nil)
+            let mainStoryboard = UIStoryboard(name: "Main", bundle: nil)
+            self.window?.rootViewController = mainStoryboard.instantiateViewController(withIdentifier: "teamListMasterVC")
         }
+        
+        loginVC.setRegistering(isRegistering, animated: false)
+        
+        currentVC.present(loginVC, animated: true, completion: nil)
     }
 
     func applicationWillResignActive(_ application: UIApplication) {
@@ -199,6 +219,85 @@ extension UIViewController {
             presentedViewController!.presentViewControllerFromVisibleViewController(viewControllerToPresent, animated: flag, completion: completion)
         } else {
             present(viewControllerToPresent, animated: flag, completion: completion)
+        }
+    }
+}
+
+extension AWSMobileClientError {
+    var message: String {
+        get {
+            switch self {
+            case .aliasExists(let mesg):
+                return mesg
+            case .codeDeliveryFailure(let mesg):
+                return mesg
+            case .codeMismatch(let mesg):
+                return mesg
+            case .expiredCode(let mesg):
+                return mesg
+            case .groupExists(let mesg):
+                return mesg
+            case .internalError(let mesg):
+                return mesg
+            case .invalidLambdaResponse(let mesg):
+                return mesg
+            case .invalidOAuthFlow(let mesg):
+                return mesg
+            case .invalidParameter(let mesg):
+                return mesg
+            case .invalidPassword(let mesg):
+                return mesg
+            case .invalidUserPoolConfiguration(let mesg):
+                return mesg
+            case .limitExceeded(let mesg):
+                return mesg
+            case .mfaMethodNotFound(let mesg):
+                return mesg
+            case .notAuthorized(let mesg):
+                return mesg
+            case .passwordResetRequired(let mesg):
+                return mesg
+            case .resourceNotFound(let mesg):
+                return mesg
+            case .scopeDoesNotExist(let mesg):
+                return mesg
+            case .softwareTokenMFANotFound(let mesg):
+                return mesg
+            case .tooManyFailedAttempts(let mesg):
+                return mesg
+            case .tooManyRequests(let mesg):
+                return mesg
+            case .unexpectedLambda(let mesg):
+                return mesg
+            case .userLambdaValidation(let mesg):
+                return mesg
+            case .userNotConfirmed(let mesg):
+                return mesg
+            case .userNotFound(let mesg):
+                return mesg
+            case .usernameExists(let mesg):
+                return mesg
+            case .unknown(let mesg):
+                return mesg
+            case .notSignedIn(let mesg):
+                return mesg
+            case .identityIdUnavailable(let mesg):
+                return mesg
+            case .guestAccessNotAllowed(let mesg):
+                return mesg
+            case .federationProviderExists(let mesg):
+                return mesg
+            case .cognitoIdentityPoolNotConfigured(let mesg):
+                return mesg
+            case .unableToSignIn(let mesg):
+                return mesg
+            case .invalidState(let mesg):
+                return mesg
+            case .userPoolNotConfigured(let mesg):
+                return mesg
+            case .userCancelledSignIn(let mesg):
+                return mesg
+            }
         }
     }
 }

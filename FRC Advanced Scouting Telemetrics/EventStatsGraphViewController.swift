@@ -137,7 +137,7 @@ class EventStatsGraphViewController: UIViewController {
                 dispatchGroup.enter()
                 //Get the scouted team
                 //Calculate it
-                var value: StatValue
+                var value: StatValue = .NoValue
                 if let scoutedTeam = scoutedTeams?.first(where: {$0.teamKey == rankedTeam?.teamKey}) {
                     stat.calculate(forObject: scoutedTeam) { (v) in
                         value = v

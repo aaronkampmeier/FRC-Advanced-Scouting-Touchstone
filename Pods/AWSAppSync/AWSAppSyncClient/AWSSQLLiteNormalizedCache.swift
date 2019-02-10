@@ -44,7 +44,7 @@ public final class AWSMutationCache {
     private let s3LocalUri = Expression<String?>("s3LocalUri")
     private let s3MimeType = Expression<String?>("s3MimeType")
     private let operationString = Expression<String>("operationString")
-    
+
     public init(fileURL: URL) throws {
         db = try Connection(.uri(fileURL.absoluteString), readonly: false)
         db.busyTimeout = sqlBusyTimeoutConstant
@@ -66,30 +66,33 @@ public final class AWSMutationCache {
             table.column(s3MimeType)
             table.column(operationString)
         })
+
         try db.run(mutationRecords.createIndex(recordIdentifier, unique: true, ifNotExists: true))
     }
     
     internal func saveMutationRecord(record: AWSAppSyncMutationRecord) throws {
         if let s3Object = record.s3ObjectInput {
-            let insert = mutationRecords.insert(recordIdentifier <- record.recordIdentitifer,
-                                                data <- record.data!,
-                                                contentMap <- record.contentMap!.description,
-                                                recordState <- record.recordState.rawValue,
-                                                timestamp <- record.timestamp,
-                                                s3Bucket <- s3Object.bucket,
-                                                s3Key <- s3Object.key,
-                                                s3Region <- s3Object.region,
-                                                s3LocalUri <- s3Object.localUri,
-                                                s3MimeType <- s3Object.mimeType,
-                                                operationString <- record.operationString!)
+            let insert = mutationRecords.insert(
+                recordIdentifier <- record.recordIdentitifer,
+                data <- record.data!,
+                contentMap <- record.contentMap!.description,
+                recordState <- record.recordState.rawValue,
+                timestamp <- record.timestamp,
+                s3Bucket <- s3Object.bucket,
+                s3Key <- s3Object.key,
+                s3Region <- s3Object.region,
+                s3LocalUri <- s3Object.localUri,
+                s3MimeType <- s3Object.mimeType,
+                operationString <- record.operationString!)
             try db.run(insert)
         } else {
-            let insert = mutationRecords.insert(recordIdentifier <- record.recordIdentitifer,
-                                                data <- record.data!,
-                                                contentMap <- record.contentMap!.description,
-                                                recordState <- record.recordState.rawValue,
-                                                timestamp <- record.timestamp,
-                                                operationString <- record.operationString!)
+            let insert = mutationRecords.insert(
+                recordIdentifier <- record.recordIdentitifer,
+                data <- record.data!,
+                contentMap <- record.contentMap!.description,
+                recordState <- record.recordState.rawValue,
+                timestamp <- record.timestamp,
+                operationString <- record.operationString!)
             try db.run(insert)
         }
         
@@ -104,24 +107,38 @@ public final class AWSMutationCache {
         let sqlRecord = mutationRecords.filter(recordIdentifier == record.recordIdentitifer)
         try db.run(sqlRecord.delete())
     }
+
+    internal func deleteMutationRecord(withIdentifier identifier: String) throws {
+        let sqlRecord = mutationRecords.filter(recordIdentifier == identifier)
+        try db.run(sqlRecord.delete())
+    }
     
     internal func getStoredMutationRecordsInQueue() throws -> [AWSAppSyncMutationRecord] {
         let sqlRecords = mutationRecords.filter(recordState == MutationRecordState.inQueue.rawValue).order(timestamp.asc)
-        var mutationRecordQueue = [AWSAppSyncMutationRecord]()
+        var mutationRecordQueue: [AWSAppSyncMutationRecord] = []
         for record in try db.prepare(sqlRecords) {
             do {
-                let mutationRecord = AWSAppSyncMutationRecord(recordIdentifier: try record.get(recordIdentifier), timestamp: try record.get(timestamp))
+                let mutationRecord = AWSAppSyncMutationRecord(
+                    recordIdentifier: try record.get(recordIdentifier),
+                    timestamp: try record.get(timestamp))
                 mutationRecord.data = try record.get(data)
                 mutationRecord.recordState = .inQueue
                 mutationRecord.operationString = try record.get(operationString)
+
                 do {
                     if let bucket = try record.get(s3Bucket),
                         let key = try record.get(s3Key),
                         let region = try record.get(s3Region),
                         let localUri = try record.get(s3LocalUri),
                         let mimeType = try record.get(s3MimeType) {
+
                         mutationRecord.type = .graphQLMutationWithS3Object
-                        mutationRecord.s3ObjectInput = InternalS3ObjectDetails(bucket: bucket, key: key, region: region, contentType: mimeType, localUri: localUri)
+                        mutationRecord.s3ObjectInput = InternalS3ObjectDetails(
+                            bucket: bucket,
+                            key: key,
+                            region: region,
+                            mimeType: mimeType,
+                            localUri: localUri)
                     }
                 } catch {}
                 mutationRecordQueue.append(mutationRecord)
@@ -211,6 +228,12 @@ public final class AWSSQLLiteNormalizedCache: NormalizedCache {
         
         let fields = try SQLiteSerialization.deserialize(data: recordData)
         return Record(key: row[key], fields)
+    }
+
+    public func clear() -> Promise<Void> {
+        return Promise {
+            try db.run(self.records.delete())
+        }
     }
 }
 

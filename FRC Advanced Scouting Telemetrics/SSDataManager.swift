@@ -36,7 +36,7 @@ class SSDataManager {
     }
     
     func recordScoutSession() {
-        Globals.appDelegate.appSyncClient?.perform(mutation: CreateScoutSessionMutation(userID: AWSMobileClient.sharedInstance().username ?? "", eventKey: match.eventKey, teamKey: teamKey, matchKey: match.key, timeMarkers: timeMarkers), optimisticUpdate: { (transaction) in
+        Globals.appDelegate.appSyncClient?.perform(mutation: CreateScoutSessionMutation(eventKey: match.eventKey, teamKey: teamKey, matchKey: match.key, timeMarkers: timeMarkers), optimisticUpdate: { (transaction) in
             //TODO: - Add optimistic update
         }, conflictResolutionBlock: { (snapshot, taskCompletionSource, onCompletion) in
             

@@ -1,6 +1,7 @@
 fragment EventRanking on EventRanking {
 	eventKey
 	eventName
+	userID
 	rankedTeams {
 		teamKey
 		isPicked
@@ -34,6 +35,7 @@ fragment Team on Team {
 
 fragment ScoutedTeam on ScoutedTeam {
 	teamKey
+	userID
     eventKey
     attributes
 }
@@ -47,24 +49,29 @@ fragment Match on Match {
     time
     actual_time
     predicted_time
-    blue_alliance {
-      score
-      team_keys
-      surrogate_team_keys
-      dq_team_keys
+    alliances {
+    	blue {
+    		...MatchAlliance
+    	}
+
+    	red {
+    		...MatchAlliance
+    	}
     }
-    red_alliance {
-      score
-      team_keys
-      surrogate_team_keys
-      dq_team_keys
-    }
+}
+
+fragment MatchAlliance on MatchAlliance {
+	score
+    team_keys
+    surrogate_team_keys
+    dq_team_keys
 }
 
 fragment ScoutSession on ScoutSession {
 	key
     matchKey
     teamKey
+    userID
     eventKey
     timeMarkers {
       ...TimeMarkerFragment
@@ -87,15 +94,23 @@ fragment TeamEventOPR on TeamEventOPR {
 
 fragment TeamEventStatus on TeamEventStatus {
 	teamKey
+	eventKey
     qual {
       num_teams
       status
+      ranking {
+      	dq
+      	matches_played
+      	qual_average
+      	rank
+      }
     }
     overall_status_str
 }
 
 fragment TeamComment on TeamComment {
 	author
+	userID
 	body
 	datePosted
 	key

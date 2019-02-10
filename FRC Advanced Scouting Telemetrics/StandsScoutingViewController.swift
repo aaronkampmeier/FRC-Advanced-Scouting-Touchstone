@@ -152,7 +152,7 @@ class StandsScoutingViewController: UIViewController {
             if Globals.handleAppSyncErrors(forQuery: "ListMatchesQuery-StandsScout", result: result, error: error) {
                 //Filter the matches to only be ones that this team is in
                 let filteredMatches = result?.data?.listMatches?.filter({
-                    return $0!.blueAlliance?.teamKeys?.contains(teamKey) ?? false || $0!.redAlliance?.teamKeys?.contains(teamKey) ?? false
+                    return $0!.alliances?.blue?.teamKeys?.contains(teamKey) ?? false || $0!.alliances?.red?.teamKeys?.contains(teamKey) ?? false
                 }) .map({$0!.fragments.match}) ?? []
                 
                 let sortedMatches = filteredMatches.sorted(by: {$0 < $1})
@@ -285,8 +285,8 @@ class StandsScoutingViewController: UIViewController {
         let superNotesNavVC = storyboard?.instantiateViewController(withIdentifier: "superNotesNavVC") as! UINavigationController
         let superNotesVC = superNotesNavVC.topViewController as! SuperNotesCollectionViewController
         
-        let redKeys = self.match?.redAlliance?.teamKeys?.map({$0!}) ?? []
-        let blueKeys = self.match?.blueAlliance?.teamKeys?.map({$0!}) ?? []
+        let redKeys = self.match?.alliances?.red?.teamKeys?.map({$0!}) ?? []
+        let blueKeys = self.match?.alliances?.blue?.teamKeys?.map({$0!}) ?? []
         if let eventKey = self.match?.eventKey {
             superNotesVC.load(forEventKey: eventKey, withTeamKeys: redKeys + blueKeys)
         }

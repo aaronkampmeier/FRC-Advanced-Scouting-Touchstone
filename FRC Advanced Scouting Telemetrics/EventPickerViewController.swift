@@ -13,7 +13,7 @@ class EventPickerViewController: UIViewController, UIPickerViewDelegate, UIPicke
     
     @IBOutlet weak var introText: UILabel!
     var delegate: EventSelection?
-    fileprivate var events: [(eventKey: String, eventName: String)]?
+    fileprivate var events: [(eventKey: String, eventName: String)] = []
     fileprivate var currentEvent: String?
     fileprivate var chosenEvent: String?
 
@@ -36,7 +36,7 @@ class EventPickerViewController: UIViewController, UIPickerViewDelegate, UIPicke
     }
     
     fileprivate func load() {
-        if events?.count == 0 {
+        if events.count == 0 {
             introText.isHidden = false
         } else {
             introText.isHidden = true
@@ -46,9 +46,12 @@ class EventPickerViewController: UIViewController, UIPickerViewDelegate, UIPicke
         
         self.chosenEvent = currentEvent
         
+        eventPicker.reloadAllComponents()
+        
         if let current = currentEvent {
-            let index = events?.firstIndex(where: {$0.eventKey == current})
-            eventPicker.selectRow(index!, inComponent: 0, animated: false)
+            if let index = events.firstIndex(where: {$0.eventKey == current}) {
+                eventPicker.selectRow(index, inComponent: 0, animated: false)
+            }
         }
     }
 
@@ -79,17 +82,17 @@ class EventPickerViewController: UIViewController, UIPickerViewDelegate, UIPicke
     }
     
     func pickerView(_ pickerView: UIPickerView, numberOfRowsInComponent component: Int) -> Int {
-        return events!.count
+        return events.count
     }
     
     func pickerView(_ pickerView: UIPickerView, titleForRow row: Int, forComponent component: Int) -> String? {
-        let event = events![row]
-        return "\(event.eventName)"
+        let event = events[row]
+        return "\(event.eventName) (\(event.eventKey.trimmingCharacters(in: CharacterSet.letters)))"
     }
     
     func pickerView(_ pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {
-        if (events?.count ?? 0) > 0 {
-            chosenEvent = events![row].eventKey
+        if (events.count ?? 0) > 0 {
+            chosenEvent = events[row].eventKey
         }
     }
 

@@ -23,7 +23,7 @@ extension ScoutedTeam: Equatable {
     var decodedAttributes: ScoutedTeamAttributes? {
         get {
             do {
-                if let data = self.attributes.data(using: .utf8) {
+                if let data = self.attributes?.data(using: .utf8) {
                     return try JSONDecoder().decode(ScoutedTeamAttributes.self, from: data)
                 } else {
                     return nil
@@ -37,12 +37,32 @@ extension ScoutedTeam: Equatable {
         }
     }
     
+    var attributeDictionary: [String: Any]? {
+        get {
+            do {
+                if let data = self.attributes?.data(using: .utf8) {
+                    return try JSONSerialization.jsonObject(with: data, options: []) as? [String:Any]
+                } else {
+                    return nil
+                }
+            } catch {
+                //Record error
+                CLSNSLogv("Error decoding scouted team attribute json data into dictionary: \(error)", getVaList([]))
+                Crashlytics.sharedInstance().recordError(error)
+                return nil
+            }
+        }
+    }
+    
     ///Called in Statistics.swift when getting all of the stats for SocutedTeams
     static var stats: [Statistic<ScoutedTeam>] {
         get {
             return [
                 Statistic<ScoutedTeam>(name: "Robot Length", id: "length", function: { (scoutedTeam, callback) in
                     callback(StatValue.initWithOptional(value: scoutedTeam.decodedAttributes?.robotLength))
+                }),
+                Statistic<ScoutedTeam>(name: "Robot Weight", id: "weight", function: { (scoutedTeam, callback) in
+                    callback(StatValue.initWithOptional(value: scoutedTeam.decodedAttributes?.robotWeight))
                 })
             ]
         }

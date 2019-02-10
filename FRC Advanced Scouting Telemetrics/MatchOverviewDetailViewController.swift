@@ -38,6 +38,10 @@ class MatchOverviewDetailViewController: UIViewController {
         self.navigationItem.leftBarButtonItem = matchOverviewSplitVC?.displayModeButtonItem
         
         matchPerformanceDetail = self.childViewControllers.first! as? MatchOverviewPerformanceDetailViewController
+        
+        if let match = displayedMatch {
+            self.setUpForMatch(match: match)
+        }
     }
 
     override func didReceiveMemoryWarning() {
@@ -46,8 +50,10 @@ class MatchOverviewDetailViewController: UIViewController {
     }
     
     func load(forMatchKey matchKey: String, shouldShowExitButton: Bool) {
+        self.setUpForMatch(match: nil)
+        
         //Get the match
-        Globals.appDelegate.appSyncClient?.fetch(query: GetMatchQuery(matchKey: matchKey), cachePolicy: .returnCacheDataElseFetch, resultHandler: { (result, error) in
+        Globals.appDelegate.appSyncClient?.fetch(query: GetMatchQuery(matchKey: matchKey), cachePolicy: .returnCacheDataAndFetch, resultHandler: { (result, error) in
             if Globals.handleAppSyncErrors(forQuery: "GetMatchQuery-MatchOverview", result: result, error: error) {
                 self.setUpForMatch(match: result?.data?.getMatch?.fragments.match)
                 
@@ -69,20 +75,36 @@ class MatchOverviewDetailViewController: UIViewController {
     private func setUpForMatch(match: Match?) {
         self.displayedMatch = match
         
+        guard self.isViewLoaded else {
+            return
+        }
+        
         if let match = match {
             matchTitleLabel.text = match.description
             
-            redPointsLabel.text = "\(match.redAlliance?.score.description ?? "-") Pts."
-            bluePointsLabel.text = "\(match.blueAlliance?.score.description ?? "-") Pts."
+            redPointsLabel.text = "\(match.alliances?.red?.score.description ?? "-") Pts."
+            bluePointsLabel.text = "\(match.alliances?.blue?.score.description ?? "-") Pts."
             
             //Set the teams in the segmented control
-            teamKeys = match.redAlliance?.teamKeys as? [String] ?? []
-            teamKeys += match.blueAlliance?.teamKeys as? [String] ?? []
+            teamKeys = match.alliances?.red?.teamKeys as? [String] ?? []
+            teamKeys += match.alliances?.blue?.teamKeys as? [String] ?? []
             for key in teamKeys.enumerated() {
-                segmentedControl.setTitle(key.element, forSegmentAt: key.offset)
+                segmentedControl.setTitle(key.element.trimmingCharacters(in: CharacterSet.letters), forSegmentAt: key.offset)
             }
             
             segmentedControl.selectedSegmentIndex = 0
+            self.selectedDifferentTeam(segmentedControl)
+        } else {
+            matchTitleLabel.text = nil
+            
+            redPointsLabel.text = "- Pts."
+            bluePointsLabel.text = "- Pts."
+            
+            for n in 0..<6 {
+                segmentedControl.setTitle(nil, forSegmentAt: n)
+            }
+            
+            segmentedControl.selectedSegmentIndex = -1
             self.selectedDifferentTeam(segmentedControl)
         }
     }

@@ -10,7 +10,7 @@ import UIKit
 
 class SSClimbViewController: UIViewController {
     
-    lazy var ssDataManager = SSDataManager.currentSSDataManager()!
+    lazy var ssDataManager = SSDataManager.currentSSDataManager
     
     var climbSuccessfulVC: SSOffenseWhereViewController? {
         didSet {
@@ -68,9 +68,10 @@ extension SSClimbViewController: WhereDelegate {
     func selected(_ whereVC: SSOffenseWhereViewController, id: String) {
         switch whereVC {
         case climbSuccessfulVC!:
-            ssDataManager.recordClimb(id)
+            //TODO: - Fix attribute situation of time markers
+            ssDataManager?.addTimeMarker(event: "Climb", location: id)
         case climbAssistVC!:
-            ssDataManager.recordAssist(id)
+            ssDataManager?.addTimeMarker(event: "Assited Climb", location: id)
         default:
             break
         }

@@ -10,11 +10,14 @@ import UIKit
 import Crashlytics
 import VTAcknowledgementsViewController
 import AWSMobileClient
+import AWSAppSync
 
 class AdminConsoleController: UIViewController, UITableViewDataSource, UITableViewDelegate {
     @IBOutlet weak var tableView: UITableView!
     
     var trackedEvents: [ListTrackedEventsQuery.Data.ListTrackedEvent] = []
+    
+    var addEventSubscription: AWSAppSyncSubscriptionWatcher<OnAddTrackedEventSubscription>?
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -27,6 +30,20 @@ class AdminConsoleController: UIViewController, UITableViewDataSource, UITableVi
                 //TODO: - Show error
             }
         })
+        
+        do {
+            self.addEventSubscription = try Globals.appDelegate.appSyncClient?.subscribe(subscription: OnAddTrackedEventSubscription(userID: AWSMobileClient.sharedInstance().username ?? ""), resultHandler: {[weak self] (result, transaction, error) in
+                //Check that the event is not already in the list
+                let newEvent = result?.data?.onAddTrackedEvent
+                if !(self?.trackedEvents.contains(where: {$0.eventKey == newEvent?.eventKey}) ?? false) {
+                    self?.trackedEvents.append(ListTrackedEventsQuery.Data.ListTrackedEvent(eventKey: newEvent?.eventKey ?? "", eventName: newEvent?.eventName ?? ""))
+                    self?.tableView.reloadData()
+                }
+            })
+        } catch {
+            CLSNSLogv("Error adding tracked event subscriptions: \(error)", getVaList([]))
+            Crashlytics.sharedInstance().recordError(error)
+        }
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -94,6 +111,7 @@ class AdminConsoleController: UIViewController, UITableViewDataSource, UITableVi
                 //Return the event cell with event name and type
                 let cell = tableView.dequeueReusableCell(withIdentifier: "event")!
                 cell.textLabel?.text = "\(trackedEvents[indexPath.row].eventName) (\(trackedEvents[indexPath.row].eventKey.trimmingCharacters(in: CharacterSet.letters)))"
+                cell.detailTextLabel?.text = trackedEvents[indexPath.row].eventKey
 //                cell.detailTextLabel?.text = events[indexPath.row].location
                 return cell
             }
@@ -153,11 +171,13 @@ class AdminConsoleController: UIViewController, UITableViewDataSource, UITableVi
                 if Globals.isInSpectatorMode {
                     self.performSegue(withIdentifier: "addEvent", sender: tableView)
                 } else {
+                    self.performSegue(withIdentifier: "addEvent", sender: tableView)
+                    
                     //First present warning
-                    let warning = UIAlertController(title: "Do Not Repeat", message: "Events need only be added to a team's FAST account once. This should be done by your scouting lead. Please make sure someone else has not already added the same event as this may cause data inconsistencies in rare cases.", preferredStyle: .alert)
-                    warning.addAction(UIAlertAction(title: "I Understand", style: .default, handler: {_ in self.performSegue(withIdentifier: "addEvent", sender: tableView); Answers.logCustomEvent(withName: "Add Event Pressed", customAttributes: ["Route":"I Understand"])}))
-                    warning.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: {_ in self.viewWillAppear(false) /*This is just to clear the table view selection*/ ; Answers.logCustomEvent(withName: "Add Event Pressed", customAttributes: ["Route":"Cancel"])}))
-                    self.present(warning, animated: true, completion: nil)
+//                    let warning = UIAlertController(title: "Do Not Repeat", message: "Events need only be added to a team's FAST account once. This should be done by your scouting lead. Please make sure someone else has not already added the same event as this may cause data inconsistencies in rare cases.", preferredStyle: .alert)
+//                    warning.addAction(UIAlertAction(title: "I Understand", style: .default, handler: {_ in self.performSegue(withIdentifier: "addEvent", sender: tableView); Answers.logCustomEvent(withName: "Add Event Pressed", customAttributes: ["Route":"I Understand"])}))
+//                    warning.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: {_ in self.viewWillAppear(false) /*This is just to clear the table view selection*/ ; Answers.logCustomEvent(withName: "Add Event Pressed", customAttributes: ["Route":"Cancel"])}))
+//                    self.present(warning, animated: true, completion: nil)
                 }
             } else {
                 //Did select event info
@@ -255,7 +275,7 @@ class AdminConsoleController: UIViewController, UITableViewDataSource, UITableVi
         showLoadingIndicator()
         
         //Call to reload the event
-        Globals.appDelegate.appSyncClient?.perform(mutation: AddTrackedEventMutation(userID: AWSMobileClient.sharedInstance().username ?? "?", eventKey: event.eventKey), conflictResolutionBlock: { (snapshot, taskCompletionSource, result) in
+        Globals.appDelegate.appSyncClient?.perform(mutation: AddTrackedEventMutation(eventKey: event.eventKey), conflictResolutionBlock: { (snapshot, taskCompletionSource, result) in
             
         }, resultHandler: { (result, error) in
             if Globals.handleAppSyncErrors(forQuery: "ReloadTrackedEvent-AdminConsole", result: result, error: error) {
@@ -298,7 +318,7 @@ class AdminConsoleController: UIViewController, UITableViewDataSource, UITableVi
     func deleteAt(indexPath: IndexPath, inTableView tableView: UITableView) {
         //Call to remove the event
         let trackedEvent = trackedEvents[indexPath.row]
-        Globals.appDelegate.appSyncClient?.perform(mutation: RemoveTrackedEventMutation(userID: AWSMobileClient.sharedInstance().username ?? "?", eventKey: trackedEvent.eventKey), optimisticUpdate: { (transaction) in
+        Globals.appDelegate.appSyncClient?.perform(mutation: RemoveTrackedEventMutation(eventKey: trackedEvent.eventKey), optimisticUpdate: { (transaction) in
             do {
                 try transaction?.update(query: ListTrackedEventsQuery(), { (data) in
                     if let index = data.listTrackedEvents?.firstIndex(where: {$0?.eventKey == trackedEvent.eventKey}) {
@@ -314,6 +334,7 @@ class AdminConsoleController: UIViewController, UITableViewDataSource, UITableVi
             if Globals.handleAppSyncErrors(forQuery: "RemoveTrackedEvent", result: result, error: error) {
                 tableView.beginUpdates()
                 tableView.deleteRows(at: [indexPath], with: .left)
+                self.trackedEvents.remove(at: indexPath.row)
                 tableView.endUpdates()
             } else {
                 let alert = UIAlertController(title: "Problem Removing Event", message: "An error occured when removing the event.", preferredStyle: .alert)
@@ -509,11 +530,6 @@ class AdminConsoleController: UIViewController, UITableViewDataSource, UITableVi
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         super.prepare(for: segue, sender: sender)
-    }
-    
-    @IBAction func advancedPressed(_ sender: UIBarButtonItem) {
         
-//        let advancedController = storyboard?.instantiateViewController(withIdentifier: "advancedControl") as! HiddenDebugViewController
-//        present(advancedController, animated: true, completion: nil)
     }
 }

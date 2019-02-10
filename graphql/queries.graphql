@@ -75,7 +75,7 @@ query ListTeamEventStatuses($eventKey: ID!) {
   }
 }
 
-query ListTeamComments($eventKey: String!, $teamKey: String!) {
+query ListTeamComments($eventKey: ID!, $teamKey: ID!) {
   listTeamComments(eventKey: $eventKey, teamKey: $teamKey) {
     ...TeamComment
   }

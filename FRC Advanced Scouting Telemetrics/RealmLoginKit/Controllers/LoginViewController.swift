@@ -18,6 +18,7 @@
 
 import UIKit
 import Crashlytics
+import AWSMobileClient
 
 /** The visual styles in which the login controller can be displayed. */
 @objc public enum LoginViewControllerStyle: Int {
@@ -30,7 +31,7 @@ import Crashlytics
 /** A protocol for third party objects to integrate with and manage the authentication 
     of user credentials. Used for integration with third party services like Amazon Cognito.
  */
-@objc(RLMAuthenticationProvider)
+//@objc(RLMAuthenticationProvider)
 public protocol AuthenticationProvider: NSObjectProtocol {
 
     /** The credentials captured by the login controller (if set) */
@@ -44,7 +45,9 @@ public protocol AuthenticationProvider: NSObjectProtocol {
      required information from the third party service that can then be used to
      create an `RLMSynCredentials` object for input into the ROS Authentication server.
      */
-    func authenticate(onCompletion: ((RLMSyncCredentials?, Error?) -> Void)?)
+    func authenticate(onCompletion: ((SignInResult?, Error?) -> Void)?)
+    
+    func signUp(onCompletion: ((SignUpResult?, Error?) -> Void)?)
 
     /**
      Not strictly required, but if the sign-in request is asynchronous and needs to be cancelled,
@@ -68,35 +71,6 @@ public class LoginViewController: UIViewController {
     public private(set) var style = LoginViewControllerStyle.lightTranslucent
 
     /**
-     The server address URL that will form the basis of the Realm authentication
-     server request URL. Including the port number will override the value in `serverPort`.
-     Declaring either scheme, 'https', 'realms', will make this a secure request
-     */
-    public var serverURL: String? {
-        set { tableDataSource.serverURL = newValue }
-        get { return tableDataSource.serverURL }
-    }
-
-    /**
-     Whether the request to the authentication server will occur over HTTPS, or plain
-     HTTP.
-     
-     Setting this value to `true` will always force a secure connection. It may be optionally
-     enabled if the server URL is prefixed with a protocol ending in 's' (eg 'https', 'realms')
-     */
-    public var isSecureConnection: Bool {
-        get {
-            if _isSecureConnection { return true }
-            if let scheme = serverURL?.URLScheme {
-                return scheme.characters.last! == "s"
-            }
-
-            return false
-        }
-        set { _isSecureConnection = newValue }
-    }
-
-    /**
      Sets whether the copyright label shown at the bottom of the
      view is visible or not.
      */
@@ -111,27 +85,6 @@ public class LoginViewController: UIViewController {
     public var copyrightLabelText: String {
         get { return self.loginView.copyrightLabelText }
         set { self.loginView.copyrightLabelText = newValue }
-    }
-
-    /**
-     The port number that will be appended to the server URL when constructing the final
-     authentication URL, if the server has been set as unsecure. Default value is 9080.
-     Specifying a port in `serverURL` will override this value.
-     */
-    public var serverPortNumber: Int {
-        set { _defaultPortNumber = newValue }
-        get {
-            let portNumber = serverURL!.URLPortNumber
-            return portNumber >= 0 ? portNumber : _defaultPortNumber
-        }
-    }
-
-    public var serverSecurePortNumber: Int {
-        set { _defaultSecurePortNumber = newValue }
-        get {
-            let portNumber = serverURL!.URLPortNumber
-            return portNumber >= 0 ? portNumber : _defaultSecurePortNumber
-        }
     }
 
     /**
@@ -208,7 +161,7 @@ public class LoginViewController: UIViewController {
      Upon successful login/registration, this callback block will be called,
      providing the user account object that was returned by the server.
     */
-    public var loginSuccessfulHandler: ((RLMSyncUser, String) -> Void)?
+    public var loginSuccessfulHandler: ((SignInResult) -> Void)?
 
     /** 
      In cases where cancelling the login controller might be needed, show 
@@ -218,20 +171,6 @@ public class LoginViewController: UIViewController {
         // Proxy this property to the one managed directly by the view
         set { self.loginView.isCancelButtonHidden = newValue }
         get { return self.loginView.isCancelButtonHidden }
-    }
-
-    /**
-     With all of the available credentials, the final URL that will be used
-     for the request to the Realm Authentication Server
-    */
-    public var authenticationRequestURL: URL? {
-        guard let serverHost = serverURL?.URLHost else { return nil }
-        let scheme: String, portNumber: Int
-
-        scheme = isSecureConnection ? "https" : "http"
-        portNumber = isSecureConnection ? serverSecurePortNumber : serverPortNumber
-
-        return URL(string: "\(scheme)://\(serverHost):\(portNumber)")
     }
 
     /**
@@ -252,8 +191,6 @@ public class LoginViewController: UIViewController {
     /* State tracking */
     private var _isRegistering = false
     private var _isSecureConnection = false
-    private var _defaultPortNumber = 9080
-    private var _defaultSecurePortNumber = 9443
 
     /* The `UIView` subclass that manages all view content in this view controller */
     private var loginView: LoginView {
@@ -323,19 +260,6 @@ public class LoginViewController: UIViewController {
         // Set callbacks for the accessory view buttons
         loginView.didTapCloseHandler = {[weak self] in
             self?.dismiss(animated: true, completion: nil)
-//            let mainStoryboard = UIStoryboard(name: "Main", bundle: nil)
-//            if self?.presentingViewController != nil {
-//                self?.dismiss(animated: true, completion: nil)
-//            } else if Globals.isInSpectatorMode || RealmController.realmController.currentSyncUser != nil {
-//                //Is Logged in, show the team list
-//                let teamList = mainStoryboard.instantiateViewController(withIdentifier: "teamListMasterVC")
-//
-//                self?.loginView.window?.rootViewController = teamList
-//            } else {
-//                let onboardingVC = mainStoryboard.instantiateInitialViewController() as! OnboardingPageViewController
-//
-//                self?.loginView.window?.rootViewController = onboardingVC
-//            }
         }
         loginView.didTapLogInHandler = { self.submitLoginRequest() }
         loginView.didTapRegisterHandler = { self.setRegistering(!self.isRegistering, animated: true) }
@@ -365,7 +289,6 @@ public class LoginViewController: UIViewController {
         var isFormValid = true
 
         // Check each credential against our external validator
-        isFormValid = formValidationManager.isValidServerURL(serverURL) && isFormValid
         isFormValid = formValidationManager.isValidUsername(username) && isFormValid
         isFormValid = formValidationManager.isValidPassword(password) && isFormValid
 
@@ -380,52 +303,10 @@ public class LoginViewController: UIViewController {
         loginView.footerView.isSubmitButtonEnabled = isFormValid
     }
 
-    // If RLMSyncUser.__login has the signature from realm-cocoa 2.x, return a
-    // wrapper which exposes the 3.x API, and otherwise return the method directly
-    typealias rc2LoginFunction = (RLMSyncCredentials, URL, TimeInterval, @escaping RLMUserCompletionBlock) -> Void
-    typealias rc3LoginFunction = (RLMSyncCredentials, URL, TimeInterval, DispatchQueue, @escaping RLMUserCompletionBlock) -> Void
-
-    private func wrapLoginFunction(_ method: @escaping rc3LoginFunction) -> rc3LoginFunction {
-        return method
-    }
-
-    private func wrapLoginFunction(_ method: @escaping rc2LoginFunction) -> rc3LoginFunction {
-        return { (credentials: RLMSyncCredentials, url: URL, timeout: TimeInterval, queue: DispatchQueue, completion: @escaping RLMUserCompletionBlock) in
-            method(credentials, url, timeout) { (user, error) in
-                queue.async {
-                    completion(user, error)
-                }
-            }
-        }
-    }
-
     private func submitLoginRequest() {
         // Show the spinner view on the login button
         loginView.footerView.isSubmitting = true
 
-        // Make sure we have a valid URL for the Realm Authentication Server
-        guard let authenticationURL = authenticationRequestURL else { return }
-
-        // Create the callback block that will perform the request
-        let login = wrapLoginFunction(RLMSyncUser.__logIn)
-        let logInBlock: ((RLMSyncCredentials) -> Void) = { credentials in
-            login(credentials, authenticationURL, 30, DispatchQueue.main) { (user, error) in
-                // Display an error message if the login failed
-                if let error = error {
-                    CLSNSLogv("Error Signing In to ROS (1): \(error)", getVaList([]))
-                    Crashlytics.sharedInstance().recordError(error)
-                    
-                    self.loginView.footerView.isSubmitting = false
-                    self.showError(title: "Unable to Sign In", message: error.localizedDescription)
-                    return
-                }
-
-                // Inform the parent that the login was successful
-                self.loginSuccessfulHandler?(user!, self.username!)
-            }
-        }
-
-        // If an authentication provider was supplied, allow it to perform the necessary requests to generate a credentials object
         if let authenticationProvider = self.authenticationProvider {
             // Copy over the current credentials
             authenticationProvider.username = self.username!
@@ -435,39 +316,46 @@ public class LoginViewController: UIViewController {
             authenticationProvider.teamEmail = self.teamEmail
 
             // Perform the request
-            authenticationProvider.authenticate { credentials, error in
-                // The credentials were successfully generated by the provider
-                if let credentials = credentials {
-                    logInBlock(credentials)
-                    return
-                }
-
-                // Show an error dialog if an error was supplied
-                if let error = error {
-                    let errorns = error as NSError
-                    switch error {
-                    case AWSCognitoAuthenticationProvider.AWSCognitoError.NeedUserVerification:
-                        CLSNSLogv("Needs to Verify Email", getVaList([]))
-                        self.showError(title: "Verification Required", message: "Signup was successful, now please verify your email by following the instructions sent to you before signing in.")
-                        self.setRegistering(false, animated: true)
-                    default:
-                        CLSNSLogv("Error Signing In (2): \(error)", getVaList([]))
-                        if !(errorns.code == 20 || errorns.code == 33 || errorns.code == 37 || errorns.code == 34) {
+            if self.isRegistering {
+                authenticationProvider.signUp { (result, error) in
+                    DispatchQueue.main.async {
+                        if let result = result {
+                            switch result.signUpConfirmationState {
+                            case .confirmed:
+                                //Cool?
+                                self.showError(title: "Good to Go", message: "Seems like you are already good to go, try signing in now.")
+                                self.setRegistering(false, animated: true)
+                            case .unconfirmed:
+                                //Needs to confirm via email
+                                self.showError(title: "Verification Required", message: "Verification is required via \(result.codeDeliveryDetails!.deliveryMedium) sent to \(result.codeDeliveryDetails!.destination ?? "unkown"). Please do this, then try signing in.")
+                                self.setRegistering(false, animated: true)
+                            case .unknown:
+                                assertionFailure()
+                            }
+                        } else if let error = error {
+                            CLSNSLogv("Error Signing Up: \(error)", getVaList([]))
                             Crashlytics.sharedInstance().recordError(error)
+                            self.showError(title: "Error Signing Up", message: (error as? AWSMobileClientError)?.message ?? error.localizedDescription)
                         }
                         self.loginView.footerView.isSubmitting = false
-                        self.showError(title: "Unable to Sign In", message: error.localizedDescription)
                     }
-                    
                 }
-
-                // Hide the spinning indicator
-                self.loginView.footerView.isSubmitting = false
+            } else {
+                authenticationProvider.authenticate { (result, error) in
+                    DispatchQueue.main.async {
+                        if let error = error {
+                            CLSNSLogv("Error signing in: \(error)", getVaList([]))
+                            Crashlytics.sharedInstance().recordError(error)
+                            self.showError(title: "Error Signing In", message: (error as? AWSMobileClientError)?.message ?? error.localizedDescription)
+                        } else if let result = result {
+                            self.loginSuccessfulHandler?(result)
+                        }
+                        self.loginView.footerView.isSubmitting = false
+                    }
+                }
             }
-        }
-        else {
-            let credentials = RLMSyncCredentials(username: username!, password: password!, register: isRegistering)
-            logInBlock(credentials)
+        } else {
+            assertionFailure()
         }
     }
 

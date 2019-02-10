@@ -53,7 +53,7 @@ class EventInfoVC: UIViewController, UITableViewDataSource {
                 self.navigationController?.navigationBar.isUserInteractionEnabled = false
                 
                 //Add the event to be tracked
-                Globals.appDelegate.appSyncClient?.perform(mutation: AddTrackedEventMutation(userID: AWSMobileClient.sharedInstance().username!, eventKey: eventKey), resultHandler: {[weak self] (result, error) in
+                Globals.appDelegate.appSyncClient?.perform(mutation: AddTrackedEventMutation(eventKey: eventKey), resultHandler: {[weak self] (result, error) in
                     if Globals.handleAppSyncErrors(forQuery: "AddTrackedEventMutation", result: result, error: error) {
                         self?.finishedImport(didComplete: true, withError: nil)
                     } else {
@@ -141,6 +141,10 @@ class EventInfoVC: UIViewController, UITableViewDataSource {
             //Official FIRST FMS
             let cell = tableView.dequeueReusableCell(withIdentifier: "nameValue")
             
+            let keyLabel = cell?.viewWithTag(1) as! UILabel
+            keyLabel.text = "Location"
+            keyLabel.constraints.filter({$0.identifier == "keyWidth"}).first?.constant = keyLabel.intrinsicContentSize.width
+            (cell?.viewWithTag(2) as! UILabel).text = selectedEvent?.locationName ?? "Unkown"
             //TODO: Find another way to describe if it is official or not
 //            let keyLabel = cell?.viewWithTag(1) as! UILabel
 //            keyLabel.text = "Uses Official FIRST FMS"

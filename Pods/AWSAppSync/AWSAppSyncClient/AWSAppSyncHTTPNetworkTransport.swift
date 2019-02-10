@@ -1,38 +1,20 @@
 //
-//  AWSSigV4HTTPNetworkTransport.swift
-//  AWSAppSyncClient
+// Copyright 2010-2018 Amazon.com, Inc. or its affiliates. All Rights Reserved.
+//
+// Licensed under the Apache License, Version 2.0 (the "License").
+// You may not use this file except in compliance with the License.
+// A copy of the License is located at
+//
+// http://aws.amazon.com/apache2.0
+//
+// or in the "license" file accompanying this file. This file is distributed
+// on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either
+// express or implied. See the License for the specific language governing
+// permissions and limitations under the License.
 //
 
 import Foundation
 import AWSCore
-
-enum AuthType {
-    case awsIAM
-    case apiKey
-    case oidcToken
-    case amazonCognitoUserPools
-}
-
-extension AuthType {
-    var rawValue: String {
-        switch self {
-        case .awsIAM: return "AWS_IAM"
-        case .apiKey: return "API_KEY"
-        case .oidcToken: return "OPENID_CONNECT"
-        case .amazonCognitoUserPools: return "AMAZON_COGNITO_USER_POOLS"
-        }
-    }
-    
-    public static func getAuthType(rawValue: String) throws -> AuthType {
-        switch rawValue {
-        case "AWS_IAM": return .awsIAM
-        case "API_KEY": return .apiKey
-        case "OPENID_CONNECT": return .oidcToken
-        case "AMAZON_COGNITO_USER_POOLS": return .amazonCognitoUserPools
-        default: throw AWSAppSyncClientInfoError(errorMessage: "AuthType not recognized. Pass in a valid AuthType.")
-        }
-    }
-}
 
 public class AWSAppSyncHTTPNetworkTransport: AWSNetworkTransport {
     let url: URL
@@ -44,7 +26,7 @@ public class AWSAppSyncHTTPNetworkTransport: AWSNetworkTransport {
     var userPoolsAuthProvider: AWSCognitoUserPoolsAuthProvider? = nil
     var oidcAuthProvider: AWSOIDCAuthProvider? = nil
     var endpoint: AWSEndpoint? = nil
-    let authType: AuthType
+    let authType: AWSAppSyncAuthType
     var activeTimers: [String: DispatchSourceTimer] = [:]
     
     /// Creates a network transport with the specified server URL and session configuration.
@@ -125,7 +107,7 @@ public class AWSAppSyncHTTPNetworkTransport: AWSNetworkTransport {
         request.httpMethod = "POST"
         request.setValue(NSDate().aws_stringValue(AWSDateISO8601DateFormat2), forHTTPHeaderField: "X-Amz-Date")
         request.setValue("application/json", forHTTPHeaderField: "Content-Type")
-        request.setValue("aws-sdk-ios/2.8.0 AppSyncClient", forHTTPHeaderField: "User-Agent")
+        request.setValue("aws-sdk-ios/2.9.2 AppSyncClient", forHTTPHeaderField: "User-Agent")
         addDeviceId(request: &request)
     }
     
@@ -160,13 +142,9 @@ public class AWSAppSyncHTTPNetworkTransport: AWSNetworkTransport {
         }
     }
     
-    func executeAfter(milliseconds interval: Int, queue: DispatchQueue, block: @escaping () -> Void ) -> DispatchSourceTimer {
+    func executeAfter(interval: DispatchTimeInterval, queue: DispatchQueue, block: @escaping () -> Void ) -> DispatchSourceTimer {
         let timer = DispatchSource.makeTimerSource(flags: DispatchSource.TimerFlags(rawValue: 0), queue: queue)
-        #if swift(>=4)
-            timer.schedule(deadline: .now() + .milliseconds(interval))
-        #else
-            timer.scheduleOneshot(deadline: .now() + .milliseconds(interval))
-        #endif
+        timer.schedule(deadline: .now() + interval)
         timer.setEventHandler(handler: block)
         timer.resume()
         return timer
@@ -185,14 +163,17 @@ public class AWSAppSyncHTTPNetworkTransport: AWSNetworkTransport {
                         completionHandler(jsonBody, nil)
                     case .failure(let error):
                         let taskUUID = UUID().uuidString
-                        let (shouldRetry, backoffTime) = retryHandler.shouldRetryRequest(for: error)
-                        if shouldRetry, let backoffTime = backoffTime {
-                            let timer = self?.executeAfter(milliseconds: backoffTime, queue: DispatchQueue.global(qos: .userInitiated), block: {
+                        let retryAdvice = retryHandler.shouldRetryRequest(for: error)
+                        if retryAdvice.shouldRetry,
+                            let retryInterval = retryAdvice.retryInterval {
+                            let timer = self?.executeAfter(interval: retryInterval,
+                                                           queue: DispatchQueue.global(qos: .userInitiated)) {
                                 self?.sendGraphQLRequest(mutableRequest: mutableRequest,
                                                          retryHandler: retryHandler,
-                                                         networkTransportOperation: networkTransportOperation, completionHandler: completionHandler)
+                                                         networkTransportOperation: networkTransportOperation,
+                                                         completionHandler: completionHandler)
                                 self?.activeTimers.removeValue(forKey: taskUUID)
-                            })
+                            }
                             self?.activeTimers[taskUUID] = timer
                         } else {
                             completionHandler(nil, error)
@@ -279,7 +260,7 @@ public class AWSAppSyncHTTPNetworkTransport: AWSNetworkTransport {
             completionHandler(.success(()))
         case .oidcToken:
             if let provider = self.oidcAuthProvider as? AWSOIDCAuthProviderAsync {
-            
+
                 provider.getLatestAuthToken { (token, error) in
                     if let error = error {
                         completionHandler(.failure(error))
@@ -291,8 +272,8 @@ public class AWSAppSyncHTTPNetworkTransport: AWSNetworkTransport {
                     }
                 }
             } else if let provider = self.oidcAuthProvider {
-                 mutableRequest.setValue(provider.getLatestAuthToken(), forHTTPHeaderField: "authorization")
-                 completionHandler(.success(()))
+                mutableRequest.setValue(provider.getLatestAuthToken(), forHTTPHeaderField: "authorization")
+                completionHandler(.success(()))
             } else {
                 fatalError("Authentication provider not set")
             }

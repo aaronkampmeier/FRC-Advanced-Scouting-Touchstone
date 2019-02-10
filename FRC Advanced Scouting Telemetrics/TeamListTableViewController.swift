@@ -83,7 +83,7 @@ class TeamListTableViewController: UITableViewController, TeamListDetailDataSour
     
     var selectedEventKey: String? {
         didSet {
-            setUpForEvent()
+//            setUpForEvent()
 //            reloadEventRankerObserver()
         }
     }
@@ -116,11 +116,7 @@ class TeamListTableViewController: UITableViewController, TeamListDetailDataSour
         let noEventView = NoEventSelectedView(frame: CGRect(x: 0, y: 0, width: tableView.frame.width, height: tableView.frame.height))
         tableView.backgroundView = noEventView
         
-        //Set last selected event
-        if let lastSelectedEventKey = UserDefaults.standard.value(forKey: lastSelectedEventStorageKey) as? String {
-            //Get event
-            self.selectedEventKey = lastSelectedEventKey
-        }
+        autoChooseEvent()
         
         //Set up a subscriber to event deletions
         do {
@@ -128,10 +124,10 @@ class TeamListTableViewController: UITableViewController, TeamListDetailDataSour
             deleteTrackedEventSubscriber = try Globals.appDelegate.appSyncClient?.subscribe(subscription: subscription) {[weak self] (result, transaction, error) in
                 if let result = result {
                     //Simply returns the event key
-                    let removedEventKey: String = result.data!.onRemoveTrackedEvent!
+                    let removedEventKey: String = result.data!.onRemoveTrackedEvent!.eventKey
                     if self?.selectedEventKey ?? "" == removedEventKey {
                         //TODO: Use transaction to edit cache
-                        self?.selectedEventKey = nil
+                        self?.eventSelected(nil)
                     }
                 } else if let error = error {
                     CLSNSLogv("Error subscribing to OnDeleteTrackedEvent: \(error)", getVaList([]))
@@ -144,26 +140,39 @@ class TeamListTableViewController: UITableViewController, TeamListDetailDataSour
         }
     }
     
+    func autoChooseEvent() {
+        //Get the tracked events
+        Globals.appDelegate.appSyncClient?.fetch(query: ListTrackedEventsQuery(), cachePolicy: .returnCacheDataAndFetch, resultHandler: {[weak self] (result, error) in
+            if Globals.handleAppSyncErrors(forQuery: "ListTrackedEvents-TeamList", result: result, error: error) {
+                let eventKeys = result?.data?.listTrackedEvents?.map({$0!.eventKey}) ?? []
+                //Check if there is a selected event saved
+                if let selectedKey = UserDefaults.standard.value(forKey: self?.lastSelectedEventStorageKey ?? "") as? String {
+                    //Check if it is tracked
+                    if eventKeys.contains(selectedKey) {
+                        //Set it
+                        self?.eventSelected(selectedKey)
+                    } else {
+                        //Not tracked
+                        UserDefaults.standard.set(nil, forKey: self?.lastSelectedEventStorageKey ?? "")
+                        self?.eventSelected(eventKeys.first)
+                    }
+                } else {
+                    self?.eventSelected(eventKeys.first)
+                }
+            } else {
+                //TODO: Show error
+            }
+        })
+    }
+    
     //For some reason this is called when moving the app to the background during stands scouting, not sure if this a beta issue or what but it does cause crash
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         
+        //If no event is selected, select one
         if selectedEventKey == nil {
-            Globals.appDelegate.appSyncClient?.fetch(query: ListTrackedEventsQuery(), cachePolicy: .fetchIgnoringCacheData) {[weak self] result, error in
-                if let error = error {
-                    CLSNSLogv("Error ListTrackedEventsQuery: \(error)", getVaList([]))
-                    Crashlytics.sharedInstance().recordError(error)
-                } else if let errors = result?.errors {
-                    CLSNSLogv("Errors ListTrackedEventQuery (GraphQL): \(errors)", getVaList([]))
-                    for error in errors {
-                        Crashlytics.sharedInstance().recordError(error)
-                    }
-                } else {
-                    self?.selectedEventKey = result?.data?.listTrackedEvents?.first??.eventKey
-                }
-            }
-        } else {
-            setUpForEvent()
+            //Select one
+            autoChooseEvent()
         }
         
         if isSearching {
@@ -184,6 +193,8 @@ class TeamListTableViewController: UITableViewController, TeamListDetailDataSour
         //Set to nil, because the selected team might not be in the new event
         selectedTeam = nil
         statToSortBy = nil
+        unorderedTeamsInEvent = []
+        currentEventTeams = []
         
         if let eventKey = selectedEventKey {
             UserDefaults.standard.set(eventKey, forKey: lastSelectedEventStorageKey)
@@ -192,6 +203,7 @@ class TeamListTableViewController: UITableViewController, TeamListDetailDataSour
             eventSelectionButton.setTitle(eventKey, for: UIControlState())
             
             Globals.appDelegate.appSyncClient?.fetch(query: ListTeamsQuery(eventKey: eventKey), cachePolicy: .returnCacheDataAndFetch, queue: DispatchQueue(label: "Team List Loading", qos: .userInteractive)) {[weak self] result, error in
+                
                 if Globals.handleAppSyncErrors(forQuery: "ListTeams", result: result, error: error) {
                     
                     //Get all of the info on teams in an event
@@ -297,7 +309,7 @@ class TeamListTableViewController: UITableViewController, TeamListDetailDataSour
     
     ///Reloads the teams in an event in the cloud, use if a team does not exist in the ranking
     func reloadEvent(eventKey: String) {
-        Globals.appDelegate.appSyncClient?.perform(mutation: AddTrackedEventMutation(userID: AWSMobileClient.sharedInstance().username ?? "", eventKey: eventKey), optimisticUpdate: {transaction in
+        Globals.appDelegate.appSyncClient?.perform(mutation: AddTrackedEventMutation(eventKey: eventKey), optimisticUpdate: {transaction in
             //TODO: Add Optimistic update
         }) {[weak self] result, error in
             if let error = error {
@@ -536,7 +548,7 @@ class TeamListTableViewController: UITableViewController, TeamListDetailDataSour
                 let rankedTeam = self.selectedEventRanking?.rankedTeams?.first {$0!.teamKey == team.key}
                 let isPicked = rankedTeam??.isPicked ?? false
                 
-                Globals.appDelegate.appSyncClient?.perform(mutation: SetTeamPickedMutation(userID: AWSMobileClient.sharedInstance().username ?? "", eventKey: eventKey, teamKey: team.key, isPicked: !isPicked), optimisticUpdate: { (transaction) in
+                Globals.appDelegate.appSyncClient?.perform(mutation: SetTeamPickedMutation(eventKey: eventKey, teamKey: team.key, isPicked: !isPicked), optimisticUpdate: { (transaction) in
                     //TODO: Optimistic update
                 }, conflictResolutionBlock: { (snapshot, source, result) in
                     CLSNSLogv("Conflict resolution block ran", getVaList([]))
@@ -580,7 +592,7 @@ class TeamListTableViewController: UITableViewController, TeamListDetailDataSour
         //Get the team key
         let team = currentTeamsToDisplay[fromIndexPath.row]
         
-        Globals.appDelegate.appSyncClient?.perform(mutation: MoveRankedTeamMutation(userID: AWSMobileClient.sharedInstance().username!, eventKey: eventKey, teamKey: team.key, toIndex: toIndexPath.row), optimisticUpdate: { (transaction) in
+        Globals.appDelegate.appSyncClient?.perform(mutation: MoveRankedTeamMutation(eventKey: eventKey, teamKey: team.key, toIndex: toIndexPath.row), optimisticUpdate: { (transaction) in
             //TODO: Optimistic
         }, conflictResolutionBlock: { (snapshot, source, result) in
             
@@ -802,6 +814,7 @@ extension TeamListTableViewController: UIPopoverPresentationControllerDelegate {
 extension TeamListTableViewController: EventSelection {
     func eventSelected(_ eventKey: String?) {
         selectedEventKey = eventKey
+        setUpForEvent()
     }
     
     func currentEventKey() -> String? {
@@ -829,46 +842,18 @@ extension TeamListTableViewController: UISearchResultsUpdating, UISearchControll
             if let searchText = searchController.searchBar.text {
                 Answers.logSearch(withQuery: searchText, customAttributes: nil)
                 
-                //For the new realm database
-                var universalPredicates: [NSPredicate] = []
-                universalPredicates.append(NSPredicate(format: "location CONTAINS[cd] %@", argumentArray: [searchText]))
-                universalPredicates.append(NSPredicate(format: "name CONTAINS[cd] %@", argumentArray: [searchText]))
-                universalPredicates.append(NSPredicate(format: "nickname CONTAINS[cd] %@", argumentArray: [searchText]))
-                //For team number we want to return as many as possible as we are building the string (i.e. "42" should include team 4256 as a result).
-                if let inputtedNum = Int(searchText) {
-                    if inputtedNum < 9999 && inputtedNum > 0 {
-                        var upperTeamNumLimit = inputtedNum
-                        while upperTeamNumLimit < 1000 {
-                            upperTeamNumLimit = (upperTeamNumLimit * 10) + 9
-                        }
-                        
-                        var lowerTeamNumLimit = inputtedNum
-                        while lowerTeamNumLimit < 1000 {
-                            lowerTeamNumLimit = lowerTeamNumLimit * 10
-                        }
-                        
-                        //Now create predicate with limits
-                        universalPredicates.append(NSPredicate(format: "teamNumber BETWEEN {%@,%@}", argumentArray: [lowerTeamNumLimit, upperTeamNumLimit]))
-                        
-                        //And for three number teams (like team 931)
-                        var upperTeamNumLimit3 = inputtedNum
-                        while upperTeamNumLimit3 < 100 {
-                            upperTeamNumLimit3 = (upperTeamNumLimit3 * 10) + 9
-                        }
-                        
-                        var lowerTeamNumLimit3 = inputtedNum
-                        while lowerTeamNumLimit3 < 100 {
-                            lowerTeamNumLimit3 = lowerTeamNumLimit3 * 10
-                        }
-                        
-                        universalPredicates.append(NSPredicate(format: "teamNumber BETWEEN {%@,%@}", argumentArray: [lowerTeamNumLimit3, upperTeamNumLimit3]))
-                    }
-                }
-                universalPredicates.append(NSPredicate(format: "website CONTAINS[cd] %@", argumentArray: [searchText]))
-                let universalPredicate = NSCompoundPredicate(orPredicateWithSubpredicates: universalPredicates)
-                
-                let filteredTeams = self.currentSortedTeams.filter() {team in
-                    return universalPredicate.evaluate(with: team)
+                let filteredTeams = self.currentSortedTeams.filter { (team) -> Bool in
+                    var isIncluded = false
+                    isIncluded = team.address?.contains(searchText) ?? false || isIncluded
+                    isIncluded = team.stateProv?.contains(searchText) ?? false || isIncluded
+                    isIncluded = team.city?.contains(searchText) ?? false || isIncluded
+                    isIncluded = team.name.contains(searchText) || isIncluded
+                    isIncluded = team.nickname.contains(searchText) || isIncluded
+                    isIncluded = team.rookieYear?.description.contains(searchText) ?? false || isIncluded
+                    isIncluded = team.teamNumber.description.contains(searchText) || isIncluded
+                    isIncluded = team.website?.contains(searchText) ?? false || isIncluded
+                    
+                    return isIncluded
                 }
                 
                 currentTeamsToDisplay = filteredTeams

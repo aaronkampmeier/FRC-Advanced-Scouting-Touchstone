@@ -1,20 +1,21 @@
 # this is an auto generated file. This will be overwritten
-mutation AddTrackedEvent($userID: ID!, $eventKey: ID!) {
-  addTrackedEvent(userID: $userID, eventKey: $eventKey) {
+mutation AddTrackedEvent($eventKey: ID!) {
+  addTrackedEvent(eventKey: $eventKey) {
     ...EventRanking
   }
 }
-mutation RemoveTrackedEvent($userID: ID!, $eventKey: ID!) {
-  removeTrackedEvent(userID: $userID, eventKey: $eventKey)
+mutation RemoveTrackedEvent($eventKey: ID!) {
+  removeTrackedEvent(eventKey: $eventKey) {
+    eventKey
+    userID
+  }
 }
 mutation MoveRankedTeam(
-  $userID: ID!
   $eventKey: ID!
   $teamKey: ID!
   $toIndex: Int!
 ) {
   moveRankedTeam(
-    userID: $userID
     eventKey: $eventKey
     teamKey: $teamKey
     toIndex: $toIndex
@@ -23,13 +24,11 @@ mutation MoveRankedTeam(
   }
 }
 mutation SetTeamPicked(
-  $userID: ID!
   $eventKey: ID!
   $teamKey: ID!
   $isPicked: Boolean!
 ) {
   setTeamPicked(
-    userID: $userID
     eventKey: $eventKey
     teamKey: $teamKey
     isPicked: $isPicked
@@ -38,13 +37,11 @@ mutation SetTeamPicked(
   }
 }
 mutation UpdateScoutedTeam(
-  $userID: ID!
   $eventKey: ID!
   $teamKey: ID!
   $attributes: AWSJSON!
 ) {
   updateScoutedTeam(
-    userID: $userID
     eventKey: $eventKey
     teamKey: $teamKey
     attributes: $attributes
@@ -53,14 +50,12 @@ mutation UpdateScoutedTeam(
   }
 }
 mutation CreateScoutSession(
-  $userID: ID!
   $eventKey: ID!
   $teamKey: ID!
   $matchKey: ID!
   $timeMarkers: [TimeMarkerInput]!
 ) {
   createScoutSession(
-    userID: $userID
     eventKey: $eventKey
     teamKey: $teamKey
     matchKey: $matchKey
@@ -69,23 +64,25 @@ mutation CreateScoutSession(
     ...ScoutSession
   }
 }
-mutation RemoveScoutSession($userID: ID!, $eventKey: ID!, $key: ID!) {
-  removeScoutSession(userID: $userID, eventKey: $eventKey, key: $key) {
+mutation RemoveScoutSession($eventKey: ID!, $key: ID!) {
+  removeScoutSession(eventKey: $eventKey, key: $key) {
     key
+    userID
     matchKey
     teamKey
     eventKey
   }
 }
 
-mutation AddTeamComment($userID: ID!, $eventKey: String!, $teamKey: String!, $body: String!, $author: String!) {
-  addTeamComment(userID: $userID, eventKey: $eventKey, teamKey: $teamKey, body: $body, author: $author) {
+mutation AddTeamComment($eventKey: String!, $teamKey: String!, $body: String!, $author: String!) {
+  addTeamComment(eventKey: $eventKey, teamKey: $teamKey, body: $body, author: $author) {
     ...TeamComment
   }
 }
 
-mutation RemoveTeamComment($userID: ID!, $eventKey: String!, $key: String!) {
-  removeTeamComment(userID: $userID, eventKey: $eventKey, key: $key) {
+mutation RemoveTeamComment($eventKey: String!, $key: String!) {
+  removeTeamComment(eventKey: $eventKey, key: $key) {
     key
+    userID
   }
 }

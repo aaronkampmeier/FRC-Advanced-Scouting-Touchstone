@@ -74,6 +74,7 @@ func !=<T>(lhs: Statistic<T>, rhs: Statistic<T>) -> Bool  {
 }
 
 enum StatValue: CustomStringConvertible, Equatable, Comparable {
+    
     case Integer(Int)
     case Double(Double)
     case Bool(Bool)

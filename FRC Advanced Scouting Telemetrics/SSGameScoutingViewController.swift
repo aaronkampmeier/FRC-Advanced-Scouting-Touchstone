@@ -33,11 +33,12 @@ class SSGameScoutingViewController: UIViewController {
         
         let initialChildVC = self.childViewControllers.first!
         let nextVC: UIViewController?
-        if ssDataManager?.preloadedCube ?? false {
-            nextVC = placeCubeVC
-        } else {
-            nextVC = grabCubeVC
-        }
+//        if ssDataManager?.preloadedCube ?? false {
+//            nextVC = placeCubeVC
+//        } else {
+//            nextVC = grabCubeVC
+//        }
+        nextVC = placeCubeVC
         cycleFromViewController(initialChildVC, toViewController: nextVC!)
         (nextVC as! SSOffenseWhereViewController).show()
     }
@@ -84,11 +85,11 @@ extension SSGameScoutingViewController: WhereDelegate {
     
     func selected(_ whereVC: SSOffenseWhereViewController, id: String) {
         if whereVC == grabCubeVC {
-            ssDataManager?.saveTimeMarker(event: .GrabbedCube, atTime: ssDataManager!.stopwatch.elapsedTime, withAssociatedLocation: id)
+            ssDataManager?.addTimeMarker(event: "Grabbed Cube", location: id)
             cycleFromViewController(grabCubeVC, toViewController: placeCubeVC)
             placeCubeVC.show()
         } else if whereVC == placeCubeVC {
-            ssDataManager?.saveTimeMarker(event: .PlacedCube, atTime: ssDataManager!.stopwatch.elapsedTime, withAssociatedLocation: id)
+            ssDataManager?.addTimeMarker(event: "Placed Cube", location: id)
             cycleFromViewController(placeCubeVC, toViewController: grabCubeVC)
             grabCubeVC.show()
         }

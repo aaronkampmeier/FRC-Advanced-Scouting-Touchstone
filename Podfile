@@ -14,7 +14,7 @@ pod 'AWSCore'
 pod 'AWSMobileClient'
 pod 'AWSUserPoolsSignIn'
 pod 'AWSAuthUI'
-pod 'AWSAppSync'
+pod 'AWSAppSync', '~> 2.9.2'
 pod 'AWSPinpoint'
 end
 

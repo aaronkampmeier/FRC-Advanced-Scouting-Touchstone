@@ -43,6 +43,21 @@
 		933E794F1E385BB20033563B /* SSPreloadingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 933E794E1E385BB20033563B /* SSPreloadingViewController.swift */; };
 		9349621F21E9A40500F761BD /* ScoutedTeamStats.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9349621E21E9A40500F761BD /* ScoutedTeamStats.swift */; };
 		934DDE462002B0510032095C /* RealmDataMangager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 934DDE452002B0510032095C /* RealmDataMangager.swift */; };
+		934F4C1622066AB100A6F5FE /* LoginFormValidation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 934F4BFF22066AB100A6F5FE /* LoginFormValidation.swift */; };
+		934F4C1722066AB100A6F5FE /* LoginTableViewDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = 934F4C0122066AB100A6F5FE /* LoginTableViewDataSource.swift */; };
+		934F4C1822066AB100A6F5FE /* LoginKeyboardManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 934F4C0222066AB100A6F5FE /* LoginKeyboardManager.swift */; };
+		934F4C1922066AB100A6F5FE /* LoginViewControllerTransitioning.swift in Sources */ = {isa = PBXBuildFile; fileRef = 934F4C0322066AB100A6F5FE /* LoginViewControllerTransitioning.swift */; };
+		934F4C1A22066AB100A6F5FE /* AWSCognitoAuthenticationProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 934F4C0522066AB100A6F5FE /* AWSCognitoAuthenticationProvider.swift */; };
+		934F4C1B22066AB100A6F5FE /* UIImage+Icons.swift in Sources */ = {isa = PBXBuildFile; fileRef = 934F4C0722066AB100A6F5FE /* UIImage+Icons.swift */; };
+		934F4C1C22066AB100A6F5FE /* FileManager+ApplicationFilePaths.swift in Sources */ = {isa = PBXBuildFile; fileRef = 934F4C0822066AB100A6F5FE /* FileManager+ApplicationFilePaths.swift */; };
+		934F4C1E22066AB100A6F5FE /* String+URLComponents.swift in Sources */ = {isa = PBXBuildFile; fileRef = 934F4C0A22066AB100A6F5FE /* String+URLComponents.swift */; };
+		934F4C1F22066AB100A6F5FE /* LoginViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 934F4C0C22066AB100A6F5FE /* LoginViewController.swift */; };
+		934F4C2022066AB100A6F5FE /* LoginFooterView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 934F4C0E22066AB100A6F5FE /* LoginFooterView.swift */; };
+		934F4C2122066AB100A6F5FE /* StatusBarUnderlayView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 934F4C0F22066AB100A6F5FE /* StatusBarUnderlayView.swift */; };
+		934F4C2222066AB100A6F5FE /* LoginView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 934F4C1022066AB100A6F5FE /* LoginView.swift */; };
+		934F4C2322066AB100A6F5FE /* LoginHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 934F4C1122066AB100A6F5FE /* LoginHeaderView.swift */; };
+		934F4C2422066AB100A6F5FE /* RealmLogoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 934F4C1222066AB100A6F5FE /* RealmLogoView.swift */; };
+		934F4C2522066AB100A6F5FE /* LoginTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 934F4C1322066AB100A6F5FE /* LoginTableViewCell.swift */; };
 		9351017021F42CD100D402FE /* DataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9351016F21F42CD100D402FE /* DataSource.swift */; };
 		9351017421F42D6000D402FE /* AWSDataManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9351017321F42D6000D402FE /* AWSDataManager.swift */; };
 		9351017621F4DEB700D402FE /* ImageScalingFunctions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9351017521F4DEB600D402FE /* ImageScalingFunctions.swift */; };
@@ -69,6 +84,7 @@
 		937C682A204C852600FAEDE8 /* EventStatsGraphViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 937C6829204C852600FAEDE8 /* EventStatsGraphViewController.swift */; };
 		937C682E204C86DB00FAEDE8 /* SelectStatsTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 937C682D204C86DB00FAEDE8 /* SelectStatsTableViewController.swift */; };
 		937E9C961E40468300D0ED76 /* SuperNotesCollectionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 937E9C951E40468300D0ED76 /* SuperNotesCollectionViewController.swift */; };
+		938BEC1B22029ED9002B39D7 /* awsconfiguration.json in Resources */ = {isa = PBXBuildFile; fileRef = 938BEC1A22029ED4002B39D7 /* awsconfiguration.json */; };
 		938E0B3C2056D85C00666FA7 /* TBAAsyncManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 938E0B3B2056D85C00666FA7 /* TBAAsyncManager.swift */; };
 		9391EA6C1E4852D2008E17A1 /* PitStringFieldCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9391EA6B1E4852D2008E17A1 /* PitStringFieldCollectionViewCell.swift */; };
 		93A38B3A2055EBA400B8B692 /* NoEventSelected.xib in Resources */ = {isa = PBXBuildFile; fileRef = 93A38B392055EBA400B8B692 /* NoEventSelected.xib */; };
@@ -81,7 +97,6 @@
 		93C609281E67D0CC007A689D /* MatchOverviewMasterViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93C609271E67D0CC007A689D /* MatchOverviewMasterViewController.swift */; };
 		93CEA6302041ED0600C5B357 /* ForgotPasswordViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93CEA62F2041ED0600C5B357 /* ForgotPasswordViewController.swift */; };
 		93CEA6322041FB5300C5B357 /* ConfirmForgotPasswordViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93CEA6312041FB5300C5B357 /* ConfirmForgotPasswordViewController.swift */; };
-		93D46A8921A8F6A5003F09C5 /* awsconfiguration.json in Resources */ = {isa = PBXBuildFile; fileRef = 93D46A8821A8F6A5003F09C5 /* awsconfiguration.json */; };
 		93D75B641E5D0866002CBED2 /* FieldLocationDisplayViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93D75B631E5D0866002CBED2 /* FieldLocationDisplayViewController.swift */; };
 		93E551E621C9FBEB006C79A8 /* Charts.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 93E551E321C9FBD2006C79A8 /* Charts.framework */; };
 		93E551E721C9FBEB006C79A8 /* Charts.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 93E551E321C9FBD2006C79A8 /* Charts.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
@@ -190,6 +205,21 @@
 		933E794E1E385BB20033563B /* SSPreloadingViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SSPreloadingViewController.swift; sourceTree = "<group>"; };
 		9349621E21E9A40500F761BD /* ScoutedTeamStats.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScoutedTeamStats.swift; sourceTree = "<group>"; };
 		934DDE452002B0510032095C /* RealmDataMangager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RealmDataMangager.swift; sourceTree = "<group>"; };
+		934F4BFF22066AB100A6F5FE /* LoginFormValidation.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LoginFormValidation.swift; sourceTree = "<group>"; };
+		934F4C0122066AB100A6F5FE /* LoginTableViewDataSource.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LoginTableViewDataSource.swift; sourceTree = "<group>"; };
+		934F4C0222066AB100A6F5FE /* LoginKeyboardManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LoginKeyboardManager.swift; sourceTree = "<group>"; };
+		934F4C0322066AB100A6F5FE /* LoginViewControllerTransitioning.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LoginViewControllerTransitioning.swift; sourceTree = "<group>"; };
+		934F4C0522066AB100A6F5FE /* AWSCognitoAuthenticationProvider.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AWSCognitoAuthenticationProvider.swift; sourceTree = "<group>"; };
+		934F4C0722066AB100A6F5FE /* UIImage+Icons.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIImage+Icons.swift"; sourceTree = "<group>"; };
+		934F4C0822066AB100A6F5FE /* FileManager+ApplicationFilePaths.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "FileManager+ApplicationFilePaths.swift"; sourceTree = "<group>"; };
+		934F4C0A22066AB100A6F5FE /* String+URLComponents.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "String+URLComponents.swift"; sourceTree = "<group>"; };
+		934F4C0C22066AB100A6F5FE /* LoginViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LoginViewController.swift; sourceTree = "<group>"; };
+		934F4C0E22066AB100A6F5FE /* LoginFooterView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LoginFooterView.swift; sourceTree = "<group>"; };
+		934F4C0F22066AB100A6F5FE /* StatusBarUnderlayView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StatusBarUnderlayView.swift; sourceTree = "<group>"; };
+		934F4C1022066AB100A6F5FE /* LoginView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LoginView.swift; sourceTree = "<group>"; };
+		934F4C1122066AB100A6F5FE /* LoginHeaderView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LoginHeaderView.swift; sourceTree = "<group>"; };
+		934F4C1222066AB100A6F5FE /* RealmLogoView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RealmLogoView.swift; sourceTree = "<group>"; };
+		934F4C1322066AB100A6F5FE /* LoginTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LoginTableViewCell.swift; sourceTree = "<group>"; };
 		9351016F21F42CD100D402FE /* DataSource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataSource.swift; sourceTree = "<group>"; };
 		9351017321F42D6000D402FE /* AWSDataManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AWSDataManager.swift; sourceTree = "<group>"; };
 		9351017521F4DEB600D402FE /* ImageScalingFunctions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ImageScalingFunctions.swift; sourceTree = "<group>"; };
@@ -216,6 +246,7 @@
 		937C6829204C852600FAEDE8 /* EventStatsGraphViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventStatsGraphViewController.swift; sourceTree = "<group>"; };
 		937C682D204C86DB00FAEDE8 /* SelectStatsTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SelectStatsTableViewController.swift; sourceTree = "<group>"; };
 		937E9C951E40468300D0ED76 /* SuperNotesCollectionViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SuperNotesCollectionViewController.swift; sourceTree = "<group>"; };
+		938BEC1A22029ED4002B39D7 /* awsconfiguration.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; name = awsconfiguration.json; path = "/Users/aaron/Documents/Xcode Projects/FRC Advanced Scouting Telemetrics/FRC Advanced Scouting Telemetrics/awsconfiguration.json"; sourceTree = "<absolute>"; };
 		938D9CB01E1B05BA00A5E522 /* FASTTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FASTTests.swift; sourceTree = "<group>"; };
 		938E0B3B2056D85C00666FA7 /* TBAAsyncManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TBAAsyncManager.swift; sourceTree = "<group>"; };
 		9391EA6B1E4852D2008E17A1 /* PitStringFieldCollectionViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PitStringFieldCollectionViewCell.swift; sourceTree = "<group>"; };
@@ -228,7 +259,6 @@
 		93C609271E67D0CC007A689D /* MatchOverviewMasterViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MatchOverviewMasterViewController.swift; sourceTree = "<group>"; };
 		93CEA62F2041ED0600C5B357 /* ForgotPasswordViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ForgotPasswordViewController.swift; sourceTree = "<group>"; };
 		93CEA6312041FB5300C5B357 /* ConfirmForgotPasswordViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConfirmForgotPasswordViewController.swift; sourceTree = "<group>"; };
-		93D46A8821A8F6A5003F09C5 /* awsconfiguration.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = awsconfiguration.json; sourceTree = SOURCE_ROOT; };
 		93D75B631E5D0866002CBED2 /* FieldLocationDisplayViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FieldLocationDisplayViewController.swift; sourceTree = "<group>"; };
 		93E551DD21C9FBD1006C79A8 /* Charts.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = Charts.xcodeproj; path = "Charts-master/Charts.xcodeproj"; sourceTree = "<group>"; };
 		93E551F821CACDE0006C79A8 /* CognitoAuthProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CognitoAuthProvider.swift; sourceTree = "<group>"; };
@@ -354,6 +384,7 @@
 		1F78E7811C3B469300221927 /* FRC Advanced Scouting Touchstone */ = {
 			isa = PBXGroup;
 			children = (
+				934F4BFC22066AB000A6F5FE /* RealmLoginKit */,
 				1F78E7821C3B469300221927 /* AppDelegate.swift */,
 				93E551F821CACDE0006C79A8 /* CognitoAuthProvider.swift */,
 				93183B8421C8AB83008DC997 /* API.swift */,
@@ -375,7 +406,7 @@
 				1F78E7911C3B469300221927 /* Info.plist */,
 				933D21501E609BF7008C8276 /* Additional Licenses.plist */,
 				933D214A1E609A04008C8276 /* Pods-acknowledgments.plist */,
-				93D46A8821A8F6A5003F09C5 /* awsconfiguration.json */,
+				938BEC1A22029ED4002B39D7 /* awsconfiguration.json */,
 			);
 			name = "FRC Advanced Scouting Touchstone";
 			path = "FRC Advanced Scouting Telemetrics";
@@ -439,6 +470,84 @@
 				938E0B3B2056D85C00666FA7 /* TBAAsyncManager.swift */,
 			);
 			name = Deprecated;
+			sourceTree = "<group>";
+		};
+		934F4BFC22066AB000A6F5FE /* RealmLoginKit */ = {
+			isa = PBXGroup;
+			children = (
+				934F4BFD22066AB000A6F5FE /* Models */,
+				934F4C0622066AB100A6F5FE /* Extensions */,
+				934F4C0B22066AB100A6F5FE /* Controllers */,
+				934F4C0D22066AB100A6F5FE /* Views */,
+			);
+			path = RealmLoginKit;
+			sourceTree = "<group>";
+		};
+		934F4BFD22066AB000A6F5FE /* Models */ = {
+			isa = PBXGroup;
+			children = (
+				934F4BFE22066AB000A6F5FE /* InputValidation */,
+				934F4C0022066AB100A6F5FE /* UIStateCoordination */,
+				934F4C0422066AB100A6F5FE /* AuthenticationProviders */,
+			);
+			path = Models;
+			sourceTree = "<group>";
+		};
+		934F4BFE22066AB000A6F5FE /* InputValidation */ = {
+			isa = PBXGroup;
+			children = (
+				934F4BFF22066AB100A6F5FE /* LoginFormValidation.swift */,
+			);
+			path = InputValidation;
+			sourceTree = "<group>";
+		};
+		934F4C0022066AB100A6F5FE /* UIStateCoordination */ = {
+			isa = PBXGroup;
+			children = (
+				934F4C0122066AB100A6F5FE /* LoginTableViewDataSource.swift */,
+				934F4C0222066AB100A6F5FE /* LoginKeyboardManager.swift */,
+				934F4C0322066AB100A6F5FE /* LoginViewControllerTransitioning.swift */,
+			);
+			path = UIStateCoordination;
+			sourceTree = "<group>";
+		};
+		934F4C0422066AB100A6F5FE /* AuthenticationProviders */ = {
+			isa = PBXGroup;
+			children = (
+				934F4C0522066AB100A6F5FE /* AWSCognitoAuthenticationProvider.swift */,
+			);
+			path = AuthenticationProviders;
+			sourceTree = "<group>";
+		};
+		934F4C0622066AB100A6F5FE /* Extensions */ = {
+			isa = PBXGroup;
+			children = (
+				934F4C0722066AB100A6F5FE /* UIImage+Icons.swift */,
+				934F4C0822066AB100A6F5FE /* FileManager+ApplicationFilePaths.swift */,
+				934F4C0A22066AB100A6F5FE /* String+URLComponents.swift */,
+			);
+			path = Extensions;
+			sourceTree = "<group>";
+		};
+		934F4C0B22066AB100A6F5FE /* Controllers */ = {
+			isa = PBXGroup;
+			children = (
+				934F4C0C22066AB100A6F5FE /* LoginViewController.swift */,
+			);
+			path = Controllers;
+			sourceTree = "<group>";
+		};
+		934F4C0D22066AB100A6F5FE /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				934F4C0E22066AB100A6F5FE /* LoginFooterView.swift */,
+				934F4C0F22066AB100A6F5FE /* StatusBarUnderlayView.swift */,
+				934F4C1022066AB100A6F5FE /* LoginView.swift */,
+				934F4C1122066AB100A6F5FE /* LoginHeaderView.swift */,
+				934F4C1222066AB100A6F5FE /* RealmLogoView.swift */,
+				934F4C1322066AB100A6F5FE /* LoginTableViewCell.swift */,
+			);
+			path = Views;
 			sourceTree = "<group>";
 		};
 		93633B20200D9B35000EC83A /* Realm Database */ = {
@@ -704,7 +813,7 @@
 				933D21511E609BF7008C8276 /* Additional Licenses.plist in Resources */,
 				936572E11E1610CA00439728 /* About.rtf in Resources */,
 				93A38B3A2055EBA400B8B692 /* NoEventSelected.xib in Resources */,
-				93D46A8921A8F6A5003F09C5 /* awsconfiguration.json in Resources */,
+				938BEC1B22029ED9002B39D7 /* awsconfiguration.json in Resources */,
 				933D214B1E609A04008C8276 /* Pods-acknowledgments.plist in Resources */,
 				93780A3020799F9C000B4565 /* LoginPromotionalText.rtf in Resources */,
 				1F78E7881C3B469300221927 /* Main.storyboard in Resources */,
@@ -860,6 +969,8 @@
 				930B96641E456D6C00E385D3 /* PitImageSelectorCollectionViewCell.swift in Sources */,
 				930B965C1E4548F700E385D3 /* PitSegmentedSelectorCollectionViewCell.swift in Sources */,
 				93E551F921CACDE0006C79A8 /* CognitoAuthProvider.swift in Sources */,
+				934F4C2422066AB100A6F5FE /* RealmLogoView.swift in Sources */,
+				934F4C1F22066AB100A6F5FE /* LoginViewController.swift in Sources */,
 				938E0B3C2056D85C00666FA7 /* TBAAsyncManager.swift in Sources */,
 				930B96671E45A91A00E385D3 /* PitButtonCollectionViewCell.swift in Sources */,
 				935A2B0A1E6E6968008FEF9D /* TimeMarkerDetailViewController.swift in Sources */,
@@ -868,7 +979,9 @@
 				937C682A204C852600FAEDE8 /* EventStatsGraphViewController.swift in Sources */,
 				933E794F1E385BB20033563B /* SSPreloadingViewController.swift in Sources */,
 				93A38B3F2055F49F00B8B692 /* NoEventSelectedView.swift in Sources */,
+				934F4C1A22066AB100A6F5FE /* AWSCognitoAuthenticationProvider.swift in Sources */,
 				93FBC39A1E3EEDEC00FEB328 /* SSClimbViewController.swift in Sources */,
+				934F4C1B22066AB100A6F5FE /* UIImage+Icons.swift in Sources */,
 				932C344C1E12DC2600A23203 /* EventInfoVC.swift in Sources */,
 				932CB3F21E305E8200712725 /* SSOffenseWhereViewController.swift in Sources */,
 				9353ADC21E57B09D00120F1A /* MatchListTableViewCell.swift in Sources */,
@@ -878,6 +991,7 @@
 				1F1C23DA1E07673E008885A1 /* AddEventTableViewController.swift in Sources */,
 				1F1C23CE1E07487C008885A1 /* TeamEventPerformance.swift in Sources */,
 				934DDE462002B0510032095C /* RealmDataMangager.swift in Sources */,
+				934F4C1622066AB100A6F5FE /* LoginFormValidation.swift in Sources */,
 				1F78E7831C3B469300221927 /* AppDelegate.swift in Sources */,
 				937BFD0420657E9E006FB3E0 /* OnboardingPathChooserViewController.swift in Sources */,
 				9353ADBC1E57ACF100120F1A /* MatchesTableViewController.swift in Sources */,
@@ -886,7 +1000,9 @@
 				9366C5AD20490AAD00A84C47 /* StatChartViewController.swift in Sources */,
 				1FD0A09B1C95093600013A18 /* TeamListTableViewCell.swift in Sources */,
 				9369681A1E502AC8001DB15D /* TeamDetailKeyValueSpreadCollectionViewCell.swift in Sources */,
+				934F4C1C22066AB100A6F5FE /* FileManager+ApplicationFilePaths.swift in Sources */,
 				930B96621E456D3000E385D3 /* PitTableViewSelectorCollectionViewCell.swift in Sources */,
+				934F4C2522066AB100A6F5FE /* LoginTableViewCell.swift in Sources */,
 				1F1C23C21E07487C008885A1 /* Team.swift in Sources */,
 				1FBB426D1C9A29FC0017E36C /* Statistics.swift in Sources */,
 				93D75B641E5D0866002CBED2 /* FieldLocationDisplayViewController.swift in Sources */,
@@ -897,19 +1013,27 @@
 				935A2B061E6CDC4C008FEF9D /* MatchOverviewPerformanceDetailViewController.swift in Sources */,
 				935A2B031E6CD1F0008FEF9D /* MatchOverviewSplitViewController.swift in Sources */,
 				93CEA6302041ED0600C5B357 /* ForgotPasswordViewController.swift in Sources */,
+				934F4C2122066AB100A6F5FE /* StatusBarUnderlayView.swift in Sources */,
+				934F4C1822066AB100A6F5FE /* LoginKeyboardManager.swift in Sources */,
 				9349621F21E9A40500F761BD /* ScoutedTeamStats.swift in Sources */,
 				1FDC1BD31CD6A35F00ABE327 /* TeamListDetailViewController.swift in Sources */,
 				1F1C23C41E07487C008885A1 /* TeamMatchPerformance.swift in Sources */,
+				934F4C1922066AB100A6F5FE /* LoginViewControllerTransitioning.swift in Sources */,
 				1F4534561C7276DE004EDDB9 /* EventPickerViewController.swift in Sources */,
 				936572DF1E160EBB00439728 /* AboutViewController.swift in Sources */,
 				9351017621F4DEB700D402FE /* ImageScalingFunctions.swift in Sources */,
+				934F4C1722066AB100A6F5FE /* LoginTableViewDataSource.swift in Sources */,
+				934F4C2022066AB100A6F5FE /* LoginFooterView.swift in Sources */,
 				1F4534101C6FF916004EDDB9 /* StandsScoutingViewController.swift in Sources */,
+				934F4C2222066AB100A6F5FE /* LoginView.swift in Sources */,
 				9351017421F42D6000D402FE /* AWSDataManager.swift in Sources */,
+				934F4C2322066AB100A6F5FE /* LoginHeaderView.swift in Sources */,
 				936967F71E4FD057001DB15D /* TeamDetailTableCollectionViewCell.swift in Sources */,
 				93780A2A20797487000B4565 /* WelcomePageViewController.swift in Sources */,
 				1FDC1BCE1CD69EBB00ABE327 /* TeamListSplitViewController.swift in Sources */,
 				93CEA6322041FB5300C5B357 /* ConfirmForgotPasswordViewController.swift in Sources */,
 				1F21DF121C66942200C55D0E /* SortVC.swift in Sources */,
+				934F4C1E22066AB100A6F5FE /* String+URLComponents.swift in Sources */,
 				9391EA6C1E4852D2008E17A1 /* PitStringFieldCollectionViewCell.swift in Sources */,
 				93780A2E20799E7D000B4565 /* LoginPromotionalViewController.swift in Sources */,
 				9317C03B201ECFEF00F1E907 /* SSGameScoutingViewController.swift in Sources */,

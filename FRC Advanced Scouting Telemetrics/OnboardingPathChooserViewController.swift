@@ -96,7 +96,7 @@ class OnboardingPathChooserViewController: UIViewController {
         
 //        let loginVC = (UIApplication.shared.delegate as! AppDelegate).logInViewController()
 //        self.present(loginVC, animated: true, completion: nil)
-        Globals.appDelegate.displayLogin()
+        Globals.appDelegate.displayLogin(isRegistering: false, onVC: self)
         
         let event = pinpoint?.analyticsClient.createEvent(withEventType: "Onboarding Completed")
         event?.addAttribute("Log In", forKey: "Onboarded Route")
@@ -110,7 +110,7 @@ class OnboardingPathChooserViewController: UIViewController {
 //        self.present(loginVC, animated: true, completion: nil)
 //        loginVC.setRegistering(true, animated: false)
         
-        Globals.appDelegate.displayLogin()
+        Globals.appDelegate.displayLogin(isRegistering: true, onVC: self)
         
         let event = pinpoint?.analyticsClient.createEvent(withEventType: "Onboarding Completed")
         event?.addAttribute("Sign Up", forKey: "Onboarded Route")

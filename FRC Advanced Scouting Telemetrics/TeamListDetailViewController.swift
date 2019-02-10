@@ -10,6 +10,8 @@ import UIKit
 import NYTPhotoViewer
 import Crashlytics
 import SafariServices
+import AWSAppSync
+import AWSMobileClient
 
 protocol TeamListDetailDataSource {
     func team() -> Team?
@@ -151,13 +153,13 @@ class TeamListDetailViewController: UIViewController {
         
         if segue.identifier == "standsScouting" {
             let destinationVC = segue.destination as! StandsScoutingViewController
-            destinationVC.setUp(forTeamKey: self.scoutedTeam?.teamKey ?? "", andEventKey: self.selectedEventKey ?? "")
+            destinationVC.setUp(forTeamKey: self.selectedTeam?.key ?? "", andEventKey: self.selectedEventKey ?? "")
             
             Answers.logCustomEvent(withName: "Opened Stands Scouting", customAttributes: ["Source":"Team Detail Button"])
             CLSNSLogv("Opening Stands Scouting from Team Detail Button", getVaList([]))
         } else if segue.identifier == "pitScouting" {
             let pitScoutingVC = segue.destination as! PitScoutingViewController
-            pitScoutingVC.scoutedTeam = scoutedTeam
+            pitScoutingVC.setUp(forTeamKey: self.selectedTeam?.key ?? "", inEvent: self.selectedEventKey ?? "")
         } else if segue.identifier == "teamDetailCollection" {
             detailCollectionVC = (segue.destination as! TeamDetailCollectionViewController)
         }
@@ -168,32 +170,72 @@ class TeamListDetailViewController: UIViewController {
         // Dispose of any resources that can be recreated.
     }
     
+    var updateTeamSubcription: AWSAppSyncSubscriptionWatcher<OnUpdateScoutedTeamSubscription>?
+    var listScoutedTeamsWatcher: GraphQLQueryWatcher<ListScoutedTeamsQuery>?
+    var listStatusesWatcher: GraphQLQueryWatcher<ListTeamEventStatusesQuery>?
     func set(input: (team: Team, eventKey: String)?) {
+        updateTeamSubcription?.cancel()
+        listScoutedTeamsWatcher?.cancel()
+        listStatusesWatcher?.cancel()
+        
         self.selectedEventKey = input?.eventKey
         self.selectedTeam = input?.team
+        self.scoutedTeam = nil
+        self.statusString = nil
+        generalInfoTableView?.reloadData()
         self.updateView()
         
         if let input = input {
             //Grab the scouted data
-            Globals.appDelegate.appSyncClient?.fetch(query: GetScoutedTeamQuery(eventKey: self.selectedEventKey ?? "", teamKey: input.team.key), cachePolicy: .returnCacheDataAndFetch) {result, error in
-                if Globals.handleAppSyncErrors(forQuery: "GetScoutedTeamQuery", result: result, error: error) {
-                    self.scoutedTeam = result?.data?.getScoutedTeam?.fragments.scoutedTeam
+            listScoutedTeamsWatcher = Globals.appDelegate.appSyncClient?.watch(query: ListScoutedTeamsQuery(eventKey: self.selectedEventKey ?? ""), cachePolicy: .returnCacheDataAndFetch, resultHandler: {[weak self] (result, error) in
+                if Globals.handleAppSyncErrors(forQuery: "ListScoutedTeams-TeamListDetail", result: result, error: error) {
+                    let sTeams = result?.data?.listScoutedTeams?.map({$0!.fragments.scoutedTeam}) ?? []
                     
-                    self.updateView()
+                    self?.scoutedTeam = sTeams.first(where: {$0.teamKey == input.team.key})
+                    
+                    self?.updateView()
                 } else {
-                    //TODO: Throw error
+                    //TODO: Show error
+                    let alert = UIAlertController(title: "Error Loading Team", message: "There was an error loading the team's information. \((error as? AWSMobileClientError)?.message ?? "")", preferredStyle: .alert)
+                    alert.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
+                    self?.present(alert, animated: true, completion: nil)
                 }
-            }
+            })
             
             //Status
-            Globals.appDelegate.appSyncClient?.fetch(query: ListTeamEventStatusesQuery(eventKey: input.eventKey), cachePolicy: .returnCacheDataElseFetch) {result, error in
+            listStatusesWatcher = Globals.appDelegate.appSyncClient?.watch(query: ListTeamEventStatusesQuery(eventKey: input.eventKey), cachePolicy: .returnCacheDataAndFetch) {[weak self] result, error in
                 if Globals.handleAppSyncErrors(forQuery: "TeamListDetail-ListTeamEventStatusesQuery", result: result, error: error) {
                     let statuses = result?.data?.listTeamEventStatuses
-                    self.statusString = statuses?.first(where: {$0?.teamKey ?? "" == input.team.key})??.fragments.teamEventStatus.overallStatusStr
-                    self.generalInfoTableView?.reloadData()
+                    let str = statuses?.first(where: {$0?.teamKey ?? "" == input.team.key})??.fragments.teamEventStatus.overallStatusStr
+                    if str != self?.statusString {
+                        self?.statusString = str
+                        self?.generalInfoTableView?.reloadData()
+                        self?.resizeDetailViewHeights()
+                    }
                 } else {
                     //TODO: - Show error
                 }
+            }
+            
+            //Set up a subscription
+            do {
+                updateTeamSubcription = try Globals.appDelegate.appSyncClient?.subscribe(subscription: OnUpdateScoutedTeamSubscription(userID: AWSMobileClient.sharedInstance().username ?? "", eventKey: input.eventKey, teamKey: input.team.key), resultHandler: { (result, transaction, error) in
+                    if Globals.handleAppSyncErrors(forQuery: "OnUpdateScoutedTeam-TeamDetail", result: result, error: error) {
+                        try? transaction?.update(query: ListScoutedTeamsQuery(eventKey: input.eventKey), { (selectionSet) in
+                            if let index = selectionSet.listScoutedTeams?.firstIndex(where: {$0?.teamKey == input.team.key}) {
+                                selectionSet.listScoutedTeams?.remove(at: index)
+                            }
+                            if let newTeam = result?.data?.onUpdateScoutedTeam {
+                                selectionSet.listScoutedTeams?.append(try! ListScoutedTeamsQuery.Data.ListScoutedTeam(newTeam))
+                            }
+                        })
+                    } else {
+                        
+                    }
+                })
+            } catch {
+                CLSNSLogv("Error starting updateScoutedTeam subscription: \(error)", getVaList([]))
+                Crashlytics.sharedInstance().recordError(error)
             }
         } else {
             self.scoutedTeam = nil
@@ -262,7 +304,6 @@ class TeamListDetailViewController: UIViewController {
             }
         }
         
-        generalInfoTableView?.reloadData()
         detailCollectionVC?.loadStats(forScoutedTeam: self.scoutedTeam)
         
         resizeDetailViewHeights()

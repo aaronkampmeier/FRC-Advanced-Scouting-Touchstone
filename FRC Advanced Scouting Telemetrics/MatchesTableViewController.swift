@@ -19,11 +19,7 @@ class MatchesTableViewController: UITableViewController {
     
     var delegate: MatchesTableViewControllerDelegate?
     
-    var matches: [Match] = [] {
-        didSet {
-            tableView.reloadData()
-        }
-    }
+    var matches: [Match] = []
     
     var noMatchesView: UIView!
 
@@ -65,6 +61,47 @@ class MatchesTableViewController: UITableViewController {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         
+    }
+
+    override func didReceiveMemoryWarning() {
+        super.didReceiveMemoryWarning()
+        // Dispose of any resources that can be recreated.
+    }
+    
+    func load(forEventKey eventKey: String?, specifyingTeam teamKey: String? = nil) {
+        self.matches = []
+        tableView.reloadData()
+        
+        if let eventKey = eventKey {
+            //Get the matches
+            Globals.appDelegate.appSyncClient?.fetch(query: ListMatchesQuery(eventKey: eventKey), cachePolicy: .returnCacheDataAndFetch, resultHandler: {[weak self] (result, error) in
+                if Globals.handleAppSyncErrors(forQuery: "ListMatchesQuery", result: result, error: error) {
+                    let returnedMatches = (result?.data?.listMatches?.map {$0!.fragments.match} ?? []).sorted(by: { (match1, match2) -> Bool in
+                        return match1 < match2
+                    })
+                    if let teamKey = teamKey {
+                        self?.matches = returnedMatches.filter {match in
+                            if match.alliances?.blue?.teamKeys?.contains(teamKey) ?? false || match.alliances?.red?.teamKeys?.contains(teamKey) ?? false {
+                                return true
+                            } else {
+                                return false
+                            }
+                        }
+                    } else {
+                        self?.matches = returnedMatches
+                    }
+                    
+                    self?.tableView.reloadData()
+                    self?.scrollToSoonest()
+                } else {
+                    //TODO: Throw error
+                    
+                }
+            })
+        }
+    }
+    
+    func scrollToSoonest() {
         //Scroll to the match that is up next according to the schedule, assuming they are in order by time
         var closestMatchAndTimeDistance: (match: Match, distance: TimeInterval)?
         for match in matches {
@@ -85,40 +122,6 @@ class MatchesTableViewController: UITableViewController {
             let index = matches.firstIndex {$0.key == closest.match.key} ?? 0
             
             tableView.scrollToRow(at: IndexPath(row: index, section: 0), at: .middle, animated: false)
-        }
-    }
-
-    override func didReceiveMemoryWarning() {
-        super.didReceiveMemoryWarning()
-        // Dispose of any resources that can be recreated.
-    }
-    
-    func load(forEventKey eventKey: String?, specifyingTeam teamKey: String? = nil) {
-        if let eventKey = eventKey {
-            //Get the matches
-            Globals.appDelegate.appSyncClient?.fetch(query: ListMatchesQuery(eventKey: eventKey), cachePolicy: .returnCacheDataAndFetch, resultHandler: {[weak self] (result, error) in
-                if Globals.handleAppSyncErrors(forQuery: "ListMatchesQuery", result: result, error: error) {
-                    let returnedMatches = (result?.data?.listMatches?.map {$0!.fragments.match} ?? []).sorted(by: { (match1, match2) -> Bool in
-                        return match1 < match2
-                    })
-                    if let teamKey = teamKey {
-                        self?.matches = returnedMatches.filter {match in
-                            if match.blueAlliance?.teamKeys?.contains(teamKey) ?? false || match.redAlliance?.teamKeys?.contains(teamKey) ?? false {
-                                return true
-                            } else {
-                                return false
-                            }
-                        }
-                    } else {
-                        self?.matches = returnedMatches
-                    }
-                } else {
-                    //TODO: Throw error
-                    
-                }
-            })
-        } else {
-            self.matches = []
         }
     }
     
@@ -162,14 +165,14 @@ class MatchesTableViewController: UITableViewController {
         }
         
         //Get the team numbers
-        if match.redAlliance?.teamKeys?.count ?? 0 >= 3 && match.blueAlliance?.teamKeys?.count ?? 0 >= 3 {
-            cell.red1.text = match.redAlliance?.teamKeys?[0]?.trimmingCharacters(in: CharacterSet.letters)
-            cell.red2.text = match.redAlliance?.teamKeys?[1]?.trimmingCharacters(in: CharacterSet.letters)
-            cell.red3.text = match.redAlliance?.teamKeys?[2]?.trimmingCharacters(in: CharacterSet.letters)
+        if match.alliances?.red?.teamKeys?.count ?? 0 >= 3 && match.alliances?.blue?.teamKeys?.count ?? 0 >= 3 {
+            cell.red1.text = match.alliances?.red?.teamKeys?[0]?.trimmingCharacters(in: CharacterSet.letters)
+            cell.red2.text = match.alliances?.red?.teamKeys?[1]?.trimmingCharacters(in: CharacterSet.letters)
+            cell.red3.text = match.alliances?.red?.teamKeys?[2]?.trimmingCharacters(in: CharacterSet.letters)
             
-            cell.blue1.text = match.blueAlliance?.teamKeys?[0]?.trimmingCharacters(in: CharacterSet.letters)
-            cell.blue2.text = match.blueAlliance?.teamKeys?[1]?.trimmingCharacters(in: CharacterSet.letters)
-            cell.blue3.text = match.blueAlliance?.teamKeys?[2]?.trimmingCharacters(in: CharacterSet.letters)
+            cell.blue1.text = match.alliances?.blue?.teamKeys?[0]?.trimmingCharacters(in: CharacterSet.letters)
+            cell.blue2.text = match.alliances?.blue?.teamKeys?[1]?.trimmingCharacters(in: CharacterSet.letters)
+            cell.blue3.text = match.alliances?.blue?.teamKeys?[2]?.trimmingCharacters(in: CharacterSet.letters)
         }
         
         
