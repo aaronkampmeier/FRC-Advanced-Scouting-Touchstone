@@ -41,7 +41,6 @@ class TeamListTableViewController: UITableViewController, TeamListDetailDataSour
     var isSearching = false
     
     var unorderedTeamsInEvent: [Team] = []
-    var scoutedTeams: [Team] = []
     
     //Is a hierarchy
     var currentEventTeams: [Team] = [Team]() {
@@ -80,17 +79,7 @@ class TeamListTableViewController: UITableViewController, TeamListDetailDataSour
     }
     let lastSelectedEventStorageKey = "Last-Selected-Event"
     var selectedEventRanking: EventRanking?
-    
-    var selectedEventKey: String? {
-        didSet {
-//            setUpForEvent()
-//            reloadEventRankerObserver()
-        }
-    }
-    
-    var deleteTrackedEventSubscriber: AWSAppSync.AWSAppSyncSubscriptionWatcher<OnRemoveTrackedEventSubscription>?
-    var changeTeamRankSubscriber: AWSAppSync.AWSAppSyncSubscriptionWatcher<OnUpdateTeamRankSubscription>?
-    var pickedTeamSubscriber: AWSAppSync.AWSAppSyncSubscriptionWatcher<OnSetTeamPickedSubscription>?
+    var selectedEventKey: String?
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -116,33 +105,12 @@ class TeamListTableViewController: UITableViewController, TeamListDetailDataSour
         let noEventView = NoEventSelectedView(frame: CGRect(x: 0, y: 0, width: tableView.frame.width, height: tableView.frame.height))
         tableView.backgroundView = noEventView
         
-        autoChooseEvent()
-        
-        //Set up a subscriber to event deletions
-        do {
-            let subscription = OnRemoveTrackedEventSubscription(userID: AWSMobileClient.sharedInstance().username ?? "")
-            deleteTrackedEventSubscriber = try Globals.appDelegate.appSyncClient?.subscribe(subscription: subscription) {[weak self] (result, transaction, error) in
-                if let result = result {
-                    //Simply returns the event key
-                    let removedEventKey: String = result.data!.onRemoveTrackedEvent!.eventKey
-                    if self?.selectedEventKey ?? "" == removedEventKey {
-                        //TODO: Use transaction to edit cache
-                        self?.eventSelected(nil)
-                    }
-                } else if let error = error {
-                    CLSNSLogv("Error subscribing to OnDeleteTrackedEvent: \(error)", getVaList([]))
-                    Crashlytics.sharedInstance().recordError(error)
-                }
-            }
-        } catch {
-            CLSNSLogv("Error starting subscriptions: \(error)", getVaList([]))
-            Crashlytics.sharedInstance().recordError(error)
-        }
+        self.resetSubscriptions()
     }
     
     func autoChooseEvent() {
         //Get the tracked events
-        Globals.appDelegate.appSyncClient?.fetch(query: ListTrackedEventsQuery(), cachePolicy: .returnCacheDataAndFetch, resultHandler: {[weak self] (result, error) in
+        Globals.appDelegate.appSyncClient?.fetch(query: ListTrackedEventsQuery(), cachePolicy: .returnCacheDataElseFetch, resultHandler: {[weak self] (result, error) in
             if Globals.handleAppSyncErrors(forQuery: "ListTrackedEvents-TeamList", result: result, error: error) {
                 let eventKeys = result?.data?.listTrackedEvents?.map({$0!.eventKey}) ?? []
                 //Check if there is a selected event saved
@@ -194,13 +162,21 @@ class TeamListTableViewController: UITableViewController, TeamListDetailDataSour
         selectedTeam = nil
         statToSortBy = nil
         unorderedTeamsInEvent = []
-        currentEventTeams = []
+        //If we are moving to a different event then clear the table otherwise leave it
+        if selectedEventRanking?.eventKey != selectedEventKey {
+            currentEventTeams = []
+        }
         
         if let eventKey = selectedEventKey {
             UserDefaults.standard.set(eventKey, forKey: lastSelectedEventStorageKey)
             
             //As a hold over until the event ranking loads
             eventSelectionButton.setTitle(eventKey, for: UIControlState())
+            
+            //Get the scouted teams in the cache
+            Globals.appDelegate.appSyncClient?.fetch(query: ListScoutedTeamsQuery(eventKey: eventKey), cachePolicy: .returnCacheDataAndFetch, resultHandler: { (result, error) in
+                
+            })
             
             Globals.appDelegate.appSyncClient?.fetch(query: ListTeamsQuery(eventKey: eventKey), cachePolicy: .returnCacheDataAndFetch, queue: DispatchQueue(label: "Team List Loading", qos: .userInteractive)) {[weak self] result, error in
                 
@@ -214,7 +190,9 @@ class TeamListTableViewController: UITableViewController, TeamListDetailDataSour
                         if Globals.handleAppSyncErrors(forQuery: "GetEventRanking", result: result, error: error) {
                             self?.selectedEventRanking = result?.data?.getEventRanking?.fragments.eventRanking
                             
-                            self?.eventSelectionButton.setTitle(self?.selectedEventRanking?.eventName, for: UIControlState())
+                            if self?.eventSelectionButton.titleLabel?.text != self?.selectedEventRanking?.eventName {
+                                self?.eventSelectionButton.setTitle(self?.selectedEventRanking?.eventName, for: UIControlState())
+                            }
                             
                             self?.orderTeamsUsingRanking()
                             
@@ -235,40 +213,6 @@ class TeamListTableViewController: UITableViewController, TeamListDetailDataSour
             
             matchesButton.isEnabled = true
             graphButton.isEnabled = true
-            
-            //Set up subscribers
-            do {
-                changeTeamRankSubscriber = try Globals.appDelegate.appSyncClient?.subscribe(subscription: OnUpdateTeamRankSubscription(userID: AWSMobileClient.sharedInstance().username ?? "", eventKey: eventKey)) {[weak self] result, transaction, error in
-                    if let result = result {
-                        self?.selectedEventRanking = result.data?.onUpdateTeamRank?.fragments.eventRanking
-                        self?.orderTeamsUsingRanking()
-                        
-                        //TODO: Edit the transaction cache
-                    } else if let error = error {
-                        CLSNSLogv("Error with rank subscription: \(error)", getVaList([]))
-                    }
-                }
-                
-                pickedTeamSubscriber = try Globals.appDelegate.appSyncClient?.subscribe(subscription: OnSetTeamPickedSubscription(userID: AWSMobileClient.sharedInstance().username ?? "", eventKey: eventKey)) {[weak self] result, transaction, error in
-                    if let result = result {
-                        //TODO: Update the cache
-                        
-                        self?.selectedEventRanking = result.data?.onSetTeamPicked?.fragments.eventRanking
-                        
-                        //Reload the cell
-                        if let visibleRows = self?.tableView.indexPathsForVisibleRows {
-                            self?.tableView.reloadRows(at: visibleRows, with: UITableViewRowAnimation.none)
-                        }
-                    } else if let error = error {
-                        CLSNSLogv("Error OnSetTeamPickedSubscription: \(error)", getVaList([]))
-                        Crashlytics.sharedInstance().recordError(error)
-                    }
-                }
-            } catch {
-                CLSNSLogv("Error starting subcriptions: \(error)", getVaList([]))
-                Crashlytics.sharedInstance().recordError(error)
-                //TODO: Handle this error
-            }
         } else {
             currentEventTeams = []
             selectedEventRanking = nil
@@ -279,6 +223,7 @@ class TeamListTableViewController: UITableViewController, TeamListDetailDataSour
             graphButton.isEnabled = false
         }
         
+        self.resetSubscriptions()
         teamListSplitVC.teamListDetailVC.reloadData()
     }
     
@@ -286,20 +231,53 @@ class TeamListTableViewController: UITableViewController, TeamListDetailDataSour
         //Orders the teams into the currentEventTeams using the selectedEventRanking
         if let eventRanking = selectedEventRanking {
             //Now order the teams according to the ranking
-            var shouldReload = false
-            self.currentEventTeams = self.unorderedTeamsInEvent.sorted {team1, team2 in
+            var shouldReloadRanking = false
+            let orderedTeams = self.unorderedTeamsInEvent.sorted {team1, team2 in
                 let firstIndex = eventRanking.rankedTeams?.firstIndex(where: {$0!.teamKey == team1.key})
                 let secondIndex = eventRanking.rankedTeams?.firstIndex(where: {$0!.teamKey == team2.key})
                 if let firstIndex = firstIndex , let secondIndex = secondIndex {
                     return firstIndex < secondIndex
                 } else {
                     //One of the teams does not exist in the ranking, reload the ranking
-                    shouldReload = true
+                    shouldReloadRanking = true
                     return false
                 }
             }
             
-            if shouldReload {
+            
+            ///Check if the order is actually different
+            //First if there are any new teams
+            var existsNewTeams = false
+            for team in orderedTeams {
+                if !currentEventTeams.contains(where: {$0.key == team.key}) {
+                    existsNewTeams = true
+                }
+            }
+            for team in currentEventTeams {
+                if !orderedTeams.contains(where: {$0.key == team.key}) {
+                    existsNewTeams = true
+                }
+            }
+            
+            //Then, check if the order is the same
+            var isNewOrder = false
+            if !existsNewTeams {
+                for (index,team) in orderedTeams.enumerated() {
+                    if currentEventTeams[index].key != team.key {
+                        isNewOrder = true
+                    }
+                }
+            }
+            
+            //If it is all the same then don't bother with reloading the table view
+            if existsNewTeams || isNewOrder {
+                self.currentEventTeams = orderedTeams
+            } else {
+                //Just reload visible rows
+                tableView.reloadRows(at: tableView.indexPathsForVisibleRows ?? [], with: .automatic)
+            }
+            
+            if shouldReloadRanking {
                 reloadEvent(eventKey: eventRanking.eventKey)
             }
         } else {
@@ -324,6 +302,78 @@ class TeamListTableViewController: UITableViewController, TeamListDetailDataSour
                 self?.selectedEventRanking = result?.data?.addTrackedEvent?.fragments.eventRanking
                 self?.orderTeamsUsingRanking()
             }
+        }
+    }
+    
+    
+    var deleteTrackedEventSubscriber: AWSAppSync.AWSAppSyncSubscriptionWatcher<OnRemoveTrackedEventSubscription>?
+    var changeTeamRankSubscriber: AWSAppSync.AWSAppSyncSubscriptionWatcher<OnUpdateTeamRankSubscription>?
+    var pickedTeamSubscriber: AWSAppSync.AWSAppSyncSubscriptionWatcher<OnSetTeamPickedSubscription>?
+    func resetSubscriptions() {
+        CLSNSLogv("Resetting Team List Subscriptions", getVaList([]))
+        
+        //Set up a subscriber to event deletions
+        do {
+            let subscription = OnRemoveTrackedEventSubscription(userID: AWSMobileClient.sharedInstance().username ?? "")
+            deleteTrackedEventSubscriber = try Globals.appDelegate.appSyncClient?.subscribe(subscription: subscription) {[weak self] (result, transaction, error) in
+                if Globals.handleAppSyncErrors(forQuery: "OnRemoveTrackedEventSubscription", result: result, error: error) {
+                    //Simply returns the event key
+                    let removedEventKey: String = result!.data!.onRemoveTrackedEvent!.eventKey
+                    if self?.selectedEventKey ?? "" == removedEventKey {
+                        //TODO: Use transaction to edit cache
+                        self?.eventSelected(nil)
+                    }
+                } else {
+                    if let error = error as? AWSAppSyncSubscriptionError {
+                        self?.resetSubscriptions()
+                    }
+                }
+            }
+        } catch {
+            CLSNSLogv("Error starting subscriptions: \(error)", getVaList([]))
+            Crashlytics.sharedInstance().recordError(error)
+        }
+        
+        if let eventKey = self.selectedEventKey {
+            //Set up subscribers for event specifics
+            do {
+                changeTeamRankSubscriber = try Globals.appDelegate.appSyncClient?.subscribe(subscription: OnUpdateTeamRankSubscription(userID: AWSMobileClient.sharedInstance().username ?? "", eventKey: eventKey)) {[weak self] result, transaction, error in
+                    if Globals.handleAppSyncErrors(forQuery: "OnUpdateTeamRankSubscription", result: result, error: error) {
+                        self?.selectedEventRanking = result?.data?.onUpdateTeamRank?.fragments.eventRanking
+                        self?.orderTeamsUsingRanking()
+                        
+                        //TODO: Edit the transaction cache
+                    } else {
+                        if let error = error as? AWSAppSyncSubscriptionError {
+                            self?.resetSubscriptions()
+                        }
+                    }
+                }
+                
+                pickedTeamSubscriber = try Globals.appDelegate.appSyncClient?.subscribe(subscription: OnSetTeamPickedSubscription(userID: AWSMobileClient.sharedInstance().username ?? "", eventKey: eventKey)) {[weak self] result, transaction, error in
+                    if Globals.handleAppSyncErrors(forQuery: "OnSetTeamPickedSubscription", result: result, error: error) {
+                        //TODO: Update the cache
+                        
+                        self?.selectedEventRanking = result?.data?.onSetTeamPicked?.fragments.eventRanking
+                        
+                        //Reload the cell
+                        if let visibleRows = self?.tableView.indexPathsForVisibleRows {
+                            self?.tableView.reloadRows(at: visibleRows, with: UITableViewRowAnimation.none)
+                        }
+                    } else {
+                        if let error = error as? AWSAppSyncSubscriptionError {
+                            self?.resetSubscriptions()
+                        }
+                    }
+                }
+            } catch {
+                CLSNSLogv("Error starting subcriptions: \(error)", getVaList([]))
+                Crashlytics.sharedInstance().recordError(error)
+                //TODO: Handle this error
+            }
+        } else {
+            changeTeamRankSubscriber?.cancel()
+            pickedTeamSubscriber?.cancel()
         }
     }
     
@@ -535,7 +585,7 @@ class TeamListTableViewController: UITableViewController, TeamListDetailDataSour
     @available(iOS 11.0, *)
     override func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
         
-        guard Globals.isInSpectatorMode else {
+        guard !Globals.isInSpectatorMode else {
             return nil
         }
         
@@ -556,23 +606,23 @@ class TeamListTableViewController: UITableViewController, TeamListDetailDataSour
                     if let error = error {
                         CLSNSLogv("Error setting team picked", getVaList([]))
                         Crashlytics.sharedInstance().recordError(error)
+                        //TODO: - Show Error
                     } else if let result = result {
                         self?.selectedEventRanking = result.data?.setTeamPicked?.fragments.eventRanking
                     }
+                    //Reload that row
+                    tableView.reloadRows(at: [indexPath], with: UITableViewRowAnimation.none)
                 })
                 
                 completionHandler(true)
-                
-                //Reload that row
-                tableView.reloadRows(at: [indexPath], with: UITableViewRowAnimation.right)
             }
             
             //Check if it is picked yet
             let rankedTeam = self.selectedEventRanking?.rankedTeams?.first {$0!.teamKey == team.key}
             let isPicked = rankedTeam??.isPicked ?? false
             
-            markAsPicked.backgroundColor = isPicked ? .purple : .red
-            markAsPicked.title = isPicked ? "Mark As Picked" : "Unmark as Picked"
+            markAsPicked.backgroundColor = isPicked ? .red : .purple
+            markAsPicked.title = isPicked ?  "Unmark as Picked" : "Mark As Picked"
             
             let swipeConfig = UISwipeActionsConfiguration(actions: [markAsPicked])
             return swipeConfig

@@ -28,8 +28,8 @@ internal struct Globals {
         if let error = error {
             if let error = error as? AWSAppSyncClientError {
                 switch error {
-                case .requestFailed(let data, let response, let err):
-                    if let nserr = err as? NSError {
+                case .requestFailed( _,  _, let err):
+                    if let nserr = err as NSError? {
                         if nserr.code == -999 {
                             //The error is that the operation was cancelled, do not treat as error
                             CLSNSLogv("Operation \(queryIdentifier) cancelled", getVaList([]))
@@ -41,10 +41,15 @@ internal struct Globals {
                 default:
                     CLSNSLogv("Error performing \(queryIdentifier): \(error)", getVaList([]))
                     Crashlytics.sharedInstance().recordError(error)
-                    wereErrors = true
                     break
                 }
+                
+            } else {
+                CLSNSLogv("Error performing \(queryIdentifier): \(error)", getVaList([]))
+                Crashlytics.sharedInstance().recordError(error)
             }
+            
+            wereErrors = true
         }
         if let errors = result?.errors {
             CLSNSLogv("GraphQL Errors performing \(queryIdentifier): \(errors)", getVaList([]))
@@ -67,6 +72,11 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     var pinpoint: AWSPinpoint?
     
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
+        NSSetUncaughtExceptionHandler { (exception) in
+            NSLog("CRASH: %@", exception)
+            NSLog("Stack Trace: %@", exception.callStackSymbols)
+        }
+        
         // Override point for customization after application launch.
         Fabric.with([Crashlytics.self])
         Crashlytics.sharedInstance().setUserIdentifier(UIDevice.current.name)

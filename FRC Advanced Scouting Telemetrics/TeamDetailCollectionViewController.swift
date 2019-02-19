@@ -25,7 +25,6 @@ class TeamDetailCollectionViewController: UICollectionViewController, UICollecti
 
         // Do any additional setup after loading the view.
         
-        (collectionView?.collectionViewLayout as! UICollectionViewFlowLayout).headerReferenceSize = CGSize(width: self.view.frame.width, height: 30)
         (collectionView?.collectionViewLayout as! UICollectionViewFlowLayout).minimumInteritemSpacing = 3
         
         collectionView?.isScrollEnabled = false
@@ -109,33 +108,26 @@ class TeamDetailCollectionViewController: UICollectionViewController, UICollecti
         Answers.logContentView(withName: "Team Stat Graph", contentType: "Graph", contentId: nil, customAttributes: ["Stat Graphed":stat.name])
     }
     
-    override func collectionView(_ collectionView: UICollectionView, viewForSupplementaryElementOfKind kind: String, at indexPath: IndexPath) -> UICollectionReusableView {
-        switch (indexPath.section, kind) {
-        case (_, UICollectionElementKindSectionFooter):
-            let footerView = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: "footer", for: indexPath)
-            (footerView.viewWithTag(1) as! UIButton).setTitle("Show More Stats and Features by Signing In", for: .normal)
-            (footerView.viewWithTag(1) as! UIButton).addTarget(self, action: #selector(showFASTPromotional), for: .touchUpInside)
-            
-            return footerView
-        default:
-            let footerView = collectionView.dequeueReusableSupplementaryView(ofKind: UICollectionElementKindSectionFooter, withReuseIdentifier: "footer", for: indexPath)
-            (footerView.viewWithTag(1) as! UIButton).setTitle(nil, for: .normal)
-            (footerView.viewWithTag(1) as! UIButton).removeTarget(self, action: #selector(showFASTPromotional), for: .touchUpInside)
-            footerView.isHidden = true
-            return footerView
-        }
-    }
+    //TODO: - Add back the header as a floating ui view
+//    override func collectionView(_ collectionView: UICollectionView, viewForSupplementaryElementOfKind kind: String, at indexPath: IndexPath) -> UICollectionReusableView {
+//        switch (indexPath.section, kind) {
+//        case (_, UICollectionElementKindSectionFooter):
+//            let footerView = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: "footer", for: indexPath)
+//            (footerView.viewWithTag(1) as! UIButton).setTitle("Show More Stats and Features by Signing In", for: .normal)
+//            (footerView.viewWithTag(1) as! UIButton).addTarget(self, action: #selector(showFASTPromotional), for: .touchUpInside)
+//
+//            return footerView
+//        default:
+//            let footerView = collectionView.dequeueReusableSupplementaryView(ofKind: UICollectionElementKindSectionFooter, withReuseIdentifier: "footer", for: indexPath)
+//            (footerView.viewWithTag(1) as! UIButton).setTitle(nil, for: .normal)
+//            (footerView.viewWithTag(1) as! UIButton).removeTarget(self, action: #selector(showFASTPromotional), for: .touchUpInside)
+//            footerView.isHidden = true
+//            return footerView
+//        }
+//    }
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
         return CGSize(width: 112, height: 65)
-    }
-    
-    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, referenceSizeForFooterInSection section: Int) -> CGSize {
-        if Globals.isInSpectatorMode && section == 1 {
-            return CGSize(width: 100, height: 50)
-        } else {
-            return CGSize.zero
-        }
     }
     
     @objc func showFASTPromotional() {

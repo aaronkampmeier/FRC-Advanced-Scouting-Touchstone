@@ -73,6 +73,8 @@ fragment ScoutSession on ScoutSession {
     teamKey
     userID
     eventKey
+    startState
+    endState
     timeMarkers {
       ...TimeMarkerFragment
     }
@@ -81,7 +83,7 @@ fragment ScoutSession on ScoutSession {
 fragment TimeMarkerFragment on TimeMarker {
 	event
 	time
-	associatedLocation
+	subOption
 }
 
 fragment TeamEventOPR on TeamEventOPR {

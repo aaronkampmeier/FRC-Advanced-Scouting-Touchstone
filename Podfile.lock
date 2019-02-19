@@ -39,11 +39,11 @@ PODS:
   - SSBouncyButton (1.0.7):
     - BRYSerialAnimationQueue (~> 1.0)
     - UIColor-Hex (~> 0.1)
-    - UIImage+BetterAdditions (~> 2.0)
+    - "UIImage+BetterAdditions (~> 2.0)"
   - TORoundedTableView (0.1.3)
   - UICircularProgressRing (4.1.0)
   - UIColor-Hex (0.1.1)
-  - UIImage+BetterAdditions (2.0.3)
+  - "UIImage+BetterAdditions (2.0.3)"
   - VTAcknowledgementsViewController (1.5.1)
 
 DEPENDENCIES:
@@ -56,10 +56,35 @@ DEPENDENCIES:
   - AWSUserPoolsSignIn
   - GMStepper
   - NYTPhotoViewer
-  - SSBouncyButton (~> 1.0)
+  - SSBouncyButton
   - TORoundedTableView
   - UICircularProgressRing
   - VTAcknowledgementsViewController
+
+SPEC REPOS:
+  https://github.com/cocoapods/specs.git:
+    - Alamofire
+    - AWSAppSync
+    - AWSAuthCore
+    - AWSAuthUI
+    - AWSCognitoIdentityProvider
+    - AWSCognitoIdentityProviderASF
+    - AWSCore
+    - AWSMobileClient
+    - AWSPinpoint
+    - AWSUserPoolsSignIn
+    - BRYSerialAnimationQueue
+    - FLAnimatedImage
+    - GMStepper
+    - NYTPhotoViewer
+    - ReachabilitySwift
+    - SQLite.swift
+    - SSBouncyButton
+    - TORoundedTableView
+    - UICircularProgressRing
+    - UIColor-Hex
+    - "UIImage+BetterAdditions"
+    - VTAcknowledgementsViewController
 
 SPEC CHECKSUMS:
   Alamofire: 3ec537f71edc9804815215393ae2b1a8ea33a844
@@ -82,9 +107,9 @@ SPEC CHECKSUMS:
   TORoundedTableView: cd1437ef81ab3888dea8c06d2dfe4795bcaac768
   UICircularProgressRing: 5a32c01f54474571b1e66e8fa050c0f83d6d981b
   UIColor-Hex: 77e80f383c6b3a63c5e95a9a4a7f4a71976e38a5
-  UIImage+BetterAdditions: 185cbe06059747dd4a65562c1b0c560e761d030c
+  "UIImage+BetterAdditions": 185cbe06059747dd4a65562c1b0c560e761d030c
   VTAcknowledgementsViewController: 3bb742da852a5161dc9f4b017e52f926a41ef5d3
 
-PODFILE CHECKSUM: 934d10b324f278b7b07f2cc39b240ef5732b1a95
+PODFILE CHECKSUM: 46115942ef2c9086539c9c39dd4b1274c181ebba
 
-COCOAPODS: 1.3.1
+COCOAPODS: 1.5.3

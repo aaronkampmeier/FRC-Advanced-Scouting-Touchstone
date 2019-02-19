@@ -7,7 +7,7 @@
 //
 
 import UIKit
-import SSBouncyButton
+//import SSBouncyButton
 import AWSPinpoint
 
 class OnboardingPathChooserViewController: UIViewController {

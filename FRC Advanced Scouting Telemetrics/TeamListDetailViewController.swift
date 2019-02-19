@@ -174,7 +174,6 @@ class TeamListDetailViewController: UIViewController {
     var listScoutedTeamsWatcher: GraphQLQueryWatcher<ListScoutedTeamsQuery>?
     var listStatusesWatcher: GraphQLQueryWatcher<ListTeamEventStatusesQuery>?
     func set(input: (team: Team, eventKey: String)?) {
-        updateTeamSubcription?.cancel()
         listScoutedTeamsWatcher?.cancel()
         listStatusesWatcher?.cancel()
         
@@ -216,13 +215,23 @@ class TeamListDetailViewController: UIViewController {
                     //TODO: - Show error
                 }
             }
-            
+        } else {
+            self.scoutedTeam = nil
+        }
+        
+        self.resetSubscriptions()
+        
+        NotificationCenter.default.post(name: Notification.Name(rawValue: "TeamSelectedChanged"), object: self)
+    }
+    
+    func resetSubscriptions() {
+        if let teamKey = selectedTeam?.key, let eventKey = selectedEventKey {
             //Set up a subscription
             do {
-                updateTeamSubcription = try Globals.appDelegate.appSyncClient?.subscribe(subscription: OnUpdateScoutedTeamSubscription(userID: AWSMobileClient.sharedInstance().username ?? "", eventKey: input.eventKey, teamKey: input.team.key), resultHandler: { (result, transaction, error) in
+                updateTeamSubcription = try Globals.appDelegate.appSyncClient?.subscribe(subscription: OnUpdateScoutedTeamSubscription(userID: AWSMobileClient.sharedInstance().username ?? "", eventKey: eventKey, teamKey: teamKey), resultHandler: { (result, transaction, error) in
                     if Globals.handleAppSyncErrors(forQuery: "OnUpdateScoutedTeam-TeamDetail", result: result, error: error) {
-                        try? transaction?.update(query: ListScoutedTeamsQuery(eventKey: input.eventKey), { (selectionSet) in
-                            if let index = selectionSet.listScoutedTeams?.firstIndex(where: {$0?.teamKey == input.team.key}) {
+                        try? transaction?.update(query: ListScoutedTeamsQuery(eventKey: eventKey), { (selectionSet) in
+                            if let index = selectionSet.listScoutedTeams?.firstIndex(where: {$0?.teamKey == teamKey}) {
                                 selectionSet.listScoutedTeams?.remove(at: index)
                             }
                             if let newTeam = result?.data?.onUpdateScoutedTeam {
@@ -230,7 +239,9 @@ class TeamListDetailViewController: UIViewController {
                             }
                         })
                     } else {
-                        
+                        if let error = error as? AWSAppSyncSubscriptionError {
+                            self.resetSubscriptions()
+                        }
                     }
                 })
             } catch {
@@ -238,10 +249,8 @@ class TeamListDetailViewController: UIViewController {
                 Crashlytics.sharedInstance().recordError(error)
             }
         } else {
-            self.scoutedTeam = nil
+            updateTeamSubcription?.cancel()
         }
-        
-        NotificationCenter.default.post(name: Notification.Name(rawValue: "TeamSelectedChanged"), object: self)
     }
     
     private func updateView() {
@@ -323,19 +332,21 @@ class TeamListDetailViewController: UIViewController {
             if self.scoutedTeam?.frontImage != nil {
                 self.contentScrollView.contentInset = self.contentViewInsets
                 self.contentScrollView.scrollIndicatorInsets = self.contentViewInsets
-                
+
                 self.contentScrollView.contentOffset = CGPoint(x: 0, y: -self.frontImageHeightConstraint.constant)
             } else {
                 self.frontImageHeightConstraint.isActive = false
-                
+
                 self.contentScrollView.contentInset = self.noContentInsets
                 self.contentScrollView.scrollIndicatorInsets = self.noContentInsets
-                
+
                 self.contentScrollView.contentOffset = CGPoint(x: 0, y: 0)
             }
-            
+
+        }, completion: {transitionContext in
+
             self.resizeDetailViewHeights()
-        }, completion: nil)
+        })
     }
     
     func reloadData() {

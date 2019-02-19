@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Scheme
-   LastUpgradeVersion = "0700"
+   LastUpgradeVersion = "0930"
    version = "1.3">
    <BuildAction
       parallelizeBuildables = "YES"
@@ -13,11 +13,11 @@
             buildForProfiling = "YES"
             buildForArchiving = "YES">
             <BuildableReference
-               BuildableIdentifier = 'primary'
-               BlueprintIdentifier = '5B6517CC07C2BBA2CC8DB010864ED7FD'
-               BlueprintName = 'TORoundedTableView'
-               ReferencedContainer = 'container:Pods.xcodeproj'
-               BuildableName = 'TORoundedTableView.framework'>
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "1508063C13D044B96FFF2C86FB5C8C25"
+               BlueprintName = "TORoundedTableView"
+               ReferencedContainer = "container:Pods.xcodeproj"
+               BuildableName = "TORoundedTableView.framework">
             </BuildableReference>
          </BuildActionEntry>
       </BuildActionEntries>

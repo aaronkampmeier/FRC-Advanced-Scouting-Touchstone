@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Scheme
-   LastUpgradeVersion = "0700"
+   LastUpgradeVersion = "0930"
    version = "1.3">
    <BuildAction
       parallelizeBuildables = "YES"
@@ -14,7 +14,7 @@
             buildForAnalyzing = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "E15C512FED678185605C992931964CD9"
+               BlueprintIdentifier = "9E23B4969FA46AF34F66874E5FAAFA65"
                BuildableName = "UIColor_Hex.framework"
                BlueprintName = "UIColor-Hex"
                ReferencedContainer = "container:Pods.xcodeproj">
@@ -45,7 +45,7 @@
       <MacroExpansion>
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "E15C512FED678185605C992931964CD9"
+            BlueprintIdentifier = "9E23B4969FA46AF34F66874E5FAAFA65"
             BuildableName = "UIColor_Hex.framework"
             BlueprintName = "UIColor-Hex"
             ReferencedContainer = "container:Pods.xcodeproj">

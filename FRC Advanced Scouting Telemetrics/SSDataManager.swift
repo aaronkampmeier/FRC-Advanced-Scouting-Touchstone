@@ -19,10 +19,12 @@ class SSDataManager {
     let stopwatch: Stopwatch
     
     static var currentSSDataManager: SSDataManager?
+    var model: StandsScoutingModel?
     
     var timeMarkers: [TimeMarkerInput] = []
-    
     private(set) var hasPassedAutonomous: Bool = false
+    private var startState: [String:Any] = [:]
+    private var endState: [String:Any] = [:]
     
     init(match: Match, teamKey: String) {
         self.match = match
@@ -33,10 +35,28 @@ class SSDataManager {
         SSDataManager.currentSSDataManager = self
         
         CLSNSLogv("Began Stands Scouting for key: \(teamKey) in \(match.key)", getVaList([]))
+        
+        StandsScoutingModelLoader().getModel { (model) in
+            self.model = model
+        }
     }
     
     func recordScoutSession() {
-        Globals.appDelegate.appSyncClient?.perform(mutation: CreateScoutSessionMutation(eventKey: match.eventKey, teamKey: teamKey, matchKey: match.key, timeMarkers: timeMarkers), optimisticUpdate: { (transaction) in
+        //Create the start state and end state json strings
+        var startStateString: String = "{}"
+        var endStateString: String = "{}"
+        do {
+            let startStateData = try JSONSerialization.data(withJSONObject: startState, options: [])
+            startStateString = String(data: startStateData, encoding: .utf8) ?? "{}"
+            
+            let endStateData = try JSONSerialization.data(withJSONObject: endState, options: [])
+            endStateString = String(data: endStateData, encoding: .utf8) ?? "{}"
+        } catch {
+            CLSNSLogv("Error serializing start (\(startState)) and end state (\(endState)) data: \(error)", getVaList([]))
+            Crashlytics.sharedInstance().recordError(error)
+        }
+        
+        Globals.appDelegate.appSyncClient?.perform(mutation: CreateScoutSessionMutation(eventKey: match.eventKey, teamKey: teamKey, matchKey: match.key, startState: startStateString, endState: endStateString, timeMarkers: timeMarkers), optimisticUpdate: { (transaction) in
             //TODO: - Add optimistic update
         }, conflictResolutionBlock: { (snapshot, taskCompletionSource, onCompletion) in
             
@@ -57,16 +77,32 @@ class SSDataManager {
             return
         } else {
             hasPassedAutonomous = true
-            addTimeMarker(event: "endAutonomousPeriod", location: nil)
+            addTimeMarker(event: "endAutonomousPeriod", subOption: nil)
         }
     }
     
     func didCrossAutoLine() {
-        addTimeMarker(event: "didCrossAutoLine", location: nil)
+        addTimeMarker(event: "didCrossAutoLine", subOption: nil)
     }
     
-    func addTimeMarker(event: String, location: String?) {
-        let newTM = TimeMarkerInput(event: event, time: stopwatch.elapsedTime, associatedLocation: location)
+    func setState(value: Any, forKey key: String, inSection gameSection: SSStateGameSection) {
+        switch gameSection {
+        case .Start:
+            startState[key] = value
+        case .End:
+            endState[key] = value
+        }
+    }
+    
+    func addTimeMarker(event: String, subOption: String?) {
+        var option: String?
+        if subOption == "" {
+            option = nil
+        } else {
+            option = subOption
+        }
+        
+        let newTM = TimeMarkerInput(event: event, time: stopwatch.elapsedTime, subOption: option)
         
         timeMarkers.append(newTM)
     }

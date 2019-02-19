@@ -53,12 +53,16 @@ mutation CreateScoutSession(
   $eventKey: ID!
   $teamKey: ID!
   $matchKey: ID!
+  $startState: AWSJSON!
+  $endState: AWSJSON!
   $timeMarkers: [TimeMarkerInput]!
 ) {
   createScoutSession(
     eventKey: $eventKey
     teamKey: $teamKey
     matchKey: $matchKey
+    startState: $startState
+    endState: $endState
     timeMarkers: $timeMarkers
   ) {
     ...ScoutSession

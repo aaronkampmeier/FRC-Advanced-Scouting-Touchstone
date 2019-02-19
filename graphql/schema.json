@@ -1405,6 +1405,28 @@
           "isDeprecated" : false,
           "deprecationReason" : null
         }, {
+          "name" : "startState",
+          "description" : null,
+          "args" : [ ],
+          "type" : {
+            "kind" : "SCALAR",
+            "name" : "AWSJSON",
+            "ofType" : null
+          },
+          "isDeprecated" : false,
+          "deprecationReason" : null
+        }, {
+          "name" : "endState",
+          "description" : null,
+          "args" : [ ],
+          "type" : {
+            "kind" : "SCALAR",
+            "name" : "AWSJSON",
+            "ofType" : null
+          },
+          "isDeprecated" : false,
+          "deprecationReason" : null
+        }, {
           "name" : "timeMarkers",
           "description" : null,
           "args" : [ ],
@@ -1459,7 +1481,7 @@
           "isDeprecated" : false,
           "deprecationReason" : null
         }, {
-          "name" : "associatedLocation",
+          "name" : "subOption",
           "description" : null,
           "args" : [ ],
           "type" : {
@@ -2056,6 +2078,24 @@
             },
             "defaultValue" : null
           }, {
+            "name" : "startState",
+            "description" : null,
+            "type" : {
+              "kind" : "SCALAR",
+              "name" : "AWSJSON",
+              "ofType" : null
+            },
+            "defaultValue" : null
+          }, {
+            "name" : "endState",
+            "description" : null,
+            "type" : {
+              "kind" : "SCALAR",
+              "name" : "AWSJSON",
+              "ofType" : null
+            },
+            "defaultValue" : null
+          }, {
             "name" : "timeMarkers",
             "description" : null,
             "type" : {
@@ -2193,7 +2233,7 @@
           },
           "defaultValue" : null
         }, {
-          "name" : "associatedLocation",
+          "name" : "subOption",
           "description" : null,
           "type" : {
             "kind" : "SCALAR",

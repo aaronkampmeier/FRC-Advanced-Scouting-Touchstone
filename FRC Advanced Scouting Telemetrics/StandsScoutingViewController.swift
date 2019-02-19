@@ -24,12 +24,11 @@ class StandsScoutingViewController: UIViewController {
     
     var ssDataManager: SSDataManager?
 	
-	let stopwatch = Stopwatch()
 	var isRunning = false {
 		willSet {
 		if newValue {
 			Timer.scheduledTimer(timeInterval: 0.1, target: self, selector: #selector(StandsScoutingViewController.updateTimeLabel(_:)), userInfo: nil, repeats: true)
-			stopwatch.start()
+			ssDataManager?.stopwatch.start()
 			
 			//Update the button
 			timerButton.setTitle("Stop", for: UIControlState())
@@ -43,7 +42,7 @@ class StandsScoutingViewController: UIViewController {
             endAutonomousButton.isHidden = false
             autonomousLabel.isHidden = false
 		} else {
-            stopwatch.stop()
+            ssDataManager?.stopwatch.stop()
             
             //Update the button
             timerButton.setTitle("Ended", for: UIControlState())
@@ -54,7 +53,7 @@ class StandsScoutingViewController: UIViewController {
             closeButton.isHidden = false
             
             //Cycle to the rope view controller
-            cycleFromViewController(currentVC!, toViewController: climbVC!)
+            cycleFromViewController(currentVC!, toViewController: gameEndVC!)
             
             endAutonomousButton.isHidden = true
             autonomousLabel.isHidden = true
@@ -67,19 +66,20 @@ class StandsScoutingViewController: UIViewController {
 	
     //Child view controllers
 	var currentVC: UIViewController?
-	var initialChild: UIViewController?
+    
+    var gameStartVC: SSGameStateViewController?
     var gameScoutVC: SSGameScoutingViewController?
-    var climbVC: SSClimbViewController?
+    var gameEndVC: SSGameStateViewController?
 
     override func viewDidLoad() {
         super.viewDidLoad()
 
         // Do any additional setup after loading the view.
-		teamLabel.text = "Team \(teamKey?.trimmingCharacters(in: CharacterSet.letters) ?? "?")"
 		
 		//Get all the view controllers
         gameScoutVC = (storyboard?.instantiateViewController(withIdentifier: "ssGameScoutVC") as! SSGameScoutingViewController)
-        climbVC = (storyboard?.instantiateViewController(withIdentifier: "ssClimbVC") as! SSClimbViewController)
+        gameStartVC = storyboard?.instantiateViewController(withIdentifier: "gameState") as! SSGameStateViewController
+        gameEndVC = storyboard?.instantiateViewController(withIdentifier: "gameState") as! SSGameStateViewController
     }
     
     override func viewDidLayoutSubviews() {
@@ -110,10 +110,6 @@ class StandsScoutingViewController: UIViewController {
 	
 	override func viewDidAppear(_ animated: Bool) {
 		super.viewDidAppear(animated)
-		
-		initialChild = childViewControllers.first
-		currentVC = initialChild
-		
 	}
 
     override func didReceiveMemoryWarning() {
@@ -121,22 +117,28 @@ class StandsScoutingViewController: UIViewController {
         // Dispose of any resources that can be recreated.
     }
     
-    func setUp(forTeamKey teamKey: String, andMatchKey matchKey: String, inEventKey eventKey: String) {
+    func setUp(forTeamKey teamKey: String, andMatchKey matchKey: String, inEventKey eventKey: String, noLocal: Bool = false) {
         self.teamKey = teamKey
-        
         //Get the match
-        Globals.appDelegate.appSyncClient?.fetch(query: ListMatchesQuery(eventKey: eventKey), cachePolicy: .returnCacheDataElseFetch, resultHandler: {[weak self] (result, error) in
+        Globals.appDelegate.appSyncClient?.fetch(query: ListMatchesQuery(eventKey: eventKey), cachePolicy: noLocal ? .fetchIgnoringCacheData : .returnCacheDataElseFetch, resultHandler: {[weak self] (result, error) in
             if Globals.handleAppSyncErrors(forQuery: "ListMatches-SetUpStandsScout", result: result, error: error) {
                 self?.match = result?.data?.listMatches?.first(where: {$0?.key == matchKey})??.fragments.match
                 
                 if let match = self?.match {
-                    self?.matchAndEventLabel.text = "\(eventKey) \(match.compLevel.description) \(match.matchNumber)"
+                    self?.teamLabel.text = "Team \(teamKey.trimmingCharacters(in: CharacterSet.letters) ?? "?")"
+                    self?.matchAndEventLabel.text = match.description
                     self?.ssDataManager = SSDataManager(match: match, teamKey: teamKey)
+                    
+                    self?.gameStartVC?.set(gameSection: .Start)
+                    self?.gameEndVC?.set(gameSection: .End)
+                    
+                    self?.cycleFromViewController(self!.childViewControllers.first!, toViewController: self!.gameStartVC!)
                     
                 } else {
                     //Throw up an error that the match does not exist
-                    CLSNSLogv("Desired Match for stands scouting does not exist or is not stored in the cache", getVaList([]))
-                    self?.close(andSave: false)
+                    CLSNSLogv("Desired Match for stands scouting does not exist or is not stored in the cache, trying again", getVaList([]))
+//                    self?.close(andSave: false)
+                    self?.setUp(forTeamKey: teamKey, andMatchKey: matchKey, inEventKey: eventKey, noLocal: true)
                     return
                 }
             } else {
@@ -175,7 +177,7 @@ class StandsScoutingViewController: UIViewController {
     }
 	
 	@IBAction func closePressed(_ sender: UIButton) {
-		if 150 - stopwatch.elapsedTime > 15 {
+		if (150 - (ssDataManager?.stopwatch.elapsedTime ?? 0)) > 15 {
 			let alert = UIAlertController(title: "Hold On, You're Not Finished", message: "It doesn't look like you've completed a full 2 minute 30 second match. Are you sure you want to close with this partial data?", preferredStyle: .alert)
 			alert.addAction(UIAlertAction(title: "No, don't close", style: .cancel, handler: nil))
 			alert.addAction(UIAlertAction(title: "Yes, close and save data", style: .default, handler: {_ in self.close(andSave: true)}))
@@ -187,17 +189,12 @@ class StandsScoutingViewController: UIViewController {
 	}
 	
 	func close(andSave shouldSave: Bool) {
-        //Wait 2 seconds for all the climb data to be in
-        self.view.isUserInteractionEnabled = false
-        DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + 2) {
-            self.view.isUserInteractionEnabled = true
-            if shouldSave {
-                self.ssDataManager?.recordScoutSession()
-            }
-            
-            self.dismiss(animated: true, completion: nil)
-            Answers.logCustomEvent(withName: "Closed Stands Scouting", customAttributes: ["With Save":shouldSave.description])
+        if shouldSave {
+            self.ssDataManager?.recordScoutSession()
         }
+        
+        self.dismiss(animated: true, completion: nil)
+        Answers.logCustomEvent(withName: "Closed Stands Scouting", customAttributes: ["With Save":shouldSave.description])
 	}
 	
 	override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
@@ -219,17 +216,17 @@ class StandsScoutingViewController: UIViewController {
 	}
 	
 	@objc func updateTimeLabel(_ timer: Timer) {
-		if stopwatch.isRunning {
-			timerLabel.text = stopwatch.elapsedTimeAsString
+		if ssDataManager?.stopwatch.isRunning ?? false {
+			timerLabel.text = ssDataManager?.stopwatch.elapsedTimeAsString
 			
             //Auto end Autonomous when timer hits 20 seconds
-            if stopwatch.elapsedTime > 20 {
+            if ssDataManager?.stopwatch.elapsedTime ?? 0 > 20 {
                 endAutonomousPressed(endAutonomousButton)
             }
             
-			if stopwatch.elapsedTime > 160 {
+			if ssDataManager?.stopwatch.elapsedTime ?? 0 > 160 {
 				isRunning = false
-			} else if stopwatch.elapsedTime > 135 {
+			} else if ssDataManager?.stopwatch.elapsedTime ?? 0 > 135 {
 				//Change the color of the start/stop button to blue signifying that it is safe to stop it.
 				timerButton.backgroundColor = UIColor.blue
             }

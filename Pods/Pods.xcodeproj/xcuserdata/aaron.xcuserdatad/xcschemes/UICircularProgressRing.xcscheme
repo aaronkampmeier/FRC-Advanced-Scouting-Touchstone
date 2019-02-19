@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Scheme
-   LastUpgradeVersion = "0700"
+   LastUpgradeVersion = "0930"
    version = "1.3">
    <BuildAction
       parallelizeBuildables = "YES"
@@ -13,11 +13,11 @@
             buildForProfiling = "YES"
             buildForArchiving = "YES">
             <BuildableReference
-               BuildableIdentifier = 'primary'
-               BlueprintIdentifier = '75E3453806F00EE635400A196AF3DDC4'
-               BlueprintName = 'UICircularProgressRing'
-               ReferencedContainer = 'container:Pods.xcodeproj'
-               BuildableName = 'UICircularProgressRing.framework'>
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "B2AFA731B061325E3E02409D42600A17"
+               BlueprintName = "UICircularProgressRing"
+               ReferencedContainer = "container:Pods.xcodeproj"
+               BuildableName = "UICircularProgressRing.framework">
             </BuildableReference>
          </BuildActionEntry>
       </BuildActionEntries>

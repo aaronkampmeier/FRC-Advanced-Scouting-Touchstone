@@ -6,15 +6,15 @@ target 'FRC Advanced Scouting Touchstone' do
 pod 'Alamofire'
 pod 'NYTPhotoViewer'
 pod "GMStepper"
-pod 'SSBouncyButton', '~> 1.0'
+pod "SSBouncyButton"
 pod 'UICircularProgressRing'
 pod 'VTAcknowledgementsViewController'
 pod 'TORoundedTableView'
 pod 'AWSCore'
+pod 'AWSAppSync', '~> 2.9.2'
 pod 'AWSMobileClient'
 pod 'AWSUserPoolsSignIn'
 pod 'AWSAuthUI'
-pod 'AWSAppSync', '~> 2.9.2'
 pod 'AWSPinpoint'
 end
 

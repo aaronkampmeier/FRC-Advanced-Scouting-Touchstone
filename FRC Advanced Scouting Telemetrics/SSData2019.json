@@ -1,0 +1,150 @@
+{
+	"startState":[
+		{
+			"name":"Loaded Game Piece",
+			"key":"loaded_game_piece",
+			"options":[
+				{
+					"name":"Hatch",
+					"key":"hatch"
+				},
+				{
+					"name":"Cargo",
+					"key":"cargo"
+				},
+				{
+					"name":"None",
+					"key":"none"
+				}
+			]
+		}
+	],
+	"gameActions":[
+		{
+			"name":"Grabbed Hatch",
+			"key":"grabbed_hatch",
+			"subOptions": [
+				{
+					"name":"Floor",
+					"key":"floor"
+				},
+				{
+					"name":"Loading Station",
+					"key":"loading_station"
+				}
+			]
+		},
+		{
+			"name":"Placed Hatch",
+			"key":"placed_hatch",
+			"subOptions": [
+				{
+					"name":"Cargo Ship",
+					"key":"cargo_ship"
+				},
+				{
+					"name":"Rocket Level 1",
+					"key":"rocket_1"
+				},
+				{
+					"name":"Rocket Level 2",
+					"key":"rocket_2"
+				},
+				{
+					"name":"Rocket Level 3",
+					"key":"rocket_3"
+				}
+			]
+		},
+		{
+			"name":"Dropped Hatch",
+			"key":"dropped_hatch"
+		},
+		{
+			"name":"Grabbed Cargo",
+			"key":"grabbed_cargo",
+			"subOptions": [
+				{
+					"name":"Floor",
+					"key":"floor"
+				},
+				{
+					"name":"Loading Station",
+					"key":"loading_station"
+				}
+			]
+		},
+		{
+			"name":"Placed Cargo",
+			"key":"placed_cargo",
+			"subOptions": [
+				{
+					"name":"Cargo Ship",
+					"key":"cargo_ship"
+				},
+				{
+					"name":"Rocket Level 1",
+					"key":"rocket_1"
+				},
+				{
+					"name":"Rocket Level 2",
+					"key":"rocket_2"
+				},
+				{
+					"name":"Rocket Level 3",
+					"key":"rocket_3"
+				}
+			]
+		},
+		{
+			"name":"Dropped Cargo",
+			"key":"dropped_cargo"
+		}
+	],
+	"endState":[
+		{
+			"name":"Climb Status",
+			"key":"climb_status",
+			"options": [
+				{
+					"name":"Level One",
+					"key":"level_1"
+				},
+				{
+					"name":"Level Two",
+					"key":"level_2"
+				},
+				{
+					"name":"Level Three",
+					"key":"level_3"
+				},
+				{
+					"name":"Attempted",
+					"key":"attempted"
+				}, 
+				{
+					"name":"Did Not Climb",
+					"key":"no_climb"
+				}
+			]
+		},
+		{
+			"name":"Climb Assist Status",
+			"key":"climb_assist",
+			"options": [
+				{
+					"name":"Did Assist Other Team",
+					"key":"successful"
+				},
+				{
+					"name":"Attempted Assist",
+					"key":"attempted"
+				},
+				{
+					"name":"Did Not Asssist",
+					"key":"no_assist"
+				}
+			]
+		}
+	]
+}

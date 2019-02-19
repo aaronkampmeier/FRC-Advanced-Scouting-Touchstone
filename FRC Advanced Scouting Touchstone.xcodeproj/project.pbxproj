@@ -37,10 +37,9 @@
 		93183B8721C8AB84008DC997 /* API.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93183B8421C8AB83008DC997 /* API.swift */; };
 		932354461E41686B0039386A /* SuperNotesCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 932354451E41686B0039386A /* SuperNotesCollectionViewCell.swift */; };
 		932C344C1E12DC2600A23203 /* EventInfoVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 932C344B1E12DC2600A23203 /* EventInfoVC.swift */; };
-		932CB3F21E305E8200712725 /* SSOffenseWhereViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 932CB3F11E305E8200712725 /* SSOffenseWhereViewController.swift */; };
+		932ED30B221523CA00396A41 /* OptionSelectorViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 932ED30A221523CA00396A41 /* OptionSelectorViewController.swift */; };
 		933D214B1E609A04008C8276 /* Pods-acknowledgments.plist in Resources */ = {isa = PBXBuildFile; fileRef = 933D214A1E609A04008C8276 /* Pods-acknowledgments.plist */; };
 		933D21511E609BF7008C8276 /* Additional Licenses.plist in Resources */ = {isa = PBXBuildFile; fileRef = 933D21501E609BF7008C8276 /* Additional Licenses.plist */; };
-		933E794F1E385BB20033563B /* SSPreloadingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 933E794E1E385BB20033563B /* SSPreloadingViewController.swift */; };
 		9349621F21E9A40500F761BD /* ScoutedTeamStats.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9349621E21E9A40500F761BD /* ScoutedTeamStats.swift */; };
 		934DDE462002B0510032095C /* RealmDataMangager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 934DDE452002B0510032095C /* RealmDataMangager.swift */; };
 		934F4C1622066AB100A6F5FE /* LoginFormValidation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 934F4BFF22066AB100A6F5FE /* LoginFormValidation.swift */; };
@@ -58,6 +57,9 @@
 		934F4C2322066AB100A6F5FE /* LoginHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 934F4C1122066AB100A6F5FE /* LoginHeaderView.swift */; };
 		934F4C2422066AB100A6F5FE /* RealmLogoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 934F4C1222066AB100A6F5FE /* RealmLogoView.swift */; };
 		934F4C2522066AB100A6F5FE /* LoginTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 934F4C1322066AB100A6F5FE /* LoginTableViewCell.swift */; };
+		934F4C4B2210BB3B00A6F5FE /* StandsScoutingModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 934F4C4A2210BB3B00A6F5FE /* StandsScoutingModel.swift */; };
+		934F4C4E2210C10F00A6F5FE /* SSData2019.json in Resources */ = {isa = PBXBuildFile; fileRef = 934F4C4D2210C10F00A6F5FE /* SSData2019.json */; };
+		934F4C552212754400A6F5FE /* SSGameStateViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 934F4C542212754400A6F5FE /* SSGameStateViewController.swift */; };
 		9351017021F42CD100D402FE /* DataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9351016F21F42CD100D402FE /* DataSource.swift */; };
 		9351017421F42D6000D402FE /* AWSDataManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9351017321F42D6000D402FE /* AWSDataManager.swift */; };
 		9351017621F4DEB700D402FE /* ImageScalingFunctions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9351017521F4DEB600D402FE /* ImageScalingFunctions.swift */; };
@@ -102,7 +104,6 @@
 		93E551E721C9FBEB006C79A8 /* Charts.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 93E551E321C9FBD2006C79A8 /* Charts.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		93E551F921CACDE0006C79A8 /* CognitoAuthProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93E551F821CACDE0006C79A8 /* CognitoAuthProvider.swift */; };
 		93EA7FEA1E4693C6002EC8C7 /* PitSwitchCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93EA7FE91E4693C6002EC8C7 /* PitSwitchCollectionViewCell.swift */; };
-		93FBC39A1E3EEDEC00FEB328 /* SSClimbViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93FBC3991E3EEDEC00FEB328 /* SSClimbViewController.swift */; };
 		DEE3AA58734C2CCE9C06727F /* Pods_FRC_Advanced_Scouting_Touchstone.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E4D7923BBAD6512A9C4F3DBB /* Pods_FRC_Advanced_Scouting_Touchstone.framework */; };
 /* End PBXBuildFile section */
 
@@ -199,10 +200,9 @@
 		93183B8421C8AB83008DC997 /* API.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = API.swift; path = amplify/API.swift; sourceTree = SOURCE_ROOT; };
 		932354451E41686B0039386A /* SuperNotesCollectionViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SuperNotesCollectionViewCell.swift; sourceTree = "<group>"; };
 		932C344B1E12DC2600A23203 /* EventInfoVC.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EventInfoVC.swift; sourceTree = "<group>"; };
-		932CB3F11E305E8200712725 /* SSOffenseWhereViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SSOffenseWhereViewController.swift; sourceTree = "<group>"; };
+		932ED30A221523CA00396A41 /* OptionSelectorViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OptionSelectorViewController.swift; sourceTree = "<group>"; };
 		933D214A1E609A04008C8276 /* Pods-acknowledgments.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "Pods-acknowledgments.plist"; sourceTree = "<group>"; };
 		933D21501E609BF7008C8276 /* Additional Licenses.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "Additional Licenses.plist"; sourceTree = "<group>"; };
-		933E794E1E385BB20033563B /* SSPreloadingViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SSPreloadingViewController.swift; sourceTree = "<group>"; };
 		9349621E21E9A40500F761BD /* ScoutedTeamStats.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScoutedTeamStats.swift; sourceTree = "<group>"; };
 		934DDE452002B0510032095C /* RealmDataMangager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RealmDataMangager.swift; sourceTree = "<group>"; };
 		934F4BFF22066AB100A6F5FE /* LoginFormValidation.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LoginFormValidation.swift; sourceTree = "<group>"; };
@@ -220,6 +220,9 @@
 		934F4C1122066AB100A6F5FE /* LoginHeaderView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LoginHeaderView.swift; sourceTree = "<group>"; };
 		934F4C1222066AB100A6F5FE /* RealmLogoView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RealmLogoView.swift; sourceTree = "<group>"; };
 		934F4C1322066AB100A6F5FE /* LoginTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LoginTableViewCell.swift; sourceTree = "<group>"; };
+		934F4C4A2210BB3B00A6F5FE /* StandsScoutingModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StandsScoutingModel.swift; sourceTree = "<group>"; };
+		934F4C4D2210C10F00A6F5FE /* SSData2019.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = SSData2019.json; sourceTree = "<group>"; };
+		934F4C542212754400A6F5FE /* SSGameStateViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SSGameStateViewController.swift; sourceTree = "<group>"; };
 		9351016F21F42CD100D402FE /* DataSource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataSource.swift; sourceTree = "<group>"; };
 		9351017321F42D6000D402FE /* AWSDataManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AWSDataManager.swift; sourceTree = "<group>"; };
 		9351017521F4DEB600D402FE /* ImageScalingFunctions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ImageScalingFunctions.swift; sourceTree = "<group>"; };
@@ -263,7 +266,6 @@
 		93E551DD21C9FBD1006C79A8 /* Charts.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = Charts.xcodeproj; path = "Charts-master/Charts.xcodeproj"; sourceTree = "<group>"; };
 		93E551F821CACDE0006C79A8 /* CognitoAuthProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CognitoAuthProvider.swift; sourceTree = "<group>"; };
 		93EA7FE91E4693C6002EC8C7 /* PitSwitchCollectionViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PitSwitchCollectionViewCell.swift; sourceTree = "<group>"; };
-		93FBC3991E3EEDEC00FEB328 /* SSClimbViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SSClimbViewController.swift; sourceTree = "<group>"; };
 		D1EBA735BA885680C38C6749 /* Pods-FRC Advanced Scouting Touchstone.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-FRC Advanced Scouting Touchstone.release.xcconfig"; path = "Pods/Target Support Files/Pods-FRC Advanced Scouting Touchstone/Pods-FRC Advanced Scouting Touchstone.release.xcconfig"; sourceTree = "<group>"; };
 		E4D7923BBAD6512A9C4F3DBB /* Pods_FRC_Advanced_Scouting_Touchstone.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_FRC_Advanced_Scouting_Touchstone.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
@@ -349,10 +351,9 @@
 			isa = PBXGroup;
 			children = (
 				1F45340F1C6FF916004EDDB9 /* StandsScoutingViewController.swift */,
-				933E794E1E385BB20033563B /* SSPreloadingViewController.swift */,
 				9317C03A201ECFEF00F1E907 /* SSGameScoutingViewController.swift */,
-				932CB3F11E305E8200712725 /* SSOffenseWhereViewController.swift */,
-				93FBC3991E3EEDEC00FEB328 /* SSClimbViewController.swift */,
+				934F4C542212754400A6F5FE /* SSGameStateViewController.swift */,
+				932ED30A221523CA00396A41 /* OptionSelectorViewController.swift */,
 				1F12CF171C7A6CD70014200C /* Stopwatch.swift */,
 			);
 			name = "Stands Scouting";
@@ -395,7 +396,7 @@
 				9351017321F42D6000D402FE /* AWSDataManager.swift */,
 				9351017521F4DEB600D402FE /* ImageScalingFunctions.swift */,
 				93633B20200D9B35000EC83A /* Realm Database */,
-				93AE997F1E3407A00000FB7C /* SSDataManager.swift */,
+				934F4C4F22112BBB00A6F5FE /* Stands Scouting Data Model */,
 				9332F2AD1E22C8C300AB3EA6 /* Deprecated */,
 				93A38B3D2055EBAA00B8B692 /* Views */,
 				1F21DF101C645D1F00C55D0E /* View Controllers */,
@@ -550,6 +551,16 @@
 			path = Views;
 			sourceTree = "<group>";
 		};
+		934F4C4F22112BBB00A6F5FE /* Stands Scouting Data Model */ = {
+			isa = PBXGroup;
+			children = (
+				93AE997F1E3407A00000FB7C /* SSDataManager.swift */,
+				934F4C4A2210BB3B00A6F5FE /* StandsScoutingModel.swift */,
+				934F4C4D2210C10F00A6F5FE /* SSData2019.json */,
+			);
+			name = "Stands Scouting Data Model";
+			sourceTree = "<group>";
+		};
 		93633B20200D9B35000EC83A /* Realm Database */ = {
 			isa = PBXGroup;
 			children = (
@@ -677,7 +688,6 @@
 				93610E301E42E2B200856BE2 /* Increment Build Number */,
 				1F7AE4DF1DCC2DC80029B420 /* Embed Frameworks */,
 				57ABF9A67635DC59BFEDA095 /* [CP] Embed Pods Frameworks */,
-				ECA5FB1E0E989F29CAAC3792 /* [CP] Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -812,6 +822,7 @@
 				1F78E78D1C3B469300221927 /* Assets.xcassets in Resources */,
 				933D21511E609BF7008C8276 /* Additional Licenses.plist in Resources */,
 				936572E11E1610CA00439728 /* About.rtf in Resources */,
+				934F4C4E2210C10F00A6F5FE /* SSData2019.json in Resources */,
 				93A38B3A2055EBA400B8B692 /* NoEventSelected.xib in Resources */,
 				938BEC1B22029ED9002B39D7 /* awsconfiguration.json in Resources */,
 				933D214B1E609A04008C8276 /* Pods-acknowledgments.plist in Resources */,
@@ -943,21 +954,6 @@
 			shellPath = /bin/sh;
 			shellScript = "buildNumber=$(/usr/libexec/PlistBuddy -c \"Print CFBundleVersion\" \"${PROJECT_DIR}/${INFOPLIST_FILE}\")\nbuildNumber=$(($buildNumber + 1))\n/usr/libexec/PlistBuddy -c \"Set :CFBundleVersion $buildNumber\" \"${PROJECT_DIR}/${INFOPLIST_FILE}\"\n";
 		};
-		ECA5FB1E0E989F29CAAC3792 /* [CP] Copy Pods Resources */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-			);
-			name = "[CP] Copy Pods Resources";
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-FRC Advanced Scouting Touchstone/Pods-FRC Advanced Scouting Touchstone-resources.sh\"\n";
-			showEnvVarsInLog = 0;
-		};
 /* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
@@ -977,13 +973,10 @@
 				932354461E41686B0039386A /* SuperNotesCollectionViewCell.swift in Sources */,
 				1FDC1BD11CD69F5F00ABE327 /* TeamListTableViewController.swift in Sources */,
 				937C682A204C852600FAEDE8 /* EventStatsGraphViewController.swift in Sources */,
-				933E794F1E385BB20033563B /* SSPreloadingViewController.swift in Sources */,
 				93A38B3F2055F49F00B8B692 /* NoEventSelectedView.swift in Sources */,
 				934F4C1A22066AB100A6F5FE /* AWSCognitoAuthenticationProvider.swift in Sources */,
-				93FBC39A1E3EEDEC00FEB328 /* SSClimbViewController.swift in Sources */,
 				934F4C1B22066AB100A6F5FE /* UIImage+Icons.swift in Sources */,
 				932C344C1E12DC2600A23203 /* EventInfoVC.swift in Sources */,
-				932CB3F21E305E8200712725 /* SSOffenseWhereViewController.swift in Sources */,
 				9353ADC21E57B09D00120F1A /* MatchListTableViewCell.swift in Sources */,
 				9300196C20537B0C00E10CDC /* TeamCommentsTableViewController.swift in Sources */,
 				93610E3D1E42F8D400856BE2 /* PitScoutingViewController.swift in Sources */,
@@ -995,6 +988,7 @@
 				1F78E7831C3B469300221927 /* AppDelegate.swift in Sources */,
 				937BFD0420657E9E006FB3E0 /* OnboardingPathChooserViewController.swift in Sources */,
 				9353ADBC1E57ACF100120F1A /* MatchesTableViewController.swift in Sources */,
+				934F4C4B2210BB3B00A6F5FE /* StandsScoutingModel.swift in Sources */,
 				93C5B47C1E53FC9C007D309F /* TeamInfoScrollView.swift in Sources */,
 				93C609241E67D035007A689D /* MatchOverviewDetailViewController.swift in Sources */,
 				9366C5AD20490AAD00A84C47 /* StatChartViewController.swift in Sources */,
@@ -1004,6 +998,7 @@
 				930B96621E456D3000E385D3 /* PitTableViewSelectorCollectionViewCell.swift in Sources */,
 				934F4C2522066AB100A6F5FE /* LoginTableViewCell.swift in Sources */,
 				1F1C23C21E07487C008885A1 /* Team.swift in Sources */,
+				932ED30B221523CA00396A41 /* OptionSelectorViewController.swift in Sources */,
 				1FBB426D1C9A29FC0017E36C /* Statistics.swift in Sources */,
 				93D75B641E5D0866002CBED2 /* FieldLocationDisplayViewController.swift in Sources */,
 				936967F11E4FB1F7001DB15D /* TeamDetailCollectionViewController.swift in Sources */,
@@ -1021,6 +1016,7 @@
 				934F4C1922066AB100A6F5FE /* LoginViewControllerTransitioning.swift in Sources */,
 				1F4534561C7276DE004EDDB9 /* EventPickerViewController.swift in Sources */,
 				936572DF1E160EBB00439728 /* AboutViewController.swift in Sources */,
+				934F4C552212754400A6F5FE /* SSGameStateViewController.swift in Sources */,
 				9351017621F4DEB700D402FE /* ImageScalingFunctions.swift in Sources */,
 				934F4C1722066AB100A6F5FE /* LoginTableViewDataSource.swift in Sources */,
 				934F4C2022066AB100A6F5FE /* LoginFooterView.swift in Sources */,

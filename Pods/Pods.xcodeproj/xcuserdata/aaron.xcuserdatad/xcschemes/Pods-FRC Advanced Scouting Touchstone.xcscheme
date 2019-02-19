@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Scheme
-   LastUpgradeVersion = "0700"
+   LastUpgradeVersion = "0930"
    version = "1.3">
    <BuildAction
       parallelizeBuildables = "YES"
@@ -14,7 +14,7 @@
             buildForAnalyzing = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "B71A213D8ECAC0C62A8F5E17A2A9291F"
+               BlueprintIdentifier = "54A2248F98F5DB020AC3018DDE68CC6B"
                BuildableName = "Pods_FRC_Advanced_Scouting_Touchstone.framework"
                BlueprintName = "Pods-FRC Advanced Scouting Touchstone"
                ReferencedContainer = "container:Pods.xcodeproj">
@@ -45,7 +45,7 @@
       <MacroExpansion>
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "B71A213D8ECAC0C62A8F5E17A2A9291F"
+            BlueprintIdentifier = "54A2248F98F5DB020AC3018DDE68CC6B"
             BuildableName = "Pods_FRC_Advanced_Scouting_Touchstone.framework"
             BlueprintName = "Pods-FRC Advanced Scouting Touchstone"
             ReferencedContainer = "container:Pods.xcodeproj">

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Scheme
-   LastUpgradeVersion = "0700"
+   LastUpgradeVersion = "0930"
    version = "1.3">
    <BuildAction
       parallelizeBuildables = "YES"
@@ -13,11 +13,11 @@
             buildForProfiling = "YES"
             buildForArchiving = "YES">
             <BuildableReference
-               BuildableIdentifier = 'primary'
-               BlueprintIdentifier = 'E92909A73A1271EB82D2F47B0F3DDB02'
-               BlueprintName = 'AWSAppSync'
-               ReferencedContainer = 'container:Pods.xcodeproj'
-               BuildableName = 'AWSAppSync.framework'>
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "31C06193C90B93C190C8F87EB5C9CBF5"
+               BlueprintName = "AWSAppSync"
+               ReferencedContainer = "container:Pods.xcodeproj"
+               BuildableName = "AWSAppSync.framework">
             </BuildableReference>
          </BuildActionEntry>
       </BuildActionEntries>
