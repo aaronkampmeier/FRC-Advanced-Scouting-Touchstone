@@ -59,6 +59,18 @@ query ListScoutSessions($eventKey: ID!, $teamKey: ID!, $matchKey: ID) {
     ...ScoutSession
   }
 }
+query ListSimpleScoutSessions($eventKey: ID!, $teamKey: ID!, $matchKey: ID) {
+  listScoutSessions(
+    eventKey: $eventKey
+    teamKey: $teamKey
+    matchKey: $matchKey
+  ) {
+    key
+    matchKey
+    teamKey
+    eventKey
+  }
+}
 query GetScoutSession($eventKey: ID!, $key: ID!) {
   getScoutSession(eventKey: $eventKey, key: $key) {
     ...ScoutSession

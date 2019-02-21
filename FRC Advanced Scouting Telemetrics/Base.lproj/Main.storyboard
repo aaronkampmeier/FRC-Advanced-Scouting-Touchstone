@@ -183,7 +183,7 @@
                                 <nil key="highlightedColor"/>
                             </label>
                             <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="57M-yC-eIi">
-                                <rect key="frame" x="0.0" y="156" width="683.5" height="612"/>
+                                <rect key="frame" x="0.0" y="156" width="703.5" height="612"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <collectionViewFlowLayout key="collectionViewLayout" minimumLineSpacing="10" minimumInteritemSpacing="10" id="hoM-6m-MxG">
                                     <size key="itemSize" width="215" height="164"/>
@@ -200,7 +200,7 @@
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="WN2-Qc-LNd">
-                                                    <rect key="frame" x="100" y="10" width="111" height="30"/>
+                                                    <rect key="frame" x="90" y="10" width="121" height="30"/>
                                                     <nil key="textColor"/>
                                                     <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                                     <textInputTraits key="textInputTraits" keyboardType="decimalPad"/>
@@ -218,7 +218,7 @@
                                         </view>
                                         <constraints>
                                             <constraint firstItem="3iG-7f-wL4" firstAttribute="leading" secondItem="PUd-A0-JNj" secondAttribute="leadingMargin" constant="7" id="6rh-sd-VCm"/>
-                                            <constraint firstItem="WN2-Qc-LNd" firstAttribute="leading" secondItem="3iG-7f-wL4" secondAttribute="trailing" constant="30" id="Fg4-EW-0ah"/>
+                                            <constraint firstItem="WN2-Qc-LNd" firstAttribute="leading" secondItem="3iG-7f-wL4" secondAttribute="trailing" constant="20" id="Fg4-EW-0ah"/>
                                             <constraint firstItem="3iG-7f-wL4" firstAttribute="centerY" secondItem="PUd-A0-JNj" secondAttribute="centerY" id="Ili-9L-0rK"/>
                                             <constraint firstAttribute="trailingMargin" secondItem="WN2-Qc-LNd" secondAttribute="trailing" constant="7" id="T2q-df-7aa"/>
                                             <constraint firstItem="WN2-Qc-LNd" firstAttribute="centerY" secondItem="PUd-A0-JNj" secondAttribute="centerY" id="qaC-iW-uAN"/>
@@ -230,7 +230,7 @@
                                         </connections>
                                     </collectionViewCell>
                                     <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="pitSegmentSelectorCell" id="qyA-fS-NsS" customClass="PitSegmentedSelectorCollectionViewCell" customModule="FRC_Advanced_Scouting_Touchstone" customModuleProvider="target">
-                                        <rect key="frame" x="398.5" y="0.0" width="285" height="79"/>
+                                        <rect key="frame" x="418.5" y="0.0" width="285" height="79"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
                                             <rect key="frame" x="0.0" y="0.0" width="285" height="79"/>
@@ -322,7 +322,7 @@
                                         </connections>
                                     </collectionViewCell>
                                     <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="pitImageSelectorCell" id="BRM-js-3rw" customClass="PitImageSelectorCollectionViewCell" customModule="FRC_Advanced_Scouting_Touchstone" customModuleProvider="target">
-                                        <rect key="frame" x="248" y="91.5" width="115" height="129"/>
+                                        <rect key="frame" x="255" y="91.5" width="115" height="129"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
                                             <rect key="frame" x="0.0" y="0.0" width="115" height="129"/>
@@ -360,7 +360,7 @@
                                         </connections>
                                     </collectionViewCell>
                                     <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="pitButtonCell" id="sdE-eI-kfr" customClass="PitButtonCollectionViewCell" customModule="FRC_Advanced_Scouting_Touchstone" customModuleProvider="target">
-                                        <rect key="frame" x="384.5" y="112" width="139" height="88"/>
+                                        <rect key="frame" x="397.5" y="112" width="139" height="88"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
                                             <rect key="frame" x="0.0" y="0.0" width="139" height="88"/>
@@ -399,7 +399,7 @@
                                         </connections>
                                     </collectionViewCell>
                                     <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="pitSwitchCell" id="5tc-bD-k4s" customClass="PitSwitchCollectionViewCell" customModule="FRC_Advanced_Scouting_Touchstone" customModuleProvider="target">
-                                        <rect key="frame" x="544.5" y="112" width="139" height="88"/>
+                                        <rect key="frame" x="564.5" y="112" width="139" height="88"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
                                             <rect key="frame" x="0.0" y="0.0" width="139" height="88"/>
@@ -439,7 +439,10 @@
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="giI-MU-OsI">
-                                                    <rect key="frame" x="84" y="24" width="113" height="30"/>
+                                                    <rect key="frame" x="74" y="24" width="123" height="30"/>
+                                                    <constraints>
+                                                        <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="50" id="Hbq-5e-2tt"/>
+                                                    </constraints>
                                                     <nil key="textColor"/>
                                                     <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                                     <textInputTraits key="textInputTraits"/>
@@ -447,8 +450,8 @@
                                                         <action selector="textFieldValueChanged:" destination="yQ1-b4-OJT" eventType="editingChanged" id="otl-BC-ioA"/>
                                                     </connections>
                                                 </textField>
-                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="String" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Mpe-24-Aut">
-                                                    <rect key="frame" x="8" y="28.5" width="46" height="21"/>
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="String" textAlignment="right" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Mpe-24-Aut">
+                                                    <rect key="frame" x="8" y="29" width="46" height="20.5"/>
                                                     <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                                     <nil key="textColor"/>
                                                     <nil key="highlightedColor"/>
@@ -458,7 +461,7 @@
                                         <constraints>
                                             <constraint firstItem="giI-MU-OsI" firstAttribute="centerY" secondItem="yQ1-b4-OJT" secondAttribute="centerY" id="A0e-uw-O1u"/>
                                             <constraint firstItem="Mpe-24-Aut" firstAttribute="leading" secondItem="yQ1-b4-OJT" secondAttribute="leadingMargin" id="CCL-tP-tUs"/>
-                                            <constraint firstItem="giI-MU-OsI" firstAttribute="leading" secondItem="Mpe-24-Aut" secondAttribute="trailing" constant="30" id="NgR-Mv-gn8"/>
+                                            <constraint firstItem="giI-MU-OsI" firstAttribute="leading" secondItem="Mpe-24-Aut" secondAttribute="trailing" constant="20" id="NgR-Mv-gn8"/>
                                             <constraint firstItem="Mpe-24-Aut" firstAttribute="centerY" secondItem="yQ1-b4-OJT" secondAttribute="centerY" id="oRQ-wt-5Gz"/>
                                             <constraint firstAttribute="trailingMargin" secondItem="giI-MU-OsI" secondAttribute="trailing" constant="7" id="sSM-0c-a4f"/>
                                         </constraints>
@@ -476,7 +479,7 @@
                             <constraint firstItem="eKK-pG-yVK" firstAttribute="top" secondItem="zoH-Cy-bxK" secondAttribute="bottom" constant="6" id="4i4-Gp-1wb"/>
                             <constraint firstItem="zoH-Cy-bxK" firstAttribute="centerX" secondItem="xzy-95-a9h" secondAttribute="centerX" id="9bk-Mq-M92"/>
                             <constraint firstItem="57M-yC-eIi" firstAttribute="leading" secondItem="xzy-95-a9h" secondAttribute="leadingMargin" constant="-20" id="AXd-7a-S8H"/>
-                            <constraint firstAttribute="trailingMargin" secondItem="57M-yC-eIi" secondAttribute="trailing" id="Ckg-Qw-mma">
+                            <constraint firstAttribute="trailing" secondItem="57M-yC-eIi" secondAttribute="trailing" id="Ckg-Qw-mma">
                                 <variation key="heightClass=compact-widthClass=compact" constant="-20"/>
                             </constraint>
                             <constraint firstItem="N6u-H5-5FW" firstAttribute="top" secondItem="57M-yC-eIi" secondAttribute="bottom" id="JtG-X8-dcA"/>
@@ -1514,7 +1517,7 @@
                                                     <action selector="notesButtonPressed:" destination="ipN-iW-fVz" eventType="touchUpInside" id="J2R-On-1hF"/>
                                                 </connections>
                                             </button>
-                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Select Team" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="th8-Go-Ydc">
+                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Select Team" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" minimumScaleFactor="0.69999999999999996" adjustsLetterSpacingToFitWidth="YES" translatesAutoresizingMaskIntoConstraints="NO" id="th8-Go-Ydc">
                                                 <rect key="frame" x="20" y="5" width="183" height="37"/>
                                                 <fontDescription key="fontDescription" type="system" weight="heavy" pointSize="31"/>
                                                 <nil key="textColor"/>

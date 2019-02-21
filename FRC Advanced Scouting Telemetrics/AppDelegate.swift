@@ -72,11 +72,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     var pinpoint: AWSPinpoint?
     
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
-        NSSetUncaughtExceptionHandler { (exception) in
-            NSLog("CRASH: %@", exception)
-            NSLog("Stack Trace: %@", exception.callStackSymbols)
-        }
-        
         // Override point for customization after application launch.
         Fabric.with([Crashlytics.self])
         Crashlytics.sharedInstance().setUserIdentifier(UIDevice.current.name)

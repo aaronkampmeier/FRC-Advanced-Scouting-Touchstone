@@ -3875,6 +3875,119 @@ public final class ListScoutSessionsQuery: GraphQLQuery {
   }
 }
 
+public final class ListSimpleScoutSessionsQuery: GraphQLQuery {
+  public static let operationString =
+    "query ListSimpleScoutSessions($eventKey: ID!, $teamKey: ID!, $matchKey: ID) {\n  listScoutSessions(eventKey: $eventKey, teamKey: $teamKey, matchKey: $matchKey) {\n    __typename\n    key\n    matchKey\n    teamKey\n    eventKey\n  }\n}"
+
+  public var eventKey: GraphQLID
+  public var teamKey: GraphQLID
+  public var matchKey: GraphQLID?
+
+  public init(eventKey: GraphQLID, teamKey: GraphQLID, matchKey: GraphQLID? = nil) {
+    self.eventKey = eventKey
+    self.teamKey = teamKey
+    self.matchKey = matchKey
+  }
+
+  public var variables: GraphQLMap? {
+    return ["eventKey": eventKey, "teamKey": teamKey, "matchKey": matchKey]
+  }
+
+  public struct Data: GraphQLSelectionSet {
+    public static let possibleTypes = ["Query"]
+
+    public static let selections: [GraphQLSelection] = [
+      GraphQLField("listScoutSessions", arguments: ["eventKey": GraphQLVariable("eventKey"), "teamKey": GraphQLVariable("teamKey"), "matchKey": GraphQLVariable("matchKey")], type: .list(.object(ListScoutSession.selections))),
+    ]
+
+    public var snapshot: Snapshot
+
+    public init(snapshot: Snapshot) {
+      self.snapshot = snapshot
+    }
+
+    public init(listScoutSessions: [ListScoutSession?]? = nil) {
+      self.init(snapshot: ["__typename": "Query", "listScoutSessions": listScoutSessions.flatMap { $0.map { $0.flatMap { $0.snapshot } } }])
+    }
+
+    public var listScoutSessions: [ListScoutSession?]? {
+      get {
+        return (snapshot["listScoutSessions"] as? [Snapshot?]).flatMap { $0.map { $0.flatMap { ListScoutSession(snapshot: $0) } } }
+      }
+      set {
+        snapshot.updateValue(newValue.flatMap { $0.map { $0.flatMap { $0.snapshot } } }, forKey: "listScoutSessions")
+      }
+    }
+
+    public struct ListScoutSession: GraphQLSelectionSet {
+      public static let possibleTypes = ["ScoutSession"]
+
+      public static let selections: [GraphQLSelection] = [
+        GraphQLField("__typename", type: .nonNull(.scalar(String.self))),
+        GraphQLField("key", type: .nonNull(.scalar(GraphQLID.self))),
+        GraphQLField("matchKey", type: .nonNull(.scalar(String.self))),
+        GraphQLField("teamKey", type: .nonNull(.scalar(String.self))),
+        GraphQLField("eventKey", type: .nonNull(.scalar(String.self))),
+      ]
+
+      public var snapshot: Snapshot
+
+      public init(snapshot: Snapshot) {
+        self.snapshot = snapshot
+      }
+
+      public init(key: GraphQLID, matchKey: String, teamKey: String, eventKey: String) {
+        self.init(snapshot: ["__typename": "ScoutSession", "key": key, "matchKey": matchKey, "teamKey": teamKey, "eventKey": eventKey])
+      }
+
+      public var __typename: String {
+        get {
+          return snapshot["__typename"]! as! String
+        }
+        set {
+          snapshot.updateValue(newValue, forKey: "__typename")
+        }
+      }
+
+      public var key: GraphQLID {
+        get {
+          return snapshot["key"]! as! GraphQLID
+        }
+        set {
+          snapshot.updateValue(newValue, forKey: "key")
+        }
+      }
+
+      public var matchKey: String {
+        get {
+          return snapshot["matchKey"]! as! String
+        }
+        set {
+          snapshot.updateValue(newValue, forKey: "matchKey")
+        }
+      }
+
+      public var teamKey: String {
+        get {
+          return snapshot["teamKey"]! as! String
+        }
+        set {
+          snapshot.updateValue(newValue, forKey: "teamKey")
+        }
+      }
+
+      public var eventKey: String {
+        get {
+          return snapshot["eventKey"]! as! String
+        }
+        set {
+          snapshot.updateValue(newValue, forKey: "eventKey")
+        }
+      }
+    }
+  }
+}
+
 public final class GetScoutSessionQuery: GraphQLQuery {
   public static let operationString =
     "query GetScoutSession($eventKey: ID!, $key: ID!) {\n  getScoutSession(eventKey: $eventKey, key: $key) {\n    __typename\n    ...ScoutSession\n  }\n}"

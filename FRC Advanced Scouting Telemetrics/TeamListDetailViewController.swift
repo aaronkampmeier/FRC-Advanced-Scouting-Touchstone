@@ -77,6 +77,9 @@ class TeamListDetailViewController: UIViewController {
 
         // Do any additional setup after loading the view.
         
+        generalInfoTableView?.translatesAutoresizingMaskIntoConstraints = false
+        generalInfoTableView?.isScrollEnabled = false
+        
         teamListSplitVC.teamListDetailVC = self
         
         self.dataSource = teamListSplitVC.teamListTableVC
@@ -121,9 +124,6 @@ class TeamListDetailViewController: UIViewController {
         generalInfoTableView?.rowHeight = UITableViewAutomaticDimension
         generalInfoTableView?.estimatedRowHeight = 44
         
-        //Watch for notifications requiring the collection view to resize it's height. This ensures that this object's container view is always the same height as it's child collection view forcing the user to use this scroll view and not the scroll view in the colleciton view.
-        NotificationCenter.default.addObserver(forName: TeamDetailCollectionViewNeedsHeightResizing, object: nil, queue: nil) {_ in self.resizeDetailViewHeights()}
-        
         //Load the data if a team was selected beforehand
         self.reloadData()
     }
@@ -144,8 +144,6 @@ class TeamListDetailViewController: UIViewController {
     
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
-        
-        self.resizeDetailViewHeights()
     }
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
@@ -195,9 +193,9 @@ class TeamListDetailViewController: UIViewController {
                     self?.updateView()
                 } else {
                     //TODO: Show error
-                    let alert = UIAlertController(title: "Error Loading Team", message: "There was an error loading the team's information. \((error as? AWSMobileClientError)?.message ?? "")", preferredStyle: .alert)
-                    alert.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
-                    self?.present(alert, animated: true, completion: nil)
+//                    let alert = UIAlertController(title: "Error Loading Team", message: "There was an error loading the team's information. \((error as? AWSMobileClientError)?.message ?? "")", preferredStyle: .alert)
+//                    alert.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
+//                    self?.present(alert, animated: true, completion: nil)
                 }
             })
             
@@ -226,6 +224,7 @@ class TeamListDetailViewController: UIViewController {
     
     func resetSubscriptions() {
         if let teamKey = selectedTeam?.key, let eventKey = selectedEventKey {
+            CLSNSLogv("Setting Team List Detail Subscriptions", getVaList([]))
             //Set up a subscription
             do {
                 updateTeamSubcription = try Globals.appDelegate.appSyncClient?.subscribe(subscription: OnUpdateScoutedTeamSubscription(userID: AWSMobileClient.sharedInstance().username ?? "", eventKey: eventKey, teamKey: teamKey), resultHandler: { (result, transaction, error) in

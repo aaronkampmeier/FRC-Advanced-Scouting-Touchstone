@@ -36,27 +36,27 @@ class Statistic<T>: Equatable {
     let name: String
     let id: String
     
-    private let compositeTrendFunction: ((T, CompositeTrendCallback) -> Void)?
+    private let compositeTrendFunction: ((T, @escaping CompositeTrendCallback) -> Void)?
     var hasCompositeTrend: Bool {
         get {
             return compositeTrendFunction != nil
         }
     }
     
-    private let calculationFunction: (T, StatValueCallback) -> Void
+    private let calculationFunction: (T, @escaping StatValueCallback) -> Void
     
-    init(name: String, id: String, compositeTrendFunction: ((T, CompositeTrendCallback) -> Void)? = nil, function: @escaping (T, StatValueCallback) -> Void) {
+    init(name: String, id: String, compositeTrendFunction: ((T, @escaping CompositeTrendCallback) -> Void)? = nil, function: @escaping (T, @escaping StatValueCallback) -> Void) {
         self.name = name
         self.id = id
         self.compositeTrendFunction = compositeTrendFunction
         self.calculationFunction = function
     }
     
-    func calculate(forObject object: T, callback: StatValueCallback) {
+    func calculate(forObject object: T, callback: @escaping StatValueCallback) {
         calculationFunction(object, callback)
     }
     
-    func compositePoints(forObject object: T, callback: CompositeTrendCallback) {
+    func compositePoints(forObject object: T, callback: @escaping CompositeTrendCallback) {
         if hasCompositeTrend {
             compositeTrendFunction?(object, callback)
         } else {
@@ -81,6 +81,21 @@ enum StatValue: CustomStringConvertible, Equatable, Comparable {
     case String(String)
     case Percent(Double)
     case NoValue
+    case Error
+    
+    static func initAny(value: Any?) -> StatValue {
+        if let val = value as? Int {
+            return initWithOptional(value: val)
+        } else if let val = value as? Double {
+            return initWithOptional(value: val)
+        } else if let val = value as? Bool {
+            return initWithOptional(value: val)
+        } else if let val = value as? String {
+            return initWithOptional(value: val)
+        } else {
+            return .NoValue
+        }
+    }
     
     static func initWithOptional(value: Int?) -> StatValue {
         if let val = value {
@@ -143,6 +158,8 @@ enum StatValue: CustomStringConvertible, Equatable, Comparable {
                 return value.description.capitalized
             case .String(let value):
                 return value.description
+            case .Error:
+                return "Error"
             case .NoValue:
                 return "No Value"
             }

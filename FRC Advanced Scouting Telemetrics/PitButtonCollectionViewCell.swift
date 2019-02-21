@@ -21,6 +21,8 @@ class PitButtonCollectionViewCell: PitScoutingCell {
         
         if let value = parameter.currentValue() as? Bool {
             button.isSelected = value
+        } else {
+            button.isSelected = false
         }
     }
     

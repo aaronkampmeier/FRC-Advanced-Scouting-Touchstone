@@ -17,6 +17,20 @@
 					"key":"none"
 				}
 			]
+		},
+		{
+			"name":"Start Position",
+			"key":"start_position",
+			"options":[
+				{
+					"name":"HAB Level 1",
+					"key":"hab_level_1"
+				},
+				{
+					"name":"HAB Level 2",
+					"key":"hab_level_2"
+				}
+			]
 		}
 	],
 	"gameActions":[

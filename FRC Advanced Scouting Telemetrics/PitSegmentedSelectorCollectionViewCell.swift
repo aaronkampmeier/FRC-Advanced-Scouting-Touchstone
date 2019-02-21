@@ -35,6 +35,8 @@ class PitSegmentedSelectorCollectionViewCell: PitScoutingCell {
             if let index = options.index(of: initValue) {
                 segmentedControl.selectedSegmentIndex = index
             }
+        } else {
+            segmentedControl.selectedSegmentIndex = -1
         }
     }
     

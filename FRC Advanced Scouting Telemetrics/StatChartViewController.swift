@@ -166,7 +166,7 @@ class StatChartViewController: UIViewController {
             }
             
             //Now we have all the BarChartDataEntries, create the data set
-            let chartDataSet = BarChartDataSet(values: valueEntries, label: "")
+            let chartDataSet = BarChartDataSet(values: self?.valueEntries, label: "")
             chartDataSet.colors = [UIColor(red: 0.16, green: 0.50, blue: 0.73, alpha: 1)]
             //        chartDataSet.colors = ChartColorTemplates.vordiplom()
             chartDataSet.valueFormatter = self
@@ -174,8 +174,8 @@ class StatChartViewController: UIViewController {
             
             self?.barChart.data = chartData
             
-            barChart.chartDescription?.text = "\(scoutedTeam.teamKey) in \(scoutedTeam.eventKey)"
-            self?.navigationItem.title = statistic?.name
+            self?.barChart.chartDescription?.text = "\(scoutedTeam.teamKey) in \(scoutedTeam.eventKey)"
+            self?.navigationItem.title = self?.statistic?.name
         }
     }
     

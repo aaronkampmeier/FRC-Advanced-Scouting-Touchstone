@@ -28,11 +28,12 @@ class TeamDetailCollectionViewController: UICollectionViewController, UICollecti
         (collectionView?.collectionViewLayout as! UICollectionViewFlowLayout).minimumInteritemSpacing = 3
         
         collectionView?.isScrollEnabled = false
+        
+        collectionView?.translatesAutoresizingMaskIntoConstraints = false
     }
     
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
-        NotificationCenter.default.post(name: TeamDetailCollectionViewNeedsHeightResizing, object: self, userInfo: nil)
     }
     
     override func didReceiveMemoryWarning() {
@@ -42,7 +43,6 @@ class TeamDetailCollectionViewController: UICollectionViewController, UICollecti
     
     override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
         collectionView?.layoutIfNeeded()
-        NotificationCenter.default.post(name: TeamDetailCollectionViewNeedsHeightResizing, object: self, userInfo: nil)
     }
     
     func loadStats(forScoutedTeam scoutedTeam: ScoutedTeam?) {
@@ -54,8 +54,6 @@ class TeamDetailCollectionViewController: UICollectionViewController, UICollecti
         
         collectionView?.reloadData()
         collectionView?.layoutIfNeeded()
-        
-        NotificationCenter.default.post(name: TeamDetailCollectionViewNeedsHeightResizing, object: self, userInfo: nil)
     }
 
     /*
@@ -156,8 +154,8 @@ class TeamDetailStatisticCell: UICollectionViewCell {
         
         stat.calculate(forObject: scoutedTeam) {value in
             //Check if this cell hasn't already been moved on to be reused with something else
-            if self.scoutedTeam == scoutedTeam {
-                valueLabel.text = value.description
+            if self.scoutedTeam == scoutedTeam && self.stat?.id == stat.id {
+                self.valueLabel.text = value.description
             }
         }
         

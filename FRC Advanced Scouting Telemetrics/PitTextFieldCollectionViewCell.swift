@@ -20,6 +20,8 @@ class PitTextFieldCollectionViewCell: PitScoutingCell {
         
         if let value = parameter.currentValue() as? Double {
             textField.text = value.description
+        } else {
+            textField.text = nil
         }
     }
     

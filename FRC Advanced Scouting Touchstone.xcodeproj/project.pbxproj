@@ -60,7 +60,6 @@
 		934F4C4B2210BB3B00A6F5FE /* StandsScoutingModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 934F4C4A2210BB3B00A6F5FE /* StandsScoutingModel.swift */; };
 		934F4C4E2210C10F00A6F5FE /* SSData2019.json in Resources */ = {isa = PBXBuildFile; fileRef = 934F4C4D2210C10F00A6F5FE /* SSData2019.json */; };
 		934F4C552212754400A6F5FE /* SSGameStateViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 934F4C542212754400A6F5FE /* SSGameStateViewController.swift */; };
-		9351017021F42CD100D402FE /* DataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9351016F21F42CD100D402FE /* DataSource.swift */; };
 		9351017421F42D6000D402FE /* AWSDataManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9351017321F42D6000D402FE /* AWSDataManager.swift */; };
 		9351017621F4DEB700D402FE /* ImageScalingFunctions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9351017521F4DEB600D402FE /* ImageScalingFunctions.swift */; };
 		9353ADBC1E57ACF100120F1A /* MatchesTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9353ADBB1E57ACF100120F1A /* MatchesTableViewController.swift */; };
@@ -76,8 +75,6 @@
 		9365947B1E441981008FF324 /* PitTextFieldCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9365947A1E441981008FF324 /* PitTextFieldCollectionViewCell.swift */; };
 		9366C5AD20490AAD00A84C47 /* StatChartViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9366C5AC20490AAD00A84C47 /* StatChartViewController.swift */; };
 		936967F11E4FB1F7001DB15D /* TeamDetailCollectionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 936967F01E4FB1F7001DB15D /* TeamDetailCollectionViewController.swift */; };
-		936967F71E4FD057001DB15D /* TeamDetailTableCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 936967F61E4FD057001DB15D /* TeamDetailTableCollectionViewCell.swift */; };
-		9369681A1E502AC8001DB15D /* TeamDetailKeyValueSpreadCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 936968191E502AC8001DB15D /* TeamDetailKeyValueSpreadCollectionViewCell.swift */; };
 		93780A2A20797487000B4565 /* WelcomePageViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93780A2920797487000B4565 /* WelcomePageViewController.swift */; };
 		93780A2E20799E7D000B4565 /* LoginPromotionalViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93780A2D20799E7D000B4565 /* LoginPromotionalViewController.swift */; };
 		93780A3020799F9C000B4565 /* LoginPromotionalText.rtf in Resources */ = {isa = PBXBuildFile; fileRef = 93780A2F20799F9C000B4565 /* LoginPromotionalText.rtf */; };
@@ -223,7 +220,6 @@
 		934F4C4A2210BB3B00A6F5FE /* StandsScoutingModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StandsScoutingModel.swift; sourceTree = "<group>"; };
 		934F4C4D2210C10F00A6F5FE /* SSData2019.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = SSData2019.json; sourceTree = "<group>"; };
 		934F4C542212754400A6F5FE /* SSGameStateViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SSGameStateViewController.swift; sourceTree = "<group>"; };
-		9351016F21F42CD100D402FE /* DataSource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataSource.swift; sourceTree = "<group>"; };
 		9351017321F42D6000D402FE /* AWSDataManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AWSDataManager.swift; sourceTree = "<group>"; };
 		9351017521F4DEB600D402FE /* ImageScalingFunctions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ImageScalingFunctions.swift; sourceTree = "<group>"; };
 		9353ADBB1E57ACF100120F1A /* MatchesTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MatchesTableViewController.swift; sourceTree = "<group>"; };
@@ -239,8 +235,6 @@
 		9365947A1E441981008FF324 /* PitTextFieldCollectionViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PitTextFieldCollectionViewCell.swift; sourceTree = "<group>"; };
 		9366C5AC20490AAD00A84C47 /* StatChartViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StatChartViewController.swift; sourceTree = "<group>"; };
 		936967F01E4FB1F7001DB15D /* TeamDetailCollectionViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TeamDetailCollectionViewController.swift; sourceTree = "<group>"; };
-		936967F61E4FD057001DB15D /* TeamDetailTableCollectionViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TeamDetailTableCollectionViewCell.swift; sourceTree = "<group>"; };
-		936968191E502AC8001DB15D /* TeamDetailKeyValueSpreadCollectionViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TeamDetailKeyValueSpreadCollectionViewCell.swift; sourceTree = "<group>"; };
 		93780A2920797487000B4565 /* WelcomePageViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WelcomePageViewController.swift; sourceTree = "<group>"; };
 		93780A2D20799E7D000B4565 /* LoginPromotionalViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginPromotionalViewController.swift; sourceTree = "<group>"; };
 		93780A2F20799F9C000B4565 /* LoginPromotionalText.rtf */ = {isa = PBXFileReference; lastKnownFileType = text.rtf; path = LoginPromotionalText.rtf; sourceTree = "<group>"; };
@@ -340,7 +334,6 @@
 				1FD0A09A1C95093600013A18 /* TeamListTableViewCell.swift */,
 				1FDC1BD21CD6A35F00ABE327 /* TeamListDetailViewController.swift */,
 				936967F01E4FB1F7001DB15D /* TeamDetailCollectionViewController.swift */,
-				936967F81E4FD05C001DB15D /* Team Detail Cells */,
 				1F21DF111C66942200C55D0E /* SortVC.swift */,
 				93C5B47B1E53FC9C007D309F /* TeamInfoScrollView.swift */,
 			);
@@ -388,15 +381,15 @@
 				934F4BFC22066AB000A6F5FE /* RealmLoginKit */,
 				1F78E7821C3B469300221927 /* AppDelegate.swift */,
 				93E551F821CACDE0006C79A8 /* CognitoAuthProvider.swift */,
+				9351017321F42D6000D402FE /* AWSDataManager.swift */,
 				93183B8421C8AB83008DC997 /* API.swift */,
 				1FBB426C1C9A29FC0017E36C /* Statistics.swift */,
 				9349621E21E9A40500F761BD /* ScoutedTeamStats.swift */,
 				93633B1E200D9B29000EC83A /* Match.swift */,
-				9351016F21F42CD100D402FE /* DataSource.swift */,
-				9351017321F42D6000D402FE /* AWSDataManager.swift */,
 				9351017521F4DEB600D402FE /* ImageScalingFunctions.swift */,
 				93633B20200D9B35000EC83A /* Realm Database */,
 				934F4C4F22112BBB00A6F5FE /* Stands Scouting Data Model */,
+				93A3ABC221F1462F007831E3 /* PitScoutingData.swift */,
 				9332F2AD1E22C8C300AB3EA6 /* Deprecated */,
 				93A38B3D2055EBAA00B8B692 /* Views */,
 				1F21DF101C645D1F00C55D0E /* View Controllers */,
@@ -582,7 +575,6 @@
 			isa = PBXGroup;
 			children = (
 				93610E3C1E42F8D400856BE2 /* PitScoutingViewController.swift */,
-				93A3ABC221F1462F007831E3 /* PitScoutingData.swift */,
 				936594811E441A7A008FF324 /* Collection Cells */,
 			);
 			name = "Pit Scouting";
@@ -600,15 +592,6 @@
 				930B96661E45A91A00E385D3 /* PitButtonCollectionViewCell.swift */,
 			);
 			name = "Collection Cells";
-			sourceTree = "<group>";
-		};
-		936967F81E4FD05C001DB15D /* Team Detail Cells */ = {
-			isa = PBXGroup;
-			children = (
-				936967F61E4FD057001DB15D /* TeamDetailTableCollectionViewCell.swift */,
-				936968191E502AC8001DB15D /* TeamDetailKeyValueSpreadCollectionViewCell.swift */,
-			);
-			name = "Team Detail Cells";
 			sourceTree = "<group>";
 		};
 		937BFD0520657EA5006FB3E0 /* Onboarding */ = {
@@ -993,7 +976,6 @@
 				93C609241E67D035007A689D /* MatchOverviewDetailViewController.swift in Sources */,
 				9366C5AD20490AAD00A84C47 /* StatChartViewController.swift in Sources */,
 				1FD0A09B1C95093600013A18 /* TeamListTableViewCell.swift in Sources */,
-				9369681A1E502AC8001DB15D /* TeamDetailKeyValueSpreadCollectionViewCell.swift in Sources */,
 				934F4C1C22066AB100A6F5FE /* FileManager+ApplicationFilePaths.swift in Sources */,
 				930B96621E456D3000E385D3 /* PitTableViewSelectorCollectionViewCell.swift in Sources */,
 				934F4C2522066AB100A6F5FE /* LoginTableViewCell.swift in Sources */,
@@ -1024,7 +1006,6 @@
 				934F4C2222066AB100A6F5FE /* LoginView.swift in Sources */,
 				9351017421F42D6000D402FE /* AWSDataManager.swift in Sources */,
 				934F4C2322066AB100A6F5FE /* LoginHeaderView.swift in Sources */,
-				936967F71E4FD057001DB15D /* TeamDetailTableCollectionViewCell.swift in Sources */,
 				93780A2A20797487000B4565 /* WelcomePageViewController.swift in Sources */,
 				1FDC1BCE1CD69EBB00ABE327 /* TeamListSplitViewController.swift in Sources */,
 				93CEA6322041FB5300C5B357 /* ConfirmForgotPasswordViewController.swift in Sources */,
@@ -1035,7 +1016,6 @@
 				9317C03B201ECFEF00F1E907 /* SSGameScoutingViewController.swift in Sources */,
 				1F4FEDAC1C4B686000F4016D /* AdminConsoleController.swift in Sources */,
 				937E9C961E40468300D0ED76 /* SuperNotesCollectionViewController.swift in Sources */,
-				9351017021F42CD100D402FE /* DataSource.swift in Sources */,
 				93EA7FEA1E4693C6002EC8C7 /* PitSwitchCollectionViewCell.swift in Sources */,
 				93183B8721C8AB84008DC997 /* API.swift in Sources */,
 				1F12CF181C7A6CD70014200C /* Stopwatch.swift in Sources */,

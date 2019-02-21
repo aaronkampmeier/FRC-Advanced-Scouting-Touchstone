@@ -11,7 +11,6 @@ import Crashlytics
 import AWSMobileClient
 
 typealias PitScoutingUpdateHandler = ((Any?)->Void)
-typealias PitScoutingCurrentValue = ()->Any?
 let PitScoutingNewImageNotification = Notification.Name("PitScoutingNewImageNotification")
 let PitScoutingUpdatedTeamDetail = Notification.Name("PitScoutingUpdatedTeamDetail")
 
@@ -34,6 +33,8 @@ class PitScoutingViewController: UIViewController, UICollectionViewDataSource, U
     
     var teamKey: String?
     var eventKey: String?
+    
+    static weak var currentPitScouter: PitScoutingViewController?
     
     //PitScoutingParameter represents a value that should appear in pit scouting and can be saved
     var pitScoutingParameters: [PitScoutingParameter] = []
@@ -58,15 +59,23 @@ class PitScoutingViewController: UIViewController, UICollectionViewDataSource, U
         let label: String
         //Options should be left nil for all types except Segmented Selector and Table View Multi Selector
         let options: [String]?
-        let currentValue: PitScoutingCurrentValue
+        let scoutedTeam: ScoutedTeam
         let key: String
         
-        init(key: String, type: PitScoutingParameterType, label: String, options: [String]?, currentValue: @escaping PitScoutingCurrentValue) {
+        init(key: String, type: PitScoutingParameterType, label: String, options: [String]?, scoutedTeam: ScoutedTeam) {
             self.type = type
             self.key = key
             self.label = label
             self.options = options
-            self.currentValue = currentValue
+            self.scoutedTeam = scoutedTeam
+        }
+        
+        func currentValue() -> Any? {
+            if let newerValue = PitScoutingViewController.currentPitScouter?.updatedValues[key] {
+                return newerValue
+            } else {
+                return scoutedTeam.attributeDictionary?[key]
+            }
         }
     }
     
@@ -112,12 +121,16 @@ class PitScoutingViewController: UIViewController, UICollectionViewDataSource, U
     override func viewDidLoad() {
         super.viewDidLoad()
 
+        PitScoutingViewController.currentPitScouter = self
         // Do any additional setup after loading the view.
         dataSource = PitScoutingData()
         
         collectionView?.dataSource = self
         collectionView?.delegate = self
         collectionView?.keyboardDismissMode = .interactive
+        
+        
+        self.teamLabel?.text = teamKey?.trimmingCharacters(in: CharacterSet.letters)
         
     }
     

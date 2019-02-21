@@ -20,6 +20,8 @@ class PitSwitchCollectionViewCell: PitScoutingCell {
         //Set current value
         if let currentValue = parameter.currentValue() as? Bool {
             `switch`.isOn = currentValue
+        } else {
+            `switch`.isOn = false
         }
     }
     

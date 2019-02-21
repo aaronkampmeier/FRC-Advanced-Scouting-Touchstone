@@ -528,6 +528,15 @@ class AdminConsoleController: UIViewController, UITableViewDataSource, UITableVi
         dismiss(animated: true, completion: nil)
     }
     
+    @IBAction func advancedPressed(_ sender: UIBarButtonItem) {
+        let alert = UIAlertController(title: "Clear Local Cache?", message: "Would you like to clear the local cache of data? This will not delete any of your scouted data, simply clear out the local cache of it. This will cause longer loading times initially as data is re-downloaded and cached again.", preferredStyle: .alert)
+        alert.addAction(UIAlertAction(title: "Clear Cache", style: .destructive, handler: { (action) in
+            Globals.appDelegate.appSyncClient?.clearCache()
+        }))
+        alert.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
+        present(alert, animated: true, completion: nil)
+    }
+    
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         super.prepare(for: segue, sender: sender)
         

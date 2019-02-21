@@ -506,20 +506,17 @@ class TeamListTableViewController: UITableViewController, TeamListDetailDataSour
         }
         
         //TODO: Add image functionality
-//        if let image = teamImages[team.key] {
-//            cell.frontImage.image = image
-//        } else {
-//            if let imageData = team.scouted?.frontImage {
-//                guard let uiImage = UIImage(data: imageData as Data) else {
-//                    Crashlytics.sharedInstance().recordCustomExceptionName("Image data corrupted", reason: "Attempt to create UIImage from data failed.", frameArray: [])
-//                    return cell
-//                }
+        if let image = teamImages[team.key] {
+            cell.frontImage.image = image
+        } else {
+            
+//            if let image = team.image {
 //                cell.frontImage.image = uiImage
-//                teamImages[team.key] = uiImage
+//            teamImages[team.key] = uiImage
 //            } else {
-//                cell.frontImage.image = UIImage(named: "FRC-Logo")
+                cell.frontImage.image = UIImage(named: "FRC-Logo")
 //            }
-//        }
+        }
         
         //Show the indicator if this is the team that is currently logged in
         cell.myTeamIndicatorImageView.isHidden = true
