@@ -8,7 +8,6 @@
 
 /* Begin PBXBuildFile section */
 		1F12CF181C7A6CD70014200C /* Stopwatch.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F12CF171C7A6CD70014200C /* Stopwatch.swift */; };
-		1F1C23C21E07487C008885A1 /* Team.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F1C23AA1E07487C008885A1 /* Team.swift */; };
 		1F1C23C41E07487C008885A1 /* TeamMatchPerformance.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F1C23AC1E07487C008885A1 /* TeamMatchPerformance.swift */; };
 		1F1C23CE1E07487C008885A1 /* TeamEventPerformance.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F1C23B61E07487C008885A1 /* TeamEventPerformance.swift */; };
 		1F1C23DA1E07673E008885A1 /* AddEventTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F1C23D91E07673E008885A1 /* AddEventTableViewController.swift */; };
@@ -41,7 +40,6 @@
 		933D214B1E609A04008C8276 /* Pods-acknowledgments.plist in Resources */ = {isa = PBXBuildFile; fileRef = 933D214A1E609A04008C8276 /* Pods-acknowledgments.plist */; };
 		933D21511E609BF7008C8276 /* Additional Licenses.plist in Resources */ = {isa = PBXBuildFile; fileRef = 933D21501E609BF7008C8276 /* Additional Licenses.plist */; };
 		9349621F21E9A40500F761BD /* ScoutedTeamStats.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9349621E21E9A40500F761BD /* ScoutedTeamStats.swift */; };
-		934DDE462002B0510032095C /* RealmDataMangager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 934DDE452002B0510032095C /* RealmDataMangager.swift */; };
 		934F4C1622066AB100A6F5FE /* LoginFormValidation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 934F4BFF22066AB100A6F5FE /* LoginFormValidation.swift */; };
 		934F4C1722066AB100A6F5FE /* LoginTableViewDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = 934F4C0122066AB100A6F5FE /* LoginTableViewDataSource.swift */; };
 		934F4C1822066AB100A6F5FE /* LoginKeyboardManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 934F4C0222066AB100A6F5FE /* LoginKeyboardManager.swift */; };
@@ -97,6 +95,7 @@
 		93CEA6302041ED0600C5B357 /* ForgotPasswordViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93CEA62F2041ED0600C5B357 /* ForgotPasswordViewController.swift */; };
 		93CEA6322041FB5300C5B357 /* ConfirmForgotPasswordViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93CEA6312041FB5300C5B357 /* ConfirmForgotPasswordViewController.swift */; };
 		93D75B641E5D0866002CBED2 /* FieldLocationDisplayViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93D75B631E5D0866002CBED2 /* FieldLocationDisplayViewController.swift */; };
+		93DA5164221E743600254BF3 /* ScoutSession.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93DA5163221E743600254BF3 /* ScoutSession.swift */; };
 		93E551E621C9FBEB006C79A8 /* Charts.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 93E551E321C9FBD2006C79A8 /* Charts.framework */; };
 		93E551E721C9FBEB006C79A8 /* Charts.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 93E551E321C9FBD2006C79A8 /* Charts.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		93E551F921CACDE0006C79A8 /* CognitoAuthProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93E551F821CACDE0006C79A8 /* CognitoAuthProvider.swift */; };
@@ -159,7 +158,6 @@
 /* Begin PBXFileReference section */
 		1C713CB13EB7BA66AC808E54 /* Pods.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		1F12CF171C7A6CD70014200C /* Stopwatch.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Stopwatch.swift; sourceTree = "<group>"; };
-		1F1C23AA1E07487C008885A1 /* Team.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Team.swift; sourceTree = "<group>"; };
 		1F1C23AC1E07487C008885A1 /* TeamMatchPerformance.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TeamMatchPerformance.swift; sourceTree = "<group>"; };
 		1F1C23B61E07487C008885A1 /* TeamEventPerformance.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TeamEventPerformance.swift; sourceTree = "<group>"; };
 		1F1C23D91E07673E008885A1 /* AddEventTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AddEventTableViewController.swift; sourceTree = "<group>"; };
@@ -201,7 +199,6 @@
 		933D214A1E609A04008C8276 /* Pods-acknowledgments.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "Pods-acknowledgments.plist"; sourceTree = "<group>"; };
 		933D21501E609BF7008C8276 /* Additional Licenses.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "Additional Licenses.plist"; sourceTree = "<group>"; };
 		9349621E21E9A40500F761BD /* ScoutedTeamStats.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScoutedTeamStats.swift; sourceTree = "<group>"; };
-		934DDE452002B0510032095C /* RealmDataMangager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RealmDataMangager.swift; sourceTree = "<group>"; };
 		934F4BFF22066AB100A6F5FE /* LoginFormValidation.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LoginFormValidation.swift; sourceTree = "<group>"; };
 		934F4C0122066AB100A6F5FE /* LoginTableViewDataSource.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LoginTableViewDataSource.swift; sourceTree = "<group>"; };
 		934F4C0222066AB100A6F5FE /* LoginKeyboardManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LoginKeyboardManager.swift; sourceTree = "<group>"; };
@@ -257,6 +254,7 @@
 		93CEA62F2041ED0600C5B357 /* ForgotPasswordViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ForgotPasswordViewController.swift; sourceTree = "<group>"; };
 		93CEA6312041FB5300C5B357 /* ConfirmForgotPasswordViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConfirmForgotPasswordViewController.swift; sourceTree = "<group>"; };
 		93D75B631E5D0866002CBED2 /* FieldLocationDisplayViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FieldLocationDisplayViewController.swift; sourceTree = "<group>"; };
+		93DA5163221E743600254BF3 /* ScoutSession.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScoutSession.swift; sourceTree = "<group>"; };
 		93E551DD21C9FBD1006C79A8 /* Charts.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = Charts.xcodeproj; path = "Charts-master/Charts.xcodeproj"; sourceTree = "<group>"; };
 		93E551F821CACDE0006C79A8 /* CognitoAuthProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CognitoAuthProvider.swift; sourceTree = "<group>"; };
 		93EA7FE91E4693C6002EC8C7 /* PitSwitchCollectionViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PitSwitchCollectionViewCell.swift; sourceTree = "<group>"; };
@@ -383,9 +381,7 @@
 				93E551F821CACDE0006C79A8 /* CognitoAuthProvider.swift */,
 				9351017321F42D6000D402FE /* AWSDataManager.swift */,
 				93183B8421C8AB83008DC997 /* API.swift */,
-				1FBB426C1C9A29FC0017E36C /* Statistics.swift */,
-				9349621E21E9A40500F761BD /* ScoutedTeamStats.swift */,
-				93633B1E200D9B29000EC83A /* Match.swift */,
+				93DA5162221E741A00254BF3 /* Statistics Extensions */,
 				9351017521F4DEB600D402FE /* ImageScalingFunctions.swift */,
 				93633B20200D9B35000EC83A /* Realm Database */,
 				934F4C4F22112BBB00A6F5FE /* Stands Scouting Data Model */,
@@ -451,7 +447,6 @@
 		9317C035201ADB6B00F1E907 /* General Models */ = {
 			isa = PBXGroup;
 			children = (
-				1F1C23AA1E07487C008885A1 /* Team.swift */,
 				1F1C23B61E07487C008885A1 /* TeamEventPerformance.swift */,
 				1F1C23AC1E07487C008885A1 /* TeamMatchPerformance.swift */,
 			);
@@ -558,7 +553,6 @@
 			isa = PBXGroup;
 			children = (
 				93633B21200D9B42000EC83A /* Models */,
-				934DDE452002B0510032095C /* RealmDataMangager.swift */,
 			);
 			name = "Realm Database";
 			sourceTree = "<group>";
@@ -635,6 +629,17 @@
 				93CEA6312041FB5300C5B357 /* ConfirmForgotPasswordViewController.swift */,
 			);
 			name = "Forgot Password";
+			sourceTree = "<group>";
+		};
+		93DA5162221E741A00254BF3 /* Statistics Extensions */ = {
+			isa = PBXGroup;
+			children = (
+				1FBB426C1C9A29FC0017E36C /* Statistics.swift */,
+				9349621E21E9A40500F761BD /* ScoutedTeamStats.swift */,
+				93DA5163221E743600254BF3 /* ScoutSession.swift */,
+				93633B1E200D9B29000EC83A /* Match.swift */,
+			);
+			name = "Statistics Extensions";
 			sourceTree = "<group>";
 		};
 		93E551DE21C9FBD1006C79A8 /* Products */ = {
@@ -966,7 +971,6 @@
 				93C609281E67D0CC007A689D /* MatchOverviewMasterViewController.swift in Sources */,
 				1F1C23DA1E07673E008885A1 /* AddEventTableViewController.swift in Sources */,
 				1F1C23CE1E07487C008885A1 /* TeamEventPerformance.swift in Sources */,
-				934DDE462002B0510032095C /* RealmDataMangager.swift in Sources */,
 				934F4C1622066AB100A6F5FE /* LoginFormValidation.swift in Sources */,
 				1F78E7831C3B469300221927 /* AppDelegate.swift in Sources */,
 				937BFD0420657E9E006FB3E0 /* OnboardingPathChooserViewController.swift in Sources */,
@@ -979,8 +983,8 @@
 				934F4C1C22066AB100A6F5FE /* FileManager+ApplicationFilePaths.swift in Sources */,
 				930B96621E456D3000E385D3 /* PitTableViewSelectorCollectionViewCell.swift in Sources */,
 				934F4C2522066AB100A6F5FE /* LoginTableViewCell.swift in Sources */,
-				1F1C23C21E07487C008885A1 /* Team.swift in Sources */,
 				932ED30B221523CA00396A41 /* OptionSelectorViewController.swift in Sources */,
+				93DA5164221E743600254BF3 /* ScoutSession.swift in Sources */,
 				1FBB426D1C9A29FC0017E36C /* Statistics.swift in Sources */,
 				93D75B641E5D0866002CBED2 /* FieldLocationDisplayViewController.swift in Sources */,
 				936967F11E4FB1F7001DB15D /* TeamDetailCollectionViewController.swift in Sources */,

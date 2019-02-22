@@ -73,6 +73,7 @@ fragment ScoutSession on ScoutSession {
     teamKey
     userID
     eventKey
+    recordedDate
     startState
     endState
     timeMarkers {

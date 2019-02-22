@@ -23,6 +23,8 @@ class StatisticsDataSource {
         switch type {
         case is ScoutedTeam.Type:
             return ScoutedTeam.stats as! [Statistic<T>]
+        case is ScoutSession.Type:
+            return ScoutSession.stats as! [Statistic<T>]
         default:
             return []
         }

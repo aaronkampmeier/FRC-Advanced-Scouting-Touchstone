@@ -58,13 +58,6 @@ extension ScoutedTeam: Equatable {
     static var stats: [Statistic<ScoutedTeam>] {
         get {
             var statistics = [Statistic<ScoutedTeam>]()
-            //Auto generate all of the pit socuting stats
-            let pitScoutingInputs = PitScoutingData().requestedDataInputs(forScoutedTeam: ScoutedTeam(teamKey: "", userId: "", eventKey: ""))
-            for input in pitScoutingInputs {
-                statistics.append(Statistic<ScoutedTeam>(name: input.label, id: input.key, function: { (scoutedTeam, callback) in
-                    callback(StatValue.initAny(value: scoutedTeam.attributeDictionary?[input.key]))
-                }))
-            }
             
             //OPRs
             statistics.append(ScoutedTeamStat(name: "OPR", id: "opr", function: { (scoutedTeam, callback) in
@@ -112,6 +105,15 @@ extension ScoutedTeam: Equatable {
                     }
                 })
             }))
+            
+            //Auto generate all of the pit socuting stats
+            let pitScoutingInputs = PitScoutingData().requestedDataInputs(forScoutedTeam: ScoutedTeam(teamKey: "", userId: "", eventKey: ""))
+            for input in pitScoutingInputs {
+                statistics.append(Statistic<ScoutedTeam>(name: input.label, id: input.key, function: { (scoutedTeam, callback) in
+                    callback(StatValue.initAny(value: scoutedTeam.attributeDictionary?[input.key]))
+                }))
+            }
+            
             statistics.append(ScoutedTeamStat(name: "Scouted Matches", id: "scoutedMatches", function: { (scoutedTeam, callback) in
                 //Fetch the opr
                 Globals.appDelegate.appSyncClient?.fetch(query: ListSimpleScoutSessionsQuery(eventKey: scoutedTeam.eventKey, teamKey: scoutedTeam.teamKey), cachePolicy: .returnCacheDataAndFetch, resultHandler: { (result, error) in

@@ -53,6 +53,7 @@ mutation CreateScoutSession(
   $eventKey: ID!
   $teamKey: ID!
   $matchKey: ID!
+  $recordedDate: AWSTimestamp!
   $startState: AWSJSON!
   $endState: AWSJSON!
   $timeMarkers: [TimeMarkerInput]!
@@ -61,6 +62,7 @@ mutation CreateScoutSession(
     eventKey: $eventKey
     teamKey: $teamKey
     matchKey: $matchKey
+    recordedDate: $recordedDate
     startState: $startState
     endState: $endState
     timeMarkers: $timeMarkers

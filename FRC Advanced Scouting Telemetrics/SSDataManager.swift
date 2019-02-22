@@ -56,7 +56,8 @@ class SSDataManager {
             Crashlytics.sharedInstance().recordError(error)
         }
         
-        Globals.appDelegate.appSyncClient?.perform(mutation: CreateScoutSessionMutation(eventKey: match.eventKey, teamKey: teamKey, matchKey: match.key, startState: startStateString, endState: endStateString, timeMarkers: timeMarkers), optimisticUpdate: { (transaction) in
+        let mutation = CreateScoutSessionMutation(eventKey: match.eventKey, teamKey: teamKey, matchKey: match.key, recordedDate: Int(Date().timeIntervalSince1970), startState: startStateString, endState: endStateString, timeMarkers: timeMarkers)
+        Globals.appDelegate.appSyncClient?.perform(mutation: mutation, optimisticUpdate: { (transaction) in
             //TODO: - Add optimistic update
         }, conflictResolutionBlock: { (snapshot, taskCompletionSource, onCompletion) in
             
@@ -66,7 +67,9 @@ class SSDataManager {
                 CLSNSLogv("Successfully saved new scout session", getVaList([]))
             } else {
                 //Show an alert that it failed to save
-                //TODO: - Handle this
+                let alert = UIAlertController(title: "Stands Scouting Failed", message: "There was an error saving the stands scouting data. This error has been recorded. \(error?.localizedDescription ?? result?.errors?.map({$0.errorDescription}).description ?? "Unkown Error")", preferredStyle: .alert)
+                alert.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
+                Globals.appDelegate.presentViewControllerOnTop(alert, animated: true)
             }
         })
     }
@@ -77,12 +80,8 @@ class SSDataManager {
             return
         } else {
             hasPassedAutonomous = true
-            addTimeMarker(event: "endAutonomousPeriod", subOption: nil)
+            addTimeMarker(event: "end_autonomous_period", subOption: nil)
         }
-    }
-    
-    func didCrossAutoLine() {
-        addTimeMarker(event: "didCrossAutoLine", subOption: nil)
     }
     
     func setState(value: Any, forKey key: String, inSection gameSection: SSStateGameSection) {

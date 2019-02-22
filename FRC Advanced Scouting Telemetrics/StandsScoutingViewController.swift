@@ -137,7 +137,6 @@ class StandsScoutingViewController: UIViewController {
                 } else {
                     //Throw up an error that the match does not exist
                     CLSNSLogv("Desired Match for stands scouting does not exist or is not stored in the cache, trying again", getVaList([]))
-//                    self?.close(andSave: false)
                     self?.setUp(forTeamKey: teamKey, andMatchKey: matchKey, inEventKey: eventKey, noLocal: true)
                     return
                 }

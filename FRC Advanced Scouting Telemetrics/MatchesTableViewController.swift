@@ -76,11 +76,12 @@ class MatchesTableViewController: UITableViewController {
             //Get the matches
             Globals.appDelegate.appSyncClient?.fetch(query: ListMatchesQuery(eventKey: eventKey), cachePolicy: .returnCacheDataAndFetch, resultHandler: {[weak self] (result, error) in
                 if Globals.handleAppSyncErrors(forQuery: "ListMatchesQuery", result: result, error: error) {
+                    var newMatches: [Match] = []
                     let returnedMatches = (result?.data?.listMatches?.map {$0!.fragments.match} ?? []).sorted(by: { (match1, match2) -> Bool in
                         return match1 < match2
                     })
                     if let teamKey = teamKey {
-                        self?.matches = returnedMatches.filter {match in
+                        newMatches = returnedMatches.filter {match in
                             if match.alliances?.blue?.teamKeys?.contains(teamKey) ?? false || match.alliances?.red?.teamKeys?.contains(teamKey) ?? false {
                                 return true
                             } else {
@@ -88,11 +89,23 @@ class MatchesTableViewController: UITableViewController {
                             }
                         }
                     } else {
-                        self?.matches = returnedMatches
+                        newMatches = returnedMatches
                     }
                     
-                    self?.tableView.reloadData()
-                    self?.scrollToSoonest()
+                    //Check if they are the same, and if they are don't update
+                    var isDifferent = false
+                    for (index,match) in (newMatches).enumerated() {
+                        if !(self?.matches.firstIndex(where: {$0.key == match.key}) ?? -1 == index) {
+                            isDifferent = true
+                        }
+                    }
+                    
+                    self?.matches = newMatches
+                    if isDifferent {
+                        self?.tableView.reloadData()
+                        self?.scrollToSoonest()
+                    }
+                    
                 } else {
                     //TODO: Throw error
                     

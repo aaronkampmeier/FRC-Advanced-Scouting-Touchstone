@@ -12,7 +12,10 @@ class MatchOverviewTimeMarkerTableViewCell: UITableViewCell {
     @IBOutlet weak var iconImageView: UIImageView!
     @IBOutlet weak var timeMarkerEventLabel: UILabel!
     @IBOutlet weak var timeLabel: UILabel!
-
+    @IBOutlet weak var subOptionLabel: UILabel!
+    @IBOutlet weak var imageViewWidthConstraint: NSLayoutConstraint!
+    @IBOutlet weak var timeMarkerVerticalCenterConstraint: NSLayoutConstraint!
+    
     override func awakeFromNib() {
         super.awakeFromNib()
         // Initialization code

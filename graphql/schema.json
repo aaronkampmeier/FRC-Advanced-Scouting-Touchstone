@@ -1405,6 +1405,17 @@
           "isDeprecated" : false,
           "deprecationReason" : null
         }, {
+          "name" : "recordedDate",
+          "description" : null,
+          "args" : [ ],
+          "type" : {
+            "kind" : "SCALAR",
+            "name" : "AWSTimestamp",
+            "ofType" : null
+          },
+          "isDeprecated" : false,
+          "deprecationReason" : null
+        }, {
           "name" : "startState",
           "description" : null,
           "args" : [ ],
@@ -2073,6 +2084,19 @@
               "ofType" : {
                 "kind" : "SCALAR",
                 "name" : "ID",
+                "ofType" : null
+              }
+            },
+            "defaultValue" : null
+          }, {
+            "name" : "recordedDate",
+            "description" : null,
+            "type" : {
+              "kind" : "NON_NULL",
+              "name" : null,
+              "ofType" : {
+                "kind" : "SCALAR",
+                "name" : "AWSTimestamp",
                 "ofType" : null
               }
             },

@@ -22,6 +22,8 @@ class MatchOverviewPerformanceDetailViewController: UIViewController {
     var match: Match?
     var teamKey: String?
     
+    var model: StandsScoutingModel?
+    
     var availableScoutSessions: [ScoutSession] = [] {
         didSet {
             if availableScoutSessions.count <= 1 {
@@ -31,9 +33,18 @@ class MatchOverviewPerformanceDetailViewController: UIViewController {
                 scoutIDViewHeight.constant = 50
                 scoutIDView.isHidden = false
                 scoutIDSegmentedSelector.removeAllSegments()
-                for n in 0..<availableScoutSessions.count {
-                    scoutIDSegmentedSelector.insertSegment(withTitle: "\(n)", at: n, animated: false)
+                for (index,session) in availableScoutSessions.enumerated() {
+                    if let date = session.recordedDate {
+                        let dateFormatter = DateFormatter()
+                        dateFormatter.locale = Locale.current
+                        
+                        dateFormatter.dateFormat = "EEE dd, HH:mm"
+                        scoutIDSegmentedSelector.insertSegment(withTitle: "\(dateFormatter.string(from: Date(timeIntervalSince1970: TimeInterval(date))))", at: index, animated: false)
+                    } else {
+                        scoutIDSegmentedSelector.insertSegment(withTitle: "\(index)", at: index, animated: false)
+                    }
                 }
+                scoutIDSegmentedSelector.selectedSegmentIndex = 0
             }
         }
     }
@@ -50,6 +61,13 @@ class MatchOverviewPerformanceDetailViewController: UIViewController {
 //            timeMarkerTableView.reloadData()
 //        }
 //    }
+    
+    func hideEverything() {
+        hasNotBeenScoutedHeight.constant = 0
+        standsScoutButton.isHidden = true
+        timeMarkerTableView.isHidden = true
+        matchStatsCollectionView.isHidden = true
+    }
     
     func hideMatchContentViews() {
         hasNotBeenScoutedHeight.constant = 22
@@ -72,6 +90,8 @@ class MatchOverviewPerformanceDetailViewController: UIViewController {
         
         timeMarkerTableView.dataSource = self
         timeMarkerTableView.delegate = self
+        timeMarkerTableView.estimatedRowHeight = 55
+        timeMarkerTableView.allowsSelection = false
         
         matchStatsCollectionView.dataSource = self
         matchStatsCollectionView.delegate = self
@@ -81,6 +101,11 @@ class MatchOverviewPerformanceDetailViewController: UIViewController {
         
         if Globals.isInSpectatorMode {
             standsScoutButton.tintColor = UIColor.purple
+        }
+        
+        StandsScoutingModelLoader().getModel { (model) in
+            self.model = model
+            self.timeMarkerTableView.reloadData()
         }
     }
     
@@ -93,28 +118,33 @@ class MatchOverviewPerformanceDetailViewController: UIViewController {
         // Dispose of any resources that can be recreated.
     }
     
-    func load(match: Match, forTeamKey teamKey: String?) {
-        self.match = match
-        self.teamKey = teamKey
-        
-        availableScoutSessions = []
-        selectScoutSession(scoutSession: nil)
-        
-        if let teamKey = teamKey {
-            //Get the scout sessions
-            Globals.appDelegate.appSyncClient?.fetch(query: ListScoutSessionsQuery(eventKey: match.eventKey, teamKey: teamKey), cachePolicy: .returnCacheDataAndFetch, resultHandler: {[weak self] (result, error) in
-                if Globals.handleAppSyncErrors(forQuery: "ListScoutSessions", result: result, error: error) {
-                    self?.availableScoutSessions = result?.data?.listScoutSessions?.map({$0!.fragments.scoutSession}) ?? []
-                    self?.selectScoutSession(scoutSession: self?.availableScoutSessions.first)
-                } else {
-                    //Uh oh
-                }
-            })
+    func load(match: Match?, forTeamKey teamKey: String?) {
+        if let match = match {
+            self.match = match
+            self.teamKey = teamKey
+            
+            availableScoutSessions = []
+            selectScoutSession(scoutSession: nil)
+            
+            if let teamKey = teamKey {
+                //Get the scout sessions
+                Globals.appDelegate.appSyncClient?.fetch(query: ListScoutSessionsQuery(eventKey: match.eventKey, teamKey: teamKey, matchKey: match.key), cachePolicy: .returnCacheDataAndFetch, resultHandler: {[weak self] (result, error) in
+                    if Globals.handleAppSyncErrors(forQuery: "ListScoutSessions", result: result, error: error) {
+                        self?.availableScoutSessions = result?.data?.listScoutSessions?.map({$0!.fragments.scoutSession}) ?? []
+                        self?.selectScoutSession(scoutSession: self?.availableScoutSessions.first)
+                    } else {
+                        //Uh oh
+                    }
+                })
+            }
+        } else {
+            hideEverything()
         }
     }
     
     
     func selectScoutSession(scoutSession: ScoutSession?) {
+        self.selectedScoutSession = scoutSession
         statistics = []
         if let _ = scoutSession {
             showMatchContentViews()
@@ -168,7 +198,7 @@ class MatchOverviewPerformanceDetailViewController: UIViewController {
 
 extension MatchOverviewPerformanceDetailViewController: UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        if let timeMarkers = selectedScoutSession?.timeMarkers?.map({$0!}) {
+        if let timeMarkers = selectedScoutSession?.timeMarkers {
             return timeMarkers.count
         } else {
             return 0
@@ -178,11 +208,43 @@ extension MatchOverviewPerformanceDetailViewController: UITableViewDataSource {
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "timeMarker") as! MatchOverviewTimeMarkerTableViewCell
         if let scoutSession = selectedScoutSession {
-            let timeMarker = scoutSession.timeMarkers?[indexPath.row]
+            let timeMarker = scoutSession.timeMarkers?[indexPath.row]?.fragments.timeMarkerFragment
             
-            cell.timeMarkerEventLabel.text = timeMarker?.event
+            if let model = model {
+                let gameAction = model.gameActions.first(where: {$0.key == timeMarker?.event})
+                
+                if let action = gameAction {
+                    cell.timeMarkerEventLabel.text = action.name
+                } else if timeMarker?.event == "end_autonomous_period" {
+                    cell.timeMarkerEventLabel.text = "Ended Autonomous Period"
+                } else {
+                    cell.timeMarkerEventLabel.text = timeMarker?.event
+                }
+                
+                if let subOption = timeMarker?.subOption {
+                    if let option = gameAction?.subOptions?.first(where: {$0.key == subOption})?.name {
+                        cell.subOptionLabel.text = option
+                    } else {
+                        cell.subOptionLabel.text = timeMarker?.subOption
+                    }
+                } else {
+                    cell.subOptionLabel.text = timeMarker?.subOption
+                }
+            } else {
+                cell.timeMarkerEventLabel.text = timeMarker?.event
+                cell.subOptionLabel.text = timeMarker?.subOption
+            }
+            
+            if timeMarker?.subOption == nil {
+                cell.timeMarkerVerticalCenterConstraint.constant = 0
+            } else {
+                cell.timeMarkerVerticalCenterConstraint.constant = -7
+            }
+            
             let elapsedTime = timeMarker?.time ?? 0
             cell.timeLabel.text = String.init(format: "%02d:%02d", Int(elapsedTime / 60), Int(elapsedTime.truncatingRemainder(dividingBy: 60)))
+            
+            cell.imageViewWidthConstraint.constant = 0
         }
         
         return cell

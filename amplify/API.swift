@@ -862,35 +862,37 @@ public final class UpdateScoutedTeamMutation: GraphQLMutation {
 
 public final class CreateScoutSessionMutation: GraphQLMutation {
   public static let operationString =
-    "mutation CreateScoutSession($eventKey: ID!, $teamKey: ID!, $matchKey: ID!, $startState: AWSJSON!, $endState: AWSJSON!, $timeMarkers: [TimeMarkerInput]!) {\n  createScoutSession(eventKey: $eventKey, teamKey: $teamKey, matchKey: $matchKey, startState: $startState, endState: $endState, timeMarkers: $timeMarkers) {\n    __typename\n    ...ScoutSession\n  }\n}"
+    "mutation CreateScoutSession($eventKey: ID!, $teamKey: ID!, $matchKey: ID!, $recordedDate: AWSTimestamp!, $startState: AWSJSON!, $endState: AWSJSON!, $timeMarkers: [TimeMarkerInput]!) {\n  createScoutSession(eventKey: $eventKey, teamKey: $teamKey, matchKey: $matchKey, recordedDate: $recordedDate, startState: $startState, endState: $endState, timeMarkers: $timeMarkers) {\n    __typename\n    ...ScoutSession\n  }\n}"
 
   public static var requestString: String { return operationString.appending(ScoutSession.fragmentString).appending(TimeMarkerFragment.fragmentString) }
 
   public var eventKey: GraphQLID
   public var teamKey: GraphQLID
   public var matchKey: GraphQLID
+  public var recordedDate: Int
   public var startState: String
   public var endState: String
   public var timeMarkers: [TimeMarkerInput?]
 
-  public init(eventKey: GraphQLID, teamKey: GraphQLID, matchKey: GraphQLID, startState: String, endState: String, timeMarkers: [TimeMarkerInput?]) {
+  public init(eventKey: GraphQLID, teamKey: GraphQLID, matchKey: GraphQLID, recordedDate: Int, startState: String, endState: String, timeMarkers: [TimeMarkerInput?]) {
     self.eventKey = eventKey
     self.teamKey = teamKey
     self.matchKey = matchKey
+    self.recordedDate = recordedDate
     self.startState = startState
     self.endState = endState
     self.timeMarkers = timeMarkers
   }
 
   public var variables: GraphQLMap? {
-    return ["eventKey": eventKey, "teamKey": teamKey, "matchKey": matchKey, "startState": startState, "endState": endState, "timeMarkers": timeMarkers]
+    return ["eventKey": eventKey, "teamKey": teamKey, "matchKey": matchKey, "recordedDate": recordedDate, "startState": startState, "endState": endState, "timeMarkers": timeMarkers]
   }
 
   public struct Data: GraphQLSelectionSet {
     public static let possibleTypes = ["Mutation"]
 
     public static let selections: [GraphQLSelection] = [
-      GraphQLField("createScoutSession", arguments: ["eventKey": GraphQLVariable("eventKey"), "teamKey": GraphQLVariable("teamKey"), "matchKey": GraphQLVariable("matchKey"), "startState": GraphQLVariable("startState"), "endState": GraphQLVariable("endState"), "timeMarkers": GraphQLVariable("timeMarkers")], type: .object(CreateScoutSession.selections)),
+      GraphQLField("createScoutSession", arguments: ["eventKey": GraphQLVariable("eventKey"), "teamKey": GraphQLVariable("teamKey"), "matchKey": GraphQLVariable("matchKey"), "recordedDate": GraphQLVariable("recordedDate"), "startState": GraphQLVariable("startState"), "endState": GraphQLVariable("endState"), "timeMarkers": GraphQLVariable("timeMarkers")], type: .object(CreateScoutSession.selections)),
     ]
 
     public var snapshot: Snapshot
@@ -923,6 +925,7 @@ public final class CreateScoutSessionMutation: GraphQLMutation {
         GraphQLField("teamKey", type: .nonNull(.scalar(String.self))),
         GraphQLField("userID", type: .nonNull(.scalar(GraphQLID.self))),
         GraphQLField("eventKey", type: .nonNull(.scalar(String.self))),
+        GraphQLField("recordedDate", type: .scalar(Int.self)),
         GraphQLField("startState", type: .scalar(String.self)),
         GraphQLField("endState", type: .scalar(String.self)),
         GraphQLField("timeMarkers", type: .list(.object(TimeMarker.selections))),
@@ -934,8 +937,8 @@ public final class CreateScoutSessionMutation: GraphQLMutation {
         self.snapshot = snapshot
       }
 
-      public init(key: GraphQLID, matchKey: String, teamKey: String, userId: GraphQLID, eventKey: String, startState: String? = nil, endState: String? = nil, timeMarkers: [TimeMarker?]? = nil) {
-        self.init(snapshot: ["__typename": "ScoutSession", "key": key, "matchKey": matchKey, "teamKey": teamKey, "userID": userId, "eventKey": eventKey, "startState": startState, "endState": endState, "timeMarkers": timeMarkers.flatMap { $0.map { $0.flatMap { $0.snapshot } } }])
+      public init(key: GraphQLID, matchKey: String, teamKey: String, userId: GraphQLID, eventKey: String, recordedDate: Int? = nil, startState: String? = nil, endState: String? = nil, timeMarkers: [TimeMarker?]? = nil) {
+        self.init(snapshot: ["__typename": "ScoutSession", "key": key, "matchKey": matchKey, "teamKey": teamKey, "userID": userId, "eventKey": eventKey, "recordedDate": recordedDate, "startState": startState, "endState": endState, "timeMarkers": timeMarkers.flatMap { $0.map { $0.flatMap { $0.snapshot } } }])
       }
 
       public var __typename: String {
@@ -989,6 +992,15 @@ public final class CreateScoutSessionMutation: GraphQLMutation {
         }
         set {
           snapshot.updateValue(newValue, forKey: "eventKey")
+        }
+      }
+
+      public var recordedDate: Int? {
+        get {
+          return snapshot["recordedDate"] as? Int
+        }
+        set {
+          snapshot.updateValue(newValue, forKey: "recordedDate")
         }
       }
 
@@ -3674,6 +3686,7 @@ public final class ListScoutSessionsQuery: GraphQLQuery {
         GraphQLField("teamKey", type: .nonNull(.scalar(String.self))),
         GraphQLField("userID", type: .nonNull(.scalar(GraphQLID.self))),
         GraphQLField("eventKey", type: .nonNull(.scalar(String.self))),
+        GraphQLField("recordedDate", type: .scalar(Int.self)),
         GraphQLField("startState", type: .scalar(String.self)),
         GraphQLField("endState", type: .scalar(String.self)),
         GraphQLField("timeMarkers", type: .list(.object(TimeMarker.selections))),
@@ -3685,8 +3698,8 @@ public final class ListScoutSessionsQuery: GraphQLQuery {
         self.snapshot = snapshot
       }
 
-      public init(key: GraphQLID, matchKey: String, teamKey: String, userId: GraphQLID, eventKey: String, startState: String? = nil, endState: String? = nil, timeMarkers: [TimeMarker?]? = nil) {
-        self.init(snapshot: ["__typename": "ScoutSession", "key": key, "matchKey": matchKey, "teamKey": teamKey, "userID": userId, "eventKey": eventKey, "startState": startState, "endState": endState, "timeMarkers": timeMarkers.flatMap { $0.map { $0.flatMap { $0.snapshot } } }])
+      public init(key: GraphQLID, matchKey: String, teamKey: String, userId: GraphQLID, eventKey: String, recordedDate: Int? = nil, startState: String? = nil, endState: String? = nil, timeMarkers: [TimeMarker?]? = nil) {
+        self.init(snapshot: ["__typename": "ScoutSession", "key": key, "matchKey": matchKey, "teamKey": teamKey, "userID": userId, "eventKey": eventKey, "recordedDate": recordedDate, "startState": startState, "endState": endState, "timeMarkers": timeMarkers.flatMap { $0.map { $0.flatMap { $0.snapshot } } }])
       }
 
       public var __typename: String {
@@ -3740,6 +3753,15 @@ public final class ListScoutSessionsQuery: GraphQLQuery {
         }
         set {
           snapshot.updateValue(newValue, forKey: "eventKey")
+        }
+      }
+
+      public var recordedDate: Int? {
+        get {
+          return snapshot["recordedDate"] as? Int
+        }
+        set {
+          snapshot.updateValue(newValue, forKey: "recordedDate")
         }
       }
 
@@ -4043,6 +4065,7 @@ public final class GetScoutSessionQuery: GraphQLQuery {
         GraphQLField("teamKey", type: .nonNull(.scalar(String.self))),
         GraphQLField("userID", type: .nonNull(.scalar(GraphQLID.self))),
         GraphQLField("eventKey", type: .nonNull(.scalar(String.self))),
+        GraphQLField("recordedDate", type: .scalar(Int.self)),
         GraphQLField("startState", type: .scalar(String.self)),
         GraphQLField("endState", type: .scalar(String.self)),
         GraphQLField("timeMarkers", type: .list(.object(TimeMarker.selections))),
@@ -4054,8 +4077,8 @@ public final class GetScoutSessionQuery: GraphQLQuery {
         self.snapshot = snapshot
       }
 
-      public init(key: GraphQLID, matchKey: String, teamKey: String, userId: GraphQLID, eventKey: String, startState: String? = nil, endState: String? = nil, timeMarkers: [TimeMarker?]? = nil) {
-        self.init(snapshot: ["__typename": "ScoutSession", "key": key, "matchKey": matchKey, "teamKey": teamKey, "userID": userId, "eventKey": eventKey, "startState": startState, "endState": endState, "timeMarkers": timeMarkers.flatMap { $0.map { $0.flatMap { $0.snapshot } } }])
+      public init(key: GraphQLID, matchKey: String, teamKey: String, userId: GraphQLID, eventKey: String, recordedDate: Int? = nil, startState: String? = nil, endState: String? = nil, timeMarkers: [TimeMarker?]? = nil) {
+        self.init(snapshot: ["__typename": "ScoutSession", "key": key, "matchKey": matchKey, "teamKey": teamKey, "userID": userId, "eventKey": eventKey, "recordedDate": recordedDate, "startState": startState, "endState": endState, "timeMarkers": timeMarkers.flatMap { $0.map { $0.flatMap { $0.snapshot } } }])
       }
 
       public var __typename: String {
@@ -4109,6 +4132,15 @@ public final class GetScoutSessionQuery: GraphQLQuery {
         }
         set {
           snapshot.updateValue(newValue, forKey: "eventKey")
+        }
+      }
+
+      public var recordedDate: Int? {
+        get {
+          return snapshot["recordedDate"] as? Int
+        }
+        set {
+          snapshot.updateValue(newValue, forKey: "recordedDate")
         }
       }
 
@@ -5551,6 +5583,7 @@ public final class OnCreateScoutSessionSubscription: GraphQLSubscription {
         GraphQLField("teamKey", type: .nonNull(.scalar(String.self))),
         GraphQLField("userID", type: .nonNull(.scalar(GraphQLID.self))),
         GraphQLField("eventKey", type: .nonNull(.scalar(String.self))),
+        GraphQLField("recordedDate", type: .scalar(Int.self)),
         GraphQLField("startState", type: .scalar(String.self)),
         GraphQLField("endState", type: .scalar(String.self)),
         GraphQLField("timeMarkers", type: .list(.object(TimeMarker.selections))),
@@ -5562,8 +5595,8 @@ public final class OnCreateScoutSessionSubscription: GraphQLSubscription {
         self.snapshot = snapshot
       }
 
-      public init(key: GraphQLID, matchKey: String, teamKey: String, userId: GraphQLID, eventKey: String, startState: String? = nil, endState: String? = nil, timeMarkers: [TimeMarker?]? = nil) {
-        self.init(snapshot: ["__typename": "ScoutSession", "key": key, "matchKey": matchKey, "teamKey": teamKey, "userID": userId, "eventKey": eventKey, "startState": startState, "endState": endState, "timeMarkers": timeMarkers.flatMap { $0.map { $0.flatMap { $0.snapshot } } }])
+      public init(key: GraphQLID, matchKey: String, teamKey: String, userId: GraphQLID, eventKey: String, recordedDate: Int? = nil, startState: String? = nil, endState: String? = nil, timeMarkers: [TimeMarker?]? = nil) {
+        self.init(snapshot: ["__typename": "ScoutSession", "key": key, "matchKey": matchKey, "teamKey": teamKey, "userID": userId, "eventKey": eventKey, "recordedDate": recordedDate, "startState": startState, "endState": endState, "timeMarkers": timeMarkers.flatMap { $0.map { $0.flatMap { $0.snapshot } } }])
       }
 
       public var __typename: String {
@@ -5617,6 +5650,15 @@ public final class OnCreateScoutSessionSubscription: GraphQLSubscription {
         }
         set {
           snapshot.updateValue(newValue, forKey: "eventKey")
+        }
+      }
+
+      public var recordedDate: Int? {
+        get {
+          return snapshot["recordedDate"] as? Int
+        }
+        set {
+          snapshot.updateValue(newValue, forKey: "recordedDate")
         }
       }
 
@@ -6889,7 +6931,7 @@ public struct MatchAlliance: GraphQLFragment {
 
 public struct ScoutSession: GraphQLFragment {
   public static let fragmentString =
-    "fragment ScoutSession on ScoutSession {\n  __typename\n  key\n  matchKey\n  teamKey\n  userID\n  eventKey\n  startState\n  endState\n  timeMarkers {\n    __typename\n    ...TimeMarkerFragment\n  }\n}"
+    "fragment ScoutSession on ScoutSession {\n  __typename\n  key\n  matchKey\n  teamKey\n  userID\n  eventKey\n  recordedDate\n  startState\n  endState\n  timeMarkers {\n    __typename\n    ...TimeMarkerFragment\n  }\n}"
 
   public static let possibleTypes = ["ScoutSession"]
 
@@ -6900,6 +6942,7 @@ public struct ScoutSession: GraphQLFragment {
     GraphQLField("teamKey", type: .nonNull(.scalar(String.self))),
     GraphQLField("userID", type: .nonNull(.scalar(GraphQLID.self))),
     GraphQLField("eventKey", type: .nonNull(.scalar(String.self))),
+    GraphQLField("recordedDate", type: .scalar(Int.self)),
     GraphQLField("startState", type: .scalar(String.self)),
     GraphQLField("endState", type: .scalar(String.self)),
     GraphQLField("timeMarkers", type: .list(.object(TimeMarker.selections))),
@@ -6911,8 +6954,8 @@ public struct ScoutSession: GraphQLFragment {
     self.snapshot = snapshot
   }
 
-  public init(key: GraphQLID, matchKey: String, teamKey: String, userId: GraphQLID, eventKey: String, startState: String? = nil, endState: String? = nil, timeMarkers: [TimeMarker?]? = nil) {
-    self.init(snapshot: ["__typename": "ScoutSession", "key": key, "matchKey": matchKey, "teamKey": teamKey, "userID": userId, "eventKey": eventKey, "startState": startState, "endState": endState, "timeMarkers": timeMarkers.flatMap { $0.map { $0.flatMap { $0.snapshot } } }])
+  public init(key: GraphQLID, matchKey: String, teamKey: String, userId: GraphQLID, eventKey: String, recordedDate: Int? = nil, startState: String? = nil, endState: String? = nil, timeMarkers: [TimeMarker?]? = nil) {
+    self.init(snapshot: ["__typename": "ScoutSession", "key": key, "matchKey": matchKey, "teamKey": teamKey, "userID": userId, "eventKey": eventKey, "recordedDate": recordedDate, "startState": startState, "endState": endState, "timeMarkers": timeMarkers.flatMap { $0.map { $0.flatMap { $0.snapshot } } }])
   }
 
   public var __typename: String {
@@ -6966,6 +7009,15 @@ public struct ScoutSession: GraphQLFragment {
     }
     set {
       snapshot.updateValue(newValue, forKey: "eventKey")
+    }
+  }
+
+  public var recordedDate: Int? {
+    get {
+      return snapshot["recordedDate"] as? Int
+    }
+    set {
+      snapshot.updateValue(newValue, forKey: "recordedDate")
     }
   }
 

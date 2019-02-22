@@ -36,6 +36,7 @@ class MatchOverviewDetailViewController: UIViewController {
         
         self.navigationItem.leftItemsSupplementBackButton = true
         self.navigationItem.leftBarButtonItem = matchOverviewSplitVC?.displayModeButtonItem
+        self.segmentedControl.selectedSegmentIndex = -1
         
         matchPerformanceDetail = self.childViewControllers.first! as? MatchOverviewPerformanceDetailViewController
         
@@ -52,10 +53,13 @@ class MatchOverviewDetailViewController: UIViewController {
     func load(forMatchKey matchKey: String, shouldShowExitButton: Bool) {
         self.setUpForMatch(match: nil)
         
+        let eventKey = matchKey.components(separatedBy: "_").first
         //Get the match
-        Globals.appDelegate.appSyncClient?.fetch(query: GetMatchQuery(matchKey: matchKey), cachePolicy: .returnCacheDataAndFetch, resultHandler: { (result, error) in
+        Globals.appDelegate.appSyncClient?.fetch(query: ListMatchesQuery(eventKey: eventKey ?? ""), cachePolicy: .returnCacheDataAndFetch, resultHandler: { (result, error) in
             if Globals.handleAppSyncErrors(forQuery: "GetMatchQuery-MatchOverview", result: result, error: error) {
-                self.setUpForMatch(match: result?.data?.getMatch?.fragments.match)
+                let matches = result?.data?.listMatches?.map({$0!.fragments.match}) ?? []
+                let match = matches.first(where: {$0.key == matchKey})
+                self.setUpForMatch(match: match)
                 
                 //TODO: - Also update the apollo cache for ListMatchesQuery with this result
             } else {
@@ -92,10 +96,12 @@ class MatchOverviewDetailViewController: UIViewController {
                 segmentedControl.setTitle(key.element.trimmingCharacters(in: CharacterSet.letters), forSegmentAt: key.offset)
             }
             
-            segmentedControl.selectedSegmentIndex = 0
+            if segmentedControl.selectedSegmentIndex == -1 {
+                segmentedControl.selectedSegmentIndex = 0
+            }
             self.selectedDifferentTeam(segmentedControl)
         } else {
-            matchTitleLabel.text = nil
+            matchTitleLabel.text = "Match"
             
             redPointsLabel.text = "- Pts."
             bluePointsLabel.text = "- Pts."
@@ -113,6 +119,8 @@ class MatchOverviewDetailViewController: UIViewController {
         //Set the selected match performance
         if let match = self.displayedMatch {
             matchPerformanceDetail.load(match: match, forTeamKey: teamKeys[sender.selectedSegmentIndex])
+        } else {
+            matchPerformanceDetail.load(match: nil, forTeamKey: nil)
         }
     }
     

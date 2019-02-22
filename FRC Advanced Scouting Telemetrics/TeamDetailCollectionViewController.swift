@@ -155,7 +155,9 @@ class TeamDetailStatisticCell: UICollectionViewCell {
         stat.calculate(forObject: scoutedTeam) {value in
             //Check if this cell hasn't already been moved on to be reused with something else
             if self.scoutedTeam == scoutedTeam && self.stat?.id == stat.id {
-                self.valueLabel.text = value.description
+                if self.valueLabel.text != value.description {
+                    self.valueLabel.text = value.description
+                }
             }
         }
         
