@@ -8,6 +8,7 @@
 
 import UIKit
 import Crashlytics
+import Firebase
 
 class MatchOverviewPerformanceDetailViewController: UIViewController {
     @IBOutlet weak var timeMarkerTableView: UITableView!
@@ -168,7 +169,7 @@ class MatchOverviewPerformanceDetailViewController: UIViewController {
             //Show the sign up thing
             let loginPromotional = storyboard!.instantiateViewController(withIdentifier: "loginPromotional")
             self.present(loginPromotional, animated: true, completion: nil)
-            Answers.logContentView(withName: "Login Promotional", contentType: nil, contentId: nil, customAttributes: ["Source":"Match Overview Scout Button"])
+            Globals.recordAnalyticsEvent(eventType: AnalyticsEventPresentOffer, attributes: ["source":"match_overview_scout_button", "item_id":"login_promotional","item_name":"Login Promotional"])
         } else {
             //Pull up the stands scouting page
             let standsScoutVC = storyboard?.instantiateViewController(withIdentifier: "standsScouting") as! StandsScoutingViewController
@@ -178,7 +179,7 @@ class MatchOverviewPerformanceDetailViewController: UIViewController {
                 
                 present(standsScoutVC, animated: true, completion: nil)
                 
-                Answers.logCustomEvent(withName: "Opened Stands Scouting", customAttributes: ["Source":"Match Overview Detail"])
+                Globals.recordAnalyticsEvent(eventType: AnalyticsEventSelectContent, attributes: ["source":"match_overview_detail", "content_type":"screen","item_id":"stands_scouting"])
                 CLSNSLogv("Opening Stands Scouting from Match Overview Detail", getVaList([]))
             }
         }

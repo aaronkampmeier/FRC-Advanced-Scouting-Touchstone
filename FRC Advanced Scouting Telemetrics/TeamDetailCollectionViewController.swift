@@ -8,6 +8,7 @@
 
 import UIKit
 import Crashlytics
+import Firebase
 
 let TeamDetailCollectionViewNeedsHeightResizing = NSNotification.Name("TeamDetailCollectionViewNeedsHeightResizing")
 
@@ -103,7 +104,7 @@ class TeamDetailCollectionViewController: UICollectionViewController, UICollecti
         navController.modalPresentationStyle = .pageSheet
         present(navController, animated: true, completion: nil)
         
-        Answers.logContentView(withName: "Team Stat Graph", contentType: "Graph", contentId: nil, customAttributes: ["Stat Graphed":stat.name])
+        Globals.recordAnalyticsEvent(eventType: AnalyticsEventSelectContent, attributes: ["graphed_stat":stat.name, "item_id":"team_stat_graph", "content_type":"screen"])
     }
     
     //TODO: - Add back the header as a floating ui view
@@ -131,7 +132,7 @@ class TeamDetailCollectionViewController: UICollectionViewController, UICollecti
     @objc func showFASTPromotional() {
         let loginPromotional = storyboard!.instantiateViewController(withIdentifier: "loginPromotional")
         self.present(loginPromotional, animated: true, completion: nil)
-        Answers.logContentView(withName: "Login Promotional", contentType: nil, contentId: nil, customAttributes: ["Source":"Team Detail Stats Collection View"])
+        Globals.recordAnalyticsEvent(eventType: AnalyticsEventPresentOffer, attributes: ["source":"team_detail_stats_collection_view", "item_id":"login_promotional", "item_name":"Login Promotional"])
     }
 }
 
@@ -155,8 +156,10 @@ class TeamDetailStatisticCell: UICollectionViewCell {
         stat.calculate(forObject: scoutedTeam) {value in
             //Check if this cell hasn't already been moved on to be reused with something else
             if self.scoutedTeam == scoutedTeam && self.stat?.id == stat.id {
-                if self.valueLabel.text != value.description {
-                    self.valueLabel.text = value.description
+                DispatchQueue.main.async {
+                    if self.valueLabel.text != value.description {
+                        self.valueLabel.text = value.description
+                    }
                 }
             }
         }

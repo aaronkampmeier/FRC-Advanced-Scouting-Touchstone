@@ -44,13 +44,13 @@ class ForgotPasswordViewController: UIViewController {
                     alert.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
                     self.present(alert, animated: true, completion: nil)
                     
-                    Answers.logCustomEvent(withName: "Forgot Password Reset Requested", customAttributes: ["Successful":false])
+                    Globals.recordAnalyticsEvent(eventType: "forgot_password_reset_requested", attributes: ["successful":"false"])
                 } else if let result = result {
                     switch result.forgotPasswordState {
                     case .confirmationCodeSent:
                         //It was successful, show the confirmation screen
                         self.performSegue(withIdentifier: "confirm", sender: self)
-                        Answers.logCustomEvent(withName: "Forgot Password Reset Requested", customAttributes: ["Successful":true])
+                        Globals.recordAnalyticsEvent(eventType: "forgot_password_reset_requested", attributes: ["successful":"true"])
                     case .done:
                         assertionFailure()
                     }

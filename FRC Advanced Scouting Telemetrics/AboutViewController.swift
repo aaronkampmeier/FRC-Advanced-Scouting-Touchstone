@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import Firebase
 import Crashlytics
 
 class AboutViewController: UIViewController {
@@ -28,7 +29,7 @@ class AboutViewController: UIViewController {
             }
         }
         
-        Answers.logContentView(withName: "FAST About Page", contentType: "App Informational", contentId: nil, customAttributes: nil)
+        Globals.recordAnalyticsEvent(eventType: AnalyticsEventSelectContent, attributes: ["content_type":"admin_console_screen", "item_id":"about_page"])
     }
     
     override func viewWillAppear(_ animated: Bool) {

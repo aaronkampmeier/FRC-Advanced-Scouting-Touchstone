@@ -18,6 +18,7 @@
 
 import UIKit
 import Crashlytics
+import AWSPinpoint
 
 enum LoginFooterViewStyle {
     case light
@@ -206,7 +207,10 @@ class LoginFooterView: UIView {
     
     @objc func forgotPasswordPressed(sender: UIButton) {
         forgotPasswordTappedHandler?()
-        Answers.logCustomEvent(withName: "Forgot Password Pressed", customAttributes: nil)
+        
+        let event = Globals.appDelegate.pinpoint?.analyticsClient.createEvent(withEventType: "Forgot Password Pressed")
+        Globals.appDelegate.pinpoint?.analyticsClient.record(event!)
+        Globals.appDelegate.pinpoint?.analyticsClient.submitEvents()
     }
 
     private func updateButtonTitles() {

@@ -54,11 +54,11 @@ class PitImageSelectorCollectionViewCell: PitScoutingCell {
                     let sourceSelector = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
                     sourceSelector.addAction(UIAlertAction(title: "Camera", style: .default) {_ in
                         self.presentImageController(self.imageController, withSource: .camera)
-                        Answers.logCustomEvent(withName: "Added Team Photo", customAttributes: ["Label":self.label.text ?? "Unknown", "Source":"Camera"])
+                        Globals.recordAnalyticsEvent(eventType: "added_team_photo", attributes: ["label":self.label.text ?? "unknown", "source":"camera"])
                     })
                     sourceSelector.addAction(UIAlertAction(title: "Photo Library", style: .default) {_ in
                         self.presentImageController(self.imageController, withSource: .photoLibrary)
-                        Answers.logCustomEvent(withName: "Added Team Photo", customAttributes: ["Label":self.label.text ?? "Unknown", "Source":"Photo Library"])
+                        Globals.recordAnalyticsEvent(eventType: "added_team_photo", attributes: ["label":self.label.text ?? "unknown", "source":"photo_library"])
                     })
                     sourceSelector.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
                     sourceSelector.popoverPresentationController?.sourceView = sender

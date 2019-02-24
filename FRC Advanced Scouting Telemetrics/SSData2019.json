@@ -2,6 +2,7 @@
 	"startState":[
 		{
 			"name":"Loaded Game Piece",
+			"shortName": "Loaded",
 			"key":"loaded_game_piece",
 			"options":[
 				{
@@ -20,6 +21,7 @@
 		},
 		{
 			"name":"Start Position",
+			"shortName":"Start",
 			"key":"start_position",
 			"options":[
 				{
@@ -36,6 +38,7 @@
 	"gameActions":[
 		{
 			"name":"Grabbed Hatch",
+			"shortName":"Grabbed Hatch",
 			"key":"grabbed_hatch",
 			"subOptions": [
 				{
@@ -50,6 +53,7 @@
 		},
 		{
 			"name":"Placed Hatch",
+			"shortName":"Hatch",
 			"key":"placed_hatch",
 			"subOptions": [
 				{
@@ -76,6 +80,7 @@
 		},
 		{
 			"name":"Grabbed Cargo",
+			"shortName":"Grabbed Cargo",
 			"key":"grabbed_cargo",
 			"subOptions": [
 				{
@@ -90,6 +95,7 @@
 		},
 		{
 			"name":"Placed Cargo",
+			"shortName":"Cargo",
 			"key":"placed_cargo",
 			"subOptions": [
 				{
@@ -118,6 +124,7 @@
 	"endState":[
 		{
 			"name":"Climb Status",
+			"shortName":"Climb Status",
 			"key":"climb_status",
 			"options": [
 				{
@@ -144,14 +151,15 @@
 		},
 		{
 			"name":"Climb Assist Status",
+			"shortName":"Climb",
 			"key":"climb_assist",
 			"options": [
 				{
-					"name":"Did Assist Other Team",
+					"name":"Did Assist Partner",
 					"key":"successful"
 				},
 				{
-					"name":"Attempted Assist",
+					"name":"Assist Failed",
 					"key":"attempted"
 				},
 				{

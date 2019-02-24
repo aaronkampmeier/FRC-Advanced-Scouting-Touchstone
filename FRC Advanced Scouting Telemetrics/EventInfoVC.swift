@@ -96,7 +96,7 @@ class EventInfoVC: UIViewController, UITableViewDataSource {
             self.navigationController?.navigationBar.isUserInteractionEnabled = true
         }
         
-        Answers.logCustomEvent(withName: "Attempted Event Import", customAttributes: ["Successful":didComplete])
+        Globals.recordAnalyticsEvent(eventType: "attempted_event_import", attributes: ["successful":didComplete.description])
     }
     
     func receivedNoAllianceData(notification: Notification) {

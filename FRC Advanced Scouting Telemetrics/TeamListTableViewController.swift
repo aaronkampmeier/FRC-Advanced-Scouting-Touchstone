@@ -11,6 +11,7 @@ import Crashlytics
 import AWSCore
 import AWSAppSync
 import AWSMobileClient
+import Firebase
 
 class EventSelectionTitleButton: UIButton {
     override var intrinsicContentSize: CGSize {
@@ -34,8 +35,23 @@ class TeamListTableViewController: UITableViewController, TeamListDetailDataSour
     }
     
     var statToSortBy: Statistic<ScoutedTeam>?
-    //Should move functionality in here to a setSortingState func
-//    var isSorted = false
+    var stashedStats: [String: StatValue] = [:] {
+        didSet {
+            //Order the teams
+            currentSortedTeams = currentEventTeams.sorted {team1, team2 in
+                
+                let value1 = stashedStats[team1.key] ?? .NoValue
+                let value2 = stashedStats[team2.key] ?? .NoValue
+                
+                let isBefore = value1 < value2
+                if self.isSortingAscending {
+                    return isBefore
+                } else {
+                    return !isBefore
+                }
+            }
+        }
+    }
     var isSortingAscending: Bool = false
     
     var isSearching = false
@@ -157,6 +173,7 @@ class TeamListTableViewController: UITableViewController, TeamListDetailDataSour
         }
     }
     
+    let teamLoadingQueue = DispatchQueue(label: "Team List Loading", qos: .userInteractive)
     fileprivate func setUpForEvent() {
         //Set to nil, because the selected team might not be in the new event
         selectedTeam = nil
@@ -178,36 +195,44 @@ class TeamListTableViewController: UITableViewController, TeamListDetailDataSour
                 
             })
             
-            Globals.appDelegate.appSyncClient?.fetch(query: ListTeamsQuery(eventKey: eventKey), cachePolicy: .returnCacheDataAndFetch, queue: DispatchQueue(label: "Team List Loading", qos: .userInteractive)) {[weak self] result, error in
+            Globals.appDelegate.appSyncClient?.fetch(query: ListTeamsQuery(eventKey: eventKey), cachePolicy: .returnCacheDataAndFetch, queue: teamLoadingQueue) { result, error in
                 
                 if Globals.handleAppSyncErrors(forQuery: "ListTeams", result: result, error: error) {
                     
                     //Get all of the info on teams in an event
-                    self?.unorderedTeamsInEvent = result?.data?.listTeams?.map {return $0!.fragments.team} ?? []
+                    self.unorderedTeamsInEvent = result?.data?.listTeams?.map {return $0!.fragments.team} ?? []
                     
                     //Now, go get the ranking of them
-                    Globals.appDelegate.appSyncClient?.fetch(query: GetEventRankingQuery(key: eventKey), cachePolicy: .returnCacheDataAndFetch) {[weak self] result, error in
+                    Globals.appDelegate.appSyncClient?.fetch(query: GetEventRankingQuery(key: eventKey), cachePolicy: .returnCacheDataAndFetch, queue: self.teamLoadingQueue) {[weak self] result, error in
                         if Globals.handleAppSyncErrors(forQuery: "GetEventRanking", result: result, error: error) {
                             self?.selectedEventRanking = result?.data?.getEventRanking?.fragments.eventRanking
                             
-                            if self?.eventSelectionButton.titleLabel?.text != self?.selectedEventRanking?.eventName {
-                                self?.eventSelectionButton.setTitle(self?.selectedEventRanking?.eventName, for: UIControlState())
+                            DispatchQueue.main.async {
+                                if self?.eventSelectionButton.titleLabel?.text != self?.selectedEventRanking?.eventName {
+                                    self?.eventSelectionButton.setTitle(self?.selectedEventRanking?.eventName, for: UIControlState())
+                                }
                             }
                             
                             self?.orderTeamsUsingRanking()
                             
-                            //Now go fetch all of the scouted teams just to get them into the cache
-                            Globals.appDelegate.appSyncClient?.fetch(query: ListScoutedTeamsQuery(eventKey: eventKey), cachePolicy: .fetchIgnoringCacheData, resultHandler: { (result, error) in
-                                if Globals.handleAppSyncErrors(forQuery: "ListScoutedTeams", result: result, error: error) {
-                                    //Ta da
-                                }
-                            })
+//                            //Now go fetch all of the scouted teams just to get them into the cache
+//                            Globals.appDelegate.appSyncClient?.fetch(query: ListScoutedTeamsQuery(eventKey: eventKey), cachePolicy: .fetchIgnoringCacheData, resultHandler: { (result, error) in
+//                                if Globals.handleAppSyncErrors(forQuery: "ListScoutedTeams", result: result, error: error) {
+//                                    //Ta da
+//                                }
+//                            })
                         } else {
                             //TODO: - Show error
+                            let alert = UIAlertController(title: "Unable to Load Team Rank", message: "There was an error loading the team rankings for this event. Please connect to the internet. \(Globals.descriptions(ofError: error, andResult: result))", preferredStyle: .alert)
+                            alert.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
+                            self?.present(alert, animated: true, completion: nil)
                         }
                     }
                 } else {
                     //TODO: - Show error
+                    let alert = UIAlertController(title: "Unable to Load Teams", message: "There was an error loading the teams for this event. Please connect to the internet and re-load. \(Globals.descriptions(ofError: error, andResult: result))", preferredStyle: .alert)
+                    alert.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
+                    self.present(alert, animated: true, completion: nil)
                 }
             }
             
@@ -230,55 +255,59 @@ class TeamListTableViewController: UITableViewController, TeamListDetailDataSour
     func orderTeamsUsingRanking() {
         //Orders the teams into the currentEventTeams using the selectedEventRanking
         if let eventRanking = selectedEventRanking {
-            //Now order the teams according to the ranking
-            var shouldReloadRanking = false
-            let orderedTeams = self.unorderedTeamsInEvent.sorted {team1, team2 in
-                let firstIndex = eventRanking.rankedTeams?.firstIndex(where: {$0!.teamKey == team1.key})
-                let secondIndex = eventRanking.rankedTeams?.firstIndex(where: {$0!.teamKey == team2.key})
-                if let firstIndex = firstIndex , let secondIndex = secondIndex {
-                    return firstIndex < secondIndex
-                } else {
-                    //One of the teams does not exist in the ranking, reload the ranking
-                    shouldReloadRanking = true
-                    return false
-                }
-            }
-            
-            
-            ///Check if the order is actually different
-            //First if there are any new teams
-            var existsNewTeams = false
-            for team in orderedTeams {
-                if !currentEventTeams.contains(where: {$0.key == team.key}) {
-                    existsNewTeams = true
-                }
-            }
-            for team in currentEventTeams {
-                if !orderedTeams.contains(where: {$0.key == team.key}) {
-                    existsNewTeams = true
-                }
-            }
-            
-            //Then, check if the order is the same
-            var isNewOrder = false
-            if !existsNewTeams {
-                for (index,team) in orderedTeams.enumerated() {
-                    if currentEventTeams[index].key != team.key {
-                        isNewOrder = true
+            teamLoadingQueue.async {
+                //Now order the teams according to the ranking
+                var shouldReloadRanking = false
+                let orderedTeams = self.unorderedTeamsInEvent.sorted {team1, team2 in
+                    let firstIndex = eventRanking.rankedTeams?.firstIndex(where: {$0!.teamKey == team1.key})
+                    let secondIndex = eventRanking.rankedTeams?.firstIndex(where: {$0!.teamKey == team2.key})
+                    if let firstIndex = firstIndex , let secondIndex = secondIndex {
+                        return firstIndex < secondIndex
+                    } else {
+                        //One of the teams does not exist in the ranking, reload the ranking
+                        shouldReloadRanking = true
+                        return false
                     }
                 }
-            }
-            
-            //If it is all the same then don't bother with reloading the table view
-            if existsNewTeams || isNewOrder {
-                self.currentEventTeams = orderedTeams
-            } else {
-                //Just reload visible rows
-                tableView.reloadRows(at: tableView.indexPathsForVisibleRows ?? [], with: .automatic)
-            }
-            
-            if shouldReloadRanking {
-                reloadEvent(eventKey: eventRanking.eventKey)
+                
+                
+                ///Check if the order is actually different
+                //First if there are any new teams
+                var existsNewTeams = false
+                for team in orderedTeams {
+                    if !self.currentEventTeams.contains(where: {$0.key == team.key}) {
+                        existsNewTeams = true
+                    }
+                }
+                for team in self.currentEventTeams {
+                    if !orderedTeams.contains(where: {$0.key == team.key}) {
+                        existsNewTeams = true
+                    }
+                }
+                
+                //Then, check if the order is the same
+                var isNewOrder = false
+                if !existsNewTeams {
+                    for (index,team) in orderedTeams.enumerated() {
+                        if self.currentEventTeams[index].key != team.key {
+                            isNewOrder = true
+                        }
+                    }
+                }
+                
+                DispatchQueue.main.async {
+                    //If it is all the same then don't bother with reloading the table view
+                    if existsNewTeams || isNewOrder {
+                        self.currentEventTeams = orderedTeams
+                    } else {
+                        //Just reload visible rows
+                        self.tableView.reloadRows(at: self.tableView.indexPathsForVisibleRows ?? [], with: .automatic)
+                    }
+                    
+                    if shouldReloadRanking {
+                        self.reloadEvent(eventKey: eventRanking.eventKey)
+                    }
+                }
             }
         } else {
             currentEventTeams = []
@@ -463,29 +492,12 @@ class TeamListTableViewController: UITableViewController, TeamListDetailDataSour
         cell.teamNameLabel.text = team.nickname
         cell.statLabel.text = ""
         if let stat = statToSortBy {
-            //Get the scouted team
-            Globals.appDelegate.appSyncClient?.fetch(query: ListScoutedTeamsQuery(eventKey: self.selectedEventKey!), cachePolicy: .returnCacheDataElseFetch) {result, error in
-                if Globals.handleAppSyncErrors(forQuery: "ListScoutedTeams-CellStatValue", result: result, error: error) {
-                    let sTeam = (result?.data?.listScoutedTeams?.first {$0?.teamKey == team.key})??.fragments.scoutedTeam
-                    
-                    guard let scoutedTeam = sTeam else {
-                        //Error that no scouted team for team
-                        CLSNSLogv("No Scouted Team for Team: \(team.key)", getVaList([]))
-                        return
-                    }
-                    //Get the stat value also async
-                    stat.calculate(forObject: scoutedTeam) {value in
-                        //Check that the cell is the right state
-                        if stateID == cell.stateID {
-                            //Set the stat label
-                            cell.statLabel.text = "\(value)"
-                        }
-                    }
-                }
-            }
+            //Get the stat value
+            let value = stashedStats[team.key]
+            cell.statLabel.text = value?.description
         }
         
-        if let index = currentEventTeams.index(where: {$0.key == team.key}) {
+        if let index = selectedEventRanking?.rankedTeams?.index(where: {$0?.teamKey == team.key}) {
             cell.rankLabel.text = "\(index as Int + 1)"
         } else {
             cell.rankLabel.text = "?"
@@ -638,16 +650,49 @@ class TeamListTableViewController: UITableViewController, TeamListDetailDataSour
         
         //Get the team key
         let team = currentTeamsToDisplay[fromIndexPath.row]
+        let previousRanking = selectedEventRanking
         
         Globals.appDelegate.appSyncClient?.perform(mutation: MoveRankedTeamMutation(eventKey: eventKey, teamKey: team.key, toIndex: toIndexPath.row), optimisticUpdate: { (transaction) in
-            //TODO: Optimistic
+            do {
+                try transaction?.updateObject(ofType: EventRanking.self, withKey: "ranking_\(eventKey)", { (selectionSet) in
+                    if let movedTeam = selectionSet.rankedTeams?.remove(at: fromIndexPath.row) {
+                        selectionSet.rankedTeams?.insert(movedTeam, at: toIndexPath.row)
+                    } else {
+                        
+                    }
+                    
+                    self.selectedEventRanking = selectionSet
+                })
+                
+                DispatchQueue.main.async {
+                    self.currentEventTeams.insert(self.currentEventTeams.remove(at: fromIndexPath.row), at: toIndexPath.row)
+                }
+            } catch {
+                CLSNSLogv("Error performing optimistic update for MoveRankedTeamMutation", getVaList([]))
+                Crashlytics.sharedInstance().recordError(error)
+            }
         }, conflictResolutionBlock: { (snapshot, source, result) in
             
         }, resultHandler: {[weak self] (result, error) in
             if Globals.handleAppSyncErrors(forQuery: "MoveRankedTeamMutation", result: result, error: error) {
                 self?.selectedEventRanking = result?.data?.moveRankedTeam?.fragments.eventRanking
+                
+                let _ = Globals.appDelegate.appSyncClient?.store?.withinReadWriteTransaction({ (transaction) -> Any in
+                    try? transaction.updateObject(ofType: EventRanking.self, withKey: "ranking_\(eventKey)", { (selectionSet) in
+                        if let ranking = result?.data?.moveRankedTeam?.fragments.eventRanking {
+                            selectionSet = ranking
+                        }
+                    }) as Any
+                })
             } else {
-                //TODO: Show Error
+                self?.selectedEventRanking = previousRanking
+                let alert = UIAlertController(title: "Error Moving Team", message: "There was an error moving the team. Make sure you are connected to the Internet and try again. \(Globals.descriptions(ofError: error, andResult: result))", preferredStyle: .alert)
+                alert.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
+                self?.present(alert, animated: true, completion: nil)
+            }
+            
+            DispatchQueue.main.async {
+                self?.orderTeamsUsingRanking()
             }
         })
     }
@@ -735,6 +780,7 @@ class TeamListTableViewController: UITableViewController, TeamListDetailDataSour
         present(sortNavVC, animated: true, completion: nil)
     }
     
+    let statsOrderingQueue = DispatchQueue(label: "StatsOrderingTeamList", qos: .utility, target: nil)
     func sortList(withStat stat: Statistic<ScoutedTeam>?, isAscending ascending: Bool) {
         guard let selectedEventKey = selectedEventKey else {
             return
@@ -746,57 +792,29 @@ class TeamListTableViewController: UITableViewController, TeamListDetailDataSour
         
         if let newStat = stat {
             //Grab the scouted teams
-            Globals.appDelegate.appSyncClient?.fetch(query: ListScoutedTeamsQuery(eventKey: selectedEventKey), cachePolicy: .returnCacheDataElseFetch, resultHandler: {[weak self] (result, error) in
+            Globals.appDelegate.appSyncClient?.fetch(query: ListScoutedTeamsQuery(eventKey: selectedEventKey), cachePolicy: .returnCacheDataElseFetch, queue: statsOrderingQueue, resultHandler: {[weak self] (result, error) in
                 if Globals.handleAppSyncErrors(forQuery: "ListScoutedTeams-StatSorting", result: result, error: error) {
                     let scoutedTeams = result?.data?.listScoutedTeams?.map {$0!.fragments.scoutedTeam} ?? []
                     
                     //Order the teams
-                    self?.currentSortedTeams = self!.currentEventTeams.sorted {team1, team2 in
-                        if let sTeam1 = scoutedTeams.first(where: {$0.teamKey == team1.key}), let sTeam2 = scoutedTeams.first(where: {$0.teamKey == team2.key}) {
-                            //Use dispatch groups to wait for both values to be calculated
-                            let group = DispatchGroup()
-                            
-                            group.enter()
-                            
-                            var value1: StatValue?
-                            var value2: StatValue?
-                            
-                            newStat.calculate(forObject: sTeam1) {value in
-                                value1 = value
-                                //Check if finished
-                                if value2 != nil {
-                                    group.leave()
+                    DispatchQueue.main.async {
+                        self?.stashedStats = [String:StatValue]()
+                    }
+                    //Calculate all of the stats
+                    for team in scoutedTeams {
+                        newStat.calculate(forObject: team, callback: { (value) in
+                            if self?.statToSortBy == newStat {
+                                DispatchQueue.main.async {
+                                    //Setting the stashed stats, reloads the order of the teams
+                                    self?.stashedStats[team.teamKey] = value
                                 }
                             }
-                            
-                            newStat.calculate(forObject: sTeam2) {value in
-                                value2 = value
-                                if value1 != nil {
-                                    group.leave()
-                                }
-                            }
-                            
-                            //Wait for the two values to be calculated
-                            group.wait()
-                            if let value1 = value1, let value2 = value2 {
-                                let isBefore = value1 < value2
-                                if ascending {
-                                    return isBefore
-                                } else {
-                                    return !isBefore
-                                }
-                            } else {
-                                //The values aren't there even though we waited for them to be calculated
-                                assertionFailure()
-                                Crashlytics.sharedInstance().recordCustomExceptionName("Calculated Stats Not There", reason: "Obviously i don't know why else would i be recording an exception", frameArray: [])
-                                exit(1)
-                            }
-                        } else {
-                            return false
-                        }
+                        })
                     }
                 } else {
-                    self?.currentSortedTeams = self!.currentEventTeams
+                    DispatchQueue.main.async {
+                        self?.currentSortedTeams = self!.currentEventTeams
+                    }
                 }
             })
         } else {
@@ -819,7 +837,7 @@ class TeamListTableViewController: UITableViewController, TeamListDetailDataSour
         
         present(matchesSplitVC, animated: true, completion: nil)
         
-        Answers.logCustomEvent(withName: "Opened Matches Overview", customAttributes: nil)
+        Globals.recordAnalyticsEvent(eventType: AnalyticsEventSelectContent, attributes: ["content_type":"screen", "item_id":"matches_overview"])
     }
     
     @IBAction func chartButtonPressed(_ sender: UIBarButtonItem) {
@@ -832,8 +850,6 @@ class TeamListTableViewController: UITableViewController, TeamListDetailDataSour
             eventStatGraphVC.setUp(forEventKey: eventKey)
             
             present(navVC, animated: true, completion: nil)
-            
-            Answers.logCustomEvent(withName: "Event Stats Grapher Button Pressed", customAttributes: nil)
         }
     }
     
@@ -887,7 +903,6 @@ extension TeamListTableViewController: UISearchResultsUpdating, UISearchControll
     func updateSearchResults(for searchController: UISearchController) {
         if isSearching {
             if let searchText = searchController.searchBar.text {
-                Answers.logSearch(withQuery: searchText, customAttributes: nil)
                 
                 let filteredTeams = self.currentSortedTeams.filter { (team) -> Bool in
                     var isIncluded = false
@@ -906,6 +921,7 @@ extension TeamListTableViewController: UISearchResultsUpdating, UISearchControll
                 currentTeamsToDisplay = filteredTeams
                 
                 tableView.reloadData()
+                Globals.recordAnalyticsEvent(eventType: AnalyticsEventSearch, attributes: ["search_term":searchText], metrics: ["results":Double(filteredTeams.count)])
             }
         } else {
             currentTeamsToDisplay = currentSortedTeams
@@ -915,6 +931,7 @@ extension TeamListTableViewController: UISearchResultsUpdating, UISearchControll
     func didPresentSearchController(_ searchController: UISearchController) {
         isSearching = true
         self.navigationController?.setToolbarHidden(true, animated: true)
+        Globals.recordAnalyticsEvent(eventType: "began_searching")
     }
     
     func didDismissSearchController(_ searchController: UISearchController) {

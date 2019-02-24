@@ -11,6 +11,7 @@ import Crashlytics
 import VTAcknowledgementsViewController
 import AWSMobileClient
 import AWSAppSync
+import Firebase
 
 class AdminConsoleController: UIViewController, UITableViewDataSource, UITableViewDelegate {
     @IBOutlet weak var tableView: UITableView!
@@ -204,7 +205,7 @@ class AdminConsoleController: UIViewController, UITableViewDataSource, UITableVi
                     }
                     
                     self.navigationController?.pushViewController(ackVC, animated: true)
-                    Answers.logContentView(withName: "Acknowledgements", contentType: "App Informational", contentId: nil, customAttributes: nil)
+                    Globals.recordAnalyticsEvent(eventType: AnalyticsEventSelectContent, attributes: ["content_type":"admin_console_screen","item_id":"acknowledgements"])
                 } else {
                     assertionFailure()
                 }
@@ -213,9 +214,9 @@ class AdminConsoleController: UIViewController, UITableViewDataSource, UITableVi
             } else if indexPath.row == 3 {
                 //Logout
                 if Globals.isInSpectatorMode {
-                    Answers.logCustomEvent(withName: "Exit Spectator Mode", customAttributes: nil)
+                    Globals.recordAnalyticsEvent(eventType: "exit_spectator_mode")
                 } else {
-                    Answers.logCustomEvent(withName: "Sign Out", customAttributes: ["Team":AWSMobileClient.sharedInstance().username ?? "?"])
+                    
                 }
                 
                 //Logout and show onboarding
@@ -392,7 +393,7 @@ class AdminConsoleController: UIViewController, UITableViewDataSource, UITableVi
                     CLSNSLogv("Failed to write csv text to file: \(error)", getVaList([]))
                     Crashlytics.sharedInstance().recordError(error)
                     
-                    Answers.logCustomEvent(withName: "Export Event to CSV", customAttributes: ["Event":eventKey, "Successful":false])
+                    Globals.recordAnalyticsEvent(eventType: "export_event_to_csv", attributes: ["event":eventKey, "successful":"false"])
                 } else if let path = path {
                     let activityVC = UIActivityViewController(activityItems: [path], applicationActivities: [])
                     
@@ -407,7 +408,7 @@ class AdminConsoleController: UIViewController, UITableViewDataSource, UITableVi
                     
                     activityVC.completionWithItemsHandler = {(activityType: UIActivityType?, completed: Bool, returnedItems: [Any]?, error: Error?) in
                         if let activityType = activityType {
-                            Answers.logShare(withMethod: activityType.rawValue, contentName: path.lastPathComponent, contentType: "CSV Event Export", contentId: "csv_\(eventKey)", customAttributes: nil)
+                            Globals.recordAnalyticsEvent(eventType: AnalyticsEventShare, attributes: ["activity_type":activityType.rawValue, "content_type":"csv_event","item_id":eventKey])
                         }
                         
                         if let error = error {
@@ -418,8 +419,7 @@ class AdminConsoleController: UIViewController, UITableViewDataSource, UITableVi
                     
                     onCompletion(true)
                     self.present(activityVC, animated: true, completion: nil)
-                    
-                    Answers.logCustomEvent(withName: "Export Event to CSV", customAttributes: ["Event":eventKey, "Successful":true])
+                    Globals.recordAnalyticsEvent(eventType: "export_event_to_csv", attributes: ["event":eventKey, "successful":"true"])
                 }
             }
         }
@@ -445,7 +445,7 @@ class AdminConsoleController: UIViewController, UITableViewDataSource, UITableVi
             
             //Now for all the stat values
             //Get the scouted teams
-            let queue = DispatchQueue(label: "CSV Export", qos: .userInitiated)
+            let queue = DispatchQueue(label: "CSV Export", qos: DispatchQoS.utility)
             Globals.appDelegate.appSyncClient?.fetch(query: GetEventRankingQuery(key: eventKey), cachePolicy: .returnCacheDataElseFetch, queue: queue, resultHandler: { (result, error) in
                 if Globals.handleAppSyncErrors(forQuery: "GetEventRanking-CSVExport", result: result, error: error) {
                     let eventRanking = result?.data?.getEventRanking?.fragments.eventRanking

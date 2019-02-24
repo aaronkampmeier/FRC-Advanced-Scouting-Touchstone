@@ -106,6 +106,9 @@ class PitScoutingViewController: UIViewController, UICollectionViewDataSource, U
                             
                         } else {
                             //Show error
+                            let alert = UIAlertController(title: "Error Saving Pit Scouting", message: "There was an error saving the pit scouting data. Please make sure you are connected to the Internet and try again. \(Globals.descriptions(ofError: error, andResult: result))", preferredStyle: .alert)
+                            alert.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
+                            self.present(alert, animated: true, completion: nil)
                         }
                     }
                 }
@@ -153,8 +156,6 @@ class PitScoutingViewController: UIViewController, UICollectionViewDataSource, U
         updateTimer?.invalidate()
         
         NotificationCenter.default.post(name: PitScoutingUpdatedTeamDetail, object: self)
-        
-        Answers.logCustomEvent(withName: "Closed Pit Scouting", customAttributes: nil)
     }
 
     override func didReceiveMemoryWarning() {

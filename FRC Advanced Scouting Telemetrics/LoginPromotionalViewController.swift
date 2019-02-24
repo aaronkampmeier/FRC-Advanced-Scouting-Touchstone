@@ -7,6 +7,8 @@
 //
 
 import UIKit
+import AWSPinpoint
+import Firebase
 import Crashlytics
 
 class LoginPromotionalViewController: UIViewController {
@@ -32,8 +34,6 @@ class LoginPromotionalViewController: UIViewController {
         loginButton.backgroundColor = UIColor.blue
         loginButton.setTitleColor(UIColor.white, for: .normal)
         loginButton.layer.cornerRadius = 10
-        
-//        Answers.logContentView(withName: "Login Promotional", contentType: "Promotional Page", contentId: nil, customAttributes: nil)
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -56,7 +56,7 @@ class LoginPromotionalViewController: UIViewController {
     }
     
     @IBAction func loginPressed(_ sender: UIButton) {
-        Answers.logCustomEvent(withName: "Promotional -> Login", customAttributes: nil)
+        Globals.recordAnalyticsEvent(eventType: AnalyticsEventSelectContent, attributes: ["content_type":"screen","item_id": "login","from":"login_promotional"])
         
 //        let loginVC = (UIApplication.shared.delegate as! AppDelegate).logInViewController()
 //        self.present(loginVC, animated: true, completion: nil)

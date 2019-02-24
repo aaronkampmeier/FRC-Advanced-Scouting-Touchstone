@@ -13,6 +13,7 @@ import Crashlytics
 
 struct GameState: Codable {
     let name: String
+    var shortName: String?
     let key: String
     let options: [SSOption]
 }
@@ -30,6 +31,7 @@ struct SSOption: Codable {
 
 struct GameAction: Codable {
     let name: String
+    var shortName: String?
     let key: String
     let subOptions: [SSOption]?
 }

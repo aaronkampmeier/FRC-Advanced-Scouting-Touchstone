@@ -8,8 +8,6 @@
 
 /* Begin PBXBuildFile section */
 		1F12CF181C7A6CD70014200C /* Stopwatch.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F12CF171C7A6CD70014200C /* Stopwatch.swift */; };
-		1F1C23C41E07487C008885A1 /* TeamMatchPerformance.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F1C23AC1E07487C008885A1 /* TeamMatchPerformance.swift */; };
-		1F1C23CE1E07487C008885A1 /* TeamEventPerformance.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F1C23B61E07487C008885A1 /* TeamEventPerformance.swift */; };
 		1F1C23DA1E07673E008885A1 /* AddEventTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F1C23D91E07673E008885A1 /* AddEventTableViewController.swift */; };
 		1F21DF121C66942200C55D0E /* SortVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F21DF111C66942200C55D0E /* SortVC.swift */; };
 		1F4534101C6FF916004EDDB9 /* StandsScoutingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F45340F1C6FF916004EDDB9 /* StandsScoutingViewController.swift */; };
@@ -37,6 +35,10 @@
 		932354461E41686B0039386A /* SuperNotesCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 932354451E41686B0039386A /* SuperNotesCollectionViewCell.swift */; };
 		932C344C1E12DC2600A23203 /* EventInfoVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 932C344B1E12DC2600A23203 /* EventInfoVC.swift */; };
 		932ED30B221523CA00396A41 /* OptionSelectorViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 932ED30A221523CA00396A41 /* OptionSelectorViewController.swift */; };
+		9339A9AB222277BB00D3D82C /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 9339A9A9222277BA00D3D82C /* GoogleService-Info.plist */; };
+		9339A9AC222277BB00D3D82C /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 9339A9A9222277BA00D3D82C /* GoogleService-Info.plist */; };
+		9339A9AD222277BB00D3D82C /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 9339A9A9222277BA00D3D82C /* GoogleService-Info.plist */; };
+		9339A9B22223408A00D3D82C /* AppSyncExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9339A9B12223408A00D3D82C /* AppSyncExtensions.swift */; };
 		933D214B1E609A04008C8276 /* Pods-acknowledgments.plist in Resources */ = {isa = PBXBuildFile; fileRef = 933D214A1E609A04008C8276 /* Pods-acknowledgments.plist */; };
 		933D21511E609BF7008C8276 /* Additional Licenses.plist in Resources */ = {isa = PBXBuildFile; fileRef = 933D21501E609BF7008C8276 /* Additional Licenses.plist */; };
 		9349621F21E9A40500F761BD /* ScoutedTeamStats.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9349621E21E9A40500F761BD /* ScoutedTeamStats.swift */; };
@@ -158,8 +160,6 @@
 /* Begin PBXFileReference section */
 		1C713CB13EB7BA66AC808E54 /* Pods.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		1F12CF171C7A6CD70014200C /* Stopwatch.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Stopwatch.swift; sourceTree = "<group>"; };
-		1F1C23AC1E07487C008885A1 /* TeamMatchPerformance.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TeamMatchPerformance.swift; sourceTree = "<group>"; };
-		1F1C23B61E07487C008885A1 /* TeamEventPerformance.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TeamEventPerformance.swift; sourceTree = "<group>"; };
 		1F1C23D91E07673E008885A1 /* AddEventTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AddEventTableViewController.swift; sourceTree = "<group>"; };
 		1F21DF111C66942200C55D0E /* SortVC.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SortVC.swift; sourceTree = "<group>"; };
 		1F45340F1C6FF916004EDDB9 /* StandsScoutingViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StandsScoutingViewController.swift; sourceTree = "<group>"; };
@@ -196,6 +196,8 @@
 		932354451E41686B0039386A /* SuperNotesCollectionViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SuperNotesCollectionViewCell.swift; sourceTree = "<group>"; };
 		932C344B1E12DC2600A23203 /* EventInfoVC.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EventInfoVC.swift; sourceTree = "<group>"; };
 		932ED30A221523CA00396A41 /* OptionSelectorViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OptionSelectorViewController.swift; sourceTree = "<group>"; };
+		9339A9A9222277BA00D3D82C /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
+		9339A9B12223408A00D3D82C /* AppSyncExtensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppSyncExtensions.swift; sourceTree = "<group>"; };
 		933D214A1E609A04008C8276 /* Pods-acknowledgments.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "Pods-acknowledgments.plist"; sourceTree = "<group>"; };
 		933D21501E609BF7008C8276 /* Additional Licenses.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "Additional Licenses.plist"; sourceTree = "<group>"; };
 		9349621E21E9A40500F761BD /* ScoutedTeamStats.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScoutedTeamStats.swift; sourceTree = "<group>"; };
@@ -378,15 +380,15 @@
 			children = (
 				934F4BFC22066AB000A6F5FE /* RealmLoginKit */,
 				1F78E7821C3B469300221927 /* AppDelegate.swift */,
+				9339A9B12223408A00D3D82C /* AppSyncExtensions.swift */,
 				93E551F821CACDE0006C79A8 /* CognitoAuthProvider.swift */,
 				9351017321F42D6000D402FE /* AWSDataManager.swift */,
 				93183B8421C8AB83008DC997 /* API.swift */,
 				93DA5162221E741A00254BF3 /* Statistics Extensions */,
 				9351017521F4DEB600D402FE /* ImageScalingFunctions.swift */,
-				93633B20200D9B35000EC83A /* Realm Database */,
 				934F4C4F22112BBB00A6F5FE /* Stands Scouting Data Model */,
 				93A3ABC221F1462F007831E3 /* PitScoutingData.swift */,
-				9332F2AD1E22C8C300AB3EA6 /* Deprecated */,
+				938E0B3B2056D85C00666FA7 /* TBAAsyncManager.swift */,
 				93A38B3D2055EBAA00B8B692 /* Views */,
 				1F21DF101C645D1F00C55D0E /* View Controllers */,
 				936572E01E1610CA00439728 /* About.rtf */,
@@ -397,6 +399,7 @@
 				933D21501E609BF7008C8276 /* Additional Licenses.plist */,
 				933D214A1E609A04008C8276 /* Pods-acknowledgments.plist */,
 				938BEC1A22029ED4002B39D7 /* awsconfiguration.json */,
+				9339A9A9222277BA00D3D82C /* GoogleService-Info.plist */,
 			);
 			name = "FRC Advanced Scouting Touchstone";
 			path = "FRC Advanced Scouting Telemetrics";
@@ -442,23 +445,6 @@
 				D1EBA735BA885680C38C6749 /* Pods-FRC Advanced Scouting Touchstone.release.xcconfig */,
 			);
 			name = Pods;
-			sourceTree = "<group>";
-		};
-		9317C035201ADB6B00F1E907 /* General Models */ = {
-			isa = PBXGroup;
-			children = (
-				1F1C23B61E07487C008885A1 /* TeamEventPerformance.swift */,
-				1F1C23AC1E07487C008885A1 /* TeamMatchPerformance.swift */,
-			);
-			name = "General Models";
-			sourceTree = "<group>";
-		};
-		9332F2AD1E22C8C300AB3EA6 /* Deprecated */ = {
-			isa = PBXGroup;
-			children = (
-				938E0B3B2056D85C00666FA7 /* TBAAsyncManager.swift */,
-			);
-			name = Deprecated;
 			sourceTree = "<group>";
 		};
 		934F4BFC22066AB000A6F5FE /* RealmLoginKit */ = {
@@ -547,22 +533,6 @@
 				934F4C4D2210C10F00A6F5FE /* SSData2019.json */,
 			);
 			name = "Stands Scouting Data Model";
-			sourceTree = "<group>";
-		};
-		93633B20200D9B35000EC83A /* Realm Database */ = {
-			isa = PBXGroup;
-			children = (
-				93633B21200D9B42000EC83A /* Models */,
-			);
-			name = "Realm Database";
-			sourceTree = "<group>";
-		};
-		93633B21200D9B42000EC83A /* Models */ = {
-			isa = PBXGroup;
-			children = (
-				9317C035201ADB6B00F1E907 /* General Models */,
-			);
-			name = Models;
 			sourceTree = "<group>";
 		};
 		936594801E44198D008FF324 /* Pit Scouting */ = {
@@ -814,6 +784,7 @@
 				93A38B3A2055EBA400B8B692 /* NoEventSelected.xib in Resources */,
 				938BEC1B22029ED9002B39D7 /* awsconfiguration.json in Resources */,
 				933D214B1E609A04008C8276 /* Pods-acknowledgments.plist in Resources */,
+				9339A9AB222277BB00D3D82C /* GoogleService-Info.plist in Resources */,
 				93780A3020799F9C000B4565 /* LoginPromotionalText.rtf in Resources */,
 				1F78E7881C3B469300221927 /* Main.storyboard in Resources */,
 			);
@@ -823,6 +794,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				9339A9AD222277BB00D3D82C /* GoogleService-Info.plist in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -830,6 +802,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				9339A9AC222277BB00D3D82C /* GoogleService-Info.plist in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -870,7 +843,11 @@
 				"${BUILT_PRODUCTS_DIR}/BRYSerialAnimationQueue/BRYSerialAnimationQueue.framework",
 				"${BUILT_PRODUCTS_DIR}/FLAnimatedImage/FLAnimatedImage.framework",
 				"${BUILT_PRODUCTS_DIR}/GMStepper/GMStepper.framework",
+				"${BUILT_PRODUCTS_DIR}/GTMSessionFetcher/GTMSessionFetcher.framework",
+				"${BUILT_PRODUCTS_DIR}/GoogleToolboxForMac/GoogleToolboxForMac.framework",
+				"${BUILT_PRODUCTS_DIR}/GoogleUtilities/GoogleUtilities.framework",
 				"${BUILT_PRODUCTS_DIR}/NYTPhotoViewer/NYTPhotoViewer.framework",
+				"${BUILT_PRODUCTS_DIR}/Protobuf/Protobuf.framework",
 				"${BUILT_PRODUCTS_DIR}/ReachabilitySwift/Reachability.framework",
 				"${BUILT_PRODUCTS_DIR}/SQLite.swift/SQLite.framework",
 				"${BUILT_PRODUCTS_DIR}/SSBouncyButton/SSBouncyButton.framework",
@@ -879,6 +856,7 @@
 				"${BUILT_PRODUCTS_DIR}/UIColor-Hex/UIColor_Hex.framework",
 				"${BUILT_PRODUCTS_DIR}/UIImage+BetterAdditions/UIImage_BetterAdditions.framework",
 				"${BUILT_PRODUCTS_DIR}/VTAcknowledgementsViewController/VTAcknowledgementsViewController.framework",
+				"${BUILT_PRODUCTS_DIR}/nanopb/nanopb.framework",
 			);
 			name = "[CP] Embed Pods Frameworks";
 			outputPaths = (
@@ -895,7 +873,11 @@
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/BRYSerialAnimationQueue.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/FLAnimatedImage.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/GMStepper.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/GTMSessionFetcher.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/GoogleToolboxForMac.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/GoogleUtilities.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/NYTPhotoViewer.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Protobuf.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Reachability.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/SQLite.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/SSBouncyButton.framework",
@@ -904,6 +886,7 @@
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/UIColor_Hex.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/UIImage_BetterAdditions.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/VTAcknowledgementsViewController.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/nanopb.framework",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
@@ -970,7 +953,6 @@
 				93610E3D1E42F8D400856BE2 /* PitScoutingViewController.swift in Sources */,
 				93C609281E67D0CC007A689D /* MatchOverviewMasterViewController.swift in Sources */,
 				1F1C23DA1E07673E008885A1 /* AddEventTableViewController.swift in Sources */,
-				1F1C23CE1E07487C008885A1 /* TeamEventPerformance.swift in Sources */,
 				934F4C1622066AB100A6F5FE /* LoginFormValidation.swift in Sources */,
 				1F78E7831C3B469300221927 /* AppDelegate.swift in Sources */,
 				937BFD0420657E9E006FB3E0 /* OnboardingPathChooserViewController.swift in Sources */,
@@ -998,7 +980,6 @@
 				934F4C1822066AB100A6F5FE /* LoginKeyboardManager.swift in Sources */,
 				9349621F21E9A40500F761BD /* ScoutedTeamStats.swift in Sources */,
 				1FDC1BD31CD6A35F00ABE327 /* TeamListDetailViewController.swift in Sources */,
-				1F1C23C41E07487C008885A1 /* TeamMatchPerformance.swift in Sources */,
 				934F4C1922066AB100A6F5FE /* LoginViewControllerTransitioning.swift in Sources */,
 				1F4534561C7276DE004EDDB9 /* EventPickerViewController.swift in Sources */,
 				936572DF1E160EBB00439728 /* AboutViewController.swift in Sources */,
@@ -1011,6 +992,7 @@
 				9351017421F42D6000D402FE /* AWSDataManager.swift in Sources */,
 				934F4C2322066AB100A6F5FE /* LoginHeaderView.swift in Sources */,
 				93780A2A20797487000B4565 /* WelcomePageViewController.swift in Sources */,
+				9339A9B22223408A00D3D82C /* AppSyncExtensions.swift in Sources */,
 				1FDC1BCE1CD69EBB00ABE327 /* TeamListSplitViewController.swift in Sources */,
 				93CEA6322041FB5300C5B357 /* ConfirmForgotPasswordViewController.swift in Sources */,
 				1F21DF121C66942200C55D0E /* SortVC.swift in Sources */,

@@ -12,6 +12,7 @@ import Crashlytics
 import SafariServices
 import AWSAppSync
 import AWSMobileClient
+import Firebase
 
 protocol TeamListDetailDataSource {
     func team() -> Team?
@@ -153,8 +154,7 @@ class TeamListDetailViewController: UIViewController {
             let destinationVC = segue.destination as! StandsScoutingViewController
             destinationVC.setUp(forTeamKey: self.selectedTeam?.key ?? "", andEventKey: self.selectedEventKey ?? "")
             
-            Answers.logCustomEvent(withName: "Opened Stands Scouting", customAttributes: ["Source":"Team Detail Button"])
-            CLSNSLogv("Opening Stands Scouting from Team Detail Button", getVaList([]))
+            Globals.recordAnalyticsEvent(eventType: AnalyticsEventSelectContent, attributes: ["Source":"team_detail_button", "content_type":"screen", "item_id":"stands_scouting"])
         } else if segue.identifier == "pitScouting" {
             let pitScoutingVC = segue.destination as! PitScoutingViewController
             pitScoutingVC.setUp(forTeamKey: self.selectedTeam?.key ?? "", inEvent: self.selectedEventKey ?? "")
@@ -200,7 +200,7 @@ class TeamListDetailViewController: UIViewController {
             })
             
             //Status
-            listStatusesWatcher = Globals.appDelegate.appSyncClient?.watch(query: ListTeamEventStatusesQuery(eventKey: input.eventKey), cachePolicy: .returnCacheDataAndFetch) {[weak self] result, error in
+            listStatusesWatcher = Globals.appDelegate.appSyncClient?.watch(query: ListTeamEventStatusesQuery(eventKey: input.eventKey), cachePolicy: .returnCacheDataElseFetch) {[weak self] result, error in
                 if Globals.handleAppSyncErrors(forQuery: "TeamListDetail-ListTeamEventStatusesQuery", result: result, error: error) {
                     let statuses = result?.data?.listTeamEventStatuses
                     let str = statuses?.first(where: {$0?.teamKey ?? "" == input.team.key})??.fragments.teamEventStatus.overallStatusStr
@@ -361,7 +361,7 @@ class TeamListDetailViewController: UIViewController {
     @objc func showLoginPromotional() {
         let loginPromotional = storyboard!.instantiateViewController(withIdentifier: "loginPromotional")
         self.present(loginPromotional, animated: true, completion: nil)
-        Answers.logContentView(withName: "Login Promotional", contentType: nil, contentId: nil, customAttributes: ["Source":"Team Detail Notes/Scouting Buttons"])
+        Globals.recordAnalyticsEvent(eventType: AnalyticsEventPresentOffer, attributes: ["Source":"team_detail", "item_id":"login_promotional", "item_name":"Login Promotional"])
     }
     
     @IBAction func notesButtonPressed(_ sender: UIButton) {
@@ -395,7 +395,7 @@ class TeamListDetailViewController: UIViewController {
         
         present(matchListNav, animated: true, completion: nil)
         
-        Answers.logCustomEvent(withName: "Opened Team Matches View", customAttributes: nil)
+        Globals.recordAnalyticsEvent(eventType: AnalyticsEventSelectContent, attributes: ["content_type":"screen","item_id":"team_matches_view"])
     }
     
     //MARK: Displaying full screen photos
@@ -457,7 +457,7 @@ extension TeamListDetailViewController: MatchesTableViewControllerDelegate {
                 
                 matchesTableViewController.present(standsScoutingVC, animated: true, completion: nil)
                 
-                Answers.logCustomEvent(withName: "Opened Stands Scouting", customAttributes: ["Source":"Team Matches List"])
+                Globals.recordAnalyticsEvent(eventType: AnalyticsEventSelectContent, attributes: ["Source":"team_matches_list", "content_type":"screen", "item_id":"stands_scouting"])
                 
                 CLSNSLogv("Opening Stands Scouting from Team Matches List", getVaList([]))
             })
@@ -546,7 +546,7 @@ extension TeamListDetailViewController: UITableViewDelegate, UITableViewDataSour
         if let url = URL(string: selectedTeam?.website ?? "") {
             let safariVC = SFSafariViewController(url: url)
             self.present(safariVC, animated: true, completion: nil)
-            Answers.logContentView(withName: "Team Website View", contentType: "Website", contentId: "\(selectedTeam?.key ?? "unk")", customAttributes: nil)
+            Globals.recordAnalyticsEvent(eventType: AnalyticsEventSelectContent, attributes: ["item_id":"\(selectedTeam?.key ?? "unk")", "content_type":"team_website"])
         }
     }
 }
@@ -610,6 +610,7 @@ extension TeamListDetailViewController: NYTPhotosViewControllerDelegate {
     
     func photosViewController(_ photosViewController: NYTPhotosViewController, actionCompletedWithActivityType activityType: String?) {
         NSLog("Completed Action: \(activityType ?? "Unknown")")
-        Answers.logShare(withMethod: activityType, contentName: "Team Photos", contentType: "Photo", contentId: nil, customAttributes: nil)
+        
+        Globals.recordAnalyticsEvent(eventType: AnalyticsEventShare, attributes: ["share_method":activityType ?? "?", "content_type":"team_photo","content_id":self.selectedTeam?.key ?? ""])
     }
 }

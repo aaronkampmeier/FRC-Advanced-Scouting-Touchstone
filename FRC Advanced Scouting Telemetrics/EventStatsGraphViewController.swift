@@ -16,6 +16,81 @@ class EventStatsGraphViewController: UIViewController {
     var eventRanking: EventRanking?
     private var statsToGraph = [Statistic<ScoutedTeam>]()
     private var scoutedTeams: [ScoutedTeam]?
+    let backgroundQueue = DispatchQueue(label: "EventStatsGraphingCalculation", qos: .userInitiated, target: nil)
+    //Stashed stats is a dict with key of stat id and value of another dict of team key for key and stat value for value
+    var stashedStats = [String:[String:StatValue]]() {
+        didSet {
+            CLSNSLogv("Stashed Stats Set", getVaList([]))
+            //Must create multiple BarChartDataSets for grouped bar charts
+            var barChartDataSets = [BarChartDataSet]()
+            for (statIndex, stat) in statsToGraph.enumerated() {
+                //Create a BarChartDataSet which takes in BarChartDataEntries
+                var barChartDataEntries = [BarChartDataEntry]()
+                for (index,team) in (self.eventRanking?.rankedTeams ?? []).enumerated() {
+                    let value = stashedStats[stat.id]?[team?.teamKey ?? ""] ?? .NoValue
+                    //Create a BarChartDataEntry
+                    var statDouble: Double
+                    var isNoValue: Bool = false
+                    switch value {
+                    case .Double(let val):
+                        statDouble = val
+                    case .Integer(let val):
+                        statDouble = Double(val)
+                    case .Percent(let val):
+                        //TODO: Add in formatting for percents
+                        statDouble = val
+                    case .Bool(let val):
+                        //TODO: Format for bools
+                        statDouble = Double(val.hashValue)
+                    case .String:
+                        //TODO: Show warning for graphing strings
+                        statDouble = 0
+                        isNoValue = true
+                    case .Error:
+                        statDouble = 0
+                        isNoValue = true
+                    case .NoValue:
+                        statDouble = 0
+                        isNoValue = true
+                    }
+                    let entry = FASTBarChartDataEntry(x: Double(index), y: statDouble)
+                    entry.isNoValue = isNoValue
+                    barChartDataEntries.append(entry)
+                }
+                
+                let dataSet = BarChartDataSet(values: barChartDataEntries, label: stat.name)
+                dataSet.colors = [self.barColors[statIndex % self.barColors.count]]
+                dataSet.valueFormatter = self
+                barChartDataSets.append(dataSet)
+            }
+            
+            let barChartData = BarChartData(dataSets: barChartDataSets)
+            
+            DispatchQueue.main.async {
+                self.barWidth = (1 - self.groupSpace - (Double(barChartDataSets.count) * self.barSpace)) / Double(barChartDataSets.count) //So that the group space always equals 1
+                barChartData.barWidth = self.barWidth
+                self.groupWidth = barChartData.groupWidth(groupSpace: self.groupSpace, barSpace: self.barSpace) //Should be one
+                
+                barChartData.groupBars(fromX: -0.5, groupSpace: self.groupSpace, barSpace: self.barSpace)
+                
+                //Check the y min and if it's not below 0 than scale the y axis down
+                var hasDataBelowZero = false
+                for set in barChartDataSets {
+                    if set.yMin < 0 {hasDataBelowZero = true}
+                }
+                
+                if !hasDataBelowZero {
+                    self.barChart.leftAxis.axisMinimum = 0
+                } else {
+                    self.barChart.leftAxis.resetCustomAxisMin()
+                }
+                
+//                self.barChart.animate(xAxisDuration: 0.5, yAxisDuration: 0.7, easingOption: .easeInOutQuart)
+                
+                self.barChart.data = barChartData
+            }
+        }
+    }
     
 //    let startSpace = 0.8
     let groupSpace = 0.12
@@ -126,89 +201,32 @@ class EventStatsGraphViewController: UIViewController {
     
     func loadGraph() {
         //TODO: - Make the loading async
-        //Must create multiple BarChartDataSets for grouped bar charts
-        var barChartDataSets = [BarChartDataSet]()
         
-        for (index, stat) in statsToGraph.enumerated() {
-            //Create a BarChartDataSet which takes in BarChartDataEntries
-            var barChartDataEntries = [BarChartDataEntry]()
-            for (index, rankedTeam) in (eventRanking?.rankedTeams ?? []).enumerated() {
-                let dispatchGroup = DispatchGroup()
-                dispatchGroup.enter()
-                //Get the scouted team
-                //Calculate it
-                var value: StatValue = .NoValue
-                if let scoutedTeam = scoutedTeams?.first(where: {$0.teamKey == rankedTeam?.teamKey}) {
-                    stat.calculate(forObject: scoutedTeam) { (v) in
-                        value = v
-                        dispatchGroup.leave()
+        backgroundQueue.async {
+            for (_, stat) in self.statsToGraph.enumerated() {
+                
+                for (_, rankedTeam) in (self.eventRanking?.rankedTeams ?? []).enumerated() {
+                    //Get the scouted team
+                    //Calculate it
+                    if let scoutedTeam = self.scoutedTeams?.first(where: {$0.teamKey == rankedTeam?.teamKey}) {
+                        stat.calculate(forObject: scoutedTeam) { (v) in
+                            if let _ = self.stashedStats[stat.id] {
+                                self.stashedStats[stat.id]![scoutedTeam.teamKey] = v
+                            } else {
+                                self.stashedStats[stat.id] = [scoutedTeam.teamKey:v]
+                            }
+                        }
+                    } else {
+                        if let _ = self.stashedStats[stat.id] {
+                            self.stashedStats[stat.id]![rankedTeam?.teamKey ?? ""] = .NoValue
+                        } else {
+                            self.stashedStats[stat.id] = [rankedTeam?.teamKey ?? "":.NoValue]
+                        }
                     }
-                } else {
-                    value = .NoValue
-                    dispatchGroup.leave()
                 }
                 
-                dispatchGroup.wait()
-                
-                //Create a BarChartDataEntry
-                var statDouble: Double
-                var isNoValue: Bool = false
-                switch value {
-                case .Double(let val):
-                    statDouble = val
-                case .Integer(let val):
-                    statDouble = Double(val)
-                case .Percent(let val):
-                    //TODO: Add in formatting for percents
-                    statDouble = val
-                case .Bool(let val):
-                    //TODO: Format for bools
-                    statDouble = Double(val.hashValue)
-                case .String:
-                    //TODO: Show warning for graphing strings
-                    statDouble = 0
-                    isNoValue = true
-                case .Error:
-                    statDouble = 0
-                    isNoValue = true
-                case .NoValue:
-                    statDouble = 0
-                    isNoValue = true
-                }
-                let entry = FASTBarChartDataEntry(x: Double(index), y: statDouble)
-                entry.isNoValue = isNoValue
-                barChartDataEntries.append(entry)
             }
-            
-            let dataSet = BarChartDataSet(values: barChartDataEntries, label: stat.name)
-            dataSet.colors = [barColors[index % barColors.count]]
-            dataSet.valueFormatter = self
-            barChartDataSets.append(dataSet)
         }
-        
-        let barChartData = BarChartData(dataSets: barChartDataSets)
-        
-        barWidth = (1 - groupSpace - (Double(barChartDataSets.count) * barSpace)) / Double(barChartDataSets.count) //So that the group space always equals 1
-        barChartData.barWidth = barWidth
-        groupWidth = barChartData.groupWidth(groupSpace: groupSpace, barSpace: barSpace) //Should be one
-        
-        barChartData.groupBars(fromX: -0.5, groupSpace: groupSpace, barSpace: barSpace)
-        
-        //Check the y min and if it's not below 0 than scale the y axis down
-        var hasDataBelowZero = false
-        for set in barChartDataSets {
-            if set.yMin < 0 {hasDataBelowZero = true}
-        }
-        
-        if !hasDataBelowZero {
-            barChart.leftAxis.axisMinimum = 0
-        } else {
-            barChart.leftAxis.resetCustomAxisMin()
-        }
-        
-        barChart.animate(xAxisDuration: 0.5, yAxisDuration: 0.7, easingOption: .easeInOutQuart)
-        
-        barChart.data = barChartData
         
         if let key = eventRanking?.eventKey {
             barChart.chartDescription?.text = "Event \(key)"
@@ -216,7 +234,7 @@ class EventStatsGraphViewController: UIViewController {
             barChart.chartDescription?.text = "No Event"
         }
         
-        Answers.logContentView(withName: "Event Stats Graph", contentType: "Graph", contentId: nil, customAttributes: ["Num of Stats Graphed":statsToGraph.count])
+        Globals.recordAnalyticsEvent(eventType: "opened_event_stats_graph", attributes: ["stats":statsToGraph.map({$0.name}).description], metrics: ["num_of_stats_graphed":Double(statsToGraph.count)])
     }
 }
 

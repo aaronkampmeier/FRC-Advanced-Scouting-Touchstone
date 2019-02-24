@@ -87,7 +87,7 @@ extension ScoutSession {
                     
                     if let subOptions = gameAction.subOptions {
                         for option in subOptions {
-                            statistics.append(ScoutSessionStat(name: "\(gameAction.name)-\(option.name)", id: UUID().uuidString, function: { (scoutSession, callback) in
+                            statistics.append(ScoutSessionStat(name: "\(gameAction.name)-\(option.name)", id: "\(gameAction.name)-\(option.name)-percentage", function: { (scoutSession, callback) in
                                 //Find the percentage of game action with suboption
                                 let totalActionOccurences = scoutSession.timeMarkers?.filter({$0?.event == gameAction.key})
                                 let optionOccurences = totalActionOccurences?.filter({$0?.subOption == option.key})

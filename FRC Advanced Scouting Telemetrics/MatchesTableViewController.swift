@@ -37,7 +37,7 @@ class MatchesTableViewController: UITableViewController {
         noMatchesView.isHidden = true
         let labelView = UILabel()
         noMatchesView.addSubview(labelView)
-        labelView.text = "There are no matches currently loaded. This could be because the match schedule was not published yet. Try having you or one of your scouts reload the event by clicking the gear on the main screen and then swiping left on an event."
+        labelView.text = "There are no matches currently loaded. This could be because the match schedule was not published yet or is still loading."
         labelView.numberOfLines = 0
         labelView.textAlignment = NSTextAlignment.center
         labelView.textColor = UIColor.lightGray

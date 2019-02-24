@@ -49,7 +49,7 @@ class ConfirmForgotPasswordViewController: UIViewController {
                     alert.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
                     self.present(alert, animated: true, completion: nil)
                     
-                    Answers.logCustomEvent(withName: "Forgot Password Reset Completed", customAttributes: ["Successful":false])
+                    Globals.recordAnalyticsEvent(eventType: "forgot_password_reset_completed", attributes: ["successful":"false"])
                 } else if let result = result {
                     switch result.forgotPasswordState {
                     case .done:
@@ -60,7 +60,7 @@ class ConfirmForgotPasswordViewController: UIViewController {
                             self.navigationController?.dismiss(animated: true, completion: nil)
                         }))
                         self.present(alert, animated: true, completion: nil)
-                        Answers.logCustomEvent(withName: "Forgot Password Reset Completed", customAttributes: ["Successful":true])
+                        Globals.recordAnalyticsEvent(eventType: "forgot_password_reset_completed", attributes: ["successful":"true"])
                     case .confirmationCodeSent:
                         assertionFailure()
                     }

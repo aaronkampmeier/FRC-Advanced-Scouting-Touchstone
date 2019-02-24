@@ -193,7 +193,7 @@ class StandsScoutingViewController: UIViewController {
         }
         
         self.dismiss(animated: true, completion: nil)
-        Answers.logCustomEvent(withName: "Closed Stands Scouting", customAttributes: ["With Save":shouldSave.description])
+        Globals.recordAnalyticsEvent(eventType: "closed_stands_scouting", attributes: ["with_save":shouldSave.description, "at_time":ssDataManager?.stopwatch.elapsedTimeAsString ?? ""])
 	}
 	
 	override func prepare(for segue: UIStoryboardSegue, sender: Any?) {

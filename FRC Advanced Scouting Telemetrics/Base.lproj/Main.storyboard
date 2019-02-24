@@ -1744,13 +1744,13 @@
                         </collectionViewFlowLayout>
                         <cells>
                             <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" misplaced="YES" reuseIdentifier="keyValue" id="5L9-K6-WKS" customClass="TeamDetailStatisticCell" customModule="FRC_Advanced_Scouting_Touchstone" customModuleProvider="target">
-                                <rect key="frame" x="164.5" y="0.0" width="335" height="102"/>
+                                <rect key="frame" x="164.5" y="0.0" width="335" height="103"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
-                                    <rect key="frame" x="0.0" y="0.0" width="335" height="102"/>
+                                    <rect key="frame" x="0.0" y="0.0" width="335" height="103"/>
                                     <autoresizingMask key="autoresizingMask"/>
                                     <subviews>
-                                        <label opaque="NO" userInteractionEnabled="NO" tag="1" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Key" textAlignment="center" lineBreakMode="wordWrap" numberOfLines="0" baselineAdjustment="alignBaselines" minimumFontSize="10" adjustsLetterSpacingToFitWidth="YES" translatesAutoresizingMaskIntoConstraints="NO" id="ken-WV-rwd">
+                                        <label opaque="NO" userInteractionEnabled="NO" tag="1" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Key" textAlignment="center" lineBreakMode="wordWrap" numberOfLines="0" baselineAdjustment="alignBaselines" minimumScaleFactor="0.5" adjustsLetterSpacingToFitWidth="YES" translatesAutoresizingMaskIntoConstraints="NO" id="ken-WV-rwd">
                                             <rect key="frame" x="0.0" y="0.0" width="0.0" height="17"/>
                                             <constraints>
                                                 <constraint firstAttribute="height" relation="greaterThanOrEqual" constant="17" id="ROh-y9-IzA"/>
@@ -1779,6 +1779,7 @@
                                 </view>
                                 <constraints>
                                     <constraint firstAttribute="trailing" secondItem="ken-WV-rwd" secondAttribute="trailing" id="4R3-nW-Bm8"/>
+                                    <constraint firstAttribute="bottom" relation="greaterThanOrEqual" secondItem="B4l-zw-Tlr" secondAttribute="bottom" constant="1" id="9KU-E5-cB2"/>
                                     <constraint firstItem="B4l-zw-Tlr" firstAttribute="top" secondItem="ken-WV-rwd" secondAttribute="bottom" constant="4" id="CVF-bO-MiC"/>
                                     <constraint firstItem="ken-WV-rwd" firstAttribute="top" secondItem="5L9-K6-WKS" secondAttribute="top" id="Jjv-E4-imB"/>
                                     <constraint firstAttribute="trailing" secondItem="B4l-zw-Tlr" secondAttribute="trailing" id="MqX-gG-Df2"/>
@@ -1787,7 +1788,7 @@
                                     <constraint firstItem="j8l-rI-bXq" firstAttribute="centerY" secondItem="B4l-zw-Tlr" secondAttribute="centerY" id="k1x-m0-zFd"/>
                                     <constraint firstAttribute="leading" secondItem="B4l-zw-Tlr" secondAttribute="leading" id="myg-Gu-9na"/>
                                 </constraints>
-                                <size key="customSize" width="335" height="102"/>
+                                <size key="customSize" width="335" height="103"/>
                                 <connections>
                                     <outlet property="chartImageView" destination="j8l-rI-bXq" id="gsz-cn-Cdb"/>
                                     <outlet property="titleLabel" destination="ken-WV-rwd" id="rbM-0A-U5e"/>
@@ -3882,7 +3883,7 @@
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <label opaque="NO" userInteractionEnabled="NO" tag="1" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Header" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="3E3-Ol-Pvr">
-                                                    <rect key="frame" x="262.5" y="4" width="59" height="21"/>
+                                                    <rect key="frame" x="302.5" y="4" width="59" height="21"/>
                                                     <fontDescription key="fontDescription" type="system" weight="semibold" pointSize="17"/>
                                                     <nil key="textColor"/>
                                                     <nil key="highlightedColor"/>

@@ -52,7 +52,7 @@ class SortVC: UIViewController, UIPickerViewDelegate, UIPickerViewDataSource {
 	override func viewWillDisappear(_ animated: Bool) {
 		super.viewWillDisappear(animated)
 		delegate?.selectedStat(selectedStat, isAscending: isAscending)
-        Answers.logCustomEvent(withName: "Sort Team List", customAttributes: ["Stat":selectedStat?.id ?? "?", "Ascending":isAscending.description])
+        Globals.recordAnalyticsEvent(eventType: "sort_team_list", attributes: ["stat":selectedStat?.id ?? "?", "ascending":isAscending.description])
     }
 	
 	override func viewDidDisappear(_ animated: Bool) {

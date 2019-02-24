@@ -210,6 +210,10 @@ enum StatValue: CustomStringConvertible, Equatable, Comparable {
             return true
         case (_, .NoValue):
             return false
+        case (_, .Error):
+            return false
+        case (.Error, _):
+            return true
         default:
             return false
         }
@@ -239,6 +243,10 @@ enum StatValue: CustomStringConvertible, Equatable, Comparable {
         case (.NoValue, _):
             return false
         case (_, .NoValue):
+            return true
+        case (.Error, _):
+            return false
+        case (_, .Error):
             return true
         default:
             return false

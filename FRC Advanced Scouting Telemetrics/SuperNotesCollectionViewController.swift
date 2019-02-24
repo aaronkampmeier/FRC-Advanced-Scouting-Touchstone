@@ -8,6 +8,7 @@
 
 import UIKit
 import Crashlytics
+import Firebase
 
 private let reuseIdentifier = "notesCell"
 
@@ -24,7 +25,7 @@ class SuperNotesCollectionViewController: UICollectionViewController {
 
         // Do any additional setup after loading the view.
         
-        Answers.logContentView(withName: "Super Notes", contentType: "Notes", contentId: nil, customAttributes: nil)
+        Globals.recordAnalyticsEvent(eventType: AnalyticsEventSelectContent, attributes: ["content_type":"screen", "item_id":"super_notes"])
     }
 
     override func didReceiveMemoryWarning() {

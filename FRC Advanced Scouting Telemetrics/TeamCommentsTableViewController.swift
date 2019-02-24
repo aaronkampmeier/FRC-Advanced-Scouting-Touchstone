@@ -164,6 +164,7 @@ class TeamCommentsTableViewController: UITableViewController {
         let body = self.currentlyWrittenCommentText
         let uuid = UUID().uuidString
         let date = Date().timeIntervalSince1970
+        Globals.recordAnalyticsEvent(eventType: "posted_team_comment", attributes: ["eventKey":eventKey!, "teamKey":teamKey!], metrics: ["length":Double(body.count)])
         Globals.appDelegate.appSyncClient?.perform(mutation: AddTeamCommentMutation(eventKey: eventKey!, teamKey: teamKey!, body: body, author: UIDevice.current.name), optimisticUpdate: { (transaction) in
             do {
                 try transaction?.update(query: ListTeamCommentsQuery(eventKey: self.eventKey!, teamKey: self.teamKey!), { (selectionSet) in
@@ -177,7 +178,6 @@ class TeamCommentsTableViewController: UITableViewController {
             
         }, resultHandler: { (result, error) in
             if Globals.handleAppSyncErrors(forQuery: "AddTeamComment", result: result, error: error) {
-                Answers.logCustomEvent(withName: "Posted team comment", customAttributes: nil)
                 
                 if let comment = result?.data?.addTeamComment?.fragments.teamComment {
                     
