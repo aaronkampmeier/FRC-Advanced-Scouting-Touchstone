@@ -19,8 +19,6 @@
 		1F78E7901C3B469300221927 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 1F78E78E1C3B469300221927 /* LaunchScreen.storyboard */; };
 		1F78E7A61C3B469300221927 /* FRC_Advanced_Scouting_TelemetricsUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F78E7A51C3B469300221927 /* FRC_Advanced_Scouting_TelemetricsUITests.swift */; };
 		1FBB426D1C9A29FC0017E36C /* Statistics.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FBB426C1C9A29FC0017E36C /* Statistics.swift */; };
-		1FBC9E691CC2EE11005DB3F4 /* Fabric.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1FBC9E671CC2EE11005DB3F4 /* Fabric.framework */; };
-		1FBC9E6C1CC2F007005DB3F4 /* Crashlytics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1FBC9E6B1CC2F007005DB3F4 /* Crashlytics.framework */; };
 		1FD0A09B1C95093600013A18 /* TeamListTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FD0A09A1C95093600013A18 /* TeamListTableViewCell.swift */; };
 		1FDC1BCE1CD69EBB00ABE327 /* TeamListSplitViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FDC1BCD1CD69EBB00ABE327 /* TeamListSplitViewController.swift */; };
 		1FDC1BD11CD69F5F00ABE327 /* TeamListTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FDC1BD01CD69F5F00ABE327 /* TeamListTableViewController.swift */; };
@@ -178,8 +176,6 @@
 		1F78E7A71C3B469300221927 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		1F9B78241CD07C7000B4E5AE /* NYTPhotoViewer.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = NYTPhotoViewer.framework; path = "Pods/../build/Debug-iphoneos/NYTPhotoViewer.framework"; sourceTree = "<group>"; };
 		1FBB426C1C9A29FC0017E36C /* Statistics.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Statistics.swift; sourceTree = "<group>"; wrapsLines = 1; };
-		1FBC9E671CC2EE11005DB3F4 /* Fabric.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Fabric.framework; sourceTree = SOURCE_ROOT; };
-		1FBC9E6B1CC2F007005DB3F4 /* Crashlytics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Crashlytics.framework; sourceTree = SOURCE_ROOT; };
 		1FD0A09A1C95093600013A18 /* TeamListTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TeamListTableViewCell.swift; sourceTree = "<group>"; };
 		1FDC1BCD1CD69EBB00ABE327 /* TeamListSplitViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TeamListSplitViewController.swift; sourceTree = "<group>"; };
 		1FDC1BD01CD69F5F00ABE327 /* TeamListTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TeamListTableViewController.swift; sourceTree = "<group>"; };
@@ -269,9 +265,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				1FBC9E6C1CC2F007005DB3F4 /* Crashlytics.framework in Frameworks */,
 				93E551E621C9FBEB006C79A8 /* Charts.framework in Frameworks */,
-				1FBC9E691CC2EE11005DB3F4 /* Fabric.framework in Frameworks */,
 				DEE3AA58734C2CCE9C06727F /* Pods_FRC_Advanced_Scouting_Touchstone.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -430,8 +424,6 @@
 			children = (
 				1F9B78241CD07C7000B4E5AE /* NYTPhotoViewer.framework */,
 				1FDE56921CCD376B009042CD /* opencv2.framework */,
-				1FBC9E6B1CC2F007005DB3F4 /* Crashlytics.framework */,
-				1FBC9E671CC2EE11005DB3F4 /* Fabric.framework */,
 				1C713CB13EB7BA66AC808E54 /* Pods.framework */,
 				E4D7923BBAD6512A9C4F3DBB /* Pods_FRC_Advanced_Scouting_Touchstone.framework */,
 			);
@@ -642,10 +634,10 @@
 				1F78E77B1C3B469300221927 /* Sources */,
 				1F78E77C1C3B469300221927 /* Frameworks */,
 				1F78E77D1C3B469300221927 /* Resources */,
-				1FBC9E661CC2ED09005DB3F4 /* Run Fabric Script */,
 				93610E301E42E2B200856BE2 /* Increment Build Number */,
 				1F7AE4DF1DCC2DC80029B420 /* Embed Frameworks */,
 				57ABF9A67635DC59BFEDA095 /* [CP] Embed Pods Frameworks */,
+				9339A9B52223553B00D3D82C /* Run Crashlytics Script */,
 			);
 			buildRules = (
 			);
@@ -809,20 +801,6 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
-		1FBC9E661CC2ED09005DB3F4 /* Run Fabric Script */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-			);
-			name = "Run Fabric Script";
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "./Fabric.framework/run 69885bcf9ab40dc49ae9c921bfc14f173744a153 96c2e8fbf7a62a41a095af4554fc38c60d5a509721db519cc7ab29ed326b4bfa";
-		};
 		57ABF9A67635DC59BFEDA095 /* [CP] Embed Pods Frameworks */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
@@ -910,6 +888,25 @@
 			shellPath = /bin/sh;
 			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
 			showEnvVarsInLog = 0;
+		};
+		9339A9B52223553B00D3D82C /* Run Crashlytics Script */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"$(BUILT_PRODUCTS_DIR)/$(INFOPLIST_PATH)",
+			);
+			name = "Run Crashlytics Script";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "# Type a script or drag a script file from your workspace to insert its path.\n\"${PODS_ROOT}/Fabric/run\"\n";
 		};
 		93610E301E42E2B200856BE2 /* Increment Build Number */ = {
 			isa = PBXShellScriptBuildPhase;

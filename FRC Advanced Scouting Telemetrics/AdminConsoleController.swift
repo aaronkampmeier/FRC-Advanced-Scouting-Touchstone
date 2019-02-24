@@ -95,7 +95,7 @@ class AdminConsoleController: UIViewController, UITableViewDataSource, UITableVi
             return trackedEvents.count + 1
         case tableView.numberOfSections - 1:
             //About Section
-            return 4
+            return 3
         default:
             return 0
         }
@@ -124,18 +124,6 @@ class AdminConsoleController: UIViewController, UITableViewDataSource, UITableVi
             case 1:
                 return tableView.dequeueReusableCell(withIdentifier: "acknowledgments")!
             case 2:
-                let cell = tableView.dequeueReusableCell(withIdentifier: "syncStatus")!
-                
-                if Globals.isInSpectatorMode {
-                    cell.isUserInteractionEnabled = false
-                    cell.textLabel?.isEnabled = false
-                } else {
-                    cell.isUserInteractionEnabled = true
-                    cell.textLabel?.isEnabled = true
-                }
-                
-                return cell
-            case 3:
                 let cell = tableView.dequeueReusableCell(withIdentifier: "logout")!
                 
                 if Globals.isInSpectatorMode {
@@ -210,8 +198,6 @@ class AdminConsoleController: UIViewController, UITableViewDataSource, UITableVi
                     assertionFailure()
                 }
             } else if indexPath.row == 2 {
-                performSegue(withIdentifier: "syncStatus", sender: self)
-            } else if indexPath.row == 3 {
                 //Logout
                 if Globals.isInSpectatorMode {
                     Globals.recordAnalyticsEvent(eventType: "exit_spectator_mode")
@@ -467,6 +453,7 @@ class AdminConsoleController: UIViewController, UITableViewDataSource, UITableVi
                             for scoutedTeam in orderedScoutedTeams {
                                 for (index, stat) in stats.enumerated() {
                                     let group = DispatchGroup()
+                                    var groupHasBeenLeft = false
                                     group.enter()
                                     stat.calculate(forObject: scoutedTeam, callback: { (value) in
                                         csvText += "\(value)"
@@ -478,7 +465,10 @@ class AdminConsoleController: UIViewController, UITableViewDataSource, UITableVi
                                             csvText += ","
                                         }
                                         
-                                        group.leave()
+                                        if !groupHasBeenLeft {
+                                            group.leave()
+                                            groupHasBeenLeft = true
+                                        }
                                     })
                                     
                                     group.wait()

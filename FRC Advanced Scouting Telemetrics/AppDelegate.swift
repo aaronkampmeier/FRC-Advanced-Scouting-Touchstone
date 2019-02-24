@@ -6,7 +6,6 @@
 //
 
 import UIKit
-import Fabric
 import Crashlytics
 import AWSAppSync
 import AWSMobileClient
@@ -107,8 +106,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         // Override point for customization after application launch.
-        Fabric.with([Crashlytics.self])
-        Crashlytics.sharedInstance().setUserIdentifier(UIDevice.current.name)
         
         FirebaseApp.configure()
         
@@ -117,6 +114,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             if let userState = userState {
                 CLSNSLogv("User State: \(userState)", getVaList([]))
                 Analytics.setUserID(AWSMobileClient.sharedInstance().username)
+                Crashlytics.sharedInstance().setUserName(AWSMobileClient.sharedInstance().username)
+                Crashlytics.sharedInstance().setUserIdentifier(UIDevice.current.name)
                 
                 switch userState {
                 case .signedOut:
@@ -221,6 +220,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             
             Analytics.setUserID(AWSMobileClient.sharedInstance().username)
             Analytics.setUserProperty(AWSMobileClient.sharedInstance().username, forName: "teamNumber")
+            Crashlytics.sharedInstance().setUserName(AWSMobileClient.sharedInstance().username)
         }
         
         return true
