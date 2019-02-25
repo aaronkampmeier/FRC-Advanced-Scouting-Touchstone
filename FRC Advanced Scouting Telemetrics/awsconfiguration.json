@@ -1,0 +1,42 @@
+{
+  "UserAgent": "MobileHub/1.0",
+  "Version": "1.0",
+  "CredentialsProvider": {
+    "CognitoIdentity": {
+      "Default": {
+        "PoolId": "us-east-1:6b605d3a-6f88-4893-8316-4a807ae329c5",
+        "Region": "us-east-1"
+      }
+    }
+  },
+  "IdentityManager": {
+    "Default": {}
+  },
+  "CognitoUserPool": {
+    "Default": {
+      "PoolId": "us-east-1_FuyxJ3oI6",
+      "AppClientId": "t9sg63r7ka1igihrlngpovipd",
+      "AppClientSecret": "1pcpa9u5lvvohqvdj9c460avc1k49rqpv6vd6oj89gntabpoo8uo",
+      "Region": "us-east-1"
+    }
+  },
+  "PinpointAnalytics": {
+    "Default": {
+      "AppId": "8ee24d2f75324e19a197338e0bfdb8cc",
+      "Region": "us-east-1"
+    }
+  },
+  "PinpointTargeting": {
+    "Default": {
+      "Region": "us-east-1"
+    }
+  },
+  "AppSync": {
+      "Default": {
+          "ApiUrl": "https://klchv4y3efga5i6dydzloxaule.appsync-api.us-east-1.amazonaws.com/graphql",
+          "Region": "us-east-1",
+          "AuthMode": "AMAZON_COGNITO_USER_POOLS",
+          "ApiKey": "null"
+      }
+  }
+}
