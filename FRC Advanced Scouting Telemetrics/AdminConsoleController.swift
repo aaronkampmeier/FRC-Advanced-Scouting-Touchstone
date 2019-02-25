@@ -367,8 +367,8 @@ class AdminConsoleController: UIViewController, UITableViewDataSource, UITableVi
         showLoadingIndicator()
         
         let finishingActions: (URL?, Error?) -> Void = {path, error in
-            self.removeLoadingIndicator()
             DispatchQueue.main.async {
+                self.removeLoadingIndicator()
                 if let error = error {
                     let alert = UIAlertController(title: "Export Failed", message: "There was an error exporting to CSV: \(error)", preferredStyle: .alert)
                     alert.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))

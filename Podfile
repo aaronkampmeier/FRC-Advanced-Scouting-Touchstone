@@ -19,7 +19,6 @@ pod 'AWSAppSync', '~> 2.9.2'
 pod 'AWSMobileClient'
 pod 'AWSUserPoolsSignIn'
 pod 'AWSAuthUI'
-pod 'AWSPinpoint'
 end
 
 post_install do | installer |

@@ -213,7 +213,6 @@ class TeamCommentsTableViewController: UITableViewController {
                     })
                 }
             } else {
-                //TODO: Show error
                 let alert = UIAlertController(title: "Error Saving Team Comment", message: "There was an error saving the team comment, please try again: \(error != nil ? (error as? AWSMobileClientError)?.message ?? "" : "")", preferredStyle: .alert)
                 alert.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
                 self.present(alert, animated: true, completion: nil)

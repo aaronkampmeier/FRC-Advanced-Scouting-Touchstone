@@ -20,7 +20,6 @@ class EventStatsGraphViewController: UIViewController {
     //Stashed stats is a dict with key of stat id and value of another dict of team key for key and stat value for value
     var stashedStats = [String:[String:StatValue]]() {
         didSet {
-            CLSNSLogv("Stashed Stats Set", getVaList([]))
             //Must create multiple BarChartDataSets for grouped bar charts
             var barChartDataSets = [BarChartDataSet]()
             for (statIndex, stat) in statsToGraph.enumerated() {

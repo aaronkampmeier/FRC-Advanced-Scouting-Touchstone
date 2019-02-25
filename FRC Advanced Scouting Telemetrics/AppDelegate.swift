@@ -11,7 +11,6 @@ import AWSAppSync
 import AWSMobileClient
 import AWSAuthCore
 import AWSAuthUI
-import AWSPinpoint
 import Firebase
 
 internal struct Globals {
@@ -80,16 +79,16 @@ internal struct Globals {
     }
     
     static func recordAnalyticsEvent(eventType: String, attributes: [String:String] = [:], metrics: [String: Double] = [:]) {
-        let event = Globals.appDelegate.pinpoint?.analyticsClient.createEvent(withEventType: eventType)
-        for attribute in attributes {
-            event?.addAttribute(attribute.value, forKey: attribute.key)
-        }
-        for metric in metrics {
-            event?.addMetric(NSNumber(value: metric.value), forKey: metric.key)
-        }
-        
-        Globals.appDelegate.pinpoint?.analyticsClient.record(event!)
-        Globals.appDelegate.pinpoint?.analyticsClient.submitEvents()
+//        let event = Globals.appDelegate.pinpoint?.analyticsClient.createEvent(withEventType: eventType)
+//        for attribute in attributes {
+//            event?.addAttribute(attribute.value, forKey: attribute.key)
+//        }
+//        for metric in metrics {
+//            event?.addMetric(NSNumber(value: metric.value), forKey: metric.key)
+//        }
+//
+//        Globals.appDelegate.pinpoint?.analyticsClient.record(event!)
+//        Globals.appDelegate.pinpoint?.analyticsClient.submitEvents()
         
         //Now for Firebase Analytics
         Analytics.logEvent(eventType, parameters: (attributes as [String:Any]).merging((metrics as [String:Any]), uniquingKeysWith: {val1,val2 in attributes[val1 as! String] as Any}))
@@ -102,7 +101,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     var window: UIWindow?
     
     var appSyncClient: AWSAppSyncClient?
-    var pinpoint: AWSPinpoint?
+//    var pinpoint: AWSPinpoint?
     
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         // Override point for customization after application launch.
@@ -125,11 +124,11 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
                     let mainStoryboard = UIStoryboard(name: "Main", bundle: nil)
                     self.window?.rootViewController = mainStoryboard.instantiateViewController(withIdentifier: "teamListMasterVC")
                     Analytics.setUserProperty(AWSMobileClient.sharedInstance().username, forName: "teamNumber")
-                    
-                    Globals.asyncLoadingManager = TBAUpdatingDataReloader()
                 case .guest:
-                    ///TODO:
-                    break
+                    if Globals.isInSpectatorMode {
+                        let mainStoryboard = UIStoryboard(name: "Main", bundle: nil)
+                        self.window?.rootViewController = mainStoryboard.instantiateViewController(withIdentifier: "teamListMasterVC")
+                    }
                 default:
                     CLSNSLogv("Signing out due to invalid userState", getVaList([]))
                     AWSMobileClient.sharedInstance().signOut()
@@ -144,24 +143,24 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         
         
         ///Start up Pinpoint
-        let pinpointConfiguration = AWSPinpointConfiguration.defaultPinpointConfiguration(launchOptions: launchOptions)
-        pinpoint = AWSPinpoint(configuration: pinpointConfiguration)
-        
-        if let targetingClient = pinpoint?.targetingClient {
-            
-            let endpoint = targetingClient.currentEndpointProfile()
-            //Users
-            if let userID = AWSMobileClient.sharedInstance().username {
-                let user = AWSPinpointEndpointProfileUser()
-                user.userId = userID
-                endpoint.user = user
-            }
-            
-            //Location
-//            let demo = AWSPinpointEndpointProfileDemographic()
-            
-            targetingClient.update(endpoint)
-        }
+//        let pinpointConfiguration = AWSPinpointConfiguration.defaultPinpointConfiguration(launchOptions: launchOptions)
+//        pinpoint = AWSPinpoint(configuration: pinpointConfiguration)
+//
+//        if let targetingClient = pinpoint?.targetingClient {
+//
+//            let endpoint = targetingClient.currentEndpointProfile()
+//            //Users
+//            if let userID = AWSMobileClient.sharedInstance().username {
+//                let user = AWSPinpointEndpointProfileUser()
+//                user.userId = userID
+//                endpoint.user = user
+//            }
+//
+//            //Location
+////            let demo = AWSPinpointEndpointProfileDemographic()
+//
+//            targetingClient.update(endpoint)
+//        }
         
         ///AWS App Sync Config
         let databaseURL = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0].appendingPathComponent("FASTAppSyncDatabase")
@@ -182,9 +181,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
                     return $0["key"]
                 }
             }
-            
-            ///TODO: - REMOVE / TEMP
-//            appSyncClient?.clearCache()
         } catch {
             CLSNSLogv("Error starting AppSync: \(error)", getVaList([]))
             Crashlytics.sharedInstance().recordError(error)
@@ -195,20 +191,20 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             CLSNSLogv("New User State: \(state)", getVaList([]))
             
             //Update the pinpoint endpoint profile
-            if let targetingClient = self.pinpoint?.targetingClient {
-                let endpoint = targetingClient.currentEndpointProfile()
-                
-                let user = AWSPinpointEndpointProfileUser()
-                
-                if state == UserState.signedIn {
-                    user.userId = AWSMobileClient.sharedInstance().username
-                } else {
-                    user.userId = nil
-                }
-                
-                endpoint.user = user
-                targetingClient.update(endpoint)
-            }
+//            if let targetingClient = self.pinpoint?.targetingClient {
+//                let endpoint = targetingClient.currentEndpointProfile()
+//
+//                let user = AWSPinpointEndpointProfileUser()
+//
+//                if state == UserState.signedIn {
+//                    user.userId = AWSMobileClient.sharedInstance().username
+//                } else {
+//                    user.userId = nil
+//                }
+//
+//                endpoint.user = user
+//                targetingClient.update(endpoint)
+//            }
             
             if state == UserState.signedOut {
                 self.appSyncClient?.clearCache()
@@ -221,6 +217,11 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             Analytics.setUserID(AWSMobileClient.sharedInstance().username)
             Analytics.setUserProperty(AWSMobileClient.sharedInstance().username, forName: "teamNumber")
             Crashlytics.sharedInstance().setUserName(AWSMobileClient.sharedInstance().username)
+        }
+        
+        //Set up the reloading manager
+        if AWSMobileClient.sharedInstance().currentUserState == .signedIn {
+            Globals.asyncLoadingManager = TBAUpdatingDataReloader()
         }
         
         return true

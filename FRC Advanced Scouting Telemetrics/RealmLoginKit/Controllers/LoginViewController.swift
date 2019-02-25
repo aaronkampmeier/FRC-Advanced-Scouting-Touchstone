@@ -19,6 +19,7 @@
 import UIKit
 import Crashlytics
 import AWSMobileClient
+import Firebase
 
 /** The visual styles in which the login controller can be displayed. */
 @objc public enum LoginViewControllerStyle: Int {
@@ -320,18 +321,24 @@ public class LoginViewController: UIViewController {
                 authenticationProvider.signUp { (result, error) in
                     DispatchQueue.main.async {
                         if let result = result {
+                            var state = ""
                             switch result.signUpConfirmationState {
                             case .confirmed:
                                 //Cool?
                                 self.showError(title: "Good to Go", message: "Seems like you are already good to go, try signing in now.")
                                 self.setRegistering(false, animated: true)
+                                state = "confirmed"
                             case .unconfirmed:
                                 //Needs to confirm via email
                                 self.showError(title: "Verification Required", message: "Verification is required via \(result.codeDeliveryDetails!.deliveryMedium) sent to \(result.codeDeliveryDetails!.destination ?? "unkown"). Please do this, then try signing in.")
                                 self.setRegistering(false, animated: true)
+                                state = "unconfirmed"
                             case .unknown:
                                 assertionFailure()
+                                state = "unknown"
                             }
+                            
+                            Globals.recordAnalyticsEvent(eventType: AnalyticsEventSignUp, attributes: [AnalyticsParameterSignUpMethod:"team_userpass", "state":state])
                         } else if let error = error {
                             CLSNSLogv("Error Signing Up: \(error)", getVaList([]))
                             Crashlytics.sharedInstance().recordError(error)
@@ -349,6 +356,7 @@ public class LoginViewController: UIViewController {
                             self.showError(title: "Error Signing In", message: (error as? AWSMobileClientError)?.message ?? error.localizedDescription)
                         } else if let result = result {
                             self.loginSuccessfulHandler?(result)
+                            Globals.recordAnalyticsEvent(eventType: AnalyticsEventLogin, attributes: [AnalyticsParameterMethod:"team_userpass"])
                         }
                         self.loginView.footerView.isSubmitting = false
                     }

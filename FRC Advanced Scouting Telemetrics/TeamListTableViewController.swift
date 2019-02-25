@@ -310,7 +310,9 @@ class TeamListTableViewController: UITableViewController, TeamListDetailDataSour
                 }
             }
         } else {
-            currentEventTeams = []
+            DispatchQueue.main.async {
+                self.currentEventTeams = []
+            }
         }
     }
     
@@ -354,7 +356,9 @@ class TeamListTableViewController: UITableViewController, TeamListDetailDataSour
                     }
                 } else {
                     if let error = error as? AWSAppSyncSubscriptionError {
-                        self?.resetSubscriptions()
+                        if error.recoverySuggestion != nil {
+                            self?.resetSubscriptions()
+                        }
                     }
                 }
             }
@@ -374,7 +378,9 @@ class TeamListTableViewController: UITableViewController, TeamListDetailDataSour
                         //TODO: Edit the transaction cache
                     } else {
                         if let error = error as? AWSAppSyncSubscriptionError {
-                            self?.resetSubscriptions()
+                            if error.recoverySuggestion != nil {
+                                self?.resetSubscriptions()
+                            }
                         }
                     }
                 }
@@ -391,7 +397,9 @@ class TeamListTableViewController: UITableViewController, TeamListDetailDataSour
                         }
                     } else {
                         if let error = error as? AWSAppSyncSubscriptionError {
-                            self?.resetSubscriptions()
+                            if error.recoverySuggestion != nil {
+                                self?.resetSubscriptions()
+                            }
                         }
                     }
                 }
@@ -427,17 +435,24 @@ class TeamListTableViewController: UITableViewController, TeamListDetailDataSour
             }
         }
         
+        //Show the Deep Space welcome if it has not been shown
+        if !(UserDefaults.standard.value(forKey: "HasShownDeepSpaceWelcome") as? Bool ?? false) {
+            let deepSpaceWelcome = storyboard!.instantiateViewController(withIdentifier: "deepSpaceWelcome")
+            self.present(deepSpaceWelcome, animated: true, completion: nil)
+        }
+        
         let hasShownInstructionalAlertKey = "FAST-HasShownInstructionalAlert"
         //Show an instructional alert about the event ranks
-        if Globals.isInSpectatorMode && !(UserDefaults.standard.value(forKey: hasShownInstructionalAlertKey) as? Bool ?? false) {
+        if !Globals.isInSpectatorMode && !(UserDefaults.standard.value(forKey: hasShownInstructionalAlertKey) as? Bool ?? false) {
             //Wait until the user has finished adding the first event
             if selectedEventKey != nil {
                 //Now show it
                 let alert = UIAlertController(title: "Important Tip", message: "The edit button on the bottom left allows you to reorder the team list however you would like in order to bring your favorite teams to the top. The rank numbers on the left correspond to this order and not the event qualification ranking. To find the qualification ranking of a team, click into that team's detail page or use the sort menu.", preferredStyle: .alert)
-                alert.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
+                alert.addAction(UIAlertAction(title: "OK", style: .default, handler: {_ in
+                    UserDefaults.standard.set(true, forKey: hasShownInstructionalAlertKey)
+                }))
                 self.present(alert, animated: true, completion: nil)
                 
-                UserDefaults.standard.set(true, forKey: hasShownInstructionalAlertKey)
             }
         }
     }

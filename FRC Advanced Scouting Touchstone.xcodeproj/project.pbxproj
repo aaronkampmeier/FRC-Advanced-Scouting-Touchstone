@@ -84,6 +84,7 @@
 		938BEC1B22029ED9002B39D7 /* awsconfiguration.json in Resources */ = {isa = PBXBuildFile; fileRef = 938BEC1A22029ED4002B39D7 /* awsconfiguration.json */; };
 		938E0B3C2056D85C00666FA7 /* TBAAsyncManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 938E0B3B2056D85C00666FA7 /* TBAAsyncManager.swift */; };
 		9391EA6C1E4852D2008E17A1 /* PitStringFieldCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9391EA6B1E4852D2008E17A1 /* PitStringFieldCollectionViewCell.swift */; };
+		93A1E28E2223921900A782FC /* DeepSpaceWelcomeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93A1E28D2223921900A782FC /* DeepSpaceWelcomeViewController.swift */; };
 		93A38B3A2055EBA400B8B692 /* NoEventSelected.xib in Resources */ = {isa = PBXBuildFile; fileRef = 93A38B392055EBA400B8B692 /* NoEventSelected.xib */; };
 		93A38B3F2055F49F00B8B692 /* NoEventSelectedView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93A38B3E2055F49F00B8B692 /* NoEventSelectedView.swift */; };
 		93A3ABC321F1462F007831E3 /* PitScoutingData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93A3ABC221F1462F007831E3 /* PitScoutingData.swift */; };
@@ -242,6 +243,7 @@
 		938D9CB01E1B05BA00A5E522 /* FASTTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FASTTests.swift; sourceTree = "<group>"; };
 		938E0B3B2056D85C00666FA7 /* TBAAsyncManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TBAAsyncManager.swift; sourceTree = "<group>"; };
 		9391EA6B1E4852D2008E17A1 /* PitStringFieldCollectionViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PitStringFieldCollectionViewCell.swift; sourceTree = "<group>"; };
+		93A1E28D2223921900A782FC /* DeepSpaceWelcomeViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeepSpaceWelcomeViewController.swift; sourceTree = "<group>"; };
 		93A38B392055EBA400B8B692 /* NoEventSelected.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = NoEventSelected.xib; sourceTree = "<group>"; };
 		93A38B3E2055F49F00B8B692 /* NoEventSelectedView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NoEventSelectedView.swift; sourceTree = "<group>"; };
 		93A3ABC221F1462F007831E3 /* PitScoutingData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PitScoutingData.swift; sourceTree = "<group>"; };
@@ -305,6 +307,7 @@
 				1F4534131C6FFC13004EDDB9 /* Stands Scouting */,
 				936594801E44198D008FF324 /* Pit Scouting */,
 				93C609201E67CE9B007A689D /* Match Overview */,
+				93A1E28D2223921900A782FC /* DeepSpaceWelcomeViewController.swift */,
 			);
 			name = "View Controllers";
 			sourceTree = "<group>";
@@ -815,7 +818,6 @@
 				"${BUILT_PRODUCTS_DIR}/AWSCognitoIdentityProviderASF/AWSCognitoIdentityProviderASF.framework",
 				"${BUILT_PRODUCTS_DIR}/AWSCore/AWSCore.framework",
 				"${BUILT_PRODUCTS_DIR}/AWSMobileClient/AWSMobileClient.framework",
-				"${BUILT_PRODUCTS_DIR}/AWSPinpoint/AWSPinpoint.framework",
 				"${BUILT_PRODUCTS_DIR}/AWSUserPoolsSignIn/AWSUserPoolsSignIn.framework",
 				"${BUILT_PRODUCTS_DIR}/Alamofire/Alamofire.framework",
 				"${BUILT_PRODUCTS_DIR}/BRYSerialAnimationQueue/BRYSerialAnimationQueue.framework",
@@ -845,7 +847,6 @@
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/AWSCognitoIdentityProviderASF.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/AWSCore.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/AWSMobileClient.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/AWSPinpoint.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/AWSUserPoolsSignIn.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Alamofire.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/BRYSerialAnimationQueue.framework",
@@ -966,6 +967,7 @@
 				93DA5164221E743600254BF3 /* ScoutSession.swift in Sources */,
 				1FBB426D1C9A29FC0017E36C /* Statistics.swift in Sources */,
 				93D75B641E5D0866002CBED2 /* FieldLocationDisplayViewController.swift in Sources */,
+				93A1E28E2223921900A782FC /* DeepSpaceWelcomeViewController.swift in Sources */,
 				936967F11E4FB1F7001DB15D /* TeamDetailCollectionViewController.swift in Sources */,
 				937C682E204C86DB00FAEDE8 /* SelectStatsTableViewController.swift in Sources */,
 				937BFD022064D1B4006FB3E0 /* OnboardingPageViewController.swift in Sources */,

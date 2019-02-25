@@ -2811,6 +2811,7 @@
                         </constraints>
                     </view>
                     <connections>
+                        <outlet property="descriptionLabel" destination="h6m-Aq-S70" id="tM7-EM-Nvg"/>
                         <outlet property="logInView" destination="fk3-kT-5JM" id="nP2-hW-xC9"/>
                         <outlet property="signUpView" destination="fGE-NZ-0GQ" id="qhB-dS-PRr"/>
                         <outlet property="spectatorView" destination="ylp-2w-MAM" id="bpg-QM-Zcr"/>
@@ -4034,10 +4035,10 @@
             </objects>
             <point key="canvasLocation" x="-1240" y="308"/>
         </scene>
-        <!--View Controller-->
+        <!--Deep Space Welcome View Controller-->
         <scene sceneID="9V5-MF-MqJ">
             <objects>
-                <viewController id="ukr-iZ-M0I" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="deepSpaceWelcome" modalPresentationStyle="formSheet" id="ukr-iZ-M0I" customClass="DeepSpaceWelcomeViewController" customModule="FRC_Advanced_Scouting_Touchstone" customModuleProvider="target" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="8yo-4g-DhO"/>
                         <viewControllerLayoutGuide type="bottom" id="dhw-eM-IXK"/>
@@ -4046,19 +4047,63 @@
                         <rect key="frame" x="0.0" y="0.0" width="1024" height="768"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="K4H-fd-QcJ">
-                                <rect key="frame" x="491" y="79" width="42" height="21"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                <nil key="textColor"/>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" verticalCompressionResistancePriority="1000" text="Welcome to FRC Deep Space!" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="K4H-fd-QcJ">
+                                <rect key="frame" x="263.5" y="40" width="497" height="42"/>
+                                <fontDescription key="fontDescription" type="system" weight="heavy" pointSize="35"/>
+                                <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <nil key="highlightedColor"/>
                             </label>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" minimumScaleFactor="0.80000000000000004" translatesAutoresizingMaskIntoConstraints="NO" id="rTi-mk-BOY">
+                                <rect key="frame" x="58" y="497.5" width="908.5" height="64.5"/>
+                                <string key="text">FAST is ready for the 2019 Deep Space competition with a brand new update that focuses on adaptability, performance, and future development. This includes a brand new pit scouting, stands scouting, and statistics designed for the 2019 competition. To get started simply add in your first 2019 events.</string>
+                                <fontDescription key="fontDescription" type="system" weight="medium" pointSize="18"/>
+                                <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="FIRST-DestDeepSpace-logo_reverse-sponsor" translatesAutoresizingMaskIntoConstraints="NO" id="ifw-Wa-g9y">
+                                <rect key="frame" x="358.5" y="190.5" width="307" height="307"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" relation="lessThanOrEqual" constant="307" id="dnK-kR-D97"/>
+                                    <constraint firstAttribute="width" secondItem="ifw-Wa-g9y" secondAttribute="height" multiplier="1:1" id="nCA-8J-ekr"/>
+                                </constraints>
+                            </imageView>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="fnF-va-fbp">
+                                <rect key="frame" x="362" y="688" width="300" height="60"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="300" id="Hzm-B0-UfX"/>
+                                    <constraint firstAttribute="height" constant="60" id="sVb-zv-mdS"/>
+                                </constraints>
+                                <state key="normal" title="Get Started"/>
+                                <connections>
+                                    <action selector="pressedButton:" destination="ukr-iZ-M0I" eventType="touchUpInside" id="1Wh-oj-FlL"/>
+                                </connections>
+                            </button>
                         </subviews>
-                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        <color key="backgroundColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        <constraints>
+                            <constraint firstItem="fnF-va-fbp" firstAttribute="centerX" secondItem="p3Y-p2-m3R" secondAttribute="centerX" id="377-03-Rx7"/>
+                            <constraint firstAttribute="trailing" relation="greaterThanOrEqual" secondItem="K4H-fd-QcJ" secondAttribute="trailing" constant="20" id="CEY-h1-lBI"/>
+                            <constraint firstItem="fnF-va-fbp" firstAttribute="top" relation="greaterThanOrEqual" secondItem="rTi-mk-BOY" secondAttribute="bottom" constant="10" id="D8L-6p-b06"/>
+                            <constraint firstItem="ifw-Wa-g9y" firstAttribute="centerX" secondItem="p3Y-p2-m3R" secondAttribute="centerX" id="N6d-Ba-INY"/>
+                            <constraint firstItem="rTi-mk-BOY" firstAttribute="centerX" secondItem="p3Y-p2-m3R" secondAttribute="centerX" id="QYA-1D-d4A"/>
+                            <constraint firstItem="dhw-eM-IXK" firstAttribute="top" secondItem="fnF-va-fbp" secondAttribute="bottom" constant="20" id="Wzs-BS-mAC"/>
+                            <constraint firstItem="K4H-fd-QcJ" firstAttribute="top" secondItem="8yo-4g-DhO" secondAttribute="bottom" constant="20" id="d0W-rO-xOk"/>
+                            <constraint firstItem="ifw-Wa-g9y" firstAttribute="centerY" secondItem="p3Y-p2-m3R" secondAttribute="centerY" constant="-40" id="eUu-7v-aQj"/>
+                            <constraint firstItem="K4H-fd-QcJ" firstAttribute="centerX" secondItem="p3Y-p2-m3R" secondAttribute="centerX" id="gY0-6O-ZMg"/>
+                            <constraint firstItem="rTi-mk-BOY" firstAttribute="top" secondItem="ifw-Wa-g9y" secondAttribute="bottom" id="qso-1g-ArW"/>
+                            <constraint firstItem="ifw-Wa-g9y" firstAttribute="top" relation="greaterThanOrEqual" secondItem="K4H-fd-QcJ" secondAttribute="bottom" constant="30" id="vbJ-hs-rfu"/>
+                            <constraint firstAttribute="trailingMargin" relation="greaterThanOrEqual" secondItem="rTi-mk-BOY" secondAttribute="trailing" constant="20" id="wII-QV-cek"/>
+                        </constraints>
                     </view>
+                    <connections>
+                        <outlet property="button" destination="fnF-va-fbp" id="hjE-mI-6Tp"/>
+                        <outlet property="descriptionLabel" destination="rTi-mk-BOY" id="LBn-WA-fea"/>
+                        <outlet property="iconImageView" destination="ifw-Wa-g9y" id="NKV-xr-Tuc"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="WFx-CR-DHZ" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
+            <point key="canvasLocation" x="101" y="109"/>
         </scene>
     </scenes>
     <resources>
@@ -4068,6 +4113,7 @@
         <image name="Chart" width="13" height="13"/>
         <image name="Cyborg Cat Simple" width="650" height="541"/>
         <image name="Edit" width="54" height="54"/>
+        <image name="FIRST-DestDeepSpace-logo_reverse-sponsor" width="792.239990234375" height="792.239990234375"/>
         <image name="My Team Indicator" width="24" height="24"/>
         <image name="Pit Scouting" width="39.857143402099609" height="39.857143402099609"/>
         <image name="Plus Math Filled-100" width="100" height="100"/>

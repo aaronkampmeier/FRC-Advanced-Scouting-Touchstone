@@ -35,12 +35,16 @@ class TBAUpdatingDataReloader {
 
         resetSubscriptions()
         
+        getTrackedEvents()
+    }
+    
+    func getTrackedEvents() {
         trackedEventWatcher = Globals.appDelegate.appSyncClient?.watch(query: ListTrackedEventsQuery(), cachePolicy: .returnCacheDataAndFetch, resultHandler: {[weak self] (result, error) in
             if Globals.handleAppSyncErrors(forQuery: "ListTrackedEventsQuery-AsyncManager", result: result, error: error) {
                 self?.trackedEvents = result?.data?.listTrackedEvents?.map({$0!}) ?? []
                 self?.setGeneralUpdaters()
             } else {
-                
+                self?.getTrackedEvents()
             }
         })
     }
@@ -61,8 +65,10 @@ class TBAUpdatingDataReloader {
                         }
                     }
                 } else {
-                    if let _ = error as? AWSAppSyncSubscriptionError {
-                        self?.resetSubscriptions()
+                    if let error = error as? AWSAppSyncSubscriptionError {
+                        if error.recoverySuggestion != nil {
+                            self?.resetSubscriptions()
+                        }
                     }
                 }
             })
@@ -80,8 +86,10 @@ class TBAUpdatingDataReloader {
                         }
                     }
                 } else {
-                    if let _ = error as? AWSAppSyncSubscriptionError {
-                        self?.resetSubscriptions()
+                    if let error = error as? AWSAppSyncSubscriptionError {
+                        if error.recoverySuggestion != nil {
+                            self?.resetSubscriptions()
+                        }
                     }
                 }
             })
@@ -117,7 +125,7 @@ class TBAUpdatingDataReloader {
                 }
                 //Reload OPR
                 Globals.appDelegate.appSyncClient?.fetch(query: ListEventOprsQuery(eventKey: eventKey), cachePolicy: .fetchIgnoringCacheData, queue: self!.backgroundQueue, resultHandler: { (result, error) in
-                    CLSNSLogv("Background reload of oprs for event \(eventKey) completed with errors \(Globals.descriptions(ofError: error, andResult: result))", getVaList([]))
+                    CLSNSLogv("Background reload of oprs for event \(eventKey) completed \(Globals.descriptions(ofError: error, andResult: result))", getVaList([]))
                     let successful = Globals.handleAppSyncErrors(forQuery: "AsyncManager-ListEventOPRs", result: result, error: error)
                     Globals.recordAnalyticsEvent(eventType: "async_loaded_oprs", attributes: ["successful":successful.description])
                 })
@@ -140,7 +148,7 @@ class TBAUpdatingDataReloader {
                     return
                 }
                 Globals.appDelegate.appSyncClient?.fetch(query: ListMatchesQuery(eventKey: eventKey), cachePolicy: .fetchIgnoringCacheData, queue: self!.backgroundQueue, resultHandler: { (result, error) in
-                    CLSNSLogv("Background reload of matches for event \(eventKey) completed with errors \(Globals.descriptions(ofError: error, andResult: result))", getVaList([]))
+                    CLSNSLogv("Background reload of matches for event \(eventKey) completed \(Globals.descriptions(ofError: error, andResult: result))", getVaList([]))
                     
                     let successful = Globals.handleAppSyncErrors(forQuery: "AsyncManager-ListMatches", result: result, error: error)
                     Globals.recordAnalyticsEvent(eventType: "async_loaded_matches", attributes: ["successful":successful.description])
@@ -165,7 +173,7 @@ class TBAUpdatingDataReloader {
                 }
                 
                 Globals.appDelegate.appSyncClient?.fetch(query: ListTeamEventStatusesQuery(eventKey: eventKey), cachePolicy: .fetchIgnoringCacheData, queue: self!.backgroundQueue, resultHandler: { (result, error) in
-                    CLSNSLogv("Background reload of team statuses for event \(eventKey) completed with errors \(Globals.descriptions(ofError: error, andResult: result))", getVaList([]))
+                    CLSNSLogv("Background reload of team statuses for event \(eventKey) completed \(Globals.descriptions(ofError: error, andResult: result))", getVaList([]))
                     
                     let successful = Globals.handleAppSyncErrors(forQuery: "AsyncManager-ListTeamEventStatuses", result: result, error: error)
                     Globals.recordAnalyticsEvent(eventType: "async_loaded_event_statuses", attributes: ["successful":successful.description])

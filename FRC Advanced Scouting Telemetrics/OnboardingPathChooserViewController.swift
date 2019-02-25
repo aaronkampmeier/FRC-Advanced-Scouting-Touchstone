@@ -8,12 +8,12 @@
 
 import UIKit
 //import SSBouncyButton
-import AWSPinpoint
 
 class OnboardingPathChooserViewController: UIViewController {
     @IBOutlet weak var spectatorView: UIView!
     @IBOutlet weak var signUpView: UIView!
     @IBOutlet weak var logInView: UIView!
+    @IBOutlet weak var descriptionLabel: UILabel!
     
     var spectatorBouncyButton: UIButton!
     var logInBouncyButton: UIButton!
@@ -21,12 +21,13 @@ class OnboardingPathChooserViewController: UIViewController {
     
     let buttonCornerRadius: CGFloat = 5
     
-    let pinpoint = Globals.appDelegate.pinpoint
+//    let pinpoint = Globals.appDelegate.pinpoint
     
     override func viewDidLoad() {
         super.viewDidLoad()
 
         // Do any additional setup after loading the view.
+        descriptionLabel.text = /*"If you're a spectator (anyone who isn't scouting data), just use FAST without logging in.*/ "To use FAST to scout teams, track performance statistics, and sync data across all of your team, log in or sign up for a team account."
         
         spectatorView.backgroundColor = nil
         logInView.backgroundColor = nil
@@ -59,6 +60,9 @@ class OnboardingPathChooserViewController: UIViewController {
         self.view.addSubview(signUpBouncyButton)
         
         updateButtonFrames()
+        
+        //TODO: Fix Spectator Implementation
+        spectatorBouncyButton.isHidden = true
     }
     
     func updateButtonFrames() {
@@ -85,11 +89,7 @@ class OnboardingPathChooserViewController: UIViewController {
         
         self.view.window?.rootViewController = teamListVC
         
-        //Pinpoint
-        let event = pinpoint?.analyticsClient.createEvent(withEventType: "Onboarding Completed")
-        event?.addAttribute("Spectator", forKey: "Onboarded Route")
-        pinpoint?.analyticsClient.record(event!)
-        pinpoint?.analyticsClient.submitEvents()
+        Globals.recordAnalyticsEvent(eventType: "onboarding_completed", attributes: ["path":"spectator"])
     }
     
     @objc func logInPressed() {
@@ -98,10 +98,7 @@ class OnboardingPathChooserViewController: UIViewController {
 //        self.present(loginVC, animated: true, completion: nil)
         Globals.appDelegate.displayLogin(isRegistering: false, onVC: self)
         
-        let event = pinpoint?.analyticsClient.createEvent(withEventType: "Onboarding Completed")
-        event?.addAttribute("Log In", forKey: "Onboarded Route")
-        pinpoint?.analyticsClient.record(event!)
-        pinpoint?.analyticsClient.submitEvents()
+        Globals.recordAnalyticsEvent(eventType: "onboarding_completed", attributes: ["path":"login"])
     }
     
     @objc func signUpPressed() {
@@ -112,10 +109,7 @@ class OnboardingPathChooserViewController: UIViewController {
         
         Globals.appDelegate.displayLogin(isRegistering: true, onVC: self)
         
-        let event = pinpoint?.analyticsClient.createEvent(withEventType: "Onboarding Completed")
-        event?.addAttribute("Sign Up", forKey: "Onboarded Route")
-        pinpoint?.analyticsClient.record(event!)
-        pinpoint?.analyticsClient.submitEvents()
+        Globals.recordAnalyticsEvent(eventType: "onboarding_completed", attributes: ["path":"sign_up"])
     }
 
     /*

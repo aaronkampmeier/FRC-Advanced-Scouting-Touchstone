@@ -7,7 +7,6 @@
 //
 
 import UIKit
-import AWSPinpoint
 import Firebase
 import Crashlytics
 
