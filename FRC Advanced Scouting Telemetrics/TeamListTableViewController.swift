@@ -338,6 +338,7 @@ class TeamListTableViewController: UITableViewController, TeamListDetailDataSour
     
     
     var deleteTrackedEventSubscriber: AWSAppSync.AWSAppSyncSubscriptionWatcher<OnRemoveTrackedEventSubscription>?
+    var addTrackedEventSubscriber: AWSAppSyncSubscriptionWatcher<OnAddTrackedEventSubscription>?
     var changeTeamRankSubscriber: AWSAppSync.AWSAppSyncSubscriptionWatcher<OnUpdateTeamRankSubscription>?
     var pickedTeamSubscriber: AWSAppSync.AWSAppSyncSubscriptionWatcher<OnSetTeamPickedSubscription>?
     func resetSubscriptions() {
@@ -347,21 +348,31 @@ class TeamListTableViewController: UITableViewController, TeamListDetailDataSour
         do {
             let subscription = OnRemoveTrackedEventSubscription(userID: AWSMobileClient.sharedInstance().username ?? "")
             deleteTrackedEventSubscriber = try Globals.appDelegate.appSyncClient?.subscribe(subscription: subscription) {[weak self] (result, transaction, error) in
-                if Globals.handleAppSyncErrors(forQuery: "OnRemoveTrackedEventSubscription", result: result, error: error) {
-                    //Simply returns the event key
-                    let removedEventKey: String = result!.data!.onRemoveTrackedEvent!.eventKey
-                    if self?.selectedEventKey ?? "" == removedEventKey {
-                        //TODO: Use transaction to edit cache
-                        self?.eventSelected(nil)
-                    }
-                } else {
-                    if let error = error as? AWSAppSyncSubscriptionError {
-                        if error.recoverySuggestion != nil {
-                            self?.resetSubscriptions()
+                DispatchQueue.main.async {
+                    if Globals.handleAppSyncErrors(forQuery: "OnRemoveTrackedEventSubscription", result: result, error: error) {
+                        //Simply returns the event key
+                        let removedEventKey: String = result!.data!.onRemoveTrackedEvent!.eventKey
+                        if self?.selectedEventKey ?? "" == removedEventKey {
+                            //TODO: Use transaction to edit cache
+                            self?.eventSelected(nil)
+                        }
+                    } else {
+                        if let error = error as? AWSAppSyncSubscriptionError {
+                            if error.recoverySuggestion != nil {
+                                self?.resetSubscriptions()
+                            }
                         }
                     }
                 }
             }
+            
+            addTrackedEventSubscriber = try Globals.appDelegate.appSyncClient?.subscribe(subscription: OnAddTrackedEventSubscription(userID: AWSMobileClient.sharedInstance().username ?? ""), resultHandler: {[weak self] (result, transaction, error) in
+                if self?.selectedEventKey == nil, let newKey = result?.data?.onAddTrackedEvent?.eventKey {
+                    DispatchQueue.main.async {
+                        self?.eventSelected(newKey)
+                    }
+                }
+            })
         } catch {
             CLSNSLogv("Error starting subscriptions: \(error)", getVaList([]))
             Crashlytics.sharedInstance().recordError(error)
