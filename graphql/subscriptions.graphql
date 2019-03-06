@@ -21,7 +21,7 @@ subscription OnSetTeamPicked($userID: ID!, $eventKey: String!) {
     ...EventRanking
   }
 }
-subscription OnUpdateScoutedTeam($userID: ID!, $eventKey: ID!, $teamKey: ID!) {
+subscription OnUpdateScoutedTeam($userID: ID!, $eventKey: ID!, $teamKey: ID) {
   onUpdateScoutedTeam(userID: $userID, eventKey: $eventKey, teamKey: $teamKey) {
     ...ScoutedTeam
   }

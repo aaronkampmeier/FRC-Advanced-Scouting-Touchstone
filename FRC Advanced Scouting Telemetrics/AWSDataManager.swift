@@ -7,7 +7,10 @@
 //
 
 import Foundation
+import Crashlytics
 import AWSMobileClient
+import AWSAppSync
+import AWSS3
 
 class AWSDataManager {
     
@@ -18,5 +21,11 @@ class AWSDataManager {
         //Show the onboarding
         let vc = UIStoryboard(name: "Main", bundle: nil).instantiateInitialViewController()
         Globals.appDelegate.window?.rootViewController = vc
+    }
+}
+
+class FASTAppSyncStateChangeHandler: ConnectionStateChangeHandler {
+    func stateChanged(networkState: ClientNetworkAccessState) {
+        CLSNSLogv("App Sync Connection State Changed: \(networkState)", getVaList([]))
     }
 }

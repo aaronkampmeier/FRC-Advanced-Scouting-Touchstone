@@ -33,12 +33,11 @@
 		932354461E41686B0039386A /* SuperNotesCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 932354451E41686B0039386A /* SuperNotesCollectionViewCell.swift */; };
 		932C344C1E12DC2600A23203 /* EventInfoVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 932C344B1E12DC2600A23203 /* EventInfoVC.swift */; };
 		932ED30B221523CA00396A41 /* OptionSelectorViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 932ED30A221523CA00396A41 /* OptionSelectorViewController.swift */; };
-		9339A9AB222277BB00D3D82C /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 9339A9A9222277BA00D3D82C /* GoogleService-Info.plist */; };
-		9339A9AC222277BB00D3D82C /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 9339A9A9222277BA00D3D82C /* GoogleService-Info.plist */; };
-		9339A9AD222277BB00D3D82C /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 9339A9A9222277BA00D3D82C /* GoogleService-Info.plist */; };
 		9339A9B22223408A00D3D82C /* AppSyncExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9339A9B12223408A00D3D82C /* AppSyncExtensions.swift */; };
 		933D214B1E609A04008C8276 /* Pods-acknowledgments.plist in Resources */ = {isa = PBXBuildFile; fileRef = 933D214A1E609A04008C8276 /* Pods-acknowledgments.plist */; };
 		933D21511E609BF7008C8276 /* Additional Licenses.plist in Resources */ = {isa = PBXBuildFile; fileRef = 933D21501E609BF7008C8276 /* Additional Licenses.plist */; };
+		9342D6BC222C58AB006A1A79 /* TeamimageLoader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9342D6BB222C58AB006A1A79 /* TeamimageLoader.swift */; };
+		9342D6C0222F5BAC006A1A79 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 9342D6BF222F5BAA006A1A79 /* GoogleService-Info.plist */; };
 		9349621F21E9A40500F761BD /* ScoutedTeamStats.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9349621E21E9A40500F761BD /* ScoutedTeamStats.swift */; };
 		934F4C1622066AB100A6F5FE /* LoginFormValidation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 934F4BFF22066AB100A6F5FE /* LoginFormValidation.swift */; };
 		934F4C1722066AB100A6F5FE /* LoginTableViewDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = 934F4C0122066AB100A6F5FE /* LoginTableViewDataSource.swift */; };
@@ -193,10 +192,11 @@
 		932354451E41686B0039386A /* SuperNotesCollectionViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SuperNotesCollectionViewCell.swift; sourceTree = "<group>"; };
 		932C344B1E12DC2600A23203 /* EventInfoVC.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EventInfoVC.swift; sourceTree = "<group>"; };
 		932ED30A221523CA00396A41 /* OptionSelectorViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OptionSelectorViewController.swift; sourceTree = "<group>"; };
-		9339A9A9222277BA00D3D82C /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		9339A9B12223408A00D3D82C /* AppSyncExtensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppSyncExtensions.swift; sourceTree = "<group>"; };
 		933D214A1E609A04008C8276 /* Pods-acknowledgments.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "Pods-acknowledgments.plist"; sourceTree = "<group>"; };
 		933D21501E609BF7008C8276 /* Additional Licenses.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "Additional Licenses.plist"; sourceTree = "<group>"; };
+		9342D6BB222C58AB006A1A79 /* TeamimageLoader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TeamimageLoader.swift; sourceTree = "<group>"; };
+		9342D6BF222F5BAA006A1A79 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = SOURCE_ROOT; };
 		9349621E21E9A40500F761BD /* ScoutedTeamStats.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScoutedTeamStats.swift; sourceTree = "<group>"; };
 		934F4BFF22066AB100A6F5FE /* LoginFormValidation.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LoginFormValidation.swift; sourceTree = "<group>"; };
 		934F4C0122066AB100A6F5FE /* LoginTableViewDataSource.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LoginTableViewDataSource.swift; sourceTree = "<group>"; };
@@ -386,6 +386,7 @@
 				934F4C4F22112BBB00A6F5FE /* Stands Scouting Data Model */,
 				93A3ABC221F1462F007831E3 /* PitScoutingData.swift */,
 				938E0B3B2056D85C00666FA7 /* TBAAsyncManager.swift */,
+				9342D6BB222C58AB006A1A79 /* TeamimageLoader.swift */,
 				93A38B3D2055EBAA00B8B692 /* Views */,
 				1F21DF101C645D1F00C55D0E /* View Controllers */,
 				936572E01E1610CA00439728 /* About.rtf */,
@@ -396,7 +397,7 @@
 				933D21501E609BF7008C8276 /* Additional Licenses.plist */,
 				933D214A1E609A04008C8276 /* Pods-acknowledgments.plist */,
 				938BEC1A22029ED4002B39D7 /* awsconfiguration.json */,
-				9339A9A9222277BA00D3D82C /* GoogleService-Info.plist */,
+				9342D6BF222F5BAA006A1A79 /* GoogleService-Info.plist */,
 			);
 			name = "FRC Advanced Scouting Touchstone";
 			path = "FRC Advanced Scouting Telemetrics";
@@ -641,6 +642,7 @@
 				1F7AE4DF1DCC2DC80029B420 /* Embed Frameworks */,
 				57ABF9A67635DC59BFEDA095 /* [CP] Embed Pods Frameworks */,
 				9339A9B52223553B00D3D82C /* Run Crashlytics Script */,
+				9342D6C1222F5C3D006A1A79 /* Primary Upload dSYMs */,
 			);
 			buildRules = (
 			);
@@ -779,7 +781,7 @@
 				93A38B3A2055EBA400B8B692 /* NoEventSelected.xib in Resources */,
 				938BEC1B22029ED9002B39D7 /* awsconfiguration.json in Resources */,
 				933D214B1E609A04008C8276 /* Pods-acknowledgments.plist in Resources */,
-				9339A9AB222277BB00D3D82C /* GoogleService-Info.plist in Resources */,
+				9342D6C0222F5BAC006A1A79 /* GoogleService-Info.plist in Resources */,
 				93780A3020799F9C000B4565 /* LoginPromotionalText.rtf in Resources */,
 				1F78E7881C3B469300221927 /* Main.storyboard in Resources */,
 			);
@@ -789,7 +791,6 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				9339A9AD222277BB00D3D82C /* GoogleService-Info.plist in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -797,7 +798,6 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				9339A9AC222277BB00D3D82C /* GoogleService-Info.plist in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -818,6 +818,7 @@
 				"${BUILT_PRODUCTS_DIR}/AWSCognitoIdentityProviderASF/AWSCognitoIdentityProviderASF.framework",
 				"${BUILT_PRODUCTS_DIR}/AWSCore/AWSCore.framework",
 				"${BUILT_PRODUCTS_DIR}/AWSMobileClient/AWSMobileClient.framework",
+				"${BUILT_PRODUCTS_DIR}/AWSS3/AWSS3.framework",
 				"${BUILT_PRODUCTS_DIR}/AWSUserPoolsSignIn/AWSUserPoolsSignIn.framework",
 				"${BUILT_PRODUCTS_DIR}/Alamofire/Alamofire.framework",
 				"${BUILT_PRODUCTS_DIR}/BRYSerialAnimationQueue/BRYSerialAnimationQueue.framework",
@@ -847,6 +848,7 @@
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/AWSCognitoIdentityProviderASF.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/AWSCore.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/AWSMobileClient.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/AWSS3.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/AWSUserPoolsSignIn.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Alamofire.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/BRYSerialAnimationQueue.framework",
@@ -892,7 +894,7 @@
 		};
 		9339A9B52223553B00D3D82C /* Run Crashlytics Script */ = {
 			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
+			buildActionMask = 8;
 			files = (
 			);
 			inputFileListPaths = (
@@ -905,9 +907,27 @@
 			);
 			outputPaths = (
 			);
-			runOnlyForDeploymentPostprocessing = 0;
+			runOnlyForDeploymentPostprocessing = 1;
 			shellPath = /bin/sh;
 			shellScript = "# Type a script or drag a script file from your workspace to insert its path.\n\"${PODS_ROOT}/Fabric/run\"\n";
+		};
+		9342D6C1222F5C3D006A1A79 /* Primary Upload dSYMs */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+			);
+			name = "Primary Upload dSYMs";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "# Type a script or drag a script file from your workspace to insert its path.\n\"${PODS_ROOT}/Fabric/upload-symbols\" -gsp \"${PROJECT_DIR}/GoogleService-Info.plist\" -p ios \"${DWARF_DSYM_FOLDER_PATH}/${DWARF_DSYM_FILE_NAME}\"\n";
 		};
 		93610E301E42E2B200856BE2 /* Increment Build Number */ = {
 			isa = PBXShellScriptBuildPhase;
@@ -955,6 +975,7 @@
 				1F78E7831C3B469300221927 /* AppDelegate.swift in Sources */,
 				937BFD0420657E9E006FB3E0 /* OnboardingPathChooserViewController.swift in Sources */,
 				9353ADBC1E57ACF100120F1A /* MatchesTableViewController.swift in Sources */,
+				9342D6BC222C58AB006A1A79 /* TeamimageLoader.swift in Sources */,
 				934F4C4B2210BB3B00A6F5FE /* StandsScoutingModel.swift in Sources */,
 				93C5B47C1E53FC9C007D309F /* TeamInfoScrollView.swift in Sources */,
 				93C609241E67D035007A689D /* MatchOverviewDetailViewController.swift in Sources */,

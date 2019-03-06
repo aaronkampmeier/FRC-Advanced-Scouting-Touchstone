@@ -6,12 +6,14 @@
 //
 
 import UIKit
+import Fabric
 import Crashlytics
 import AWSAppSync
 import AWSMobileClient
 import AWSAuthCore
 import AWSAuthUI
 import Firebase
+import AWSS3
 
 internal struct Globals {
     static unowned let appDelegate = UIApplication.shared.delegate as! AppDelegate
@@ -105,8 +107,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         // Override point for customization after application launch.
-        
         FirebaseApp.configure()
+        Fabric.with([Crashlytics.self])
         
         ///AWS Cognito Initialization
         AWSMobileClient.sharedInstance().initialize {userState, error in
@@ -141,30 +143,14 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             }
         }
         
-        
-        ///Start up Pinpoint
-//        let pinpointConfiguration = AWSPinpointConfiguration.defaultPinpointConfiguration(launchOptions: launchOptions)
-//        pinpoint = AWSPinpoint(configuration: pinpointConfiguration)
-//
-//        if let targetingClient = pinpoint?.targetingClient {
-//
-//            let endpoint = targetingClient.currentEndpointProfile()
-//            //Users
-//            if let userID = AWSMobileClient.sharedInstance().username {
-//                let user = AWSPinpointEndpointProfileUser()
-//                user.userId = userID
-//                endpoint.user = user
-//            }
-//
-//            //Location
-////            let demo = AWSPinpointEndpointProfileDemographic()
-//
-//            targetingClient.update(endpoint)
-//        }
-        
         ///AWS App Sync Config
         let databaseURL = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0].appendingPathComponent("FASTAppSyncDatabase")
         do {
+            
+            let serviceConfig = try AWSAppSyncServiceConfig()
+            
+//            let appSyncConfig = try AWSAppSyncClientConfiguration(url: URL(string: "")!, serviceRegion: .USEast1, userPoolsAuthProvider: FASTCognitoUserPoolsAuthProvider(), databaseURL: databaseURL, connectionStateChangeHandler: FASTAppSyncStateChangeHandler(), s3ObjectManager: AWSS3TransferUtility.default())
+//            let appSyncConfig = try AWSAppSyncClientConfiguration(appSyncServiceConfig: serviceConfig, databaseURL: databaseURL)
             let appSyncConfig = try AWSAppSyncClientConfiguration(appSyncClientInfo: AWSAppSyncClientInfo(), userPoolsAuthProvider: FASTCognitoUserPoolsAuthProvider(), databaseURL: databaseURL)
             appSyncClient = try AWSAppSyncClient(appSyncConfig: appSyncConfig)
             appSyncClient?.apolloClient?.cacheKeyForObject = {
@@ -209,6 +195,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             if state == UserState.signedOut {
                 self.appSyncClient?.clearCache()
                 Globals.asyncLoadingManager = nil
+                
+                //Clear the Images cache
+                TeamImageLoader.default.clearCache()
             } else if state == UserState.signedIn {
                 Globals.asyncLoadingManager = TBAUpdatingDataReloader()
             }

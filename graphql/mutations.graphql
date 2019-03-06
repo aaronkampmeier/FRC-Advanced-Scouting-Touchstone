@@ -39,11 +39,13 @@ mutation SetTeamPicked(
 mutation UpdateScoutedTeam(
   $eventKey: ID!
   $teamKey: ID!
+  $image: ImageInput
   $attributes: AWSJSON!
 ) {
   updateScoutedTeam(
     eventKey: $eventKey
     teamKey: $teamKey
+    image: $image
     attributes: $attributes
   ) {
     ...ScoutedTeam

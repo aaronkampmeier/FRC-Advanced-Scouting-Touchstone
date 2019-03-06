@@ -170,20 +170,20 @@
                         <rect key="frame" x="0.0" y="0.0" width="703.5" height="768"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Team" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="zoH-Cy-bxK">
-                                <rect key="frame" x="321.5" y="85" width="60.5" height="32"/>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" verticalCompressionResistancePriority="1000" text="Team" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="zoH-Cy-bxK">
+                                <rect key="frame" x="321.5" y="85" width="60.5" height="31.5"/>
                                 <fontDescription key="fontDescription" style="UICTFontTextStyleTitle1"/>
                                 <nil key="textColor"/>
                                 <nil key="highlightedColor"/>
                             </label>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Team Nickname" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="eKK-pG-yVK">
-                                <rect key="frame" x="297" y="123" width="110" height="18"/>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" verticalCompressionResistancePriority="1000" text="Team Nickname" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="eKK-pG-yVK">
+                                <rect key="frame" x="297" y="122.5" width="110" height="18"/>
                                 <fontDescription key="fontDescription" style="UICTFontTextStyleSubhead"/>
                                 <nil key="textColor"/>
                                 <nil key="highlightedColor"/>
                             </label>
                             <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="57M-yC-eIi">
-                                <rect key="frame" x="0.0" y="156" width="703.5" height="612"/>
+                                <rect key="frame" x="0.0" y="155.5" width="703.5" height="612.5"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <collectionViewFlowLayout key="collectionViewLayout" minimumLineSpacing="10" minimumInteritemSpacing="10" id="hoM-6m-MxG">
                                     <size key="itemSize" width="215" height="164"/>
@@ -473,6 +473,17 @@
                                     </collectionViewCell>
                                 </cells>
                             </collectionView>
+                            <button opaque="NO" contentMode="scaleAspectFit" verticalCompressionResistancePriority="250" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="mab-uz-kpU">
+                                <rect key="frame" x="628.5" y="85" width="50" height="50"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" secondItem="mab-uz-kpU" secondAttribute="height" multiplier="1:1" id="75d-uu-Msx"/>
+                                    <constraint firstAttribute="height" constant="50" id="8ru-3C-ovj"/>
+                                </constraints>
+                                <state key="normal" title="Button" image="Camera"/>
+                                <connections>
+                                    <action selector="imageButtonPressed:" destination="cOC-Uw-kvx" eventType="touchUpInside" id="mdc-sc-lO6"/>
+                                </connections>
+                            </button>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
@@ -483,7 +494,10 @@
                                 <variation key="heightClass=compact-widthClass=compact" constant="-20"/>
                             </constraint>
                             <constraint firstItem="N6u-H5-5FW" firstAttribute="top" secondItem="57M-yC-eIi" secondAttribute="bottom" id="JtG-X8-dcA"/>
+                            <constraint firstAttribute="trailingMargin" secondItem="mab-uz-kpU" secondAttribute="trailing" constant="5" id="NzA-YV-Ijj"/>
+                            <constraint firstItem="57M-yC-eIi" firstAttribute="top" relation="greaterThanOrEqual" secondItem="mab-uz-kpU" secondAttribute="bottom" constant="5" id="bCN-yE-Skp"/>
                             <constraint firstItem="eKK-pG-yVK" firstAttribute="centerX" secondItem="xzy-95-a9h" secondAttribute="centerX" id="bMw-Jl-dcH"/>
+                            <constraint firstItem="mab-uz-kpU" firstAttribute="centerY" secondItem="zoH-Cy-bxK" secondAttribute="centerY" constant="9" id="u09-kC-om3"/>
                             <constraint firstItem="zoH-Cy-bxK" firstAttribute="top" secondItem="LKI-I7-8Ej" secondAttribute="bottom" constant="15" id="vLb-5z-3HD"/>
                             <constraint firstItem="57M-yC-eIi" firstAttribute="top" secondItem="eKK-pG-yVK" secondAttribute="bottom" constant="15" id="woO-Mh-C8R"/>
                         </constraints>
@@ -497,13 +511,14 @@
                     </navigationItem>
                     <connections>
                         <outlet property="collectionView" destination="57M-yC-eIi" id="ivf-PA-LlF"/>
+                        <outlet property="imageButton" destination="mab-uz-kpU" id="sgd-fQ-9Os"/>
                         <outlet property="teamLabel" destination="zoH-Cy-bxK" id="aV4-xf-lrm"/>
                         <outlet property="teamNicknameLabel" destination="eKK-pG-yVK" id="W0d-vP-eJ1"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="YAh-9k-L04" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="4265.0246305418723" y="58.399999999999999"/>
+            <point key="canvasLocation" x="4264.453125" y="57.8125"/>
         </scene>
         <!--Transfer Info-->
         <scene sceneID="jpo-zH-5ew">

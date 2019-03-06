@@ -33,11 +33,26 @@ fragment Team on Team {
     website
 }
 
+fragment S3Object on S3Object {
+	bucket
+	key
+	region
+}
+
+fragment Image on Image {
+	bucket
+	key
+	region
+}
+
 fragment ScoutedTeam on ScoutedTeam {
 	teamKey
 	userID
     eventKey
     attributes
+    image {
+    	...Image
+    }
 }
 
 fragment Match on Match {

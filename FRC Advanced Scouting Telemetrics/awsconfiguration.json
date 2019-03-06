@@ -38,5 +38,17 @@
           "AuthMode": "AMAZON_COGNITO_USER_POOLS",
           "ApiKey": "null"
       }
+  },
+  "S3TransferUtility": {
+      "Default": {
+          "Bucket": "fast-userfiles-mobilehub-708509237",
+          "Region": "us-east-1"
+      }
+  },
+  "UserFileManager": {
+      "Default": {
+          "Bucket": "fast-userfiles-mobilehub-708509237",
+          "Region": "us-east-1"
+      }
   }
 }

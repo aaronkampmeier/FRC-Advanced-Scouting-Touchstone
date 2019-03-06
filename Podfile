@@ -15,10 +15,11 @@ pod 'UICircularProgressRing'
 pod 'VTAcknowledgementsViewController'
 pod 'TORoundedTableView'
 pod 'AWSCore'
-pod 'AWSAppSync', '~> 2.9.2'
+pod 'AWSAppSync'
 pod 'AWSMobileClient'
 pod 'AWSUserPoolsSignIn'
 pod 'AWSAuthUI'
+pod 'AWSS3'
 end
 
 post_install do | installer |
