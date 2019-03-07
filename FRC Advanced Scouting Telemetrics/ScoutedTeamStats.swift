@@ -343,12 +343,6 @@ extension ScoutedTeam: Equatable {
             return statistics
         }
     }
-    
-    var frontImage: UIImage? {
-        get {
-            return nil
-        }
-    }
 }
 
 public func ==(lhs: ScoutedTeam, rhs: ScoutedTeam) -> Bool {

@@ -641,8 +641,8 @@
 				93610E301E42E2B200856BE2 /* Increment Build Number */,
 				1F7AE4DF1DCC2DC80029B420 /* Embed Frameworks */,
 				57ABF9A67635DC59BFEDA095 /* [CP] Embed Pods Frameworks */,
-				9339A9B52223553B00D3D82C /* Run Crashlytics Script */,
 				9342D6C1222F5C3D006A1A79 /* Primary Upload dSYMs */,
+				9339A9B52223553B00D3D82C /* Run Crashlytics Script */,
 			);
 			buildRules = (
 			);
@@ -927,7 +927,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "# Type a script or drag a script file from your workspace to insert its path.\n\"${PODS_ROOT}/Fabric/upload-symbols\" -gsp \"${PROJECT_DIR}/GoogleService-Info.plist\" -p ios \"${DWARF_DSYM_FOLDER_PATH}/${DWARF_DSYM_FILE_NAME}\"\n";
+			shellScript = "# Type a script or drag a script file from your workspace to insert its path.\n# \"${PODS_ROOT}/Fabric/upload-symbols\" -gsp \"${PROJECT_DIR}/GoogleService-Info.plist\" -p ios \"${DWARF_DSYM_FOLDER_PATH}/${DWARF_DSYM_FILE_NAME}\"\n";
 		};
 		93610E301E42E2B200856BE2 /* Increment Build Number */ = {
 			isa = PBXShellScriptBuildPhase;

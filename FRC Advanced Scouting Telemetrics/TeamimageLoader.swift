@@ -1,0 +1,110 @@
+//
+//  TeamimageLoader.swift
+//  FRC Advanced Scouting Touchstone
+//
+//  Created by Aaron Kampmeier on 3/3/19.
+//  Copyright © 2019 Kampfire Technologies. All rights reserved.
+//
+
+import Foundation
+import Crashlytics
+import AWSS3
+import AWSMobileClient
+
+class TeamImageLoader {
+    static var `default`: TeamImageLoader = TeamImageLoader()
+    
+    init() {
+    }
+    
+    let imageCacheURL = FileManager.default.temporaryDirectory.appendingPathComponent("FAST Image Cache", isDirectory: true)
+    
+    func clearCache() {
+        do {
+            try FileManager.default.removeItem(at: imageCacheURL)
+        } catch {
+            CLSNSLogv("Error deleting image cache: \(error)", getVaList([]))
+            Crashlytics.sharedInstance().recordError(error)
+        }
+    }
+    
+    func loadImage(withAttributes attributes: ScoutedTeam.Image, noCache: Bool = false, progressBlock: @escaping (Progress) -> Void, completionHandler: @escaping (UIImage?, Error?) -> Void) {
+        //Check if it is stored in the cache
+        let cachePath = imageCacheURL.appendingPathComponent("\(attributes.bucket)/\(attributes.key)")
+        if FileManager.default.fileExists(atPath: cachePath.path) && !noCache {
+            if let image = UIImage(contentsOfFile: cachePath.path) {
+                completionHandler(image, nil)
+                
+                //Check the last time it was reloaded and if it is over a certain amount of time than reload it
+                do {
+                    let fileAttributes = try FileManager.default.attributesOfItem(atPath: cachePath.path) as NSDictionary
+                    if let modDate = fileAttributes.fileModificationDate() {
+                        if abs(modDate.timeIntervalSinceNow) > 60 * 60 {
+                            self.loadImage(withAttributes: attributes, noCache: true, progressBlock: progressBlock, completionHandler: completionHandler)
+                        }
+                    }
+                } catch {
+                    CLSNSLogv("Error getting the attributes of team image (key: \(attributes.key): \(error)", getVaList([]))
+                    Crashlytics.sharedInstance().recordError(error)
+                }
+            } else {
+                //Load from S3
+                self.loadImage(withAttributes: attributes, noCache: true, progressBlock: progressBlock, completionHandler: completionHandler)
+            }
+        } else {
+            //Load from S3
+            let expression = AWSS3TransferUtilityDownloadExpression()
+            expression.progressBlock = {(task, progress) in
+                DispatchQueue.main.async {
+                    progressBlock(progress)
+                }
+            }
+            
+            AWSS3TransferUtility.default().downloadData(fromBucket: attributes.bucket, key: attributes.key, expression: expression, completionHandler: { (task, url, data, error) in
+                if let error = error {
+                    CLSNSLogv("Error downloading team image (key: \(attributes.key): \(error)", getVaList([]))
+                    Crashlytics.sharedInstance().recordError(error)
+                    
+                    completionHandler(nil, error)
+                } else {
+                    DispatchQueue.main.async {
+                        if let data = data {
+                            if let image = UIImage(data: data) {
+                                completionHandler(image, nil)
+                                
+                                //Cache it
+                                do {
+                                    //Save the data to a file
+                                    try FileManager.default.createDirectory(at: cachePath.deletingLastPathComponent(), withIntermediateDirectories: true, attributes: nil)
+                                    FileManager.default.createFile(atPath: cachePath.path, contents: data, attributes: nil)
+                                } catch {
+                                    CLSNSLogv("Error saving image to cache: \(error)", getVaList([]))
+                                    Crashlytics.sharedInstance().recordError(error)
+                                }
+                            } else {
+                                completionHandler(nil, ImageError.CorruptData)
+                                Crashlytics.sharedInstance().recordError(ImageError.CorruptData)
+                            }
+                        } else {
+                            completionHandler(nil, ImageError.NoData)
+                            Crashlytics.sharedInstance().recordError(ImageError.NoData)
+                        }
+                    }
+                }
+            }).continueWith(block: { (task) -> Any? in
+                if let error = task.error {
+                    CLSNSLogv("Error executing team image download: \(error)", getVaList([]))
+                    Crashlytics.sharedInstance().recordError(error)
+                    completionHandler(nil, error)
+                }
+                
+                return nil
+            })
+        }
+    }
+    
+    enum ImageError: Error {
+        case CorruptData
+        case NoData
+    }
+}

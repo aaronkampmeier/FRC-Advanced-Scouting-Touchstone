@@ -179,6 +179,7 @@ class TeamListTableViewController: UITableViewController, TeamListDetailDataSour
         selectedTeam = nil
         statToSortBy = nil
         unorderedTeamsInEvent = []
+        teamImages.removeAll()
         //If we are moving to a different event then clear the table otherwise leave it
         if selectedEventRanking?.eventKey != selectedEventKey {
             currentEventTeams = []
@@ -192,7 +193,29 @@ class TeamListTableViewController: UITableViewController, TeamListDetailDataSour
             
             //Get the scouted teams in the cache
             Globals.appDelegate.appSyncClient?.fetch(query: ListScoutedTeamsQuery(eventKey: eventKey), cachePolicy: .returnCacheDataAndFetch, resultHandler: { (result, error) in
-                
+                if Globals.handleAppSyncErrors(forQuery: "ListScoutedTeams-TeamListHydrateCache", result: result, error: error) {
+                    //Get all of the images
+//                    if let scoutedTeams = result?.data?.listScoutedTeams {
+//                        for scoutedTeam in scoutedTeams {
+//                            if let scoutedTeamImage = scoutedTeam?.fragments.scoutedTeam.image {
+//                                TeamImageLoader.default.loadImage(withAttributes: scoutedTeamImage, progressBlock: { (progress) in
+//
+//                                }, completionHandler: { (image, error) in
+//                                    if let image = image {
+//                                        self.teamImages[scoutedTeam?.teamKey ?? ""] = image
+//
+//                                        //Reload that row
+//                                        if let row = self.currentTeamsToDisplay.firstIndex(where: {$0.key == scoutedTeam?.teamKey}) {
+//                                            self.tableView.reloadRows(at: [IndexPath(row: row, section: 0)], with: .automatic)
+//                                        }
+//                                    } else if let _ = error {
+//                                        self.teamImages[scoutedTeam?.teamKey ?? ""] = UIImage(named: "Error")
+//                                    }
+//                                })
+//                            }
+//                        }
+//                    }
+                }
             })
             
             Globals.appDelegate.appSyncClient?.fetch(query: ListTeamsQuery(eventKey: eventKey), cachePolicy: .returnCacheDataAndFetch, queue: teamLoadingQueue) { result, error in
@@ -214,25 +237,22 @@ class TeamListTableViewController: UITableViewController, TeamListDetailDataSour
                             }
                             
                             self?.orderTeamsUsingRanking()
-                            
-//                            //Now go fetch all of the scouted teams just to get them into the cache
-//                            Globals.appDelegate.appSyncClient?.fetch(query: ListScoutedTeamsQuery(eventKey: eventKey), cachePolicy: .fetchIgnoringCacheData, resultHandler: { (result, error) in
-//                                if Globals.handleAppSyncErrors(forQuery: "ListScoutedTeams", result: result, error: error) {
-//                                    //Ta da
-//                                }
-//                            })
                         } else {
-                            //TODO: - Show error
-                            let alert = UIAlertController(title: "Unable to Load Team Rank", message: "There was an error loading the team rankings for this event. Please connect to the internet. \(Globals.descriptions(ofError: error, andResult: result))", preferredStyle: .alert)
-                            alert.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
-                            self?.present(alert, animated: true, completion: nil)
+                            DispatchQueue.main.async {
+                                //Show error
+                                let alert = UIAlertController(title: "Unable to Load Team Rank", message: "There was an error loading the team rankings for this event. Please connect to the internet. \(Globals.descriptions(ofError: error, andResult: result))", preferredStyle: .alert)
+                                alert.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
+                                self?.present(alert, animated: true, completion: nil)
+                            }
                         }
                     }
                 } else {
-                    //TODO: - Show error
-                    let alert = UIAlertController(title: "Unable to Load Teams", message: "There was an error loading the teams for this event. Please connect to the internet and re-load. \(Globals.descriptions(ofError: error, andResult: result))", preferredStyle: .alert)
-                    alert.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
-                    self.present(alert, animated: true, completion: nil)
+                    DispatchQueue.main.async {
+                        //Show error
+                        let alert = UIAlertController(title: "Unable to Load Teams", message: "There was an error loading the teams for this event. Please connect to the internet and re-load. \(Globals.descriptions(ofError: error, andResult: result))", preferredStyle: .alert)
+                        alert.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
+                        self.present(alert, animated: true, completion: nil)
+                    }
                 }
             }
             
@@ -341,6 +361,7 @@ class TeamListTableViewController: UITableViewController, TeamListDetailDataSour
     var addTrackedEventSubscriber: AWSAppSyncSubscriptionWatcher<OnAddTrackedEventSubscription>?
     var changeTeamRankSubscriber: AWSAppSync.AWSAppSyncSubscriptionWatcher<OnUpdateTeamRankSubscription>?
     var pickedTeamSubscriber: AWSAppSync.AWSAppSyncSubscriptionWatcher<OnSetTeamPickedSubscription>?
+    var updateScoutedTeamSubscriber: AWSAppSyncSubscriptionWatcher<OnUpdateScoutedTeamsSubscription>?
     func resetSubscriptions() {
         CLSNSLogv("Resetting Team List Subscriptions", getVaList([]))
         
@@ -414,6 +435,30 @@ class TeamListTableViewController: UITableViewController, TeamListDetailDataSour
                         }
                     }
                 }
+                
+                updateScoutedTeamSubscriber = try Globals.appDelegate.appSyncClient?.subscribe(subscription: OnUpdateScoutedTeamsSubscription(userID: AWSMobileClient.sharedInstance().username ?? "", eventKey: eventKey), resultHandler: {[weak self] (result, transaction, error) in
+                    if Globals.handleAppSyncErrors(forQuery: "OnUpdateScoutedTeamGeneral-TeamList", result: result, error: error) {
+                        try? transaction?.update(query: ListScoutedTeamsQuery(eventKey: eventKey), { (selectionSet) in
+                            if let index = selectionSet.listScoutedTeams?.firstIndex(where: {$0?.teamKey == result?.data?.onUpdateScoutedTeam?.teamKey}) {
+                                selectionSet.listScoutedTeams?.remove(at: index)
+                            }
+                            if let newTeam = result?.data?.onUpdateScoutedTeam {
+                                selectionSet.listScoutedTeams?.append(try! ListScoutedTeamsQuery.Data.ListScoutedTeam(newTeam))
+                            }
+                        })
+                        
+                        //Reload row
+                        if let index = self?.currentTeamsToDisplay.firstIndex(where: {$0.key == result?.data?.onUpdateScoutedTeam?.teamKey}) {
+                            self?.tableView.reloadRows(at: [IndexPath(row: index, section: 0)], with: .automatic)
+                        }
+                    } else {
+                        if let error = error as? AWSAppSyncSubscriptionError {
+                            if error.recoverySuggestion != nil {
+                                self?.resetSubscriptions()
+                            }
+                        }
+                    }
+                })
             } catch {
                 CLSNSLogv("Error starting subcriptions: \(error)", getVaList([]))
                 Crashlytics.sharedInstance().recordError(error)
@@ -422,6 +467,7 @@ class TeamListTableViewController: UITableViewController, TeamListDetailDataSour
         } else {
             changeTeamRankSubscriber?.cancel()
             pickedTeamSubscriber?.cancel()
+            updateScoutedTeamSubscriber?.cancel()
         }
     }
     
@@ -543,17 +589,32 @@ class TeamListTableViewController: UITableViewController, TeamListDetailDataSour
             }
         }
         
-        //TODO: Add image functionality
-        if let image = teamImages[team.key] {
+        //Image functionality
+        if let image = teamImages["\(selectedEventKey ?? "")-\(team.key)"] {
             cell.frontImage.image = image
         } else {
-            
-//            if let image = team.image {
-//                cell.frontImage.image = uiImage
-//            teamImages[team.key] = uiImage
-//            } else {
-                cell.frontImage.image = UIImage(named: "FRC-Logo")
-//            }
+            cell.frontImage.image = UIImage(named: "FRC-Logo")
+            Globals.appDelegate.appSyncClient?.fetch(query: ListScoutedTeamsQuery(eventKey: selectedEventKey ?? ""), cachePolicy: .returnCacheDataDontFetch, resultHandler: {[weak self] (result, error) in
+                if Globals.handleAppSyncErrors(forQuery: "ListScoutedTeams-TeamListCellForRowAt", result: result, error: error) {
+                    if let scoutedTeam = result?.data?.listScoutedTeams?.first(where: {$0?.teamKey == team.key})??.fragments.scoutedTeam {
+                        if let imageInfo = scoutedTeam.image {
+                            TeamImageLoader.default.loadImage(withAttributes: imageInfo, progressBlock: { (progress) in
+                                
+                            }, completionHandler: { (image, error) in
+                                if let image = image {
+                                    if cell.stateID == stateID {
+                                        cell.frontImage.image = image
+                                    }
+                                    self?.teamImages["\(self?.selectedEventKey ?? "")-\(team.key)"] = image
+                                } else {
+                                }
+                            })
+                        } else {
+                        }
+                    } else {
+                    }
+                }
+            })
         }
         
         //Show the indicator if this is the team that is currently logged in

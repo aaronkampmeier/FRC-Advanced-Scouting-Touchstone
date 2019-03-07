@@ -176,8 +176,8 @@
                                 <nil key="textColor"/>
                                 <nil key="highlightedColor"/>
                             </label>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" verticalCompressionResistancePriority="1000" text="Team Nickname" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="eKK-pG-yVK">
-                                <rect key="frame" x="297" y="122.5" width="110" height="18"/>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" verticalCompressionResistancePriority="1000" text="Team Nickname" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumScaleFactor="0.5" translatesAutoresizingMaskIntoConstraints="NO" id="eKK-pG-yVK">
+                                <rect key="frame" x="297" y="122.5" width="109.5" height="18"/>
                                 <fontDescription key="fontDescription" style="UICTFontTextStyleSubhead"/>
                                 <nil key="textColor"/>
                                 <nil key="highlightedColor"/>
@@ -484,6 +484,9 @@
                                     <action selector="imageButtonPressed:" destination="cOC-Uw-kvx" eventType="touchUpInside" id="mdc-sc-lO6"/>
                                 </connections>
                             </button>
+                            <progressView hidden="YES" opaque="NO" contentMode="scaleToFill" verticalHuggingPriority="750" progress="0.5" translatesAutoresizingMaskIntoConstraints="NO" id="9Ho-AX-QfG">
+                                <rect key="frame" x="0.0" y="148.5" width="703.5" height="2"/>
+                            </progressView>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
@@ -495,8 +498,12 @@
                             </constraint>
                             <constraint firstItem="N6u-H5-5FW" firstAttribute="top" secondItem="57M-yC-eIi" secondAttribute="bottom" id="JtG-X8-dcA"/>
                             <constraint firstAttribute="trailingMargin" secondItem="mab-uz-kpU" secondAttribute="trailing" constant="5" id="NzA-YV-Ijj"/>
+                            <constraint firstItem="mab-uz-kpU" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="eKK-pG-yVK" secondAttribute="trailing" constant="5" id="X1y-1p-9nJ"/>
                             <constraint firstItem="57M-yC-eIi" firstAttribute="top" relation="greaterThanOrEqual" secondItem="mab-uz-kpU" secondAttribute="bottom" constant="5" id="bCN-yE-Skp"/>
                             <constraint firstItem="eKK-pG-yVK" firstAttribute="centerX" secondItem="xzy-95-a9h" secondAttribute="centerX" id="bMw-Jl-dcH"/>
+                            <constraint firstItem="57M-yC-eIi" firstAttribute="top" secondItem="9Ho-AX-QfG" secondAttribute="bottom" constant="5" id="gZv-ao-U2h"/>
+                            <constraint firstAttribute="trailing" secondItem="9Ho-AX-QfG" secondAttribute="trailing" id="juk-Xr-3ey"/>
+                            <constraint firstItem="9Ho-AX-QfG" firstAttribute="leading" secondItem="xzy-95-a9h" secondAttribute="leading" id="pt8-gZ-FBH"/>
                             <constraint firstItem="mab-uz-kpU" firstAttribute="centerY" secondItem="zoH-Cy-bxK" secondAttribute="centerY" constant="9" id="u09-kC-om3"/>
                             <constraint firstItem="zoH-Cy-bxK" firstAttribute="top" secondItem="LKI-I7-8Ej" secondAttribute="bottom" constant="15" id="vLb-5z-3HD"/>
                             <constraint firstItem="57M-yC-eIi" firstAttribute="top" secondItem="eKK-pG-yVK" secondAttribute="bottom" constant="15" id="woO-Mh-C8R"/>
@@ -512,6 +519,7 @@
                     <connections>
                         <outlet property="collectionView" destination="57M-yC-eIi" id="ivf-PA-LlF"/>
                         <outlet property="imageButton" destination="mab-uz-kpU" id="sgd-fQ-9Os"/>
+                        <outlet property="progressView" destination="9Ho-AX-QfG" id="rTw-DK-4Bi"/>
                         <outlet property="teamLabel" destination="zoH-Cy-bxK" id="aV4-xf-lrm"/>
                         <outlet property="teamNicknameLabel" destination="eKK-pG-yVK" id="W0d-vP-eJ1"/>
                     </connections>

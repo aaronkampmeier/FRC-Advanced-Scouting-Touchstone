@@ -227,22 +227,22 @@ class TeamListDetailViewController: UIViewController {
             CLSNSLogv("Setting Team List Detail Subscriptions", getVaList([]))
             //Set up a subscription
             do {
-                updateTeamSubcription = try Globals.appDelegate.appSyncClient?.subscribe(subscription: OnUpdateScoutedTeamSubscription(userID: AWSMobileClient.sharedInstance().username ?? "", eventKey: eventKey, teamKey: teamKey), resultHandler: { (result, transaction, error) in
-                    if Globals.handleAppSyncErrors(forQuery: "OnUpdateScoutedTeam-TeamDetail", result: result, error: error) {
-                        try? transaction?.update(query: ListScoutedTeamsQuery(eventKey: eventKey), { (selectionSet) in
-                            if let index = selectionSet.listScoutedTeams?.firstIndex(where: {$0?.teamKey == teamKey}) {
-                                selectionSet.listScoutedTeams?.remove(at: index)
-                            }
-                            if let newTeam = result?.data?.onUpdateScoutedTeam {
-                                selectionSet.listScoutedTeams?.append(try! ListScoutedTeamsQuery.Data.ListScoutedTeam(newTeam))
-                            }
-                        })
-                    } else {
-                        if let error = error as? AWSAppSyncSubscriptionError {
-                            self.resetSubscriptions()
-                        }
-                    }
-                })
+//                updateTeamSubcription = try Globals.appDelegate.appSyncClient?.subscribe(subscription: OnUpdateScoutedTeamSubscription(userID: AWSMobileClient.sharedInstance().username ?? "", eventKey: eventKey, teamKey: teamKey), resultHandler: { (result, transaction, error) in
+//                    if Globals.handleAppSyncErrors(forQuery: "OnUpdateScoutedTeam-TeamDetail", result: result, error: error) {
+//                        try? transaction?.update(query: ListScoutedTeamsQuery(eventKey: eventKey), { (selectionSet) in
+//                            if let index = selectionSet.listScoutedTeams?.firstIndex(where: {$0?.teamKey == teamKey}) {
+//                                selectionSet.listScoutedTeams?.remove(at: index)
+//                            }
+//                            if let newTeam = result?.data?.onUpdateScoutedTeam {
+//                                selectionSet.listScoutedTeams?.append(try! ListScoutedTeamsQuery.Data.ListScoutedTeam(newTeam))
+//                            }
+//                        })
+//                    } else {
+//                        if let error = error as? AWSAppSyncSubscriptionError {
+//                            self.resetSubscriptions()
+//                        }
+//                    }
+//                })
             } catch {
                 CLSNSLogv("Error starting updateScoutedTeam subscription: \(error)", getVaList([]))
                 Crashlytics.sharedInstance().recordError(error)
@@ -253,6 +253,26 @@ class TeamListDetailViewController: UIViewController {
     }
     
     private func updateView() {
+        let setImage = {(image: UIImage?) -> Void in
+            if let image = image {
+                self.frontImage = TeamImagePhoto(image: image, attributedCaptionTitle: NSAttributedString(string: "Team \(self.selectedTeam?.teamNumber ?? 0): Front Image"))
+                self.frontImageHeightConstraint.isActive = true
+                
+                self.contentScrollView.contentInset = self.contentViewInsets
+                self.contentScrollView.scrollIndicatorInsets = self.contentViewInsets
+                
+                self.contentScrollView.contentOffset = CGPoint(x: 0, y: -self.frontImageHeightConstraint.constant)
+            } else {
+                self.frontImage = nil
+                self.frontImageHeightConstraint.isActive = false
+                
+                self.contentScrollView.contentInset = self.noContentInsets
+                self.contentScrollView.scrollIndicatorInsets = self.noContentInsets
+                
+                self.contentScrollView.contentOffset = CGPoint(x: 0, y: 0)
+            }
+        }
+        setImage(nil)
         if let team = self.selectedTeam {
             navBar.title = team.teamNumber.description
             teamLabel.text = team.nickname
@@ -291,24 +311,15 @@ class TeamListDetailViewController: UIViewController {
                 bananaImageWidth.constant = 0
             }
             
-            //TODO: - Fix images
-//            Populate the images, if there are images
-            if let image = scoutedTeam.frontImage {
-                frontImage = TeamImagePhoto(image: image, attributedCaptionTitle: NSAttributedString(string: "Team \(self.selectedTeam?.teamNumber ?? 0): Front Image"))
-                frontImageHeightConstraint.isActive = true
-
-                contentScrollView.contentInset = contentViewInsets
-                contentScrollView.scrollIndicatorInsets = contentViewInsets
-
-                contentScrollView.contentOffset = CGPoint(x: 0, y: -frontImageHeightConstraint.constant)
-            } else {
-                frontImage = nil
-                frontImageHeightConstraint.isActive = false
-
-                contentScrollView.contentInset = noContentInsets
-                contentScrollView.scrollIndicatorInsets = noContentInsets
-
-                contentScrollView.contentOffset = CGPoint(x: 0, y: 0)
+            //Get the team image
+            if let imageInfo = scoutedTeam.image {
+                TeamImageLoader.default.loadImage(withAttributes: imageInfo, progressBlock: { (progress) in
+                    
+                }) { (image, error) in
+                    DispatchQueue.main.async {
+                        setImage(image)
+                    }
+                }
             }
         }
         
@@ -328,7 +339,7 @@ class TeamListDetailViewController: UIViewController {
         super.viewWillTransition(to: size, with: coordinator)
         //Reset the content insets
         coordinator.animate(alongsideTransition: {_ in
-            if self.scoutedTeam?.frontImage != nil {
+            if self.scoutedTeam?.image != nil {
                 self.contentScrollView.contentInset = self.contentViewInsets
                 self.contentScrollView.scrollIndicatorInsets = self.contentViewInsets
 

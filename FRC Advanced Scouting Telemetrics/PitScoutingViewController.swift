@@ -8,6 +8,8 @@
 
 import UIKit
 import Crashlytics
+import AVFoundation
+import AWSS3
 import AWSMobileClient
 
 typealias PitScoutingUpdateHandler = ((Any?)->Void)
@@ -30,6 +32,8 @@ class PitScoutingViewController: UIViewController, UICollectionViewDataSource, U
     @IBOutlet weak var collectionView: UICollectionView?
     @IBOutlet weak var teamLabel: UILabel?
     @IBOutlet weak var teamNicknameLabel: UILabel?
+    @IBOutlet weak var imageButton: UIButton!
+    @IBOutlet weak var progressView: UIProgressView!
     
     var teamKey: String?
     var eventKey: String?
@@ -81,8 +85,8 @@ class PitScoutingViewController: UIViewController, UICollectionViewDataSource, U
     
     //For updates we will keep them in a stack and then batch write them to save resources
     private var updateTimer: Timer?
-    
-    private var updatedValues: [String:Any] = [:]
+    private var newImage: UIImage?
+    private var updatedValues: [String:Any?] = [:]
     func registerUpdate(forKey key: String, value: Any?) {
         updatedValues[key] = value
     }
@@ -94,7 +98,8 @@ class PitScoutingViewController: UIViewController, UICollectionViewDataSource, U
                     let jsonData = try JSONSerialization.data(withJSONObject: updatedValues, options: [])
                     
                     let updateString = String(data: jsonData, encoding: .utf8)
-                    let mutation = UpdateScoutedTeamMutation(eventKey: eventKey, teamKey: teamKey, attributes: updateString!)
+                    let mutation: UpdateScoutedTeamMutation
+                    mutation = UpdateScoutedTeamMutation(eventKey: eventKey, teamKey: teamKey, attributes: updateString!)
                     
                     //Perform the mutation
                     Globals.appDelegate.appSyncClient?.perform(mutation: mutation, optimisticUpdate: { (transaction) in
@@ -106,7 +111,7 @@ class PitScoutingViewController: UIViewController, UICollectionViewDataSource, U
                             
                         } else {
                             //Show error
-                            let alert = UIAlertController(title: "Error Saving Pit Scouting", message: "There was an error saving the pit scouting data. Please make sure you are connected to the Internet and try again. \(Globals.descriptions(ofError: error, andResult: result))", preferredStyle: .alert)
+                            let alert = UIAlertController(title: "Error Saving Pit Scouting", message: "There was an error saving the pit scouting data. Please check your internet connection and try again. \(Globals.descriptions(ofError: error, andResult: result))", preferredStyle: .alert)
                             alert.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
                             self.present(alert, animated: true, completion: nil)
                         }
@@ -178,9 +183,27 @@ class PitScoutingViewController: UIViewController, UICollectionViewDataSource, U
                 if let scoutedTeam = result?.data?.listScoutedTeams?.first(where: {$0?.teamKey == teamKey})??.fragments.scoutedTeam {
                     self.pitScoutingParameters = self.dataSource?.requestedDataInputs(forScoutedTeam: scoutedTeam) ?? []
                     self.collectionView?.reloadData()
+                    
+                    //Set Image Button's Image
+                    if let teamImageInformation = scoutedTeam.image {
+                        //Grab it from S3
+                        TeamImageLoader.default.loadImage(withAttributes: teamImageInformation, progressBlock: { (progress) in
+                            
+                        }, completionHandler: { (image, error) in
+                            DispatchQueue.main.async {
+                                if let image = image {
+                                    self.imageButton.setImage(image, for: .normal)
+                                } else if let _ = error {
+                                    self.imageButton.setImage(UIImage(named: "Error"), for: .normal)
+                                }
+                            }
+                        })
+                    }
                 }
             } else {
-                //TODO: Show error
+                let alert = UIAlertController(title: "Error Loading Team", message: "There was an error loading the team. Make sure you are connected to the internet and try again.", preferredStyle: .alert)
+                alert.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
+                self.present(alert, animated: true, completion: nil)
             }
         })
         
@@ -243,6 +266,65 @@ class PitScoutingViewController: UIViewController, UICollectionViewDataSource, U
         
         present(navVC, animated: true, completion: nil)
     }
+    
+    //MARK: - Photo
+    let imageController = UIImagePickerController()
+    @IBAction func imageButtonPressed(_ sender: UIButton) {
+        
+        if UIImagePickerController.isSourceTypeAvailable(.camera) || UIImagePickerController.isSourceTypeAvailable(.photoLibrary) {
+            //Ask for permission
+            let authStatus = AVCaptureDevice.authorizationStatus(for: AVMediaType.video)
+            if  authStatus != .authorized && authStatus == .notDetermined {
+                AVCaptureDevice.requestAccess(for: AVMediaType.video, completionHandler: {_ in })
+            } else if authStatus == .denied {
+                let alert = UIAlertController(title: "You Have Denied Acces to the Camera", message: "Go to Settings> Privacy> Camera> FAST and turn it on.", preferredStyle: .alert)
+                alert.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
+                Globals.appDelegate.presentViewControllerOnTop(alert, animated: true)
+            } else if authStatus == .authorized {
+                //Set up the camera view and present it
+                imageController.delegate = self
+                imageController.allowsEditing = true
+                
+                //Figure out which source to use
+                if !UIImagePickerController.isSourceTypeAvailable(.camera) {
+                    presentImageController(imageController, withSource: .photoLibrary)
+                } else {
+                    let sourceSelector = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
+                    sourceSelector.addAction(UIAlertAction(title: "Camera", style: .default) {_ in
+                        self.presentImageController(self.imageController, withSource: .camera)
+                        Globals.recordAnalyticsEvent(eventType: "added_team_photo", attributes: ["source":"camera"])
+                    })
+                    sourceSelector.addAction(UIAlertAction(title: "Photo Library", style: .default) {_ in
+                        self.presentImageController(self.imageController, withSource: .photoLibrary)
+                        Globals.recordAnalyticsEvent(eventType: "added_team_photo", attributes: ["source":"photo_library"])
+                    })
+                    sourceSelector.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
+                    sourceSelector.popoverPresentationController?.sourceView = sender
+                    Globals.appDelegate.presentViewControllerOnTop(sourceSelector, animated: true)
+                }
+            } else {
+                
+            }
+        } else {
+            let alert = UIAlertController(title: "No Camera", message: "The device you are using does not have image taking abilities.", preferredStyle: .alert)
+            alert.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
+            Globals.appDelegate.presentViewControllerOnTop(alert, animated: true)
+        }
+    }
+    
+    func presentImageController(_ controller: UIImagePickerController, withSource source: UIImagePickerControllerSourceType) {
+        controller.sourceType = source
+        controller.allowsEditing = false
+        
+        if source == .camera {
+            imageController.modalPresentationStyle = .fullScreen
+        } else if source == .photoLibrary {
+            imageController.modalPresentationStyle = .popover
+            imageController.popoverPresentationController?.sourceView = imageButton
+        }
+        Globals.appDelegate.presentViewControllerOnTop(controller, animated: true)
+    }
+    
     /*
     // MARK: - Navigation
 
@@ -253,6 +335,94 @@ class PitScoutingViewController: UIViewController, UICollectionViewDataSource, U
     }
     */
 
+    func uploadImage(image: UIImage) {
+        guard let data = UIImageJPEGRepresentation(image, 0.3) else {
+            let alert = UIAlertController(title: "Error Saving Image", message: "There was an error saving the image, please try again.", preferredStyle: .alert)
+            alert.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
+            self.present(alert, animated: true, completion: nil)
+            
+            CLSNSLogv("Error creating data from pit scouting image", getVaList([]))
+            Crashlytics.sharedInstance().recordCustomExceptionName("UIImage Failure to Create Data", reason: nil, frameArray: [])
+            return
+        }
+        
+        let transferUtility = AWSS3TransferUtility.default()
+        
+        let uploadExpression = AWSS3TransferUtilityUploadExpression()
+        uploadExpression.setValue(AWSMobileClient.sharedInstance().username, forRequestHeader: "x-amz-meta-user-id")
+        uploadExpression.setValue(eventKey, forRequestHeader: "x-amz-meta-event-key")
+        uploadExpression.setValue(teamKey, forRequestHeader: "x-amz-meta-team-key")
+        uploadExpression.progressBlock = {(task, progress) in
+            DispatchQueue.main.async {
+                self.progressView.isHidden = false
+                self.progressView.progress = Float(progress.fractionCompleted)
+            }
+        }
+        
+        let identityId = AWSMobileClient.sharedInstance().identityId
+        let key = "private/\(identityId ?? "")/\(eventKey ?? "")/\(teamKey ?? "").jpeg"
+        transferUtility.uploadData(data, key: key, contentType: "image/jpeg", expression: uploadExpression) { (uploadTask, error) in
+            DispatchQueue.main.async {
+                self.progressView.isHidden = true
+                if let error = error {
+                    CLSNSLogv("Error uploading image to S3: \(error)", getVaList([]))
+                    Crashlytics.sharedInstance().recordError(error)
+                    
+                    let alert = UIAlertController(title: "Error Uploading Team Image", message: "There was an error uploading the team image. Make sure you are connected to the internet and try again.", preferredStyle: .alert)
+                    alert.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
+                    Globals.appDelegate.presentViewControllerOnTop(alert, animated: true)
+                } else {
+                    //Success
+                    CLSNSLogv("Success uploading team image", getVaList([]))
+                    //Save it in the scouted team as well now
+                    let imageInput = ImageInput(bucket: "fast-userfiles-mobilehub-708509237" /*transferUtility.transferUtilityConfiguration.bucket*/, key: key, region: "us-east-1")
+                    let mutation = UpdateScoutedTeamMutation(eventKey: self.eventKey ?? "", teamKey: self.teamKey ?? "", image: imageInput, attributes: "{}")
+                    Globals.appDelegate.appSyncClient?.perform(mutation: mutation, resultHandler: { (result, error) in
+                        if Globals.handleAppSyncErrors(forQuery: "UpdateScoutedTeam-SetImage", result: result, error: error) {
+                            
+                        } else {
+                            
+                        }
+                    })
+                }
+            }
+        }
+            .continueWith { (uploadTask) -> Any? in
+                if let error = uploadTask.error {
+                    CLSNSLogv("Error Uploading image: \(error)", getVaList([]))
+                    Crashlytics.sharedInstance().recordError(error)
+                }
+                
+                if let uploadTask = uploadTask.result {
+                    
+                }
+                
+                return nil
+        }
+    }
+}
+
+extension PitScoutingViewController: UIImagePickerControllerDelegate {
+    func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String : Any]) {
+        picker.dismiss(animated: true, completion: nil)
+        if let image = info[UIImagePickerControllerOriginalImage] as? UIImage {
+            imageButton.setImage(image, for: .normal)
+            
+            //Save the image
+            self.newImage = image
+            
+            //Upload it
+            self.uploadImage(image: image)
+        }
+    }
+    
+    func imagePickerControllerDidCancel(_ picker: UIImagePickerController) {
+        picker.dismiss(animated: true, completion: nil)
+    }
+}
+
+extension PitScoutingViewController: UINavigationControllerDelegate {
+    
 }
 
 extension PitScoutingViewController: UICollectionViewDelegateFlowLayout {

@@ -26,7 +26,8 @@ class PitScoutingData: PitScoutingDataSource {
             PitScoutingViewController.PitScoutingParameter(key: "rocketCargoCapability", type: .SegmentedSelector, label: "Rocket Max Cargo Level", options: ["3","2","1","None"], scoutedTeam: scoutedTeam),
             PitScoutingViewController.PitScoutingParameter(key: "hasShooter", type: .SegmentedSelector, label: "Shooter", options: ["Yes","No"], scoutedTeam: scoutedTeam),
             
-            PitScoutingViewController.PitScoutingParameter(key: "climbCapability", type: .SegmentedSelector, label: "Climb Capability", options: ["3","2","1","None"], scoutedTeam: scoutedTeam)
+            PitScoutingViewController.PitScoutingParameter(key: "climbCapability", type: .SegmentedSelector, label: "Climb Capability", options: ["3","2","1","None"], scoutedTeam: scoutedTeam),
+            PitScoutingViewController.PitScoutingParameter(key: "canBanana", type: .Button, label: "", options: nil, scoutedTeam: scoutedTeam)
         ]
     }
 }
