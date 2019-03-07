@@ -48,7 +48,6 @@ class PitScoutingViewController: UIViewController, UICollectionViewDataSource, U
         case TextField = "pitTextFieldCell"
         case SegmentedSelector = "pitSegmentSelectorCell"
         case TableViewSelector = "pitTableViewCell"
-        case ImageSelector = "pitImageSelectorCell"
         case Button = "pitButtonCell"
         case Switch = "pitSwitchCell"
         case StringField = "pitStringCell"
@@ -86,7 +85,7 @@ class PitScoutingViewController: UIViewController, UICollectionViewDataSource, U
     //For updates we will keep them in a stack and then batch write them to save resources
     private var updateTimer: Timer?
     private var newImage: UIImage?
-    private var updatedValues: [String:Any?] = [:]
+    private var updatedValues: [String:Any] = [:]
     func registerUpdate(forKey key: String, value: Any?) {
         updatedValues[key] = value
     }
@@ -238,8 +237,6 @@ class PitScoutingViewController: UIViewController, UICollectionViewDataSource, U
             return CGSize(width: 290, height: 80)
         case .TableViewSelector:
             return CGSize(width: 250, height: 180)
-        case .ImageSelector:
-            return CGSize(width: 110, height: 100)
         case .Button:
             return CGSize(width: 180, height: 50)
         case .Switch:

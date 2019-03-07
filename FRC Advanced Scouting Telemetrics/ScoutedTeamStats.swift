@@ -113,9 +113,11 @@ extension ScoutedTeam: Equatable {
             //Auto generate all of the pit socuting stats
             let pitScoutingInputs = PitScoutingData().requestedDataInputs(forScoutedTeam: ScoutedTeam(teamKey: "", userId: "", eventKey: ""))
             for input in pitScoutingInputs {
-                statistics.append(Statistic<ScoutedTeam>(name: input.label, id: input.key, function: { (scoutedTeam, callback) in
-                    callback(StatValue.initAny(value: scoutedTeam.attributeDictionary?[input.key]))
-                }))
+                if input.key != "canBanana" {
+                    statistics.append(Statistic<ScoutedTeam>(name: input.label, id: input.key, function: { (scoutedTeam, callback) in
+                        callback(StatValue.initAny(value: scoutedTeam.attributeDictionary?[input.key]))
+                    }))
+                }
             }
             
             statistics.append(ScoutedTeamStat(name: "Scouted Matches", id: "scoutedMatches", function: { (scoutedTeam, callback) in
@@ -174,7 +176,7 @@ extension ScoutedTeam: Equatable {
             for startState in model?.startState ?? [] {
                 //Show the breakdown of the options
                 for option in startState.options {
-                    statistics.append(ScoutedTeamStat(name: "\(startState.shortName ?? startState.name)-\(option.name)", id: UUID().uuidString, function: { (scoutedTeam, callback) in
+                    statistics.append(ScoutedTeamStat(name: "\(startState.shortName ?? startState.name)-\(option.name)", id: "\(startState.shortName ?? startState.name)-\(option.name)", function: { (scoutedTeam, callback) in
                         //Get the scout sessions
                         Globals.appDelegate.appSyncClient?.fetch(query: ListScoutSessionsQuery(eventKey: scoutedTeam.eventKey, teamKey: scoutedTeam.teamKey), cachePolicy: .returnCacheDataAndFetch, queue: statCalculationQueue, resultHandler: { (result, error) in
                             if Globals.handleAppSyncErrors(forQuery: "ScoutSessions-StartStateStat", result: result, error: error) {
@@ -195,7 +197,7 @@ extension ScoutedTeam: Equatable {
             for endState in model?.endState ?? [] {
                 //Show the breakdown of the options
                 for option in endState.options {
-                    statistics.append(ScoutedTeamStat(name: "\(endState.shortName ?? endState.name)-\(option.name)", id: UUID().uuidString, function: { (scoutedTeam, callback) in
+                    statistics.append(ScoutedTeamStat(name: "\(endState.shortName ?? endState.name)-\(option.name)", id: "\(endState.shortName ?? endState.name)-\(option.name)", function: { (scoutedTeam, callback) in
                         //Get the scout sessions
                         Globals.appDelegate.appSyncClient?.fetch(query: ListScoutSessionsQuery(eventKey: scoutedTeam.eventKey, teamKey: scoutedTeam.teamKey), cachePolicy: .returnCacheDataElseFetch, queue: statCalculationQueue, resultHandler: { (result, error) in
                             if Globals.handleAppSyncErrors(forQuery: "ScoutSessions-EndStateStat", result: result, error: error) {
@@ -216,7 +218,7 @@ extension ScoutedTeam: Equatable {
             
             for gameAction in model?.gameActions ?? [] {
                 //First show number of times action happened
-                let totalOccurenceStat = ScoutedTeamStat(name: "\(gameAction.name) Occurrences", id: UUID().uuidString, compositeTrendFunction: { (scoutedTeam, callback) in
+                let totalOccurenceStat = ScoutedTeamStat(name: "\(gameAction.name) Occurrences", id: gameAction.name + " occurrences", compositeTrendFunction: { (scoutedTeam, callback) in
                     Globals.appDelegate.appSyncClient?.fetch(query: ListScoutSessionsQuery(eventKey: scoutedTeam.eventKey, teamKey: scoutedTeam.teamKey), cachePolicy: .returnCacheDataElseFetch, queue: statCalculationQueue, resultHandler: { (result, error) in
                         var compositePoints = [(matchNumber: Int, value: StatValue)]()
                         for session in result?.data?.listScoutSessions?.map({$0!.fragments.scoutSession}) ?? [] {
@@ -246,7 +248,7 @@ extension ScoutedTeam: Equatable {
                 statistics.append(totalOccurenceStat)
                 
                 //Show average of number of times this option is selected
-                statistics.append(ScoutedTeamStat(name: "\(gameAction.name) Avg.", id: UUID().uuidString, function: { (scoutedTeam, callback) in
+                statistics.append(ScoutedTeamStat(name: "\(gameAction.name) Avg.", id: gameAction.name + " avg", function: { (scoutedTeam, callback) in
                     totalOccurenceStat.compositePoints(forObject: scoutedTeam, callback: { (compositePoints) in
                         var total = 0
                         var count = 0

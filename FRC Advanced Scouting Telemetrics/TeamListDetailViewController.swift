@@ -181,10 +181,11 @@ class TeamListDetailViewController: UIViewController {
         self.statusString = nil
         generalInfoTableView?.reloadData()
         self.updateView()
+        setImage(image: nil)
         
         if let input = input {
             //Grab the scouted data
-            listScoutedTeamsWatcher = Globals.appDelegate.appSyncClient?.watch(query: ListScoutedTeamsQuery(eventKey: self.selectedEventKey ?? ""), cachePolicy: .returnCacheDataAndFetch, resultHandler: {[weak self] (result, error) in
+            listScoutedTeamsWatcher = Globals.appDelegate.appSyncClient?.watch(query: ListScoutedTeamsQuery(eventKey: self.selectedEventKey ?? ""), cachePolicy: .returnCacheDataElseFetch, resultHandler: {[weak self] (result, error) in
                 if Globals.handleAppSyncErrors(forQuery: "ListScoutedTeams-TeamListDetail", result: result, error: error) {
                     let sTeams = result?.data?.listScoutedTeams?.map({$0!.fragments.scoutedTeam}) ?? []
                     
@@ -192,10 +193,7 @@ class TeamListDetailViewController: UIViewController {
                     
                     self?.updateView()
                 } else {
-                    //TODO: Show error
-//                    let alert = UIAlertController(title: "Error Loading Team", message: "There was an error loading the team's information. \((error as? AWSMobileClientError)?.message ?? "")", preferredStyle: .alert)
-//                    alert.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
-//                    self?.present(alert, animated: true, completion: nil)
+                    
                 }
             })
             
@@ -252,27 +250,27 @@ class TeamListDetailViewController: UIViewController {
         }
     }
     
-    private func updateView() {
-        let setImage = {(image: UIImage?) -> Void in
-            if let image = image {
-                self.frontImage = TeamImagePhoto(image: image, attributedCaptionTitle: NSAttributedString(string: "Team \(self.selectedTeam?.teamNumber ?? 0): Front Image"))
-                self.frontImageHeightConstraint.isActive = true
-                
-                self.contentScrollView.contentInset = self.contentViewInsets
-                self.contentScrollView.scrollIndicatorInsets = self.contentViewInsets
-                
-                self.contentScrollView.contentOffset = CGPoint(x: 0, y: -self.frontImageHeightConstraint.constant)
-            } else {
-                self.frontImage = nil
-                self.frontImageHeightConstraint.isActive = false
-                
-                self.contentScrollView.contentInset = self.noContentInsets
-                self.contentScrollView.scrollIndicatorInsets = self.noContentInsets
-                
-                self.contentScrollView.contentOffset = CGPoint(x: 0, y: 0)
-            }
+    private func setImage(image: UIImage?) {
+        if let image = image {
+            self.frontImage = TeamImagePhoto(image: image, attributedCaptionTitle: NSAttributedString(string: "Team \(self.selectedTeam?.teamNumber ?? 0): Front Image"))
+            self.frontImageHeightConstraint.isActive = true
+            
+            self.contentScrollView.contentInset = self.contentViewInsets
+            self.contentScrollView.scrollIndicatorInsets = self.contentViewInsets
+            
+            self.contentScrollView.contentOffset = CGPoint(x: 0, y: -self.frontImageHeightConstraint.constant)
+        } else {
+            self.frontImage = nil
+            self.frontImageHeightConstraint.isActive = false
+            
+            self.contentScrollView.contentInset = self.noContentInsets
+            self.contentScrollView.scrollIndicatorInsets = self.noContentInsets
+            
+            self.contentScrollView.contentOffset = CGPoint(x: 0, y: 0)
         }
-        setImage(nil)
+    }
+    
+    private func updateView() {
         if let team = self.selectedTeam {
             navBar.title = team.teamNumber.description
             teamLabel.text = team.nickname
@@ -317,7 +315,7 @@ class TeamListDetailViewController: UIViewController {
                     
                 }) { (image, error) in
                     DispatchQueue.main.async {
-                        setImage(image)
+                        self.setImage(image: image)
                     }
                 }
             }

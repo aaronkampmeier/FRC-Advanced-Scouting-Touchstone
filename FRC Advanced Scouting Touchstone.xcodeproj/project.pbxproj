@@ -26,7 +26,6 @@
 		9300196C20537B0C00E10CDC /* TeamCommentsTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9300196B20537B0C00E10CDC /* TeamCommentsTableViewController.swift */; };
 		930B965C1E4548F700E385D3 /* PitSegmentedSelectorCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 930B965B1E4548F700E385D3 /* PitSegmentedSelectorCollectionViewCell.swift */; };
 		930B96621E456D3000E385D3 /* PitTableViewSelectorCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 930B96611E456D3000E385D3 /* PitTableViewSelectorCollectionViewCell.swift */; };
-		930B96641E456D6C00E385D3 /* PitImageSelectorCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 930B96631E456D6C00E385D3 /* PitImageSelectorCollectionViewCell.swift */; };
 		930B96671E45A91A00E385D3 /* PitButtonCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 930B96661E45A91A00E385D3 /* PitButtonCollectionViewCell.swift */; };
 		9317C03B201ECFEF00F1E907 /* SSGameScoutingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9317C03A201ECFEF00F1E907 /* SSGameScoutingViewController.swift */; };
 		93183B8721C8AB84008DC997 /* API.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93183B8421C8AB83008DC997 /* API.swift */; };
@@ -38,6 +37,7 @@
 		933D21511E609BF7008C8276 /* Additional Licenses.plist in Resources */ = {isa = PBXBuildFile; fileRef = 933D21501E609BF7008C8276 /* Additional Licenses.plist */; };
 		9342D6BC222C58AB006A1A79 /* TeamimageLoader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9342D6BB222C58AB006A1A79 /* TeamimageLoader.swift */; };
 		9342D6C0222F5BAC006A1A79 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 9342D6BF222F5BAA006A1A79 /* GoogleService-Info.plist */; };
+		9342D6C32230DEC0006A1A79 /* PitScoutingInputs2019.json in Resources */ = {isa = PBXBuildFile; fileRef = 9342D6C22230DEBE006A1A79 /* PitScoutingInputs2019.json */; };
 		9349621F21E9A40500F761BD /* ScoutedTeamStats.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9349621E21E9A40500F761BD /* ScoutedTeamStats.swift */; };
 		934F4C1622066AB100A6F5FE /* LoginFormValidation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 934F4BFF22066AB100A6F5FE /* LoginFormValidation.swift */; };
 		934F4C1722066AB100A6F5FE /* LoginTableViewDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = 934F4C0122066AB100A6F5FE /* LoginTableViewDataSource.swift */; };
@@ -185,7 +185,6 @@
 		9300196B20537B0C00E10CDC /* TeamCommentsTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TeamCommentsTableViewController.swift; sourceTree = "<group>"; };
 		930B965B1E4548F700E385D3 /* PitSegmentedSelectorCollectionViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PitSegmentedSelectorCollectionViewCell.swift; sourceTree = "<group>"; };
 		930B96611E456D3000E385D3 /* PitTableViewSelectorCollectionViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PitTableViewSelectorCollectionViewCell.swift; sourceTree = "<group>"; };
-		930B96631E456D6C00E385D3 /* PitImageSelectorCollectionViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PitImageSelectorCollectionViewCell.swift; sourceTree = "<group>"; };
 		930B96661E45A91A00E385D3 /* PitButtonCollectionViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PitButtonCollectionViewCell.swift; sourceTree = "<group>"; };
 		9317C03A201ECFEF00F1E907 /* SSGameScoutingViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SSGameScoutingViewController.swift; sourceTree = "<group>"; };
 		93183B8421C8AB83008DC997 /* API.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = API.swift; path = amplify/API.swift; sourceTree = SOURCE_ROOT; };
@@ -197,6 +196,7 @@
 		933D21501E609BF7008C8276 /* Additional Licenses.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "Additional Licenses.plist"; sourceTree = "<group>"; };
 		9342D6BB222C58AB006A1A79 /* TeamimageLoader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TeamimageLoader.swift; sourceTree = "<group>"; };
 		9342D6BF222F5BAA006A1A79 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = SOURCE_ROOT; };
+		9342D6C22230DEBE006A1A79 /* PitScoutingInputs2019.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = PitScoutingInputs2019.json; sourceTree = "<group>"; };
 		9349621E21E9A40500F761BD /* ScoutedTeamStats.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScoutedTeamStats.swift; sourceTree = "<group>"; };
 		934F4BFF22066AB100A6F5FE /* LoginFormValidation.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LoginFormValidation.swift; sourceTree = "<group>"; };
 		934F4C0122066AB100A6F5FE /* LoginTableViewDataSource.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LoginTableViewDataSource.swift; sourceTree = "<group>"; };
@@ -385,6 +385,7 @@
 				9351017521F4DEB600D402FE /* ImageScalingFunctions.swift */,
 				934F4C4F22112BBB00A6F5FE /* Stands Scouting Data Model */,
 				93A3ABC221F1462F007831E3 /* PitScoutingData.swift */,
+				9342D6C22230DEBE006A1A79 /* PitScoutingInputs2019.json */,
 				938E0B3B2056D85C00666FA7 /* TBAAsyncManager.swift */,
 				9342D6BB222C58AB006A1A79 /* TeamimageLoader.swift */,
 				93A38B3D2055EBAA00B8B692 /* Views */,
@@ -548,7 +549,6 @@
 				930B965B1E4548F700E385D3 /* PitSegmentedSelectorCollectionViewCell.swift */,
 				930B96611E456D3000E385D3 /* PitTableViewSelectorCollectionViewCell.swift */,
 				93EA7FE91E4693C6002EC8C7 /* PitSwitchCollectionViewCell.swift */,
-				930B96631E456D6C00E385D3 /* PitImageSelectorCollectionViewCell.swift */,
 				930B96661E45A91A00E385D3 /* PitButtonCollectionViewCell.swift */,
 			);
 			name = "Collection Cells";
@@ -778,6 +778,7 @@
 				933D21511E609BF7008C8276 /* Additional Licenses.plist in Resources */,
 				936572E11E1610CA00439728 /* About.rtf in Resources */,
 				934F4C4E2210C10F00A6F5FE /* SSData2019.json in Resources */,
+				9342D6C32230DEC0006A1A79 /* PitScoutingInputs2019.json in Resources */,
 				93A38B3A2055EBA400B8B692 /* NoEventSelected.xib in Resources */,
 				938BEC1B22029ED9002B39D7 /* awsconfiguration.json in Resources */,
 				933D214B1E609A04008C8276 /* Pods-acknowledgments.plist in Resources */,
@@ -951,7 +952,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				9365947B1E441981008FF324 /* PitTextFieldCollectionViewCell.swift in Sources */,
-				930B96641E456D6C00E385D3 /* PitImageSelectorCollectionViewCell.swift in Sources */,
 				930B965C1E4548F700E385D3 /* PitSegmentedSelectorCollectionViewCell.swift in Sources */,
 				93E551F921CACDE0006C79A8 /* CognitoAuthProvider.swift in Sources */,
 				934F4C2422066AB100A6F5FE /* RealmLogoView.swift in Sources */,
