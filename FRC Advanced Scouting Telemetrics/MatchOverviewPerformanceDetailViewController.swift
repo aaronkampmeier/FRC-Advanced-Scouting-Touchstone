@@ -25,7 +25,7 @@ class MatchOverviewPerformanceDetailViewController: UIViewController {
     
     var model: StandsScoutingModel?
     
-    var availableScoutSessions: [ScoutSession] = [] {
+    var availableScoutSessions: [ScoutSession?] = [] {
         didSet {
             if availableScoutSessions.count <= 1 {
                 scoutIDViewHeight.constant = 0
@@ -35,7 +35,7 @@ class MatchOverviewPerformanceDetailViewController: UIViewController {
                 scoutIDView.isHidden = false
                 scoutIDSegmentedSelector.removeAllSegments()
                 for (index,session) in availableScoutSessions.enumerated() {
-                    if let date = session.recordedDate {
+                    if let date = session?.recordedDate {
                         let dateFormatter = DateFormatter()
                         dateFormatter.locale = Locale.current
                         
@@ -51,17 +51,6 @@ class MatchOverviewPerformanceDetailViewController: UIViewController {
     }
     var selectedScoutSession: ScoutSession?
     var statistics: [Statistic<ScoutSession>] = []
-    
-//    var scoutID: String? {
-//        didSet {
-//            if let id = scoutID {
-//                timeMarkers = displayedTeamMatchPerformance?.scouted?.timeMarkers(forScoutID: id) ?? []
-//                timeMarkers = timeMarkers.sorted {($0.time) < ($1.time)}
-//            }
-//
-//            timeMarkerTableView.reloadData()
-//        }
-//    }
     
     func hideEverything() {
         hasNotBeenScoutedHeight.constant = 0
@@ -129,14 +118,13 @@ class MatchOverviewPerformanceDetailViewController: UIViewController {
             
             if let teamKey = teamKey {
                 //Get the scout sessions
-                Globals.appDelegate.appSyncClient?.fetch(query: ListScoutSessionsQuery(eventKey: match.eventKey, teamKey: teamKey, matchKey: match.key), cachePolicy: .returnCacheDataAndFetch, resultHandler: {[weak self] (result, error) in
-                    if Globals.handleAppSyncErrors(forQuery: "ListScoutSessions", result: result, error: error) {
-                        self?.availableScoutSessions = result?.data?.listScoutSessions?.map({$0!.fragments.scoutSession}) ?? []
-                        self?.selectScoutSession(scoutSession: self?.availableScoutSessions.first)
-                    } else {
-                        //Uh oh
+                AWSDataManager.default.retrieveScoutSessions(forEventKey: match.eventKey, teamKey: teamKey, andMatchKey: match.key) {[weak self] (scoutSessions) in
+                    DispatchQueue.main.async {
+                        self?.availableScoutSessions = scoutSessions ?? []
+                        let session = self?.availableScoutSessions.first?.map({$0})
+                        self?.selectScoutSession(scoutSession: session)
                     }
-                })
+                }
             }
         } else {
             hideEverything()

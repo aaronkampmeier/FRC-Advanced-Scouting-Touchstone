@@ -71,6 +71,16 @@ query ListSimpleScoutSessions($eventKey: ID!, $teamKey: ID!, $matchKey: ID) {
     eventKey
   }
 }
+query ListAllScoutSessions($eventKey: ID!) {
+  listAllScoutSessions(eventKey: $eventKey) {
+    ...ScoutSession
+  }
+}
+query ListScoutSessionsDelta($eventKey: ID!, $lastSync: AWSTimestamp!) {
+  listScoutSessionsDelta(eventKey: $eventKey, lastSync: $lastSync) {
+    ...ScoutSession
+  }
+}
 query GetScoutSession($eventKey: ID!, $key: ID!) {
   getScoutSession(eventKey: $eventKey, key: $key) {
     ...ScoutSession

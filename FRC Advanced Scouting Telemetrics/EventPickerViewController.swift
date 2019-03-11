@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import AWSAppSync
 
 class EventPickerViewController: UIViewController, UIPickerViewDelegate, UIPickerViewDataSource {
     @IBOutlet weak var eventPicker: UIPickerView!
@@ -16,6 +17,8 @@ class EventPickerViewController: UIViewController, UIPickerViewDelegate, UIPicke
     fileprivate var events: [(eventKey: String, eventName: String)] = []
     fileprivate var currentEvent: String?
     fileprivate var chosenEvent: String?
+    
+    private var trackedEventsWatcher: GraphQLQueryWatcher<ListTrackedEventsQuery>?
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -25,14 +28,20 @@ class EventPickerViewController: UIViewController, UIPickerViewDelegate, UIPicke
         eventPicker.delegate = self
         
         //Load all the events
-        Globals.appDelegate.appSyncClient?.fetch(query: ListTrackedEventsQuery(), cachePolicy: .returnCacheDataAndFetch) {[weak self] result, error in
-            if Globals.handleAppSyncErrors(forQuery: "ListTrackedEventsQuery", result: result, error: error) {
-                self?.events = result?.data?.listTrackedEvents?.map {(eventKey: $0!.eventKey, eventName: $0!.eventName)} ?? []
-                self?.load()
-            } else {
-                //TODO: Show error
+        trackedEventsWatcher = Globals.appDelegate.appSyncClient?.watch(query: ListTrackedEventsQuery(), cachePolicy: .returnCacheDataElseFetch, queue: DispatchQueue.global(qos: .userInteractive)) {[weak self] result, error in
+            DispatchQueue.main.async {
+                if Globals.handleAppSyncErrors(forQuery: "ListTrackedEventsQuery", result: result, error: error) {
+                    self?.events = result?.data?.listTrackedEvents?.map {(eventKey: $0!.eventKey, eventName: $0!.eventName)} ?? []
+                    self?.load()
+                } else {
+                    //TODO: Show error
+                }
             }
         }
+    }
+    
+    deinit {
+        trackedEventsWatcher?.cancel()
     }
     
     fileprivate func load() {

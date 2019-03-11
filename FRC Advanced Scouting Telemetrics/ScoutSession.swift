@@ -45,6 +45,8 @@ extension ScoutSession {
         }
     }
     
+    
+    
     static var stats: [Statistic<ScoutSession>] {
         get {
             var statistics = [ScoutSessionStat]()

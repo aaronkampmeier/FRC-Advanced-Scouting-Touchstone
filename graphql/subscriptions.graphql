@@ -33,13 +33,11 @@ subscription OnUpdateScoutedTeams($userID: ID!, $eventKey: ID!) {
 }
 subscription OnCreateScoutSession(
   $userID: ID!
-  $teamKey: String
-  $matchKey: String
+  $eventKey: String!
 ) {
   onCreateScoutSession(
     userID: $userID
-    teamKey: $teamKey
-    matchKey: $matchKey
+    eventKey: $eventKey
   ) {
     ...ScoutSession
   }

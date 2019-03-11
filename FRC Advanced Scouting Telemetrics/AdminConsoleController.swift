@@ -18,12 +18,12 @@ class AdminConsoleController: UIViewController, UITableViewDataSource, UITableVi
     
     var trackedEvents: [ListTrackedEventsQuery.Data.ListTrackedEvent] = []
     
-    var addEventSubscription: AWSAppSyncSubscriptionWatcher<OnAddTrackedEventSubscription>?
+    var trackedEventsWatcher: GraphQLQueryWatcher<ListTrackedEventsQuery>?
     
     override func viewDidLoad() {
         super.viewDidLoad()
         //Get the tracked events
-        Globals.appDelegate.appSyncClient?.fetch(query: ListTrackedEventsQuery(), cachePolicy: .returnCacheDataAndFetch, resultHandler: {[weak self] (result, error) in
+        trackedEventsWatcher = Globals.appDelegate.appSyncClient?.watch(query: ListTrackedEventsQuery(), cachePolicy: .returnCacheDataAndFetch, resultHandler: {[weak self] (result, error) in
             if Globals.handleAppSyncErrors(forQuery: "ListTrackedEventsQuery-AdminConsole", result: result, error: error) {
                 self?.trackedEvents = result?.data?.listTrackedEvents?.map({$0!}) ?? []
                 self?.tableView.reloadData()
@@ -31,20 +31,10 @@ class AdminConsoleController: UIViewController, UITableViewDataSource, UITableVi
                 //TODO: - Show error
             }
         })
-        
-        do {
-            self.addEventSubscription = try Globals.appDelegate.appSyncClient?.subscribe(subscription: OnAddTrackedEventSubscription(userID: AWSMobileClient.sharedInstance().username ?? ""), resultHandler: {[weak self] (result, transaction, error) in
-                //Check that the event is not already in the list
-                let newEvent = result?.data?.onAddTrackedEvent
-                if !(self?.trackedEvents.contains(where: {$0.eventKey == newEvent?.eventKey}) ?? false) {
-                    self?.trackedEvents.append(ListTrackedEventsQuery.Data.ListTrackedEvent(eventKey: newEvent?.eventKey ?? "", eventName: newEvent?.eventName ?? ""))
-                    self?.tableView.reloadData()
-                }
-            })
-        } catch {
-            CLSNSLogv("Error adding tracked event subscriptions: \(error)", getVaList([]))
-            Crashlytics.sharedInstance().recordError(error)
-        }
+    }
+    
+    deinit {
+        trackedEventsWatcher?.cancel()
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -55,28 +45,11 @@ class AdminConsoleController: UIViewController, UITableViewDataSource, UITableVi
         
         //Reload the table view
         tableView.reloadData()
-        
-        //Set the observer
-//        notificationToken = events.observe {[weak self] collectionChange in
-//            switch collectionChange {
-//            case .update(_, deletions: let deletions, insertions: let insertions, _):
-//                if deletions.count > 0 || insertions.count > 0 {
-//                    self?.tableView.beginUpdates()
-//                    self?.tableView.deleteRows(at: deletions.map {IndexPath(row: $0, section: 0)}, with: .automatic)
-//                    self?.tableView.insertRows(at: insertions.map {IndexPath(row: $0, section: 0)}, with: .automatic)
-//                    self?.tableView.endUpdates()
-//                }
-//            default:
-//                break
-//            }
-//        }
     }
     
     override func viewDidDisappear(_ animated: Bool) {
         super.viewDidDisappear(animated)
         
-//        notificationToken?.invalidate()
-//        self.notificationToken = nil
     }
     
     enum adminConsoleSections: Int {

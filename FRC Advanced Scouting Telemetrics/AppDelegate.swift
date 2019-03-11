@@ -21,7 +21,8 @@ internal struct Globals {
     static var isInSpectatorMode: Bool {
         return UserDefaults.standard.value(forKey: isSpectatorModeKey) as? Bool ?? false
     }
-    static var asyncLoadingManager: TBAUpdatingDataReloader?
+    static var asyncLoadingManager: FASTAsyncManager?
+    static var dataManager: AWSDataManager?
     
     ///Handles AppSync errors inline by logging and recording them
     ///- Returns: A bool signifiying if the query was successful or not
@@ -109,6 +110,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         // Override point for customization after application launch.
         FirebaseApp.configure()
         Fabric.with([Crashlytics.self])
+        
+        Globals.dataManager = AWSDataManager()
         
         ///AWS Cognito Initialization
         AWSMobileClient.sharedInstance().initialize {userState, error in
@@ -199,7 +202,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
                 //Clear the Images cache
                 TeamImageLoader.default.clearCache()
             } else if state == UserState.signedIn {
-                Globals.asyncLoadingManager = TBAUpdatingDataReloader()
+                Globals.asyncLoadingManager = FASTAsyncManager()
             }
             
             
@@ -210,7 +213,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         
         //Set up the reloading manager
         if AWSMobileClient.sharedInstance().currentUserState == .signedIn {
-            Globals.asyncLoadingManager = TBAUpdatingDataReloader()
+            Globals.asyncLoadingManager = FASTAsyncManager()
         }
         
         return true

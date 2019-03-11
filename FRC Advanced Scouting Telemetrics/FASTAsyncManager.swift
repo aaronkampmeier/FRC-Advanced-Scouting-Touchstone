@@ -14,7 +14,7 @@ import Crashlytics
 ///For loading async OPRs, ranks, team statuses, match scores, and eventually insights
 
 ///Sole job is to reload data from cloud not retrieve
-class TBAUpdatingDataReloader {
+class FASTAsyncManager {
 
     static let backgroundQueueID = "TBAUpdatingThread"
     private var backgroundQueue: DispatchQueue
@@ -23,6 +23,7 @@ class TBAUpdatingDataReloader {
     private var oprTimedUpdaters = [String:FASTBackgroundTimer]()
     private var matchTimedUpdaters = [String:FASTBackgroundTimer]()
     private var statusTimedUpdaters = [String:FASTBackgroundTimer]()
+    private var scoutSessionDeltaSync: Cancellable?
     
     private var addEventSubscription: AWSAppSyncSubscriptionWatcher<OnAddTrackedEventSubscription>?
     private var removeEventSubscription: AWSAppSyncSubscriptionWatcher<OnRemoveTrackedEventSubscription>?
@@ -31,7 +32,7 @@ class TBAUpdatingDataReloader {
 
     init() {
         //Create background thread for updating
-        backgroundQueue = DispatchQueue(label: TBAUpdatingDataReloader.backgroundQueueID, qos: .utility)
+        backgroundQueue = DispatchQueue.global(qos: .utility) //DispatchQueue(label: FASTAsyncManager.backgroundQueueID, qos: .utility)
 
         resetSubscriptions()
         
@@ -42,7 +43,7 @@ class TBAUpdatingDataReloader {
         trackedEventWatcher = Globals.appDelegate.appSyncClient?.watch(query: ListTrackedEventsQuery(), cachePolicy: .returnCacheDataAndFetch, resultHandler: {[weak self] (result, error) in
             if Globals.handleAppSyncErrors(forQuery: "ListTrackedEventsQuery-AsyncManager", result: result, error: error) {
                 self?.trackedEvents = result?.data?.listTrackedEvents?.map({$0!}) ?? []
-                self?.setGeneralUpdaters()
+//                self?.setGeneralUpdaters()
             } else {
                 self?.getTrackedEvents()
             }
@@ -50,6 +51,8 @@ class TBAUpdatingDataReloader {
     }
     
     func resetSubscriptions() {
+        addEventSubscription?.cancel()
+        removeEventSubscription?.cancel()
         //Set updaters to listen for new/deleted events
         do {
             addEventSubscription = try Globals.appDelegate.appSyncClient?.subscribe(subscription: OnAddTrackedEventSubscription(userID: AWSMobileClient.sharedInstance().username!), resultHandler: {[weak self] (result, transaction, error) in
@@ -100,21 +103,86 @@ class TBAUpdatingDataReloader {
     }
 
     deinit {
+        addEventSubscription?.cancel()
+        removeEventSubscription?.cancel()
+        scoutSessionDeltaSync?.cancel()
     }
 
     ///Sets basic, general updaters; will remove all existing ones on call
-    func setGeneralUpdaters() {
+    func setGeneralUpdaters(forEventKey eventKey: String?) {
         oprTimedUpdaters.removeAll()
         matchTimedUpdaters.removeAll()
         statusTimedUpdaters.removeAll()
+        scoutSessionDeltaSync?.cancel()
         
-        for trackedEvent in self.trackedEvents {
-            self.setOPRUpdater(forEventKey: trackedEvent.eventKey)
-            self.setMatchUpdater(forEventKey: trackedEvent.eventKey)
-            self.setStatusesUpdater(forEvent: trackedEvent.eventKey)
+        if let eventKey = eventKey {
+            self.setOPRUpdater(forEventKey: eventKey)
+            self.setMatchUpdater(forEventKey: eventKey)
+            self.setStatusesUpdater(forEvent: eventKey)
+            
+            //Start the scout sessions delta sync
+            let config = SyncConfiguration(baseRefreshIntervalInSeconds: 1 * 24 * 60 * 60)
+            self.scoutSessionDeltaSync = Globals.appDelegate.appSyncClient?.sync(baseQuery: ListAllScoutSessionsQuery(eventKey: eventKey), baseQueryResultHandler: { (result, error) in
+                if Globals.handleAppSyncErrors(forQuery: "ListAllScoutSessions-Base", result: result, error: error) {
+                    let numOfSessions = result?.data?.listAllScoutSessions?.count ?? 0
+                    CLSNSLogv("Ran ListAllScoutSessions Base Query with source: \(String(describing: result?.source)) with \(numOfSessions) sessions", getVaList([]))
+                    
+                    //Set the in memory cache of scout sessions
+                    Globals.dataManager?.inMemoryCacheScoutSessions(scoutSessions: result?.data?.listAllScoutSessions?.map({$0?.fragments.scoutSession}), forEventKey: eventKey)
+                }
+            }, subscription: OnCreateScoutSessionSubscription(userID: AWSMobileClient.sharedInstance().username ?? "", eventKey: eventKey), subscriptionResultHandler: { (result, transaction, error) in
+                CLSNSLogv("Scout Sessions Subscription Fired", getVaList([]))
+                if Globals.handleAppSyncErrors(forQuery: "OnCreateScoutSessionSubscription-DeltaSync", result: result, error: error) {
+                    //Add the new scout session to the cache
+                    if let newSession = result?.data?.onCreateScoutSession {
+                        do {
+                            try transaction?.update(query: ListAllScoutSessionsQuery(eventKey: eventKey), { (selectionSet) in
+                                if !(selectionSet.listAllScoutSessions?.contains(where: {$0?.key == newSession.key}) ?? false) {
+                                    selectionSet.listAllScoutSessions?.append(try ListAllScoutSessionsQuery.Data.ListAllScoutSession(newSession))
+                                }
+                            })
+                            
+                            //Update the in memory cache
+                            if !(Globals.dataManager?.cachedScoutSessions.scoutSessions?.contains(where: {$0?.key == newSession.key}) ?? false) {
+                                Globals.dataManager?.cachedScoutSessions.scoutSessions?.append(newSession.fragments.scoutSession)
+                            }
+                        } catch {
+                            CLSNSLogv("Error updating the scout session cache: \(error)", getVaList([]))
+                            Crashlytics.sharedInstance().recordError(error)
+                        }
+                    }
+                }
+            }, deltaQuery: ListScoutSessionsDeltaQuery(eventKey: eventKey, lastSync: 0), deltaQueryResultHandler: { (result, transaction, error) in
+                if Globals.handleAppSyncErrors(forQuery: "ListScoutSessionsDelta", result: result, error: error) {
+                    let numOfUpdates = result?.data?.listScoutSessionsDelta?.count
+                    CLSNSLogv("Got delta update of scout sessions with \(numOfUpdates ?? 0) updates", getVaList([]))
+                    //Add the new scout session to the cache
+                    do {
+                        try transaction?.update(query: ListAllScoutSessionsQuery(eventKey: eventKey), { (selectionSet) in
+                            for session in result?.data?.listScoutSessionsDelta ?? [] {
+                                if let newSession = session {
+                                    if !(selectionSet.listAllScoutSessions?.contains(where: {$0?.key == newSession.key}) ?? false) {
+                                        selectionSet.listAllScoutSessions?.append(try ListAllScoutSessionsQuery.Data.ListAllScoutSession(newSession))
+                                    }
+                                    
+                                    //Update the in memory cache
+                                    if !(Globals.dataManager?.cachedScoutSessions.scoutSessions?.contains(where: {$0?.key == newSession.key}) ?? false) {
+                                        Globals.dataManager?.cachedScoutSessions.scoutSessions?.append(newSession.fragments.scoutSession)
+                                    }
+                                }
+                            }
+                        })
+                    } catch {
+                        CLSNSLogv("Error updating the scout session cache: \(error)", getVaList([]))
+                        Crashlytics.sharedInstance().recordError(error)
+                    }
+                    
+                    Globals.recordAnalyticsEvent(eventType: "scoutsessions_delta_update", metrics: ["update_count":Double(numOfUpdates ?? 0)])
+                }
+            }, callbackQueue: backgroundQueue, syncConfiguration: config)
+            
+            Globals.recordAnalyticsEvent(eventType: "set_event_async_updaters")
         }
-        
-        Globals.recordAnalyticsEvent(eventType: "set_async_updaters")
     }
 
     func setOPRUpdater(forEventKey eventKey: String) {

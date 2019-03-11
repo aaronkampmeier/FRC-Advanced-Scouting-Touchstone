@@ -81,7 +81,7 @@
 		937C682E204C86DB00FAEDE8 /* SelectStatsTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 937C682D204C86DB00FAEDE8 /* SelectStatsTableViewController.swift */; };
 		937E9C961E40468300D0ED76 /* SuperNotesCollectionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 937E9C951E40468300D0ED76 /* SuperNotesCollectionViewController.swift */; };
 		938BEC1B22029ED9002B39D7 /* awsconfiguration.json in Resources */ = {isa = PBXBuildFile; fileRef = 938BEC1A22029ED4002B39D7 /* awsconfiguration.json */; };
-		938E0B3C2056D85C00666FA7 /* TBAAsyncManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 938E0B3B2056D85C00666FA7 /* TBAAsyncManager.swift */; };
+		938E0B3C2056D85C00666FA7 /* FASTAsyncManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 938E0B3B2056D85C00666FA7 /* FASTAsyncManager.swift */; };
 		9391EA6C1E4852D2008E17A1 /* PitStringFieldCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9391EA6B1E4852D2008E17A1 /* PitStringFieldCollectionViewCell.swift */; };
 		93A1E28E2223921900A782FC /* DeepSpaceWelcomeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93A1E28D2223921900A782FC /* DeepSpaceWelcomeViewController.swift */; };
 		93A38B3A2055EBA400B8B692 /* NoEventSelected.xib in Resources */ = {isa = PBXBuildFile; fileRef = 93A38B392055EBA400B8B692 /* NoEventSelected.xib */; };
@@ -241,7 +241,7 @@
 		937E9C951E40468300D0ED76 /* SuperNotesCollectionViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SuperNotesCollectionViewController.swift; sourceTree = "<group>"; };
 		938BEC1A22029ED4002B39D7 /* awsconfiguration.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; name = awsconfiguration.json; path = "/Users/aaron/Documents/Xcode Projects/FRC Advanced Scouting Telemetrics/FRC Advanced Scouting Telemetrics/awsconfiguration.json"; sourceTree = "<absolute>"; };
 		938D9CB01E1B05BA00A5E522 /* FASTTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FASTTests.swift; sourceTree = "<group>"; };
-		938E0B3B2056D85C00666FA7 /* TBAAsyncManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TBAAsyncManager.swift; sourceTree = "<group>"; };
+		938E0B3B2056D85C00666FA7 /* FASTAsyncManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FASTAsyncManager.swift; sourceTree = "<group>"; };
 		9391EA6B1E4852D2008E17A1 /* PitStringFieldCollectionViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PitStringFieldCollectionViewCell.swift; sourceTree = "<group>"; };
 		93A1E28D2223921900A782FC /* DeepSpaceWelcomeViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeepSpaceWelcomeViewController.swift; sourceTree = "<group>"; };
 		93A38B392055EBA400B8B692 /* NoEventSelected.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = NoEventSelected.xib; sourceTree = "<group>"; };
@@ -386,7 +386,7 @@
 				934F4C4F22112BBB00A6F5FE /* Stands Scouting Data Model */,
 				93A3ABC221F1462F007831E3 /* PitScoutingData.swift */,
 				9342D6C22230DEBE006A1A79 /* PitScoutingInputs2019.json */,
-				938E0B3B2056D85C00666FA7 /* TBAAsyncManager.swift */,
+				938E0B3B2056D85C00666FA7 /* FASTAsyncManager.swift */,
 				9342D6BB222C58AB006A1A79 /* TeamimageLoader.swift */,
 				93A38B3D2055EBAA00B8B692 /* Views */,
 				1F21DF101C645D1F00C55D0E /* View Controllers */,
@@ -910,7 +910,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 1;
 			shellPath = /bin/sh;
-			shellScript = "# Type a script or drag a script file from your workspace to insert its path.\n\"${PODS_ROOT}/Fabric/run\"\n";
+			shellScript = "# Type a script or drag a script file from your workspace to insert its path.\n\"${PODS_ROOT}/Fabric/run\" 69885bcf9ab40dc49ae9c921bfc14f173744a153\n";
 		};
 		9342D6C1222F5C3D006A1A79 /* Primary Upload dSYMs */ = {
 			isa = PBXShellScriptBuildPhase;
@@ -956,7 +956,7 @@
 				93E551F921CACDE0006C79A8 /* CognitoAuthProvider.swift in Sources */,
 				934F4C2422066AB100A6F5FE /* RealmLogoView.swift in Sources */,
 				934F4C1F22066AB100A6F5FE /* LoginViewController.swift in Sources */,
-				938E0B3C2056D85C00666FA7 /* TBAAsyncManager.swift in Sources */,
+				938E0B3C2056D85C00666FA7 /* FASTAsyncManager.swift in Sources */,
 				930B96671E45A91A00E385D3 /* PitButtonCollectionViewCell.swift in Sources */,
 				935A2B0A1E6E6968008FEF9D /* TimeMarkerDetailViewController.swift in Sources */,
 				932354461E41686B0039386A /* SuperNotesCollectionViewCell.swift in Sources */,

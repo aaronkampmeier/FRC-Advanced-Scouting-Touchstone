@@ -194,27 +194,6 @@ class TeamListTableViewController: UITableViewController, TeamListDetailDataSour
             //Get the scouted teams in the cache
             Globals.appDelegate.appSyncClient?.fetch(query: ListScoutedTeamsQuery(eventKey: eventKey), cachePolicy: .returnCacheDataAndFetch, resultHandler: { (result, error) in
                 if Globals.handleAppSyncErrors(forQuery: "ListScoutedTeams-TeamListHydrateCache", result: result, error: error) {
-                    //Get all of the images
-//                    if let scoutedTeams = result?.data?.listScoutedTeams {
-//                        for scoutedTeam in scoutedTeams {
-//                            if let scoutedTeamImage = scoutedTeam?.fragments.scoutedTeam.image {
-//                                TeamImageLoader.default.loadImage(withAttributes: scoutedTeamImage, progressBlock: { (progress) in
-//
-//                                }, completionHandler: { (image, error) in
-//                                    if let image = image {
-//                                        self.teamImages[scoutedTeam?.teamKey ?? ""] = image
-//
-//                                        //Reload that row
-//                                        if let row = self.currentTeamsToDisplay.firstIndex(where: {$0.key == scoutedTeam?.teamKey}) {
-//                                            self.tableView.reloadRows(at: [IndexPath(row: row, section: 0)], with: .automatic)
-//                                        }
-//                                    } else if let _ = error {
-//                                        self.teamImages[scoutedTeam?.teamKey ?? ""] = UIImage(named: "Error")
-//                                    }
-//                                })
-//                            }
-//                        }
-//                    }
                 }
             })
             
@@ -270,6 +249,10 @@ class TeamListTableViewController: UITableViewController, TeamListDetailDataSour
         
         self.resetSubscriptions()
         teamListSplitVC.teamListDetailVC.reloadData()
+        
+        if selectedEventRanking?.eventKey != selectedEventKey {
+            Globals.asyncLoadingManager?.setGeneralUpdaters(forEventKey: selectedEventKey)
+        }
     }
     
     func orderTeamsUsingRanking() {
@@ -320,8 +303,10 @@ class TeamListTableViewController: UITableViewController, TeamListDetailDataSour
                     if existsNewTeams || isNewOrder {
                         self.currentEventTeams = orderedTeams
                     } else {
-                        //Just reload visible rows
-                        self.tableView.reloadRows(at: self.tableView.indexPathsForVisibleRows ?? [], with: .automatic)
+                        if self.selectedEventKey != nil {
+                            //Just reload visible rows
+                            self.tableView.reloadRows(at: self.tableView.indexPathsForVisibleRows ?? [], with: .automatic)
+                        }
                     }
                     
                     if shouldReloadRanking {
@@ -356,41 +341,40 @@ class TeamListTableViewController: UITableViewController, TeamListDetailDataSour
         }
     }
     
+    deinit {
+        trackedEventsWatcher?.cancel()
+        changeTeamRankSubscriber?.cancel()
+        pickedTeamSubscriber?.cancel()
+        updateScoutedTeamSubscriber?.cancel()
+    }
     
-    var deleteTrackedEventSubscriber: AWSAppSync.AWSAppSyncSubscriptionWatcher<OnRemoveTrackedEventSubscription>?
-    var addTrackedEventSubscriber: AWSAppSyncSubscriptionWatcher<OnAddTrackedEventSubscription>?
+    var trackedEventsWatcher: GraphQLQueryWatcher<ListTrackedEventsQuery>?
     var changeTeamRankSubscriber: AWSAppSync.AWSAppSyncSubscriptionWatcher<OnUpdateTeamRankSubscription>?
     var pickedTeamSubscriber: AWSAppSync.AWSAppSyncSubscriptionWatcher<OnSetTeamPickedSubscription>?
     var updateScoutedTeamSubscriber: AWSAppSyncSubscriptionWatcher<OnUpdateScoutedTeamsSubscription>?
     func resetSubscriptions() {
         CLSNSLogv("Resetting Team List Subscriptions", getVaList([]))
         
-        //Set up a subscriber to event deletions
+        trackedEventsWatcher?.cancel()
+        changeTeamRankSubscriber?.cancel()
+        pickedTeamSubscriber?.cancel()
+        updateScoutedTeamSubscriber?.cancel()
+        
+        //Set up a watcher to event deletions
         do {
-            let subscription = OnRemoveTrackedEventSubscription(userID: AWSMobileClient.sharedInstance().username ?? "")
-            deleteTrackedEventSubscriber = try Globals.appDelegate.appSyncClient?.subscribe(subscription: subscription) {[weak self] (result, transaction, error) in
+            trackedEventsWatcher = Globals.appDelegate.appSyncClient?.watch(query: ListTrackedEventsQuery(), cachePolicy: .returnCacheDataDontFetch, resultHandler: {[weak self] (result, error) in
                 DispatchQueue.main.async {
-                    if Globals.handleAppSyncErrors(forQuery: "OnRemoveTrackedEventSubscription", result: result, error: error) {
-                        //Simply returns the event key
-                        let removedEventKey: String = result!.data!.onRemoveTrackedEvent!.eventKey
-                        if self?.selectedEventKey ?? "" == removedEventKey {
-                            //TODO: Use transaction to edit cache
+                    let trackedEvents = result?.data?.listTrackedEvents?.map({$0!}) ?? []
+                    
+                    if let selectedEventKey = self?.selectedEventKey {
+                        if !trackedEvents.contains(where: {$0.eventKey == selectedEventKey}) {
+                            //Event was removed
                             self?.eventSelected(nil)
                         }
                     } else {
-                        if let error = error as? AWSAppSyncSubscriptionError {
-                            if error.recoverySuggestion != nil {
-                                self?.resetSubscriptions()
-                            }
+                        if let newEventKey = trackedEvents.first?.eventKey {
+                            self?.eventSelected(newEventKey)
                         }
-                    }
-                }
-            }
-            
-            addTrackedEventSubscriber = try Globals.appDelegate.appSyncClient?.subscribe(subscription: OnAddTrackedEventSubscription(userID: AWSMobileClient.sharedInstance().username ?? ""), resultHandler: {[weak self] (result, transaction, error) in
-                if self?.selectedEventKey == nil, let newKey = result?.data?.onAddTrackedEvent?.eventKey {
-                    DispatchQueue.main.async {
-                        self?.eventSelected(newKey)
                     }
                 }
             })
@@ -465,9 +449,6 @@ class TeamListTableViewController: UITableViewController, TeamListDetailDataSour
                 //TODO: Handle this error
             }
         } else {
-            changeTeamRankSubscriber?.cancel()
-            pickedTeamSubscriber?.cancel()
-            updateScoutedTeamSubscriber?.cancel()
         }
     }
     
@@ -573,7 +554,7 @@ class TeamListTableViewController: UITableViewController, TeamListDetailDataSour
             cell.rankLabel.text = "\(index as Int + 1)"
         } else {
             cell.rankLabel.text = "?"
-            Crashlytics.sharedInstance().recordCustomExceptionName("Team Event Rank Failed", reason: "Team is not in currentEventTeams. Team: \(team.key), Event: \(selectedEventKey)", frameArray: [])
+            Crashlytics.sharedInstance().recordCustomExceptionName("Team Event Rank Failed", reason: "Team is not in currentEventTeams.", frameArray: [])
         }
         
         //Show an X if they have been picked
