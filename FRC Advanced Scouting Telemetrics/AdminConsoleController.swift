@@ -12,6 +12,7 @@ import VTAcknowledgementsViewController
 import AWSMobileClient
 import AWSAppSync
 import Firebase
+import FirebasePerformance
 
 class AdminConsoleController: UIViewController, UITableViewDataSource, UITableViewDelegate {
     @IBOutlet weak var tableView: UITableView!
@@ -118,7 +119,7 @@ class AdminConsoleController: UIViewController, UITableViewDataSource, UITableVi
     func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
         switch section {
         case 0:
-            return "Events (swipe left to reload/export/remove)"
+            return "Events (swipe left to export/remove)"
         default:
             return ""
         }
@@ -338,9 +339,13 @@ class AdminConsoleController: UIViewController, UITableViewDataSource, UITableVi
     
     func exportToCSV(eventKey: String, withSourceView view: UIView?, onCompletion: @escaping (Bool) -> Void) {
         showLoadingIndicator()
-        
+		let perfTrace = Performance.startTrace(name: "CSV Export")
+		perfTrace?.setValue(eventKey, forAttribute: "event_key")
+//		perfTrace?.start()
+		
         let finishingActions: (URL?, Error?) -> Void = {path, error in
             DispatchQueue.main.async {
+				perfTrace?.stop()
                 self.removeLoadingIndicator()
                 if let error = error {
                     let alert = UIAlertController(title: "Export Failed", message: "There was an error exporting to CSV: \(error)", preferredStyle: .alert)
@@ -390,6 +395,9 @@ class AdminConsoleController: UIViewController, UITableViewDataSource, UITableVi
             let stats = StatisticsDataSource().getStats(forType: ScoutedTeam.self)
             
             var csvText = ""
+            //First add in the header for the team number
+            csvText += "Team Number,"
+            
             //First add in the header row of all stat names
             for (index, stat) in stats.enumerated() {
                 csvText += stat.name
@@ -404,7 +412,7 @@ class AdminConsoleController: UIViewController, UITableViewDataSource, UITableVi
             
             //Now for all the stat values
             //Get the scouted teams
-            let queue = DispatchQueue(label: "CSV Export", qos: DispatchQoS.utility)
+            let queue = DispatchQueue.global(qos: .utility)
             Globals.appDelegate.appSyncClient?.fetch(query: GetEventRankingQuery(key: eventKey), cachePolicy: .returnCacheDataElseFetch, queue: queue, resultHandler: { (result, error) in
                 if Globals.handleAppSyncErrors(forQuery: "GetEventRanking-CSVExport", result: result, error: error) {
                     let eventRanking = result?.data?.getEventRanking?.fragments.eventRanking
@@ -424,21 +432,24 @@ class AdminConsoleController: UIViewController, UITableViewDataSource, UITableVi
                             
                             //Teams are ordered, now calculate the stats
                             for scoutedTeam in orderedScoutedTeams {
+                                //First put the team number
+                                csvText += scoutedTeam.teamKey.trimmingCharacters(in: CharacterSet.letters) + ","
+                                
                                 for (index, stat) in stats.enumerated() {
                                     let group = DispatchGroup()
                                     var groupHasBeenLeft = false
                                     group.enter()
                                     stat.calculate(forObject: scoutedTeam, callback: { (value) in
-                                        csvText += "\(value)"
-                                        
-                                        if index == stats.count - 1 {
-                                            //End index
-                                            csvText += "\n"
-                                        } else {
-                                            csvText += ","
-                                        }
-                                        
                                         if !groupHasBeenLeft {
+                                            csvText += "\(value)"
+                                            
+                                            if index == stats.count - 1 {
+                                                //End index
+                                                csvText += "\n"
+                                            } else {
+                                                csvText += ","
+                                            }
+                                            
                                             group.leave()
                                             groupHasBeenLeft = true
                                         }
@@ -447,7 +458,6 @@ class AdminConsoleController: UIViewController, UITableViewDataSource, UITableVi
                                     group.wait()
                                 }
                             }
-                            
                             
                             do {
                                 try csvText.write(to: path, atomically: true, encoding: String.Encoding.utf8)
@@ -495,6 +505,7 @@ class AdminConsoleController: UIViewController, UITableViewDataSource, UITableVi
         let alert = UIAlertController(title: "Clear Local Cache?", message: "Would you like to clear the local cache of data? This will not delete any of your scouted data, simply clear out the local cache of it. This will cause longer loading times initially as data is re-downloaded and cached again.", preferredStyle: .alert)
         alert.addAction(UIAlertAction(title: "Clear Cache", style: .destructive, handler: { (action) in
             Globals.appDelegate.appSyncClient?.clearCache()
+            CLSNSLogv("Cleared AppSync Cache", getVaList([]))
         }))
         alert.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
         present(alert, animated: true, completion: nil)

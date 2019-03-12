@@ -37,8 +37,18 @@ internal struct Globals {
                             //The error is that the operation was cancelled, do not treat as error
                             CLSNSLogv("Operation \(queryIdentifier) cancelled", getVaList([]))
                             break
+                        } else if nserr.code == -1005 {
+                            //The network connection was lost
+                            CLSNSLogv("Operation \(queryIdentifier) terminated because the network connection was lost", getVaList([]))
+                        } else if nserr.code == -1009 {
+                            //Internet connection is offline
+                            CLSNSLogv("Operation \(queryIdentifier) failed because the network connection is offline", getVaList([]))
+                        } else {
+                            CLSNSLogv("Error performing \(queryIdentifier): \(error)", getVaList([]))
+                            Crashlytics.sharedInstance().recordError(nserr)
                         }
-                        fallthrough
+                        
+//                        fallthrough
                     }
                     fallthrough
                 default:
@@ -47,6 +57,13 @@ internal struct Globals {
                     break
                 }
                 
+            } else if let error = error as? AWSAppSyncSubscriptionError {
+                if error.recoverySuggestion != nil {
+                    //There is a recovery suggestion, don't treat as error
+                } else {
+                    CLSNSLogv("Error subscribing to \(queryIdentifier): \(error)", getVaList([]))
+                    Crashlytics.sharedInstance().recordError(error)
+                }
             } else {
                 CLSNSLogv("Error performing \(queryIdentifier): \(error)", getVaList([]))
                 Crashlytics.sharedInstance().recordError(error)

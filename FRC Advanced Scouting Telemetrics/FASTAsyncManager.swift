@@ -10,6 +10,8 @@ import Foundation
 import AWSAppSync
 import AWSMobileClient
 import Crashlytics
+import Firebase
+import FirebasePerformance
 
 ///For loading async OPRs, ranks, team statuses, match scores, and eventually insights
 
@@ -108,8 +110,14 @@ class FASTAsyncManager {
         scoutSessionDeltaSync?.cancel()
     }
 
+	var selectedEventKey: String?
     ///Sets basic, general updaters; will remove all existing ones on call
     func setGeneralUpdaters(forEventKey eventKey: String?) {
+		guard eventKey != selectedEventKey else {
+			return
+		}
+		selectedEventKey = eventKey
+		CLSNSLogv("Setting async updaters for \(eventKey ?? "?")", getVaList([]))
         oprTimedUpdaters.removeAll()
         matchTimedUpdaters.removeAll()
         statusTimedUpdaters.removeAll()
@@ -121,30 +129,40 @@ class FASTAsyncManager {
             self.setStatusesUpdater(forEvent: eventKey)
             
             //Start the scout sessions delta sync
-            let config = SyncConfiguration(baseRefreshIntervalInSeconds: 1 * 24 * 60 * 60)
+			Globals.dataManager?.currentlyCachingEvents.append(eventKey)
+            let config = SyncConfiguration(baseRefreshIntervalInSeconds: 6 * 60 * 60)
+			let perfTrace = Performance.startTrace(name: "ScoutSessions Delta Sync Base Query")
+//			perfTrace?.start()
             self.scoutSessionDeltaSync = Globals.appDelegate.appSyncClient?.sync(baseQuery: ListAllScoutSessionsQuery(eventKey: eventKey), baseQueryResultHandler: { (result, error) in
                 if Globals.handleAppSyncErrors(forQuery: "ListAllScoutSessions-Base", result: result, error: error) {
                     let numOfSessions = result?.data?.listAllScoutSessions?.count ?? 0
+					perfTrace?.setValue(Int64(numOfSessions), forMetric: "sessions_returned")
                     CLSNSLogv("Ran ListAllScoutSessions Base Query with source: \(String(describing: result?.source)) with \(numOfSessions) sessions", getVaList([]))
                     
                     //Set the in memory cache of scout sessions
-                    Globals.dataManager?.inMemoryCacheScoutSessions(scoutSessions: result?.data?.listAllScoutSessions?.map({$0?.fragments.scoutSession}), forEventKey: eventKey)
+                    Globals.dataManager?.cachedScoutSessions[eventKey] = result?.data?.listAllScoutSessions?.map({$0?.fragments.scoutSession})
                 }
+				perfTrace?.stop()
+				if let index = Globals.dataManager?.currentlyCachingEvents.firstIndex(of: eventKey) {
+					Globals.dataManager?.currentlyCachingEvents.remove(at: index)
+				}
             }, subscription: OnCreateScoutSessionSubscription(userID: AWSMobileClient.sharedInstance().username ?? "", eventKey: eventKey), subscriptionResultHandler: { (result, transaction, error) in
                 CLSNSLogv("Scout Sessions Subscription Fired", getVaList([]))
                 if Globals.handleAppSyncErrors(forQuery: "OnCreateScoutSessionSubscription-DeltaSync", result: result, error: error) {
                     //Add the new scout session to the cache
                     if let newSession = result?.data?.onCreateScoutSession {
                         do {
+							let perfTrace = Performance.startTrace(name: "Scout Session Subscription Cache Update")
                             try transaction?.update(query: ListAllScoutSessionsQuery(eventKey: eventKey), { (selectionSet) in
                                 if !(selectionSet.listAllScoutSessions?.contains(where: {$0?.key == newSession.key}) ?? false) {
                                     selectionSet.listAllScoutSessions?.append(try ListAllScoutSessionsQuery.Data.ListAllScoutSession(newSession))
                                 }
+								perfTrace?.stop()
                             })
                             
                             //Update the in memory cache
-                            if !(Globals.dataManager?.cachedScoutSessions.scoutSessions?.contains(where: {$0?.key == newSession.key}) ?? false) {
-                                Globals.dataManager?.cachedScoutSessions.scoutSessions?.append(newSession.fragments.scoutSession)
+                            if !(Globals.dataManager?.cachedScoutSessions[eventKey]??.contains(where: {$0?.key == newSession.key}) ?? false) {
+                                Globals.dataManager?.cachedScoutSessions[eventKey]??.append(newSession.fragments.scoutSession)
                             }
                         } catch {
                             CLSNSLogv("Error updating the scout session cache: \(error)", getVaList([]))
@@ -154,10 +172,12 @@ class FASTAsyncManager {
                 }
             }, deltaQuery: ListScoutSessionsDeltaQuery(eventKey: eventKey, lastSync: 0), deltaQueryResultHandler: { (result, transaction, error) in
                 if Globals.handleAppSyncErrors(forQuery: "ListScoutSessionsDelta", result: result, error: error) {
-                    let numOfUpdates = result?.data?.listScoutSessionsDelta?.count
-                    CLSNSLogv("Got delta update of scout sessions with \(numOfUpdates ?? 0) updates", getVaList([]))
+                    let numOfUpdates = result?.data?.listScoutSessionsDelta?.count ?? 0
+                    CLSNSLogv("Got delta update of scout sessions with \(numOfUpdates) updates", getVaList([]))
                     //Add the new scout session to the cache
                     do {
+						let perfTrace = Performance.startTrace(name: "Scout Sessions Delta Cache Update")
+						perfTrace?.setValue(Int64(numOfUpdates), forMetric: "sessions_returned")
                         try transaction?.update(query: ListAllScoutSessionsQuery(eventKey: eventKey), { (selectionSet) in
                             for session in result?.data?.listScoutSessionsDelta ?? [] {
                                 if let newSession = session {
@@ -166,18 +186,19 @@ class FASTAsyncManager {
                                     }
                                     
                                     //Update the in memory cache
-                                    if !(Globals.dataManager?.cachedScoutSessions.scoutSessions?.contains(where: {$0?.key == newSession.key}) ?? false) {
-                                        Globals.dataManager?.cachedScoutSessions.scoutSessions?.append(newSession.fragments.scoutSession)
+                                    if !(Globals.dataManager?.cachedScoutSessions[eventKey]??.contains(where: {$0?.key == newSession.key}) ?? false) {
+                                        Globals.dataManager?.cachedScoutSessions[eventKey]??.append(newSession.fragments.scoutSession)
                                     }
                                 }
                             }
+							perfTrace?.stop()
                         })
                     } catch {
                         CLSNSLogv("Error updating the scout session cache: \(error)", getVaList([]))
                         Crashlytics.sharedInstance().recordError(error)
                     }
                     
-                    Globals.recordAnalyticsEvent(eventType: "scoutsessions_delta_update", metrics: ["update_count":Double(numOfUpdates ?? 0)])
+                    Globals.recordAnalyticsEvent(eventType: "scoutsessions_delta_update", metrics: ["update_count":Double(numOfUpdates)])
                 }
             }, callbackQueue: backgroundQueue, syncConfiguration: config)
             

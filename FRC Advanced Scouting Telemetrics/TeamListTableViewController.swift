@@ -249,10 +249,8 @@ class TeamListTableViewController: UITableViewController, TeamListDetailDataSour
         
         self.resetSubscriptions()
         teamListSplitVC.teamListDetailVC.reloadData()
-        
-        if selectedEventRanking?.eventKey != selectedEventKey {
-            Globals.asyncLoadingManager?.setGeneralUpdaters(forEventKey: selectedEventKey)
-        }
+		
+		Globals.asyncLoadingManager?.setGeneralUpdaters(forEventKey: selectedEventKey)
     }
     
     func orderTeamsUsingRanking() {

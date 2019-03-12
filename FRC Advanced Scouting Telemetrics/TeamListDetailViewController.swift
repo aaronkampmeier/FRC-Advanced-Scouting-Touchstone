@@ -221,33 +221,6 @@ class TeamListDetailViewController: UIViewController {
     }
     
     func resetSubscriptions() {
-        if let teamKey = selectedTeam?.key, let eventKey = selectedEventKey {
-            CLSNSLogv("Setting Team List Detail Subscriptions", getVaList([]))
-            //Set up a subscription
-            do {
-//                updateTeamSubcription = try Globals.appDelegate.appSyncClient?.subscribe(subscription: OnUpdateScoutedTeamSubscription(userID: AWSMobileClient.sharedInstance().username ?? "", eventKey: eventKey, teamKey: teamKey), resultHandler: { (result, transaction, error) in
-//                    if Globals.handleAppSyncErrors(forQuery: "OnUpdateScoutedTeam-TeamDetail", result: result, error: error) {
-//                        try? transaction?.update(query: ListScoutedTeamsQuery(eventKey: eventKey), { (selectionSet) in
-//                            if let index = selectionSet.listScoutedTeams?.firstIndex(where: {$0?.teamKey == teamKey}) {
-//                                selectionSet.listScoutedTeams?.remove(at: index)
-//                            }
-//                            if let newTeam = result?.data?.onUpdateScoutedTeam {
-//                                selectionSet.listScoutedTeams?.append(try! ListScoutedTeamsQuery.Data.ListScoutedTeam(newTeam))
-//                            }
-//                        })
-//                    } else {
-//                        if let error = error as? AWSAppSyncSubscriptionError {
-//                            self.resetSubscriptions()
-//                        }
-//                    }
-//                })
-            } catch {
-                CLSNSLogv("Error starting updateScoutedTeam subscription: \(error)", getVaList([]))
-                Crashlytics.sharedInstance().recordError(error)
-            }
-        } else {
-            updateTeamSubcription?.cancel()
-        }
     }
     
     private func setImage(image: UIImage?) {

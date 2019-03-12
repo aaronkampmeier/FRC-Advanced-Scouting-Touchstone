@@ -16,7 +16,8 @@ class AWSDataManager {
     static unowned let `default`: AWSDataManager = Globals.dataManager!
     
     //Tuple of event key and scout sessions
-    var cachedScoutSessions: (eventKey: String, scoutSessions: [ScoutSession?]?) = (eventKey: "", scoutSessions: [ScoutSession?]())
+    var cachedScoutSessions: [String: [ScoutSession?]?] = [:]
+    var currentlyCachingEvents = [String]()
     let utilityWorkQueue = DispatchQueue(label: "FASTDataManagerUtility", qos: .utility)
     let foregroundWorkQueue = DispatchQueue(label: "FASTDataManagerForeground", qos: .userInitiated)
     
@@ -47,46 +48,44 @@ class AWSDataManager {
                 callbackHandler(filtered)
             }
             
-            while self.cachedScoutSessions.eventKey == "" {
+            while self.currentlyCachingEvents.contains(eventKey) {
                 
             }
             
             //Fetching hundreds of records from the SQLite cache everytime this function is called is inefficient, so we'll store all of the scout sessions in memory for multiple calls
-            if self.cachedScoutSessions.eventKey == eventKey {
+            if let scoutSessions = self.cachedScoutSessions[eventKey] {
                 //There are values cached, use them
-                filterAndReturn(self.cachedScoutSessions.scoutSessions)
+                filterAndReturn(scoutSessions)
             } else {
-//                self.beginScoutSessionCaching(withEventKey: eventKey)
-                
-                filterAndReturn([])
-                
-                //Has loaded everything now, try again
-//                self.retrieveScoutSessions(forEventKey: eventKey, teamKey: teamKey, andMatchKey: matchKey, withCallback: callbackHandler)
+                //Cache scout sessions
+                self.cacheScoutSessions(withEventKey: eventKey)
+                self.retrieveScoutSessions(forEventKey: eventKey, teamKey: teamKey, withCallback: callbackHandler)
+//                filterAndReturn(nil)
             }
         }
     }
     
 //    private var scoutSessionWatcher: GraphQLQueryWatcher<ListAllScoutSessionsQuery>?
-//    private func beginScoutSessionCaching(withEventKey eventKey: String) {
-//        scoutSessionWatcher?.cancel()
-//        let group = DispatchGroup()
-//        var hasLeft = false
-//        group.enter()
-//        scoutSessionWatcher = Globals.appDelegate.appSyncClient?.watch(query: ListAllScoutSessionsQuery(eventKey: eventKey), cachePolicy: .returnCacheDataDontFetch, queue: DispatchQueue.global(qos: .utility), resultHandler: {[weak self] (result, error) in
-//            if Globals.handleAppSyncErrors(forQuery: "ListAllScoutSessions-UpdateInMemoryCache", result: result, error: error) {
-//                self?.cachedScoutSessions = (eventKey, result?.data?.listAllScoutSessions?.map({$0?.fragments.scoutSession}))
-//            }
-//
-//            if !hasLeft {
-//                hasLeft = true
-//                group.leave()
-//            }
-//        })
-//        group.wait()
-//    }
-    
-    func inMemoryCacheScoutSessions(scoutSessions: [ScoutSession?]?, forEventKey eventKey: String) {
-        self.cachedScoutSessions = (eventKey, scoutSessions)
+    private func cacheScoutSessions(withEventKey eventKey: String) {
+        CLSNSLogv("Caching scout sessions manually for event: \(eventKey)", getVaList([]))
+        self.currentlyCachingEvents.append(eventKey)
+        let group = DispatchGroup()
+        var hasLeft = false
+        group.enter()
+        Globals.appDelegate.appSyncClient?.fetch(query: ListAllScoutSessionsQuery(eventKey: eventKey), cachePolicy: .fetchIgnoringCacheData, queue: DispatchQueue.global(qos: .utility), resultHandler: {[weak self] (result, error) in
+            if Globals.handleAppSyncErrors(forQuery: "ListAllScoutSessions-UpdateInMemoryCache", result: result, error: error) {
+                self?.cachedScoutSessions[eventKey] = result?.data?.listAllScoutSessions?.map({$0?.fragments.scoutSession})
+            }
+
+            if !hasLeft {
+                hasLeft = true
+                group.leave()
+            }
+            if let index = self?.currentlyCachingEvents.firstIndex(of: eventKey) {
+                self?.currentlyCachingEvents.remove(at: index)
+            }
+        })
+        group.wait()
     }
 }
 
