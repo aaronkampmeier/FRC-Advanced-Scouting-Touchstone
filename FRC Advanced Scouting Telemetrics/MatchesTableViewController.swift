@@ -107,9 +107,10 @@ class MatchesTableViewController: UITableViewController {
                     }
                     
                 } else {
-                    let alert = UIAlertController(title: "Error Loading Matches", message: "There was an error loading the matches. Connect to the Internet and try again. \(Globals.descriptions(ofError: error, andResult: result))", preferredStyle: .alert)
-                    alert.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
-                    self?.present(alert, animated: true, completion: nil)
+					Globals.presentError(error: error, andResult: result, withTitle: "Error Loading Matches")
+//                    let alert = UIAlertController(title: "Error Loading Matches", message: "There was an error loading the matches. Connect to the Internet and try again. \(Globals.descriptions(ofError: error, andResult: result))", preferredStyle: .alert)
+//                    alert.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
+//                    self?.present(alert, animated: true, completion: nil)
                 }
             })
         }

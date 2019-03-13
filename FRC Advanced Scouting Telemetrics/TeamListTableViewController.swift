@@ -219,18 +219,20 @@ class TeamListTableViewController: UITableViewController, TeamListDetailDataSour
                         } else {
                             DispatchQueue.main.async {
                                 //Show error
-                                let alert = UIAlertController(title: "Unable to Load Team Rank", message: "There was an error loading the team rankings for this event. Please connect to the internet. \(Globals.descriptions(ofError: error, andResult: result))", preferredStyle: .alert)
-                                alert.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
-                                self?.present(alert, animated: true, completion: nil)
+								Globals.presentError(error: error, andResult: result, withTitle: "Unable to Load Team Rank")
+//                                let alert = UIAlertController(title: "Unable to Load Team Rank", message: "There was an error loading the team rankings for this event. Please connect to the internet. \(Globals.descriptions(ofError: error, andResult: result))", preferredStyle: .alert)
+//                                alert.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
+//                                self?.present(alert, animated: true, completion: nil)
                             }
                         }
                     }
                 } else {
                     DispatchQueue.main.async {
                         //Show error
-                        let alert = UIAlertController(title: "Unable to Load Teams", message: "There was an error loading the teams for this event. Please connect to the internet and re-load. \(Globals.descriptions(ofError: error, andResult: result))", preferredStyle: .alert)
-                        alert.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
-                        self.present(alert, animated: true, completion: nil)
+						Globals.presentError(error: error, andResult: result, withTitle: "Unable to Load Teams")
+//                        let alert = UIAlertController(title: "Unable to Load Teams", message: "There was an error loading the teams for this event. Please connect to the internet and re-load. \(Globals.descriptions(ofError: error, andResult: result))", preferredStyle: .alert)
+//                        alert.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
+//                        self.present(alert, animated: true, completion: nil)
                     }
                 }
             }

@@ -50,7 +50,7 @@ class MatchOverviewDetailViewController: UIViewController {
         // Dispose of any resources that can be recreated.
     }
     
-    func load(forMatchKey matchKey: String, shouldShowExitButton: Bool) {
+	func load(forMatchKey matchKey: String, shouldShowExitButton: Bool, preSelectedTeamKey: String? = nil) {
         self.setUpForMatch(match: nil)
         
         let eventKey = matchKey.components(separatedBy: "_").first
@@ -59,7 +59,7 @@ class MatchOverviewDetailViewController: UIViewController {
             if Globals.handleAppSyncErrors(forQuery: "GetMatchQuery-MatchOverview", result: result, error: error) {
                 let matches = result?.data?.listMatches?.map({$0!.fragments.match}) ?? []
                 let match = matches.first(where: {$0.key == matchKey})
-                self.setUpForMatch(match: match)
+                self.setUpForMatch(match: match, preselectedTeamKey: preSelectedTeamKey)
                 
                 //TODO: - Also update the apollo cache for ListMatchesQuery with this result
             } else {
@@ -76,7 +76,7 @@ class MatchOverviewDetailViewController: UIViewController {
         }
     }
     
-    private func setUpForMatch(match: Match?) {
+	private func setUpForMatch(match: Match?, preselectedTeamKey: String? = nil) {
         self.displayedMatch = match
         
         guard self.isViewLoaded else {
@@ -97,7 +97,16 @@ class MatchOverviewDetailViewController: UIViewController {
             }
             
             if segmentedControl.selectedSegmentIndex == -1 {
-                segmentedControl.selectedSegmentIndex = 0
+				//Set the segment with the preselected team
+				if let teamKey = preselectedTeamKey {
+					if let index = teamKeys.firstIndex(of: teamKey) {
+						segmentedControl.selectedSegmentIndex = index
+					} else {
+						segmentedControl.selectedSegmentIndex = 0
+					}
+				} else {
+					segmentedControl.selectedSegmentIndex = 0
+				}
             }
             self.selectedDifferentTeam(segmentedControl)
         } else {

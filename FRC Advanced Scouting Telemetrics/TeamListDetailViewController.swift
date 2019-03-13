@@ -419,7 +419,7 @@ extension TeamListDetailViewController: MatchesTableViewControllerDelegate {
             let matchDetailNav = self?.storyboard?.instantiateViewController(withIdentifier: "matchDetailNav") as! UINavigationController
             let matchDetail = matchDetailNav.topViewController as! MatchOverviewDetailViewController
             
-            matchDetail.load(forMatchKey: self?.selectedMatch?.key ?? "", shouldShowExitButton: true)
+            matchDetail.load(forMatchKey: self?.selectedMatch?.key ?? "", shouldShowExitButton: true, preSelectedTeamKey: self?.selectedTeam?.key)
             
             matchesTableViewController.present(matchDetailNav, animated: true, completion: nil)
         }
@@ -427,28 +427,29 @@ extension TeamListDetailViewController: MatchesTableViewControllerDelegate {
         if Globals.isInSpectatorMode {
             showMatchDetail()
         } else {
+			showMatchDetail()
             //Present an action sheet to see if the user wants to view it or scout it
-            let actionSheet = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
-            
-            actionSheet.addAction(UIAlertAction(title: "View Match", style: .default) {action in
-                showMatchDetail()
-            })
-            actionSheet.addAction(UIAlertAction(title: "Stands Scout", style: .default) {action in
-                let standsScoutingVC = self.storyboard?.instantiateViewController(withIdentifier: "standsScouting") as! StandsScoutingViewController
-                standsScoutingVC.setUp(forTeamKey: self.selectedTeam?.key ?? "", andMatchKey: self.selectedMatch?.key ?? "", inEventKey: self.selectedMatch?.eventKey ?? "")
-                
-                matchesTableViewController.present(standsScoutingVC, animated: true, completion: nil)
-                
-                Globals.recordAnalyticsEvent(eventType: AnalyticsEventSelectContent, attributes: ["Source":"team_matches_list", "content_type":"screen", "item_id":"stands_scouting"])
-                
-                CLSNSLogv("Opening Stands Scouting from Team Matches List", getVaList([]))
-            })
-            actionSheet.addAction(UIAlertAction(title: "Cancel", style: .cancel) {action in
-                matchesTableViewController.tableView.deselectRow(at: matchesTableViewController.tableView.indexPathForSelectedRow ?? IndexPath(), animated: true)
-            })
-            
-            
-            matchesTableViewController.present(actionSheet, animated: true, completion: nil)
+//            let actionSheet = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
+//
+//            actionSheet.addAction(UIAlertAction(title: "View Match", style: .default) {action in
+//                showMatchDetail()
+//            })
+//            actionSheet.addAction(UIAlertAction(title: "Stands Scout", style: .default) {action in
+//                let standsScoutingVC = self.storyboard?.instantiateViewController(withIdentifier: "standsScouting") as! StandsScoutingViewController
+//                standsScoutingVC.setUp(forTeamKey: self.selectedTeam?.key ?? "", andMatchKey: self.selectedMatch?.key ?? "", inEventKey: self.selectedMatch?.eventKey ?? "")
+//
+//                matchesTableViewController.present(standsScoutingVC, animated: true, completion: nil)
+//
+//                Globals.recordAnalyticsEvent(eventType: AnalyticsEventSelectContent, attributes: ["Source":"team_matches_list", "content_type":"screen", "item_id":"stands_scouting"])
+//
+//                CLSNSLogv("Opening Stands Scouting from Team Matches List", getVaList([]))
+//            })
+//            actionSheet.addAction(UIAlertAction(title: "Cancel", style: .cancel) {action in
+//                matchesTableViewController.tableView.deselectRow(at: matchesTableViewController.tableView.indexPathForSelectedRow ?? IndexPath(), animated: true)
+//            })
+//
+//
+//            matchesTableViewController.present(actionSheet, animated: true, completion: nil)
         }
     }
 }

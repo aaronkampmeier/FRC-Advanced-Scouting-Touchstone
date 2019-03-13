@@ -94,3 +94,14 @@ class FASTAppSyncStateChangeHandler: ConnectionStateChangeHandler {
         CLSNSLogv("App Sync Connection State Changed: \(networkState)", getVaList([]))
     }
 }
+
+class FASTOfflineMutationDelegate: AWSAppSyncOfflineMutationDelegate {
+	func mutationCallback(recordIdentifier: String, operationString: String, snapshot: Snapshot?, error: Error?) {
+		if let error = error {
+			CLSNSLogv("Offline mutation of %@ failed with error: \(error)", getVaList([recordIdentifier]))
+			Crashlytics.sharedInstance().recordError(error)
+		} else {
+			CLSNSLogv("Performed offline mutation %@", getVaList([recordIdentifier]))
+		}
+	}
+}

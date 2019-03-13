@@ -43,7 +43,10 @@ internal struct Globals {
                         } else if nserr.code == -1009 {
                             //Internet connection is offline
                             CLSNSLogv("Operation \(queryIdentifier) failed because the network connection is offline", getVaList([]))
-                        } else {
+						} else if nserr.code == -1001 {
+							//Timed out
+							CLSNSLogv("Operation \(queryIdentifier) failed because the request timed out", getVaList([]))
+						} else {
                             CLSNSLogv("Error performing \(queryIdentifier): \(error)", getVaList([]))
                             Crashlytics.sharedInstance().recordError(nserr)
                         }
@@ -85,6 +88,30 @@ internal struct Globals {
         
         return !wereErrors
     }
+	
+	static func presentError<T>(error: Error?, andResult result: GraphQLResult<T>?, withTitle title: String, hideIfIsOffline: Bool = true) {
+		var shouldDisplay = true
+		if let error = error as? AWSAppSyncClientError {
+			switch error {
+			case .requestFailed(_, _, let err):
+				if let nserr = err as NSError? {
+					if nserr.code == -1009 || nserr.code == -1001 {
+						//Is offline, request timed out
+						shouldDisplay = false && hideIfIsOffline
+					}
+				}
+			default:
+				break
+			}
+		}
+		
+		if shouldDisplay {
+			let alert = UIAlertController(title: "Unable to Load Teams", message: "There was an error loading the teams for this event. Please connect to the internet and re-load. \(Globals.descriptions(ofError: error, andResult: result))", preferredStyle: .alert)
+			alert.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
+			
+			Globals.appDelegate.presentViewControllerOnTop(alert, animated: true)
+		}
+	}
     
     static func descriptions<T>(ofError error: Error?, andResult result: GraphQLResult<T>?) -> String {
         if let error = error as? AWSAppSyncClientError {
@@ -192,6 +219,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             Crashlytics.sharedInstance().recordError(error)
             assertionFailure()
         }
+		
+		appSyncClient?.offlineMutationDelegate = FASTOfflineMutationDelegate()
         
         AWSMobileClient.sharedInstance().addUserStateListener(self) { (state, attributes) in
             CLSNSLogv("New User State: \(state)", getVaList([]))
