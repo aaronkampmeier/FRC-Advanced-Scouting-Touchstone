@@ -34,7 +34,7 @@ class EventPickerViewController: UIViewController, UIPickerViewDelegate, UIPicke
                     self?.events = result?.data?.listTrackedEvents?.map {(eventKey: $0!.eventKey, eventName: $0!.eventName)} ?? []
                     self?.load()
                 } else {
-                    //TODO: Show error
+					
                 }
             }
         }

@@ -220,9 +220,6 @@ class TeamListTableViewController: UITableViewController, TeamListDetailDataSour
                             DispatchQueue.main.async {
                                 //Show error
 								Globals.presentError(error: error, andResult: result, withTitle: "Unable to Load Team Rank")
-//                                let alert = UIAlertController(title: "Unable to Load Team Rank", message: "There was an error loading the team rankings for this event. Please connect to the internet. \(Globals.descriptions(ofError: error, andResult: result))", preferredStyle: .alert)
-//                                alert.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
-//                                self?.present(alert, animated: true, completion: nil)
                             }
                         }
                     }
@@ -230,9 +227,6 @@ class TeamListTableViewController: UITableViewController, TeamListDetailDataSour
                     DispatchQueue.main.async {
                         //Show error
 						Globals.presentError(error: error, andResult: result, withTitle: "Unable to Load Teams")
-//                        let alert = UIAlertController(title: "Unable to Load Teams", message: "There was an error loading the teams for this event. Please connect to the internet and re-load. \(Globals.descriptions(ofError: error, andResult: result))", preferredStyle: .alert)
-//                        alert.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
-//                        self.present(alert, animated: true, completion: nil)
                     }
                 }
             }
@@ -802,22 +796,6 @@ class TeamListTableViewController: UITableViewController, TeamListDetailDataSour
                 setEditing(true, animated: true)
             }
         }
-//        else if touch.tapCount == 0 {
-//            //Long press
-//            if let frcEvent = selectedEvent {
-//                let clearPickListAlert = UIAlertController(title: "Reset Picked Teams", message: "Would you like to reset what teams are picked or not? This will not affect any scouting data, just the Xs next to teams that were marked as picked.", preferredStyle: .alert)
-//                clearPickListAlert.addAction(UIAlertAction(title: "Reset", style: .default, handler: {_ in
-//                    //Reset the picked teams
-//                    let eventRanker = RealmController.realmController.getTeamRanker(forEvent: frcEvent)
-//
-//                    RealmController.realmController.genericWrite(onRealm: .Synced) {
-//                        eventRanker?.pickedTeams.removeAll()
-//                    }
-//                }))
-//                clearPickListAlert.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
-//                self.present(clearPickListAlert, animated: true, completion: nil)
-//            }
-//        }
     }
     
     // MARK: - Navigation

@@ -159,7 +159,6 @@ class EventStatsGraphViewController: UIViewController {
             if Globals.handleAppSyncErrors(forQuery: "ListScoutedTeams-StatsGraph", result: result, error: error) {
                 self?.scoutedTeams = result?.data?.listScoutedTeams?.map {$0!.fragments.scoutedTeam} ?? []
             } else {
-                //Error
             }
         })
     }

@@ -29,7 +29,7 @@ class AdminConsoleController: UIViewController, UITableViewDataSource, UITableVi
                 self?.trackedEvents = result?.data?.listTrackedEvents?.map({$0!}) ?? []
                 self?.tableView.reloadData()
             } else {
-                //TODO: - Show error
+				
             }
         })
     }
@@ -243,7 +243,7 @@ class AdminConsoleController: UIViewController, UITableViewDataSource, UITableVi
                 self.removeLoadingIndicator()
                 onCompletion?()
             } else {
-                //TODO: - Show error
+				
             }
         })
     }
