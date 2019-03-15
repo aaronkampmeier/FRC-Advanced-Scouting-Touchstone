@@ -30,30 +30,37 @@ internal struct Globals {
         var wereErrors = false
         if let error = error {
             if let error = error as? AWSAppSyncClientError {
+				let handleNsError = {(nserr: NSError) in
+					if nserr.code == -999 {
+						//The error is that the operation was cancelled, do not treat as error
+						CLSNSLogv("Operation \(queryIdentifier) cancelled", getVaList([]))
+					} else if nserr.code == -1005 {
+						//The network connection was lost
+						CLSNSLogv("Operation \(queryIdentifier) terminated because the network connection was lost", getVaList([]))
+					} else if nserr.code == -1009 {
+						//Internet connection is offline
+						CLSNSLogv("Operation \(queryIdentifier) failed because the network connection is offline", getVaList([]))
+					} else if nserr.code == -1001 {
+						//Timed out
+						CLSNSLogv("Operation \(queryIdentifier) failed because the request timed out", getVaList([]))
+					} else if nserr.code == 53 {
+						CLSNSLogv("Operation \(queryIdentifier) canceled by the software", getVaList([]))
+					} else {
+						CLSNSLogv("Error performing \(queryIdentifier): \(error)", getVaList([]))
+						Crashlytics.sharedInstance().recordError(nserr)
+					}
+				}
                 switch error {
                 case .requestFailed( _,  _, let err):
                     if let nserr = err as NSError? {
-                        if nserr.code == -999 {
-                            //The error is that the operation was cancelled, do not treat as error
-                            CLSNSLogv("Operation \(queryIdentifier) cancelled", getVaList([]))
-                            break
-                        } else if nserr.code == -1005 {
-                            //The network connection was lost
-                            CLSNSLogv("Operation \(queryIdentifier) terminated because the network connection was lost", getVaList([]))
-                        } else if nserr.code == -1009 {
-                            //Internet connection is offline
-                            CLSNSLogv("Operation \(queryIdentifier) failed because the network connection is offline", getVaList([]))
-						} else if nserr.code == -1001 {
-							//Timed out
-							CLSNSLogv("Operation \(queryIdentifier) failed because the request timed out", getVaList([]))
-						} else {
-                            CLSNSLogv("Error performing \(queryIdentifier): \(error)", getVaList([]))
-                            Crashlytics.sharedInstance().recordError(nserr)
-                        }
-                        
-//                        fallthrough
-                    }
-                    fallthrough
+						handleNsError(nserr)
+					} else {
+						CLSNSLogv("Error performing \(queryIdentifier): \(error)", getVaList([]))
+						Crashlytics.sharedInstance().recordError(error)
+					}
+				case .authenticationError(let error):
+					let nserr = error as NSError
+					handleNsError(nserr)
                 default:
                     CLSNSLogv("Error performing \(queryIdentifier): \(error)", getVaList([]))
                     Crashlytics.sharedInstance().recordError(error)
@@ -64,8 +71,12 @@ internal struct Globals {
                 if error.recoverySuggestion != nil {
                     //There is a recovery suggestion, don't treat as error
                 } else {
-                    CLSNSLogv("Error subscribing to \(queryIdentifier): \(error)", getVaList([]))
-                    Crashlytics.sharedInstance().recordError(error)
+					if error.errorDescription?.contains("-1001") ?? false || error.errorDescription?.contains("-1009") ?? false {
+						//Internet is offline, no error
+					} else {
+						CLSNSLogv("Error subscribing to \(queryIdentifier): \(error)", getVaList([]))
+						Crashlytics.sharedInstance().recordError(error)
+					}
                 }
             } else {
                 CLSNSLogv("Error performing \(queryIdentifier): \(error)", getVaList([]))
@@ -92,14 +103,19 @@ internal struct Globals {
 	static func presentError<T>(error: Error?, andResult result: GraphQLResult<T>?, withTitle title: String, hideIfIsOffline: Bool = true) {
 		var shouldDisplay = true
 		if let error = error as? AWSAppSyncClientError {
+			let handleNsError = {(nserr: NSError) in
+				if nserr.code == -1009 || nserr.code == -1001 {
+					//Is offline, request timed out
+					shouldDisplay = false && hideIfIsOffline
+				}
+			}
 			switch error {
 			case .requestFailed(_, _, let err):
 				if let nserr = err as NSError? {
-					if nserr.code == -1009 || nserr.code == -1001 {
-						//Is offline, request timed out
-						shouldDisplay = false && hideIfIsOffline
-					}
+					handleNsError(nserr)
 				}
+			case .authenticationError(let error):
+				handleNsError(error as NSError)
 			default:
 				break
 			}
@@ -148,7 +164,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     var window: UIWindow?
     
     var appSyncClient: AWSAppSyncClient?
-//    var pinpoint: AWSPinpoint?
     
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         // Override point for customization after application launch.

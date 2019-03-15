@@ -576,13 +576,15 @@ class TeamListTableViewController: UITableViewController, TeamListDetailDataSour
                             TeamImageLoader.default.loadImage(withAttributes: imageInfo, progressBlock: { (progress) in
                                 
                             }, completionHandler: { (image, error) in
-                                if let image = image {
-                                    if cell.stateID == stateID {
-                                        cell.frontImage.image = image
-                                    }
-                                    self?.teamImages["\(self?.selectedEventKey ?? "")-\(team.key)"] = image
-                                } else {
-                                }
+								DispatchQueue.main.async {
+									if let image = image {
+										if cell.stateID == stateID {
+											cell.frontImage.image = image
+										}
+										self?.teamImages["\(self?.selectedEventKey ?? "")-\(team.key)"] = image
+									} else {
+									}
+								}
                             })
                         } else {
                         }

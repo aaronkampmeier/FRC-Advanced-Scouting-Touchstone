@@ -24,7 +24,10 @@ class TeamImageLoader {
             try FileManager.default.removeItem(at: imageCacheURL)
         } catch {
             CLSNSLogv("Error deleting image cache: \(error)", getVaList([]))
-            Crashlytics.sharedInstance().recordError(error)
+			if (error as NSError).code != 4 {
+				//Code 4 is the dir doesn't exist, don't treat as error
+				Crashlytics.sharedInstance().recordError(error)
+			}
         }
     }
     
@@ -62,8 +65,23 @@ class TeamImageLoader {
             
             AWSS3TransferUtility.default().downloadData(fromBucket: attributes.bucket, key: attributes.key, expression: expression, completionHandler: { (task, url, data, error) in
                 if let error = error {
-                    CLSNSLogv("Error downloading team image (key: \(attributes.key): \(error)", getVaList([]))
-                    Crashlytics.sharedInstance().recordError(error)
+					if (error as NSError).code == -1200 {
+						CLSNSLogv("Error downloading team image (key: \(attributes.key): Secure connection to the server could not be made", getVaList([]))
+					} else {
+						CLSNSLogv("Error downloading team image (key: \(attributes.key): \(error)", getVaList([]))
+					}
+					
+					if #available(iOS 12.0, *) {
+						if FASTNetworkManager.main.isOnline() {
+							Crashlytics.sharedInstance().recordError(error)
+						} else {
+							FASTNetworkManager.main.registerUpdateOnReconnect {[weak self] in
+								self?.loadImage(withAttributes: attributes, noCache: true, progressBlock: progressBlock, completionHandler: completionHandler)
+							}
+						}
+					} else {
+						Crashlytics.sharedInstance().recordError(error)
+					}
                     
                     completionHandler(nil, error)
                 } else {
@@ -94,8 +112,19 @@ class TeamImageLoader {
             }).continueWith(block: { (task) -> Any? in
                 if let error = task.error {
                     CLSNSLogv("Error executing team image download: \(error)", getVaList([]))
-                    Crashlytics.sharedInstance().recordError(error)
                     completionHandler(nil, error)
+					
+					if #available(iOS 12.0, *) {
+						if FASTNetworkManager.main.isOnline() {
+							Crashlytics.sharedInstance().recordError(error)
+						} else {
+							FASTNetworkManager.main.registerUpdateOnReconnect {
+								self.loadImage(withAttributes: attributes, noCache: false, progressBlock: progressBlock, completionHandler: completionHandler)
+							}
+						}
+					} else {
+						Crashlytics.sharedInstance().recordError(error)
+					}
                 }
                 
                 return nil

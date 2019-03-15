@@ -89,6 +89,7 @@
 		93A3ABC321F1462F007831E3 /* PitScoutingData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93A3ABC221F1462F007831E3 /* PitScoutingData.swift */; };
 		93AE99801E3407A00000FB7C /* SSDataManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93AE997F1E3407A00000FB7C /* SSDataManager.swift */; };
 		93BA599E1E2C95F200171D72 /* FASTTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 938D9CB01E1B05BA00A5E522 /* FASTTests.swift */; };
+		93BCA618223B50AD00BF6467 /* OfflineSupport.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93BCA617223B50AD00BF6467 /* OfflineSupport.swift */; };
 		93C5B47C1E53FC9C007D309F /* TeamInfoScrollView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93C5B47B1E53FC9C007D309F /* TeamInfoScrollView.swift */; };
 		93C609241E67D035007A689D /* MatchOverviewDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93C609231E67D035007A689D /* MatchOverviewDetailViewController.swift */; };
 		93C609281E67D0CC007A689D /* MatchOverviewMasterViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93C609271E67D0CC007A689D /* MatchOverviewMasterViewController.swift */; };
@@ -248,6 +249,7 @@
 		93A38B3E2055F49F00B8B692 /* NoEventSelectedView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NoEventSelectedView.swift; sourceTree = "<group>"; };
 		93A3ABC221F1462F007831E3 /* PitScoutingData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PitScoutingData.swift; sourceTree = "<group>"; };
 		93AE997F1E3407A00000FB7C /* SSDataManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SSDataManager.swift; sourceTree = "<group>"; };
+		93BCA617223B50AD00BF6467 /* OfflineSupport.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OfflineSupport.swift; sourceTree = "<group>"; };
 		93C5B47B1E53FC9C007D309F /* TeamInfoScrollView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TeamInfoScrollView.swift; sourceTree = "<group>"; };
 		93C609231E67D035007A689D /* MatchOverviewDetailViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MatchOverviewDetailViewController.swift; sourceTree = "<group>"; };
 		93C609271E67D0CC007A689D /* MatchOverviewMasterViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MatchOverviewMasterViewController.swift; sourceTree = "<group>"; };
@@ -380,6 +382,7 @@
 				9339A9B12223408A00D3D82C /* AppSyncExtensions.swift */,
 				93E551F821CACDE0006C79A8 /* CognitoAuthProvider.swift */,
 				9351017321F42D6000D402FE /* AWSDataManager.swift */,
+				93BCA617223B50AD00BF6467 /* OfflineSupport.swift */,
 				93183B8421C8AB83008DC997 /* API.swift */,
 				93DA5162221E741A00254BF3 /* Statistics Extensions */,
 				9351017521F4DEB600D402FE /* ImageScalingFunctions.swift */,
@@ -1002,6 +1005,7 @@
 				1FDC1BD31CD6A35F00ABE327 /* TeamListDetailViewController.swift in Sources */,
 				934F4C1922066AB100A6F5FE /* LoginViewControllerTransitioning.swift in Sources */,
 				1F4534561C7276DE004EDDB9 /* EventPickerViewController.swift in Sources */,
+				93BCA618223B50AD00BF6467 /* OfflineSupport.swift in Sources */,
 				936572DF1E160EBB00439728 /* AboutViewController.swift in Sources */,
 				934F4C552212754400A6F5FE /* SSGameStateViewController.swift in Sources */,
 				9351017621F4DEB700D402FE /* ImageScalingFunctions.swift in Sources */,

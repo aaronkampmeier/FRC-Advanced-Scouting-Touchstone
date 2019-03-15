@@ -20,6 +20,7 @@ class FASTAsyncManager {
 
     static let backgroundQueueID = "TBAUpdatingThread"
     private var backgroundQueue: DispatchQueue
+	var networkUpdater: FASTCancellable?
 
     //Event Key is key
     private var oprTimedUpdaters = [String:FASTBackgroundTimer]()
@@ -39,7 +40,32 @@ class FASTAsyncManager {
         resetSubscriptions()
         
         getTrackedEvents()
+		
+		if #available(iOS 12.0, *) {
+			networkUpdater = FASTNetworkManager.main.register {[weak self] (isConnected) in
+				if isConnected {
+					CLSNSLogv("Resuming async updaters", getVaList([]))
+					self?.oprTimedUpdaters.forEach({$0.value.resume()})
+					self?.matchTimedUpdaters.forEach({$0.value.resume()})
+					self?.statusTimedUpdaters.forEach({$0.value.resume()})
+				} else {
+					CLSNSLogv("Pausing async updaters", getVaList([]))
+					self?.oprTimedUpdaters.forEach({$0.value.suspend()})
+					self?.matchTimedUpdaters.forEach({$0.value.suspend()})
+					self?.statusTimedUpdaters.forEach({$0.value.suspend()})
+				}
+			}
+		} else {
+			// Fallback on earlier versions
+		}
     }
+	
+	deinit {
+		networkUpdater?.cancel()
+		addEventSubscription?.cancel()
+		removeEventSubscription?.cancel()
+		scoutSessionDeltaSync?.cancel()
+	}
     
     func getTrackedEvents() {
         trackedEventWatcher = Globals.appDelegate.appSyncClient?.watch(query: ListTrackedEventsQuery(), cachePolicy: .returnCacheDataAndFetch, resultHandler: {[weak self] (result, error) in
@@ -47,7 +73,15 @@ class FASTAsyncManager {
                 self?.trackedEvents = result?.data?.listTrackedEvents?.map({$0!}) ?? []
 //                self?.setGeneralUpdaters()
             } else {
-                self?.getTrackedEvents()
+				if #available(iOS 12.0, *) {
+					FASTNetworkManager.main.registerUpdateOnReconnect {
+						self?.getTrackedEvents()
+					}
+				} else {
+					DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + 5 * 50, execute: {
+						self?.getTrackedEvents()
+					})
+				}
             }
         })
     }
@@ -73,7 +107,11 @@ class FASTAsyncManager {
                     if let error = error as? AWSAppSyncSubscriptionError {
                         if error.recoverySuggestion != nil {
                             self?.resetSubscriptions()
-                        }
+						} else {
+							DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + 5 * 60, execute: {[weak self] in
+								self?.resetSubscriptions()
+							})
+						}
                     }
                 }
             })
@@ -94,7 +132,17 @@ class FASTAsyncManager {
                     if let error = error as? AWSAppSyncSubscriptionError {
                         if error.recoverySuggestion != nil {
                             self?.resetSubscriptions()
-                        }
+						} else {
+							if #available(iOS 12.0, *) {
+								FASTNetworkManager.main.registerUpdateOnReconnect {
+									self?.resetSubscriptions()
+								}
+							} else {
+								DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + 5 * 50, execute: {
+									self?.resetSubscriptions()
+								})
+							}
+						}
                     }
                 }
             })
@@ -102,13 +150,7 @@ class FASTAsyncManager {
             CLSNSLogv("Error setting subscriptions on the Async Loading Manager", getVaList([]))
             Crashlytics.sharedInstance().recordError(error)
         }
-    }
-
-    deinit {
-        addEventSubscription?.cancel()
-        removeEventSubscription?.cancel()
-        scoutSessionDeltaSync?.cancel()
-    }
+	}
 
 	var selectedEventKey: String?
     ///Sets basic, general updaters; will remove all existing ones on call
