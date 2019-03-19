@@ -1,16 +1,7 @@
 //
-// Copyright 2010-2018 Amazon.com, Inc. or its affiliates. All Rights Reserved.
-//
-// Licensed under the Apache License, Version 2.0 (the "License").
-// You may not use this file except in compliance with the License.
-// A copy of the License is located at
-//
-// http://aws.amazon.com/apache2.0
-//
-// or in the "license" file accompanying this file. This file is distributed
-// on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either
-// express or implied. See the License for the specific language governing
-// permissions and limitations under the License.
+// Copyright 2019 Amazon.com, Inc. or its affiliates. All Rights Reserved.
+// Licensed under the Amazon Software License
+// http://aws.amazon.com/asl/
 //
 
 import Foundation
@@ -47,4 +38,35 @@ extension Optional where Wrapped: Collection {
             return true
         }
     }
+}
+
+extension DispatchSource {
+    /// Convenience function to encapsulate creation of a one-off DispatchSourceTimer for different versions of Swift
+    ///
+    /// - Parameters:
+    ///   - interval: The future DispatchInterval at which to fire the timer
+    ///   - queue: The queue on which the timer should perform its block
+    ///   - block: The block to invoke when the timer is fired
+    /// - Returns: The unstarted timer
+    static func makeOneOffDispatchSourceTimer(interval: DispatchTimeInterval, queue: DispatchQueue, block: @escaping () -> Void ) -> DispatchSourceTimer {
+        let deadline = DispatchTime.now() + interval
+        return makeOneOffDispatchSourceTimer(deadline: deadline, queue: queue, block: block)
+    }
+
+    /// Convenience function to encapsulate creation of a one-off DispatchSourceTimer for different versions of Swift
+    /// - Parameters:
+    ///   - deadline: The time to fire the timer
+    ///   - queue: The queue on which the timer should perform its block
+    ///   - block: The block to invoke when the timer is fired
+    static func makeOneOffDispatchSourceTimer(deadline: DispatchTime, queue: DispatchQueue, block: @escaping () -> Void ) -> DispatchSourceTimer {
+        let timer = DispatchSource.makeTimerSource(flags: DispatchSource.TimerFlags(rawValue: 0), queue: queue)
+        #if swift(>=4)
+        timer.schedule(deadline: deadline)
+        #else
+        timer.scheduleOneshot(deadline: deadline)
+        #endif
+        timer.setEventHandler(handler: block)
+        return timer
+    }
+
 }

@@ -36,8 +36,10 @@ class StandsScoutingViewController: UIViewController {
 			
 			//Set appropriate state for elements in the view
 			closeButton.isHidden = true
-            
-            cycleFromViewController(currentVC!, toViewController: gameScoutVC!)
+			
+			if let currentVC = currentVC, let gameScoutVC = gameScoutVC {
+				cycleFromViewController(currentVC, toViewController: gameScoutVC)
+			}
             
             endAutonomousButton.isHidden = false
             autonomousLabel.isHidden = false
@@ -53,7 +55,9 @@ class StandsScoutingViewController: UIViewController {
             closeButton.isHidden = false
             
             //Cycle to the rope view controller
-            cycleFromViewController(currentVC!, toViewController: gameEndVC!)
+			if let currentVC = currentVC, let gameVC = gameEndVC {
+				cycleFromViewController(currentVC, toViewController: gameVC)
+			}
             
             endAutonomousButton.isHidden = true
             autonomousLabel.isHidden = true
@@ -80,6 +84,8 @@ class StandsScoutingViewController: UIViewController {
         gameScoutVC = (storyboard?.instantiateViewController(withIdentifier: "ssGameScoutVC") as! SSGameScoutingViewController)
         gameStartVC = storyboard?.instantiateViewController(withIdentifier: "gameState") as! SSGameStateViewController
         gameEndVC = storyboard?.instantiateViewController(withIdentifier: "gameState") as! SSGameStateViewController
+		
+		self.timerButton.isEnabled = false
     }
     
     override func viewDidLayoutSubviews() {
@@ -125,7 +131,7 @@ class StandsScoutingViewController: UIViewController {
                 self?.match = result?.data?.listMatches?.first(where: {$0?.key == matchKey})??.fragments.match
                 
                 if let match = self?.match {
-                    self?.teamLabel.text = "Team \(teamKey.trimmingCharacters(in: CharacterSet.letters) ?? "?")"
+					self?.teamLabel.text = "Team \(teamKey.trimmingCharacters(in: CharacterSet.letters) )"
                     self?.matchAndEventLabel.text = match.description
                     self?.ssDataManager = SSDataManager(match: match, teamKey: teamKey)
                     
@@ -133,7 +139,8 @@ class StandsScoutingViewController: UIViewController {
                     self?.gameEndVC?.set(gameSection: .End)
                     
                     self?.cycleFromViewController(self!.childViewControllers.first!, toViewController: self!.gameStartVC!)
-                    
+					self?.timerButton.isEnabled = true
+					
                 } else {
                     //Throw up an error that the match does not exist
                     CLSNSLogv("Desired Match for stands scouting does not exist or is not stored in the cache, trying again", getVaList([]))

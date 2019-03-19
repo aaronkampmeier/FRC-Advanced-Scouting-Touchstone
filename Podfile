@@ -14,12 +14,12 @@ pod "SSBouncyButton"
 pod 'UICircularProgressRing'
 pod 'VTAcknowledgementsViewController'
 pod 'TORoundedTableView'
-pod 'AWSCore'
-pod 'AWSAppSync'
-pod 'AWSMobileClient'
-pod 'AWSUserPoolsSignIn'
-pod 'AWSAuthUI'
-pod 'AWSS3'
+pod 'AWSCore', '~> 2.9.3'
+pod 'AWSAppSync', '~> 2.10.3'
+pod 'AWSMobileClient', '~> 2.9.3'
+pod 'AWSUserPoolsSignIn', '~> 2.9.3'
+pod 'AWSAuthUI', '~> 2.9.3'
+pod 'AWSS3', '~> 2.9.3'
 end
 
 post_install do | installer |

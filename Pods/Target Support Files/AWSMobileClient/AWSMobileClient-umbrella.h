@@ -12,6 +12,8 @@
 
 #import "AWSMobileClient.h"
 #import "_AWSMobileClient.h"
+#import "AWSCognitoAuth.h"
+#import "AWSCognitoAuth+Extensions.h"
 
 FOUNDATION_EXPORT double AWSMobileClientVersionNumber;
 FOUNDATION_EXPORT const unsigned char AWSMobileClientVersionString[];

@@ -1,16 +1,7 @@
 //
-// Copyright 2010-2018 Amazon.com, Inc. or its affiliates. All Rights Reserved.
-//
-// Licensed under the Apache License, Version 2.0 (the "License").
-// You may not use this file except in compliance with the License.
-// A copy of the License is located at
-//
-// http://aws.amazon.com/apache2.0
-//
-// or in the "license" file accompanying this file. This file is distributed
-// on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either
-// express or implied. See the License for the specific language governing
-// permissions and limitations under the License.
+// Copyright 2019 Amazon.com, Inc. or its affiliates. All Rights Reserved.
+// Licensed under the Amazon Software License
+// http://aws.amazon.com/asl/
 //
 
 import Foundation
@@ -21,23 +12,29 @@ final class AWSPerformMutationQueue {
     private weak var networkClient: AWSNetworkTransport?
     private let persistentCache: AWSMutationCache?
 
+    /// The OperationQueue onto which we enqueue mutations to perform
     private let operationQueue: OperationQueue
-    private let handlerQueue: DispatchQueue
+
+    /// Returns the count of mutations yet to be processed, so apps can give UI advice if there are unprocessed
+    /// mutations.
+    var operationQueueCount: Int {
+        return operationQueue.operationCount
+    }
 
     init(
         appSyncClient: AWSAppSyncClient,
         networkClient: AWSNetworkTransport,
-        handlerQueue: DispatchQueue = .main,
         reachabiltyChangeNotifier: NetworkReachabilityNotifier?,
         cacheFileURL: URL? = nil) {
 
+        AppSyncLog.verbose("Initializing AWSPerformMutationQueue")
+
         self.appSyncClient = appSyncClient
         self.networkClient = networkClient
-        self.handlerQueue = handlerQueue
 
-        self.operationQueue = OperationQueue()
-        self.operationQueue.name = "com.amazonaws.service.appsync.MutationQueue"
-        self.operationQueue.maxConcurrentOperationCount = 1
+        operationQueue = OperationQueue()
+        operationQueue.name = "com.amazonaws.service.appsync.AWSPerformMutationQueue.operations"
+        operationQueue.maxConcurrentOperationCount = 1
 
         if let cacheFileURL = cacheFileURL {
             do {
@@ -67,7 +64,8 @@ final class AWSPerformMutationQueue {
     func add<Mutation: GraphQLMutation>(
         _ mutation: Mutation,
         mutationConflictHandler: MutationConflictHandler<Mutation>?,
-        mutationResultHandler: OperationResultHandler<Mutation>?) -> Cancellable {
+        mutationResultHandler: OperationResultHandler<Mutation>?,
+        handlerQueue: DispatchQueue) -> Cancellable {
 
         let offlineMutation: AWSAppSyncMutationRecord?
         do {
@@ -84,16 +82,11 @@ final class AWSPerformMutationQueue {
             mutationConflictHandler: mutationConflictHandler,
             mutationResultHandler: mutationResultHandler)
 
-        operation.identifier = offlineMutation?.recordIdentitifer
+        operation.identifier = offlineMutation?.recordIdentifier
 
         operation.operationCompletionBlock = { [weak self] operation, error in
             guard let identifier = operation.identifier else { return }
-
-            do {
-                try self?.deleteOfflineMutation(withIdentifier: identifier)
-            } catch {
-                AppSyncLog.error("error deleting offline mutation: \(error)")
-            }
+            self?.deleteOfflineMutation(withIdentifier: identifier)
         }
 
         operationQueue.addOperation(operation)
@@ -102,10 +95,12 @@ final class AWSPerformMutationQueue {
     }
 
     func suspend() {
+        AppSyncLog.verbose("Suspending OperationQueue")
         operationQueue.isSuspended = true
     }
 
     func resume() {
+        AppSyncLog.verbose("Resuming OperationQueue")
         operationQueue.isSuspended = false
     }
 
@@ -121,7 +116,9 @@ final class AWSPerformMutationQueue {
 
     private func loadMutations() throws {
         do {
-            guard let mutations = try persistentCache?.getStoredMutationRecordsInQueue() else {
+            AppSyncLog.info("Loading offline mutations")
+
+            guard let mutations = try persistentCache?.getStoredMutationRecordsInQueue().await() else {
                 return
             }
 
@@ -129,23 +126,25 @@ final class AWSPerformMutationQueue {
                 let operation = AWSPerformOfflineMutationOperation(
                     appSyncClient: appSyncClient,
                     networkClient: networkClient,
-                    handlerQueue: handlerQueue,
+                    handlerQueue: .main,
                     mutation: mutation)
 
                 operation.operationCompletionBlock = { [weak self] operation, error in
-                    let identifier = operation.mutation.recordIdentitifer
-
-                    do {
-                        try self?.deleteOfflineMutation(withIdentifier: identifier)
-                    } catch {
-                        AppSyncLog.error("error deleting offline mutation: \(error)")
-                    }
+                    let identifier = operation.mutation.recordIdentifier
+                    self?.deleteOfflineMutation(withIdentifier: identifier)
                 }
 
                 operationQueue.addOperation(operation)
+                AppSyncLog.verbose("\(mutation.recordIdentifier) loaded")
             }
         } catch {
-            AppSyncLog.error("error retrieving offline mutation from storage: \(error)")
+            AppSyncLog.error("Error retrieving offline mutation from storage: \(error)")
+        }
+
+        if AppSyncLogHelper.shouldLog(flag: .verbose) {
+            operationQueue.addOperation {
+                AppSyncLog.verbose("Finished processing offline mutations")
+            }
         }
     }
 
@@ -170,13 +169,17 @@ final class AWSPerformMutationQueue {
         offlineMutation.recordState = .inQueue
         offlineMutation.operationString = Mutation.operationString
 
-        try persistentCache.saveMutationRecord(record: offlineMutation)
+        persistentCache
+            .saveMutationRecord(record: offlineMutation)
+            .catch { error in AppSyncLog.error("\(#function) failure: \(error)") }
 
         return offlineMutation
     }
 
-    private func deleteOfflineMutation(withIdentifier identifier: String) throws {
-        try persistentCache?.deleteMutationRecord(withIdentifier: identifier)
+    private func deleteOfflineMutation(withIdentifier identifier: String) {
+        persistentCache?
+            .deleteMutationRecord(withIdentifier: identifier)
+            .catch { error in AppSyncLog.error("\(#function) failure: \(error)") }
     }
 
 }

@@ -1,16 +1,7 @@
 //
-// Copyright 2010-2018 Amazon.com, Inc. or its affiliates. All Rights Reserved.
-//
-// Licensed under the Apache License, Version 2.0 (the "License").
-// You may not use this file except in compliance with the License.
-// A copy of the License is located at
-//
-// http://aws.amazon.com/apache2.0
-//
-// or in the "license" file accompanying this file. This file is distributed
-// on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either
-// express or implied. See the License for the specific language governing
-// permissions and limitations under the License.
+// Copyright 2019 Amazon.com, Inc. or its affiliates. All Rights Reserved.
+// Licensed under the Amazon Software License
+// http://aws.amazon.com/asl/
 //
 
 import Foundation
@@ -21,6 +12,8 @@ final class AWSPerformMutationOperation<Mutation: GraphQLMutation>: Asynchronous
     private let mutation: Mutation
     private let mutationConflictHandler: MutationConflictHandler<Mutation>?
     private let mutationResultHandler: OperationResultHandler<Mutation>?
+
+    private var networkTask: Cancellable?
 
     var identifier: String?
     var operationCompletionBlock: ((AWSPerformMutationOperation, Error?) -> Void)?
@@ -38,19 +31,22 @@ final class AWSPerformMutationOperation<Mutation: GraphQLMutation>: Asynchronous
         self.mutationResultHandler = mutationResultHandler
     }
 
-    private var networkTask: Cancellable?
+    deinit {
+        AppSyncLog.verbose("\(identifier ?? "(no identifier)"): deinit")
+    }
 
     private func send(_ resultHandler: OperationResultHandler<Mutation>?) -> Cancellable? {
         guard let appSyncClient = appSyncClient else {
             return nil
         }
 
+        AppSyncLog.verbose("\(identifier ?? "(No identifier)"): sending")
+
         if let s3Object = AWSRequestBuilder.s3Object(from: mutation.variables) {
             appSyncClient.performMutationWithS3Object(
                 operation: mutation,
                 s3Object: s3Object,
                 conflictResolutionBlock: mutationConflictHandler,
-                dispatchGroup: nil,
                 handlerQueue: handlerQueue,
                 resultHandler: resultHandler)
 
@@ -58,9 +54,7 @@ final class AWSPerformMutationOperation<Mutation: GraphQLMutation>: Asynchronous
         } else {
             return appSyncClient.send(
                 operation: mutation,
-                context: nil,
                 conflictResolutionBlock: mutationConflictHandler,
-                dispatchGroup: nil,
                 handlerQueue: handlerQueue,
                 resultHandler: resultHandler)
         }

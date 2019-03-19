@@ -27,7 +27,7 @@ class TeamListTableViewController: UITableViewController, TeamListDetailDataSour
     @IBOutlet weak var matchesButton: UIBarButtonItem!
     
     var searchController: UISearchController!
-    var teamImages = [String:UIImage]()
+	var teamImageCache = NSCache<NSString, UIImage>()
     var teamListSplitVC: TeamListSplitViewController {
         get {
             return splitViewController as! TeamListSplitViewController
@@ -179,7 +179,7 @@ class TeamListTableViewController: UITableViewController, TeamListDetailDataSour
         selectedTeam = nil
         statToSortBy = nil
         unorderedTeamsInEvent = []
-        teamImages.removeAll()
+		teamImageCache.removeAllObjects()
         //If we are moving to a different event then clear the table otherwise leave it
         if selectedEventRanking?.eventKey != selectedEventKey {
             currentEventTeams = []
@@ -492,8 +492,8 @@ class TeamListTableViewController: UITableViewController, TeamListDetailDataSour
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
-        
-        self.teamImages.removeAll()
+		
+		teamImageCache.removeAllObjects()
     }
     
     //MARK: - TeamListDetailDataSource
@@ -565,28 +565,29 @@ class TeamListTableViewController: UITableViewController, TeamListDetailDataSour
         }
         
         //Image functionality
-        if let image = teamImages["\(selectedEventKey ?? "")-\(team.key)"] {
+		let cacheKey = "\(selectedEventKey ?? "")-\(team.key)"
+		if let image = teamImageCache.object(forKey: cacheKey as NSString) {
             cell.frontImage.image = image
         } else {
             cell.frontImage.image = UIImage(named: "FRC-Logo")
             Globals.appDelegate.appSyncClient?.fetch(query: ListScoutedTeamsQuery(eventKey: selectedEventKey ?? ""), cachePolicy: .returnCacheDataDontFetch, resultHandler: {[weak self] (result, error) in
                 if Globals.handleAppSyncErrors(forQuery: "ListScoutedTeams-TeamListCellForRowAt", result: result, error: error) {
-                    if let scoutedTeam = result?.data?.listScoutedTeams?.first(where: {$0?.teamKey == team.key})??.fragments.scoutedTeam {
-                        if let imageInfo = scoutedTeam.image {
-                            TeamImageLoader.default.loadImage(withAttributes: imageInfo, progressBlock: { (progress) in
-                                
-                            }, completionHandler: { (image, error) in
-								DispatchQueue.main.async {
-									if let image = image {
-										if cell.stateID == stateID {
+					if let scoutedTeam = result?.data?.listScoutedTeams?.first(where: {$0?.teamKey == team.key})??.fragments.scoutedTeam {
+						if let imageInfo = scoutedTeam.image {
+							TeamImageLoader.default.loadImage(withAttributes: imageInfo, progressBlock: { (progress) in
+								
+							}, completionHandler: { (image, error) in
+								if let image = image {
+									if cell.stateID == stateID {
+										DispatchQueue.main.async {
 											cell.frontImage.image = image
 										}
-										self?.teamImages["\(self?.selectedEventKey ?? "")-\(team.key)"] = image
-									} else {
 									}
+									self?.teamImageCache.setObject(image, forKey: cacheKey as NSString)
+								} else {
 								}
-                            })
-                        } else {
+							})
+						} else {
                         }
                     } else {
                     }

@@ -123,7 +123,7 @@ class TeamCommentsTableViewController: UITableViewController {
             let comment = teamComments[indexPath.row]
             let deleteAction = UIContextualAction(style: .destructive, title: "Delete") {[weak self] (action, view, completionHandler) in
                 //Delete the comment
-                Globals.appDelegate.appSyncClient?.perform(mutation: RemoveTeamCommentMutation(eventKey: (self?.eventKey)!, key: comment.key), resultHandler: { (result, error) in
+                Globals.appDelegate.appSyncClient?.perform(mutation: RemoveTeamCommentMutation(eventKey: (self?.eventKey) ?? "", key: comment.key), resultHandler: { (result, error) in
                     if Globals.handleAppSyncErrors(forQuery: "RemoveTeamComment", result: result, error: error) {
                         self?.tableView.beginUpdates()
                         self?.teamComments.remove(at: indexPath.row)

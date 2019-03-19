@@ -149,7 +149,11 @@ class MatchOverviewPerformanceDetailViewController: UIViewController {
     }
     
     @IBAction func scoutingIDSelected(_ sender: UISegmentedControl) {
-        selectScoutSession(scoutSession: availableScoutSessions[sender.selectedSegmentIndex])
+		if sender.selectedSegmentIndex < availableScoutSessions.count {
+			selectScoutSession(scoutSession: availableScoutSessions[sender.selectedSegmentIndex])
+		} else {
+			selectScoutSession(scoutSession: availableScoutSessions.first ?? nil)
+		}
     }
     
     @IBAction func standsScoutPressed(_ sender: UIButton) {

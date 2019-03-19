@@ -1,16 +1,7 @@
 //
-// Copyright 2010-2018 Amazon.com, Inc. or its affiliates. All Rights Reserved.
-//
-// Licensed under the Apache License, Version 2.0 (the "License").
-// You may not use this file except in compliance with the License.
-// A copy of the License is located at
-//
-// http://aws.amazon.com/apache2.0
-//
-// or in the "license" file accompanying this file. This file is distributed
-// on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either
-// express or implied. See the License for the specific language governing
-// permissions and limitations under the License.
+// Copyright 2019 Amazon.com, Inc. or its affiliates. All Rights Reserved.
+// Licensed under the Amazon Software License
+// http://aws.amazon.com/asl/
 //
 
 import Foundation
@@ -18,42 +9,24 @@ import AWSCore
 
 public typealias SubscriptionResultHandler<Operation: GraphQLSubscription> = (_ result: GraphQLResult<Operation.Data>?, _ transaction: ApolloStore.ReadWriteTransaction?, _ error: Error?) -> Void
 
+public typealias SubscriptionStatusChangeHandler = (AWSAppSyncSubscriptionWatcherStatus) -> Void
+
 public typealias DeltaQueryResultHandler<Operation: GraphQLQuery> = (_ result: GraphQLResult<Operation.Data>?, _ transaction: ApolloStore.ReadWriteTransaction?, _ error: Error?) -> Void
 
 public typealias OptimisticResponseBlock = (ApolloStore.ReadWriteTransaction?) -> Void
 
 public typealias MutationConflictHandler<Mutation: GraphQLMutation> = (_ serverState: Snapshot?, _ taskCompletionSource: AWSTaskCompletionSource<Mutation>?, _ resultHandler: OperationResultHandler<Mutation>?) -> Void
 
-enum AWSAppSyncGraphQLOperation {
-    case mutation
-    case query
-    case subscription
-}
-
 internal let NoOpOperationString = "No-op"
 
-public struct AWSAppSyncSubscriptionError: Error, LocalizedError {
-    let additionalInfo: String?
-    let errorDetails: [String: String]?
-
-    public var errorDescription: String? {
-        return additionalInfo ?? "Unable to start subscription."
-    }
-
-    public var recoverySuggestion: String? {
-        return errorDetails?["recoverySuggestion"]
-    }
-
-    public var failureReason: String? {
-        return errorDetails?["failureReason"]
-    }
-}
-
+/// Delegates will be notified when a mutation is performed from the `mutationCallback`. This pattern is necessary
+/// in order to provide notifications of mutations which are performed after an app restart and the initial callback
+/// context has been lost.
 public protocol AWSAppSyncOfflineMutationDelegate {
     func mutationCallback(recordIdentifier: String, operationString: String, snapshot: Snapshot?, error: Error?)
 }
 
-// The client for making `Mutation`, `Query` and `Subscription` requests.
+/// The client for making `Mutation`, `Query` and `Subscription` requests.
 public class AWSAppSyncClient {
 
     public let apolloClient: ApolloClient?
@@ -65,6 +38,17 @@ public class AWSAppSyncClient {
 
     public var offlineMutationDelegate: AWSAppSyncOfflineMutationDelegate?
     private var mutationQueue: AWSPerformMutationQueue!
+
+    /// The count of Mutation operations queued for sending to the backend.
+    ///
+    /// AppSyncClient processes both offline and online mutations, and mutations are queued for processing even while
+    /// the client is offline, so this count represents a good measure of the number of mutations that have yet to be
+    /// successfully sent to the service, regardless of the state of the network.
+    ///
+    /// This value is `nil` if the mutationQueue cannot be accessed (e.g., has not finished initializing).
+    public var queuedMutationCount: Int? {
+        return mutationQueue?.operationQueueCount
+    }
 
     private var connectionStateChangeHandler: ConnectionStateChangeHandler?
     private var autoSubmitOfflineMutations: Bool = false
@@ -83,9 +67,11 @@ public class AWSAppSyncClient {
 
     init(appSyncConfig: AWSAppSyncClientConfiguration,
          reachabilityFactory: NetworkReachabilityProvidingFactory.Type? = nil) throws {
+
+        AppSyncLog.info("Initializing AppSyncClient")
+
         self.autoSubmitOfflineMutations = appSyncConfig.autoSubmitOfflineMutations
         self.store = appSyncConfig.store
-        self.appSyncMQTTClient.allowCellularAccess = appSyncConfig.allowsCellularAccess
         self.presignedURLClient = appSyncConfig.presignedURLClient
         self.s3ObjectManager = appSyncConfig.s3ObjectManager
         self.subscriptionMetadataCache = appSyncConfig.subscriptionMetadataCache
@@ -103,9 +89,8 @@ public class AWSAppSyncClient {
         self.mutationQueue = AWSPerformMutationQueue(
             appSyncClient: self,
             networkClient: httpTransport!,
-            handlerQueue: .main,
             reachabiltyChangeNotifier: NetworkReachabilityNotifier.shared,
-            cacheFileURL: appSyncConfig.databaseURL)
+            cacheFileURL: appSyncConfig.cacheConfiguration?.offlineMutations)
 
         NotificationCenter.default.addObserver(
             self,
@@ -115,6 +100,7 @@ public class AWSAppSyncClient {
     }
 
     deinit {
+        AppSyncLog.info("Releasing AppSyncClient")
         NetworkReachabilityNotifier.clearShared()
     }
 
@@ -145,7 +131,7 @@ public class AWSAppSyncClient {
     ///   - error: An error that indicates why the fetch failed, or `nil` if the fetch was succesful.
     /// - Returns: An object that can be used to cancel an in progress fetch.
     @discardableResult public func fetch<Query: GraphQLQuery>(query: Query, cachePolicy: CachePolicy = .returnCacheDataElseFetch, queue: DispatchQueue = DispatchQueue.main, resultHandler: OperationResultHandler<Query>? = nil) -> Cancellable {
-        AppSyncLog.verbose("fetch: \(query)")
+        AppSyncLog.verbose("Fetching: \(query)")
         return apolloClient!.fetch(query: query, cachePolicy: cachePolicy, queue: queue, resultHandler: resultHandler)
     }
 
@@ -164,7 +150,10 @@ public class AWSAppSyncClient {
         return apolloClient!.watch(query: query, cachePolicy: cachePolicy, queue: queue, resultHandler: resultHandler)
     }
 
-    public func subscribe<Subscription: GraphQLSubscription>(subscription: Subscription, queue: DispatchQueue = DispatchQueue.main, resultHandler: @escaping SubscriptionResultHandler<Subscription>) throws -> AWSAppSyncSubscriptionWatcher<Subscription>? {
+    public func subscribe<Subscription: GraphQLSubscription>(subscription: Subscription,
+                                                             queue: DispatchQueue = DispatchQueue.main,
+                                                             statusChangeHandler: SubscriptionStatusChangeHandler? = nil,
+                                                             resultHandler: @escaping SubscriptionResultHandler<Subscription>) throws -> AWSAppSyncSubscriptionWatcher<Subscription>? {
 
         return AWSAppSyncSubscriptionWatcher(client: self.appSyncMQTTClient,
                                               httpClient: self.httpTransport!,
@@ -172,6 +161,7 @@ public class AWSAppSyncClient {
                                               subscriptionsQueue: self.subscriptionsQueue,
                                               subscription: subscription,
                                               handlerQueue: queue,
+                                              statusChangeHandler: statusChangeHandler,
                                               resultHandler: resultHandler)
     }
 
@@ -183,11 +173,14 @@ public class AWSAppSyncClient {
                                              subscriptionsQueue: self.subscriptionsQueue,
                                              subscription: subscription,
                                              handlerQueue: queue,
+                                             statusChangeHandler: nil,
                                              connectedCallback: connectCallback,
                                              resultHandler: resultHandler)
     }
 
-    /// Performs a mutation by sending it to the server.
+    /// Performs a mutation by sending it to the server. Internally, these mutations are added to a queue and performed
+    /// serially, in first-in, first-out order. Clients can inspect the size of the queue with the `queuedMutationCount`
+    /// property.
     ///
     /// - Parameters:
     ///   - mutation: The mutation to perform.
@@ -219,7 +212,9 @@ public class AWSAppSyncClient {
         return mutationQueue.add(
             mutation,
             mutationConflictHandler: conflictResolutionBlock,
-            mutationResultHandler: resultHandler)
+            mutationResultHandler: resultHandler,
+            handlerQueue: queue
+        )
     }
 
     internal final class EmptySubscription: GraphQLSubscription {

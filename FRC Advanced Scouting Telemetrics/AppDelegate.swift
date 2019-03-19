@@ -213,7 +213,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             
 //            let appSyncConfig = try AWSAppSyncClientConfiguration(url: URL(string: "")!, serviceRegion: .USEast1, userPoolsAuthProvider: FASTCognitoUserPoolsAuthProvider(), databaseURL: databaseURL, connectionStateChangeHandler: FASTAppSyncStateChangeHandler(), s3ObjectManager: AWSS3TransferUtility.default())
 //            let appSyncConfig = try AWSAppSyncClientConfiguration(appSyncServiceConfig: serviceConfig, databaseURL: databaseURL)
-            let appSyncConfig = try AWSAppSyncClientConfiguration(appSyncClientInfo: AWSAppSyncClientInfo(), userPoolsAuthProvider: FASTCognitoUserPoolsAuthProvider(), databaseURL: databaseURL)
+			let appSyncConfig = try AWSAppSyncClientConfiguration(appSyncServiceConfig: serviceConfig, userPoolsAuthProvider: FASTCognitoUserPoolsAuthProvider(), connectionStateChangeHandler: FASTAppSyncStateChangeHandler())
+//            let appSyncConfig = try AWSAppSyncClientConfiguration(appSyncClientInfo: AWSAppSyncClientInfo(), userPoolsAuthProvider: FASTCognitoUserPoolsAuthProvider(), databaseURL: databaseURL)
             appSyncClient = try AWSAppSyncClient(appSyncConfig: appSyncConfig)
             appSyncClient?.apolloClient?.cacheKeyForObject = {
                 switch $0["__typename"] as! String {
@@ -418,7 +419,23 @@ extension AWSMobileClientError {
                 return mesg
             case .userCancelledSignIn(let mesg):
                 return mesg
-            }
+			case .badRequest(let message):
+				return message
+			case .expiredRefreshToken(let message):
+				return message
+			case .errorLoadingPage(let message):
+				return message
+			case .securityFailed(let message):
+				return message
+			case .idTokenNotIssued(let message):
+				return message
+			case .idTokenAndAcceessTokenNotIssued(let message):
+				return message
+			case .invalidConfiguration(let message):
+				return message
+			case .deviceNotRemembered(let message):
+				return message
+			}
         }
     }
 }
