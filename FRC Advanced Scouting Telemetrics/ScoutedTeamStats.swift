@@ -314,6 +314,54 @@ extension ScoutedTeam: Equatable {
                     }
                 }
             }
+			
+			//CUSTOM STAT FOR SAM
+			statistics.append(ScoutedTeamStat(name: "Cargo + Hatch Average", id: "cargoandhatchteam", compositeTrendFunction: { (scoutedTeam, callback) in
+				let ssStats = StatisticsDataSource().getStats(forType: ScoutSession.self)
+				let cargoandhatchStat = ssStats.first(where: {$0.id == "cargoandhatch"})
+				
+				AWSDataManager.default.retrieveScoutSessions(forEventKey: scoutedTeam.eventKey, teamKey: scoutedTeam.teamKey, withCallback: { (scoutSessions) in
+					var compositePoints = [(Int, StatValue)]()
+					
+					let group = DispatchGroup()
+					
+					for scoutSession in scoutSessions ?? [] {
+						let matchNumber = Int(scoutSession?.matchKey.components(separatedBy: "_").last?.trimmingCharacters(in: CharacterSet.letters) ?? "0") ?? 0
+						if let scoutSession = scoutSession {
+							group.enter()
+							cargoandhatchStat?.calculate(forObject: scoutSession, callback: { (value) in
+								compositePoints.append((matchNumber, value))
+								group.leave()
+							})
+							
+							group.wait()
+						} else {
+							compositePoints.append(((matchNumber, .NoValue)))
+						}
+					}
+					
+					callback(compositePoints)
+				})
+			}, function: { (scoutedTeam, callback) in
+				AWSDataManager.default.retrieveScoutSessions(forEventKey: scoutedTeam.eventKey, teamKey: scoutedTeam.teamKey, withCallback: { (scoutSessions) in
+					let totalTMs = scoutSessions?.map({$0?.timeMarkers?.map({$0!.fragments.timeMarkerFragment})}).reduce([TimeMarkerFragment](), { (tms, newTMs) -> [TimeMarkerFragment] in
+						return tms + (newTMs ?? [])
+					})
+					
+					var hatchesPlaced = 0
+					var cargoPlaced = 0
+					
+					for tm in totalTMs ?? [] {
+						if tm.event == "placed_hatch" {
+							hatchesPlaced += 1
+						} else if tm.event == "placed_cargo" {
+							cargoPlaced += 1
+						}
+					}
+					
+					callback(StatValue.Double(Double(cargoPlaced + hatchesPlaced) / Double(scoutSessions?.count ?? 0)))
+				})
+			}))
             
             return statistics
         }

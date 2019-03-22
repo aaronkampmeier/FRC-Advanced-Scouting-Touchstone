@@ -101,6 +101,22 @@ extension ScoutSession {
                 }
                 
             }
+			
+			//CUSTOM FOR SAM
+			//Placed Cargo Number + Placed Hatch Number = Cycles
+			statistics.append(ScoutSessionStat(name: "Cargo + Hatch", id: "cargoandhatch", function: { (scoutSession, callback) in
+				var numberOfCargo = 0
+				var numberOfHatches = 0
+				for timeMarker in scoutSession.timeMarkers ?? [] {
+					if timeMarker?.event == "placed_hatch" {
+						numberOfHatches += 1
+					} else if timeMarker?.event == "placed_cargo" {
+						numberOfCargo += 1
+					}
+				}
+				
+				callback(StatValue.Integer(numberOfHatches + numberOfCargo))
+			}))
             
             return statistics
         }
