@@ -97,6 +97,9 @@ class MatchOverviewPerformanceDetailViewController: UIViewController {
             self.model = model
             self.timeMarkerTableView.reloadData()
         }
+		
+		availableScoutSessions = []
+		hideEverything()
     }
     
     override func viewWillAppear(_ animated: Bool) {
