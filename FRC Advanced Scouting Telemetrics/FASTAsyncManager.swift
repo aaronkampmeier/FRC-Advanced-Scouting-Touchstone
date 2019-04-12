@@ -197,7 +197,11 @@ class FASTAsyncManager {
 							let perfTrace = Performance.startTrace(name: "Scout Session Subscription Cache Update")
                             try transaction?.update(query: ListAllScoutSessionsQuery(eventKey: eventKey), { (selectionSet) in
                                 if !(selectionSet.listAllScoutSessions?.contains(where: {$0?.key == newSession.key}) ?? false) {
-                                    selectionSet.listAllScoutSessions?.append(try ListAllScoutSessionsQuery.Data.ListAllScoutSession(newSession))
+									do {
+										selectionSet.listAllScoutSessions?.append(try ListAllScoutSessionsQuery.Data.ListAllScoutSession(newSession))
+									} catch {
+										CLSNSLogv("Error appending scout session to the cache: \(newSession) \(error)", getVaList([]))
+									}
                                 }
 								perfTrace?.stop()
                             })

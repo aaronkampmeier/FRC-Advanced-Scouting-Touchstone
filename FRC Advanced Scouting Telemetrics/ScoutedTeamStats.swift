@@ -21,7 +21,7 @@ extension ScoutedTeam: Equatable {
     
     static let statCalculationQueue = DispatchQueue.global(qos: .userInitiated) //DispatchQueue(label: "ScoutedTeamStatCalculation", qos: .userInitiated, target: nil)
     
-    //TODO: - Cache this object
+	///: Deprecated
     var decodedAttributes: ScoutedTeamAttributes? {
         get {
             do {

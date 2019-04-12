@@ -4,7 +4,7 @@ use_frameworks!
 
 target 'FRC Advanced Scouting Touchstone' do
 pod 'Alamofire'
-pod 'Firebase/Core'
+pod 'Firebase/Core', '~> 5.20.0'
 pod 'Firebase/Performance'
 pod 'Fabric', '~> 1.9.0'
 pod 'Crashlytics', '~> 3.12.0'

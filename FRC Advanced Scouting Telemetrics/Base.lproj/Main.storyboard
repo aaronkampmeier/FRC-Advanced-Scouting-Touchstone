@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="14460.31" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="48F-9f-Lof">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="14490.70" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="48F-9f-Lof">
     <device id="ipad9_7" orientation="landscape">
         <adaptation id="fullscreen"/>
     </device>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14460.20"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14490.49"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
@@ -3066,7 +3066,7 @@
                         <rect key="frame" x="0.0" y="0.0" width="400" height="400"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Event Short Name" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumScaleFactor="0.75" adjustsLetterSpacingToFitWidth="YES" translatesAutoresizingMaskIntoConstraints="NO" id="DWa-P5-LeK">
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Event Short Name" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" minimumScaleFactor="0.75" adjustsLetterSpacingToFitWidth="YES" translatesAutoresizingMaskIntoConstraints="NO" id="DWa-P5-LeK">
                                 <rect key="frame" x="99" y="100" width="202" height="31.5"/>
                                 <fontDescription key="fontDescription" style="UICTFontTextStyleTitle1"/>
                                 <nil key="textColor"/>
@@ -4077,14 +4077,14 @@
                                 <nil key="highlightedColor"/>
                             </label>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" minimumScaleFactor="0.80000000000000004" translatesAutoresizingMaskIntoConstraints="NO" id="rTi-mk-BOY">
-                                <rect key="frame" x="58" y="497.5" width="908.5" height="64.5"/>
+                                <rect key="frame" x="58" y="352" width="908.5" height="64.5"/>
                                 <string key="text">FAST is ready for the 2019 Deep Space competition with a brand new update that focuses on adaptability, performance, and future development. This includes a brand new pit scouting, stands scouting, and statistics designed for the 2019 competition. To get started simply add in your first 2019 events.</string>
                                 <fontDescription key="fontDescription" type="system" weight="medium" pointSize="18"/>
                                 <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <nil key="highlightedColor"/>
                             </label>
                             <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="FIRST-DestDeepSpace-logo_reverse-sponsor" translatesAutoresizingMaskIntoConstraints="NO" id="ifw-Wa-g9y">
-                                <rect key="frame" x="358.5" y="190.5" width="307" height="307"/>
+                                <rect key="frame" x="504" y="336" width="16" height="16"/>
                                 <constraints>
                                     <constraint firstAttribute="height" relation="lessThanOrEqual" constant="307" id="dnK-kR-D97"/>
                                     <constraint firstAttribute="width" secondItem="ifw-Wa-g9y" secondAttribute="height" multiplier="1:1" id="nCA-8J-ekr"/>
@@ -4130,19 +4130,19 @@
         </scene>
     </scenes>
     <resources>
-        <image name="Banana" width="66" height="66"/>
-        <image name="Banana Filled" width="66" height="66"/>
-        <image name="Camera" width="60" height="60"/>
-        <image name="Chart" width="13" height="13"/>
+        <image name="Banana" width="33" height="33"/>
+        <image name="Banana Filled" width="33" height="33"/>
+        <image name="Camera" width="30" height="30"/>
+        <image name="Chart" width="27" height="27"/>
         <image name="Cyborg Cat Simple" width="650" height="541"/>
-        <image name="Edit" width="54" height="54"/>
-        <image name="FIRST-DestDeepSpace-logo_reverse-sponsor" width="792.239990234375" height="792.239990234375"/>
-        <image name="My Team Indicator" width="24" height="24"/>
-        <image name="Pit Scouting" width="39.857143402099609" height="39.857143402099609"/>
+        <image name="Edit" width="27" height="27"/>
+        <image name="FIRST-DestDeepSpace-logo_reverse-sponsor" width="3301" height="3301"/>
+        <image name="My Team Indicator" width="50" height="50"/>
+        <image name="Pit Scouting" width="31" height="31"/>
         <image name="Plus Math Filled-100" width="100" height="100"/>
-        <image name="Settings-50" width="34.714286804199219" height="34.714286804199219"/>
-        <image name="Sort" width="34.714286804199219" height="34.714286804199219"/>
-        <image name="Stands Scouting" width="62" height="62"/>
+        <image name="Settings-50" width="27" height="27"/>
+        <image name="Sort" width="27" height="27"/>
+        <image name="Stands Scouting" width="31" height="31"/>
     </resources>
     <inferredMetricsTieBreakers>
         <segue reference="vir-FS-zIP"/>

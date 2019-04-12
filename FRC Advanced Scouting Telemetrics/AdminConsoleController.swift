@@ -180,7 +180,7 @@ class AdminConsoleController: UIViewController, UITableViewDataSource, UITableVi
                 }
                 
                 //Logout and show onboarding
-                AWSDataManager().signOut()
+                AWSDataManager.default.signOut()
                 
                 UserDefaults.standard.setValue(false, forKey: Globals.isSpectatorModeKey)
             }
@@ -209,17 +209,23 @@ class AdminConsoleController: UIViewController, UITableViewDataSource, UITableVi
             if indexPath.row == tableView.numberOfRows(inSection: 0) - 1 {
                 return nil
             } else {
-                let reloadAction = UITableViewRowAction.init(style: .normal, title: "Reload") {(rowAction, indexPath) in
-                    self.reloadAt(indexPath: indexPath, inTableView: tableView)
+                let reloadAction = UITableViewRowAction.init(style: .normal, title: "Reload") {[weak self](rowAction, indexPath) in
+                    self?.reloadAt(indexPath: indexPath, inTableView: tableView)
                 }
                 reloadAction.backgroundColor = UIColor.blue
                 
-                let delete = UITableViewRowAction.init(style: .destructive, title: "Delete") {(rowAction, indexPath) in
-                    self.deleteAt(indexPath: indexPath, inTableView: tableView)
+                let delete = UITableViewRowAction.init(style: .destructive, title: "Delete") {[weak self](rowAction, indexPath) in
+					let confirmationAlert = UIAlertController(title: "Are you sure?", message: "Are you sure you want to delete \(self?.trackedEvents[indexPath.row].eventName ?? "") (\(self?.trackedEvents[indexPath.row].eventKey ?? ""))", preferredStyle: .alert)
+					confirmationAlert.addAction(UIAlertAction(title: "Yes, Delete It", style: .destructive, handler: { (action) in
+						self?.deleteAt(indexPath: indexPath, inTableView: tableView)
+					}))
+					confirmationAlert.addAction(UIAlertAction(title: "No", style: .cancel, handler: nil))
+					
+					self?.present(confirmationAlert, animated: true, completion: nil)
                 }
                 
-                let exportToCSV = UITableViewRowAction(style: .default, title: "CSV Export") {(rowAction, indexPath) in
-                    self.exportToCSV(eventKey: self.trackedEvents[indexPath.row].eventKey, withSourceView: nil) {_ in
+                let exportToCSV = UITableViewRowAction(style: .default, title: "CSV Export") {[weak self](rowAction, indexPath) in
+                    self?.exportToCSV(eventKey: self?.trackedEvents[indexPath.row].eventKey ?? "", withSourceView: nil) {_ in
                     }
                 }
                 exportToCSV.backgroundColor = .purple
@@ -291,16 +297,15 @@ class AdminConsoleController: UIViewController, UITableViewDataSource, UITableVi
             }
         }, conflictResolutionBlock: { (snapshot, taskCompletionSource, result) in
             
-        }, resultHandler: { (result, error) in
+        }, resultHandler: {[weak self] (result, error) in
             if Globals.handleAppSyncErrors(forQuery: "RemoveTrackedEvent", result: result, error: error) {
-                tableView.beginUpdates()
-                tableView.deleteRows(at: [indexPath], with: .left)
-                self.trackedEvents.remove(at: indexPath.row)
-                tableView.endUpdates()
+//                tableView.beginUpdates()
+//                tableView.deleteRows(at: [indexPath], with: .left)
+//                tableView.endUpdates()
             } else {
                 let alert = UIAlertController(title: "Problem Removing Event", message: "An error occured when removing the event.", preferredStyle: .alert)
                 alert.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
-                self.present(alert, animated: true, completion: nil)
+                self?.present(alert, animated: true, completion: nil)
             }
         })
     }

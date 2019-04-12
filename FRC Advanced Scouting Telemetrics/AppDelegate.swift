@@ -45,6 +45,18 @@ internal struct Globals {
 						CLSNSLogv("Operation \(queryIdentifier) failed because the request timed out", getVaList([]))
 					} else if nserr.code == 53 {
 						CLSNSLogv("Operation \(queryIdentifier) canceled by the software", getVaList([]))
+					} else if nserr.code == -1003 {
+						
+						if #available(iOS 12.0, *) {
+							CLSNSLogv("Operation \(queryIdentifier) failed beccause a server with specified hostname could not be found. Is online: \(FASTNetworkManager.main.isOnline())", getVaList([]))
+							if FASTNetworkManager.main.isOnline() {
+								Crashlytics.sharedInstance().recordError(error, withAdditionalUserInfo: ["is-online":"true"])
+							}
+						} else {
+							// Fallback on earlier versions
+							CLSNSLogv("Operation \(queryIdentifier) failed beccause a server with specified hostname could not be found.", getVaList([]))
+							Crashlytics.sharedInstance().recordError(error, withAdditionalUserInfo: ["is-online":"true"])
+						}
 					} else {
 						CLSNSLogv("Error performing \(queryIdentifier): \(error)", getVaList([]))
 						Crashlytics.sharedInstance().recordError(nserr)
@@ -266,6 +278,11 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             } else if state == UserState.signedIn {
                 Globals.asyncLoadingManager = FASTAsyncManager()
             }
+			
+			if state == UserState.signedOutUserPoolsTokenInvalid || state == UserState.signedOutFederatedTokensInvalid {
+				//Show the sign in screen
+				AWSDataManager.default.signOut()
+			}
             
             
             Analytics.setUserID(AWSMobileClient.sharedInstance().username)
