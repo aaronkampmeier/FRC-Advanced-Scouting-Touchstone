@@ -56,7 +56,7 @@ class StatusBarUnderlayView: UIVisualEffectView {
         let darkMode = (style == .dark)
 
         // Configure the style of the translucency view
-        let blurEffect = darkMode ? UIBlurEffectStyle.dark : UIBlurEffectStyle.light
+        let blurEffect = darkMode ? UIBlurEffect.Style.dark : UIBlurEffect.Style.light
         self.effect = UIBlurEffect(style: blurEffect)
 
         // Configure the shade of white of the separator line

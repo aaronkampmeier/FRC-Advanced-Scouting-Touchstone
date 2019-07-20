@@ -34,7 +34,7 @@ class OnboardingPageViewController: UIPageViewController, UIPageViewControllerDa
     func addStationaryCyborgCat() {
         //Set the cyborg cat subview
         let cyborgCatImageView = UIImageView(image: #imageLiteral(resourceName: "Cyborg Cat Simple"))
-        cyborgCatImageView.contentMode = UIViewContentMode.scaleToFill
+        cyborgCatImageView.contentMode = UIView.ContentMode.scaleToFill
         cyborgCatImageView.translatesAutoresizingMaskIntoConstraints = false
         self.view.addSubview(cyborgCatImageView)
         let imageWidth: CGFloat = 260
@@ -83,7 +83,7 @@ class OnboardingPageViewController: UIPageViewController, UIPageViewControllerDa
 //    }
     
     func pageViewController(_ pageViewController: UIPageViewController, viewControllerBefore viewController: UIViewController) -> UIViewController? {
-        guard let currentIndex = onboardingVCs.index(of: viewController) else {
+        guard let currentIndex = onboardingVCs.firstIndex(of: viewController) else {
             return nil
         }
         
@@ -96,7 +96,7 @@ class OnboardingPageViewController: UIPageViewController, UIPageViewControllerDa
     }
     
     func pageViewController(_ pageViewController: UIPageViewController, viewControllerAfter viewController: UIViewController) -> UIViewController? {
-        guard let currentIndex = onboardingVCs.index(of: viewController) else {
+        guard let currentIndex = onboardingVCs.firstIndex(of: viewController) else {
             return nil
         }
         

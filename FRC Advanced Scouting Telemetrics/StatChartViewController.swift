@@ -95,8 +95,10 @@ class StatChartViewController: UIViewController {
         
         statistic?.compositePoints(forObject: scoutedTeam) {[weak self] entries in
             self?.statsLoaderQueue.async {
-                while self?.isViewLoaded != true {
-                    
+                DispatchQueue.main.sync {
+                    while self?.isViewLoaded != true {
+                        
+                    }
                 }
                 self?.entries = entries
                 //Create all of the BarChartDataEntry objects

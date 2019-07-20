@@ -31,7 +31,7 @@ class FieldLocationDisplayViewController: UIViewController {
     var points: [CGPoint] = [] {
         willSet {
             if !(dataSource?.allowsMultiplePoints() ?? false) {
-                points.removeAll()
+//                points.removeAll()
                 reloadPoints()
             }
         }

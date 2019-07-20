@@ -67,9 +67,9 @@ class LoginFooterView: UIView {
     // Views
     private let loginButton = UIButton(type: .system)
     private let registerButton = UIButton(type: .system)
-    private let loadingIndicator = UIActivityIndicatorView(activityIndicatorStyle: .white)
+    private let loadingIndicator = UIActivityIndicatorView(style: .white)
     
-    private let forgotPasswordButton = UIButton(type: UIButtonType.system)
+    private let forgotPasswordButton = UIButton(type: UIButton.ButtonType.system)
     
     var loginButtonTappedHandler: (() -> Void)?
     var registerButtonTappedHandler: (() -> Void)?

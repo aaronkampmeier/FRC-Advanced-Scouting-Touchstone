@@ -32,7 +32,7 @@ class PitSegmentedSelectorCollectionViewCell: PitScoutingCell {
         
         //Set the initial value
         if let initValue = parameter.currentValue() as? String {
-            if let index = options.index(of: initValue) {
+            if let index = options.firstIndex(of: initValue) {
                 segmentedControl.selectedSegmentIndex = index
             }
         } else {

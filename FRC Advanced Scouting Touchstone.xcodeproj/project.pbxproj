@@ -11,7 +11,6 @@
 		1F1C23DA1E07673E008885A1 /* AddEventTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F1C23D91E07673E008885A1 /* AddEventTableViewController.swift */; };
 		1F21DF121C66942200C55D0E /* SortVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F21DF111C66942200C55D0E /* SortVC.swift */; };
 		1F4534101C6FF916004EDDB9 /* StandsScoutingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F45340F1C6FF916004EDDB9 /* StandsScoutingViewController.swift */; };
-		1F4534561C7276DE004EDDB9 /* EventPickerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F4534551C7276DE004EDDB9 /* EventPickerViewController.swift */; };
 		1F4FEDAC1C4B686000F4016D /* AdminConsoleController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F4FEDAB1C4B686000F4016D /* AdminConsoleController.swift */; };
 		1F78E7831C3B469300221927 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F78E7821C3B469300221927 /* AppDelegate.swift */; };
 		1F78E7881C3B469300221927 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 1F78E7861C3B469300221927 /* Main.storyboard */; };
@@ -24,6 +23,8 @@
 		1FDC1BD11CD69F5F00ABE327 /* TeamListTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FDC1BD01CD69F5F00ABE327 /* TeamListTableViewController.swift */; };
 		1FDC1BD31CD6A35F00ABE327 /* TeamListDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FDC1BD21CD6A35F00ABE327 /* TeamListDetailViewController.swift */; };
 		9300196C20537B0C00E10CDC /* TeamCommentsTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9300196B20537B0C00E10CDC /* TeamCommentsTableViewController.swift */; };
+		9303DD1E22DFD4DA000D5178 /* EventSelector.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9303DD1D22DFD4DA000D5178 /* EventSelector.swift */; };
+		9303DD2022DFDE1C000D5178 /* EventSelectorRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9303DD1F22DFDE1C000D5178 /* EventSelectorRow.swift */; };
 		930B965C1E4548F700E385D3 /* PitSegmentedSelectorCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 930B965B1E4548F700E385D3 /* PitSegmentedSelectorCollectionViewCell.swift */; };
 		930B96621E456D3000E385D3 /* PitTableViewSelectorCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 930B96611E456D3000E385D3 /* PitTableViewSelectorCollectionViewCell.swift */; };
 		930B96671E45A91A00E385D3 /* PitButtonCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 930B96661E45A91A00E385D3 /* PitButtonCollectionViewCell.swift */; };
@@ -87,7 +88,9 @@
 		93A38B3A2055EBA400B8B692 /* NoEventSelected.xib in Resources */ = {isa = PBXBuildFile; fileRef = 93A38B392055EBA400B8B692 /* NoEventSelected.xib */; };
 		93A38B3F2055F49F00B8B692 /* NoEventSelectedView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93A38B3E2055F49F00B8B692 /* NoEventSelectedView.swift */; };
 		93A3ABC321F1462F007831E3 /* PitScoutingData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93A3ABC221F1462F007831E3 /* PitScoutingData.swift */; };
+		93AADF4922E2572C00C37E2D /* EventSelectorTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93AADF4822E2572C00C37E2D /* EventSelectorTableViewController.swift */; };
 		93AE99801E3407A00000FB7C /* SSDataManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93AE997F1E3407A00000FB7C /* SSDataManager.swift */; };
+		93B7195F22DE694D00B08FDD /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93B7195E22DE694D00B08FDD /* SceneDelegate.swift */; };
 		93BA599E1E2C95F200171D72 /* FASTTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 938D9CB01E1B05BA00A5E522 /* FASTTests.swift */; };
 		93BCA618223B50AD00BF6467 /* OfflineSupport.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93BCA617223B50AD00BF6467 /* OfflineSupport.swift */; };
 		93C5B47C1E53FC9C007D309F /* TeamInfoScrollView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93C5B47B1E53FC9C007D309F /* TeamInfoScrollView.swift */; };
@@ -162,7 +165,6 @@
 		1F1C23D91E07673E008885A1 /* AddEventTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AddEventTableViewController.swift; sourceTree = "<group>"; };
 		1F21DF111C66942200C55D0E /* SortVC.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SortVC.swift; sourceTree = "<group>"; };
 		1F45340F1C6FF916004EDDB9 /* StandsScoutingViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StandsScoutingViewController.swift; sourceTree = "<group>"; };
-		1F4534551C7276DE004EDDB9 /* EventPickerViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EventPickerViewController.swift; sourceTree = "<group>"; };
 		1F4FEDAB1C4B686000F4016D /* AdminConsoleController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AdminConsoleController.swift; sourceTree = "<group>"; };
 		1F78E77F1C3B469300221927 /* FRC Advanced Scouting Touchstone.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "FRC Advanced Scouting Touchstone.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		1F78E7821C3B469300221927 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -184,6 +186,8 @@
 		1FDE56921CCD376B009042CD /* opencv2.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = opencv2.framework; path = "FRC Advanced Scouting Telemetrics/swix/objc/opencv2.framework"; sourceTree = "<group>"; };
 		789856AA1C2E7793DD302784 /* Pods-FRC Advanced Scouting Touchstone.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-FRC Advanced Scouting Touchstone.debug.xcconfig"; path = "Pods/Target Support Files/Pods-FRC Advanced Scouting Touchstone/Pods-FRC Advanced Scouting Touchstone.debug.xcconfig"; sourceTree = "<group>"; };
 		9300196B20537B0C00E10CDC /* TeamCommentsTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TeamCommentsTableViewController.swift; sourceTree = "<group>"; };
+		9303DD1D22DFD4DA000D5178 /* EventSelector.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EventSelector.swift; sourceTree = "<group>"; };
+		9303DD1F22DFDE1C000D5178 /* EventSelectorRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = EventSelectorRow.swift; path = "../../../../../../../../../System/Volumes/Data/Users/aaron/Library/CloudStorage/iCloud Drive/Documents/Xcode Projects/FRC Advanced Scouting Telemetrics/FRC Advanced Scouting Telemetrics/EventSelectorRow.swift"; sourceTree = "<group>"; };
 		930B965B1E4548F700E385D3 /* PitSegmentedSelectorCollectionViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PitSegmentedSelectorCollectionViewCell.swift; sourceTree = "<group>"; };
 		930B96611E456D3000E385D3 /* PitTableViewSelectorCollectionViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PitTableViewSelectorCollectionViewCell.swift; sourceTree = "<group>"; };
 		930B96661E45A91A00E385D3 /* PitButtonCollectionViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PitButtonCollectionViewCell.swift; sourceTree = "<group>"; };
@@ -248,7 +252,9 @@
 		93A38B392055EBA400B8B692 /* NoEventSelected.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = NoEventSelected.xib; sourceTree = "<group>"; };
 		93A38B3E2055F49F00B8B692 /* NoEventSelectedView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NoEventSelectedView.swift; sourceTree = "<group>"; };
 		93A3ABC221F1462F007831E3 /* PitScoutingData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PitScoutingData.swift; sourceTree = "<group>"; };
+		93AADF4822E2572C00C37E2D /* EventSelectorTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EventSelectorTableViewController.swift; sourceTree = "<group>"; };
 		93AE997F1E3407A00000FB7C /* SSDataManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SSDataManager.swift; sourceTree = "<group>"; };
+		93B7195E22DE694D00B08FDD /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
 		93BCA617223B50AD00BF6467 /* OfflineSupport.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OfflineSupport.swift; sourceTree = "<group>"; };
 		93C5B47B1E53FC9C007D309F /* TeamInfoScrollView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TeamInfoScrollView.swift; sourceTree = "<group>"; };
 		93C609231E67D035007A689D /* MatchOverviewDetailViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MatchOverviewDetailViewController.swift; sourceTree = "<group>"; };
@@ -301,7 +307,9 @@
 				9353ADC11E57B09D00120F1A /* MatchListTableViewCell.swift */,
 				93EA7FF11E46A36E002EC8C7 /* Notes */,
 				1F4178BF1CD02E4200801D5B /* Team List Detail */,
-				1F4534551C7276DE004EDDB9 /* EventPickerViewController.swift */,
+				9303DD1D22DFD4DA000D5178 /* EventSelector.swift */,
+				9303DD1F22DFDE1C000D5178 /* EventSelectorRow.swift */,
+				93AADF4822E2572C00C37E2D /* EventSelectorTableViewController.swift */,
 				9366C5AC20490AAD00A84C47 /* StatChartViewController.swift */,
 				937C6829204C852600FAEDE8 /* EventStatsGraphViewController.swift */,
 				937C682D204C86DB00FAEDE8 /* SelectStatsTableViewController.swift */,
@@ -379,6 +387,7 @@
 			children = (
 				934F4BFC22066AB000A6F5FE /* RealmLoginKit */,
 				1F78E7821C3B469300221927 /* AppDelegate.swift */,
+				93B7195E22DE694D00B08FDD /* SceneDelegate.swift */,
 				9339A9B12223408A00D3D82C /* AppSyncExtensions.swift */,
 				93E551F821CACDE0006C79A8 /* CognitoAuthProvider.swift */,
 				9351017321F42D6000D402FE /* AWSDataManager.swift */,
@@ -705,8 +714,8 @@
 				TargetAttributes = {
 					1F78E77E1C3B469300221927 = {
 						CreatedOnToolsVersion = 7.2;
-						DevelopmentTeam = 3T77TK2ECU;
-						LastSwiftMigration = 0920;
+						DevelopmentTeam = J9YCJFXQQ7;
+						LastSwiftMigration = 1100;
 						ProvisioningStyle = Automatic;
 						SystemCapabilities = {
 							com.apple.Siri = {
@@ -716,24 +725,24 @@
 					};
 					1F78E7951C3B469300221927 = {
 						CreatedOnToolsVersion = 7.2;
-						DevelopmentTeam = 3T77TK2ECU;
-						LastSwiftMigration = 0920;
+						DevelopmentTeam = J9YCJFXQQ7;
+						LastSwiftMigration = 1100;
 						ProvisioningStyle = Automatic;
 						TestTargetID = 1F78E77E1C3B469300221927;
 					};
 					1F78E7A01C3B469300221927 = {
 						CreatedOnToolsVersion = 7.2;
-						LastSwiftMigration = 0920;
+						LastSwiftMigration = 1100;
+						ProvisioningStyle = Automatic;
 						TestTargetID = 1F78E77E1C3B469300221927;
 					};
 				};
 			};
 			buildConfigurationList = 1F78E77A1C3B469300221927 /* Build configuration list for PBXProject "FRC Advanced Scouting Touchstone" */;
 			compatibilityVersion = "Xcode 3.2";
-			developmentRegion = English;
+			developmentRegion = en;
 			hasScannedForEncodings = 0;
 			knownRegions = (
-				English,
 				en,
 				Base,
 			);
@@ -936,7 +945,7 @@
 		};
 		93610E301E42E2B200856BE2 /* Increment Build Number */ = {
 			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
+			buildActionMask = 8;
 			files = (
 			);
 			inputPaths = (
@@ -944,7 +953,7 @@
 			name = "Increment Build Number";
 			outputPaths = (
 			);
-			runOnlyForDeploymentPostprocessing = 0;
+			runOnlyForDeploymentPostprocessing = 1;
 			shellPath = /bin/sh;
 			shellScript = "buildNumber=$(/usr/libexec/PlistBuddy -c \"Print CFBundleVersion\" \"${PROJECT_DIR}/${INFOPLIST_FILE}\")\nbuildNumber=$(($buildNumber + 1))\n/usr/libexec/PlistBuddy -c \"Set :CFBundleVersion $buildNumber\" \"${PROJECT_DIR}/${INFOPLIST_FILE}\"\n";
 		};
@@ -971,6 +980,8 @@
 				934F4C1B22066AB100A6F5FE /* UIImage+Icons.swift in Sources */,
 				932C344C1E12DC2600A23203 /* EventInfoVC.swift in Sources */,
 				9353ADC21E57B09D00120F1A /* MatchListTableViewCell.swift in Sources */,
+				93B7195F22DE694D00B08FDD /* SceneDelegate.swift in Sources */,
+				9303DD2022DFDE1C000D5178 /* EventSelectorRow.swift in Sources */,
 				9300196C20537B0C00E10CDC /* TeamCommentsTableViewController.swift in Sources */,
 				93610E3D1E42F8D400856BE2 /* PitScoutingViewController.swift in Sources */,
 				93C609281E67D0CC007A689D /* MatchOverviewMasterViewController.swift in Sources */,
@@ -1005,7 +1016,6 @@
 				9349621F21E9A40500F761BD /* ScoutedTeamStats.swift in Sources */,
 				1FDC1BD31CD6A35F00ABE327 /* TeamListDetailViewController.swift in Sources */,
 				934F4C1922066AB100A6F5FE /* LoginViewControllerTransitioning.swift in Sources */,
-				1F4534561C7276DE004EDDB9 /* EventPickerViewController.swift in Sources */,
 				93BCA618223B50AD00BF6467 /* OfflineSupport.swift in Sources */,
 				936572DF1E160EBB00439728 /* AboutViewController.swift in Sources */,
 				934F4C552212754400A6F5FE /* SSGameStateViewController.swift in Sources */,
@@ -1019,10 +1029,12 @@
 				93780A2A20797487000B4565 /* WelcomePageViewController.swift in Sources */,
 				9339A9B22223408A00D3D82C /* AppSyncExtensions.swift in Sources */,
 				1FDC1BCE1CD69EBB00ABE327 /* TeamListSplitViewController.swift in Sources */,
+				9303DD1E22DFD4DA000D5178 /* EventSelector.swift in Sources */,
 				93CEA6322041FB5300C5B357 /* ConfirmForgotPasswordViewController.swift in Sources */,
 				1F21DF121C66942200C55D0E /* SortVC.swift in Sources */,
 				934F4C1E22066AB100A6F5FE /* String+URLComponents.swift in Sources */,
 				9391EA6C1E4852D2008E17A1 /* PitStringFieldCollectionViewCell.swift in Sources */,
+				93AADF4922E2572C00C37E2D /* EventSelectorTableViewController.swift in Sources */,
 				93780A2E20799E7D000B4565 /* LoginPromotionalViewController.swift in Sources */,
 				9317C03B201ECFEF00F1E907 /* SSGameScoutingViewController.swift in Sources */,
 				1F4FEDAC1C4B686000F4016D /* AdminConsoleController.swift in Sources */,
@@ -1138,12 +1150,13 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 9.2;
+				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
 				MTL_ENABLE_DEBUG_INFO = YES;
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = iphoneos;
 				SWIFT_OBJC_BRIDGING_HEADER = "";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = "";
 				TARGETED_DEVICE_FAMILY = 2;
 			};
 			name = Debug;
@@ -1188,11 +1201,12 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 9.2;
+				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				SDKROOT = iphoneos;
 				SWIFT_OBJC_BRIDGING_HEADER = "";
 				SWIFT_OPTIMIZATION_LEVEL = "-Owholemodule";
+				SWIFT_VERSION = "";
 				TARGETED_DEVICE_FAMILY = 2;
 				VALIDATE_PRODUCT = YES;
 			};
@@ -1209,7 +1223,7 @@
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
-				DEVELOPMENT_TEAM = 3T77TK2ECU;
+				DEVELOPMENT_TEAM = J9YCJFXQQ7;
 				ENABLE_BITCODE = NO;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
@@ -1230,15 +1244,14 @@
 					"-iquote",
 					"\"$CONFIGURATION_BUILD_DIR/SSZipArchive.framework/Headers\"",
 				);
-				OTHER_SWIFT_FLAGS = "$(inherited) \"-D\" \"COCOAPODS\"";
+				OTHER_SWIFT_FLAGS = "$(inherited) \"-D\" \"COCOAPODS\" -D DEBUG";
 				PRODUCT_BUNDLE_IDENTIFIER = "com.kampmeier.FRC-Advanced-Scouting-Touchstone";
 				PRODUCT_NAME = "FRC Advanced Scouting Touchstone";
 				PROVISIONING_PROFILE = "";
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_OBJC_BRIDGING_HEADER = "";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
-				SWIFT_SWIFT3_OBJC_INFERENCE = Default;
-				SWIFT_VERSION = 4.0;
+				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				VERSIONING_SYSTEM = "apple-generic";
 			};
@@ -1254,7 +1267,7 @@
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = 3T77TK2ECU;
+				DEVELOPMENT_TEAM = J9YCJFXQQ7;
 				ENABLE_BITCODE = YES;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
@@ -1280,8 +1293,7 @@
 				PROVISIONING_PROFILE = "";
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_OBJC_BRIDGING_HEADER = "";
-				SWIFT_SWIFT3_OBJC_INFERENCE = Default;
-				SWIFT_VERSION = 4.0;
+				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				VERSIONING_SYSTEM = "apple-generic";
 			};
@@ -1292,15 +1304,14 @@
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
-				DEVELOPMENT_TEAM = 3T77TK2ECU;
+				DEVELOPMENT_TEAM = J9YCJFXQQ7;
 				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
 				INFOPLIST_FILE = "FRC Advanced Scouting TelemetricsTests/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = "com.kampmeier.FRC-Advanced-Scouting-TouchstoneTests";
 				PRODUCT_NAME = "FRC Advanced Scouting Touchstone Tests";
 				SWIFT_OBJC_BRIDGING_HEADER = "";
-				SWIFT_SWIFT3_OBJC_INFERENCE = On;
-				SWIFT_VERSION = 4.0;
+				SWIFT_VERSION = 5.0;
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/FRC Advanced Scouting Touchstone.app/FRC Advanced Scouting Touchstone";
 			};
 			name = Debug;
@@ -1317,8 +1328,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = "com.kampmeier.FRC-Advanced-Scouting-TouchstoneTests";
 				PRODUCT_NAME = "FRC Advanced Scouting Touchstone Tests";
 				SWIFT_OBJC_BRIDGING_HEADER = "";
-				SWIFT_SWIFT3_OBJC_INFERENCE = On;
-				SWIFT_VERSION = 4.0;
+				SWIFT_VERSION = 5.0;
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/FRC Advanced Scouting Touchstone.app/FRC Advanced Scouting Touchstone";
 			};
 			name = Release;
@@ -1326,13 +1336,18 @@
 		1F78E7B11C3B469300221927 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CODE_SIGN_IDENTITY = "Apple Development";
+				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Apple Development";
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = "";
 				INFOPLIST_FILE = "FRC Advanced Scouting TelemetricsUITests/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = "com.kampmeier.FRC-Advanced-Scouting-TouchstoneUITests";
 				PRODUCT_NAME = "FRC Advanced Scouting Touchstone UI Tests";
+				PROVISIONING_PROFILE_SPECIFIER = "";
+				"PROVISIONING_PROFILE_SPECIFIER[sdk=macosx*]" = "";
 				SWIFT_OBJC_BRIDGING_HEADER = "";
-				SWIFT_SWIFT3_OBJC_INFERENCE = On;
-				SWIFT_VERSION = 4.0;
+				SWIFT_VERSION = 5.0;
 				TEST_TARGET_NAME = "FRC Advanced Scouting Telemetrics";
 				USES_XCTRUNNER = YES;
 			};
@@ -1341,13 +1356,18 @@
 		1F78E7B21C3B469300221927 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CODE_SIGN_IDENTITY = "Apple Development";
+				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Apple Development";
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = "";
 				INFOPLIST_FILE = "FRC Advanced Scouting TelemetricsUITests/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = "com.kampmeier.FRC-Advanced-Scouting-TouchstoneUITests";
 				PRODUCT_NAME = "FRC Advanced Scouting Touchstone UI Tests";
+				PROVISIONING_PROFILE_SPECIFIER = "";
+				"PROVISIONING_PROFILE_SPECIFIER[sdk=macosx*]" = "";
 				SWIFT_OBJC_BRIDGING_HEADER = "";
-				SWIFT_SWIFT3_OBJC_INFERENCE = On;
-				SWIFT_VERSION = 4.0;
+				SWIFT_VERSION = 5.0;
 				TEST_TARGET_NAME = "FRC Advanced Scouting Telemetrics";
 				USES_XCTRUNNER = YES;
 			};

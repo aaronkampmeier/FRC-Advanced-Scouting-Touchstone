@@ -15,6 +15,7 @@ import AWSAuthUI
 import Firebase
 import AWSS3
 
+//MARK: - Globals
 internal struct Globals {
     static unowned let appDelegate = UIApplication.shared.delegate as! AppDelegate
     static let isSpectatorModeKey = "FAST-IsInSpectatorMode"
@@ -154,17 +155,6 @@ internal struct Globals {
     }
     
     static func recordAnalyticsEvent(eventType: String, attributes: [String:String] = [:], metrics: [String: Double] = [:]) {
-//        let event = Globals.appDelegate.pinpoint?.analyticsClient.createEvent(withEventType: eventType)
-//        for attribute in attributes {
-//            event?.addAttribute(attribute.value, forKey: attribute.key)
-//        }
-//        for metric in metrics {
-//            event?.addMetric(NSNumber(value: metric.value), forKey: metric.key)
-//        }
-//
-//        Globals.appDelegate.pinpoint?.analyticsClient.record(event!)
-//        Globals.appDelegate.pinpoint?.analyticsClient.submitEvents()
-        
         //Now for Firebase Analytics
         Analytics.logEvent(eventType, parameters: (attributes as [String:Any]).merging((metrics as [String:Any]), uniquingKeysWith: {val1,val2 in attributes[val1 as! String] as Any}))
     }
@@ -173,10 +163,12 @@ internal struct Globals {
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
 
+    ///DEPRECATED  in iOS 13. Use SceneDelegate's window instead.
     var window: UIWindow?
     
     var appSyncClient: AWSAppSyncClient?
     
+    //MARK: App Did Finish Launching
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         // Override point for customization after application launch.
         FirebaseApp.configure()
@@ -194,17 +186,11 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
                 
                 switch userState {
                 case .signedOut:
-                    //Let the onboarding show to sign in; Do nothing
                     break
                 case .signedIn:
-                    let mainStoryboard = UIStoryboard(name: "Main", bundle: nil)
-                    self.window?.rootViewController = mainStoryboard.instantiateViewController(withIdentifier: "teamListMasterVC")
                     Analytics.setUserProperty(AWSMobileClient.sharedInstance().username, forName: "teamNumber")
                 case .guest:
-                    if Globals.isInSpectatorMode {
-                        let mainStoryboard = UIStoryboard(name: "Main", bundle: nil)
-                        self.window?.rootViewController = mainStoryboard.instantiateViewController(withIdentifier: "teamListMasterVC")
-                    }
+                    break
                 default:
                     CLSNSLogv("Signing out due to invalid userState", getVaList([]))
                     AWSMobileClient.sharedInstance().signOut()
@@ -218,15 +204,10 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         }
         
         ///AWS App Sync Config
-        let databaseURL = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0].appendingPathComponent("FASTAppSyncDatabase")
+        _ = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0].appendingPathComponent("FASTAppSyncDatabase")
         do {
-            
             let serviceConfig = try AWSAppSyncServiceConfig()
-            
-//            let appSyncConfig = try AWSAppSyncClientConfiguration(url: URL(string: "")!, serviceRegion: .USEast1, userPoolsAuthProvider: FASTCognitoUserPoolsAuthProvider(), databaseURL: databaseURL, connectionStateChangeHandler: FASTAppSyncStateChangeHandler(), s3ObjectManager: AWSS3TransferUtility.default())
-//            let appSyncConfig = try AWSAppSyncClientConfiguration(appSyncServiceConfig: serviceConfig, databaseURL: databaseURL)
 			let appSyncConfig = try AWSAppSyncClientConfiguration(appSyncServiceConfig: serviceConfig, userPoolsAuthProvider: FASTCognitoUserPoolsAuthProvider(), connectionStateChangeHandler: FASTAppSyncStateChangeHandler())
-//            let appSyncConfig = try AWSAppSyncClientConfiguration(appSyncClientInfo: AWSAppSyncClientInfo(), userPoolsAuthProvider: FASTCognitoUserPoolsAuthProvider(), databaseURL: databaseURL)
             appSyncClient = try AWSAppSyncClient(appSyncConfig: appSyncConfig)
             appSyncClient?.apolloClient?.cacheKeyForObject = {
                 switch $0["__typename"] as! String {
@@ -253,24 +234,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         AWSMobileClient.sharedInstance().addUserStateListener(self) { (state, attributes) in
             CLSNSLogv("New User State: \(state)", getVaList([]))
             
-            //Update the pinpoint endpoint profile
-//            if let targetingClient = self.pinpoint?.targetingClient {
-//                let endpoint = targetingClient.currentEndpointProfile()
-//
-//                let user = AWSPinpointEndpointProfileUser()
-//
-//                if state == UserState.signedIn {
-//                    user.userId = AWSMobileClient.sharedInstance().username
-//                } else {
-//                    user.userId = nil
-//                }
-//
-//                endpoint.user = user
-//                targetingClient.update(endpoint)
-//            }
-            
             if state == UserState.signedOut {
-                self.appSyncClient?.clearCache()
+                let _ = self.appSyncClient?.clearCache()
                 Globals.asyncLoadingManager = nil
                 
                 //Clear the Images cache
@@ -296,7 +261,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         }
         
         return true
-//        return AWSMobileClient.sharedInstance().interceptApplication(application, didFinishLaunchingWithOptions: launchOptions)
     }
     
     func displayLogin(isRegistering: Bool, onVC currentVC: UIViewController) {
@@ -346,6 +310,15 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         DispatchQueue.main.async {
             self.window?.rootViewController?.presentViewControllerFromVisibleViewController(viewControllerToPresent, animated: flag, completion: completion)
         }
+    }
+    
+    //MARK: Scene Support
+    @available(iOS 13.0, *)
+    func application(_ application: UIApplication, configurationForConnecting connectingSceneSession: UISceneSession, options: UIScene.ConnectionOptions) -> UISceneConfiguration {
+        let config = UISceneConfiguration(name: "Dynamic", sessionRole: .windowApplication)
+        config.delegateClass = SceneDelegate.self
+        config.storyboard = UIStoryboard(name: "Main", bundle: nil)
+        return config
     }
 }
 

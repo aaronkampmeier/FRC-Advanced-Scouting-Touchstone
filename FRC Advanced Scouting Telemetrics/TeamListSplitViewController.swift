@@ -68,11 +68,11 @@ class TeamListSplitViewController: UISplitViewController, UISplitViewControllerD
 		return .all
 	}
 	
-	func targetDisplayModeForAction(in svc: UISplitViewController) -> UISplitViewControllerDisplayMode {
+	func targetDisplayModeForAction(in svc: UISplitViewController) -> UISplitViewController.DisplayMode {
 		return .automatic
 	}
 	
-	func splitViewController(_ svc: UISplitViewController, willChangeTo displayMode: UISplitViewControllerDisplayMode) {
+	func splitViewController(_ svc: UISplitViewController, willChangeTo displayMode: UISplitViewController.DisplayMode) {
 		
 	}
 
@@ -145,7 +145,11 @@ extension UINavigationController {
             let secondaryNav = storyboard?.instantiateViewController(withIdentifier: "secondaryNav") as! UINavigationController
             
             if secondaryVCs.isEmpty {
-                secondaryVCs = [((UIApplication.shared.delegate as! AppDelegate).window?.rootViewController as! TeamListSplitViewController).teamListDetailVC]
+                if #available(iOS 13.0, *) {
+                    self.view.window?.windowScene
+                } else {
+                    secondaryVCs = [((UIApplication.shared.delegate as! AppDelegate).window?.rootViewController as! TeamListSplitViewController).teamListDetailVC]
+                }
             }
             secondaryNav.setViewControllers(secondaryVCs, animated: false)
             self.setViewControllers([primaryContentVC], animated: false)

@@ -38,7 +38,7 @@ class MatchOverviewDetailViewController: UIViewController {
         self.navigationItem.leftBarButtonItem = matchOverviewSplitVC?.displayModeButtonItem
         self.segmentedControl.selectedSegmentIndex = -1
         
-        matchPerformanceDetail = self.childViewControllers.first! as? MatchOverviewPerformanceDetailViewController
+        matchPerformanceDetail = self.children.first! as? MatchOverviewPerformanceDetailViewController
         
         if let match = displayedMatch {
             self.setUpForMatch(match: match)

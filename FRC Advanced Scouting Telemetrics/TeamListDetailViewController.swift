@@ -52,12 +52,12 @@ class TeamListDetailViewController: UIViewController {
     //Insets for the scroll view
     var contentViewInsets: UIEdgeInsets {
         get {
-            return UIEdgeInsetsMake(frontImageHeightConstraint.constant, 0, 0, 0)
+            return UIEdgeInsets.init(top: frontImageHeightConstraint.constant, left: 0, bottom: 0, right: 0)
         }
     }
     var noContentInsets: UIEdgeInsets {
         get {
-            return UIEdgeInsetsMake(0, 0, 0, 0)
+            return UIEdgeInsets.init(top: 0, left: 0, bottom: 0, right: 0)
         }
     }
     
@@ -122,7 +122,7 @@ class TeamListDetailViewController: UIViewController {
         
         generalInfoTableView?.delegate = self
         generalInfoTableView?.dataSource = self
-        generalInfoTableView?.rowHeight = UITableViewAutomaticDimension
+        generalInfoTableView?.rowHeight = UITableView.automaticDimension
         generalInfoTableView?.estimatedRowHeight = 44
         
         //Load the data if a team was selected beforehand

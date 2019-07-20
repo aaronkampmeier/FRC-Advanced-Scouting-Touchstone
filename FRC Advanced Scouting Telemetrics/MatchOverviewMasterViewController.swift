@@ -31,7 +31,7 @@ class MatchOverviewMasterViewController: UIViewController {
         // Do any additional setup after loading the view.
         matchOverviewSplitVC.matchesMaster = self
         
-        matchesTableVC = (self.childViewControllers.first as! MatchesTableViewController)
+        matchesTableVC = (self.children.first as! MatchesTableViewController)
         matchesTableVC?.delegate = self
         matchesTableVC?.tableView.allowsSelection = true
         

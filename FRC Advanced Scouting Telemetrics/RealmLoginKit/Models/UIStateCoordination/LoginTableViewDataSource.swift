@@ -92,7 +92,7 @@ public class LoginTableViewDataSource: NSObject, UITableViewDataSource {
         let identifier = "CellIdentifier"
         var cell = tableView.dequeueReusableCell(withIdentifier: identifier) as? LoginTableViewCell
         if cell == nil {
-            cell = LoginTableViewCell(style: .default, reuseIdentifier: identifier)
+            cell = LoginTableViewCell(style: UITableViewCell.CellStyle.default, reuseIdentifier: identifier)
         }
 
         let lastCellIndex = tableView.numberOfRows(inSection: 0) - 1
@@ -172,7 +172,7 @@ public class LoginTableViewDataSource: NSObject, UITableViewDataSource {
                 let placeholderText = tableViewCell.textField?.placeholder
                 let placeholderTextColor = UIColor(white: 0.45, alpha: 1.0)
                 #if swift(>=4.0)
-                    let attributes = [NSAttributedStringKey.foregroundColor: placeholderTextColor]
+                let attributes = [NSAttributedString.Key.foregroundColor: placeholderTextColor]
                 #else
                     let attributes = [NSForegroundColorAttributeName: placeholderTextColor]
                 #endif

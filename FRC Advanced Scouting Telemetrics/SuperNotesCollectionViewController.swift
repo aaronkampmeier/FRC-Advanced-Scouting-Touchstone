@@ -73,14 +73,14 @@ class SuperNotesCollectionViewController: UICollectionViewController {
     
         //It is not possible to add a container view into a collection view cell from storyboard, so it has to be done manually
         //1. Create a notes viewcontroller and put it into the cell's variable to hold it
-        cell.notesVC = self.storyboard?.instantiateViewController(withIdentifier: "commentNotesVC") as! TeamCommentsTableViewController
+        cell.notesVC = self.storyboard?.instantiateViewController(withIdentifier: "commentNotesVC") as? TeamCommentsTableViewController
         
         //Set up the cell and notes vc for the team
         cell.setUp(forEventKey: eventKey!, teamKey: teamKeys[indexPath.item])
         
         //2. Add the notesvc's view to the cell
-        cell.notesVC.willMove(toParentViewController: self)
-        addChildViewController(cell.notesVC)
+        cell.notesVC.willMove(toParent: self)
+        addChild(cell.notesVC)
         
         // 2.1. Have to turn off translates Autoresizing Mask Into Constraints to be able to add all the constraints programaticallly
         cell.notesVC.view.translatesAutoresizingMaskIntoConstraints = false
@@ -94,7 +94,7 @@ class SuperNotesCollectionViewController: UICollectionViewController {
             cell.notesVC.view.bottomAnchor.constraint(equalTo: cell.contentView.bottomAnchor)
         ])
         
-        cell.notesVC.didMove(toParentViewController: self)
+        cell.notesVC.didMove(toParent: self)
         
         return cell
     }
