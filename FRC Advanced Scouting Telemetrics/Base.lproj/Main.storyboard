@@ -128,7 +128,7 @@
                             </label>
                             <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="57M-yC-eIi">
                                 <rect key="frame" x="0.0" y="135.5" width="768" height="888.5"/>
-                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                <color key="backgroundColor" xcode11CocoaTouchSystemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
                                 <collectionViewFlowLayout key="collectionViewLayout" minimumLineSpacing="10" minimumInteritemSpacing="10" id="hoM-6m-MxG">
                                     <size key="itemSize" width="215" height="164"/>
                                     <size key="headerReferenceSize" width="0.0" height="0.0"/>
@@ -284,6 +284,7 @@
                                                         <constraint firstAttribute="height" constant="70" id="HpS-ox-hT0"/>
                                                         <constraint firstAttribute="width" constant="70" id="lCk-WY-tG1"/>
                                                     </constraints>
+                                                    <color key="tintColor" cocoaTouchSystemColor="linkColor"/>
                                                     <state key="normal" image="Camera"/>
                                                     <connections>
                                                         <action selector="imageButtonPressed:" destination="BRM-js-3rw" eventType="touchUpInside" id="W1Q-Vh-F1R"/>
@@ -322,7 +323,9 @@
                                                         <constraint firstAttribute="height" constant="40" id="Caj-9L-FIy"/>
                                                         <constraint firstAttribute="width" constant="40" id="VLO-tf-0jg"/>
                                                     </constraints>
-                                                    <state key="normal" image="Banana"/>
+                                                    <state key="normal" image="Banana">
+                                                        <color key="titleColor" xcode11CocoaTouchSystemColor="labelColor" cocoaTouchSystemColor="darkTextColor"/>
+                                                    </state>
                                                     <state key="selected" image="Banana Filled"/>
                                                     <connections>
                                                         <action selector="buttonPressed:" destination="sdE-eI-kfr" eventType="touchUpInside" id="vBg-CM-WgW"/>
@@ -423,16 +426,19 @@
                                     <constraint firstAttribute="width" secondItem="mab-uz-kpU" secondAttribute="height" multiplier="1:1" id="75d-uu-Msx"/>
                                     <constraint firstAttribute="height" constant="50" id="8ru-3C-ovj"/>
                                 </constraints>
-                                <state key="normal" title="Button" image="Camera"/>
+                                <state key="normal" title="Button" image="Camera">
+                                    <color key="titleColor" xcode11CocoaTouchSystemColor="labelColor" cocoaTouchSystemColor="darkTextColor"/>
+                                </state>
                                 <connections>
                                     <action selector="imageButtonPressed:" destination="cOC-Uw-kvx" eventType="touchUpInside" id="mdc-sc-lO6"/>
                                 </connections>
                             </button>
                             <progressView hidden="YES" opaque="NO" contentMode="scaleToFill" verticalHuggingPriority="750" progress="0.5" translatesAutoresizingMaskIntoConstraints="NO" id="9Ho-AX-QfG">
                                 <rect key="frame" x="0.0" y="128.5" width="768" height="2"/>
+                                <color key="tintColor" cocoaTouchSystemColor="systemBlueColor"/>
                             </progressView>
                         </subviews>
-                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <color key="backgroundColor" xcode11CocoaTouchSystemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
                         <constraints>
                             <constraint firstItem="eKK-pG-yVK" firstAttribute="top" secondItem="zoH-Cy-bxK" secondAttribute="bottom" constant="6" id="4i4-Gp-1wb"/>
                             <constraint firstItem="zoH-Cy-bxK" firstAttribute="centerX" secondItem="xzy-95-a9h" secondAttribute="centerX" id="9bk-Mq-M92"/>
@@ -1309,52 +1315,6 @@
             <point key="canvasLocation" x="3338" y="-1038"/>
         </scene>
         <!--Notes-->
-        <scene sceneID="VMK-gZ-9Ax">
-            <objects>
-                <viewController storyboardIdentifier="notesVC" automaticallyAdjustsScrollViewInsets="NO" id="Zrr-EK-TVo" customClass="NotesViewController" customModule="FRC_Advanced_Scouting_Touchstone" customModuleProvider="target" sceneMemberID="viewController">
-                    <layoutGuides>
-                        <viewControllerLayoutGuide type="top" id="XBw-4W-g8b"/>
-                        <viewControllerLayoutGuide type="bottom" id="ZJc-fz-WTc"/>
-                    </layoutGuides>
-                    <view key="view" contentMode="scaleToFill" id="shE-Sk-fEf">
-                        <rect key="frame" x="0.0" y="0.0" width="400" height="300"/>
-                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                        <subviews>
-                            <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" text="Notes..." translatesAutoresizingMaskIntoConstraints="NO" id="hYu-Rf-QYU">
-                                <rect key="frame" x="20" y="60" width="360" height="230"/>
-                                <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                                <fontDescription key="fontDescription" name="HelveticaNeue" family="Helvetica Neue" pointSize="14"/>
-                                <textInputTraits key="textInputTraits" autocapitalizationType="sentences" autocorrectionType="yes"/>
-                                <dataDetectorType key="dataDetectorTypes" phoneNumber="YES" link="YES" address="YES"/>
-                            </textView>
-                        </subviews>
-                        <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                        <constraints>
-                            <constraint firstItem="hYu-Rf-QYU" firstAttribute="top" secondItem="XBw-4W-g8b" secondAttribute="bottom" constant="10" id="cC8-LK-Yjw"/>
-                            <constraint firstAttribute="trailingMargin" secondItem="hYu-Rf-QYU" secondAttribute="trailing" id="mme-u0-bML"/>
-                            <constraint firstItem="ZJc-fz-WTc" firstAttribute="top" secondItem="hYu-Rf-QYU" secondAttribute="bottom" constant="10" id="pna-nC-mRp"/>
-                            <constraint firstItem="hYu-Rf-QYU" firstAttribute="leading" secondItem="shE-Sk-fEf" secondAttribute="leadingMargin" id="tER-rj-gdH"/>
-                        </constraints>
-                    </view>
-                    <navigationItem key="navigationItem" title="Notes" id="728-Ph-kDd">
-                        <barButtonItem key="rightBarButtonItem" systemItem="done" id="I6U-6m-PWw">
-                            <connections>
-                                <action selector="donePressed:" destination="Zrr-EK-TVo" id="EKy-YE-SRY"/>
-                            </connections>
-                        </barButtonItem>
-                    </navigationItem>
-                    <nil key="simulatedStatusBarMetrics"/>
-                    <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
-                    <size key="freeformSize" width="400" height="300"/>
-                    <connections>
-                        <outlet property="notesTextView" destination="hYu-Rf-QYU" id="O8y-oi-Ufh"/>
-                    </connections>
-                </viewController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="iHX-y4-ITb" userLabel="First Responder" sceneMemberID="firstResponder"/>
-            </objects>
-            <point key="canvasLocation" x="1350" y="395.3125"/>
-        </scene>
-        <!--Notes-->
         <scene sceneID="1jo-BA-s79">
             <objects>
                 <tableViewController storyboardIdentifier="commentNotesVC" id="2mg-ug-SJH" customClass="TeamCommentsTableViewController" customModule="FRC_Advanced_Scouting_Touchstone" customModuleProvider="target" sceneMemberID="viewController">
@@ -1856,7 +1816,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="9Ro-jy-qJH" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="2097" y="1034"/>
+            <point key="canvasLocation" x="3009" y="959"/>
         </scene>
         <!--Match Detail-->
         <scene sceneID="04i-rL-2DM">
@@ -1999,11 +1959,11 @@
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Pinch to zoom in" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="pQP-ff-yDI">
                                 <rect key="frame" x="211.5" y="388" width="77" height="12"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="9.5"/>
-                                <color key="textColor" white="0.66666666666666663" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <color key="textColor" cocoaTouchSystemColor="secondaryLabelColor"/>
                                 <nil key="highlightedColor"/>
                             </label>
                         </subviews>
-                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        <color key="backgroundColor" xcode11CocoaTouchSystemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
                         <constraints>
                             <constraint firstAttribute="bottomMargin" secondItem="pQP-ff-yDI" secondAttribute="bottom" id="2Ph-cO-bhZ"/>
                             <constraint firstItem="pQP-ff-yDI" firstAttribute="centerX" secondItem="qj2-pl-gt7" secondAttribute="centerX" id="TpF-WJ-1MT"/>
@@ -2026,7 +1986,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="xcB-0M-Jm2" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1458" y="1070"/>
+            <point key="canvasLocation" x="1389" y="1049"/>
         </scene>
         <!--All Stats-->
         <scene sceneID="EDy-eh-NjS">
@@ -2035,7 +1995,7 @@
                     <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" id="OSU-dV-g1D">
                         <rect key="frame" x="0.0" y="0.0" width="400" height="400"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        <color key="backgroundColor" xcode11CocoaTouchSystemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
                         <prototypes>
                             <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="cell" textLabel="nqi-oX-qEQ" style="IBUITableViewCellStyleDefault" id="V0f-Zu-7RI">
                                 <rect key="frame" x="0.0" y="28" width="400" height="43.5"/>
@@ -2131,7 +2091,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="c6T-db-YPc" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1948" y="1572"/>
+            <point key="canvasLocation" x="1974" y="1571"/>
         </scene>
         <!--Field Location Display View Controller-->
         <scene sceneID="5UP-UU-Bk2">
@@ -2231,37 +2191,37 @@
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="R1" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ya7-Sa-4Gk">
                                                     <rect key="frame" x="0.0" y="0.0" width="62.5" height="20.5"/>
                                                     <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                                    <color key="textColor" red="1" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                                                    <color key="textColor" cocoaTouchSystemColor="systemRedColor"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="R2" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="1gb-Pz-Jfe">
                                                     <rect key="frame" x="67.5" y="0.0" width="62.5" height="20.5"/>
                                                     <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                                    <color key="textColor" red="1" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                                                    <color key="textColor" cocoaTouchSystemColor="systemRedColor"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="R3" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="tWr-2a-krY">
                                                     <rect key="frame" x="135" y="0.0" width="62.5" height="20.5"/>
                                                     <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                                    <color key="textColor" red="1" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                                                    <color key="textColor" cocoaTouchSystemColor="systemRedColor"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="B1" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Uct-Ed-H4H">
                                                     <rect key="frame" x="202.5" y="0.0" width="62.5" height="20.5"/>
                                                     <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                                    <color key="textColor" red="0.0" green="0.0" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                                                    <color key="textColor" cocoaTouchSystemColor="systemBlueColor"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="B2" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Pch-VY-l0R">
                                                     <rect key="frame" x="270" y="0.0" width="62.5" height="20.5"/>
                                                     <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                                    <color key="textColor" red="0.0" green="0.0" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                                                    <color key="textColor" cocoaTouchSystemColor="systemBlueColor"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="B3" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="lAI-Ge-ili">
                                                     <rect key="frame" x="337.5" y="0.0" width="62.5" height="20.5"/>
                                                     <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                                    <color key="textColor" red="0.0" green="0.0" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                                                    <color key="textColor" cocoaTouchSystemColor="systemBlueColor"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
                                             </subviews>
@@ -3582,26 +3542,6 @@
             <point key="canvasLocation" x="1534.5703125" y="-425"/>
         </scene>
         <!--Navigation Controller-->
-        <scene sceneID="Ji3-zG-vEe">
-            <objects>
-                <navigationController storyboardIdentifier="notesNavVC" automaticallyAdjustsScrollViewInsets="NO" id="XqK-TG-scI" sceneMemberID="viewController">
-                    <toolbarItems/>
-                    <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
-                    <size key="freeformSize" width="200" height="200"/>
-                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="sS8-3H-1Zt">
-                        <rect key="frame" x="0.0" y="0.0" width="200" height="50"/>
-                        <autoresizingMask key="autoresizingMask"/>
-                    </navigationBar>
-                    <nil name="viewControllers"/>
-                    <connections>
-                        <segue destination="Zrr-EK-TVo" kind="relationship" relationship="rootViewController" id="pnR-85-g98"/>
-                    </connections>
-                </navigationController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="x7W-lY-vOB" userLabel="First Responder" sceneMemberID="firstResponder"/>
-            </objects>
-            <point key="canvasLocation" x="1350" y="78.90625"/>
-        </scene>
-        <!--Navigation Controller-->
         <scene sceneID="GEy-0V-psi">
             <objects>
                 <navigationController storyboardIdentifier="superNotesNavVC" automaticallyAdjustsScrollViewInsets="NO" modalPresentationStyle="pageSheet" id="sf2-I1-7H4" sceneMemberID="viewController">
@@ -4121,6 +4061,6 @@
         <image name="Stands Scouting" width="31" height="31"/>
     </resources>
     <inferredMetricsTieBreakers>
-        <segue reference="vir-FS-zIP"/>
+        <segue reference="yoF-JC-lMK"/>
     </inferredMetricsTieBreakers>
 </document>

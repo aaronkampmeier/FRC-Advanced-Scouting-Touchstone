@@ -21,7 +21,11 @@ class EventSelectionTitleButton: UIButton {
     }
 }
 
-class TeamListTableViewController: UITableViewController, TeamListDetailDataSource {
+extension Notification.Name {
+    static let FASTSelectedTeamDidChange = Notification.Name(rawValue: "Different Team Selected")
+}
+
+class TeamListTableViewController: UITableViewController {
     @IBOutlet weak var incompleteEventView: UIView!
     var graphButton: UIBarButtonItem!
     @IBOutlet weak var editButton: UIBarButtonItem!
@@ -79,7 +83,7 @@ class TeamListTableViewController: UITableViewController, TeamListDetailDataSour
     
     var selectedTeam: Team? {
         didSet {
-            NotificationCenter.default.post(name: Notification.Name(rawValue: "Different Team Selected"), object: self)
+            NotificationCenter.default.post(name: .FASTSelectedTeamDidChange, object: self, userInfo: ["team": selectedTeam as Any, "eventKey": selectedEventRanking?.eventKey as Any])
             if let sTeam = selectedTeam {
                 //Select row in table view
                 if let index = currentTeamsToDisplay.firstIndex(where: {team in
@@ -90,8 +94,6 @@ class TeamListTableViewController: UITableViewController, TeamListDetailDataSour
             } else {
                 tableView.deselectRow(at: tableView.indexPathForSelectedRow ?? IndexPath(), animated: false)
             }
-            
-            teamListSplitVC.teamListDetailVC.reloadData()
         }
     }
     let lastSelectedEventStorageKey = "Last-Selected-Event"
@@ -289,7 +291,6 @@ class TeamListTableViewController: UITableViewController, TeamListDetailDataSour
         }
         
         self.resetSubscriptions()
-        teamListSplitVC.teamListDetailVC.reloadData()
 		
 		Globals.asyncLoadingManager?.setGeneralUpdaters(forEventKey: selectedEventKey)
     }
