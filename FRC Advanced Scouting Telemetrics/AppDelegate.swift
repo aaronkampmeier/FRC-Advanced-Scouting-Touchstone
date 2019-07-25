@@ -166,6 +166,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     ///DEPRECATED  in iOS 13. Use SceneDelegate's window instead.
     var window: UIWindow?
     
+    var supportedInterfaceOrientations: UIInterfaceOrientationMask = .all
     var appSyncClient: AWSAppSyncClient?
     
     //MARK: App Did Finish Launching
@@ -320,8 +321,13 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         config.storyboard = UIStoryboard(name: "Main", bundle: nil)
         return config
     }
+    
+    func application(_ application: UIApplication, supportedInterfaceOrientationsFor window: UIWindow?) -> UIInterfaceOrientationMask {
+        return supportedInterfaceOrientations
+    }
 }
 
+//MARK: - Additional stuff
 //Adds a function to UIViewController to allow presenting views (i.e. alerts) on the top view controller from lower view controllers
 extension UIViewController {
     func presentViewControllerFromVisibleViewController(_ viewControllerToPresent: UIViewController, animated flag: Bool, completion: (() -> Void)? = nil) {

@@ -13,7 +13,6 @@ import AWSAppSync
 import AWSMobileClient
 import Firebase
 import SwiftUI
-import Combine
 
 class EventSelectionTitleButton: UIButton {
     override var intrinsicContentSize: CGSize {
@@ -21,7 +20,11 @@ class EventSelectionTitleButton: UIButton {
     }
 }
 
-class TeamListTableViewController: UITableViewController, TeamListDetailDataSource {
+extension Notification.Name {
+    static let FASTSelectedTeamDidChange = Notification.Name(rawValue: "Different Team Selected")
+}
+
+class TeamListTableViewController: UITableViewController {
     @IBOutlet weak var incompleteEventView: UIView!
     var graphButton: UIBarButtonItem!
     @IBOutlet weak var editButton: UIBarButtonItem!
@@ -79,7 +82,7 @@ class TeamListTableViewController: UITableViewController, TeamListDetailDataSour
     
     var selectedTeam: Team? {
         didSet {
-            NotificationCenter.default.post(name: Notification.Name(rawValue: "Different Team Selected"), object: self)
+            NotificationCenter.default.post(name: .FASTSelectedTeamDidChange, object: self, userInfo: ["team": selectedTeam as Any, "eventKey": selectedEventRanking?.eventKey as Any])
             if let sTeam = selectedTeam {
                 //Select row in table view
                 if let index = currentTeamsToDisplay.firstIndex(where: {team in
@@ -90,8 +93,6 @@ class TeamListTableViewController: UITableViewController, TeamListDetailDataSour
             } else {
                 tableView.deselectRow(at: tableView.indexPathForSelectedRow ?? IndexPath(), animated: false)
             }
-            
-            teamListSplitVC.teamListDetailVC.reloadData()
         }
     }
     let lastSelectedEventStorageKey = "Last-Selected-Event"
@@ -289,7 +290,6 @@ class TeamListTableViewController: UITableViewController, TeamListDetailDataSour
         }
         
         self.resetSubscriptions()
-        teamListSplitVC.teamListDetailVC.reloadData()
 		
 		Globals.asyncLoadingManager?.setGeneralUpdaters(forEventKey: selectedEventKey)
     }
@@ -837,17 +837,13 @@ class TeamListTableViewController: UITableViewController, TeamListDetailDataSour
     
     //MARK: - Sorting
     @IBAction func sortPressed(_ sender: UIBarButtonItem) {
-        let sortNavVC = storyboard?.instantiateViewController(withIdentifier: "sortNav") as! UINavigationController
-        let sortVC = sortNavVC.topViewController as! SortVC
+        let sortVC = storyboard?.instantiateViewController(withIdentifier: "statsSortView") as! SortVC
         sortVC.delegate = self
-        sortNavVC.modalPresentationStyle = .popover
-        sortNavVC.preferredContentSize = CGSize(width: 350, height: 300)
         
-        let popoverVC = sortNavVC.popoverPresentationController
-        popoverVC?.delegate = self
+        sortVC.modalPresentationStyle = .custom
+        sortVC.transitioningDelegate = slideInTransitionDelegate
         
-        popoverVC?.barButtonItem = sender
-        present(sortNavVC, animated: true, completion: nil)
+        present(sortVC, animated: true, completion: nil)
     }
     
     let statsOrderingQueue = DispatchQueue(label: "StatsOrderingTeamList", qos: .utility, target: nil)
@@ -965,6 +961,7 @@ extension TeamListTableViewController: MatchOverviewMasterDataSource {
     }
 }
 
+//TODO: Remove
 extension TeamListTableViewController: UIPopoverPresentationControllerDelegate {
     func adaptivePresentationStyle(for controller: UIPresentationController, traitCollection: UITraitCollection) -> UIModalPresentationStyle {
         return .none
@@ -1028,10 +1025,17 @@ extension TeamListTableViewController: UISearchResultsUpdating, UISearchControll
     }
 }
 
+
 //MARK: - Slide In Transition Animation
 class TeamListSlideInTransitioningDelegate: NSObject, UIViewControllerTransitioningDelegate {
     func presentationController(forPresented presented: UIViewController, presenting: UIViewController?, source: UIViewController) -> UIPresentationController? {
-        return TeamListSlideInPresentationController(presentedViewController: presented, presenting: presenting)
+        if presented is EventSelectorTableViewController {
+            return EventSelectionSlideInPresentationController(presentedViewController: presented, presenting: presenting)
+        } else if presented is SortVC {
+            return SortStatSelectionSlideInPresentationController(presentedViewController: presented, presenting: presenting)
+        } else {
+            fatalError()
+        }
     }
     
     func animationController(forPresented presented: UIViewController, presenting: UIViewController, source: UIViewController) -> UIViewControllerAnimatedTransitioning? {
@@ -1052,28 +1056,6 @@ class TeamListSlideInPresentationController: UIPresentationController {
     var tapGestureRecognizer: UITapGestureRecognizer!
     var teamListTableViewController: TeamListTableViewController?
     
-    
-    override var frameOfPresentedViewInContainerView: CGRect {
-        get {
-            
-            //First for the origin: the view is going to slide in right below the nav bar
-            let yCoord = (teamListTableViewController?.navigationController?.navigationBar.frame.origin.y ?? CGFloat.zero) + (teamListTableViewController?.navigationController?.navigationBar.frame.height ?? CGFloat.zero) //- (teamListTableViewController?.searchController.searchBar.frame.height ?? CGFloat.zero)
-//            let yCoord = teamListTableViewController?.navigationController?.navigationBar.frame.height ?? .zero
-            let origin = CGPoint(x: CGFloat.zero, y: yCoord)
-            
-            //Now add the size to it
-            let width = teamListTableViewController?.tableView.frame.width ?? CGFloat.zero
-//            let height = (presentedViewController as? UITableViewController)?.tableView.contentSize.height ?? CGFloat(250)
-//            let height = presentedViewController.view.intrinsicContentSize.height
-            let height = CGFloat(300)
-            
-            let size = CGSize(width: width, height: height)
-            
-            let rect = CGRect(origin: origin, size: size)
-            return rect
-        }
-    }
-    
     override init(presentedViewController: UIViewController, presenting presentingViewController: UIViewController?) {
         if #available(iOS 13.0, *) {
             dimView = UIVisualEffectView(effect: UIBlurEffect(style: .systemUltraThinMaterial))
@@ -1092,42 +1074,14 @@ class TeamListSlideInPresentationController: UIPresentationController {
     
     override func presentationTransitionWillBegin() {
         super.presentationTransitionWillBegin()
-        
+
         let teamListSplitViewController = (presentingViewController as? TeamListSplitViewController)
         teamListTableViewController = teamListSplitViewController?.teamListTableVC
-        
-        //Create a cover snapshot
-        coverSnapshot = teamListTableViewController?.navigationController?.navigationBar.snapshotView(afterScreenUpdates: false)
-        coverSnapshot?.frame = teamListTableViewController?.navigationController?.navigationBar.frame ?? CGRect.zero
-        if #available(iOS 13.0, *) {
-            coverSnapshot?.backgroundColor = teamListTableViewController?.view.backgroundColor
-        } else {
-            // Fallback on earlier versions
-            coverSnapshot?.backgroundColor = UIColor.white
-        }
-        coverSnapshot?.isUserInteractionEnabled = false
-        coverSnapshot?.tag = 1
-        
-        //Add a white view to the cover snapshot that covers the status bar portion
-        let size = CGSize(width: teamListTableViewController?.tableView.frame.width ?? .zero, height: coverSnapshot?.frame.origin.y ?? .zero)
-        let frame = CGRect(origin: CGPoint(x: 0, y: -size.height), size: size)
-        let whiteCoverView = UIView(frame: frame)
-        if #available(iOS 13.0, *) {
-            whiteCoverView.backgroundColor = UIColor.systemBackground
-        } else {
-            // Fallback on earlier versions
-            whiteCoverView.backgroundColor = UIColor.white
-        }
-        coverSnapshot?.addSubview(whiteCoverView)
         
         //Create a dimming view
         dimView.alpha = 0
         dimView.frame = containerView?.frame ?? .zero
         containerView?.addSubview(dimView)
-        
-        if let snap = coverSnapshot {
-            containerView?.addSubview(snap)
-        }
         
         presentedViewController.transitionCoordinator?.animate(alongsideTransition: { (transitionCoordinatorContext) in
             self.dimView.alpha = 1
@@ -1169,6 +1123,99 @@ class TeamListSlideInPresentationController: UIPresentationController {
     
     @objc func dismiss(_ sender: Any) {
         presentedViewController.dismiss(animated: true, completion: nil)
+    }
+}
+
+class EventSelectionSlideInPresentationController: TeamListSlideInPresentationController {
+    
+    override var frameOfPresentedViewInContainerView: CGRect {
+        
+        //First for the origin: the view is going to slide in right below the nav bar
+        let yCoord = (teamListTableViewController?.navigationController?.navigationBar.frame.origin.y ?? CGFloat.zero) + (teamListTableViewController?.navigationController?.navigationBar.frame.height ?? CGFloat.zero) //- (teamListTableViewController?.searchController.searchBar.frame.height ?? CGFloat.zero)
+        //            let yCoord = teamListTableViewController?.navigationController?.navigationBar.frame.height ?? .zero
+        let origin = CGPoint(x: CGFloat.zero, y: yCoord)
+        
+        //Now add the size to it
+        let width = teamListTableViewController?.tableView.frame.width ?? CGFloat.zero
+        //            let height = (presentedViewController as? UITableViewController)?.tableView.contentSize.height ?? CGFloat(250)
+        //            let height = presentedViewController.view.intrinsicContentSize.height
+        let height = CGFloat(300)
+        
+        let size = CGSize(width: width, height: height)
+        
+        let rect = CGRect(origin: origin, size: size)
+        return rect
+    }
+    
+    override func presentationTransitionWillBegin() {
+        super.presentationTransitionWillBegin()
+        
+        //Create a cover snapshot
+        coverSnapshot = teamListTableViewController?.navigationController?.navigationBar.snapshotView(afterScreenUpdates: false)
+        coverSnapshot?.frame = teamListTableViewController?.navigationController?.navigationBar.frame ?? CGRect.zero
+        if #available(iOS 13.0, *) {
+            coverSnapshot?.backgroundColor = teamListTableViewController?.view.backgroundColor
+        } else {
+            // Fallback on earlier versions
+            coverSnapshot?.backgroundColor = UIColor.white
+        }
+        coverSnapshot?.isUserInteractionEnabled = false
+        coverSnapshot?.tag = 1
+        
+        //Add a white view to the cover snapshot that covers the status bar portion
+        let size = CGSize(width: teamListTableViewController?.tableView.frame.width ?? .zero, height: coverSnapshot?.frame.origin.y ?? .zero)
+        let frame = CGRect(origin: CGPoint(x: 0, y: -size.height), size: size)
+        let whiteCoverView = UIView(frame: frame)
+        if #available(iOS 13.0, *) {
+            whiteCoverView.backgroundColor = UIColor.systemBackground
+        } else {
+            // Fallback on earlier versions
+            whiteCoverView.backgroundColor = UIColor.white
+        }
+        coverSnapshot?.addSubview(whiteCoverView)
+        
+        if let snap = coverSnapshot {
+            containerView?.addSubview(snap)
+        }
+    }
+}
+
+class SortStatSelectionSlideInPresentationController: TeamListSlideInPresentationController {
+    override var frameOfPresentedViewInContainerView: CGRect {
+        let height = CGFloat(300)
+        let width = teamListTableViewController?.tableView.frame.width ?? .zero
+        
+        let xCoord: CGFloat
+        if #available(iOS 11.0, *) {
+            xCoord = teamListTableViewController?.tableView.safeAreaInsets.left ?? .zero
+        } else {
+            // Fallback on earlier versions
+            xCoord = 0
+        }
+        
+        let yCoord = teamListTableViewController?.navigationController?.toolbar.frame.origin.y ?? .zero - height
+        
+        return CGRect(x: xCoord, y: yCoord, width: width, height: height)
+    }
+    
+    override func presentationTransitionWillBegin() {
+        super.presentationTransitionWillBegin()
+        
+        //Create the toolbar cover snapshot
+        coverSnapshot = teamListTableViewController?.navigationController?.toolbar.snapshotView(afterScreenUpdates: false)
+        coverSnapshot?.frame = teamListTableViewController?.navigationController?.toolbar.frame ?? .zero
+        if #available(iOS 13.0, *) {
+            coverSnapshot?.backgroundColor = teamListTableViewController?.view.backgroundColor
+        } else {
+            // Fallback on earlier versions
+            coverSnapshot?.backgroundColor = UIColor.white
+        }
+        coverSnapshot?.isUserInteractionEnabled = false
+        coverSnapshot?.tag = 1
+        
+        if let snap = coverSnapshot {
+            containerView?.addSubview(snap)
+        }
     }
 }
 

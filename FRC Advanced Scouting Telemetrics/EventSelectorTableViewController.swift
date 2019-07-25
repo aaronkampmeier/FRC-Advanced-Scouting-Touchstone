@@ -25,8 +25,6 @@ class EventSelectorTableViewController: UITableViewController {
         // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
         // self.navigationItem.rightBarButtonItem = self.editButtonItem
         
-        
-        
         //Load all the events
         trackedEventsWatcher = Globals.appDelegate.appSyncClient?.watch(query: ListTrackedEventsQuery(), cachePolicy: .returnCacheDataElseFetch, queue: DispatchQueue.global(qos: .userInteractive)) {[weak self] result, error in
             DispatchQueue.main.async {
@@ -34,14 +32,14 @@ class EventSelectorTableViewController: UITableViewController {
                     self?.events = result?.data?.listTrackedEvents?.map {(eventKey: $0!.eventKey, eventName: $0!.eventName)} ?? []
                     self?.tableView.reloadData()
                     //Transition the view to the proper size
-                    DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + 1) {
-                        UIView.animate(withDuration: 0.4, delay: 0, options: [], animations: {
-                            let newFrame = CGRect(x: self?.tableView.frame.origin.x ?? .zero, y: self?.tableView.frame.origin.y ?? .zero, width: self?.tableView.frame.width ?? .zero, height: self?.tableView.contentSize.height ?? .zero)
-                            self?.tableView.frame = newFrame
-                        }) { (completed) in
-                            self?.tableView.invalidateIntrinsicContentSize()
-                        }
-                    }
+//                    DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + 1) {
+//                        UIView.animate(withDuration: 0.4, delay: 0, options: [], animations: {
+//                            let newFrame = CGRect(x: self?.tableView.frame.origin.x ?? .zero, y: self?.tableView.frame.origin.y ?? .zero, width: self?.tableView.frame.width ?? .zero, height: self?.tableView.contentSize.height ?? .zero)
+//                            self?.tableView.frame = newFrame
+//                        }) { (completed) in
+//                            self?.tableView.invalidateIntrinsicContentSize()
+//                        }
+//                    }
                 } else {
                     
                 }
@@ -51,6 +49,17 @@ class EventSelectorTableViewController: UITableViewController {
     
     deinit {
         trackedEventsWatcher?.cancel()
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        
+        Globals.appDelegate.supportedInterfaceOrientations = .portrait
+    }
+    
+    override func viewDidDisappear(_ animated: Bool) {
+        super.viewDidDisappear(animated)
+        Globals.appDelegate.supportedInterfaceOrientations = .all
     }
 
     // MARK: - Table view data source
