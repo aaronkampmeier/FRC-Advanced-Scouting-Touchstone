@@ -69,6 +69,9 @@ class EventSelectorModel: BindableObject {
     public var didChange: PassthroughSubject<Void, Never>
     
     var events: [ListTrackedEventsQuery.Data.ListTrackedEvent] = [] {
+        willSet {
+            willChange.send()
+        }
         didSet {
             didChange.send()
         }
