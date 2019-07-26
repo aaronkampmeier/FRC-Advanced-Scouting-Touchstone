@@ -1153,12 +1153,7 @@ class EventSelectionSlideInPresentationController: TeamListSlideInPresentationCo
         //Create a cover snapshot
         coverSnapshot = teamListTableViewController?.navigationController?.navigationBar.snapshotView(afterScreenUpdates: false)
         coverSnapshot?.frame = teamListTableViewController?.navigationController?.navigationBar.frame ?? CGRect.zero
-        if #available(iOS 13.0, *) {
-            coverSnapshot?.backgroundColor = teamListTableViewController?.view.backgroundColor
-        } else {
-            // Fallback on earlier versions
-            coverSnapshot?.backgroundColor = UIColor.white
-        }
+        coverSnapshot?.backgroundColor = presentedView?.backgroundColor
         coverSnapshot?.isUserInteractionEnabled = false
         coverSnapshot?.tag = 1
         
@@ -1166,12 +1161,7 @@ class EventSelectionSlideInPresentationController: TeamListSlideInPresentationCo
         let size = CGSize(width: teamListTableViewController?.tableView.frame.width ?? .zero, height: coverSnapshot?.frame.origin.y ?? .zero)
         let frame = CGRect(origin: CGPoint(x: 0, y: -size.height), size: size)
         let whiteCoverView = UIView(frame: frame)
-        if #available(iOS 13.0, *) {
-            whiteCoverView.backgroundColor = UIColor.systemBackground
-        } else {
-            // Fallback on earlier versions
-            whiteCoverView.backgroundColor = UIColor.white
-        }
+        whiteCoverView.backgroundColor = coverSnapshot?.backgroundColor
         coverSnapshot?.addSubview(whiteCoverView)
         
         if let snap = coverSnapshot {
@@ -1193,7 +1183,7 @@ class SortStatSelectionSlideInPresentationController: TeamListSlideInPresentatio
             xCoord = 0
         }
         
-        let yCoord = teamListTableViewController?.navigationController?.toolbar.frame.origin.y ?? .zero - height
+        let yCoord = (teamListTableViewController?.navigationController?.toolbar.frame.origin.y ?? .zero) - height
         
         return CGRect(x: xCoord, y: yCoord, width: width, height: height)
     }
@@ -1204,12 +1194,19 @@ class SortStatSelectionSlideInPresentationController: TeamListSlideInPresentatio
         //Create the toolbar cover snapshot
         coverSnapshot = teamListTableViewController?.navigationController?.toolbar.snapshotView(afterScreenUpdates: false)
         coverSnapshot?.frame = teamListTableViewController?.navigationController?.toolbar.frame ?? .zero
-        if #available(iOS 13.0, *) {
-            coverSnapshot?.backgroundColor = teamListTableViewController?.view.backgroundColor
+        coverSnapshot?.backgroundColor = presentedView?.backgroundColor
+        
+        //Add a cover view to cover the bottom part of the screen
+        if #available(iOS 11.0, *) {
+            let size = CGSize(width: teamListTableViewController?.tableView.frame.width ?? .zero, height: teamListTableViewController?.tableView.safeAreaInsets.bottom ?? .zero)
+            let frame = CGRect(origin: CGPoint(x: teamListTableViewController?.tableView.safeAreaInsets.left ?? .zero, y: coverSnapshot?.frame.height ?? .zero), size: size)
+            let additionalCover = UIView(frame: frame)
+            additionalCover.backgroundColor = coverSnapshot?.backgroundColor
+            coverSnapshot?.addSubview(additionalCover)
         } else {
             // Fallback on earlier versions
-            coverSnapshot?.backgroundColor = UIColor.white
         }
+        
         coverSnapshot?.isUserInteractionEnabled = false
         coverSnapshot?.tag = 1
         
@@ -1247,13 +1244,19 @@ class TeamListSlideInAnimationController: NSObject, UIViewControllerAnimatedTran
             
             //Start State
             toView.alpha = 0.5
+            let finalFrame: CGRect = transitionContext.finalFrame(for: toVC!)
             //Figure out the start frame
-            let finalFrame = transitionContext.finalFrame(for: toVC!)
-            let startOrigin = CGPoint(x: 0, y: finalFrame.origin.y - finalFrame.height)
-            let startFrame = CGRect(origin: startOrigin, size: finalFrame.size)
-            toView.frame = startFrame
+            if toVC is EventSelectorTableViewController {
+                let startOrigin = CGPoint(x: 0, y: finalFrame.origin.y - finalFrame.height)
+                let startFrame = CGRect(origin: startOrigin, size: finalFrame.size)
+                toView.frame = startFrame
+            } else if toVC is SortVC {
+                let startOrigin = CGPoint(x: 0, y: finalFrame.origin.y + finalFrame.height)
+                toView.frame = CGRect(origin: startOrigin, size: finalFrame.size)
+            }
             
-            UIView.animate(withDuration: duration, delay: 0, usingSpringWithDamping: CGFloat(0.8), initialSpringVelocity: CGFloat(0.5), options: [.curveEaseOut], animations: {
+            
+            UIView.animate(withDuration: duration, delay: 0, usingSpringWithDamping: CGFloat(1), initialSpringVelocity: CGFloat(0.5), options: [.curveEaseOut], animations: {
                 toView.alpha = 1
                 toView.frame = finalFrame
             }) { (completed) in
@@ -1261,13 +1264,18 @@ class TeamListSlideInAnimationController: NSObject, UIViewControllerAnimatedTran
             }
         } else {
             //Dismissing
-            //Get endFrame for the slide in list
-            let endOrigin = CGPoint(x: 0, y: fromView.frame.origin.y - fromView.frame.height - 50)
-            let endFrame = CGRect(origin: endOrigin, size: fromView.frame.size)
             
             UIView.animate(withDuration: duration, delay: 0, usingSpringWithDamping: CGFloat(1), initialSpringVelocity: CGFloat(1), options: [.curveEaseIn], animations: {
                 fromView.alpha = 1
-                fromView.frame = endFrame
+                
+                //Get endFrame for the slide in list
+                if fromVC is EventSelectorTableViewController {
+                    let endOrigin = CGPoint(x: 0, y: fromView.frame.origin.y - fromView.frame.height - 50)
+                    fromView.frame = CGRect(origin: endOrigin, size: fromView.frame.size)
+                } else if fromVC is SortVC {
+                    let endOrigin = CGPoint(x: fromView.frame.origin.x, y: fromView.frame.origin.y + fromView.frame.height + 50)
+                    fromView.frame = CGRect(origin: endOrigin, size: fromView.frame.size)
+                }
             }) { (completed) in
                 fromView.removeFromSuperview()
                 transitionContext.completeTransition(completed)

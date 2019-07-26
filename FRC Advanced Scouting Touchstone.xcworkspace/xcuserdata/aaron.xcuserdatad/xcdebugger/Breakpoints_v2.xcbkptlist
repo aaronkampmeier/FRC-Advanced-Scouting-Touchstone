@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Bucket
-   uuid = "8808F399-C423-4B06-AFC0-7CBC70D7D048"
+   uuid = "2879189B-326D-4B2D-9873-E34C8BFD47E6"
    type = "0"
    version = "2.0">
    <Breakpoints>
       <BreakpointProxy
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
-            uuid = "EB131FB3-2977-46E6-9EE8-A588109FFB90"
+            uuid = "4EBF02A4-B0B5-45B8-85BE-A38A58327DCE"
             shouldBeEnabled = "No"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
@@ -17,14 +17,14 @@
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "104"
             endingLineNumber = "104"
-            landmarkName = "unknown"
-            landmarkType = "0">
+            landmarkName = "loadImage(withAttributes:noCache:progressBlock:completionHandler:)"
+            landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
-            uuid = "44E244C4-83E1-4069-BCC8-FF25D7274DC3"
+            uuid = "EF86533B-C4A5-472E-B031-52F36545EA97"
             shouldBeEnabled = "No"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
@@ -41,7 +41,7 @@
       <BreakpointProxy
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
-            uuid = "C0214275-F4B7-485C-904B-4B422BD13638"
+            uuid = "12F0CCC0-6102-4062-A002-7D886DA6B49B"
             shouldBeEnabled = "No"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
@@ -58,7 +58,7 @@
       <BreakpointProxy
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
-            uuid = "7E79ADFB-8DD1-4A72-877A-0A7936E414C9"
+            uuid = "7D3A86E6-FCBA-4248-BBC9-96656A415816"
             shouldBeEnabled = "No"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
@@ -75,7 +75,7 @@
       <BreakpointProxy
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
-            uuid = "D20AE49C-BD47-4A0A-AFED-B5E7628F4A68"
+            uuid = "DC3E0B4D-877C-4C8F-8348-11828CF43B9C"
             shouldBeEnabled = "No"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
@@ -92,7 +92,7 @@
       <BreakpointProxy
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
-            uuid = "124A0A2F-99F5-44FA-9C4C-09645DF3DAC0"
+            uuid = "C86994F8-022E-4EF8-88D6-74C7C2979876"
             shouldBeEnabled = "Yes"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
@@ -109,7 +109,7 @@
       <BreakpointProxy
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
-            uuid = "21C163DE-34C9-4573-9D3D-ED66537AF492"
+            uuid = "C5825159-11B2-400C-9D7D-43187B10AF23"
             shouldBeEnabled = "No"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
@@ -119,11 +119,11 @@
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "899"
             endingLineNumber = "899"
-            landmarkName = "unknown"
-            landmarkType = "0">
+            landmarkName = "getTokens(_:)"
+            landmarkType = "7">
             <Locations>
                <Location
-                  uuid = "21C163DE-34C9-4573-9D3D-ED66537AF492 - 631f7ebbb38ef8e9"
+                  uuid = "C5825159-11B2-400C-9D7D-43187B10AF23 - 631f7ebbb38ef8e9"
                   shouldBeEnabled = "No"
                   ignoreCount = "0"
                   continueAfterRunningActions = "No"
@@ -139,7 +139,7 @@
                   offsetFromSymbolStart = "142">
                </Location>
                <Location
-                  uuid = "21C163DE-34C9-4573-9D3D-ED66537AF492 - 7d8962611fa4cc6b"
+                  uuid = "C5825159-11B2-400C-9D7D-43187B10AF23 - 7d8962611fa4cc6b"
                   shouldBeEnabled = "No"
                   ignoreCount = "0"
                   continueAfterRunningActions = "No"
@@ -160,7 +160,7 @@
       <BreakpointProxy
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
-            uuid = "7AA7ED57-1218-42C7-84C8-4D514206D7CE"
+            uuid = "D5AD89D9-1A4D-456C-AC0D-6976F3D34390"
             shouldBeEnabled = "No"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
@@ -177,7 +177,7 @@
       <BreakpointProxy
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
-            uuid = "779CF372-FD6E-4F6C-9209-064C6B9510BB"
+            uuid = "44237941-AD67-4360-BFFE-681B5B091FC0"
             shouldBeEnabled = "No"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
@@ -194,7 +194,7 @@
       <BreakpointProxy
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
-            uuid = "CE0C6554-3206-475E-9C0B-2A856B6FEC0C"
+            uuid = "C6757857-84E9-4EB2-8284-B583E2E0432F"
             shouldBeEnabled = "No"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
@@ -208,7 +208,7 @@
             landmarkType = "7">
             <Locations>
                <Location
-                  uuid = "CE0C6554-3206-475E-9C0B-2A856B6FEC0C - d6fef6e6122f6956"
+                  uuid = "C6757857-84E9-4EB2-8284-B583E2E0432F - d6fef6e6122f6956"
                   shouldBeEnabled = "No"
                   ignoreCount = "0"
                   continueAfterRunningActions = "No"
@@ -224,7 +224,7 @@
                   offsetFromSymbolStart = "1909">
                </Location>
                <Location
-                  uuid = "CE0C6554-3206-475E-9C0B-2A856B6FEC0C - b314b93fa5c8d9bc"
+                  uuid = "C6757857-84E9-4EB2-8284-B583E2E0432F - b314b93fa5c8d9bc"
                   shouldBeEnabled = "No"
                   ignoreCount = "0"
                   continueAfterRunningActions = "No"
@@ -245,7 +245,7 @@
       <BreakpointProxy
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
-            uuid = "E0B29BDA-7BDF-48C0-80DB-112F888CEEDC"
+            uuid = "640F71AC-EBFC-43C2-91A0-90995B4FD068"
             shouldBeEnabled = "No"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
@@ -262,7 +262,7 @@
       <BreakpointProxy
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
-            uuid = "F80316B2-CE05-441D-80A8-7A4C99D82A4D"
+            uuid = "168033BB-CD80-4AA2-8951-9ABD2D089D9E"
             shouldBeEnabled = "No"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
@@ -279,7 +279,7 @@
       <BreakpointProxy
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
-            uuid = "BB46FC9D-3869-40EA-ACE8-8F1A005F2B27"
+            uuid = "394C2902-D010-4178-A713-091792287CEA"
             shouldBeEnabled = "No"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
@@ -296,7 +296,7 @@
       <BreakpointProxy
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
-            uuid = "2DE93F33-1B94-4CC7-BBED-1E4B77BB71B2"
+            uuid = "8E892720-0DFB-4DCB-96E2-9E9CADD468DF"
             shouldBeEnabled = "Yes"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
@@ -313,7 +313,7 @@
       <BreakpointProxy
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
-            uuid = "7400E78B-DE4A-4688-ACEA-8EFE5B42F7E2"
+            uuid = "AD401412-2A3E-4489-92F2-B36EDC5E67DE"
             shouldBeEnabled = "Yes"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
@@ -330,7 +330,7 @@
       <BreakpointProxy
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
-            uuid = "8B9FE16D-574C-476A-8F5E-7BA4D67D5B58"
+            uuid = "D7BEBAEB-30DE-423E-A95C-A353543DE5C9"
             shouldBeEnabled = "Yes"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
@@ -347,7 +347,7 @@
       <BreakpointProxy
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
-            uuid = "6BF936F7-98AB-4166-B9FC-18EC9130DB46"
+            uuid = "6E6E535F-ECA2-4A8C-AC4B-AA81DDFEB3E8"
             shouldBeEnabled = "No"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
@@ -364,7 +364,7 @@
       <BreakpointProxy
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
-            uuid = "61849ABD-04BF-4941-8ABC-818005CC0316"
+            uuid = "EA04336E-CF29-4341-93E8-9E5CF859B58A"
             shouldBeEnabled = "No"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
@@ -381,7 +381,7 @@
       <BreakpointProxy
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
-            uuid = "8D2B2D8B-8E5C-4786-8250-EB4AA304DF62"
+            uuid = "7243E4B4-8AA5-4478-85DD-F711B2B6F7CA"
             shouldBeEnabled = "No"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
@@ -398,7 +398,7 @@
       <BreakpointProxy
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
-            uuid = "5D1E1437-243B-4FC4-9946-F82F3580974D"
+            uuid = "B4D90B22-5009-4F0E-91AB-9567410F6462"
             shouldBeEnabled = "No"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
@@ -415,7 +415,7 @@
       <BreakpointProxy
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
-            uuid = "A5AE1980-0193-43C3-BFDD-AA2F4B2AC392"
+            uuid = "7A6DA178-1B0A-410C-89C1-03E3370C54B8"
             shouldBeEnabled = "No"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
@@ -432,7 +432,7 @@
       <BreakpointProxy
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
-            uuid = "A7BA5A3B-1569-4181-A3AF-CABDA82B99C9"
+            uuid = "89887868-6F75-4C0C-8829-39EE682DA93C"
             shouldBeEnabled = "Yes"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
@@ -449,7 +449,41 @@
       <BreakpointProxy
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
-            uuid = "43226ED0-05E7-4A11-A17C-536220D561D4"
+            uuid = "B9A691D9-EF4F-4717-BECE-1F535C2BD929"
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "Pods/AWSCore/AWSCore/UICKeyChainStore/AWSUICKeyChainStore.m"
+            timestampString = "575685045.556375"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "875"
+            endingLineNumber = "875"
+            landmarkName = "+prettify:items:"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "8E4F8ECE-4D1A-436C-B935-9EC38FE8A308"
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "Pods/AWSCore/AWSCore/UICKeyChainStore/AWSUICKeyChainStore.m"
+            timestampString = "575685045.556769"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "959"
+            endingLineNumber = "959"
+            landmarkName = "-sharedPasswordWithCompletion:"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "2443E85A-1541-47DE-8BF3-5D6868F6084D"
             shouldBeEnabled = "Yes"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
@@ -466,7 +500,7 @@
       <BreakpointProxy
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
-            uuid = "2134A1CC-968B-4502-8BAA-968722E60FC9"
+            uuid = "FC5BE087-2496-43C4-9CF0-BF6BDF47325B"
             shouldBeEnabled = "Yes"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
@@ -483,7 +517,7 @@
       <BreakpointProxy
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
-            uuid = "E4826278-CDC3-49B8-A437-211C07829E1A"
+            uuid = "F623F9EC-2950-4207-81C5-4652C4954A34"
             shouldBeEnabled = "Yes"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
@@ -500,7 +534,7 @@
       <BreakpointProxy
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
-            uuid = "8AE258C8-CAC1-4D15-80D7-9B0470AA702F"
+            uuid = "A439A3D3-6C33-40D9-BD40-6587E888B32C"
             shouldBeEnabled = "Yes"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
@@ -517,7 +551,7 @@
       <BreakpointProxy
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
-            uuid = "43E310AD-9447-4B67-A8F9-8D8999A42977"
+            uuid = "5A286BB7-6831-4A4C-8F87-052C0458F330"
             shouldBeEnabled = "No"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
@@ -534,7 +568,7 @@
       <BreakpointProxy
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
-            uuid = "F8254E28-3946-4BA0-B32C-0EEF99CF2EE1"
+            uuid = "C2BC2977-6DFD-4140-9B4A-5516AD6287E0"
             shouldBeEnabled = "No"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
@@ -551,7 +585,7 @@
       <BreakpointProxy
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
-            uuid = "E294B1CA-6EBC-40EB-A4C6-82DF82D8A9A9"
+            uuid = "4390252D-A33E-4FA1-94D6-56BF28AC3435"
             shouldBeEnabled = "No"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
@@ -568,7 +602,7 @@
       <BreakpointProxy
          BreakpointExtensionID = "Xcode.Breakpoint.RuntimeIssueBreakpoint">
          <BreakpointContent
-            uuid = "6EBCC311-3C1B-4E7B-A605-89A20CAFFE4E"
+            uuid = "725787C3-55D9-4AAE-8156-F231B45211EB"
             shouldBeEnabled = "Yes"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
@@ -579,538 +613,17 @@
       <BreakpointProxy
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
-            uuid = "073C5BB9-96A6-484E-BE4D-FA951D2348D9"
+            uuid = "A1CE41AC-F4E5-40E7-9A49-6EE04B340746"
             shouldBeEnabled = "No"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "FRC Advanced Scouting Telemetrics/TeamListTableViewController.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "141"
-            endingLineNumber = "141"
-            landmarkName = "viewDidLoad()"
+            startingLineNumber = "1264"
+            endingLineNumber = "1264"
+            landmarkName = "animateTransition(using:)"
             landmarkType = "7">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            uuid = "EC33388E-BA7B-4A7D-8C7B-9B02A87F4096"
-            shouldBeEnabled = "No"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "FRC Advanced Scouting Telemetrics/AppDelegate.swift"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "174"
-            endingLineNumber = "174"
-            landmarkName = "application(_:didFinishLaunchingWithOptions:)"
-            landmarkType = "7">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            uuid = "1620EB45-28CF-4C26-BF1C-BDB346CBE18A"
-            shouldBeEnabled = "No"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "FRC Advanced Scouting Telemetrics/AppDelegate.swift"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "182"
-            endingLineNumber = "182"
-            landmarkName = "application(_:didFinishLaunchingWithOptions:)"
-            landmarkType = "7">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            uuid = "E1598222-0F12-4A76-BF9B-A2D6A73AE7E4"
-            shouldBeEnabled = "No"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "FRC Advanced Scouting Telemetrics/TeamListTableViewController.swift"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "1074"
-            endingLineNumber = "1074"
-            landmarkName = "frameOfPresentedViewInContainerView"
-            landmarkType = "24">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            uuid = "3F22975F-C1C4-4A1D-B724-7DFAC6E1FE5D"
-            shouldBeEnabled = "No"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "FRC Advanced Scouting Telemetrics/TeamListTableViewController.swift"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "1167"
-            endingLineNumber = "1167"
-            landmarkName = "containerViewWillLayoutSubviews()"
-            landmarkType = "7">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            uuid = "DB5BE9F7-038B-476F-BE97-576A633E29C4"
-            shouldBeEnabled = "No"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "FRC Advanced Scouting Telemetrics/TeamListTableViewController.swift"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "1162"
-            endingLineNumber = "1162"
-            landmarkName = "containerViewDidLayoutSubviews()"
-            landmarkType = "7">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            uuid = "F8A4B3EF-34FA-4E84-95B5-0ED46AF9EEEB"
-            shouldBeEnabled = "No"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "FRC Advanced Scouting Telemetrics/EventSelector.swift"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "1079"
-            endingLineNumber = "1079"
-            landmarkName = "init(presentedViewController:presenting:)"
-            landmarkType = "7">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            uuid = "11A4328E-8CBD-4C51-8C99-87066BEF3211"
-            shouldBeEnabled = "Yes"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "FRC Advanced Scouting Telemetrics/TeamListTableViewController.swift"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "1097"
-            endingLineNumber = "1097"
-            landmarkName = "presentationTransitionWillBegin()"
-            landmarkType = "7">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            uuid = "FA1B4624-F35B-4959-9ECD-D7C6F231B2B8"
-            shouldBeEnabled = "No"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "FRC Advanced Scouting Telemetrics/TeamListTableViewController.swift"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "1063"
-            endingLineNumber = "1063"
-            landmarkName = "frameOfPresentedViewInContainerView"
-            landmarkType = "24">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            uuid = "414E40B2-25E7-4CC1-BC4F-039C5332FDF8"
-            shouldBeEnabled = "No"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "Pods/AWSMobileClient/AWSAuthSDK/Sources/AWSMobileClient/AWSMobileResults.swift"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "95"
-            endingLineNumber = "95"
-            landmarkName = "ErrorMappingHelper(errorCode:message:error:)"
-            landmarkType = "7">
-            <Locations>
-               <Location
-                  uuid = "414E40B2-25E7-4CC1-BC4F-039C5332FDF8 - 3a28f33f7abf9070"
-                  shouldBeEnabled = "No"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "static AWSMobileClient.AWSMobileClient.ErrorMappingHelper(errorCode: Swift.String, message: Swift.String, error: Swift.Optional&lt;__C.NSError&gt;) -&gt; AWSMobileClient.AWSMobileClientError"
-                  moduleName = "AWSMobileClient"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/aaron/Library/CloudStorage/iCloud%20Drive/Documents/Xcode%20Projects/FRC%20Advanced%20Scouting%20Telemetrics/Pods/AWSMobileClient/AWSAuthSDK/Sources/AWSMobileClient/AWSMobileResults.swift"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "95"
-                  endingLineNumber = "95"
-                  offsetFromSymbolStart = "256">
-               </Location>
-               <Location
-                  uuid = "414E40B2-25E7-4CC1-BC4F-039C5332FDF8 - 3a28f33f7abf9070"
-                  shouldBeEnabled = "No"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "static AWSMobileClient.AWSMobileClient.ErrorMappingHelper(errorCode: Swift.String, message: Swift.String, error: Swift.Optional&lt;__C.NSError&gt;) -&gt; AWSMobileClient.AWSMobileClientError"
-                  moduleName = "AWSMobileClient"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/aaron/Library/CloudStorage/iCloud%20Drive/Documents/Xcode%20Projects/FRC%20Advanced%20Scouting%20Telemetrics/Pods/AWSMobileClient/AWSAuthSDK/Sources/AWSMobileClient/AWSMobileResults.swift"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "95"
-                  endingLineNumber = "95"
-                  offsetFromSymbolStart = "392">
-               </Location>
-               <Location
-                  uuid = "414E40B2-25E7-4CC1-BC4F-039C5332FDF8 - 3a28f33f7abf9070"
-                  shouldBeEnabled = "No"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "static AWSMobileClient.AWSMobileClient.ErrorMappingHelper(errorCode: Swift.String, message: Swift.String, error: Swift.Optional&lt;__C.NSError&gt;) -&gt; AWSMobileClient.AWSMobileClientError"
-                  moduleName = "AWSMobileClient"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/aaron/Library/CloudStorage/iCloud%20Drive/Documents/Xcode%20Projects/FRC%20Advanced%20Scouting%20Telemetrics/Pods/AWSMobileClient/AWSAuthSDK/Sources/AWSMobileClient/AWSMobileResults.swift"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "95"
-                  endingLineNumber = "95"
-                  offsetFromSymbolStart = "528">
-               </Location>
-               <Location
-                  uuid = "414E40B2-25E7-4CC1-BC4F-039C5332FDF8 - 3a28f33f7abf9070"
-                  shouldBeEnabled = "No"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "static AWSMobileClient.AWSMobileClient.ErrorMappingHelper(errorCode: Swift.String, message: Swift.String, error: Swift.Optional&lt;__C.NSError&gt;) -&gt; AWSMobileClient.AWSMobileClientError"
-                  moduleName = "AWSMobileClient"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/aaron/Library/CloudStorage/iCloud%20Drive/Documents/Xcode%20Projects/FRC%20Advanced%20Scouting%20Telemetrics/Pods/AWSMobileClient/AWSAuthSDK/Sources/AWSMobileClient/AWSMobileResults.swift"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "95"
-                  endingLineNumber = "95"
-                  offsetFromSymbolStart = "664">
-               </Location>
-               <Location
-                  uuid = "414E40B2-25E7-4CC1-BC4F-039C5332FDF8 - 3a28f33f7abf9070"
-                  shouldBeEnabled = "No"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "static AWSMobileClient.AWSMobileClient.ErrorMappingHelper(errorCode: Swift.String, message: Swift.String, error: Swift.Optional&lt;__C.NSError&gt;) -&gt; AWSMobileClient.AWSMobileClientError"
-                  moduleName = "AWSMobileClient"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/aaron/Library/CloudStorage/iCloud%20Drive/Documents/Xcode%20Projects/FRC%20Advanced%20Scouting%20Telemetrics/Pods/AWSMobileClient/AWSAuthSDK/Sources/AWSMobileClient/AWSMobileResults.swift"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "95"
-                  endingLineNumber = "95"
-                  offsetFromSymbolStart = "800">
-               </Location>
-               <Location
-                  uuid = "414E40B2-25E7-4CC1-BC4F-039C5332FDF8 - 3a28f33f7abf9070"
-                  shouldBeEnabled = "No"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "static AWSMobileClient.AWSMobileClient.ErrorMappingHelper(errorCode: Swift.String, message: Swift.String, error: Swift.Optional&lt;__C.NSError&gt;) -&gt; AWSMobileClient.AWSMobileClientError"
-                  moduleName = "AWSMobileClient"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/aaron/Library/CloudStorage/iCloud%20Drive/Documents/Xcode%20Projects/FRC%20Advanced%20Scouting%20Telemetrics/Pods/AWSMobileClient/AWSAuthSDK/Sources/AWSMobileClient/AWSMobileResults.swift"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "95"
-                  endingLineNumber = "95"
-                  offsetFromSymbolStart = "936">
-               </Location>
-               <Location
-                  uuid = "414E40B2-25E7-4CC1-BC4F-039C5332FDF8 - 3a28f33f7abf9070"
-                  shouldBeEnabled = "No"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "static AWSMobileClient.AWSMobileClient.ErrorMappingHelper(errorCode: Swift.String, message: Swift.String, error: Swift.Optional&lt;__C.NSError&gt;) -&gt; AWSMobileClient.AWSMobileClientError"
-                  moduleName = "AWSMobileClient"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/aaron/Library/CloudStorage/iCloud%20Drive/Documents/Xcode%20Projects/FRC%20Advanced%20Scouting%20Telemetrics/Pods/AWSMobileClient/AWSAuthSDK/Sources/AWSMobileClient/AWSMobileResults.swift"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "95"
-                  endingLineNumber = "95"
-                  offsetFromSymbolStart = "1072">
-               </Location>
-               <Location
-                  uuid = "414E40B2-25E7-4CC1-BC4F-039C5332FDF8 - 3a28f33f7abf9070"
-                  shouldBeEnabled = "No"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "static AWSMobileClient.AWSMobileClient.ErrorMappingHelper(errorCode: Swift.String, message: Swift.String, error: Swift.Optional&lt;__C.NSError&gt;) -&gt; AWSMobileClient.AWSMobileClientError"
-                  moduleName = "AWSMobileClient"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/aaron/Library/CloudStorage/iCloud%20Drive/Documents/Xcode%20Projects/FRC%20Advanced%20Scouting%20Telemetrics/Pods/AWSMobileClient/AWSAuthSDK/Sources/AWSMobileClient/AWSMobileResults.swift"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "95"
-                  endingLineNumber = "95"
-                  offsetFromSymbolStart = "1208">
-               </Location>
-               <Location
-                  uuid = "414E40B2-25E7-4CC1-BC4F-039C5332FDF8 - 3a28f33f7abf9070"
-                  shouldBeEnabled = "No"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "static AWSMobileClient.AWSMobileClient.ErrorMappingHelper(errorCode: Swift.String, message: Swift.String, error: Swift.Optional&lt;__C.NSError&gt;) -&gt; AWSMobileClient.AWSMobileClientError"
-                  moduleName = "AWSMobileClient"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/aaron/Library/CloudStorage/iCloud%20Drive/Documents/Xcode%20Projects/FRC%20Advanced%20Scouting%20Telemetrics/Pods/AWSMobileClient/AWSAuthSDK/Sources/AWSMobileClient/AWSMobileResults.swift"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "95"
-                  endingLineNumber = "95"
-                  offsetFromSymbolStart = "1344">
-               </Location>
-               <Location
-                  uuid = "414E40B2-25E7-4CC1-BC4F-039C5332FDF8 - 3a28f33f7abf9070"
-                  shouldBeEnabled = "No"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "static AWSMobileClient.AWSMobileClient.ErrorMappingHelper(errorCode: Swift.String, message: Swift.String, error: Swift.Optional&lt;__C.NSError&gt;) -&gt; AWSMobileClient.AWSMobileClientError"
-                  moduleName = "AWSMobileClient"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/aaron/Library/CloudStorage/iCloud%20Drive/Documents/Xcode%20Projects/FRC%20Advanced%20Scouting%20Telemetrics/Pods/AWSMobileClient/AWSAuthSDK/Sources/AWSMobileClient/AWSMobileResults.swift"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "95"
-                  endingLineNumber = "95"
-                  offsetFromSymbolStart = "1480">
-               </Location>
-               <Location
-                  uuid = "414E40B2-25E7-4CC1-BC4F-039C5332FDF8 - 3a28f33f7abf9070"
-                  shouldBeEnabled = "No"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "static AWSMobileClient.AWSMobileClient.ErrorMappingHelper(errorCode: Swift.String, message: Swift.String, error: Swift.Optional&lt;__C.NSError&gt;) -&gt; AWSMobileClient.AWSMobileClientError"
-                  moduleName = "AWSMobileClient"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/aaron/Library/CloudStorage/iCloud%20Drive/Documents/Xcode%20Projects/FRC%20Advanced%20Scouting%20Telemetrics/Pods/AWSMobileClient/AWSAuthSDK/Sources/AWSMobileClient/AWSMobileResults.swift"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "95"
-                  endingLineNumber = "95"
-                  offsetFromSymbolStart = "1616">
-               </Location>
-               <Location
-                  uuid = "414E40B2-25E7-4CC1-BC4F-039C5332FDF8 - 3a28f33f7abf9070"
-                  shouldBeEnabled = "No"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "static AWSMobileClient.AWSMobileClient.ErrorMappingHelper(errorCode: Swift.String, message: Swift.String, error: Swift.Optional&lt;__C.NSError&gt;) -&gt; AWSMobileClient.AWSMobileClientError"
-                  moduleName = "AWSMobileClient"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/aaron/Library/CloudStorage/iCloud%20Drive/Documents/Xcode%20Projects/FRC%20Advanced%20Scouting%20Telemetrics/Pods/AWSMobileClient/AWSAuthSDK/Sources/AWSMobileClient/AWSMobileResults.swift"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "95"
-                  endingLineNumber = "95"
-                  offsetFromSymbolStart = "1752">
-               </Location>
-               <Location
-                  uuid = "414E40B2-25E7-4CC1-BC4F-039C5332FDF8 - 3a28f33f7abf9070"
-                  shouldBeEnabled = "No"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "static AWSMobileClient.AWSMobileClient.ErrorMappingHelper(errorCode: Swift.String, message: Swift.String, error: Swift.Optional&lt;__C.NSError&gt;) -&gt; AWSMobileClient.AWSMobileClientError"
-                  moduleName = "AWSMobileClient"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/aaron/Library/CloudStorage/iCloud%20Drive/Documents/Xcode%20Projects/FRC%20Advanced%20Scouting%20Telemetrics/Pods/AWSMobileClient/AWSAuthSDK/Sources/AWSMobileClient/AWSMobileResults.swift"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "95"
-                  endingLineNumber = "95"
-                  offsetFromSymbolStart = "1888">
-               </Location>
-               <Location
-                  uuid = "414E40B2-25E7-4CC1-BC4F-039C5332FDF8 - 3a28f33f7abf9070"
-                  shouldBeEnabled = "No"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "static AWSMobileClient.AWSMobileClient.ErrorMappingHelper(errorCode: Swift.String, message: Swift.String, error: Swift.Optional&lt;__C.NSError&gt;) -&gt; AWSMobileClient.AWSMobileClientError"
-                  moduleName = "AWSMobileClient"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/aaron/Library/CloudStorage/iCloud%20Drive/Documents/Xcode%20Projects/FRC%20Advanced%20Scouting%20Telemetrics/Pods/AWSMobileClient/AWSAuthSDK/Sources/AWSMobileClient/AWSMobileResults.swift"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "95"
-                  endingLineNumber = "95"
-                  offsetFromSymbolStart = "2024">
-               </Location>
-               <Location
-                  uuid = "414E40B2-25E7-4CC1-BC4F-039C5332FDF8 - 3a28f33f7abf9070"
-                  shouldBeEnabled = "No"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "static AWSMobileClient.AWSMobileClient.ErrorMappingHelper(errorCode: Swift.String, message: Swift.String, error: Swift.Optional&lt;__C.NSError&gt;) -&gt; AWSMobileClient.AWSMobileClientError"
-                  moduleName = "AWSMobileClient"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/aaron/Library/CloudStorage/iCloud%20Drive/Documents/Xcode%20Projects/FRC%20Advanced%20Scouting%20Telemetrics/Pods/AWSMobileClient/AWSAuthSDK/Sources/AWSMobileClient/AWSMobileResults.swift"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "95"
-                  endingLineNumber = "95"
-                  offsetFromSymbolStart = "2160">
-               </Location>
-               <Location
-                  uuid = "414E40B2-25E7-4CC1-BC4F-039C5332FDF8 - 3a28f33f7abf9070"
-                  shouldBeEnabled = "No"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "static AWSMobileClient.AWSMobileClient.ErrorMappingHelper(errorCode: Swift.String, message: Swift.String, error: Swift.Optional&lt;__C.NSError&gt;) -&gt; AWSMobileClient.AWSMobileClientError"
-                  moduleName = "AWSMobileClient"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/aaron/Library/CloudStorage/iCloud%20Drive/Documents/Xcode%20Projects/FRC%20Advanced%20Scouting%20Telemetrics/Pods/AWSMobileClient/AWSAuthSDK/Sources/AWSMobileClient/AWSMobileResults.swift"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "95"
-                  endingLineNumber = "95"
-                  offsetFromSymbolStart = "2296">
-               </Location>
-               <Location
-                  uuid = "414E40B2-25E7-4CC1-BC4F-039C5332FDF8 - 3a28f33f7abf9070"
-                  shouldBeEnabled = "No"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "static AWSMobileClient.AWSMobileClient.ErrorMappingHelper(errorCode: Swift.String, message: Swift.String, error: Swift.Optional&lt;__C.NSError&gt;) -&gt; AWSMobileClient.AWSMobileClientError"
-                  moduleName = "AWSMobileClient"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/aaron/Library/CloudStorage/iCloud%20Drive/Documents/Xcode%20Projects/FRC%20Advanced%20Scouting%20Telemetrics/Pods/AWSMobileClient/AWSAuthSDK/Sources/AWSMobileClient/AWSMobileResults.swift"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "95"
-                  endingLineNumber = "95"
-                  offsetFromSymbolStart = "2432">
-               </Location>
-               <Location
-                  uuid = "414E40B2-25E7-4CC1-BC4F-039C5332FDF8 - 3a28f33f7abf9070"
-                  shouldBeEnabled = "No"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "static AWSMobileClient.AWSMobileClient.ErrorMappingHelper(errorCode: Swift.String, message: Swift.String, error: Swift.Optional&lt;__C.NSError&gt;) -&gt; AWSMobileClient.AWSMobileClientError"
-                  moduleName = "AWSMobileClient"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/aaron/Library/CloudStorage/iCloud%20Drive/Documents/Xcode%20Projects/FRC%20Advanced%20Scouting%20Telemetrics/Pods/AWSMobileClient/AWSAuthSDK/Sources/AWSMobileClient/AWSMobileResults.swift"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "95"
-                  endingLineNumber = "95"
-                  offsetFromSymbolStart = "2568">
-               </Location>
-               <Location
-                  uuid = "414E40B2-25E7-4CC1-BC4F-039C5332FDF8 - 3a28f33f7abf9070"
-                  shouldBeEnabled = "No"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "static AWSMobileClient.AWSMobileClient.ErrorMappingHelper(errorCode: Swift.String, message: Swift.String, error: Swift.Optional&lt;__C.NSError&gt;) -&gt; AWSMobileClient.AWSMobileClientError"
-                  moduleName = "AWSMobileClient"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/aaron/Library/CloudStorage/iCloud%20Drive/Documents/Xcode%20Projects/FRC%20Advanced%20Scouting%20Telemetrics/Pods/AWSMobileClient/AWSAuthSDK/Sources/AWSMobileClient/AWSMobileResults.swift"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "95"
-                  endingLineNumber = "95"
-                  offsetFromSymbolStart = "2704">
-               </Location>
-               <Location
-                  uuid = "414E40B2-25E7-4CC1-BC4F-039C5332FDF8 - 3a28f33f7abf9070"
-                  shouldBeEnabled = "No"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "static AWSMobileClient.AWSMobileClient.ErrorMappingHelper(errorCode: Swift.String, message: Swift.String, error: Swift.Optional&lt;__C.NSError&gt;) -&gt; AWSMobileClient.AWSMobileClientError"
-                  moduleName = "AWSMobileClient"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/aaron/Library/CloudStorage/iCloud%20Drive/Documents/Xcode%20Projects/FRC%20Advanced%20Scouting%20Telemetrics/Pods/AWSMobileClient/AWSAuthSDK/Sources/AWSMobileClient/AWSMobileResults.swift"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "95"
-                  endingLineNumber = "95"
-                  offsetFromSymbolStart = "2840">
-               </Location>
-               <Location
-                  uuid = "414E40B2-25E7-4CC1-BC4F-039C5332FDF8 - 3a28f33f7abf9070"
-                  shouldBeEnabled = "No"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "static AWSMobileClient.AWSMobileClient.ErrorMappingHelper(errorCode: Swift.String, message: Swift.String, error: Swift.Optional&lt;__C.NSError&gt;) -&gt; AWSMobileClient.AWSMobileClientError"
-                  moduleName = "AWSMobileClient"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/aaron/Library/CloudStorage/iCloud%20Drive/Documents/Xcode%20Projects/FRC%20Advanced%20Scouting%20Telemetrics/Pods/AWSMobileClient/AWSAuthSDK/Sources/AWSMobileClient/AWSMobileResults.swift"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "95"
-                  endingLineNumber = "95"
-                  offsetFromSymbolStart = "2976">
-               </Location>
-               <Location
-                  uuid = "414E40B2-25E7-4CC1-BC4F-039C5332FDF8 - 3a28f33f7abf9070"
-                  shouldBeEnabled = "No"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "static AWSMobileClient.AWSMobileClient.ErrorMappingHelper(errorCode: Swift.String, message: Swift.String, error: Swift.Optional&lt;__C.NSError&gt;) -&gt; AWSMobileClient.AWSMobileClientError"
-                  moduleName = "AWSMobileClient"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/aaron/Library/CloudStorage/iCloud%20Drive/Documents/Xcode%20Projects/FRC%20Advanced%20Scouting%20Telemetrics/Pods/AWSMobileClient/AWSAuthSDK/Sources/AWSMobileClient/AWSMobileResults.swift"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "95"
-                  endingLineNumber = "95"
-                  offsetFromSymbolStart = "3112">
-               </Location>
-               <Location
-                  uuid = "414E40B2-25E7-4CC1-BC4F-039C5332FDF8 - 3a28f33f7abf9070"
-                  shouldBeEnabled = "No"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "static AWSMobileClient.AWSMobileClient.ErrorMappingHelper(errorCode: Swift.String, message: Swift.String, error: Swift.Optional&lt;__C.NSError&gt;) -&gt; AWSMobileClient.AWSMobileClientError"
-                  moduleName = "AWSMobileClient"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/aaron/Library/CloudStorage/iCloud%20Drive/Documents/Xcode%20Projects/FRC%20Advanced%20Scouting%20Telemetrics/Pods/AWSMobileClient/AWSAuthSDK/Sources/AWSMobileClient/AWSMobileResults.swift"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "95"
-                  endingLineNumber = "95"
-                  offsetFromSymbolStart = "3248">
-               </Location>
-               <Location
-                  uuid = "414E40B2-25E7-4CC1-BC4F-039C5332FDF8 - 3a28f33f7abf9070"
-                  shouldBeEnabled = "No"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "static AWSMobileClient.AWSMobileClient.ErrorMappingHelper(errorCode: Swift.String, message: Swift.String, error: Swift.Optional&lt;__C.NSError&gt;) -&gt; AWSMobileClient.AWSMobileClientError"
-                  moduleName = "AWSMobileClient"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/aaron/Library/CloudStorage/iCloud%20Drive/Documents/Xcode%20Projects/FRC%20Advanced%20Scouting%20Telemetrics/Pods/AWSMobileClient/AWSAuthSDK/Sources/AWSMobileClient/AWSMobileResults.swift"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "95"
-                  endingLineNumber = "95"
-                  offsetFromSymbolStart = "3384">
-               </Location>
-               <Location
-                  uuid = "414E40B2-25E7-4CC1-BC4F-039C5332FDF8 - 3a28f33f7abf9070"
-                  shouldBeEnabled = "No"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "static AWSMobileClient.AWSMobileClient.ErrorMappingHelper(errorCode: Swift.String, message: Swift.String, error: Swift.Optional&lt;__C.NSError&gt;) -&gt; AWSMobileClient.AWSMobileClientError"
-                  moduleName = "AWSMobileClient"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/aaron/Library/CloudStorage/iCloud%20Drive/Documents/Xcode%20Projects/FRC%20Advanced%20Scouting%20Telemetrics/Pods/AWSMobileClient/AWSAuthSDK/Sources/AWSMobileClient/AWSMobileResults.swift"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "95"
-                  endingLineNumber = "95"
-                  offsetFromSymbolStart = "3520">
-               </Location>
-            </Locations>
          </BreakpointContent>
       </BreakpointProxy>
    </Breakpoints>

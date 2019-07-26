@@ -572,16 +572,33 @@
                                 </connections>
                             </segmentedControl>
                             <pickerView contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="svs-Jc-Q2Y">
-                                <rect key="frame" x="0.0" y="50" width="400" height="216"/>
+                                <rect key="frame" x="0.0" y="47.5" width="400" height="216"/>
                             </pickerView>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Sort by a Statistic" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="w0I-7d-Gp2">
+                                <rect key="frame" x="129" y="20" width="142" height="20.5"/>
+                                <fontDescription key="fontDescription" type="system" weight="semibold" pointSize="17"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="zlC-aG-Yip">
+                                <rect key="frame" x="343" y="14" width="42" height="33"/>
+                                <fontDescription key="fontDescription" type="system" weight="medium" pointSize="17"/>
+                                <state key="normal" title="Done"/>
+                                <connections>
+                                    <action selector="donePressed:" destination="LzG-mF-Xm8" eventType="touchUpInside" id="lnM-Nl-oiO"/>
+                                </connections>
+                            </button>
                         </subviews>
                         <color key="backgroundColor" xcode11CocoaTouchSystemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
                         <constraints>
+                            <constraint firstAttribute="trailing" secondItem="zlC-aG-Yip" secondAttribute="trailing" constant="15" id="H1z-R8-1ah"/>
                             <constraint firstItem="VA4-xt-SJp" firstAttribute="top" secondItem="SPL-gJ-B4f" secondAttribute="bottom" constant="25" id="Ji7-jH-KgH"/>
-                            <constraint firstItem="svs-Jc-Q2Y" firstAttribute="top" secondItem="7qs-wb-MrS" secondAttribute="bottom" id="Ltn-tB-xxb"/>
+                            <constraint firstItem="zlC-aG-Yip" firstAttribute="centerY" secondItem="w0I-7d-Gp2" secondAttribute="centerY" id="PZ5-85-sTJ"/>
                             <constraint firstItem="SPL-gJ-B4f" firstAttribute="top" relation="greaterThanOrEqual" secondItem="svs-Jc-Q2Y" secondAttribute="bottom" constant="20" id="SEO-gh-Tlw"/>
                             <constraint firstItem="svs-Jc-Q2Y" firstAttribute="leading" secondItem="kgZ-CR-sl5" secondAttribute="leading" id="VEi-ul-Omw"/>
                             <constraint firstItem="SPL-gJ-B4f" firstAttribute="centerX" secondItem="kgZ-CR-sl5" secondAttribute="centerX" id="c44-PT-Qjw"/>
+                            <constraint firstItem="svs-Jc-Q2Y" firstAttribute="top" secondItem="w0I-7d-Gp2" secondAttribute="bottom" constant="7" id="hJY-ki-Cba"/>
+                            <constraint firstItem="w0I-7d-Gp2" firstAttribute="top" secondItem="7qs-wb-MrS" secondAttribute="bottom" constant="20" id="qC3-2b-pHw"/>
+                            <constraint firstItem="w0I-7d-Gp2" firstAttribute="centerX" secondItem="kgZ-CR-sl5" secondAttribute="centerX" id="rXu-4x-huT"/>
                             <constraint firstAttribute="trailing" secondItem="svs-Jc-Q2Y" secondAttribute="trailing" id="udw-1I-hPX"/>
                         </constraints>
                     </view>
@@ -603,7 +620,7 @@
                 <placeholder placeholderIdentifier="IBFirstResponder" id="KlT-Yk-fEG" userLabel="First Responder" sceneMemberID="firstResponder"/>
                 <exit id="Fqb-qF-c4T" userLabel="Exit" sceneMemberID="exit"/>
             </objects>
-            <point key="canvasLocation" x="979" y="1174"/>
+            <point key="canvasLocation" x="683" y="1085"/>
         </scene>
         <!--Team List Search Results Table View Controller-->
         <scene sceneID="viM-7R-Ol1">
@@ -2501,12 +2518,11 @@
                                     <constraint firstAttribute="height" constant="40" id="Ck7-Vn-nHy"/>
                                     <constraint firstAttribute="width" constant="180" id="hSw-q9-QHq"/>
                                 </constraints>
-                                <nil key="textColor"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="16"/>
                                 <textInputTraits key="textInputTraits"/>
                             </textField>
                         </subviews>
-                        <color key="backgroundColor" white="0.14999999999999999" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        <color key="backgroundColor" xcode11CocoaTouchSystemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
                         <constraints>
                             <constraint firstItem="1lp-LK-qjC" firstAttribute="top" secondItem="U2U-IM-kNH" secondAttribute="bottom" constant="30" id="WPs-dO-qbT"/>
                             <constraint firstItem="1lp-LK-qjC" firstAttribute="centerX" secondItem="noQ-xT-wnk" secondAttribute="centerX" id="kpV-V5-rPu"/>
@@ -2553,7 +2569,6 @@
                                     <constraint firstAttribute="height" constant="40" id="E7N-iQ-HsD"/>
                                     <constraint firstAttribute="width" constant="150" id="yJo-M4-Ja8"/>
                                 </constraints>
-                                <nil key="textColor"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="15"/>
                                 <textInputTraits key="textInputTraits"/>
                             </textField>
@@ -2563,18 +2578,16 @@
                                     <constraint firstAttribute="height" constant="30" id="0Qg-8K-mZA"/>
                                     <constraint firstAttribute="width" constant="150" id="d3k-7i-dyH"/>
                                 </constraints>
-                                <nil key="textColor"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                 <textInputTraits key="textInputTraits" secureTextEntry="YES"/>
                             </textField>
                             <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Confirm Password" textAlignment="center" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="0y9-CI-x1B">
                                 <rect key="frame" x="437" y="233" width="150" height="30"/>
-                                <nil key="textColor"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                 <textInputTraits key="textInputTraits" secureTextEntry="YES"/>
                             </textField>
                         </subviews>
-                        <color key="backgroundColor" red="0.14902138710021973" green="0.14901724457740784" blue="0.14901807904243469" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+                        <color key="backgroundColor" xcode11CocoaTouchSystemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
                         <constraints>
                             <constraint firstItem="BDd-dc-OuB" firstAttribute="top" secondItem="5j9-AI-cnJ" secondAttribute="bottom" constant="24" id="4gF-cC-PPo"/>
                             <constraint firstItem="5j9-AI-cnJ" firstAttribute="top" secondItem="hgc-6Z-U1C" secondAttribute="bottom" constant="35" id="APg-zO-PMx"/>
@@ -3285,27 +3298,6 @@
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Xxd-gr-A1y" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="-222" y="2951"/>
-        </scene>
-        <!--Navigation Controller-->
-        <scene sceneID="Qrj-QW-tmu">
-            <objects>
-                <navigationController storyboardIdentifier="sortNav" automaticallyAdjustsScrollViewInsets="NO" id="K3x-s6-ZzC" sceneMemberID="viewController">
-                    <toolbarItems/>
-                    <value key="contentSizeForViewInPopover" type="size" width="350" height="300"/>
-                    <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
-                    <size key="freeformSize" width="200" height="100"/>
-                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="dh1-I8-5yf">
-                        <rect key="frame" x="0.0" y="0.0" width="200" height="50"/>
-                        <autoresizingMask key="autoresizingMask"/>
-                    </navigationBar>
-                    <nil name="viewControllers"/>
-                    <connections>
-                        <segue destination="LzG-mF-Xm8" kind="relationship" relationship="rootViewController" id="Ptn-hE-ykc"/>
-                    </connections>
-                </navigationController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="hHF-IZ-7fz" userLabel="First Responder" sceneMemberID="firstResponder"/>
-            </objects>
-            <point key="canvasLocation" x="647" y="944"/>
         </scene>
         <!--About-->
         <scene sceneID="Vxi-nJ-Owv">

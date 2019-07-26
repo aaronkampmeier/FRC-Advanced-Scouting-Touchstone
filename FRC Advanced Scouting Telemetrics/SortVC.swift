@@ -95,4 +95,8 @@ class SortVC: UIViewController, UIPickerViewDelegate, UIPickerViewDataSource {
             isAscending = true
         }
     }
+    
+    @IBAction func donePressed(_ sender: UIButton) {
+        self.dismiss(animated: true, completion: nil)
+    }
 }
