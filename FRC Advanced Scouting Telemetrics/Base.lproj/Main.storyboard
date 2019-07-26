@@ -128,7 +128,7 @@
                             </label>
                             <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="57M-yC-eIi">
                                 <rect key="frame" x="0.0" y="135.5" width="768" height="888.5"/>
-                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                <color key="backgroundColor" xcode11CocoaTouchSystemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
                                 <collectionViewFlowLayout key="collectionViewLayout" minimumLineSpacing="10" minimumInteritemSpacing="10" id="hoM-6m-MxG">
                                     <size key="itemSize" width="215" height="164"/>
                                     <size key="headerReferenceSize" width="0.0" height="0.0"/>
@@ -284,6 +284,7 @@
                                                         <constraint firstAttribute="height" constant="70" id="HpS-ox-hT0"/>
                                                         <constraint firstAttribute="width" constant="70" id="lCk-WY-tG1"/>
                                                     </constraints>
+                                                    <color key="tintColor" cocoaTouchSystemColor="linkColor"/>
                                                     <state key="normal" image="Camera"/>
                                                     <connections>
                                                         <action selector="imageButtonPressed:" destination="BRM-js-3rw" eventType="touchUpInside" id="W1Q-Vh-F1R"/>
@@ -322,7 +323,9 @@
                                                         <constraint firstAttribute="height" constant="40" id="Caj-9L-FIy"/>
                                                         <constraint firstAttribute="width" constant="40" id="VLO-tf-0jg"/>
                                                     </constraints>
-                                                    <state key="normal" image="Banana"/>
+                                                    <state key="normal" image="Banana">
+                                                        <color key="titleColor" xcode11CocoaTouchSystemColor="labelColor" cocoaTouchSystemColor="darkTextColor"/>
+                                                    </state>
                                                     <state key="selected" image="Banana Filled"/>
                                                     <connections>
                                                         <action selector="buttonPressed:" destination="sdE-eI-kfr" eventType="touchUpInside" id="vBg-CM-WgW"/>
@@ -423,16 +426,19 @@
                                     <constraint firstAttribute="width" secondItem="mab-uz-kpU" secondAttribute="height" multiplier="1:1" id="75d-uu-Msx"/>
                                     <constraint firstAttribute="height" constant="50" id="8ru-3C-ovj"/>
                                 </constraints>
-                                <state key="normal" title="Button" image="Camera"/>
+                                <state key="normal" title="Button" image="Camera">
+                                    <color key="titleColor" xcode11CocoaTouchSystemColor="labelColor" cocoaTouchSystemColor="darkTextColor"/>
+                                </state>
                                 <connections>
                                     <action selector="imageButtonPressed:" destination="cOC-Uw-kvx" eventType="touchUpInside" id="mdc-sc-lO6"/>
                                 </connections>
                             </button>
                             <progressView hidden="YES" opaque="NO" contentMode="scaleToFill" verticalHuggingPriority="750" progress="0.5" translatesAutoresizingMaskIntoConstraints="NO" id="9Ho-AX-QfG">
                                 <rect key="frame" x="0.0" y="128.5" width="768" height="2"/>
+                                <color key="tintColor" cocoaTouchSystemColor="systemBlueColor"/>
                             </progressView>
                         </subviews>
-                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <color key="backgroundColor" xcode11CocoaTouchSystemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
                         <constraints>
                             <constraint firstItem="eKK-pG-yVK" firstAttribute="top" secondItem="zoH-Cy-bxK" secondAttribute="bottom" constant="6" id="4i4-Gp-1wb"/>
                             <constraint firstItem="zoH-Cy-bxK" firstAttribute="centerX" secondItem="xzy-95-a9h" secondAttribute="centerX" id="9bk-Mq-M92"/>
@@ -2085,7 +2091,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="c6T-db-YPc" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1948" y="1572"/>
+            <point key="canvasLocation" x="1974" y="1571"/>
         </scene>
         <!--Field Location Display View Controller-->
         <scene sceneID="5UP-UU-Bk2">
@@ -2185,37 +2191,37 @@
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="R1" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ya7-Sa-4Gk">
                                                     <rect key="frame" x="0.0" y="0.0" width="62.5" height="20.5"/>
                                                     <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                                    <color key="textColor" red="1" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                                                    <color key="textColor" cocoaTouchSystemColor="systemRedColor"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="R2" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="1gb-Pz-Jfe">
                                                     <rect key="frame" x="67.5" y="0.0" width="62.5" height="20.5"/>
                                                     <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                                    <color key="textColor" red="1" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                                                    <color key="textColor" cocoaTouchSystemColor="systemRedColor"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="R3" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="tWr-2a-krY">
                                                     <rect key="frame" x="135" y="0.0" width="62.5" height="20.5"/>
                                                     <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                                    <color key="textColor" red="1" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                                                    <color key="textColor" cocoaTouchSystemColor="systemRedColor"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="B1" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Uct-Ed-H4H">
                                                     <rect key="frame" x="202.5" y="0.0" width="62.5" height="20.5"/>
                                                     <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                                    <color key="textColor" red="0.0" green="0.0" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                                                    <color key="textColor" cocoaTouchSystemColor="systemBlueColor"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="B2" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Pch-VY-l0R">
                                                     <rect key="frame" x="270" y="0.0" width="62.5" height="20.5"/>
                                                     <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                                    <color key="textColor" red="0.0" green="0.0" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                                                    <color key="textColor" cocoaTouchSystemColor="systemBlueColor"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="B3" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="lAI-Ge-ili">
                                                     <rect key="frame" x="337.5" y="0.0" width="62.5" height="20.5"/>
                                                     <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                                    <color key="textColor" red="0.0" green="0.0" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                                                    <color key="textColor" cocoaTouchSystemColor="systemBlueColor"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
                                             </subviews>
@@ -4055,6 +4061,6 @@
         <image name="Stands Scouting" width="31" height="31"/>
     </resources>
     <inferredMetricsTieBreakers>
-        <segue reference="vir-FS-zIP"/>
+        <segue reference="yoF-JC-lMK"/>
     </inferredMetricsTieBreakers>
 </document>

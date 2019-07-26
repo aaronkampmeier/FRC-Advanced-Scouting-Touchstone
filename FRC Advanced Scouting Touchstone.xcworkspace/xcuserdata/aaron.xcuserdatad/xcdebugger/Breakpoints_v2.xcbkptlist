@@ -586,8 +586,8 @@
             filePath = "FRC Advanced Scouting Telemetrics/TeamListTableViewController.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "140"
-            endingLineNumber = "140"
+            startingLineNumber = "141"
+            endingLineNumber = "141"
             landmarkName = "viewDidLoad()"
             landmarkType = "7">
          </BreakpointContent>
@@ -634,10 +634,10 @@
             filePath = "FRC Advanced Scouting Telemetrics/TeamListTableViewController.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "1120"
-            endingLineNumber = "1120"
-            landmarkName = "containerViewWillLayoutSubviews()"
-            landmarkType = "7">
+            startingLineNumber = "1074"
+            endingLineNumber = "1074"
+            landmarkName = "frameOfPresentedViewInContainerView"
+            landmarkType = "24">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -650,9 +650,9 @@
             filePath = "FRC Advanced Scouting Telemetrics/TeamListTableViewController.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "1115"
-            endingLineNumber = "1115"
-            landmarkName = "containerViewDidLayoutSubviews()"
+            startingLineNumber = "1167"
+            endingLineNumber = "1167"
+            landmarkName = "containerViewWillLayoutSubviews()"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
@@ -666,9 +666,9 @@
             filePath = "FRC Advanced Scouting Telemetrics/TeamListTableViewController.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "1060"
-            endingLineNumber = "1060"
-            landmarkName = "init(presentedViewController:presenting:)"
+            startingLineNumber = "1162"
+            endingLineNumber = "1162"
+            landmarkName = "containerViewDidLayoutSubviews()"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
@@ -682,9 +682,9 @@
             filePath = "FRC Advanced Scouting Telemetrics/EventSelector.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "99"
-            endingLineNumber = "99"
-            landmarkName = "init()"
+            startingLineNumber = "1079"
+            endingLineNumber = "1079"
+            landmarkName = "init(presentedViewController:presenting:)"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
@@ -698,25 +698,9 @@
             filePath = "FRC Advanced Scouting Telemetrics/TeamListTableViewController.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "1198"
-            endingLineNumber = "1198"
-            landmarkName = "frameOfPresentedViewInContainerView"
-            landmarkType = "24">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            uuid = "5657A95C-39D4-4D6A-928E-581A54BC5A57"
-            shouldBeEnabled = "Yes"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "FRC Advanced Scouting Telemetrics/TeamListTableViewController.swift"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "1032"
-            endingLineNumber = "1032"
-            landmarkName = "presentationController(forPresented:presenting:source:)"
+            startingLineNumber = "1097"
+            endingLineNumber = "1097"
+            landmarkName = "presentationTransitionWillBegin()"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
@@ -730,10 +714,10 @@
             filePath = "FRC Advanced Scouting Telemetrics/TeamListTableViewController.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "1252"
-            endingLineNumber = "1252"
-            landmarkName = "animateTransition(using:)"
-            landmarkType = "7">
+            startingLineNumber = "1063"
+            endingLineNumber = "1063"
+            landmarkName = "frameOfPresentedViewInContainerView"
+            landmarkType = "24">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
