@@ -45,13 +45,13 @@ public extension String {
     public var URLHost: String {
         var host = self
 
-//        if let scheme = self.URLScheme {
-//            host = host.substring(from: self.index(self.startIndex, offsetBy: (scheme + "://").characters.count))
-//        }
-//
-//        if let portRange = host.range(of: ":") {
-//            host = host.substring(to: portRange.lowerBound)
-//        }
+        if let scheme = self.URLScheme {
+            host = host.substring(from: self.index(self.startIndex, offsetBy: (scheme + "://").characters.count))
+        }
+
+        if let portRange = host.range(of: ":") {
+            host = host.substring(to: portRange.lowerBound)
+        }
 
         return host
     }

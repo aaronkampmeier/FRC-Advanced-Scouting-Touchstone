@@ -29,7 +29,7 @@ class ForgotPasswordViewController: UIViewController {
     @IBAction func continuePressed(_ sender: UIBarButtonItem) {
         let cognitoManager = AWSCognitoAuthenticationProvider()
 
-        let loadingIndicator = UIActivityIndicatorView(style: .whiteLarge)
+        let loadingIndicator = UIActivityIndicatorView(activityIndicatorStyle: .whiteLarge)
         loadingIndicator.frame = CGRect(x: self.view.frame.width / 2 - 20, y: self.view.frame.height / 2 - 20, width: 20, height: 20)
         self.view.addSubview(loadingIndicator)
         loadingIndicator.startAnimating()

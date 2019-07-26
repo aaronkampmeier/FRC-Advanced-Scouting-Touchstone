@@ -240,7 +240,7 @@ class PitScoutingViewController: UIViewController, UICollectionViewDataSource, U
         case .Button:
             return CGSize(width: 180, height: 50)
         case .Switch:
-            if parameter.label.count > 20 {
+            if parameter.label.characters.count > 20 {
                 return CGSize(width: 240, height: 80)
             } else {
                 return CGSize(width: 180, height: 80)
@@ -309,7 +309,7 @@ class PitScoutingViewController: UIViewController, UICollectionViewDataSource, U
         }
     }
     
-    func presentImageController(_ controller: UIImagePickerController, withSource source: UIImagePickerController.SourceType) {
+    func presentImageController(_ controller: UIImagePickerController, withSource source: UIImagePickerControllerSourceType) {
         controller.sourceType = source
         controller.allowsEditing = false
         
@@ -333,7 +333,7 @@ class PitScoutingViewController: UIViewController, UICollectionViewDataSource, U
     */
 
     func uploadImage(image: UIImage) {
-        guard let data = image.jpegData(compressionQuality: 0.3) else {
+        guard let data = UIImageJPEGRepresentation(image, 0.3) else {
             let alert = UIAlertController(title: "Error Saving Image", message: "There was an error saving the image, please try again.", preferredStyle: .alert)
             alert.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
             self.present(alert, animated: true, completion: nil)
@@ -400,12 +400,9 @@ class PitScoutingViewController: UIViewController, UICollectionViewDataSource, U
 }
 
 extension PitScoutingViewController: UIImagePickerControllerDelegate {
-    func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
-// Local variable inserted by Swift 4.2 migrator.
-let info = convertFromUIImagePickerControllerInfoKeyDictionary(info)
-
+    func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String : Any]) {
         picker.dismiss(animated: true, completion: nil)
-        if let image = info[convertFromUIImagePickerControllerInfoKey(UIImagePickerController.InfoKey.originalImage)] as? UIImage {
+        if let image = info[UIImagePickerControllerOriginalImage] as? UIImage {
             imageButton.setImage(image, for: .normal)
             
             //Save the image
@@ -427,14 +424,4 @@ extension PitScoutingViewController: UINavigationControllerDelegate {
 
 extension PitScoutingViewController: UICollectionViewDelegateFlowLayout {
     
-}
-
-// Helper function inserted by Swift 4.2 migrator.
-fileprivate func convertFromUIImagePickerControllerInfoKeyDictionary(_ input: [UIImagePickerController.InfoKey: Any]) -> [String: Any] {
-	return Dictionary(uniqueKeysWithValues: input.map {key, value in (key.rawValue, value)})
-}
-
-// Helper function inserted by Swift 4.2 migrator.
-fileprivate func convertFromUIImagePickerControllerInfoKey(_ input: UIImagePickerController.InfoKey) -> String {
-	return input.rawValue
 }

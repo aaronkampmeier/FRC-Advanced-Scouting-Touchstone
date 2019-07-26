@@ -169,7 +169,7 @@ class OptionSelectorPresentationController: UIPresentationController {
             newHeight = 800
         }
         
-        let newFrame = CGRect(x: (currentFrame.width - newWidth) / 2, y: (currentFrame.height - newHeight) / 2, width: newWidth, height: newHeight)
+        var newFrame = CGRect(x: (currentFrame.width - newWidth) / 2, y: (currentFrame.height - newHeight) / 2, width: newWidth, height: newHeight)
         
         return newFrame
     }

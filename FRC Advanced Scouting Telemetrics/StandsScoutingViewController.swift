@@ -31,7 +31,7 @@ class StandsScoutingViewController: UIViewController {
 			ssDataManager?.stopwatch.start()
 			
 			//Update the button
-			timerButton.setTitle("Stop", for: UIControl.State())
+			timerButton.setTitle("Stop", for: UIControlState())
 			timerButton.backgroundColor = UIColor.red
 			
 			//Set appropriate state for elements in the view
@@ -47,7 +47,7 @@ class StandsScoutingViewController: UIViewController {
             ssDataManager?.stopwatch.stop()
             
             //Update the button
-            timerButton.setTitle("Ended", for: UIControl.State())
+            timerButton.setTitle("Ended", for: UIControlState())
             timerButton.backgroundColor = UIColor.gray
             timerButton.isEnabled = false
             
@@ -82,8 +82,8 @@ class StandsScoutingViewController: UIViewController {
 		
 		//Get all the view controllers
         gameScoutVC = (storyboard?.instantiateViewController(withIdentifier: "ssGameScoutVC") as! SSGameScoutingViewController)
-        gameStartVC = storyboard?.instantiateViewController(withIdentifier: "gameState") as? SSGameStateViewController
-        gameEndVC = storyboard?.instantiateViewController(withIdentifier: "gameState") as? SSGameStateViewController
+        gameStartVC = storyboard?.instantiateViewController(withIdentifier: "gameState") as! SSGameStateViewController
+        gameEndVC = storyboard?.instantiateViewController(withIdentifier: "gameState") as! SSGameStateViewController
 		
 		self.timerButton.isEnabled = false
     }
@@ -138,7 +138,7 @@ class StandsScoutingViewController: UIViewController {
                     self?.gameStartVC?.set(gameSection: .Start)
                     self?.gameEndVC?.set(gameSection: .End)
                     
-                    self?.cycleFromViewController(self!.children.first!, toViewController: self!.gameStartVC!)
+                    self?.cycleFromViewController(self!.childViewControllers.first!, toViewController: self!.gameStartVC!)
 					self?.timerButton.isEnabled = true
 					
                 } else {
@@ -208,12 +208,12 @@ class StandsScoutingViewController: UIViewController {
 	}
 	
 	func cycleFromViewController(_ oldVC: UIViewController, toViewController newVC: UIViewController) {
-		oldVC.willMove(toParent: nil)
-		addChild(newVC)
+		oldVC.willMove(toParentViewController: nil)
+		addChildViewController(newVC)
 		
 		newVC.view.frame = oldVC.view.frame
 		
-		transition(from: oldVC, to: newVC, duration: 0, options: UIView.AnimationOptions(), animations: {}, completion: {_ in oldVC.removeFromParent(); newVC.didMove(toParent: self); self.currentVC = newVC})
+		transition(from: oldVC, to: newVC, duration: 0, options: UIViewAnimationOptions(), animations: {}, completion: {_ in oldVC.removeFromParentViewController(); newVC.didMove(toParentViewController: self); self.currentVC = newVC})
 	}
 	
 	//Timer

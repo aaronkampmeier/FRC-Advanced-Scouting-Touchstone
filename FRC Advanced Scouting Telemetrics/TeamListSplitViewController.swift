@@ -68,11 +68,11 @@ class TeamListSplitViewController: UISplitViewController, UISplitViewControllerD
 		return .all
 	}
 	
-	func targetDisplayModeForAction(in svc: UISplitViewController) -> UISplitViewController.DisplayMode {
+	func targetDisplayModeForAction(in svc: UISplitViewController) -> UISplitViewControllerDisplayMode {
 		return .automatic
 	}
 	
-	func splitViewController(_ svc: UISplitViewController, willChangeTo displayMode: UISplitViewController.DisplayMode) {
+	func splitViewController(_ svc: UISplitViewController, willChangeTo displayMode: UISplitViewControllerDisplayMode) {
 		
 	}
 
@@ -117,10 +117,10 @@ class TeamListSplitViewController: UISplitViewController, UISplitViewControllerD
 }
 
 extension UINavigationController {
-    //When the split view controller will go into a collapsed state, it will attempt to push the secondary vc onto the primary vc's nav controller stack. Because our secondary vc is a nav controller we need to instead push all of the secondary nav vcs onto the primary nav vcs. And then reverse this change when the split view controller is expanded. Reference: http://commandshift.co.uk/blog/2016/04/11/understanding-split-view-controller/
-    
-    override open func collapseSecondaryViewController(_ secondaryViewController: UIViewController, for splitViewController: UISplitViewController) {
-        if let secondaryAsNav = secondaryViewController as? UINavigationController {
+	//When the split view controller will go into a collapsed state, it will attempt to push the secondary vc onto the primary vc's nav controller stack. Because our secondary vc is a nav controller we need to instead push all of the secondary nav vcs onto the primary nav vcs. And then reverse this change when the split view controller is expanded. Reference: http://commandshift.co.uk/blog/2016/04/11/understanding-split-view-controller/
+	
+	override open func collapseSecondaryViewController(_ secondaryViewController: UIViewController, for splitViewController: UISplitViewController) {
+		if let secondaryAsNav = secondaryViewController as? UINavigationController {
 			//Combine the vcs from both nav controller's stacks
 			NSLog("Collapsing view controllers")
 			self.setViewControllers(self.viewControllers + secondaryAsNav.viewControllers, animated: false)
@@ -145,7 +145,7 @@ extension UINavigationController {
             let secondaryNav = storyboard?.instantiateViewController(withIdentifier: "secondaryNav") as! UINavigationController
             
             if secondaryVCs.isEmpty {
-                secondaryVCs = [(splitViewController as! TeamListSplitViewController).teamListDetailVC]
+                secondaryVCs = [((UIApplication.shared.delegate as! AppDelegate).window?.rootViewController as! TeamListSplitViewController).teamListDetailVC]
             }
             secondaryNav.setViewControllers(secondaryVCs, animated: false)
             self.setViewControllers([primaryContentVC], animated: false)

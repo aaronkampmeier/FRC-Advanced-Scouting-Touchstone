@@ -74,7 +74,7 @@ class SelectStatsTableViewController: UITableViewController {
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         let stat = allStats[indexPath.row]
-        if let index = selectedStats.firstIndex(of: stat) {
+        if let index = selectedStats.index(of: stat) {
             //Remove it
             selectedStats.remove(at: index)
         } else {

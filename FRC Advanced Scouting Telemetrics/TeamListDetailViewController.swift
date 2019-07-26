@@ -14,6 +14,11 @@ import AWSAppSync
 import AWSMobileClient
 import Firebase
 
+protocol TeamListDetailDataSource {
+    func team() -> Team?
+    func inEventKey() -> String?
+}
+
 class TeamListDetailViewController: UIViewController {
     @IBOutlet weak var frontImageButton: UIButton!
     @IBOutlet weak var teamLabel: UILabel!
@@ -42,15 +47,17 @@ class TeamListDetailViewController: UIViewController {
     
     var detailCollectionVC: TeamDetailCollectionViewController?
     
+    var dataSource: TeamListDetailDataSource?
+    
     //Insets for the scroll view
     var contentViewInsets: UIEdgeInsets {
         get {
-            return UIEdgeInsets.init(top: frontImageHeightConstraint.constant, left: 0, bottom: 0, right: 0)
+            return UIEdgeInsetsMake(frontImageHeightConstraint.constant, 0, 0, 0)
         }
     }
     var noContentInsets: UIEdgeInsets {
         get {
-            return UIEdgeInsets.init(top: 0, left: 0, bottom: 0, right: 0)
+            return UIEdgeInsetsMake(0, 0, 0, 0)
         }
     }
     
@@ -75,6 +82,8 @@ class TeamListDetailViewController: UIViewController {
         generalInfoTableView?.isScrollEnabled = false
         
         teamListSplitVC.teamListDetailVC = self
+        
+        self.dataSource = teamListSplitVC.teamListTableVC
         
         navigationItem.leftItemsSupplementBackButton = true
         
@@ -113,35 +122,11 @@ class TeamListDetailViewController: UIViewController {
         
         generalInfoTableView?.delegate = self
         generalInfoTableView?.dataSource = self
-        generalInfoTableView?.rowHeight = UITableView.automaticDimension
+        generalInfoTableView?.rowHeight = UITableViewAutomaticDimension
         generalInfoTableView?.estimatedRowHeight = 44
         
-        //Set up observer to get team change notifications
-        if #available(iOS 13.0, *) {
-            NotificationCenter.default.publisher(for: .FASTSelectedTeamDidChange, object: teamListSplitVC.teamListTableVC)
-                .map { (notification: Notification) -> (teamKey: Team, eventKey: String)? in
-                    if let team = notification.userInfo?["team"] as? Team, let eventKey = notification.userInfo?["eventKey"] as? String {
-                        return (team, eventKey)
-                    } else {
-                        return nil
-                    }
-            }
-            .sink {[weak self] (tuple) in
-                self?.set(input: tuple)
-            }
-        } else {
-            // Fallback on earlier versions
-            NotificationCenter.default.addObserver(forName: .FASTSelectedTeamDidChange, object: teamListSplitVC.teamListTableVC, queue: nil) { (notification) in
-                if let team = notification.userInfo?["team"] as? Team, let eventKey = notification.userInfo?["eventKey"] as? String {
-                    self.set(input: (team, eventKey))
-                } else {
-                    self.set(input: nil)
-                }
-            }
-        }
-        
         //Load the data if a team was selected beforehand
-        NotificationCenter.default.post(name: .FASTSelectedTeamDidChange, object: teamListSplitVC.teamListTableVC, userInfo: ["team": teamListSplitVC.teamListTableVC.selectedTeam, "eventKey":teamListSplitVC.teamListTableVC.selectedEventRanking?.eventKey])
+        self.reloadData()
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -231,6 +216,8 @@ class TeamListDetailViewController: UIViewController {
         }
         
         self.resetSubscriptions()
+        
+        NotificationCenter.default.post(name: Notification.Name(rawValue: "TeamSelectedChanged"), object: self)
     }
     
     func resetSubscriptions() {
@@ -321,28 +308,35 @@ class TeamListDetailViewController: UIViewController {
     
     override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
         super.viewWillTransition(to: size, with: coordinator)
-        
+        //Reset the content insets
+        coordinator.animate(alongsideTransition: {_ in
+            if self.scoutedTeam?.image != nil {
+                self.contentScrollView.contentInset = self.contentViewInsets
+                self.contentScrollView.scrollIndicatorInsets = self.contentViewInsets
+
+                self.contentScrollView.contentOffset = CGPoint(x: 0, y: -self.frontImageHeightConstraint.constant)
+            } else {
+                self.frontImageHeightConstraint.isActive = false
+
+                self.contentScrollView.contentInset = self.noContentInsets
+                self.contentScrollView.scrollIndicatorInsets = self.noContentInsets
+
+                self.contentScrollView.contentOffset = CGPoint(x: 0, y: 0)
+            }
+
+        }, completion: {transitionContext in
+
+            self.resizeDetailViewHeights()
+        })
+    }
+    
+    func reloadData() {
         if self.isViewLoaded {
-            //Reset the content insets
-            coordinator.animate(alongsideTransition: {_ in
-                if self.scoutedTeam?.image != nil {
-                    self.contentScrollView.contentInset = self.contentViewInsets
-                    self.contentScrollView.scrollIndicatorInsets = self.contentViewInsets
-                    
-                    self.contentScrollView.contentOffset = CGPoint(x: 0, y: -self.frontImageHeightConstraint.constant)
-                } else {
-                    self.frontImageHeightConstraint.isActive = false
-                    
-                    self.contentScrollView.contentInset = self.noContentInsets
-                    self.contentScrollView.scrollIndicatorInsets = self.noContentInsets
-                    
-                    self.contentScrollView.contentOffset = CGPoint(x: 0, y: 0)
-                }
-                
-            }, completion: {transitionContext in
-                
-                self.resizeDetailViewHeights()
-            })
+            if let team = dataSource?.team(), let eventKey = dataSource?.inEventKey() {
+                self.set(input: (team, eventKey))
+            } else {
+                self.set(input: nil)
+            }
         }
     }
     
@@ -532,11 +526,6 @@ extension UILabel {
         
         
         self.attributedText = attrStr
-        if #available(iOS 13.0, *) {
-            self.textColor = UIColor.label
-        } else {
-            // Fallback on earlier versions
-        }
     }
 }
 

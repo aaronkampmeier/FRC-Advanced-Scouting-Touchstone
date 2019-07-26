@@ -128,10 +128,10 @@ extension SSGameStateViewController: UICollectionViewDataSource, UICollectionVie
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, insetForSectionAt section: Int) -> UIEdgeInsets {
         //Inset to make everything centered on screen
-        let top: CGFloat = 0
-        let left: CGFloat = 0
-        let right: CGFloat = 0
-        let bottom: CGFloat = 0
+        var top: CGFloat = 0
+        var left: CGFloat = 0
+        var right: CGFloat = 0
+        var bottom: CGFloat = 0
 
 //        if collectionView.contentSize.height < view.frame.height {
 //            //Inset stuff

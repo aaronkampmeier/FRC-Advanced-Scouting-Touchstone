@@ -38,24 +38,19 @@ class OnboardingPathChooserViewController: UIViewController {
         signUpBouncyButton = UIButton() // SSBouncyButton()
         
 //        spectatorBouncyButton.tintColor = UIColor.blue
-        spectatorBouncyButton.backgroundColor = UIColor.systemBlue
+        spectatorBouncyButton.backgroundColor = UIColor.blue
         spectatorBouncyButton.layer.cornerRadius = buttonCornerRadius
         spectatorBouncyButton.setTitle("I'm a Spectator", for: .normal)
         spectatorBouncyButton.addTarget(self, action: #selector(spectatorPressed), for: .touchUpInside)
         
 //        logInBouncyButton.tintColor = UIColor.darkGray
-        if #available(iOS 13.0, *) {
-            logInBouncyButton.backgroundColor = UIColor.systemGray2
-        } else {
-            // Fallback on earlier versions
-            logInBouncyButton.backgroundColor = UIColor.lightGray
-        }
+        logInBouncyButton.backgroundColor = UIColor.darkGray
         logInBouncyButton.layer.cornerRadius = buttonCornerRadius
         logInBouncyButton.setTitle("Log into Existing Account", for: .normal)
         logInBouncyButton.addTarget(self, action: #selector(logInPressed), for: .touchUpInside)
         
 //        signUpBouncyButton.tintColor = UIColor.purple
-        signUpBouncyButton.backgroundColor = UIColor.systemBlue
+        signUpBouncyButton.backgroundColor = UIColor.blue
         signUpBouncyButton.layer.cornerRadius = buttonCornerRadius
         signUpBouncyButton.setTitle("Create a Team Account", for: .normal)
         signUpBouncyButton.addTarget(self, action: #selector(signUpPressed), for: .touchUpInside)

@@ -21,7 +21,7 @@
 	<key>CFBundleSignature</key>
 	<string>????</string>
 	<key>CFBundleVersion</key>
-	<string>2497</string>
+	<string>2441</string>
 	<key>Fabric</key>
 	<dict>
 		<key>APIKey</key>
@@ -51,25 +51,6 @@
 	<string>FAST uses your photo library to take photos of robots in Pit Scouting.</string>
 	<key>NSPhotoLibraryUsageDescription</key>
 	<string>FAST uses your photo library in order to add photos of robots into Pit Scouting.</string>
-	<key>UIApplicationSceneManifest</key>
-	<dict>
-		<key>UIApplicationSupportsMultipleScenes</key>
-		<true/>
-		<key>UISceneConfigurations</key>
-		<dict>
-			<key>UIWindowSceneSessionRoleApplication</key>
-			<array>
-				<dict>
-					<key>UISceneConfigurationName</key>
-					<string>Default</string>
-					<key>UISceneDelegateClassName</key>
-					<string>FRC Advanced Scouting Touchstone.SceneDelegate</string>
-					<key>UISceneStoryboardFile</key>
-					<string>Main</string>
-				</dict>
-			</array>
-		</dict>
-	</dict>
 	<key>UILaunchStoryboardName</key>
 	<string>LaunchScreen</string>
 	<key>UIMainStoryboardFile</key>

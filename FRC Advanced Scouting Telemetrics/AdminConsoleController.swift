@@ -257,7 +257,7 @@ class AdminConsoleController: UIViewController, UITableViewDataSource, UITableVi
     var grayView: UIView?
     func showLoadingIndicator() {
         //Create a loading view
-        let spinnerView = UIActivityIndicatorView(style: UIActivityIndicatorView.Style.whiteLarge)
+        let spinnerView = UIActivityIndicatorView(activityIndicatorStyle: UIActivityIndicatorViewStyle.whiteLarge)
         grayView = UIView(frame: CGRect(x: self.tableView.frame.width / 2 - 50, y: self.tableView.frame.height / 2 - 50, width: 120, height: 120))
         grayView?.backgroundColor = UIColor.lightGray
         grayView?.backgroundColor?.withAlphaComponent(0.7)
@@ -366,7 +366,7 @@ class AdminConsoleController: UIViewController, UITableViewDataSource, UITableVi
                 } else if let path = path {
                     let activityVC = UIActivityViewController(activityItems: [path], applicationActivities: [])
                     
-                    activityVC.excludedActivityTypes = [UIActivity.ActivityType.addToReadingList, UIActivity.ActivityType.assignToContact, UIActivity.ActivityType.openInIBooks, UIActivity.ActivityType.postToFacebook, UIActivity.ActivityType.postToVimeo, UIActivity.ActivityType.postToWeibo, UIActivity.ActivityType.postToFlickr, UIActivity.ActivityType.postToTwitter, UIActivity.ActivityType.postToTencentWeibo, UIActivity.ActivityType.saveToCameraRoll]
+                    activityVC.excludedActivityTypes = [UIActivityType.addToReadingList, UIActivityType.assignToContact, UIActivityType.openInIBooks, UIActivityType.postToFacebook, UIActivityType.postToVimeo, UIActivityType.postToWeibo, UIActivityType.postToFlickr, UIActivityType.postToTwitter, UIActivityType.postToTencentWeibo, UIActivityType.saveToCameraRoll]
                     
                     activityVC.popoverPresentationController?.sourceView = self.tableView
                     if let index = self.trackedEvents.firstIndex(where: {$0.eventKey == eventKey}) {
@@ -375,7 +375,7 @@ class AdminConsoleController: UIViewController, UITableViewDataSource, UITableVi
                         }
                     }
                     
-                    activityVC.completionWithItemsHandler = {(activityType: UIActivity.ActivityType?, completed: Bool, returnedItems: [Any]?, error: Error?) in
+                    activityVC.completionWithItemsHandler = {(activityType: UIActivityType?, completed: Bool, returnedItems: [Any]?, error: Error?) in
                         if let activityType = activityType {
                             Globals.recordAnalyticsEvent(eventType: AnalyticsEventShare, attributes: ["activity_type":activityType.rawValue, "content_type":"csv_event","item_id":eventKey])
                         }

@@ -30,7 +30,7 @@ class TeamCommentsTableViewController: UITableViewController {
         // self.navigationItem.rightBarButtonItem = self.editButtonItem
         
         self.tableView.allowsSelection = false
-        self.tableView.rowHeight = UITableView.automaticDimension
+        self.tableView.rowHeight = UITableViewAutomaticDimension
         self.tableView.estimatedRowHeight = 55
     }
     

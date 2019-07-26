@@ -44,11 +44,7 @@ class AddEventTableViewController: UITableViewController {
         searchController?.searchResultsUpdater = self
         searchController?.dimsBackgroundDuringPresentation = false
         definesPresentationContext = true
-        if #available(iOS 11.0, *) {
-            navigationItem.searchController = searchController
-        } else {
-            tableView.tableHeaderView = searchController?.searchBar
-        }
+        tableView.tableHeaderView = searchController?.searchBar
         
         self.navigationItem.prompt = "Choose an event to add and track"
     }
@@ -64,7 +60,7 @@ class AddEventTableViewController: UITableViewController {
         let y = (tableView.frame.height / 2) - (height/2) - (self.navigationController?.navigationBar.frame.height)!
         loadingView?.frame = CGRect(x: x, y: y, width: width, height: height)
         
-        let spinnerView = UIActivityIndicatorView(style: .gray)
+        let spinnerView = UIActivityIndicatorView(activityIndicatorStyle: .gray)
         spinnerView.frame = CGRect(x: 0, y: 0, width: 30, height: 30)
         spinnerView.startAnimating()
         

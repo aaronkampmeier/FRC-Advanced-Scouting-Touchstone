@@ -12,21 +12,17 @@ import AWSCore
 import AWSAppSync
 import AWSMobileClient
 import Firebase
-import SwiftUI
 
 class EventSelectionTitleButton: UIButton {
     override var intrinsicContentSize: CGSize {
-        return UIView.layoutFittingExpandedSize
+        return UILayoutFittingExpandedSize
     }
 }
 
-extension Notification.Name {
-    static let FASTSelectedTeamDidChange = Notification.Name(rawValue: "Different Team Selected")
-}
-
-class TeamListTableViewController: UITableViewController {
+class TeamListTableViewController: UITableViewController, TeamListDetailDataSource {
     @IBOutlet weak var incompleteEventView: UIView!
-    var graphButton: UIBarButtonItem!
+    @IBOutlet weak var graphButton: UIBarButtonItem!
+    @IBOutlet weak var eventSelectionButton: EventSelectionTitleButton!
     @IBOutlet weak var editButton: UIBarButtonItem!
     @IBOutlet weak var matchesButton: UIBarButtonItem!
     
@@ -82,10 +78,10 @@ class TeamListTableViewController: UITableViewController {
     
     var selectedTeam: Team? {
         didSet {
-            NotificationCenter.default.post(name: .FASTSelectedTeamDidChange, object: self, userInfo: ["team": selectedTeam as Any, "eventKey": selectedEventRanking?.eventKey as Any])
+            NotificationCenter.default.post(name: Notification.Name(rawValue: "Different Team Selected"), object: self)
             if let sTeam = selectedTeam {
                 //Select row in table view
-                if let index = currentTeamsToDisplay.firstIndex(where: {team in
+                if let index = currentTeamsToDisplay.index(where: {team in
                     return team.key == sTeam.key
                 }) {
                     tableView.selectRow(at: IndexPath.init(row: index, section: 0), animated: false, scrollPosition: .none)
@@ -93,51 +89,31 @@ class TeamListTableViewController: UITableViewController {
             } else {
                 tableView.deselectRow(at: tableView.indexPathForSelectedRow ?? IndexPath(), animated: false)
             }
+            
+            teamListSplitVC.teamListDetailVC.reloadData()
         }
     }
     let lastSelectedEventStorageKey = "Last-Selected-Event"
     var selectedEventRanking: EventRanking?
     var selectedEventKey: String?
     
-    //MARK: - View Did Load
     override func viewDidLoad() {
         super.viewDidLoad()
 
         self.clearsSelectionOnViewWillAppear = false
         
         teamListSplitVC.teamListTableVC = self
-       
-        //Set up the nav bar buttons
-        let settingsButton: UIBarButtonItem
-        let eventSelectionDisclosureIndicator: UIBarButtonItem
-        if #available(iOS 13.0, *) {
-            graphButton = UIBarButtonItem(image: UIImage(systemName: "chart.bar.fill"), style: .plain, target: self, action: #selector(chartButtonPressed(_:)))
-            settingsButton = UIBarButtonItem(image: UIImage(systemName: "gear"), style: .plain, target: self, action: #selector(settingsPressed(_:)))
-            eventSelectionDisclosureIndicator = UIBarButtonItem(image: UIImage(systemName: "arrowtriangle.down.circle.fill"), style: .plain, target: self, action: #selector(eventSelectionIndicatorPressed(_:)))
-        } else {
-            // Fallback on earlier versions
-            graphButton = UIBarButtonItem(image: UIImage(named: "chart"), style: .plain, target: self, action: #selector(chartButtonPressed(_:)))
-            settingsButton = UIBarButtonItem(image: UIImage(named: "Settings-50"), style: .plain, target: self, action: #selector(settingsPressed(_:)))
-            eventSelectionDisclosureIndicator = UIBarButtonItem(title: "Switch Events", style: .plain, target: self, action: #selector(eventSelectionIndicatorPressed(_:)))
-        }
-        navigationItem.setLeftBarButton(eventSelectionDisclosureIndicator, animated: false)
-        navigationItem.setRightBarButtonItems([settingsButton, graphButton], animated: false)
+        
+        eventSelectionButton.widthAnchor.constraint(equalToConstant: CGFloat.greatestFiniteMagnitude - (navigationItem.leftBarButtonItem?.width)! - (navigationItem.rightBarButtonItem?.width)!)
         
         //Set up the searching capabilities and the search bar. At the time of coding, Storyboards do not support the new UISearchController, so this is done programatically.
         searchController = UISearchController(searchResultsController: nil)
         searchController.searchResultsUpdater = self
         searchController.delegate = self
-//        searchController.hidesNavigationBarDuringPresentation = true
+        searchController.hidesNavigationBarDuringPresentation = true
         searchController.obscuresBackgroundDuringPresentation = false
         self.definesPresentationContext = true
-//        tableView.tableHeaderView = searchController.searchBar
-        if #available(iOS 11.0, *) {
-            navigationItem.searchController = searchController
-        } else {
-            // Fallback on earlier versions
-            tableView.tableHeaderView = searchController.searchBar
-        }
-//        tableView.tableHeaderView = searchController.searchBar.searchTextField
+        tableView.tableHeaderView = searchController.searchBar
         
         tableView.allowsSelectionDuringEditing = true
         
@@ -146,22 +122,6 @@ class TeamListTableViewController: UITableViewController {
         tableView.backgroundView = noEventView
         
         self.resetSubscriptions()
-        
-        //Add a watcher for when the event switches
-        if #available(iOS 13.0, *) {
-            NotificationCenter.default.publisher(for: .FASTSelectedEventChanged)
-                .map({ (notification: Notification) -> String? in
-                    return notification.userInfo?["eventKey"] as? String
-                })
-                .sink(receiveValue: {[weak self] (eventKey) in
-                    self?.eventSelected(eventKey)
-                })
-        } else {
-            // Fallback on earlier versions
-            NotificationCenter.default.addObserver(forName: .FASTSelectedEventChanged, object: self, queue: nil) {[weak self] (notification) in
-                self?.eventSelected(notification.userInfo?["eventKey"] as? String)
-            }
-        }
     }
     
     func autoChooseEvent() {
@@ -213,7 +173,6 @@ class TeamListTableViewController: UITableViewController {
         }
     }
     
-    //MARK: - Set Up For Event
     let teamLoadingQueue = DispatchQueue(label: "Team List Loading", qos: .userInteractive)
     fileprivate func setUpForEvent() {
         //Set to nil, because the selected team might not be in the new event
@@ -230,7 +189,7 @@ class TeamListTableViewController: UITableViewController {
             UserDefaults.standard.set(eventKey, forKey: lastSelectedEventStorageKey)
             
             //As a hold over until the event ranking loads
-            navigationItem.title = eventKey
+            eventSelectionButton.setTitle(eventKey, for: UIControlState())
             
             //Get the scouted teams in the cache
             Globals.appDelegate.appSyncClient?.fetch(query: ListScoutedTeamsQuery(eventKey: eventKey), cachePolicy: .returnCacheDataAndFetch, resultHandler: { (result, error) in
@@ -251,13 +210,8 @@ class TeamListTableViewController: UITableViewController {
                             self?.selectedEventRanking = result?.data?.getEventRanking?.fragments.eventRanking
                             
                             DispatchQueue.main.async {
-                                if let year = self?.selectedEventRanking?.eventKey.prefix(4) {
-                                    //If the event is not in the current year then display the year in front of it to signify it
-                                    if year != Calendar.current.component(.year, from: Date()).description {
-                                        self?.navigationItem.title = "\(year) \(self?.selectedEventRanking?.eventName ?? "")"
-                                    } else {
-                                        self?.navigationItem.title = self?.selectedEventRanking?.eventName
-                                    }
+                                if self?.eventSelectionButton.titleLabel?.text != self?.selectedEventRanking?.eventName {
+                                    self?.eventSelectionButton.setTitle(self?.selectedEventRanking?.eventName, for: UIControlState())
                                 }
                             }
                             
@@ -283,13 +237,14 @@ class TeamListTableViewController: UITableViewController {
             currentEventTeams = []
             selectedEventRanking = nil
             
-            navigationItem.title = "Select Event"
+            eventSelectionButton.setTitle("Select Event", for: UIControlState())
             
             matchesButton.isEnabled = false
             graphButton.isEnabled = false
         }
         
         self.resetSubscriptions()
+        teamListSplitVC.teamListDetailVC.reloadData()
 		
 		Globals.asyncLoadingManager?.setGeneralUpdaters(forEventKey: selectedEventKey)
     }
@@ -380,11 +335,6 @@ class TeamListTableViewController: UITableViewController {
         }
     }
     
-    func eventSelected(_ eventKey: String?) {
-        selectedEventKey = eventKey
-        setUpForEvent()
-    }
-    
     deinit {
         trackedEventsWatcher?.cancel()
         changeTeamRankSubscriber?.cancel()
@@ -405,22 +355,27 @@ class TeamListTableViewController: UITableViewController {
         updateScoutedTeamSubscriber?.cancel()
         
         //Set up a watcher to event deletions
-        trackedEventsWatcher = Globals.appDelegate.appSyncClient?.watch(query: ListTrackedEventsQuery(), cachePolicy: .returnCacheDataDontFetch, resultHandler: {[weak self] (result, error) in
-            DispatchQueue.main.async {
-                let trackedEvents = result?.data?.listTrackedEvents?.map({$0!}) ?? []
-                
-                if let selectedEventKey = self?.selectedEventKey {
-                    if !trackedEvents.contains(where: {$0.eventKey == selectedEventKey}) {
-                        //Event was removed
-                        self?.eventSelected(nil)
-                    }
-                } else {
-                    if let newEventKey = trackedEvents.first?.eventKey {
-                        self?.eventSelected(newEventKey)
+        do {
+            trackedEventsWatcher = Globals.appDelegate.appSyncClient?.watch(query: ListTrackedEventsQuery(), cachePolicy: .returnCacheDataDontFetch, resultHandler: {[weak self] (result, error) in
+                DispatchQueue.main.async {
+                    let trackedEvents = result?.data?.listTrackedEvents?.map({$0!}) ?? []
+                    
+                    if let selectedEventKey = self?.selectedEventKey {
+                        if !trackedEvents.contains(where: {$0.eventKey == selectedEventKey}) {
+                            //Event was removed
+                            self?.eventSelected(nil)
+                        }
+                    } else {
+                        if let newEventKey = trackedEvents.first?.eventKey {
+                            self?.eventSelected(newEventKey)
+                        }
                     }
                 }
-            }
-        })
+            })
+        } catch {
+            CLSNSLogv("Error starting subscriptions: \(error)", getVaList([]))
+            Crashlytics.sharedInstance().recordError(error)
+        }
         
         if let eventKey = self.selectedEventKey {
             //Set up subscribers for event specifics
@@ -448,7 +403,7 @@ class TeamListTableViewController: UITableViewController {
                         
                         //Reload the cell
                         if let visibleRows = self?.tableView.indexPathsForVisibleRows {
-                            self?.tableView.reloadRows(at: visibleRows, with: UITableView.RowAnimation.none)
+                            self?.tableView.reloadRows(at: visibleRows, with: UITableViewRowAnimation.none)
                         }
                     } else {
                         if let error = error as? AWSAppSyncSubscriptionError {
@@ -461,14 +416,14 @@ class TeamListTableViewController: UITableViewController {
                 
                 updateScoutedTeamSubscriber = try Globals.appDelegate.appSyncClient?.subscribe(subscription: OnUpdateScoutedTeamsSubscription(userID: AWSMobileClient.sharedInstance().username ?? "", eventKey: eventKey), resultHandler: {[weak self] (result, transaction, error) in
                     if Globals.handleAppSyncErrors(forQuery: "OnUpdateScoutedTeamGeneral-TeamList", result: result, error: error) {
-                        ((try? transaction?.update(query: ListScoutedTeamsQuery(eventKey: eventKey), { (selectionSet) in
+                        try? transaction?.update(query: ListScoutedTeamsQuery(eventKey: eventKey), { (selectionSet) in
                             if let index = selectionSet.listScoutedTeams?.firstIndex(where: {$0?.teamKey == result?.data?.onUpdateScoutedTeam?.teamKey}) {
                                 selectionSet.listScoutedTeams?.remove(at: index)
                             }
                             if let newTeam = result?.data?.onUpdateScoutedTeam {
                                 selectionSet.listScoutedTeams?.append(try! ListScoutedTeamsQuery.Data.ListScoutedTeam(newTeam))
                             }
-                        })) as ()??)
+                        })
                         
                         //Reload row
                         if let index = self?.currentTeamsToDisplay.firstIndex(where: {$0.key == result?.data?.onUpdateScoutedTeam?.teamKey}) {
@@ -583,13 +538,13 @@ class TeamListTableViewController: UITableViewController {
         cell.teamLabel.text = "Team \(team.teamNumber)"
         cell.teamNameLabel.text = team.nickname
         cell.statLabel.text = ""
-        if statToSortBy != nil {
+        if let stat = statToSortBy {
             //Get the stat value
             let value = stashedStats[team.key]
             cell.statLabel.text = value?.description
         }
         
-        if let index = selectedEventRanking?.rankedTeams?.firstIndex(where: {$0?.teamKey == team.key}) {
+        if let index = selectedEventRanking?.rankedTeams?.index(where: {$0?.teamKey == team.key}) {
             cell.rankLabel.text = "\(index as Int + 1)"
         } else {
             cell.rankLabel.text = "?"
@@ -604,7 +559,6 @@ class TeamListTableViewController: UITableViewController {
             if rankedTeam??.isPicked ?? false {
                 //Show indicator that it is picked
                 let crossImage = UIImageView(image: #imageLiteral(resourceName: "Cross"))
-                crossImage.tintColor = UIColor.systemPurple
                 crossImage.frame = CGRect(x: 0, y: 0, width: 20, height: 20)
                 cell.accessoryView = crossImage
             }
@@ -677,9 +631,29 @@ class TeamListTableViewController: UITableViewController {
         }
     }
     
-    override func tableView(_ tableView: UITableView, editingStyleForRowAt indexPath: IndexPath) -> UITableViewCell.EditingStyle {
+    override func tableView(_ tableView: UITableView, editingStyleForRowAt indexPath: IndexPath) -> UITableViewCellEditingStyle {
         return .none
     }
+    
+//    override func tableView(_ tableView: UITableView, editActionsForRowAt indexPath: IndexPath) -> [UITableViewRowAction]? {
+//        if let event = selectedEvent {
+//            guard let ranker = RealmController.realmController.getTeamRanker(forEvent: event) else {
+//                return nil
+//            }
+//            let team = self.currentTeamsToDisplay[indexPath.row]
+//
+//            let markAsPicked = UITableViewRowAction(style: .default, title: "Mark Picked") {action, indexPath in
+//
+//            }
+//
+//        }
+//
+//        return nil
+//    }
+//
+//    func markAsPicked(atIndexPath indexPath: IndexPath, inTableView tableView: UITableView) {
+//
+//    }
     
     //For selecting which teams have been picked
     @available(iOS 11.0, *)
@@ -711,7 +685,7 @@ class TeamListTableViewController: UITableViewController {
                         self?.selectedEventRanking = result.data?.setTeamPicked?.fragments.eventRanking
                     }
                     //Reload that row
-                    tableView.reloadRows(at: [indexPath], with: UITableView.RowAnimation.none)
+                    tableView.reloadRows(at: [indexPath], with: UITableViewRowAnimation.none)
                 })
                 
                 completionHandler(true)
@@ -833,17 +807,26 @@ class TeamListTableViewController: UITableViewController {
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         super.prepare(for: segue, sender: sender)
         // Get the new view controller using segue.destinationViewController.
+        // Pass the selected object to the new view controller.
+        if segue.identifier == "eventSelection" {
+            let destinationVC = (segue.destination as! UINavigationController).topViewController as! EventPickerViewController
+            destinationVC.delegate = self
+        }
     }
     
     //MARK: - Sorting
     @IBAction func sortPressed(_ sender: UIBarButtonItem) {
-        let sortVC = storyboard?.instantiateViewController(withIdentifier: "statsSortView") as! SortVC
+        let sortNavVC = storyboard?.instantiateViewController(withIdentifier: "sortNav") as! UINavigationController
+        let sortVC = sortNavVC.topViewController as! SortVC
         sortVC.delegate = self
+        sortNavVC.modalPresentationStyle = .popover
+        sortNavVC.preferredContentSize = CGSize(width: 350, height: 300)
         
-        sortVC.modalPresentationStyle = .custom
-        sortVC.transitioningDelegate = slideInTransitionDelegate
+        let popoverVC = sortNavVC.popoverPresentationController
+        popoverVC?.delegate = self
         
-        present(sortVC, animated: true, completion: nil)
+        popoverVC?.barButtonItem = sender
+        present(sortNavVC, animated: true, completion: nil)
     }
     
     let statsOrderingQueue = DispatchQueue(label: "StatsOrderingTeamList", qos: .utility, target: nil)
@@ -895,28 +878,6 @@ class TeamListTableViewController: UITableViewController {
         }
     }
     
-    //MARK: - Button Presses
-    let slideInTransitionDelegate = TeamListSlideInTransitioningDelegate()
-    @objc func eventSelectionIndicatorPressed(_ sender: UIBarButtonItem) {
-        //Slide down the event selector
-        let eventSelectorVC = storyboard?.instantiateViewController(withIdentifier: "eventSelector")
-        eventSelectorVC?.modalPresentationStyle = .custom
-        eventSelectorVC?.transitioningDelegate = slideInTransitionDelegate
-        self.present(eventSelectorVC!, animated: true, completion: nil)
-        
-        
-//        if #available(iOS 13.0, *) {
-//            let eventSelector = UIHostingController(rootView: EventSelector(eventModel: EventSelectorModel()))
-//
-//            eventSelector.modalPresentationStyle = .custom
-//            eventSelector.transitioningDelegate = slideInTransitionDelegate
-//
-//            self.present(eventSelector, animated: true, completion: nil)
-//        } else {
-//
-//        }
-    }
-    
     @IBAction func matchesButtonPressed(_ sender: UIBarButtonItem) {
         let matchesSplitVC = storyboard?.instantiateViewController(withIdentifier: "matchOverviewSplitVC") as! MatchOverviewSplitViewController
         let matchOverviewMaster = (matchesSplitVC.viewControllers.first as! UINavigationController).topViewController as! MatchOverviewMasterViewController
@@ -928,12 +889,7 @@ class TeamListTableViewController: UITableViewController {
         Globals.recordAnalyticsEvent(eventType: AnalyticsEventSelectContent, attributes: ["content_type":"screen", "item_id":"matches_overview"])
     }
     
-    @objc func settingsPressed(_ sender: UIBarButtonItem) {
-        guard let adminConsoleNavController = storyboard?.instantiateViewController(withIdentifier: "adminConsoleNav") else { return }
-        present(adminConsoleNavController, animated: true, completion: nil)
-    }
-    
-    @objc func chartButtonPressed(_ sender: UIBarButtonItem) {
+    @IBAction func chartButtonPressed(_ sender: UIBarButtonItem) {
         if let eventKey = selectedEventKey {
             let eventStatGraphVC = storyboard?.instantiateViewController(withIdentifier: "eventStatsGraph") as! EventStatsGraphViewController
             let navVC = UINavigationController(rootViewController: eventStatGraphVC)
@@ -961,10 +917,20 @@ extension TeamListTableViewController: MatchOverviewMasterDataSource {
     }
 }
 
-//TODO: Remove
 extension TeamListTableViewController: UIPopoverPresentationControllerDelegate {
     func adaptivePresentationStyle(for controller: UIPresentationController, traitCollection: UITraitCollection) -> UIModalPresentationStyle {
         return .none
+    }
+}
+
+extension TeamListTableViewController: EventSelection {
+    func eventSelected(_ eventKey: String?) {
+        selectedEventKey = eventKey
+        setUpForEvent()
+    }
+    
+    func currentEventKey() -> String? {
+        return selectedEventKey
     }
 }
 
@@ -989,14 +955,14 @@ extension TeamListTableViewController: UISearchResultsUpdating, UISearchControll
                 
                 let filteredTeams = self.currentSortedTeams.filter { (team) -> Bool in
                     var isIncluded = false
-                    isIncluded = team.address?.range(of: searchText, options: .caseInsensitive) != nil || isIncluded
-                    isIncluded = team.stateProv?.range(of: searchText, options: .caseInsensitive) != nil || isIncluded
-                    isIncluded = team.city?.range(of: searchText, options: .caseInsensitive) != nil || isIncluded
-                    isIncluded = team.name.range(of: searchText, options: .caseInsensitive) != nil || isIncluded
-                    isIncluded = team.nickname.range(of: searchText, options: .caseInsensitive) != nil || isIncluded
-                    isIncluded = team.rookieYear?.description.range(of: searchText, options: .caseInsensitive) != nil || isIncluded
-                    isIncluded = team.teamNumber.description.range(of: searchText, options: .caseInsensitive) != nil || isIncluded
-                    isIncluded = team.website?.range(of: searchText, options: .caseInsensitive) != nil || isIncluded
+                    isIncluded = team.address?.contains(searchText) ?? false || isIncluded
+                    isIncluded = team.stateProv?.contains(searchText) ?? false || isIncluded
+                    isIncluded = team.city?.contains(searchText) ?? false || isIncluded
+                    isIncluded = team.name.contains(searchText) || isIncluded
+                    isIncluded = team.nickname.contains(searchText) || isIncluded
+                    isIncluded = team.rookieYear?.description.contains(searchText) ?? false || isIncluded
+                    isIncluded = team.teamNumber.description.contains(searchText) || isIncluded
+                    isIncluded = team.website?.contains(searchText) ?? false || isIncluded
                     
                     return isIncluded
                 }
@@ -1022,260 +988,5 @@ extension TeamListTableViewController: UISearchResultsUpdating, UISearchControll
         currentTeamsToDisplay = currentSortedTeams
         isSearching = false
         self.navigationController?.setToolbarHidden(false, animated: true)
-    }
-}
-
-
-//MARK: - Slide In Transition Animation
-class TeamListSlideInTransitioningDelegate: NSObject, UIViewControllerTransitioningDelegate {
-    func presentationController(forPresented presented: UIViewController, presenting: UIViewController?, source: UIViewController) -> UIPresentationController? {
-        if presented is EventSelectorTableViewController {
-            return EventSelectionSlideInPresentationController(presentedViewController: presented, presenting: presenting)
-        } else if presented is SortVC {
-            return SortStatSelectionSlideInPresentationController(presentedViewController: presented, presenting: presenting)
-        } else {
-            fatalError()
-        }
-    }
-    
-    func animationController(forPresented presented: UIViewController, presenting: UIViewController, source: UIViewController) -> UIViewControllerAnimatedTransitioning? {
-        let controller = TeamListSlideInAnimationController()
-        controller.isPresenting = true
-        return controller
-    }
-
-    func animationController(forDismissed dismissed: UIViewController) -> UIViewControllerAnimatedTransitioning? {
-        let controller = TeamListSlideInAnimationController()
-        controller.isPresenting = false
-        return controller
-    }
-}
-class TeamListSlideInPresentationController: UIPresentationController {
-    let dimView: UIVisualEffectView
-    var coverSnapshot: UIView?
-    var tapGestureRecognizer: UITapGestureRecognizer!
-    var teamListTableViewController: TeamListTableViewController?
-    
-    override init(presentedViewController: UIViewController, presenting presentingViewController: UIViewController?) {
-        if #available(iOS 13.0, *) {
-            dimView = UIVisualEffectView(effect: UIBlurEffect(style: .systemUltraThinMaterial))
-        } else {
-            // Fallback on earlier versions
-            dimView = UIVisualEffectView(effect: UIBlurEffect(style: .prominent))
-        }
-        super.init(presentedViewController: presentedViewController, presenting: presentingViewController)
-
-        tapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(dismiss(_:)))
-        
-        dimView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
-        dimView.isUserInteractionEnabled = true
-        dimView.addGestureRecognizer(tapGestureRecognizer)
-    }
-    
-    override func presentationTransitionWillBegin() {
-        super.presentationTransitionWillBegin()
-
-        let teamListSplitViewController = (presentingViewController as? TeamListSplitViewController)
-        teamListTableViewController = teamListSplitViewController?.teamListTableVC
-        
-        //Create a dimming view
-        dimView.alpha = 0
-        dimView.frame = containerView?.frame ?? .zero
-        containerView?.addSubview(dimView)
-        
-        presentedViewController.transitionCoordinator?.animate(alongsideTransition: { (transitionCoordinatorContext) in
-            self.dimView.alpha = 1
-        }, completion: { (coordinatorContext) in
-            
-        })
-    }
-    
-    override func presentationTransitionDidEnd(_ completed: Bool) {
-        super.presentationTransitionDidEnd(completed)
-        
-    }
-    
-    override func dismissalTransitionWillBegin() {
-        super.dismissalTransitionWillBegin()
-        presentedViewController.transitionCoordinator?.animate(alongsideTransition: { (coordinatorContext) in
-            self.dimView.alpha = 0
-        }, completion: { (coordinatorContext) in
-            self.dimView.removeFromSuperview()
-            self.coverSnapshot?.removeFromSuperview()
-        })
-    }
-    
-    override func dismissalTransitionDidEnd(_ completed: Bool) {
-        super.dismissalTransitionDidEnd(completed)
-//        self.dimView.removeFromSuperview()
-//        self.coverSnapshot?.removeFromSuperview()
-    }
-    
-    override func containerViewDidLayoutSubviews() {
-        super.containerViewDidLayoutSubviews()
-        
-    }
-    
-    override func containerViewWillLayoutSubviews() {
-        super.containerViewWillLayoutSubviews()
-        
-    }
-    
-    @objc func dismiss(_ sender: Any) {
-        presentedViewController.dismiss(animated: true, completion: nil)
-    }
-}
-
-class EventSelectionSlideInPresentationController: TeamListSlideInPresentationController {
-    
-    override var frameOfPresentedViewInContainerView: CGRect {
-        
-        //First for the origin: the view is going to slide in right below the nav bar
-        let yCoord = (teamListTableViewController?.navigationController?.navigationBar.frame.origin.y ?? CGFloat.zero) + (teamListTableViewController?.navigationController?.navigationBar.frame.height ?? CGFloat.zero) //- (teamListTableViewController?.searchController.searchBar.frame.height ?? CGFloat.zero)
-        //            let yCoord = teamListTableViewController?.navigationController?.navigationBar.frame.height ?? .zero
-        let origin = CGPoint(x: CGFloat.zero, y: yCoord)
-        
-        //Now add the size to it
-        let width = teamListTableViewController?.tableView.frame.width ?? CGFloat.zero
-        //            let height = (presentedViewController as? UITableViewController)?.tableView.contentSize.height ?? CGFloat(250)
-        //            let height = presentedViewController.view.intrinsicContentSize.height
-        let height = CGFloat(300)
-        
-        let size = CGSize(width: width, height: height)
-        
-        let rect = CGRect(origin: origin, size: size)
-        return rect
-    }
-    
-    override func presentationTransitionWillBegin() {
-        super.presentationTransitionWillBegin()
-        
-        //Create a cover snapshot
-        coverSnapshot = teamListTableViewController?.navigationController?.navigationBar.snapshotView(afterScreenUpdates: false)
-        coverSnapshot?.frame = teamListTableViewController?.navigationController?.navigationBar.frame ?? CGRect.zero
-        if #available(iOS 13.0, *) {
-            coverSnapshot?.backgroundColor = teamListTableViewController?.view.backgroundColor
-        } else {
-            // Fallback on earlier versions
-            coverSnapshot?.backgroundColor = UIColor.white
-        }
-        coverSnapshot?.isUserInteractionEnabled = false
-        coverSnapshot?.tag = 1
-        
-        //Add a white view to the cover snapshot that covers the status bar portion
-        let size = CGSize(width: teamListTableViewController?.tableView.frame.width ?? .zero, height: coverSnapshot?.frame.origin.y ?? .zero)
-        let frame = CGRect(origin: CGPoint(x: 0, y: -size.height), size: size)
-        let whiteCoverView = UIView(frame: frame)
-        if #available(iOS 13.0, *) {
-            whiteCoverView.backgroundColor = UIColor.systemBackground
-        } else {
-            // Fallback on earlier versions
-            whiteCoverView.backgroundColor = UIColor.white
-        }
-        coverSnapshot?.addSubview(whiteCoverView)
-        
-        if let snap = coverSnapshot {
-            containerView?.addSubview(snap)
-        }
-    }
-}
-
-class SortStatSelectionSlideInPresentationController: TeamListSlideInPresentationController {
-    override var frameOfPresentedViewInContainerView: CGRect {
-        let height = CGFloat(300)
-        let width = teamListTableViewController?.tableView.frame.width ?? .zero
-        
-        let xCoord: CGFloat
-        if #available(iOS 11.0, *) {
-            xCoord = teamListTableViewController?.tableView.safeAreaInsets.left ?? .zero
-        } else {
-            // Fallback on earlier versions
-            xCoord = 0
-        }
-        
-        let yCoord = teamListTableViewController?.navigationController?.toolbar.frame.origin.y ?? .zero - height
-        
-        return CGRect(x: xCoord, y: yCoord, width: width, height: height)
-    }
-    
-    override func presentationTransitionWillBegin() {
-        super.presentationTransitionWillBegin()
-        
-        //Create the toolbar cover snapshot
-        coverSnapshot = teamListTableViewController?.navigationController?.toolbar.snapshotView(afterScreenUpdates: false)
-        coverSnapshot?.frame = teamListTableViewController?.navigationController?.toolbar.frame ?? .zero
-        if #available(iOS 13.0, *) {
-            coverSnapshot?.backgroundColor = teamListTableViewController?.view.backgroundColor
-        } else {
-            // Fallback on earlier versions
-            coverSnapshot?.backgroundColor = UIColor.white
-        }
-        coverSnapshot?.isUserInteractionEnabled = false
-        coverSnapshot?.tag = 1
-        
-        if let snap = coverSnapshot {
-            containerView?.addSubview(snap)
-        }
-    }
-}
-
-class TeamListSlideInAnimationController: NSObject, UIViewControllerAnimatedTransitioning {
-    var isPresenting = true
-    let duration: TimeInterval = 0.35
-    
-    func transitionDuration(using transitionContext: UIViewControllerContextTransitioning?) -> TimeInterval {
-        return duration
-    }
-    
-    func animateTransition(using transitionContext: UIViewControllerContextTransitioning) {
-        let toVC = transitionContext.viewController(forKey: .to)
-        let fromVC = transitionContext.viewController(forKey: .from)
-        
-//        let containerView = transitionContext.containerView
-        guard let toView = toVC?.view, let fromView = fromVC?.view else {
-            assertionFailure()
-            return
-        }
-        
-        if isPresenting {
-            //Add the toView behind the navBar cover snapshot which has a tag of 1, declared in the TeamListSlideInPresentationController
-            if let coverSnap = transitionContext.containerView.viewWithTag(1) {
-                transitionContext.containerView.insertSubview(toView, belowSubview: coverSnap)
-            } else {
-                transitionContext.containerView.addSubview(toView)
-            }
-            
-            //Start State
-            toView.alpha = 0.5
-            //Figure out the start frame
-            let finalFrame = transitionContext.finalFrame(for: toVC!)
-            let startOrigin = CGPoint(x: 0, y: finalFrame.origin.y - finalFrame.height)
-            let startFrame = CGRect(origin: startOrigin, size: finalFrame.size)
-            toView.frame = startFrame
-            
-            UIView.animate(withDuration: duration, delay: 0, usingSpringWithDamping: CGFloat(0.8), initialSpringVelocity: CGFloat(0.5), options: [.curveEaseOut], animations: {
-                toView.alpha = 1
-                toView.frame = finalFrame
-            }) { (completed) in
-                transitionContext.completeTransition(completed)
-            }
-        } else {
-            //Dismissing
-            //Get endFrame for the slide in list
-            let endOrigin = CGPoint(x: 0, y: fromView.frame.origin.y - fromView.frame.height - 50)
-            let endFrame = CGRect(origin: endOrigin, size: fromView.frame.size)
-            
-            UIView.animate(withDuration: duration, delay: 0, usingSpringWithDamping: CGFloat(1), initialSpringVelocity: CGFloat(1), options: [.curveEaseIn], animations: {
-                fromView.alpha = 1
-                fromView.frame = endFrame
-            }) { (completed) in
-                fromView.removeFromSuperview()
-                transitionContext.completeTransition(completed)
-            }
-        }
-    }
-    
-    func animationEnded(_ transitionCompleted: Bool) {
-        
     }
 }

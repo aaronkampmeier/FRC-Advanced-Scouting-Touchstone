@@ -41,7 +41,7 @@ class PitTableViewSelectorCollectionViewCell: PitScoutingCell, UITableViewDataSo
         tableView.allowsMultipleSelection = false
         
         selectedOption = parameter.currentValue() as? String
-        if let index = options.firstIndex(of: selectedOption ?? "") {
+        if let index = options.index(of: selectedOption ?? "") {
             tableView.selectRow(at: IndexPath(row: index, section: 0), animated: false, scrollPosition: .bottom)
         }
     }
