@@ -10,52 +10,21 @@ import UIKit
 
 class TeamListSplitViewController: UISplitViewController, UISplitViewControllerDelegate {
     
-    static var `default`: TeamListSplitViewController!
-
-    var teamListTableVC: TeamListTableViewController {
-        get {
-            if let master = teamListMasterVC {
-                return master
-            } else if let master = self.viewControllers.first as? TeamListTableViewController {
-                teamListMasterVC = master
-                return master
-            } else {
-                teamListMasterVC = storyboard?.instantiateViewController(withIdentifier: "teamListTableView") as? TeamListTableViewController
-                return teamListMasterVC!
-            }
-        }
-        
-        set {
-            teamListMasterVC = newValue
-        }
-    }
-    weak fileprivate var teamListMasterVC: TeamListTableViewController?
-    
-    var teamListDetailVC: TeamListDetailViewController {
-        get {
-            if let secondary = teamListSecondaryVC {
-                return secondary
-            } else if let secondary = self.viewControllers.last as? TeamListDetailViewController {
-                teamListSecondaryVC = secondary
-                return secondary
-            } else {
-                //There is none, create one
-                teamListSecondaryVC = (storyboard?.instantiateViewController(withIdentifier: "teamListDetail") as! TeamListDetailViewController)
-                return teamListSecondaryVC!
-            }
-        }
-        
-        set {
-            teamListSecondaryVC = newValue
-        }
-    }
-    fileprivate var teamListSecondaryVC: TeamListDetailViewController?
+    //MARK: - View Controller Storage
+    private(set) lazy var teamListTableNavigationController = self.storyboard?.instantiateViewController(withIdentifier: "teamListTableNav") as! UINavigationController
+    private(set) lazy var teamListTableVC: TeamListTableViewController = {
+        teamListTableNavigationController.topViewController as! TeamListTableViewController
+    }()
+    private(set) lazy var teamDetailNavigationController = self.storyboard?.instantiateViewController(withIdentifier: "secondaryNav") as! UINavigationController
+    private(set) lazy var teamDetailVC = {
+        teamDetailNavigationController.topViewController as! TeamListDetailViewController
+    }()
     
     override func viewDidLoad() {
         super.viewDidLoad()
 
         // Do any additional setup after loading the view.
-        TeamListSplitViewController.default = self
+        self.viewControllers = [teamListTableNavigationController, teamDetailNavigationController]
 		self.delegate = self
     }
 
@@ -77,79 +46,81 @@ class TeamListSplitViewController: UISplitViewController, UISplitViewControllerD
 	}
 
     func splitViewController(_ splitViewController: UISplitViewController, collapseSecondary secondaryViewController: UIViewController, onto primaryViewController: UIViewController) -> Bool {
-        if let secondaryNav = secondaryViewController as? UINavigationController {
-            if let teamDetail = secondaryNav.topViewController as? TeamListDetailViewController {
-                self.teamListDetailVC = teamDetail
-                if teamDetail.selectedTeam == nil {
-                    return true
-                }
+        //Check if there is a team being shown
+        if primaryViewController == teamListTableNavigationController && secondaryViewController == teamDetailNavigationController {
+            if teamDetailVC.selectedTeam != nil {
+                //There is a team so show this detail view within the primary's navigation stack
+                teamListTableNavigationController.setViewControllers(teamListTableNavigationController.viewControllers + teamDetailNavigationController.viewControllers, animated: false)
+                return true
+            } else {
+                //There isn't a team. just show the default primary vc
+                return false
             }
         }
         
         return false
     }
     
-    func splitViewController(_ splitViewController: UISplitViewController, show vc: UIViewController, sender: Any?) -> Bool {
-        if let teamListTable = vc as? TeamListTableViewController {
-            let primaryNav = UINavigationController(rootViewController: teamListTable)
-            self.show(primaryNav, sender: self)
-            return true
+    func splitViewController(_ splitViewController: UISplitViewController, separateSecondaryFrom primaryViewController: UIViewController) -> UIViewController? {
+        //Check if it is the team list
+        if primaryViewController == teamListTableNavigationController {
+            //Get the first vc to use as the primary
+            let secondaryViewControllers = teamListTableNavigationController.popToRootViewController(animated: false) ?? []
+            if secondaryViewControllers.count > 0 {
+                teamDetailNavigationController.setViewControllers(secondaryViewControllers, animated: false)
+            } else {
+                teamDetailNavigationController.setViewControllers([teamDetailVC], animated: false)
+            }
+            
+            return teamDetailNavigationController
         }
         
+        return nil
+    }
+    
+    func splitViewController(_ splitViewController: UISplitViewController, show vc: UIViewController, sender: Any?) -> Bool {
         return false
     }
     
     func splitViewController(_ splitViewController: UISplitViewController, showDetail vc: UIViewController, sender: Any?) -> Bool {
-        //Checks if the split view is collapsed or not. If it is then simply present the detail view controller because it will push onto self's navigation controller. If it isn't, then present the detail view controller in a navigation controller because it is actually a "split" view.
-        if let teamListDetail = vc as? TeamListDetailViewController {
-            //If the split view is collapsed then just show the detail view controller because it will be pushed onto self's nav stack. Otherwise present it with a nav controller.
-            if !self.isCollapsed {
-                let secondaryNav = UINavigationController(rootViewController: teamListDetail)
-                self.showDetailViewController(secondaryNav, sender: self)
+        //Checks if the split view is collapsed or not. If collapsed, then conditionally push the vc's view controllers onto the primary stack.
+        if self.isCollapsed {
+            if let firstNav = viewControllers.first as? UINavigationController, let vc = vc as? UINavigationController {
+                firstNav.setViewControllers(firstNav.viewControllers + vc.viewControllers, animated: true)
                 return true
-            } else {
-                return false
             }
-        } else {
-            return false
         }
+        
+        return false
     }
 }
 
 extension UINavigationController {
-    //When the split view controller will go into a collapsed state, it will attempt to push the secondary vc onto the primary vc's nav controller stack. Because our secondary vc is a nav controller we need to instead push all of the secondary nav vcs onto the primary nav vcs. And then reverse this change when the split view controller is expanded. Reference: http://commandshift.co.uk/blog/2016/04/11/understanding-split-view-controller/
-    
-    override open func collapseSecondaryViewController(_ secondaryViewController: UIViewController, for splitViewController: UISplitViewController) {
-        if let secondaryAsNav = secondaryViewController as? UINavigationController {
-			//Combine the vcs from both nav controller's stacks
-			NSLog("Collapsing view controllers")
-			self.setViewControllers(self.viewControllers + secondaryAsNav.viewControllers, animated: false)
-		} else {
-			super.collapseSecondaryViewController(secondaryViewController, for: splitViewController)
-		}
-	}
+    /// When the split view controller will go into a collapsed state, it will attempt to push the secondary vc onto the primary vc's nav controller stack.
+    /// Because our secondary vc is a nav controller we need to instead push all of the secondary nav vcs onto the primary nav vcs.
+    /// And then reverse this change when the split view controller is expanded. Reference: http://commandshift.co.uk/blog/2016/04/11/understanding-split-view-controller/
 	
-	override open func separateSecondaryViewController(for splitViewController: UISplitViewController) -> UIViewController? {
-		//Grab the first vc to keep in this nav controller, then take all the other vcs and push them onto a second nav controller and use that as the secondary vc for the split vc.
-		NSLog("Expanding view controllers")
-		var vcs = viewControllers
-		let primaryContentVC = vcs.removeFirst()
-        
-        if let matchSplitVC = splitViewController as? MatchOverviewSplitViewController {
-            let detailNav = UINavigationController(rootViewController: matchSplitVC.matchesDetail!)
-            
-            self.setViewControllers([primaryContentVC], animated: true)
-            return detailNav
-        } else {
-            var secondaryVCs = vcs
-            let secondaryNav = storyboard?.instantiateViewController(withIdentifier: "secondaryNav") as! UINavigationController
-            
-            if secondaryVCs.isEmpty {
-                secondaryVCs = [(splitViewController as! TeamListSplitViewController).teamListDetailVC]
-            }
-            secondaryNav.setViewControllers(secondaryVCs, animated: false)
-            self.setViewControllers([primaryContentVC], animated: false)
-            return secondaryNav
-        }
-	}
+//	override open func separateSecondaryViewController(for splitViewController: UISplitViewController) -> UIViewController? {
+//		//Grab the first vc to keep in this nav controller, then take all the other vcs and push them onto a second nav controller and use that as the secondary vc for the split vc.
+//		NSLog("Expanding view controllers")
+//		var vcs = viewControllers
+//		let primaryContentVC = vcs.removeFirst()
+//
+//        if let matchSplitVC = splitViewController as? MatchOverviewSplitViewController {
+//            let detailNav = UINavigationController(rootViewController: matchSplitVC.matchesDetail!)
+//
+//            self.setViewControllers([primaryContentVC], animated: true)
+//            return detailNav
+//        } else {
+//            var secondaryVCs = vcs
+//            let secondaryNav = storyboard?.instantiateViewController(withIdentifier: "secondaryNav") as! UINavigationController
+//
+//            if secondaryVCs.isEmpty {
+//                secondaryVCs = [(splitViewController as! TeamListSplitViewController).teamListDetailVC]
+//            }
+//            secondaryNav.setViewControllers(secondaryVCs, animated: false)
+//            self.setViewControllers([primaryContentVC], animated: false)
+//            return secondaryNav
+//        }
+//	}
 }

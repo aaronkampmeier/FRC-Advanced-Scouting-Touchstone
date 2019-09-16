@@ -99,22 +99,39 @@ class OnboardingPathChooserViewController: UIViewController {
     
     @objc func logInPressed() {
         
-//        let loginVC = (UIApplication.shared.delegate as! AppDelegate).logInViewController()
-//        self.present(loginVC, animated: true, completion: nil)
-        Globals.appDelegate.displayLogin(isRegistering: false, onVC: self)
+        self.showLogin(isRegistering: false)
         
         Globals.recordAnalyticsEvent(eventType: "onboarding_completed", attributes: ["path":"login"])
     }
     
     @objc func signUpPressed() {
         
-//        let loginVC = (UIApplication.shared.delegate as! AppDelegate).logInViewController()
-//        self.present(loginVC, animated: true, completion: nil)
-//        loginVC.setRegistering(true, animated: false)
-        
-        Globals.appDelegate.displayLogin(isRegistering: true, onVC: self)
+        self.showLogin(isRegistering: true)
         
         Globals.recordAnalyticsEvent(eventType: "onboarding_completed", attributes: ["path":"sign_up"])
+    }
+    
+    func showLogin(isRegistering: Bool) {
+        //Present log in screen
+        let loginVC = LoginViewController(style: .darkOpaque)
+        loginVC.isCancelButtonHidden = false
+        loginVC.isCopyrightLabelHidden = true
+        loginVC.authenticationProvider = AWSCognitoAuthenticationProvider()
+        
+        loginVC.loginSuccessfulHandler = {result in
+            UserDefaults.standard.set(false, forKey: Globals.isSpectatorModeKey)
+            
+            if #available(iOS 13.0, *) {
+                // iOS 13 and up uses scenes and those will switch views depending on login state automatically.
+            } else {
+                loginVC.dismiss(animated: false, completion: nil)
+                let mainStoryboard = UIStoryboard(name: "Main", bundle: nil)
+                self.view.window?.rootViewController = mainStoryboard.instantiateViewController(withIdentifier: "teamListMasterVC")
+            }
+        }
+        
+        loginVC.setRegistering(isRegistering, animated: false)
+        present(loginVC, animated: true, completion: nil)
     }
 
     /*

@@ -103,7 +103,11 @@ class EventSelectorTableViewController: UITableViewController {
             //TODO: Show the add event view
             
         } else {
-            NotificationCenter.default.post(name: .FASTSelectedEventChanged, object: self, userInfo: ["eventKey":events[indexPath.row].eventKey])
+            var userInfo: [String : Any] = ["eventKey":events[indexPath.row].eventKey]
+            if #available(iOS 13.0, *) {
+                userInfo["sceneId"] = view.window?.windowScene?.session.persistentIdentifier
+            }
+            NotificationCenter.default.post(name: .FASTSelectedEventChanged, object: self, userInfo: userInfo)
             self.dismiss(animated: true, completion: nil)
         }
     }

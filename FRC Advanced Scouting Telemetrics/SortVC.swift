@@ -54,14 +54,17 @@ class SortVC: UIViewController, UIPickerViewDelegate, UIPickerViewDataSource {
 		delegate?.selectedStat(selectedStat, isAscending: isAscending)
         Globals.recordAnalyticsEvent(eventType: "sort_team_list", attributes: ["stat":selectedStat?.id ?? "?", "ascending":isAscending.description])
     }
-	
-	override func viewDidDisappear(_ animated: Bool) {
-		super.viewDidDisappear(animated)
-	}
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-		sortTypePicker.reloadAllComponents()
+        
+        Globals.appDelegate.supportedInterfaceOrientations = .portrait
+        sortTypePicker.reloadAllComponents()
+    }
+    
+    override func viewDidDisappear(_ animated: Bool) {
+        super.viewDidDisappear(animated)
+        Globals.appDelegate.supportedInterfaceOrientations = .all
     }
     
     func pickerView(_ pickerView: UIPickerView, numberOfRowsInComponent component: Int) -> Int {

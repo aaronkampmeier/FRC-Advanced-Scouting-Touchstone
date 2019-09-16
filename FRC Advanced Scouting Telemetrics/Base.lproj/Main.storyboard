@@ -2623,10 +2623,6 @@
             <objects>
                 <splitViewController storyboardIdentifier="teamListMasterVC" id="v0c-l5-P8z" customClass="TeamListSplitViewController" customModule="FRC_Advanced_Scouting_Touchstone" customModuleProvider="target" sceneMemberID="viewController">
                     <navigationItem key="navigationItem" title="Split View" id="5Jp-hh-UlN"/>
-                    <connections>
-                        <segue destination="NV9-Im-cmg" kind="relationship" relationship="detailViewController" id="Pjw-25-Azi"/>
-                        <segue destination="FRP-LG-zr7" kind="relationship" relationship="masterViewController" id="WXs-iT-ICH"/>
-                    </connections>
                 </splitViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Xiv-eq-Nwc" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
@@ -3187,15 +3183,15 @@
         <!--Navigation Controller-->
         <scene sceneID="RNj-XG-PzU">
             <objects>
-                <navigationController automaticallyAdjustsScrollViewInsets="NO" toolbarHidden="NO" id="FRP-LG-zr7" sceneMemberID="viewController">
+                <navigationController storyboardIdentifier="teamListTableNav" automaticallyAdjustsScrollViewInsets="NO" toolbarHidden="NO" id="FRP-LG-zr7" sceneMemberID="viewController">
                     <toolbarItems/>
                     <navigationBar key="navigationBar" contentMode="scaleToFill" largeTitles="YES" id="yWx-zl-Szq">
-                        <rect key="frame" x="0.0" y="0.0" width="320" height="102"/>
+                        <rect key="frame" x="0.0" y="0.0" width="768" height="102"/>
                         <autoresizingMask key="autoresizingMask"/>
                     </navigationBar>
                     <nil name="viewControllers"/>
                     <toolbar key="toolbar" opaque="NO" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" id="2jy-0e-Mf0">
-                        <rect key="frame" x="0.0" y="974" width="320" height="50"/>
+                        <rect key="frame" x="0.0" y="974" width="768" height="50"/>
                         <autoresizingMask key="autoresizingMask"/>
                     </toolbar>
                     <connections>

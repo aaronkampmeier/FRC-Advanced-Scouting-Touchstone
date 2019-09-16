@@ -8,6 +8,7 @@
 
 import UIKit
 import AWSMobileClient
+import AWSAppSync
 import Crashlytics
 
 @available(iOS 13.0, *)
@@ -25,9 +26,12 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
             //Show the sign in flow
             window?.rootViewController = mainStoryboard.instantiateViewController(identifier: "onboarding")
         case .signedIn:
-            //Add user activity restoration logic
-            
-            self.window?.rootViewController = mainStoryboard.instantiateViewController(withIdentifier: "teamListMasterVC")
+            //User activity restoration logic
+            if let activity = connectionOptions.userActivities.first ?? session.stateRestorationActivity {
+                self.scene(scene, continue: activity)
+            } else {
+                self.window?.rootViewController = mainStoryboard.instantiateViewController(withIdentifier: "teamListMasterVC")
+            }
         case .guest:
             if Globals.isInSpectatorMode {
                 self.window?.rootViewController = mainStoryboard.instantiateViewController(withIdentifier: "teamListMasterVC")
@@ -47,8 +51,6 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
                     //Show the sign in flow
                     self?.window?.rootViewController = mainStoryboard.instantiateViewController(identifier: "onboarding")
                 case .signedIn:
-                    //User activity restoration logic
-                    
                     self?.window?.rootViewController = mainStoryboard.instantiateViewController(withIdentifier: "teamListMasterVC")
                 case .guest:
                     if Globals.isInSpectatorMode {
@@ -76,7 +78,40 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         NSLog("Scene Did Become Active")
     }
     
+    //MARK: - Handling NSUserActivity
+    //UIKit will call this when handoff data becomes available. Within FAST this will also be called when a scene should resume using an activity object.
     func scene(_ scene: UIScene, continue userActivity: NSUserActivity) {
+        NSLog("Scene continue user activity: \(userActivity.title ?? "")")
+        let mainStoryboard = UIStoryboard(name: "Main", bundle: nil)
         
+        //Set the correct rootViewController
+        switch userActivity.activityType {
+        case Globals.UserActivity.eventSelection:
+            //Open up the team list table view
+            let eventKey = userActivity.userInfo?["eventKey"] as? String
+            let teamListSplitVC = mainStoryboard.instantiateViewController(withIdentifier: "teamListMasterVC") as! TeamListSplitViewController
+            self.window?.rootViewController = teamListSplitVC
+            teamListSplitVC.teamListTableVC.selectedEventKey = eventKey
+        case Globals.UserActivity.viewTeamDetail:
+            let eventKey = userActivity.userInfo?["eventKey"] as? String
+            let teamKey = userActivity.userInfo?["teamKey"] as? String
+            let teamListSplitVC = mainStoryboard.instantiateViewController(withIdentifier: "teamListMasterVC") as! TeamListSplitViewController
+//            teamListSplitVC.teamListTableVC.selectedEventKey = eventKey
+            self.window?.rootViewController = teamListSplitVC
+            teamListSplitVC.teamListTableVC.eventSelected(eventKey)
+            Globals.appDelegate.appSyncClient?.fetch(query: ListTeamsQuery(eventKey: eventKey ?? ""), cachePolicy: .returnCacheDataElseFetch, resultHandler: { (result, error) in
+                if Globals.handleAppSyncErrors(forQuery: "RestoreTeamFromList", result: result, error: error) {
+                    let team = result?.data?.listTeams?.first(where: {$0?.key == teamKey})??.fragments.team
+                    teamListSplitVC.teamListTableVC.selectedTeam = team
+                }
+            })
+        default:
+            break
+        }
+    }
+    
+    func stateRestorationActivity(for scene: UIScene) -> NSUserActivity? {
+        NSLog("Requested state restoration activity for scene. \(scene.userActivity?.description ?? "No such activity.")")
+        return scene.userActivity
     }
 }

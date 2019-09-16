@@ -26,10 +26,6 @@ class AWSDataManager {
     
     func signOut() {
         AWSMobileClient.sharedInstance().signOut()
-        
-        //Show the onboarding
-        let vc = UIStoryboard(name: "Main", bundle: nil).instantiateInitialViewController()
-        Globals.appDelegate.window?.rootViewController = vc
     }
     
     func retrieveScoutSessions(forEventKey eventKey: String, teamKey: String, andMatchKey matchKey: String? = nil, withCallback callbackHandler: @escaping (([ScoutSession?]?) -> Void)) {

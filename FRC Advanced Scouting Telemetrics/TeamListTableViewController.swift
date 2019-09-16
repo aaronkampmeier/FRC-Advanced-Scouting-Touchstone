@@ -12,13 +12,6 @@ import AWSCore
 import AWSAppSync
 import AWSMobileClient
 import Firebase
-import SwiftUI
-
-class EventSelectionTitleButton: UIButton {
-    override var intrinsicContentSize: CGSize {
-        return UIView.layoutFittingExpandedSize
-    }
-}
 
 extension Notification.Name {
     static let FASTSelectedTeamDidChange = Notification.Name(rawValue: "Different Team Selected")
@@ -62,7 +55,8 @@ class TeamListTableViewController: UITableViewController {
     
     var unorderedTeamsInEvent: [Team] = []
     
-    //Is a hierarchy
+    //MARK: Team List State Storage
+    //These are a hieracrhy of more and more filtered and sorted teams
     var currentEventTeams: [Team] = [Team]() {
         didSet {
             sortList(withStat: statToSortBy, isAscending: isSortingAscending)
@@ -104,8 +98,7 @@ class TeamListTableViewController: UITableViewController {
         super.viewDidLoad()
 
         self.clearsSelectionOnViewWillAppear = false
-        
-        teamListSplitVC.teamListTableVC = self
+        tableView.allowsSelectionDuringEditing = true
        
         //Set up the nav bar buttons
         let settingsButton: UIBarButtonItem
@@ -127,29 +120,26 @@ class TeamListTableViewController: UITableViewController {
         searchController = UISearchController(searchResultsController: nil)
         searchController.searchResultsUpdater = self
         searchController.delegate = self
-//        searchController.hidesNavigationBarDuringPresentation = true
         searchController.obscuresBackgroundDuringPresentation = false
         self.definesPresentationContext = true
-//        tableView.tableHeaderView = searchController.searchBar
         if #available(iOS 11.0, *) {
             navigationItem.searchController = searchController
         } else {
             // Fallback on earlier versions
             tableView.tableHeaderView = searchController.searchBar
         }
-//        tableView.tableHeaderView = searchController.searchBar.searchTextField
-        
-        tableView.allowsSelectionDuringEditing = true
         
         //Set background view of table view
         let noEventView = NoEventSelectedView(frame: CGRect(x: 0, y: 0, width: tableView.frame.width, height: tableView.frame.height))
         tableView.backgroundView = noEventView
         
-        self.resetSubscriptions()
-        
         //Add a watcher for when the event switches
         if #available(iOS 13.0, *) {
             NotificationCenter.default.publisher(for: .FASTSelectedEventChanged)
+                .filter({[weak self] (notification: Notification) -> Bool in
+                    let persistentId = self?.view.window?.windowScene?.session.persistentIdentifier
+                    return (notification.userInfo?["sceneId"] as? String ?? "0") == (persistentId ?? "0")
+                })
                 .map({ (notification: Notification) -> String? in
                     return notification.userInfo?["eventKey"] as? String
                 })
@@ -158,10 +148,12 @@ class TeamListTableViewController: UITableViewController {
                 })
         } else {
             // Fallback on earlier versions
-            NotificationCenter.default.addObserver(forName: .FASTSelectedEventChanged, object: self, queue: nil) {[weak self] (notification) in
+            NotificationCenter.default.addObserver(forName: .FASTSelectedEventChanged, object: nil, queue: nil) {[weak self] (notification) in
                 self?.eventSelected(notification.userInfo?["eventKey"] as? String)
             }
         }
+        
+        self.resetSubscriptions()
     }
     
     func autoChooseEvent() {
@@ -257,6 +249,19 @@ class TeamListTableViewController: UITableViewController {
                                         self?.navigationItem.title = "\(year) \(self?.selectedEventRanking?.eventName ?? "")"
                                     } else {
                                         self?.navigationItem.title = self?.selectedEventRanking?.eventName
+                                    }
+                                    
+                                    //Set a user activity for event selection
+                                    let activity = NSUserActivity(activityType: Globals.UserActivity.eventSelection)
+                                    activity.title = "View \(self?.navigationItem.title ?? "?")"
+                                    activity.userInfo = ["eventKey":eventKey]
+                                    activity.requiredUserInfoKeys = Set(arrayLiteral: "eventKey")
+                                    activity.isEligibleForSearch = true
+                                    activity.isEligibleForHandoff = true
+                                    activity.keywords = Set(arrayLiteral: self?.navigationItem.title ?? "event")
+                                    activity.becomeCurrent()
+                                    if #available(iOS 13.0, *) {
+                                        self?.view.window?.windowScene?.userActivity = activity
                                     }
                                 }
                             }
@@ -412,7 +417,8 @@ class TeamListTableViewController: UITableViewController {
                 if let selectedEventKey = self?.selectedEventKey {
                     if !trackedEvents.contains(where: {$0.eventKey == selectedEventKey}) {
                         //Event was removed
-                        self?.eventSelected(nil)
+                        //TODO: Bette handle event removals, because if this is uncommented state restoration with nsuseractivities will not work
+//                        self?.eventSelected(nil)
                     }
                 } else {
                     if let newEventKey = trackedEvents.first?.eventKey {
@@ -512,6 +518,7 @@ class TeamListTableViewController: UITableViewController {
             }
         }
         
+        //TODO: Move this to a generic "updates" screen whose presentation is controlled by cloud config
         //Show the Deep Space welcome if it has not been shown
         if !(UserDefaults.standard.value(forKey: "HasShownDeepSpaceWelcome") as? Bool ?? false) {
             let deepSpaceWelcome = storyboard!.instantiateViewController(withIdentifier: "deepSpaceWelcome")
@@ -539,15 +546,6 @@ class TeamListTableViewController: UITableViewController {
         // Dispose of any resources that can be recreated.
 		
 		teamImageCache.removeAllObjects()
-    }
-    
-    //MARK: - TeamListDetailDataSource
-    func team() -> Team? {
-        return selectedTeam
-    }
-    
-    func inEventKey() -> String? {
-        return selectedEventKey
     }
 
     // MARK: - Table view data source
@@ -657,13 +655,11 @@ class TeamListTableViewController: UITableViewController {
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         let pressedTeam = currentTeamsToDisplay[indexPath.row]
         
-        let teamListDetailVC: TeamListDetailViewController = teamListSplitVC.teamListDetailVC
-        
         //Set the selected team (and alert the delegate)
         selectedTeam = pressedTeam
         
         //Show the detail vc
-        splitViewController?.showDetailViewController(teamListDetailVC, sender: self)
+        splitViewController?.showDetailViewController(teamListSplitVC.teamDetailNavigationController, sender: self)
     }
 
     // Override to support conditional editing of the table view.
@@ -903,18 +899,6 @@ class TeamListTableViewController: UITableViewController {
         eventSelectorVC?.modalPresentationStyle = .custom
         eventSelectorVC?.transitioningDelegate = slideInTransitionDelegate
         self.present(eventSelectorVC!, animated: true, completion: nil)
-        
-        
-//        if #available(iOS 13.0, *) {
-//            let eventSelector = UIHostingController(rootView: EventSelector(eventModel: EventSelectorModel()))
-//
-//            eventSelector.modalPresentationStyle = .custom
-//            eventSelector.transitioningDelegate = slideInTransitionDelegate
-//
-//            self.present(eventSelector, animated: true, completion: nil)
-//        } else {
-//
-//        }
     }
     
     @IBAction func matchesButtonPressed(_ sender: UIBarButtonItem) {
@@ -958,13 +942,6 @@ class TeamListTableViewController: UITableViewController {
 extension TeamListTableViewController: MatchOverviewMasterDataSource {
     func eventKey() -> String? {
         return selectedEventKey
-    }
-}
-
-//TODO: Remove
-extension TeamListTableViewController: UIPopoverPresentationControllerDelegate {
-    func adaptivePresentationStyle(for controller: UIPresentationController, traitCollection: UITraitCollection) -> UIModalPresentationStyle {
-        return .none
     }
 }
 

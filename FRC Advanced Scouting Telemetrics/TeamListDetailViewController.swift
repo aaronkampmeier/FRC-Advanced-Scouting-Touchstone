@@ -32,11 +32,7 @@ class TeamListDetailViewController: UIViewController {
     
     var teamListSplitVC: TeamListSplitViewController {
         get {
-            if let teamSplit = splitViewController as? TeamListSplitViewController {
-                return teamSplit
-            } else {
-                return TeamListSplitViewController.default
-            }
+            splitViewController as! TeamListSplitViewController
         }
     }
     
@@ -69,12 +65,8 @@ class TeamListDetailViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        // Do any additional setup after loading the view.
-        
         generalInfoTableView?.translatesAutoresizingMaskIntoConstraints = false
         generalInfoTableView?.isScrollEnabled = false
-        
-        teamListSplitVC.teamListDetailVC = self
         
         navigationItem.leftItemsSupplementBackButton = true
         
@@ -119,7 +111,7 @@ class TeamListDetailViewController: UIViewController {
         //Set up observer to get team change notifications
         if #available(iOS 13.0, *) {
             NotificationCenter.default.publisher(for: .FASTSelectedTeamDidChange, object: teamListSplitVC.teamListTableVC)
-                .map { (notification: Notification) -> (teamKey: Team, eventKey: String)? in
+                .map { (notification: Notification) -> (team: Team, eventKey: String)? in
                     if let team = notification.userInfo?["team"] as? Team, let eventKey = notification.userInfo?["eventKey"] as? String {
                         return (team, eventKey)
                     } else {
@@ -128,6 +120,19 @@ class TeamListDetailViewController: UIViewController {
             }
             .sink {[weak self] (tuple) in
                 self?.set(input: tuple)
+                
+                if let (team, eventKey) = tuple {
+                    let activity = NSUserActivity(activityType: Globals.UserActivity.viewTeamDetail)
+                    activity.title = "View Team \(team.teamNumber): \(team.nickname) in \(eventKey)"
+                    activity.isEligibleForHandoff = true
+                    activity.isEligibleForSearch = true
+                    activity.addUserInfoEntries(from: ["teamKey":team.key, "eventKey":eventKey])
+                    activity.requiredUserInfoKeys = Set(arrayLiteral: "teamKey", "eventKey")
+                    activity.becomeCurrent()
+                    if #available(iOS 13.0, *) {
+                        self?.view.window?.windowScene?.userActivity = activity
+                    }
+                }
             }
         } else {
             // Fallback on earlier versions
