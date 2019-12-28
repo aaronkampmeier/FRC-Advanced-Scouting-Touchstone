@@ -1,0 +1,501 @@
+AWSTemplateFormatVersion: 2010-09-09
+Metadata:
+  'AWS::CloudFormation::Designer':
+    79ee8c5c-c919-4d0f-91b8-4d7b665068a2:
+      size:
+        width: 60
+        height: 60
+      position:
+        x: 60
+        'y': 90
+      z: 1
+      embeds: []
+    c64c3e2a-645c-453c-9f8a-f8a29eb7642f:
+      size:
+        width: 60
+        height: 60
+      position:
+        x: 150
+        'y': 90
+      z: 1
+      embeds: []
+      dependson:
+        - 79ee8c5c-c919-4d0f-91b8-4d7b665068a2
+    30665b18-1c16-4cc1-8ae7-4f71b6b66bd1:
+      size:
+        width: 60
+        height: 60
+      position:
+        x: 60
+        'y': 210
+      z: 1
+      embeds: []
+      dependson:
+        - 79ee8c5c-c919-4d0f-91b8-4d7b665068a2
+    9826eb5e-9f89-4a15-a614-3649ede94ece:
+      size:
+        width: 60
+        height: 60
+      position:
+        x: 180
+        'y': 210
+      z: 1
+      embeds: []
+      dependson:
+        - 79ee8c5c-c919-4d0f-91b8-4d7b665068a2
+    498c3101-f50d-4d07-9089-89280e24fd9c:
+      size:
+        width: 60
+        height: 60
+      position:
+        x: 240
+        'y': 90
+      z: 1
+      embeds: []
+      dependson:
+        - 79ee8c5c-c919-4d0f-91b8-4d7b665068a2
+    289c27ae-f6f9-466f-9178-d759f183065f:
+      size:
+        width: 60
+        height: 60
+      position:
+        x: 60
+        'y': 300
+      z: 1
+      embeds: []
+      dependson:
+        - 79ee8c5c-c919-4d0f-91b8-4d7b665068a2
+    f2456b96-4959-4209-8b39-1d3c6a52a0a4:
+      size:
+        width: 60
+        height: 60
+      position:
+        x: 180
+        'y': 300
+      z: 1
+      embeds: []
+      dependson:
+        - 79ee8c5c-c919-4d0f-91b8-4d7b665068a2
+    818db899-3f2c-4ad2-bd52-cfee272a41f7:
+      size:
+        width: 60
+        height: 60
+      position:
+        x: 60
+        'y': 420
+      z: 1
+      embeds: []
+      dependson:
+        - 79ee8c5c-c919-4d0f-91b8-4d7b665068a2
+    6dd778d5-8507-4d03-94a9-902f189da3bc:
+      size:
+        width: 60
+        height: 60
+      position:
+        x: 180
+        'y': 420
+      z: 1
+      embeds: []
+      dependson:
+        - 79ee8c5c-c919-4d0f-91b8-4d7b665068a2
+    582f5066-0cf9-41d3-aca3-e1e5d3d85a3e:
+      size:
+        width: 60
+        height: 60
+      position:
+        x: 300
+        'y': 210
+      z: 1
+      embeds: []
+      dependson:
+        - 79ee8c5c-c919-4d0f-91b8-4d7b665068a2
+    9aaf0919-2593-4f7a-aece-96a4d2919512:
+      source:
+        id: c64c3e2a-645c-453c-9f8a-f8a29eb7642f
+      target:
+        id: 79ee8c5c-c919-4d0f-91b8-4d7b665068a2
+      z: 11
+    7f6c6eec-c603-4fcd-8f31-744bd894aeca:
+      source:
+        id: c64c3e2a-645c-453c-9f8a-f8a29eb7642f
+        selector: 'g:nth-child(1) g:nth-child(4) g:nth-child(1) circle:nth-child(1)     '
+        port: 'AWS::DependencyLink-*'
+      target:
+        id: 79ee8c5c-c919-4d0f-91b8-4d7b665068a2
+      z: 13
+    cbb3d970-31bc-4562-adf5-ca3e5062803d:
+      source:
+        id: 498c3101-f50d-4d07-9089-89280e24fd9c
+      target:
+        id: 79ee8c5c-c919-4d0f-91b8-4d7b665068a2
+      z: 12
+    6114c639-07da-487f-bd9a-b391f280a825:
+      source:
+        id: 30665b18-1c16-4cc1-8ae7-4f71b6b66bd1
+      target:
+        id: 79ee8c5c-c919-4d0f-91b8-4d7b665068a2
+      z: 13
+    bdc72f57-7389-451b-8a5a-e1393cdfa240:
+      source:
+        id: 9826eb5e-9f89-4a15-a614-3649ede94ece
+      target:
+        id: 79ee8c5c-c919-4d0f-91b8-4d7b665068a2
+      z: 14
+    b132a48c-80cb-4719-9c70-52b3fe38b8b8:
+      source:
+        id: 582f5066-0cf9-41d3-aca3-e1e5d3d85a3e
+      target:
+        id: 79ee8c5c-c919-4d0f-91b8-4d7b665068a2
+      z: 15
+    077d69ed-6025-4c6f-93d1-159758526e8a:
+      source:
+        id: 289c27ae-f6f9-466f-9178-d759f183065f
+      target:
+        id: 79ee8c5c-c919-4d0f-91b8-4d7b665068a2
+      z: 16
+    50bb7d56-2f72-4b39-91c0-f2c8e8c57fa3:
+      source:
+        id: f2456b96-4959-4209-8b39-1d3c6a52a0a4
+      target:
+        id: 79ee8c5c-c919-4d0f-91b8-4d7b665068a2
+      z: 17
+    d156f463-fd39-4f8e-9020-9126d2c303ab:
+      source:
+        id: 818db899-3f2c-4ad2-bd52-cfee272a41f7
+      target:
+        id: 79ee8c5c-c919-4d0f-91b8-4d7b665068a2
+      z: 18
+    67c13e55-04db-41f8-abd2-317686d74dd7:
+      source:
+        id: 6dd778d5-8507-4d03-94a9-902f189da3bc
+      target:
+        id: 79ee8c5c-c919-4d0f-91b8-4d7b665068a2
+      z: 19
+Resources:
+  AppSyncAPI:
+    Type: 'AWS::AppSync::GraphQLApi'
+    Properties:
+      AuthenticationType: AMAZON_COGNITO_USER_POOLS
+      LogConfig:
+        CloudWatchLogsRoleArn: 'arn:aws:iam::797353049590:role/FAST-AppSync-MakeLogs'
+        ExcludeVerboseContent: false
+        FieldLogLevel: NONE
+      Name: FAST App Sync API 2
+      Tags: []
+      UserPoolConfig:
+        AwsRegion: us-east-1
+        UserPoolId: us-east-1_z8wzHGNeO
+        DefaultAction: "ALLOW"
+    Metadata:
+      'AWS::CloudFormation::Designer':
+        id: 79ee8c5c-c919-4d0f-91b8-4d7b665068a2
+  AppSyncSchema:
+    Type: 'AWS::AppSync::GraphQLSchema'
+    Properties:
+      ApiId: !GetAtt AppSyncAPI.ApiId
+      DefinitionS3Location: >-
+        s3://cf-templates-4eazvtfbn788-us-east-1/FAST API Stack Resources/schema.graphql
+    Metadata:
+      'AWS::CloudFormation::Designer':
+        id: 9826eb5e-9f89-4a15-a614-3649ede94ece
+    DependsOn:
+      - AppSyncAPI
+  SourceEventRankingManagement:
+    Type: 'AWS::AppSync::DataSource'
+    Properties:
+      ApiId: !GetAtt AppSyncAPI.ApiId
+      ServiceRoleArn: arn:aws:iam::797353049590:role/service-role/appsync-ds-lam-nuerz7-eventRankingManageme
+      LambdaConfig:
+        LambdaFunctionArn: >-
+          arn:aws:lambda:us-east-1:797353049590:function:eventRankingManagement:Production
+      Name: EventRankingManagement
+      Type: AWS_LAMBDA
+    Metadata:
+      'AWS::CloudFormation::Designer':
+        id: 30665b18-1c16-4cc1-8ae7-4f71b6b66bd1
+    DependsOn:
+      - AppSyncAPI
+  SourceScoutSessions:
+    Type: 'AWS::AppSync::DataSource'
+    Properties:
+      ApiId: !GetAtt AppSyncAPI.ApiId
+      ServiceRoleArn: arn:aws:iam::797353049590:role/service-role/appsync-ds-lam-nuerz7-listScoutSessions
+      LambdaConfig:
+        LambdaFunctionArn: >-
+          arn:aws:lambda:us-east-1:797353049590:function:listScoutSessions:Production
+      Name: ScoutSessions
+      Type: AWS_LAMBDA
+    Metadata:
+      'AWS::CloudFormation::Designer':
+        id: c64c3e2a-645c-453c-9f8a-f8a29eb7642f
+    DependsOn:
+      - AppSyncAPI
+  SourceStatsUpdater:
+    Type: 'AWS::AppSync::DataSource'
+    Properties:
+      ApiId: !GetAtt AppSyncAPI.ApiId
+      ServiceRoleArn: arn:aws:iam::797353049590:role/service-role/appsync-ds-lam-nuerz7-updateStatistics
+      LambdaConfig:
+        LambdaFunctionArn: >-
+          arn:aws:lambda:us-east-1:797353049590:function:updateStatistics:Production
+      Name: StatsUpdater
+      Type: AWS_LAMBDA
+    Metadata:
+      'AWS::CloudFormation::Designer':
+        id: 582f5066-0cf9-41d3-aca3-e1e5d3d85a3e
+    DependsOn:
+      - AppSyncAPI
+  SourceTBAApiKey:
+    Type: 'AWS::AppSync::DataSource'
+    Properties:
+      ApiId: !GetAtt AppSyncAPI.ApiId
+      ServiceRoleArn: arn:aws:iam::797353049590:role/service-role/appsync-ds-lam-nuerz7-RetrieveTBAKey
+      LambdaConfig:
+        LambdaFunctionArn: >-
+          arn:aws:lambda:us-east-1:797353049590:function:RetrieveTBAKey:Production
+      Name: TBAApiKey
+      Type: AWS_LAMBDA
+    Metadata:
+      'AWS::CloudFormation::Designer':
+        id: 6dd778d5-8507-4d03-94a9-902f189da3bc
+    DependsOn:
+      - AppSyncAPI
+  SourceTBALambda:
+    Type: 'AWS::AppSync::DataSource'
+    Properties:
+      ApiId: !GetAtt AppSyncAPI.ApiId
+      ServiceRoleArn: arn:aws:iam::797353049590:role/service-role/appsync-ds-lam-nuerz7-FAST-TBA-Request-Han
+      LambdaConfig:
+        LambdaFunctionArn: >-
+          arn:aws:lambda:us-east-1:797353049590:function:FAST-TBA-Request-Handler:Production
+      Name: TBALambda
+      Type: AWS_LAMBDA
+    Metadata:
+      'AWS::CloudFormation::Designer':
+        id: 818db899-3f2c-4ad2-bd52-cfee272a41f7
+    DependsOn:
+      - AppSyncAPI
+  SourceFASTTable:
+    Type: 'AWS::AppSync::DataSource'
+    Properties:
+      ApiId: !GetAtt AppSyncAPI.ApiId
+      DynamoDBConfig:
+        AwsRegion: us-east-1
+        TableName: FASTTable
+        UseCallerCredentials: false
+        Versioned: false
+      Name: FASTTable
+      ServiceRoleArn: >-
+        arn:aws:iam::797353049590:role/service-role/appsync-ds-ddb-nuerz7-FASTTable
+      Type: AMAZON_DYNAMODB
+    Metadata:
+      'AWS::CloudFormation::Designer':
+        id: f2456b96-4959-4209-8b39-1d3c6a52a0a4
+    DependsOn:
+      - AppSyncAPI
+
+  IAMAppSyncToFASTTeamsRole:
+    Type: AWS::IAM::Role
+    Properties: 
+      AssumeRolePolicyDocument: |
+        {
+          "Version": "2012-10-17",
+          "Statement": [
+            {
+              "Effect": "Allow",
+              "Principal": {
+                "Service": [
+                  "appsync.amazonaws.com"
+                ]
+              },
+              "Action": "sts:AssumeRole"
+            }
+          ]
+        }
+      Policies: 
+        - PolicyDocument: |
+            {
+              "Version": "2012-10-17",
+              "Statement": [
+                {
+                  "Effect": "Allow",
+                  "Action": [
+                      "dynamodb:DeleteItem",
+                      "dynamodb:GetItem",
+                      "dynamodb:PutItem",
+                      "dynamodb:Query",
+                      "dynamodb:Scan",
+                      "dynamodb:UpdateItem"
+                  ],
+                  "Resource": [
+                      "arn:aws:dynamodb:us-east-1:797353049590:table/FASTTeams",
+                      "arn:aws:dynamodb:us-east-1:797353049590:table/FASTTeams/*"
+                  ]
+                }
+              ]
+            }
+          PolicyName: AccessFASTScoutingTeams
+      RoleName: FAST-AppSync2ScoutingTeamsAccess
+      Tags: 
+        - Key: App
+          Value: FAST
+
+  SourceFASTTeams:
+    Type: 'AWS::AppSync::DataSource'
+    Properties:
+      ApiId: !GetAtt AppSyncAPI.ApiId
+      DynamoDBConfig:
+        AwsRegion: us-east-1
+        TableName: FASTTeams
+        UseCallerCredentials: false
+        Versioned: false
+      Name: FASTTeams
+      ServiceRoleArn: !GetAtt IAMAppSyncToFASTTeamsRole.Arn
+      Type: AMAZON_DYNAMODB
+    DependsOn:
+      - AppSyncAPI
+
+  SourceNone:
+    Type: 'AWS::AppSync::DataSource'
+    Properties:
+      ApiId: !GetAtt AppSyncAPI.ApiId
+      Name: None
+      Type: NONE
+    Metadata:
+      'AWS::CloudFormation::Designer':
+        id: 289c27ae-f6f9-466f-9178-d759f183065f
+    DependsOn:
+      - AppSyncAPI
+  SourceTheBlueAllianceHTTP:
+    Type: 'AWS::AppSync::DataSource'
+    Properties:
+      ApiId: !GetAtt AppSyncAPI.ApiId
+      HttpConfig:
+        Endpoint: 'https://www.thebluealliance.com'
+      Name: TheBlueAllianceHTTP
+      Type: HTTP
+    Metadata:
+      'AWS::CloudFormation::Designer':
+        id: 498c3101-f50d-4d07-9089-89280e24fd9c
+    DependsOn:
+      - AppSyncAPI
+  FuncCheckEventExistence:
+    Type: AWS::AppSync::FunctionConfiguration
+    Properties: 
+      ApiId: !GetAtt AppSyncAPI.ApiId
+      DataSourceName: !GetAtt SourceFASTTable.Name
+      FunctionVersion: 2018-05-29
+      Name: CheckExistenceOfEvent
+      RequestMappingTemplateS3Location: s3://cf-templates-4eazvtfbn788-us-east-1/FAST API Stack Resources/Functions/CheckEventExistenceRequest
+      ResponseMappingTemplateS3Location: s3://cf-templates-4eazvtfbn788-us-east-1/FAST API Stack Resources/Functions/CheckEventExistenceResponse
+  FuncCreateEventRanking:
+    Type: AWS::AppSync::FunctionConfiguration
+    Properties: 
+      ApiId: !GetAtt AppSyncAPI.ApiId
+      DataSourceName: !GetAtt SourceEventRankingManagement.Name
+      FunctionVersion: 2018-05-29
+      Name: CreateEventRanking
+      RequestMappingTemplateS3Location: s3://cf-templates-4eazvtfbn788-us-east-1/FAST API Stack Resources/Functions/EventRankingManagementRequest
+      ResponseMappingTemplateS3Location: s3://cf-templates-4eazvtfbn788-us-east-1/FAST API Stack Resources/Functions/EventRankingManagementResponse
+  FuncCreateScoutSession:
+    Type: AWS::AppSync::FunctionConfiguration
+    Properties: 
+      ApiId: !GetAtt AppSyncAPI.ApiId
+      DataSourceName: !GetAtt SourceFASTTable.Name
+      FunctionVersion: 2018-05-29
+      Name: CreateScoutSession
+      RequestMappingTemplateS3Location: s3://cf-templates-4eazvtfbn788-us-east-1/FAST API Stack Resources/Functions/CreateScoutSessionRequest
+      ResponseMappingTemplateS3Location: s3://cf-templates-4eazvtfbn788-us-east-1/FAST API Stack Resources/Functions/CreateScoutSessionResponse
+  FuncGetAllEvents:
+    Type: AWS::AppSync::FunctionConfiguration
+    Properties: 
+      ApiId: !GetAtt AppSyncAPI.ApiId
+      DataSourceName: !GetAtt SourceTheBlueAllianceHTTP.Name
+      FunctionVersion: 2018-05-29
+      Name: GetAllEvents
+      RequestMappingTemplateS3Location: s3://cf-templates-4eazvtfbn788-us-east-1/FAST API Stack Resources/Functions/GetAllEventsRequest
+      ResponseMappingTemplateS3Location: s3://cf-templates-4eazvtfbn788-us-east-1/FAST API Stack Resources/Functions/GetAllEventsResponse
+  FuncGetSimpleEvent:
+    Type: AWS::AppSync::FunctionConfiguration
+    Properties: 
+      ApiId: !GetAtt AppSyncAPI.ApiId
+      DataSourceName: !GetAtt SourceTBALambda.Name
+      FunctionVersion: 2018-05-29
+      Name: GetSimpleEvent
+      RequestMappingTemplateS3Location: s3://cf-templates-4eazvtfbn788-us-east-1/FAST API Stack Resources/Functions/GetSimpleEventRequest
+      ResponseMappingTemplateS3Location: s3://cf-templates-4eazvtfbn788-us-east-1/FAST API Stack Resources/Functions/GetSimpleEventResponse
+  FuncGetTeamsInEvent:
+    Type: AWS::AppSync::FunctionConfiguration
+    Properties: 
+      ApiId: !GetAtt AppSyncAPI.ApiId
+      DataSourceName: !GetAtt SourceTBALambda.Name
+      FunctionVersion: 2018-05-29
+      Name: GetTeamsInEvent
+      RequestMappingTemplateS3Location: !Sub s3://cf-templates-4eazvtfbn788-us-east-1/FAST API Stack Resources/Functions/GetTeamsInEventRequest
+      ResponseMappingTemplateS3Location: s3://cf-templates-4eazvtfbn788-us-east-1/FAST API Stack Resources/Functions/GetTeamsInEventResponse
+  FuncAddTeamComment:
+    Type: AWS::AppSync::FunctionConfiguration
+    Properties: 
+      ApiId: !GetAtt AppSyncAPI.ApiId
+      DataSourceName: !GetAtt SourceFASTTable.Name
+      FunctionVersion: 2018-05-29
+      Name: AddTeamComment
+      RequestMappingTemplateS3Location: s3://cf-templates-4eazvtfbn788-us-east-1/FAST API Stack Resources/Functions/AddTeamCommentRequest
+      ResponseMappingTemplateS3Location: s3://cf-templates-4eazvtfbn788-us-east-1/FAST API Stack Resources/Functions/AddTeamCommentResponse
+  FuncStashTBAKey:
+    Type: AWS::AppSync::FunctionConfiguration
+    Properties: 
+      ApiId: !GetAtt AppSyncAPI.ApiId
+      DataSourceName: !GetAtt SourceTBAApiKey.Name
+      FunctionVersion: 2018-05-29
+      Name: StashTBAKey
+      RequestMappingTemplateS3Location: s3://cf-templates-4eazvtfbn788-us-east-1/FAST API Stack Resources/Functions/StashTBAKeyRequest
+      ResponseMappingTemplateS3Location: s3://cf-templates-4eazvtfbn788-us-east-1/FAST API Stack Resources/Functions/StashTBAKeyResponse
+  FuncUpdateScoutSessionStats:
+    Type: AWS::AppSync::FunctionConfiguration
+    Properties: 
+      ApiId: !GetAtt AppSyncAPI.ApiId
+      DataSourceName: !GetAtt SourceStatsUpdater.Name
+      FunctionVersion: 2018-05-29
+      Name: UpdateScoutSessionStats
+      RequestMappingTemplateS3Location: s3://cf-templates-4eazvtfbn788-us-east-1/FAST API Stack Resources/Functions/UpdateScoutSessionStatsRequest
+      ResponseMappingTemplateS3Location: s3://cf-templates-4eazvtfbn788-us-east-1/FAST API Stack Resources/Functions/UpdateScoutSessionStatsResponse
+  FuncAuthenticate:
+    Type: AWS::AppSync::FunctionConfiguration
+    Properties: 
+      ApiId: !GetAtt AppSyncAPI.ApiId
+      DataSourceName: !GetAtt SourceFASTTeams.Name
+      FunctionVersion: 2018-05-29
+      Name: Authenticate
+      RequestMappingTemplateS3Location: s3://cf-templates-4eazvtfbn788-us-east-1/FAST API Stack Resources/Functions/AuthenticateRequest
+      ResponseMappingTemplateS3Location: s3://cf-templates-4eazvtfbn788-us-east-1/FAST API Stack Resources/Functions/AuthenticateResponse
+  ResolverListAvailableEvents:
+    Type: AWS::AppSync::Resolver
+    Properties: 
+      ApiId: !GetAtt AppSyncAPI.ApiId
+      FieldName: listAvailableEvents
+      Kind: PIPELINE
+      PipelineConfig: 
+        Functions:
+          - !GetAtt FuncStashTBAKey.FunctionId
+          - !GetAtt FuncGetAllEvents.FunctionId
+      RequestMappingTemplateS3Location: s3://cf-templates-4eazvtfbn788-us-east-1/FAST API Stack Resources/Functions/ListAvailableEventsBeforeRequest
+      ResponseMappingTemplateS3Location: s3://cf-templates-4eazvtfbn788-us-east-1/FAST API Stack Resources/Functions/ListAvailableEventsAfterResponse
+      TypeName: Query
+    DependsOn:
+      - FuncStashTBAKey
+      - FuncGetAllEvents
+
+
+
+
+  # Func NAME:
+  #   Type: AWS::AppSync::FunctionConfiguration
+  #   Properties: 
+  #     ApiId: !GetAtt AppSyncAPI.ApiId
+  #     DataSourceName: !GetAtt SOURCE.Name
+  #     FunctionVersion: 2018-05-29
+  #     Name: NAME
+  #     RequestMappingTemplateS3Location: s3://cf-templates-4eazvtfbn788-us-east-1/FAST API Stack Resources/Functions/FUNC Request
+  #     ResponseMappingTemplateS3Location: s3://cf-templates-4eazvtfbn788-us-east-1/FAST API Stack Resources/Functions/FUNC Response
+  

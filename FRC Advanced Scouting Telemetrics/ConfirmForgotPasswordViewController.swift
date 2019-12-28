@@ -41,7 +41,7 @@ class ConfirmForgotPasswordViewController: UIViewController {
         }
 
         //Passwords are valid, now try to confirm
-        AWSMobileClient.sharedInstance().confirmForgotPassword(username: self.teamNumber!, newPassword: newPasswordField.text!, confirmationCode: confirmationCodeField.text!) { (result, error) in
+        AWSMobileClient.default().confirmForgotPassword(username: self.teamNumber!, newPassword: newPasswordField.text!, confirmationCode: confirmationCodeField.text!) { (result, error) in
             DispatchQueue.main.async {
                 if let error = error {
                     //Throw an error

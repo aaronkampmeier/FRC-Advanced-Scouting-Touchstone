@@ -25,7 +25,7 @@ class AWSDataManager {
     }
     
     func signOut() {
-        AWSMobileClient.sharedInstance().signOut()
+        AWSMobileClient.default().signOut()
     }
     
     func retrieveScoutSessions(forEventKey eventKey: String, teamKey: String, andMatchKey matchKey: String? = nil, withCallback callbackHandler: @escaping (([ScoutSession?]?) -> Void)) {

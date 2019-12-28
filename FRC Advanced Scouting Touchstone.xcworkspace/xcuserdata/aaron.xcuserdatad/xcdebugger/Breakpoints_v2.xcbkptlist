@@ -450,7 +450,7 @@
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
             uuid = "B9A691D9-EF4F-4717-BECE-1F535C2BD929"
-            shouldBeEnabled = "Yes"
+            shouldBeEnabled = "No"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Pods/AWSCore/AWSCore/UICKeyChainStore/AWSUICKeyChainStore.m"
@@ -620,8 +620,8 @@
             filePath = "FRC Advanced Scouting Telemetrics/TeamListTableViewController.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "1230"
-            endingLineNumber = "1230"
+            startingLineNumber = "1233"
+            endingLineNumber = "1233"
             landmarkName = "animateTransition(using:)"
             landmarkType = "7">
          </BreakpointContent>
@@ -662,7 +662,7 @@
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
             uuid = "86A0AD1A-1A1F-4917-B5EB-2CF8697C783B"
-            shouldBeEnabled = "Yes"
+            shouldBeEnabled = "No"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "FRC Advanced Scouting Telemetrics/TeamListTableViewController.swift"
@@ -684,8 +684,8 @@
             filePath = "FRC Advanced Scouting Telemetrics/TeamListDetailViewController.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "149"
-            endingLineNumber = "149"
+            startingLineNumber = "168"
+            endingLineNumber = "168"
             landmarkName = "viewDidLoad()"
             landmarkType = "7">
          </BreakpointContent>
@@ -694,14 +694,14 @@
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
             uuid = "264077EE-8A4A-4CF2-9BE2-E96FB1B32AB7"
-            shouldBeEnabled = "Yes"
+            shouldBeEnabled = "No"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "FRC Advanced Scouting Telemetrics/TeamListDetailViewController.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "115"
-            endingLineNumber = "115"
+            startingLineNumber = "134"
+            endingLineNumber = "134"
             landmarkName = "viewDidLoad()"
             landmarkType = "7">
          </BreakpointContent>
@@ -722,14 +722,14 @@
             landmarkType = "7">
             <Locations>
                <Location
-                  uuid = "A8AEF53A-C3F7-4B36-B0C4-885D5F18CA57 - c0c092acd2d32914"
+                  uuid = "A8AEF53A-C3F7-4B36-B0C4-885D5F18CA57 - f1b9ce97bf777004"
                   shouldBeEnabled = "Yes"
                   ignoreCount = "0"
                   continueAfterRunningActions = "No"
                   symbolName = "FRC_Advanced_Scouting_Touchstone.SceneDelegate.scene(_: __C.UIScene, continue: __C.NSUserActivity) -&gt; ()"
                   moduleName = "FRC Advanced Scouting Touchstone"
                   usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/aaron/Library/CloudStorage/iCloud%20Drive/Documents/Xcode%20Projects/FRC%20Advanced%20Scouting%20Telemetrics/FRC%20Advanced%20Scouting%20Telemetrics/SceneDelegate.swift"
+                  urlString = "file:///Users/aaron/Documents/Xcode%20Projects/FRC%20Advanced%20Scouting%20Telemetrics/FRC%20Advanced%20Scouting%20Telemetrics/SceneDelegate.swift"
                   startingColumnNumber = "9223372036854775807"
                   endingColumnNumber = "9223372036854775807"
                   startingLineNumber = "102"
@@ -737,14 +737,14 @@
                   offsetFromSymbolStart = "4826">
                </Location>
                <Location
-                  uuid = "A8AEF53A-C3F7-4B36-B0C4-885D5F18CA57 - 2da202eb88908e01"
+                  uuid = "A8AEF53A-C3F7-4B36-B0C4-885D5F18CA57 - 1cdb5ed0e534d711"
                   shouldBeEnabled = "Yes"
                   ignoreCount = "0"
                   continueAfterRunningActions = "No"
                   symbolName = "closure #1 (Swift.Optional&lt;AWSAppSync.GraphQLResult&lt;FRC_Advanced_Scouting_Touchstone.ListTeamsQuery.Data&gt;&gt;, Swift.Optional&lt;Swift.Error&gt;) -&gt; () in FRC_Advanced_Scouting_Touchstone.SceneDelegate.scene(_: __C.UIScene, continue: __C.NSUserActivity) -&gt; ()"
                   moduleName = "FRC Advanced Scouting Touchstone"
                   usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/aaron/Library/CloudStorage/iCloud%20Drive/Documents/Xcode%20Projects/FRC%20Advanced%20Scouting%20Telemetrics/FRC%20Advanced%20Scouting%20Telemetrics/SceneDelegate.swift"
+                  urlString = "file:///Users/aaron/Documents/Xcode%20Projects/FRC%20Advanced%20Scouting%20Telemetrics/FRC%20Advanced%20Scouting%20Telemetrics/SceneDelegate.swift"
                   startingColumnNumber = "9223372036854775807"
                   endingColumnNumber = "9223372036854775807"
                   startingLineNumber = "103"
@@ -758,14 +758,14 @@
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
             uuid = "05A7E4DE-66C4-41B2-8F67-F3E98A0A86EA"
-            shouldBeEnabled = "Yes"
+            shouldBeEnabled = "No"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "FRC Advanced Scouting Telemetrics/TeamListTableViewController.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "221"
-            endingLineNumber = "221"
+            startingLineNumber = "224"
+            endingLineNumber = "224"
             landmarkName = "setUpForEvent()"
             landmarkType = "7">
          </BreakpointContent>
@@ -774,14 +774,14 @@
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
             uuid = "3F6C5FBA-6AA8-4F21-9FE9-C0C08C133B65"
-            shouldBeEnabled = "Yes"
+            shouldBeEnabled = "No"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "FRC Advanced Scouting Telemetrics/TeamListTableViewController.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "235"
-            endingLineNumber = "235"
+            startingLineNumber = "238"
+            endingLineNumber = "238"
             landmarkName = "setUpForEvent()"
             landmarkType = "7">
          </BreakpointContent>
@@ -790,26 +790,26 @@
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
             uuid = "F3DE7476-A176-4AD8-A6EC-1BA7788AA952"
-            shouldBeEnabled = "Yes"
+            shouldBeEnabled = "No"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "FRC Advanced Scouting Telemetrics/TeamListTableViewController.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "413"
-            endingLineNumber = "413"
+            startingLineNumber = "416"
+            endingLineNumber = "416"
             landmarkName = "resetSubscriptions()"
             landmarkType = "7">
             <Locations>
                <Location
-                  uuid = "F3DE7476-A176-4AD8-A6EC-1BA7788AA952 - cc0055ab3384abe3"
-                  shouldBeEnabled = "Yes"
+                  uuid = "F3DE7476-A176-4AD8-A6EC-1BA7788AA952 - c2529c94b9ed75d3"
+                  shouldBeEnabled = "No"
                   ignoreCount = "0"
                   continueAfterRunningActions = "No"
                   symbolName = "FRC_Advanced_Scouting_Touchstone.TeamListTableViewController.resetSubscriptions() -&gt; ()"
                   moduleName = "FRC Advanced Scouting Touchstone"
                   usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/aaron/Library/CloudStorage/iCloud%20Drive/Documents/Xcode%20Projects/FRC%20Advanced%20Scouting%20Telemetrics/FRC%20Advanced%20Scouting%20Telemetrics/TeamListTableViewController.swift"
+                  urlString = "file:///Users/aaron/Documents/Xcode%20Projects/FRC%20Advanced%20Scouting%20Telemetrics/FRC%20Advanced%20Scouting%20Telemetrics/TeamListTableViewController.swift"
                   startingColumnNumber = "9223372036854775807"
                   endingColumnNumber = "9223372036854775807"
                   startingLineNumber = "413"
@@ -817,14 +817,14 @@
                   offsetFromSymbolStart = "829">
                </Location>
                <Location
-                  uuid = "F3DE7476-A176-4AD8-A6EC-1BA7788AA952 - 92d91322e274d5c9"
-                  shouldBeEnabled = "Yes"
+                  uuid = "F3DE7476-A176-4AD8-A6EC-1BA7788AA952 - 9c8bda1d681d0bf9"
+                  shouldBeEnabled = "No"
                   ignoreCount = "0"
                   continueAfterRunningActions = "No"
                   symbolName = "closure #1 (Swift.Optional&lt;AWSAppSync.GraphQLResult&lt;FRC_Advanced_Scouting_Touchstone.ListTrackedEventsQuery.Data&gt;&gt;, Swift.Optional&lt;Swift.Error&gt;) -&gt; () in FRC_Advanced_Scouting_Touchstone.TeamListTableViewController.resetSubscriptions() -&gt; ()"
                   moduleName = "FRC Advanced Scouting Touchstone"
                   usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/aaron/Library/CloudStorage/iCloud%20Drive/Documents/Xcode%20Projects/FRC%20Advanced%20Scouting%20Telemetrics/FRC%20Advanced%20Scouting%20Telemetrics/TeamListTableViewController.swift"
+                  urlString = "file:///Users/aaron/Documents/Xcode%20Projects/FRC%20Advanced%20Scouting%20Telemetrics/FRC%20Advanced%20Scouting%20Telemetrics/TeamListTableViewController.swift"
                   startingColumnNumber = "9223372036854775807"
                   endingColumnNumber = "9223372036854775807"
                   startingLineNumber = "413"
@@ -832,14 +832,14 @@
                   offsetFromSymbolStart = "246">
                </Location>
                <Location
-                  uuid = "F3DE7476-A176-4AD8-A6EC-1BA7788AA952 - 1bc815a8e4d9ae06"
-                  shouldBeEnabled = "Yes"
+                  uuid = "F3DE7476-A176-4AD8-A6EC-1BA7788AA952 - 159adc976eb07036"
+                  shouldBeEnabled = "No"
                   ignoreCount = "0"
                   continueAfterRunningActions = "No"
                   symbolName = "closure #1 () -&gt; () in closure #1 (Swift.Optional&lt;AWSAppSync.GraphQLResult&lt;FRC_Advanced_Scouting_Touchstone.ListTrackedEventsQuery.Data&gt;&gt;, Swift.Optional&lt;Swift.Error&gt;) -&gt; () in FRC_Advanced_Scouting_Touchstone.TeamListTableViewController.resetSubscriptions() -&gt; ()"
                   moduleName = "FRC Advanced Scouting Touchstone"
                   usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/aaron/Library/CloudStorage/iCloud%20Drive/Documents/Xcode%20Projects/FRC%20Advanced%20Scouting%20Telemetrics/FRC%20Advanced%20Scouting%20Telemetrics/TeamListTableViewController.swift"
+                  urlString = "file:///Users/aaron/Documents/Xcode%20Projects/FRC%20Advanced%20Scouting%20Telemetrics/FRC%20Advanced%20Scouting%20Telemetrics/TeamListTableViewController.swift"
                   startingColumnNumber = "9223372036854775807"
                   endingColumnNumber = "9223372036854775807"
                   startingLineNumber = "413"
@@ -853,15 +853,175 @@
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
             uuid = "7C2605EB-134C-43BC-A813-E556FDDC8CB2"
-            shouldBeEnabled = "Yes"
+            shouldBeEnabled = "No"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "FRC Advanced Scouting Telemetrics/TeamListTableViewController.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "417"
-            endingLineNumber = "417"
+            startingLineNumber = "420"
+            endingLineNumber = "420"
             landmarkName = "resetSubscriptions()"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "6EDDC228-2BCB-4B4E-AAA7-8815711E0447"
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "FRC Advanced Scouting Telemetrics/EventSelectorTableViewController.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "114"
+            endingLineNumber = "114"
+            landmarkName = "tableView(_:didSelectRowAt:)"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "0EC51D48-5AA5-4FDD-B328-7A0264F4A101"
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "FRC Advanced Scouting Telemetrics/TeamListTableViewController.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "150"
+            endingLineNumber = "150"
+            landmarkName = "viewDidLoad()"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "3DD436BC-7A2D-410E-BD0F-B2F4B03F7280"
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "FRC Advanced Scouting Telemetrics/TeamListTableViewController.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "143"
+            endingLineNumber = "143"
+            landmarkName = "viewDidLoad()"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "AAA2A730-DC4D-4206-AE99-0BD92C64E719"
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "FRC Advanced Scouting Telemetrics/TeamListTableViewController.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "155"
+            endingLineNumber = "155"
+            landmarkName = "viewDidLoad()"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "1D4653E7-4A7E-46EF-A139-BA9497A36305"
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "FRC Advanced Scouting Telemetrics/TeamListTableViewController.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "141"
+            endingLineNumber = "141"
+            landmarkName = "viewDidLoad()"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "63943EA4-49B3-4F67-AA5B-1F0EB2E2B8FC"
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "FRC Advanced Scouting Telemetrics/TeamListSplitViewController.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "28"
+            endingLineNumber = "28"
+            landmarkName = "viewDidLoad()"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "F2E7CDFC-93DA-4968-8ED5-0E2162AF44AD"
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "FRC Advanced Scouting Telemetrics/TeamListSplitViewController.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "16"
+            endingLineNumber = "16"
+            landmarkName = "teamListTableVC"
+            landmarkType = "24">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "3B16C4F0-A321-4BB7-B169-DB0E5D0BC83F"
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "FRC Advanced Scouting Telemetrics/TeamListSplitViewController.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "20"
+            endingLineNumber = "20"
+            landmarkName = "teamDetailVC"
+            landmarkType = "24">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "11FE3533-615B-4583-BADF-AACE5F6DD1C1"
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "FRC Advanced Scouting Telemetrics/TeamListSplitViewController.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "50"
+            endingLineNumber = "50"
+            landmarkName = "splitViewController(_:collapseSecondary:onto:)"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "8B1D4B24-FF2C-49ED-A113-88B616537556"
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "FRC Advanced Scouting Telemetrics/TeamListSplitViewController.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "66"
+            endingLineNumber = "66"
+            landmarkName = "splitViewController(_:separateSecondaryFrom:)"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>

@@ -68,7 +68,7 @@
 					<key>UISceneConfigurationName</key>
 					<string>Default</string>
 					<key>UISceneDelegateClassName</key>
-					<string>FRC Advanced Scouting Touchstone.SceneDelegate</string>
+					<string>$(PROJECT_NAME).SceneDelegate</string>
 					<key>UISceneStoryboardFile</key>
 					<string>Main</string>
 				</dict>

@@ -42,13 +42,13 @@ public class AWSCognitoAuthenticationProvider: NSObject, AuthenticationProvider,
     }
 
     public func authenticate(onCompletion: ((SignInResult?, Error?) -> Void)?) {
-        AWSMobileClient.sharedInstance().signIn(username: username!, password: password!) { (result, error) in
+        AWSMobileClient.default().signIn(username: username!, password: password!) { (result, error) in
             onCompletion?(result, error)
         }
     }
     
     public func signUp(onCompletion: ((SignUpResult?, Error?) -> Void)?) {
-        AWSMobileClient.sharedInstance().signUp(username: username!, password: password!, userAttributes: ["email":teamEmail!]) { (result, error) in
+        AWSMobileClient.default().signUp(username: username!, password: password!, userAttributes: ["email":teamEmail!]) { (result, error) in
             onCompletion?(result, error)
         }
     }

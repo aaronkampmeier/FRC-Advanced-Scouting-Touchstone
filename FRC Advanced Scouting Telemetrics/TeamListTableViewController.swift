@@ -134,24 +134,27 @@ class TeamListTableViewController: UITableViewController {
         tableView.backgroundView = noEventView
         
         //Add a watcher for when the event switches
-        if #available(iOS 13.0, *) {
-            NotificationCenter.default.publisher(for: .FASTSelectedEventChanged)
-                .filter({[weak self] (notification: Notification) -> Bool in
-                    let persistentId = self?.view.window?.windowScene?.session.persistentIdentifier
-                    return (notification.userInfo?["sceneId"] as? String ?? "0") == (persistentId ?? "0")
-                })
-                .map({ (notification: Notification) -> String? in
-                    return notification.userInfo?["eventKey"] as? String
-                })
-                .sink(receiveValue: {[weak self] (eventKey) in
-                    self?.eventSelected(eventKey)
-                })
-        } else {
-            // Fallback on earlier versions
-            NotificationCenter.default.addObserver(forName: .FASTSelectedEventChanged, object: nil, queue: nil) {[weak self] (notification) in
-                self?.eventSelected(notification.userInfo?["eventKey"] as? String)
-            }
+        NotificationCenter.default.addObserver(forName: .FASTSelectedEventChanged, object: nil, queue: nil) {[weak self] (notification) in
+            self?.eventSelected(notification.userInfo?["eventKey"] as? String)
         }
+//        if #available(iOS 13.0, *) { //For some reason this notification center publisher does not work...
+//            NotificationCenter.default.publisher(for: .FASTSelectedEventChanged)
+//                .filter({[weak self] (notification: Notification) -> Bool in
+//                    let persistentId = self?.view.window?.windowScene?.session.persistentIdentifier
+//                    return (notification.userInfo?["sceneId"] as? String ?? "0") == (persistentId ?? "0")
+//                })
+//                .map({ (notification: Notification) -> String? in
+//                    return notification.userInfo?["eventKey"] as? String
+//                })
+//                .sink(receiveValue: {[weak self] (eventKey) in
+//                    self?.eventSelected(eventKey)
+//                })
+//        } else {
+//            // Fallback on earlier versions
+//            NotificationCenter.default.addObserver(forName: .FASTSelectedEventChanged, object: nil, queue: nil) {[weak self] (notification) in
+//                self?.eventSelected(notification.userInfo?["eventKey"] as? String)
+//            }
+//        }
         
         self.resetSubscriptions()
     }
@@ -431,7 +434,7 @@ class TeamListTableViewController: UITableViewController {
         if let eventKey = self.selectedEventKey {
             //Set up subscribers for event specifics
             do {
-                changeTeamRankSubscriber = try Globals.appDelegate.appSyncClient?.subscribe(subscription: OnUpdateTeamRankSubscription(userID: AWSMobileClient.sharedInstance().username ?? "", eventKey: eventKey)) {[weak self] result, transaction, error in
+                changeTeamRankSubscriber = try Globals.appDelegate.appSyncClient?.subscribe(subscription: OnUpdateTeamRankSubscription(userID: AWSMobileClient.default().username ?? "", eventKey: eventKey)) {[weak self] result, transaction, error in
                     if Globals.handleAppSyncErrors(forQuery: "OnUpdateTeamRankSubscription", result: result, error: error) {
                         self?.selectedEventRanking = result?.data?.onUpdateTeamRank?.fragments.eventRanking
                         self?.orderTeamsUsingRanking()
@@ -446,7 +449,7 @@ class TeamListTableViewController: UITableViewController {
                     }
                 }
                 
-                pickedTeamSubscriber = try Globals.appDelegate.appSyncClient?.subscribe(subscription: OnSetTeamPickedSubscription(userID: AWSMobileClient.sharedInstance().username ?? "", eventKey: eventKey)) {[weak self] result, transaction, error in
+                pickedTeamSubscriber = try Globals.appDelegate.appSyncClient?.subscribe(subscription: OnSetTeamPickedSubscription(userID: AWSMobileClient.default().username ?? "", eventKey: eventKey)) {[weak self] result, transaction, error in
                     if Globals.handleAppSyncErrors(forQuery: "OnSetTeamPickedSubscription", result: result, error: error) {
                         //TODO: Update the cache
                         
@@ -465,7 +468,7 @@ class TeamListTableViewController: UITableViewController {
                     }
                 }
                 
-                updateScoutedTeamSubscriber = try Globals.appDelegate.appSyncClient?.subscribe(subscription: OnUpdateScoutedTeamsSubscription(userID: AWSMobileClient.sharedInstance().username ?? "", eventKey: eventKey), resultHandler: {[weak self] (result, transaction, error) in
+                updateScoutedTeamSubscriber = try Globals.appDelegate.appSyncClient?.subscribe(subscription: OnUpdateScoutedTeamsSubscription(userID: AWSMobileClient.default().username ?? "", eventKey: eventKey), resultHandler: {[weak self] (result, transaction, error) in
                     if Globals.handleAppSyncErrors(forQuery: "OnUpdateScoutedTeamGeneral-TeamList", result: result, error: error) {
                         ((try? transaction?.update(query: ListScoutedTeamsQuery(eventKey: eventKey), { (selectionSet) in
                             if let index = selectionSet.listScoutedTeams?.firstIndex(where: {$0?.teamKey == result?.data?.onUpdateScoutedTeam?.teamKey}) {
@@ -641,7 +644,7 @@ class TeamListTableViewController: UITableViewController {
         
         //Show the indicator if this is the team that is currently logged in
         cell.myTeamIndicatorImageView.isHidden = true
-        if let loggedInTeam = AWSMobileClient.sharedInstance().username {
+        if let loggedInTeam = AWSMobileClient.default().username {
             if let teamInt = Int(loggedInTeam) {
                 if teamInt == team.teamNumber {
                     cell.myTeamIndicatorImageView.isHidden = false

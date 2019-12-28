@@ -168,7 +168,7 @@ class TeamCommentsTableViewController: UITableViewController {
         Globals.appDelegate.appSyncClient?.perform(mutation: AddTeamCommentMutation(eventKey: eventKey!, teamKey: teamKey!, body: body, author: UIDevice.current.name), optimisticUpdate: { (transaction) in
             do {
                 try transaction?.update(query: ListTeamCommentsQuery(eventKey: self.eventKey!, teamKey: self.teamKey!), { (selectionSet) in
-                    selectionSet.listTeamComments?.append(ListTeamCommentsQuery.Data.ListTeamComment(author: UIDevice.current.name, userId: AWSMobileClient.sharedInstance().username!, body: body, datePosted: Int(date), key: uuid, teamKey: self.teamKey!, eventKey: self.eventKey!))
+                    selectionSet.listTeamComments?.append(ListTeamCommentsQuery.Data.ListTeamComment(author: UIDevice.current.name, userId: AWSMobileClient.default().username!, body: body, datePosted: Int(date), key: uuid, teamKey: self.teamKey!, eventKey: self.eventKey!))
                 })
             } catch {
                 CLSNSLogv("Error performing optimistic update: \(error)", getVaList([]))
@@ -220,7 +220,7 @@ class TeamCommentsTableViewController: UITableViewController {
         })
         
         tableView.beginUpdates()
-        teamComments.append(TeamComment(author: UIDevice.current.name, userId: AWSMobileClient.sharedInstance().username!, body: body, datePosted: Int(date), key: uuid, teamKey: teamKey ?? "", eventKey: eventKey ?? ""))
+        teamComments.append(TeamComment(author: UIDevice.current.name, userId: AWSMobileClient.default().username!, body: body, datePosted: Int(date), key: uuid, teamKey: teamKey ?? "", eventKey: eventKey ?? ""))
         tableView.insertRows(at: [IndexPath(row: teamComments.count - 1, section: 0)], with: .top)
         self.currentlyWrittenCommentText = ""
         tableView.endUpdates()

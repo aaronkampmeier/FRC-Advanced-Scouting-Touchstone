@@ -1,0 +1,17 @@
+#if( ! $ctx.args.year )
+    #set( $year = $util.time.nowFormatted("yyyy") )
+#else 
+	#set($year = $ctx.args.year)
+#end
+
+{
+    "method": "GET",
+    ## E.G. if full path is https://api.xxxxxxxxx.com/posts then resourcePath would be /posts **
+    "resourcePath": "/api/v3/events/${year}",
+    "params":{
+        ##"query":$util.toJson($ctx.args),
+        "headers": {
+            "X-TBA-Auth-Key": "$ctx.prev.result"
+        }
+    }
+}

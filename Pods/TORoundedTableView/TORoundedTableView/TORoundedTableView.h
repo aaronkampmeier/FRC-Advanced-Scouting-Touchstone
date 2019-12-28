@@ -1,7 +1,7 @@
 //
 //  TORoundedTableView.h
 //
-//  Copyright 2016-2017 Timothy Oliver. All rights reserved.
+//  Copyright 2016-2019 Timothy Oliver. All rights reserved.
 //
 //  Permission is hereby granted, free of charge, to any person obtaining a copy
 //  of this software and associated documentation files (the "Software"), to
@@ -22,26 +22,36 @@
 
 #import <UIKit/UIKit.h>
 
-@class TORoundedTableViewCell;
+#import "TORoundedTableViewCell.h"
+#import "TORoundedTableViewCapCell.h"
 
 @interface TORoundedTableView : UITableView
 
-/** The distance from the edges of each side of the table view (Default is 22 points) */
+/** Shows the rounded corners. Setting to NO will show the original edge-to-edge visual style. (Default is YES) */
+@property (nonatomic, assign) BOOL showRoundedCorners;
+
+/** The distance from the edges of each side of the table view (Default is 18 points) */
 @property (nonatomic, assign) CGFloat horizontalInset;
 
-/** From the edge of the table view cells, the horizontal inset of the accessory views. (Defaults to `separatorInset.left`) */
+/** From the edge of the table view cells, the horizontal inset of the accessory views. (Default is an un-used value.) */
 @property (nonatomic, assign) CGFloat accessoryHorizontalInset;
 
 /** The maximum width that the table content may be scale to (Default is 675) */
 @property (nonatomic, assign) CGFloat maximumWidth;
 
-/** The corner radius of each section (Default value is 5) */
+/** The corner radius of each section (Default value is 7.0f) */
 @property (nonatomic, assign) CGFloat sectionCornerRadius;
 
-/** The default background color of every cell (Default color is white) */
-@property (nonatomic, strong) UIColor *cellBackgroundColor;
+/** The default background color of every cell (Default color is the default table view cell background) */
+@property (nonatomic, strong, null_resettable) UIColor *cellBackgroundColor;
 
-/** The default background color of each cell when tapped (Default color is light grey) */
-@property (nonatomic, strong) UIColor *cellSelectedBackgroundColor;
+/** The default background color of each cell when tapped (Default color is standard selection color) */
+@property (nonatomic, strong, null_resettable) UIColor *cellSelectedBackgroundColor;
 
 @end
+
+//! Project version number for TORoundedTableView.
+FOUNDATION_EXPORT double TORoundedTableViewVersionNumber;
+
+//! Project version string for TORoundedTableView.
+FOUNDATION_EXPORT const unsigned char TORoundedTableViewVersionString[];

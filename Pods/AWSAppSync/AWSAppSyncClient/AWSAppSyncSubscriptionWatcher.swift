@@ -5,72 +5,36 @@
 //
 
 import Dispatch
-import os.log
 
-/// A protocol to allow our Swift AWSAppSyncSubscriptionWatcher class to be referenced by the Objective-C
-/// AWSIoTMQTTClient.
-@objc protocol MQTTSubscriptionWatcher {
-    func getIdentifier() -> Int
-
-    func getTopics() -> [String]
-
-    func messageCallbackDelegate(data: Data)
-
-    func disconnectCallbackDelegate(error: Error)
-
-    func connectedCallbackDelegate()
-
-    func statusChangeDelegate(status: AWSIoTMQTTStatus)
-
-    func subscriptionAcknowledgementDelegate()
+/// Used to determine the reason why a subscription is being cancelled/ disconnected.
+///
+/// - none: Indicates there is no source of cancellation yet.
+/// - user: Indicates that the developer invoked `cancel`
+/// - `error`: Indicates that there was a protocol/ network or service level error.
+/// - `deinit`: Indicates that the watcher was released from memory and the subscription should be disconnected.
+enum CancellationSource {
+    case none, user, `error`, `deinit`
 }
 
-private class SubscriptionsOrderHelper {
-    var count = 0
-    var previousCall = Date()
-    var pendingCount = 0
-    var dispatchLock = DispatchQueue(label: "SubscriptionsQueue")
-    var waitDictionary = [0: true]
-    static let sharedInstance = SubscriptionsOrderHelper()
-    
-    func getLatestCount() -> Int {
-        count += 1
-        waitDictionary[count] = false
-        return count
-    }
-    
-    func markDone(id: Int) {
-        waitDictionary[id] = true
-    }
-    
-    func shouldWait(id: Int) -> Bool {
-        for i in 0..<id where waitDictionary[i] == false {
-            return true
-        }
-        return false
-    }
-    
-}
+/// A `AWSAppSyncSubscriptionWatcher` is responsible for watching the subscription, and calling the result handler with
+/// a new result whenever any of the data is published. It also normalizes the cache before giving the callback to customer.
+public final class AWSAppSyncSubscriptionWatcher<Subscription: GraphQLSubscription>: Cancellable {
 
-/// A `AWSAppSyncSubscriptionWatcher` is responsible for watching the subscription, and calling the result handler with a new result whenever any of the data is published on the MQTT topic. It also normalizes the cache before giving the callback to customer.
-public final class AWSAppSyncSubscriptionWatcher<Subscription: GraphQLSubscription>: MQTTSubscriptionWatcher, Cancellable {
-
-    private weak var client: AppSyncMQTTClient?
-    private weak var httpClient: AWSNetworkTransport?
+    private let store: ApolloStore
     private let subscription: Subscription
+    private var connection: SubscriptionConnection?
+    private var subscriptionItem: SubscriptionItem?
+
     private let handlerQueue: DispatchQueue
     private var resultHandler: SubscriptionResultHandler<Subscription>?
     private var connectedCallback: (() -> Void)?
     private var statusChangeHandler: SubscriptionStatusChangeHandler?
-    private let store: ApolloStore
-    private var isCancelled: Bool = false
-    private var subscriptionTopic: [String]?
 
-    private let uniqueIdentifier = SubscriptionsOrderHelper.sharedInstance.getLatestCount()
+    private var isCancelled: Bool = false
+    private var cancellationSource: CancellationSource = .none
     private var status = AWSAppSyncSubscriptionWatcherStatus.connecting
 
-    init(client: AppSyncMQTTClient,
-         httpClient: AWSNetworkTransport,
+    init(connection: SubscriptionConnection,
          store: ApolloStore,
          subscriptionsQueue: DispatchQueue,
          subscription: Subscription,
@@ -78,9 +42,9 @@ public final class AWSAppSyncSubscriptionWatcher<Subscription: GraphQLSubscripti
          statusChangeHandler: SubscriptionStatusChangeHandler? = nil,
          connectedCallback: (() -> Void)? = nil,
          resultHandler: @escaping SubscriptionResultHandler<Subscription>) {
+
         AppSyncLog.verbose("Subscribing to operation \(subscription)")
-        self.client = client
-        self.httpClient = httpClient
+        self.connection = connection
         self.store = store
         self.subscription = subscription
         self.handlerQueue = handlerQueue
@@ -99,128 +63,46 @@ public final class AWSAppSyncSubscriptionWatcher<Subscription: GraphQLSubscripti
         }
     }
     
-    func getIdentifier() -> Int {
-        return uniqueIdentifier
-    }
-    
     private func startSubscription() {
-        let semaphore = DispatchSemaphore(value: 0)
-        
-        performSubscriptionRequest(completionHandler: { [weak self] (success, error) in
-            if let error = error {
-                self?.resultHandler?(nil, nil, error)
-            }
-            semaphore.signal()
-        })
-        
-        semaphore.wait()
-    }
+        guard let connection = connection else {
+            AppSyncLog.debug("Connection is nil, could not subscribe")
+            self.resultHandler?(nil, nil, AWSAppSyncSubscriptionError.setupError("Connection is nil"))
+            return
+        }
 
-    private func performSubscriptionRequest(completionHandler: @escaping (Bool, Error?) -> Void) {
-        do {
-            _ = try httpClient?.sendSubscriptionRequest(operation: subscription, completionHandler: {[weak self] (response, error) in
-                AppSyncLog.debug("Received AWSGraphQLSubscriptionResponse")
-
-                guard let self = self else {
-                    return
-                }
-
-                guard self.isCancelled == false else {
-                    return
-                }
-
-                guard error == nil else {
-                    AppSyncLog.error("Unexpected error in subscription request: \(error!)")
-                    completionHandler(false, AWSAppSyncSubscriptionError.setupError(error!.localizedDescription))
-                    return
-                }
-
-                guard let response = response else {
-                    let message = "Response unexpectedly nil subscribing \(self.getIdentifier())"
-                    AppSyncLog.error(message)
-                    let error = AWSAppSyncSubscriptionError.setupError(message)
-                    completionHandler(false, error)
-                    return
-                }
-
-                let subscriptionResult: AWSGraphQLSubscriptionResponse
-                do {
-                    subscriptionResult = try AWSGraphQLSubscriptionResponseParser(body: response).parseResult()
-                } catch {
-                    AppSyncLog.error("Error parsing subscription result: \(error)")
-                    completionHandler(false, AWSAppSyncSubscriptionError.setupError(error.localizedDescription))
-                    return
-                }
-
-                guard let subscriptionInfo = subscriptionResult.subscriptionInfo else {
-                    let message = "Subscription info unexpectedly nil in subscription result \(self.getIdentifier())"
-                    AppSyncLog.error(message)
-                    let error = AWSAppSyncSubscriptionError.setupError(message)
-                    completionHandler(false, error)
-                    return
-                }
-
-                AppSyncLog.verbose("New subscription set: \(subscriptionInfo.count)")
-
-                self.subscriptionTopic = subscriptionResult.newTopics
-                AppSyncLog.debug("Subscription watcher \(self.getIdentifier()) now watching topics: \(self.subscriptionTopic ?? [])")
-
-                self.client?.add(watcher: self, forNewTopics: subscriptionResult.newTopics!)
-
-                self.client?.startSubscriptions(subscriptionInfos: subscriptionInfo, identifier: self.uniqueIdentifier)
-
-                completionHandler(true, nil)
-            })
-        } catch {
-            AppSyncLog.error("Error performing subscription request: \(error)")
-            completionHandler(false, AWSAppSyncSubscriptionError.setupError(error.localizedDescription))
+        let requestString = type(of: subscription).requestString
+        subscriptionItem = connection.subscribe(requestString: requestString,
+                                                variables: subscription.variables) { [weak self] (event, item) in
+                                                    switch event {
+                                                    case .connection(let value):
+                                                        self?.handleConnectionEvent(value)
+                                                    case .data(let data):
+                                                        self?.handleMessage(data)
+                                                    case .failed(let error):
+                                                        self?.handleError(error)
+                                                    }
         }
     }
-    
-    func getTopics() -> [String] {
-        return subscriptionTopic ?? [String]()
+
+    // MARK: - Result handling
+
+    func handleConnectionEvent(_ event: SubscriptionConnectionEvent) {
+        AppSyncLog.debug("Subscription connectedCallback \(connectedCallback == nil ? "" : "(callback is null)")")
+        switch event {
+        case .connected:
+            connectedCallback?()
+            statusChangeHandler?(AWSAppSyncSubscriptionWatcherStatus.connected)
+        case .connecting:
+            statusChangeHandler?(AWSAppSyncSubscriptionWatcherStatus.connecting)
+        case .disconnected:
+            statusChangeHandler?(AWSAppSyncSubscriptionWatcherStatus.disconnected)
+        }
     }
 
-    deinit {
-        // call cancel here before exiting
-        cancel()
-    }    
-    
-    /// Cancel any in progress fetching operations and unsubscribe from the messages. After canceling, no updates will
-    /// be delivered to the result handler or status change handler.
-    ///
-    /// Internally, this method sets an `isCancelled` flag to prevent any future activity, and issues a
-    /// `cancelSubscription` on the client to cancel subscriptions on the service. It also releases retained handler
-    /// blocks and clients.
-    ///
-    /// Specifically, this means that cancelling a subscription watcher will not invoke `statusChangeHandler` or
-    /// `resultHandler`, although it will set the internal state of the watcher to `.disconnected`
-    public func cancel() {
-        isCancelled = true
-        status = .disconnected
-        client?.cancelSubscription(for: self)
-        client = nil
-        httpClient = nil
-        resultHandler = nil
-        statusChangeHandler = nil
-        subscriptionTopic = nil
-    }
-
-    // MARK: - MQTTSubscriptionWatcher
-
-    func disconnectCallbackDelegate(error: Error) {
-        self.resultHandler?(nil, nil, error)
-    }
-
-    func connectedCallbackDelegate() {
-        AppSyncLog.debug("MQTT connectedCallback \(connectedCallback == nil ? "" : "(callback is null)")")
-        connectedCallback?()
-    }
-
-    func messageCallbackDelegate(data: Data) {
+    func handleMessage(_ data: Data) {
         do {
             AppSyncLog.debug("Received message")
-            AppSyncLog.verbose("First 128 bytes of message data is [\(data.prefix(upTo: 128))]")
+            AppSyncLog.verbose("First \(min(data.count, 128)) bytes of message data is [\(data.prefix(upTo: min(data.count, 128)))]")
 
             guard String(data: data, encoding: .utf8) != nil else {
                 let error = AWSAppSyncSubscriptionError.messageCallbackError("Unable to convert message data to String using UTF8 encoding")
@@ -243,42 +125,70 @@ public final class AWSAppSyncSubscriptionWatcher<Subscription: GraphQLSubscripti
 
             firstly {
                 try response.parseResult(cacheKeyForObject: self.store.cacheKeyForObject)
-                }.andThen { (result, records) in
-                    _ = self.store.withinReadWriteTransaction { transaction in
-                        self.resultHandler?(result, transaction, nil)
-                    }
+            }.andThen { (result, records) in
+                _ = self.store.withinReadWriteTransaction { transaction in
+                    self.resultHandler?(result, transaction, nil)
+                }
 
-                    if let records = records {
-                        self.store.publish(records: records, context: nil).catch { error in
-                            preconditionFailure(String(describing: error))
-                        }
+                if let records = records {
+                    self.store.publish(records: records, context: nil).catch { error in
+                        preconditionFailure(String(describing: error))
                     }
-                }.catch { error in
-                    self.resultHandler?(nil, nil, AWSAppSyncSubscriptionError.parseError(error))
+                }
+            }.catch { error in
+                self.resultHandler?(nil, nil, AWSAppSyncSubscriptionError.parseError(error))
             }
         } catch {
             self.resultHandler?(nil, nil, AWSAppSyncSubscriptionError.parseError(error))
         }
     }
 
-    /// The watcher has received a status update for the underlying MQTT client. This method will translate the incoming
-    /// status
-    ///
-    /// - Parameter status: The new AWSIoTMQTTStatus. This will be resolved to a AWSAppSyncSubscriptionStatus and trigger the notification handler
-    func statusChangeDelegate(status: AWSIoTMQTTStatus) {
-        let subscriptionWatcherStatus = status.toSubscriptionWatcherStatus
-        statusChangeHandler?(subscriptionWatcherStatus)
+    func handleError(_ error: Error) {
+        if let connectionError = error as? ConnectionProviderError {
+            switch connectionError {
+            case .connection:
+                self.cancellationSource = .`error`
+                statusChangeHandler?(.error(.other(error)))
+            default:
+                resultHandler?(nil, nil, error)
+            }
+        }
     }
 
-    /// The underlying client has received a subscription acknowledgement from the broker. This means the watcher is now
-    /// receiving subscriptions. This is the only code path that can set the status to `.connected`.
-    func subscriptionAcknowledgementDelegate() {
-        guard !isCancelled else {
-            return
+    deinit {
+        // call cancel here before exiting
+        if self.cancellationSource == .none {
+            self.cancellationSource = .deinit
         }
+        performCleanUpTasksOnCancel()
+    }    
+    
+    /// Cancel any in progress fetching operations and unsubscribe from the messages. After canceling, no updates will
+    /// be delivered to the result handler or status change handler.
+    ///
+    /// Internally, this method sets an `isCancelled` flag to prevent any future activity, and issues a
+    /// `cancelSubscription` on the client to cancel subscriptions on the service. It also releases retained handler
+    /// blocks and clients.
+    ///
+    /// Specifically, this means that cancelling a subscription watcher will not invoke `statusChangeHandler` or
+    /// `resultHandler`, although it will set the internal state of the watcher to `.disconnected`
+    public func cancel() {
+        if self.cancellationSource == .none {
+            self.cancellationSource = .user
+        }
+        performCleanUpTasksOnCancel()
+    }
+    
+    internal func performCleanUpTasksOnCancel() {
+        isCancelled = true
+        status = .disconnected
+        resultHandler = nil
+        statusChangeHandler = nil
 
-        status = .connected
-        statusChangeHandler?(status)
+        if self.cancellationSource != .error, let item = subscriptionItem {
+            connection?.unsubscribe(item: item)
+        }
+        connection = nil
     }
 
 }

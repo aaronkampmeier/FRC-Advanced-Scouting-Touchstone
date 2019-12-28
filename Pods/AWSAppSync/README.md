@@ -6,7 +6,7 @@ AWS AppSync SDK for iOS
 [![Carthage compatible](https://img.shields.io/badge/Carthage-compatible-4BC51D.svg?style=flat)](https://github.com/Carthage/Carthage)
 [![Build Status](https://travis-ci.org/awslabs/aws-mobile-appsync-sdk-ios.svg?branch=master)](https://travis-ci.org/awslabs/aws-mobile-appsync-sdk-ios)
 [![Documentation Status](https://readthedocs.org/projects/ansicolortags/badge/?version=latest)](https://aws-amplify.github.io/docs/ios/api/)
-[![Swift](https://img.shields.io/badge/swift-4.2-orange.svg?style=flat)](https://developer.apple.com/swift/)
+[![Swift](https://img.shields.io/badge/swift-5-orange.svg?style=flat)](https://developer.apple.com/swift/)
 [![Twitter Follow](https://img.shields.io/twitter/follow/AWSforMobile.svg?style=social&label=Follow)](https://twitter.com/AWSforMobile)
 
 
@@ -14,7 +14,7 @@ The AWS AppSync SDK for iOS enables you to access your AWS AppSync backend and p
 
 ## Setup
 
-> Note: AWS AppSync uses Swift 4.2.1. Use Xcode 10.1 or greater to build.
+> Note: AWS AppSync uses Swift 5.1. Use Xcode 11.0 or greater to build.
 
 ### Installing the SDK
 
@@ -23,7 +23,7 @@ The AWS AppSync SDK for iOS enables you to access your AWS AppSync backend and p
 1. Add the following line to your Podfile:
 
     ```ruby
-    pod 'AWSAppSync', '~> 2.9.0'
+    pod 'AWSAppSync', '~> 3.0.0'
     ```
 
     Example:
@@ -37,7 +37,7 @@ The AWS AppSync SDK for iOS enables you to access your AWS AppSync backend and p
       use_frameworks!
 
       # Pods for EventsApp
-      pod 'AWSAppSync', '~> 2.9.0'
+      pod 'AWSAppSync', '~> 3.0.0'
     end
     ```
 
@@ -145,6 +145,9 @@ You can get the backend setup by following the steps below:
         - `AppSyncRegion`
         - `CognitoIdentityPoolId`
         - `CognitoIdentityPoolRegion`
+        - `BucketName`
+        - `BucketRegion`
+        - `AppSyncMultiAuthAPIKey`
 
 > Note: You must either provide all values in the `AppSyncIntegrationTests/appsync_test_credentials.json` or in code. There is no mechanism to handle partial overrides of one source with the other. All values must be specified before running the integration tests.
 
@@ -160,7 +163,10 @@ Add a file `appsync_test_credentials.json` (see sample below) in the `AWSAppSync
   "CognitoIdentityPoolRegion": "us-east-1",
   "AppSyncEndpointAPIKey": "https://apikeybasedendpoint.appsync-api.us-east-1.amazonaws.com/graphql",
   "AppSyncEndpointAPIKeyRegion": "us-east-1",
-  "AppSyncAPIKey": "da2-sad3lkh23422"
+  "AppSyncAPIKey": "da2-sad3lkh23422",
+  "BucketName": "bucketName",
+  "BucketRegion": "us-east-1",
+  "AppSyncMultiAuthAPIKey": "da2-sd34s5ffxz"
 }
 ```
 

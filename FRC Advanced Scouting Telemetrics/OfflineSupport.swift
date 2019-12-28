@@ -67,7 +67,11 @@ class FASTNetworkManager {
 			return false
 		case .unsatisfied:
 			return false
-		}
+        @unknown default:
+            assertionFailure()
+            Crashlytics.sharedInstance().recordCustomExceptionName("Unknown Path status encountered: \(monitor.currentPath.status)", reason: nil, frameArray: [])
+            return false
+        }
 	}
 	
 	func register(updateHandler: @escaping (Bool) -> Void) -> FASTCancellable {

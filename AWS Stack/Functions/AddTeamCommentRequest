@@ -1,0 +1,26 @@
+## Below example shows how to create an object from all provided GraphQL arguments
+## The primary key of the obejct is a randomly generated UUD using the $util.autoId() utility
+## Other utilities include $util.matches() for regular expressions, $util.time.nowISO8601() or
+##   $util.time.nowEpochMilliSeconds() for timestamps, and even List or Map helpers like
+##   $util.list.copyAndRetainAll() $util.map.copyAndRemoveAllKeys() for shallow copies
+## Read more: https://docs.aws.amazon.com/appsync/latest/devguide/resolver-context-reference.html#utility-helpers-in-util
+
+#set($commentID = $util.autoId())
+#set($commentKey = "${ctx.args.teamKey}-${commentID}")
+{
+    "version" : "2018-05-29",
+    "operation" : "PutItem",
+    "key" : {
+        "partitionKey" : $util.dynamodb.toDynamoDBJson("u${ctx.identity.username}-e${ctx.args.eventKey}"),
+        "sortKey": $util.dynamodb.toDynamoDBJson("c${commentKey}")
+    },
+    "attributeValues" : {
+    	"teamKey":$util.dynamodb.toDynamoDBJson($ctx.args.teamKey),
+        "userID":$util.dynamodb.toDynamoDBJson($ctx.identity.username),
+        "eventKey":$util.dynamodb.toDynamoDBJson($ctx.args.eventKey),
+        "key":$util.dynamodb.toDynamoDBJson($commentKey),
+        "author":$util.dynamodb.toDynamoDBJson($ctx.args.author),
+        "body":$util.dynamodb.toDynamoDBJson($ctx.args.body),
+        "datePosted":$util.dynamodb.toDynamoDBJson($util.time.nowEpochSeconds())
+    }
+}

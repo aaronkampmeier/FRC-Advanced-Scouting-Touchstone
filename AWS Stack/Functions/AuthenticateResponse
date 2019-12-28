@@ -1,0 +1,9 @@
+#if($ctx.error.type == 400)
+	$util.unauthorized()
+#else
+	#if($ctx.error)
+		$util.error($ctx.error.message, $ctx.error.type)
+	#end
+#end
+
+$ctx.result

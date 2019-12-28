@@ -20,12 +20,12 @@ import Foundation
 
 public extension String {
 
-    public var URLScheme: String? {
+    var URLScheme: String? {
         guard let schemeRange = self.range(of: "://") else { return nil }
         return self.substring(to: schemeRange.lowerBound)
     }
 
-    public var URLPortNumber: Int {
+    var URLPortNumber: Int {
         // if the user didn't supply a port, presume the Realm default
         guard let portRange = self.range(of: ":", options: .backwards) else { return 9080 }
 
@@ -42,7 +42,7 @@ public extension String {
         return result
     }
 
-    public var URLHost: String {
+    var URLHost: String {
         var host = self
 
 //        if let scheme = self.URLScheme {

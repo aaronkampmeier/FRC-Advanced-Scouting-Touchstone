@@ -21,7 +21,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         
         //Restore activity for the session
         let mainStoryboard = UIStoryboard(name: "Main", bundle: nil)
-        switch AWSMobileClient.sharedInstance().currentUserState {
+        switch AWSMobileClient.default().currentUserState {
         case .signedOut:
             //Show the sign in flow
             window?.rootViewController = mainStoryboard.instantiateViewController(identifier: "onboarding")
@@ -43,7 +43,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
             break
         }
         
-        AWSMobileClient.sharedInstance().addUserStateListener(self) {[weak self] (userState, attributes) in
+        AWSMobileClient.default().addUserStateListener(self) {[weak self] (userState, attributes) in
             //Update the view to reflect
             DispatchQueue.main.async {
                 switch userState {

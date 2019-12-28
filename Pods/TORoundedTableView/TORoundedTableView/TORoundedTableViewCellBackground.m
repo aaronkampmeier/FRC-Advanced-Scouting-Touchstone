@@ -1,7 +1,7 @@
 //
 //  TORoundedTableViewCellBackground.m
 //
-//  Copyright 2015-2016 Timothy Oliver. All rights reserved.
+//  Copyright 2016-2019 Timothy Oliver. All rights reserved.
 //
 //  Permission is hereby granted, free of charge, to any person obtaining a copy
 //  of this software and associated documentation files (the "Software"), to
@@ -71,7 +71,7 @@ typedef NS_ENUM(NSInteger, TORoundedTableViewCellBackgroundCorner) {
         for (NSInteger i = 0; i < TORoundedTableViewCellBackgroundViewNum; i++) {
             CALayer *layer = [[CALayer alloc] init];
             layer.backgroundColor = ([UIColor whiteColor].CGColor);
-            layer.actions = @{@"position": [NSNull null], @"bounds": [NSNull null], @"hidden": [NSNull null]};
+            layer.actions = @{@"position": [NSNull null], @"bounds": [NSNull null], @"hidden": [NSNull null], @"backgroundColor": [NSNull null] };
             [layers addObject:layer];
             [self.layer addSublayer:layer];
         }
@@ -83,7 +83,7 @@ typedef NS_ENUM(NSInteger, TORoundedTableViewCellBackgroundCorner) {
         NSMutableArray *corners = [NSMutableArray arrayWithCapacity:4];
         for (NSInteger i = 0; i < TORoundedTableViewCellBackgroundCornerNum; i++) {
             CALayer *cornerLayer = [[CALayer alloc] init];
-            cornerLayer.actions = @{@"position": [NSNull null], @"bounds": [NSNull null], @"hidden": [NSNull null]};
+            cornerLayer.actions = @{@"position": [NSNull null], @"bounds": [NSNull null], @"hidden": [NSNull null], @"contents": [NSNull null] };
             [corners addObject:cornerLayer];
             [self.layer addSublayer:cornerLayer];
         }
@@ -97,9 +97,15 @@ typedef NS_ENUM(NSInteger, TORoundedTableViewCellBackgroundCorner) {
 - (void)layoutSubviews
 {
     [super layoutSubviews];
-    
-    BOOL isCompactSizeClass = (self.superview.traitCollection.horizontalSizeClass == UIUserInterfaceSizeClassCompact);
-    
+
+    // On iOS 10 and below, there is an additional container view we need to hook
+    UIView *containerView = self.superview;
+    if (@available(iOS 11.0, *)) { }
+    else { containerView = self.superview.superview; }
+
+    // Check if we're enabled or not by seeing if we are stretching edge-to-edge
+    BOOL hideRoundedCorners = (containerView.frame.origin.x <= FLT_EPSILON);
+
     CABasicAnimation *resizeAnimation = (CABasicAnimation *)[self.layer animationForKey:@"bounds.size"];
     if (resizeAnimation == nil) {
         resizeAnimation = (CABasicAnimation *)[self.layer animationForKey:@"bounds"];
@@ -116,11 +122,11 @@ typedef NS_ENUM(NSInteger, TORoundedTableViewCellBackgroundCorner) {
     CALayer *topRightCornerLayer = self.cornerLayers[TORoundedTableViewCellBackgroundCornerTopRight];
     CALayer *topLayer = self.layers[TORoundedTableViewCellBackgroundViewTop];
     
-    topLeftCornerLayer.hidden  = !self.topCornersRounded || isCompactSizeClass;
-    topRightCornerLayer.hidden = !self.topCornersRounded || isCompactSizeClass;
-    topLayer.hidden            = !self.topCornersRounded || isCompactSizeClass;
+    topLeftCornerLayer.hidden  = !self.topCornersRounded || hideRoundedCorners;
+    topRightCornerLayer.hidden = !self.topCornersRounded || hideRoundedCorners;
+    topLayer.hidden            = !self.topCornersRounded || hideRoundedCorners;
     
-    if (self.topCornersRounded && !isCompactSizeClass) {
+    if (self.topCornersRounded && !hideRoundedCorners) {
         frame = (CGRect){CGPointZero, cornerLayerSize};
         [self animateLayer:topLeftCornerLayer forNewFrame:frame fromAnimation:resizeAnimation];
         topLeftCornerLayer.frame = frame;
@@ -140,12 +146,12 @@ typedef NS_ENUM(NSInteger, TORoundedTableViewCellBackgroundCorner) {
     
     // Layout out the middle rect
     frame = self.bounds;
-    if (self.topCornersRounded && !isCompactSizeClass) {
+    if (self.topCornersRounded && !hideRoundedCorners) {
         frame.origin.y += cornerLayerSize.height;
         frame.size.height -= cornerLayerSize.height;
     }
     
-    if (self.bottomCornersRounded && !isCompactSizeClass) {
+    if (self.bottomCornersRounded && !hideRoundedCorners) {
         frame.size.height -= cornerLayerSize.height;
     }
     
@@ -157,11 +163,11 @@ typedef NS_ENUM(NSInteger, TORoundedTableViewCellBackgroundCorner) {
     CALayer *bottomRightCornerLayer = self.cornerLayers[TORoundedTableViewCellBackgroundCornerBottomRight];
     CALayer *bottomLayer            = self.layers[TORoundedTableViewCellBackgroundViewBottom];
     
-    bottomLeftCornerLayer.hidden    = !self.bottomCornersRounded || isCompactSizeClass;
-    bottomRightCornerLayer.hidden   = !self.bottomCornersRounded || isCompactSizeClass;
-    bottomLayer.hidden              = !self.bottomCornersRounded || isCompactSizeClass;
+    bottomLeftCornerLayer.hidden    = !self.bottomCornersRounded || hideRoundedCorners;
+    bottomRightCornerLayer.hidden   = !self.bottomCornersRounded || hideRoundedCorners;
+    bottomLayer.hidden              = !self.bottomCornersRounded || hideRoundedCorners;
     
-    if (self.bottomCornersRounded && !isCompactSizeClass) {
+    if (self.bottomCornersRounded && !hideRoundedCorners) {
         frame = self.bounds;
         frame.origin.y = boundsSize.height - cornerLayerSize.height;
         frame.size = cornerLayerSize;

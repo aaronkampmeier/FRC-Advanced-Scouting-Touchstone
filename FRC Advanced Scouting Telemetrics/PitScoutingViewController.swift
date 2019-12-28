@@ -346,7 +346,7 @@ class PitScoutingViewController: UIViewController, UICollectionViewDataSource, U
         let transferUtility = AWSS3TransferUtility.default()
         
         let uploadExpression = AWSS3TransferUtilityUploadExpression()
-        uploadExpression.setValue(AWSMobileClient.sharedInstance().username, forRequestHeader: "x-amz-meta-user-id")
+        uploadExpression.setValue(AWSMobileClient.default().username, forRequestHeader: "x-amz-meta-user-id")
         uploadExpression.setValue(eventKey, forRequestHeader: "x-amz-meta-event-key")
         uploadExpression.setValue(teamKey, forRequestHeader: "x-amz-meta-team-key")
         uploadExpression.progressBlock = {(task, progress) in
@@ -356,7 +356,7 @@ class PitScoutingViewController: UIViewController, UICollectionViewDataSource, U
             }
         }
         
-        let identityId = AWSMobileClient.sharedInstance().identityId
+        let identityId = AWSMobileClient.default().identityId
         let key = "private/\(identityId ?? "")/\(eventKey ?? "")/\(teamKey ?? "").jpeg"
         transferUtility.uploadData(data, key: key, contentType: "image/jpeg", expression: uploadExpression) { (uploadTask, error) in
             DispatchQueue.main.async {

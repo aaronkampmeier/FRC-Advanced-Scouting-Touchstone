@@ -33,23 +33,23 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         Globals.dataManager = AWSDataManager()
         
         // AWS Cognito Initialization
-        AWSMobileClient.sharedInstance().initialize {userState, error in
+        AWSMobileClient.default().initialize {userState, error in
             if let userState = userState {
                 CLSNSLogv("User State: \(userState)", getVaList([]))
-                Analytics.setUserID(AWSMobileClient.sharedInstance().username)
-                Crashlytics.sharedInstance().setUserName(AWSMobileClient.sharedInstance().username)
+                Analytics.setUserID(AWSMobileClient.default().username)
+                Crashlytics.sharedInstance().setUserName(AWSMobileClient.default().username)
                 Crashlytics.sharedInstance().setUserIdentifier(UIDevice.current.name)
                 
                 switch userState {
                 case .signedOut:
                     break
                 case .signedIn:
-                    Analytics.setUserProperty(AWSMobileClient.sharedInstance().username, forName: "teamNumber")
+                    Analytics.setUserProperty(AWSMobileClient.default().username, forName: "teamNumber")
                 case .guest:
                     break
                 default:
                     CLSNSLogv("Signing out due to invalid userState", getVaList([]))
-                    AWSMobileClient.sharedInstance().signOut()
+                    AWSMobileClient.default().signOut()
                 }
             } else if let error = error {
                 CLSNSLogv("Error: \(error)", getVaList([]))
@@ -87,11 +87,15 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 		
 		appSyncClient?.offlineMutationDelegate = FASTOfflineMutationDelegate()
         
-        AWSMobileClient.sharedInstance().addUserStateListener(self) { (state, attributes) in
+        AWSMobileClient.default().addUserStateListener(self) { (state, attributes) in
             CLSNSLogv("New User State: \(state)", getVaList([]))
             
             if state == UserState.signedOut {
-                let _ = self.appSyncClient?.clearCache()
+                do {
+                    try self.appSyncClient?.clearCaches()
+                } catch {
+                    CLSNSLogv("Error clearing app sync cache: \(error)", getVaList([]))
+                }
                 Globals.asyncLoadingManager = nil
                 
                 //Clear the Images cache
@@ -106,13 +110,13 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 			}
             
             
-            Analytics.setUserID(AWSMobileClient.sharedInstance().username)
-            Analytics.setUserProperty(AWSMobileClient.sharedInstance().username, forName: "teamNumber")
-            Crashlytics.sharedInstance().setUserName(AWSMobileClient.sharedInstance().username)
+            Analytics.setUserID(AWSMobileClient.default().username)
+            Analytics.setUserProperty(AWSMobileClient.default().username, forName: "teamNumber")
+            Crashlytics.sharedInstance().setUserName(AWSMobileClient.default().username)
         }
         
         // Set up the reloading manager
-        if AWSMobileClient.sharedInstance().currentUserState == .signedIn {
+        if AWSMobileClient.default().currentUserState == .signedIn {
             Globals.asyncLoadingManager = FASTAsyncManager()
         }
         

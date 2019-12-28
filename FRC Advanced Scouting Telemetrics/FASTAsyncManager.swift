@@ -91,7 +91,7 @@ class FASTAsyncManager {
         removeEventSubscription?.cancel()
         //Set updaters to listen for new/deleted events
         do {
-            addEventSubscription = try Globals.appDelegate.appSyncClient?.subscribe(subscription: OnAddTrackedEventSubscription(userID: AWSMobileClient.sharedInstance().username!), resultHandler: {[weak self] (result, transaction, error) in
+            addEventSubscription = try Globals.appDelegate.appSyncClient?.subscribe(subscription: OnAddTrackedEventSubscription(userID: AWSMobileClient.default().username!), resultHandler: {[weak self] (result, transaction, error) in
                 if Globals.handleAppSyncErrors(forQuery: "AsyncLoader-OnAddTrackedEventSubscription", result: result, error: error) {
                     if let newEvent = result?.data?.onAddTrackedEvent {
                         do {
@@ -116,7 +116,7 @@ class FASTAsyncManager {
                 }
             })
             
-            removeEventSubscription = try Globals.appDelegate.appSyncClient?.subscribe(subscription: OnRemoveTrackedEventSubscription(userID: AWSMobileClient.sharedInstance().username!), resultHandler: {[weak self] (result, transaction, error) in
+            removeEventSubscription = try Globals.appDelegate.appSyncClient?.subscribe(subscription: OnRemoveTrackedEventSubscription(userID: AWSMobileClient.default().username!), resultHandler: {[weak self] (result, transaction, error) in
                 if Globals.handleAppSyncErrors(forQuery: "AsyncLoader-OnRemoveTrackedEventSubscription", result: result, error: error) {
                     if let removedEvent = result?.data?.onRemoveTrackedEvent {
                         do {
@@ -188,7 +188,7 @@ class FASTAsyncManager {
 				if let index = Globals.dataManager?.currentlyCachingEvents.firstIndex(of: eventKey) {
 					Globals.dataManager?.currentlyCachingEvents.remove(at: index)
 				}
-            }, subscription: OnCreateScoutSessionSubscription(userID: AWSMobileClient.sharedInstance().username ?? "", eventKey: eventKey), subscriptionResultHandler: { (result, transaction, error) in
+            }, subscription: OnCreateScoutSessionSubscription(userID: AWSMobileClient.default().username ?? "", eventKey: eventKey), subscriptionResultHandler: { (result, transaction, error) in
                 CLSNSLogv("Scout Sessions Subscription Fired", getVaList([]))
                 if Globals.handleAppSyncErrors(forQuery: "OnCreateScoutSessionSubscription-DeltaSync", result: result, error: error) {
                     //Add the new scout session to the cache

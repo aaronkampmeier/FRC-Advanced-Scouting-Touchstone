@@ -109,44 +109,63 @@ class TeamListDetailViewController: UIViewController {
         generalInfoTableView?.estimatedRowHeight = 44
         
         //Set up observer to get team change notifications
-        if #available(iOS 13.0, *) {
-            NotificationCenter.default.publisher(for: .FASTSelectedTeamDidChange, object: teamListSplitVC.teamListTableVC)
-                .map { (notification: Notification) -> (team: Team, eventKey: String)? in
-                    if let team = notification.userInfo?["team"] as? Team, let eventKey = notification.userInfo?["eventKey"] as? String {
-                        return (team, eventKey)
-                    } else {
-                        return nil
-                    }
-            }
-            .sink {[weak self] (tuple) in
-                self?.set(input: tuple)
+        NotificationCenter.default.addObserver(forName: .FASTSelectedTeamDidChange, object: teamListSplitVC.teamListTableVC, queue: nil) { (notification) in
+            if let team = notification.userInfo?["team"] as? Team, let eventKey = notification.userInfo?["eventKey"] as? String {
+                self.set(input: (team, eventKey))
+                let activity = NSUserActivity(activityType: Globals.UserActivity.viewTeamDetail)
+                activity.title = "View Team \(team.teamNumber): \(team.nickname) in \(eventKey)"
+                activity.isEligibleForHandoff = true
+                activity.isEligibleForSearch = true
+                activity.addUserInfoEntries(from: ["teamKey":team.key, "eventKey":eventKey])
+                activity.requiredUserInfoKeys = Set(arrayLiteral: "teamKey", "eventKey")
+                activity.becomeCurrent()
+                if #available(iOS 13.0, *) {
+                    self.view.window?.windowScene?.userActivity = activity
+                }
+            } else {
+                self.set(input: nil)
                 
-                if let (team, eventKey) = tuple {
-                    let activity = NSUserActivity(activityType: Globals.UserActivity.viewTeamDetail)
-                    activity.title = "View Team \(team.teamNumber): \(team.nickname) in \(eventKey)"
-                    activity.isEligibleForHandoff = true
-                    activity.isEligibleForSearch = true
-                    activity.addUserInfoEntries(from: ["teamKey":team.key, "eventKey":eventKey])
-                    activity.requiredUserInfoKeys = Set(arrayLiteral: "teamKey", "eventKey")
-                    activity.becomeCurrent()
-                    if #available(iOS 13.0, *) {
-                        self?.view.window?.windowScene?.userActivity = activity
-                    }
-                }
-            }
-        } else {
-            // Fallback on earlier versions
-            NotificationCenter.default.addObserver(forName: .FASTSelectedTeamDidChange, object: teamListSplitVC.teamListTableVC, queue: nil) { (notification) in
-                if let team = notification.userInfo?["team"] as? Team, let eventKey = notification.userInfo?["eventKey"] as? String {
-                    self.set(input: (team, eventKey))
-                } else {
-                    self.set(input: nil)
-                }
             }
         }
+//
+//        if #available(iOS 13.0, *) {
+//            NotificationCenter.default.publisher(for: .FASTSelectedTeamDidChange)//, object: teamListSplitVC.teamListTableVC)
+//                .map { (notification: Notification) -> (team: Team, eventKey: String)? in
+//                    if let team = notification.userInfo?["team"] as? Team, let eventKey = notification.userInfo?["eventKey"] as? String {
+//                        return (team, eventKey)
+//                    } else {
+//                        return nil
+//                    }
+//            }
+//            .sink {[weak self] (tuple) in
+//                self?.set(input: tuple)
+//
+//                if let (team, eventKey) = tuple {
+//                    let activity = NSUserActivity(activityType: Globals.UserActivity.viewTeamDetail)
+//                    activity.title = "View Team \(team.teamNumber): \(team.nickname) in \(eventKey)"
+//                    activity.isEligibleForHandoff = true
+//                    activity.isEligibleForSearch = true
+//                    activity.addUserInfoEntries(from: ["teamKey":team.key, "eventKey":eventKey])
+//                    activity.requiredUserInfoKeys = Set(arrayLiteral: "teamKey", "eventKey")
+//                    activity.becomeCurrent()
+//                    if #available(iOS 13.0, *) {
+//                        self?.view.window?.windowScene?.userActivity = activity
+//                    }
+//                }
+//            }
+//        } else {
+//            // Fallback on earlier versions
+//            NotificationCenter.default.addObserver(forName: .FASTSelectedTeamDidChange, object: teamListSplitVC.teamListTableVC, queue: nil) { (notification) in
+//                if let team = notification.userInfo?["team"] as? Team, let eventKey = notification.userInfo?["eventKey"] as? String {
+//                    self.set(input: (team, eventKey))
+//                } else {
+//                    self.set(input: nil)
+//                }
+//            }
+//        }
         
         //Load the data if a team was selected beforehand
-        NotificationCenter.default.post(name: .FASTSelectedTeamDidChange, object: teamListSplitVC.teamListTableVC, userInfo: ["team": teamListSplitVC.teamListTableVC.selectedTeam, "eventKey":teamListSplitVC.teamListTableVC.selectedEventRanking?.eventKey])
+        NotificationCenter.default.post(name: .FASTSelectedTeamDidChange, object: teamListSplitVC.teamListTableVC, userInfo: ["team": teamListSplitVC.teamListTableVC.selectedTeam as Any, "eventKey":teamListSplitVC.teamListTableVC.selectedEventRanking?.eventKey as Any])
     }
     
     override func viewWillAppear(_ animated: Bool) {

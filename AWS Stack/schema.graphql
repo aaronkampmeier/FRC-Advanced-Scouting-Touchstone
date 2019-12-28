@@ -1,0 +1,276 @@
+﻿##The UserID argument for each mutation must match the username of the user in Cognito exactly (i.e. team number)
+type Mutation {
+  addTrackedEvent(eventKey: ID!): EventRanking
+  removeTrackedEvent(eventKey: ID!): EventDeletion
+  moveRankedTeam(eventKey: ID!, teamKey: ID!, toIndex: Int!): EventRanking
+  setTeamPicked(eventKey: ID!, teamKey: ID!, isPicked: Boolean!): EventRanking
+  updateScoutedTeam(
+    eventKey: ID!,
+    teamKey: ID!,
+    image: ImageInput,
+    attributes: AWSJSON!
+  ): ScoutedTeam
+  addTeamComment(
+    eventKey: String!,
+    teamKey: String!,
+    body: String!,
+    author: String!
+  ): TeamComment
+  removeTeamComment(eventKey: String!, key: String!): TeamComment
+  createScoutSession(
+    eventKey: ID!,
+    teamKey: ID!,
+    matchKey: ID!,
+    recordedDate: AWSTimestamp!,
+    startState: AWSJSON,
+    endState: AWSJSON,
+    timeMarkers: [TimeMarkerInput]!
+  ): ScoutSession
+  removeScoutSession(eventKey: ID!, key: ID!): ScoutSession
+}
+
+type Query {
+  ## The Blue Alliance Universal Calls
+  listAvailableEvents(year: String): [Event]
+  getEvent(key: ID!): Event
+  listTeams(eventKey: ID!): [Team]
+  getTeam(key: ID!): Team
+  listMatches(eventKey: ID!): [Match]
+  getMatch(matchKey: ID!): Match
+  listEventOprs(eventKey: ID!): [TeamEventOPR]
+  listTeamEventStatuses(eventKey: ID!): [TeamEventStatus]
+
+
+  ## Scout Team Data Calls
+  listTrackedEvents(scoutTeam: ID!): [EventRanking]
+  getEventRanking(scoutTeam: ID!, key: ID!): EventRanking
+
+  listScoutedTeams(scoutTeam: ID!, eventKey: ID!): [ScoutedTeam]
+  getScoutedTeam(scoutTeam: ID!, eventKey: ID!, teamKey: ID!): ScoutedTeam
+  listTeamComments(scoutTeam:ID!, eventKey: ID!, teamKey: ID!): [TeamComment]
+
+  listScoutSessions(scoutTeam: ID!, eventKey: ID!, teamKey: ID!, matchKey: ID): [ScoutSession]
+  getScoutSession(scoutTeam: ID!, eventKey: ID!, key: ID!): ScoutSession
+
+  ## Delta Sync
+  listAllScoutSessions(scoutTeam: ID!, eventKey: ID!): [ScoutSession]
+  listScoutSessionsDelta(scoutTeam: ID!, eventKey: ID!, lastSync: AWSTimestamp!): [ScoutSession]
+}
+
+type Subscription {
+  onAddTrackedEvent(userID: ID!): EventRanking
+    @aws_subscribe(mutations: ["addTrackedEvent"])
+  onRemoveTrackedEvent(userID: ID!): EventDeletion
+    @aws_subscribe(mutations: ["removeTrackedEvent"])
+  onUpdateTeamRank(userID: ID!, eventKey: String!): EventRanking
+    @aws_subscribe(mutations: ["moveRankedTeam"])
+  onSetTeamPicked(userID: ID!, eventKey: String!): EventRanking
+    @aws_subscribe(mutations: ["setTeamPicked"])
+  onUpdateScoutedTeam(userID: ID!, eventKey: ID!, teamKey: ID): ScoutedTeam
+    @aws_subscribe(mutations: ["updateScoutedTeam"])
+  onAddTeamComment(userID: ID!, teamKey: String!): TeamComment
+    @aws_subscribe(mutations: ["addTeamComment"])
+  onCreateScoutSession(userID: ID!, eventKey: String!, teamKey: String): ScoutSession
+    @aws_subscribe(mutations: ["createScoutSession"])
+  onDeleteScoutSession(
+    userID: ID!,
+    key: ID,
+    matchKey: String,
+    teamKey: String
+  ): ScoutSession
+    @aws_subscribe(mutations: ["removeScoutSession"])
+}
+
+
+input UpdateScoutedTeamInput {
+  canBanana: Boolean
+  computerVisionCapability: String
+  driveTrain: String
+  driverXP: Float
+  frontImage: AWSURL
+  programmingLanguage: String
+  robotHeight: Float
+  robotLength: Float
+  robotWeight: Float
+  robotWidth: Float
+  strategy: String
+  otherAttributes: AWSJSON
+}
+
+enum CompetitionLevel {
+  qm
+  ef
+  qf
+  sf
+  f
+}
+
+##FAST Types
+type Event {
+  event_code: String!
+  event_type: Int!
+  event_type_string: String!
+  key: ID!
+  address: String
+  name: String!
+  year: Int!
+  website: String
+  location_name: String
+  short_name: String
+}
+
+type EventDeletion {
+  eventKey: ID!
+  userID: ID!
+}
+
+type EventRanking {
+  userID: ID!
+  eventKey: String!
+  eventName: String!
+  rankedTeams: [RankedTeam]
+}
+
+type Image {
+  bucket: String!
+  key: String!
+  region: String!
+}
+
+input ImageInput {
+  bucket: String!
+  key: String!
+  region: String!
+}
+
+type Match {
+  key: ID!
+  event_key: ID!
+  comp_level: CompetitionLevel!
+  match_number: Int!
+  set_number: Int
+  time: AWSTimestamp
+  actual_time: AWSTimestamp
+  predicted_time: AWSTimestamp
+  alliances: MatchAlliances
+}
+
+type MatchAlliance {
+  score: Int!
+  team_keys: [String]
+  surrogate_team_keys: [String]
+  dq_team_keys: [String]
+}
+
+type MatchAlliances {
+  blue: MatchAlliance
+  red: MatchAlliance
+}
+
+type RankedTeam {
+  teamKey: String!
+  isPicked: Boolean!
+}
+
+type S3Object {
+  bucket: String!
+  key: String!
+  region: String!
+}
+
+input S3ObjectInput {
+  bucket: String!
+  key: String!
+  region: String!
+  localUri: String!
+  mimeType: String!
+}
+
+type ScoutSession {
+  userID: ID!
+  key: ID!
+  matchKey: String!
+  teamKey: String!
+  eventKey: String!
+  recordedDate: Float
+  startState: AWSJSON
+  endState: AWSJSON
+  timeMarkers: [TimeMarker]
+}
+
+type ScoutedTeam {
+  teamKey: ID!
+  eventKey: String!
+  userID: ID!
+  image: Image
+  attributes: AWSJSON
+}
+
+type Team {
+  key: ID!
+  address: String
+  city: String
+  state_prov: String
+  name: String!
+  nickname: String!
+  rookie_year: Int
+  team_number: Int!
+  website: String
+}
+
+type TeamComment {
+  userID: ID!
+  author: String!
+  body: String!
+  datePosted: AWSTimestamp!
+  key: ID!
+  teamKey: String!
+  eventKey: String!
+}
+
+type TeamEventOPR {
+  teamKey: String!
+  eventKey: String!
+  opr: Float
+  dpr: Float
+  ccwm: Float
+}
+
+type TeamEventStatus {
+  teamKey: String!
+  eventKey: String!
+  qual: TeamEventStatusRank
+  overall_status_str: String
+}
+
+type TeamEventStatusQualRanking {
+  dq: Int
+  matches_played: Int
+  qual_average: Float
+  rank: Int
+}
+
+type TeamEventStatusRank {
+  num_teams: Int
+  ranking: TeamEventStatusQualRanking
+  status: String
+}
+
+type TimeMarker {
+  event: String!
+  time: Float!
+  subOption: String
+}
+
+input TimeMarkerInput {
+  event: String!
+  time: Float!
+  subOption: String
+}
+
+##Base Schema
+schema {
+  query: Query
+  mutation: Mutation
+  subscription: Subscription
+}

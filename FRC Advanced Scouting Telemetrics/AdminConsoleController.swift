@@ -103,7 +103,7 @@ class AdminConsoleController: UIViewController, UITableViewDataSource, UITableVi
                 if Globals.isInSpectatorMode {
                     (cell.viewWithTag(1) as! UILabel).text = "Exit Spectator Mode"
                 } else {
-                    let teamNumber: String = AWSMobileClient.sharedInstance().username ?? "?"
+                    let teamNumber: String = AWSMobileClient.default().username ?? "?"
                     (cell.viewWithTag(1) as! UILabel).text = "Log Out of Team \(teamNumber)"
                 }
                 
@@ -509,7 +509,11 @@ class AdminConsoleController: UIViewController, UITableViewDataSource, UITableVi
     @IBAction func advancedPressed(_ sender: UIBarButtonItem) {
         let alert = UIAlertController(title: "Clear Local Cache?", message: "Would you like to clear the local cache of data? This will not delete any of your scouted data, simply clear out the local cache of it. This will cause longer loading times initially as data is re-downloaded and cached again.", preferredStyle: .alert)
         alert.addAction(UIAlertAction(title: "Clear Cache", style: .destructive, handler: { (action) in
-            Globals.appDelegate.appSyncClient?.clearCache()
+            do {
+                try Globals.appDelegate.appSyncClient?.clearCaches()
+            } catch {
+                CLSNSLogv("Error clearing app sync cache: \(error)", getVaList([]))
+            }
             CLSNSLogv("Cleared AppSync Cache", getVaList([]))
         }))
         alert.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))

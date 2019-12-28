@@ -9,6 +9,10 @@
 import UIKit
 import AWSAppSync
 
+extension Notification.Name {
+    static let FASTSelectedEventChanged = Notification.Name("FASTSelectedEventChanged")
+}
+
 class EventSelectorTableViewController: UITableViewController {
     
     fileprivate var events: [(eventKey: String, eventName: String)] = []
