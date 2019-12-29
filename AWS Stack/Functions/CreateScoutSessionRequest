@@ -14,15 +14,16 @@ $util.qr($ctx.stash.put("scout_session_key", $newScoutSessionID))
     "operation" : "PutItem",
     "key" : {
         ## If object "id" should come from GraphQL arguments, change to $util.dynamodb.toDynamoDBJson($ctx.args.id)
-        "partitionKey": $util.dynamodb.toDynamoDBJson("u${ctx.identity.username}-e${ctx.args.eventKey}"),
+        "partitionKey": $util.dynamodb.toDynamoDBJson("g${ctx.args.scoutTeam}-e${ctx.args.eventKey}"),
         "sortKey":$util.dynamodb.toDynamoDBJson("s${newScoutSessionID}")
     },
     "attributeValues" : $util.dynamodb.toMapValuesJson({
     	"key":$newScoutSessionID,
-        "userID":$ctx.identity.username,
+        "scoutTeam":$ctx.args.scoutTeam,
         "matchKey":$ctx.args.matchKey,
         "teamKey":$ctx.args.teamKey,
         "eventKey":$ctx.args.eventKey,
+        "authorId":$ctx.identity.sub,
         "recordedDate":$util.time.nowEpochSeconds(),
         "startState":$ctx.args.startState,
         "endState":$ctx.args.endState,

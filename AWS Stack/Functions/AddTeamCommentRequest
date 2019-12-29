@@ -11,15 +11,16 @@
     "version" : "2018-05-29",
     "operation" : "PutItem",
     "key" : {
-        "partitionKey" : $util.dynamodb.toDynamoDBJson("u${ctx.identity.username}-e${ctx.args.eventKey}"),
+        "partitionKey" : $util.dynamodb.toDynamoDBJson("g${ctx.args.scoutTeam}-e${ctx.args.eventKey}"),
         "sortKey": $util.dynamodb.toDynamoDBJson("c${commentKey}")
     },
     "attributeValues" : {
     	"teamKey":$util.dynamodb.toDynamoDBJson($ctx.args.teamKey),
-        "userID":$util.dynamodb.toDynamoDBJson($ctx.identity.username),
+        "scoutTeam":$util.dynamodb.toDynamoDBJson($ctx.args.scoutTeam),
         "eventKey":$util.dynamodb.toDynamoDBJson($ctx.args.eventKey),
         "key":$util.dynamodb.toDynamoDBJson($commentKey),
         "author":$util.dynamodb.toDynamoDBJson($ctx.args.author),
+        "authorUserId":$util.dynamodb.toDynamoDBJson($ctx.identity.sub),
         "body":$util.dynamodb.toDynamoDBJson($ctx.args.body),
         "datePosted":$util.dynamodb.toDynamoDBJson($util.time.nowEpochSeconds())
     }

@@ -1,0 +1,2 @@
+#set($return = {"scoutTeam":$ctx.args.scoutTeam, "eventKey":$ctx.result })
+$util.toJson($return)

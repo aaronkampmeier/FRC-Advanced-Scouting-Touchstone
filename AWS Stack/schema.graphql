@@ -1,23 +1,26 @@
 ﻿##The UserID argument for each mutation must match the username of the user in Cognito exactly (i.e. team number)
 type Mutation {
-  addTrackedEvent(eventKey: ID!): EventRanking
-  removeTrackedEvent(eventKey: ID!): EventDeletion
-  moveRankedTeam(eventKey: ID!, teamKey: ID!, toIndex: Int!): EventRanking
-  setTeamPicked(eventKey: ID!, teamKey: ID!, isPicked: Boolean!): EventRanking
+  addTrackedEvent(scoutTeam: ID!, eventKey: ID!): EventRanking
+  removeTrackedEvent(scoutTeam: ID!, eventKey: ID!): EventDeletion
+  moveRankedTeam(scoutTeam: ID!, eventKey: ID!, teamKey: ID!, toIndex: Int!): EventRanking
+  setTeamPicked(scoutTeam: ID!, eventKey: ID!, teamKey: ID!, isPicked: Boolean!): EventRanking
   updateScoutedTeam(
+    scoutTeam: ID!,
     eventKey: ID!,
     teamKey: ID!,
     image: ImageInput,
     attributes: AWSJSON!
   ): ScoutedTeam
   addTeamComment(
+    scoutTeam: ID!,
     eventKey: String!,
     teamKey: String!,
     body: String!,
     author: String!
   ): TeamComment
-  removeTeamComment(eventKey: String!, key: String!): TeamComment
+  removeTeamComment(scoutTeam: ID!, eventKey: String!, key: String!): TeamComment
   createScoutSession(
+    scoutTeam: ID!,
     eventKey: ID!,
     teamKey: ID!,
     matchKey: ID!,
@@ -26,7 +29,10 @@ type Mutation {
     endState: AWSJSON,
     timeMarkers: [TimeMarkerInput]!
   ): ScoutSession
-  removeScoutSession(eventKey: ID!, key: ID!): ScoutSession
+  removeScoutSession(scoutTeam: ID!, eventKey: ID!, key: ID!): ScoutSession
+
+  ## Scouting Team Management
+  ## addMemberTo(scoutingTeam: ID!): 
 }
 
 type Query {
@@ -58,22 +64,22 @@ type Query {
 }
 
 type Subscription {
-  onAddTrackedEvent(userID: ID!): EventRanking
+  onAddTrackedEvent(scoutTeam: ID!): EventRanking
     @aws_subscribe(mutations: ["addTrackedEvent"])
-  onRemoveTrackedEvent(userID: ID!): EventDeletion
+  onRemoveTrackedEvent(scoutTeam: ID!): EventDeletion
     @aws_subscribe(mutations: ["removeTrackedEvent"])
-  onUpdateTeamRank(userID: ID!, eventKey: String!): EventRanking
+  onUpdateTeamRank(scoutTeam: ID!, eventKey: String!): EventRanking
     @aws_subscribe(mutations: ["moveRankedTeam"])
-  onSetTeamPicked(userID: ID!, eventKey: String!): EventRanking
+  onSetTeamPicked(scoutTeam: ID!, eventKey: String!): EventRanking
     @aws_subscribe(mutations: ["setTeamPicked"])
-  onUpdateScoutedTeam(userID: ID!, eventKey: ID!, teamKey: ID): ScoutedTeam
+  onUpdateScoutedTeam(scoutTeam: ID!, eventKey: ID!, teamKey: ID): ScoutedTeam
     @aws_subscribe(mutations: ["updateScoutedTeam"])
-  onAddTeamComment(userID: ID!, teamKey: String!): TeamComment
+  onAddTeamComment(scoutTeam: ID!, teamKey: String!): TeamComment
     @aws_subscribe(mutations: ["addTeamComment"])
-  onCreateScoutSession(userID: ID!, eventKey: String!, teamKey: String): ScoutSession
+  onCreateScoutSession(scoutTeam: ID!, eventKey: String!, teamKey: String): ScoutSession
     @aws_subscribe(mutations: ["createScoutSession"])
   onDeleteScoutSession(
-    userID: ID!,
+    scoutTeam: ID!,
     key: ID,
     matchKey: String,
     teamKey: String
@@ -121,11 +127,11 @@ type Event {
 
 type EventDeletion {
   eventKey: ID!
-  userID: ID!
+  scoutTeam: ID!
 }
 
 type EventRanking {
-  userID: ID!
+  scoutTeam: ID!
   eventKey: String!
   eventName: String!
   rankedTeams: [RankedTeam]
@@ -187,7 +193,7 @@ input S3ObjectInput {
 }
 
 type ScoutSession {
-  userID: ID!
+  scoutTeam: ID!
   key: ID!
   matchKey: String!
   teamKey: String!
@@ -201,7 +207,7 @@ type ScoutSession {
 type ScoutedTeam {
   teamKey: ID!
   eventKey: String!
-  userID: ID!
+  scoutTeam: ID!
   image: Image
   attributes: AWSJSON
 }
@@ -219,8 +225,9 @@ type Team {
 }
 
 type TeamComment {
-  userID: ID!
+  scoutTeam: ID!
   author: String!
+  authorUserId: ID!
   body: String!
   datePosted: AWSTimestamp!
   key: ID!

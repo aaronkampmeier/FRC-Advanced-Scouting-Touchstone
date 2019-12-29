@@ -10,9 +10,10 @@
 ## Read more: https://docs.aws.amazon.com/appsync/latest/devguide/resolver-mapping-template-reference.html
 
 {
+    "version": "2017-02-28",
     "operation": "GetItem",
     "key": {
-        "partitionKey":$util.dynamodb.toDynamoDBJson("g${ctx.args.scoutTeam}"),
-        "sortKey":$util.dynamodb.toDynamoDBJson("e${ctx.args.eventKey}")
+        "partitionKey": $util.dynamodb.toDynamoDBJson("g${ctx.args.scoutTeam}"),
+        "sortKey":$util.dynamodb.toDynamoDBJson("e${ctx.args.key}")
     }
 }

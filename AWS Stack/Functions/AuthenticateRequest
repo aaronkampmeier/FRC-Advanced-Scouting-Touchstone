@@ -3,7 +3,7 @@
     "operation" : "GetItem",
     "key" : {
         "teamID" : $util.dynamodb.toDynamoDBJson($ctx.args.scoutTeam),
-        "userID" : $util.dynamodb.toDynamoDBJson($ctx.identity.cognitoIdentityId)
+        "userID" : $util.dynamodb.toDynamoDBJson($ctx.identity.sub)
     },
     "consistentRead" : false
 }

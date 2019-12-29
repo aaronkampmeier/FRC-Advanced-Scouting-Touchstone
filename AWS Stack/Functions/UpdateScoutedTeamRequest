@@ -1,0 +1,106 @@
+## Below example shows how to create an object from all provided GraphQL arguments
+## The primary key of the obejct is a randomly generated UUD using the $util.autoId() utility
+## Other utilities include $util.matches() for regular expressions, $util.time.nowISO8601() or
+##   $util.time.nowEpochMilliSeconds() for timestamps, and even List or Map helpers like
+##   $util.list.copyAndRetainAll() $util.map.copyAndRemoveAllKeys() for shallow copies
+## Read more: https://docs.aws.amazon.com/appsync/latest/devguide/resolver-context-reference.html#utility-helpers-in-util
+{
+    "version" : "2017-02-28",
+    "operation" : "UpdateItem",
+    "key" : {
+        "partitionKey":$util.dynamodb.toDynamoDBJson("g${ctx.args.scoutTeam}-e${ctx.args.eventKey}"),
+        "sortKey":$util.dynamodb.toDynamoDBJson("t${ctx.args.teamKey}")
+    },
+
+    #set( $attribs = $ctx.args.attributes )
+    
+    ##The following is pulled from: https://docs.aws.amazon.com/appsync/latest/devguide/resolver-mapping-template-reference-dynamodb.html#aws-appsync-resolver-mapping-template-reference-dynamodb-updateitem
+    ## Set up some space to keep track of things we're updating **
+    ####if ($util.isNullOrEmpty($attribs))
+    #set( $expNames = {})
+    ####else
+    	####set( $expNames  = {"#attr":"attributes"} )
+    ####end
+    #set( $expValues = {} )
+    #set( $expSet = {} )
+    #set( $expAdd = {} )
+    #set( $expRemove = [] )
+
+    ## Iterate through each argument, skipping "id" and "expectedVersion" **
+    #foreach( $entry in $attribs.entrySet() )
+        #if( "" == "" )
+        	$utils.qr($expNames.put("#attr","attributes"))
+            #if( $util.isNull($entry.value) || ("$!{entry.value}" == "") )
+                ## If the argument is set to "null", then remove that attribute from the item in DynamoDB **
+
+                #set( $discard = ${expRemove.add("#${entry.key}")} )
+                $!{expNames.put("#${entry.key}", "$entry.key")}
+            #else
+                ## Otherwise set (or update) the attribute on the item in DynamoDB **
+
+                $!{expSet.put("#${entry.key}", ":${entry.key}")}
+                $!{expNames.put("#${entry.key}", "$entry.key")}
+
+                $!{expValues.put(":${entry.key}", $util.dynamodb.toDynamoDB($entry.value))}
+
+            #end
+        #end
+    #end
+
+    ## Start building the update expression, starting with attributes we're going to SET **
+    #set( $expression = "" )
+    #if( !${expSet.isEmpty()} )
+        #set( $expression = "SET" )
+        #foreach( $entry in $expSet.entrySet() )
+            #set( $expression = "${expression} #attr.${entry.key} = ${entry.value}" )
+            #if ( $foreach.hasNext )
+                #set( $expression = "${expression}," )
+            #end
+        #end
+    #end
+
+    ## Continue building the update expression, adding attributes we're going to ADD **
+    #if( !${expAdd.isEmpty()} )
+        #set( $expression = "${expression} ADD" )
+        #foreach( $entry in $expAdd.entrySet() )
+            #set( $expression = "${expression} #attr.${entry.key} ${entry.value}" )
+            #if ( $foreach.hasNext )
+                #set( $expression = "${expression}," )
+            #end
+        #end
+    #end
+
+    ## Continue building the update expression, adding attributes we're going to REMOVE **
+    #if( !${expRemove.isEmpty()} )
+        #set( $expression = "${expression} REMOVE" )
+
+        #foreach( $entry in $expRemove )
+            #set( $expression = "${expression} #attr.${entry}" )
+            #if ( $foreach.hasNext )
+                #set( $expression = "${expression}," )
+            #end
+        #end
+    #end
+
+    ## Update the image
+    #if( !($util.isNull($ctx.args.image)) )
+
+    	#set( $expression = "${expression} SET #img = :imgFile" )
+        $util.qr($expNames.put("#img","image"))
+        $util.qr($expValues.put(":imgFile", $util.dynamodb.toDynamoDB($ctx.args.image )))
+    #end
+
+    ## Finally, write the update expression into the document, along with any expressionNames and expressionValues **
+    "update" : {
+        "expression" : "${expression}"
+        #if( !${expNames.isEmpty()} )
+            ,"expressionNames" : $utils.toJson($expNames)
+        #end
+        #if( !${expValues.isEmpty()} )
+            ,"expressionValues" : $utils.toJson($expValues)
+        #end
+    },
+    "condition" : {
+    	"expression":"attribute_exists(sortKey)"
+    }
+}

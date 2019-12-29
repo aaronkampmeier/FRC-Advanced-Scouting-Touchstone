@@ -3,12 +3,11 @@
     will be passed as the event to AWS Lambda.
 *#
 {
+    "version" : "2017-02-28",
     "operation": "Invoke",
     "payload": {
-  		"operation":"create",
-    	"scoutTeam":"$ctx.args.scoutTeam",
+    	"operation":"delete",
     	"eventKey":"$ctx.args.eventKey",
-        "eventName": "${ctx.stash.event.name}",
-    	"teams":$util.toJson($ctx.prev.result)
-  	}
+        "scoutTeam":"$ctx.args.scoutTeam"
+    }
 }

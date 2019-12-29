@@ -5,7 +5,7 @@ will be passed as the event to AWS Lambda.
 {
   "operation": "Invoke",
   "payload": {
-  	"team_id":$util.toJson($context.identity.username),
+  	"scoutTeam":$util.toJson($context.args.scoutTeam),
     "event_key":$util.toJson($ctx.args.eventKey),
     "category":"scout_session",
     "scout_session_keys":[$util.toJson($ctx.stash.scout_session_key)]
