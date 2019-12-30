@@ -1,0 +1,13 @@
+## Return a scouting team from the BatchPutItem request
+#if(!$ctx.result.unprocessedItems.FASTTeams)
+		## One of the items did not put successfully
+		$util.error($ctx.error.message, $ctx.error.type)
+#end
+
+#foreach( $object in $ctx.result.data.FASTTeams )
+		#if( $object.userID == "teamData")
+				#set( $returnScoutingTeam = $object )
+		#end
+#end
+
+$util.toJson($returnScoutingTeam)

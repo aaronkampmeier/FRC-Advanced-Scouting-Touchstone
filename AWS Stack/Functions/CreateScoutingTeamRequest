@@ -1,0 +1,20 @@
+{
+    "version" : "2018-05-29",
+    "operation" : "BatchPutItem",
+    "tables":{
+		    "FASTTeams": [
+						{
+								"teamID": $util.dynamodb.toDynamoDBJson($util.autoId()),
+				        "userID": $util.dynamodb.toDynamoDBJson("teamData"),
+								"teamLead": $util.dynamodb.toDynamoDBJson($ctx.identity.sub),
+								"associatedFrcTeamNumber": $util.dynamodb.toDynamoDBJson($ctx.args.associatedFrcTeamNumber),
+								"name": $util.dynamodb.toDynamoDBJson($ctx.args.name)
+						},
+						{
+								"teamID": $util.dynamodb.toDynamoDBJson($util.autoId()),
+								"userID": $util.dynamodb.toDynamoDBJson("u${ctx.identity.sub}"),
+								"memberSince": $util.dynamodb.toDynamoDBJson($util.time.nowEpochSeconds())
+						}
+		    ]
+    }
+}

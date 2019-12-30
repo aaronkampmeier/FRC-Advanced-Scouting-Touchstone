@@ -1,6 +1,6 @@
 AWSTemplateFormatVersion: 2010-09-09
 Metadata:
-  Stupid: 
+  Stupid:
     Stupid: Stupid
   'AWS::CloudFormation::Designer':
     79ee8c5c-c919-4d0f-91b8-4d7b665068a2:
@@ -196,7 +196,7 @@ Resources:
     Properties:
       ApiId: !GetAtt AppSyncAPI.ApiId
       DefinitionS3Location: >-
-        s3://cf-templates-4eazvtfbn788-us-east-1/FAST API Stack Resources/schema.graphql
+        ./schema.graphql
     Metadata:
       'AWS::CloudFormation::Designer':
         id: 9826eb5e-9f89-4a15-a614-3649ede94ece
@@ -298,7 +298,7 @@ Resources:
 
   IAMAppSyncToFASTTeamsRole:
     Type: AWS::IAM::Role
-    Properties: 
+    Properties:
       AssumeRolePolicyDocument: |
         {
           "Version": "2012-10-17",
@@ -314,7 +314,7 @@ Resources:
             }
           ]
         }
-      Policies: 
+      Policies:
         - PolicyDocument: |
             {
               "Version": "2012-10-17",
@@ -338,7 +338,7 @@ Resources:
             }
           PolicyName: AccessFASTScoutingTeams
       RoleName: FAST-AppSync2ScoutingTeamsAccess
-      Tags: 
+      Tags:
         - Key: App
           Value: FAST
 
@@ -381,493 +381,511 @@ Resources:
         id: 498c3101-f50d-4d07-9089-89280e24fd9c
     DependsOn:
       - AppSyncAPI
+
+  # FUNCTIONS
   FuncCheckEventExistence:
     Type: AWS::AppSync::FunctionConfiguration
-    Properties: 
+    Properties:
       ApiId: !GetAtt AppSyncAPI.ApiId
       DataSourceName: !GetAtt SourceFASTTable.Name
       FunctionVersion: 2018-05-29
       Name: CheckExistenceOfEvent
-      RequestMappingTemplateS3Location: s3://cf-templates-4eazvtfbn788-us-east-1/FAST API Stack Resources/Functions/CheckEventExistenceRequest
-      ResponseMappingTemplateS3Location: s3://cf-templates-4eazvtfbn788-us-east-1/FAST API Stack Resources/Functions/CheckEventExistenceResponse
+      RequestMappingTemplateS3Location: ./Functions/CheckEventExistenceRequest
+      ResponseMappingTemplateS3Location: ./Functions/CheckEventExistenceResponse
   FuncCreateEventRanking:
     Type: AWS::AppSync::FunctionConfiguration
-    Properties: 
+    Properties:
       ApiId: !GetAtt AppSyncAPI.ApiId
       DataSourceName: !GetAtt SourceEventRankingManagement.Name
       FunctionVersion: 2018-05-29
       Name: CreateEventRanking
-      RequestMappingTemplateS3Location: s3://cf-templates-4eazvtfbn788-us-east-1/FAST API Stack Resources/Functions/EventRankingManagementRequest
-      ResponseMappingTemplateS3Location: s3://cf-templates-4eazvtfbn788-us-east-1/FAST API Stack Resources/Functions/EventRankingManagementResponse
+      RequestMappingTemplateS3Location: ./Functions/EventRankingManagementRequest
+      ResponseMappingTemplateS3Location: ./Functions/EventRankingManagementResponse
   FuncCreateScoutSession:
     Type: AWS::AppSync::FunctionConfiguration
-    Properties: 
+    Properties:
       ApiId: !GetAtt AppSyncAPI.ApiId
       DataSourceName: !GetAtt SourceFASTTable.Name
       FunctionVersion: 2018-05-29
       Name: CreateScoutSession
-      RequestMappingTemplateS3Location: s3://cf-templates-4eazvtfbn788-us-east-1/FAST API Stack Resources/Functions/CreateScoutSessionRequest
-      ResponseMappingTemplateS3Location: s3://cf-templates-4eazvtfbn788-us-east-1/FAST API Stack Resources/Functions/CreateScoutSessionResponse
+      RequestMappingTemplateS3Location: ./Functions/CreateScoutSessionRequest
+      ResponseMappingTemplateS3Location: ./Functions/CreateScoutSessionResponse
   FuncGetAllEvents:
     Type: AWS::AppSync::FunctionConfiguration
-    Properties: 
+    Properties:
       ApiId: !GetAtt AppSyncAPI.ApiId
       DataSourceName: !GetAtt SourceTheBlueAllianceHTTP.Name
       FunctionVersion: 2018-05-29
       Name: GetAllEvents
-      RequestMappingTemplateS3Location: s3://cf-templates-4eazvtfbn788-us-east-1/FAST API Stack Resources/Functions/GetAllEventsRequest
-      ResponseMappingTemplateS3Location: s3://cf-templates-4eazvtfbn788-us-east-1/FAST API Stack Resources/Functions/GetAllEventsResponse
+      RequestMappingTemplateS3Location: ./Functions/GetAllEventsRequest
+      ResponseMappingTemplateS3Location: ./Functions/GetAllEventsResponse
   FuncGetSimpleEvent:
     Type: AWS::AppSync::FunctionConfiguration
-    Properties: 
+    Properties:
       ApiId: !GetAtt AppSyncAPI.ApiId
       DataSourceName: !GetAtt SourceTBALambda.Name
       FunctionVersion: 2018-05-29
       Name: GetSimpleEvent
-      RequestMappingTemplateS3Location: s3://cf-templates-4eazvtfbn788-us-east-1/FAST API Stack Resources/Functions/GetSimpleEventRequest
-      ResponseMappingTemplateS3Location: s3://cf-templates-4eazvtfbn788-us-east-1/FAST API Stack Resources/Functions/GetSimpleEventResponse
+      RequestMappingTemplateS3Location: ./Functions/GetSimpleEventRequest
+      ResponseMappingTemplateS3Location: ./Functions/GetSimpleEventResponse
   FuncGetTeamsInEvent:
     Type: AWS::AppSync::FunctionConfiguration
-    Properties: 
+    Properties:
       ApiId: !GetAtt AppSyncAPI.ApiId
       DataSourceName: !GetAtt SourceTBALambda.Name
       FunctionVersion: 2018-05-29
       Name: GetTeamsInEvent
-      RequestMappingTemplateS3Location: s3://cf-templates-4eazvtfbn788-us-east-1/FAST API Stack Resources/Functions/GetTeamsInEventRequest
-      ResponseMappingTemplateS3Location: s3://cf-templates-4eazvtfbn788-us-east-1/FAST API Stack Resources/Functions/GetTeamsInEventResponse
+      RequestMappingTemplateS3Location: ./Functions/GetTeamsInEventRequest
+      ResponseMappingTemplateS3Location: ./Functions/GetTeamsInEventResponse
   FuncAddTeamComment:
     Type: AWS::AppSync::FunctionConfiguration
-    Properties: 
+    Properties:
       ApiId: !GetAtt AppSyncAPI.ApiId
       DataSourceName: !GetAtt SourceFASTTable.Name
       FunctionVersion: 2018-05-29
       Name: AddTeamComment
-      RequestMappingTemplateS3Location: s3://cf-templates-4eazvtfbn788-us-east-1/FAST API Stack Resources/Functions/AddTeamCommentRequest
-      ResponseMappingTemplateS3Location: s3://cf-templates-4eazvtfbn788-us-east-1/FAST API Stack Resources/Functions/AddTeamCommentResponse
+      RequestMappingTemplateS3Location: ./Functions/AddTeamCommentRequest
+      ResponseMappingTemplateS3Location: ./Functions/AddTeamCommentResponse
   FuncStashTBAKey:
     Type: AWS::AppSync::FunctionConfiguration
-    Properties: 
+    Properties:
       ApiId: !GetAtt AppSyncAPI.ApiId
       DataSourceName: !GetAtt SourceTBAApiKey.Name
       FunctionVersion: 2018-05-29
       Name: StashTBAKey
-      RequestMappingTemplateS3Location: s3://cf-templates-4eazvtfbn788-us-east-1/FAST API Stack Resources/Functions/StashTBAKeyRequest
-      ResponseMappingTemplateS3Location: s3://cf-templates-4eazvtfbn788-us-east-1/FAST API Stack Resources/Functions/StashTBAKeyResponse
+      RequestMappingTemplateS3Location: ./Functions/StashTBAKeyRequest
+      ResponseMappingTemplateS3Location: ./Functions/StashTBAKeyResponse
   FuncUpdateScoutSessionStats:
     Type: AWS::AppSync::FunctionConfiguration
-    Properties: 
+    Properties:
       ApiId: !GetAtt AppSyncAPI.ApiId
       DataSourceName: !GetAtt SourceStatsUpdater.Name
       FunctionVersion: 2018-05-29
       Name: UpdateScoutSessionStats
-      RequestMappingTemplateS3Location: s3://cf-templates-4eazvtfbn788-us-east-1/FAST API Stack Resources/Functions/UpdateScoutSessionStatsRequest
-      ResponseMappingTemplateS3Location: s3://cf-templates-4eazvtfbn788-us-east-1/FAST API Stack Resources/Functions/UpdateScoutSessionStatsResponse
+      RequestMappingTemplateS3Location: ./Functions/UpdateScoutSessionStatsRequest
+      ResponseMappingTemplateS3Location: ./Functions/UpdateScoutSessionStatsResponse
   FuncAuthenticate:
     Type: AWS::AppSync::FunctionConfiguration
-    Properties: 
+    Properties:
       ApiId: !GetAtt AppSyncAPI.ApiId
       DataSourceName: !GetAtt SourceFASTTeams.Name
       Description: This is to authenticate users whenever they try to access shared team resources. If they are not a member of the team they are trying to access, then deny them.
       FunctionVersion: 2018-05-29
       Name: Authenticate
-      RequestMappingTemplateS3Location: s3://cf-templates-4eazvtfbn788-us-east-1/FAST API Stack Resources/Functions/AuthenticateRequest
-      ResponseMappingTemplateS3Location: s3://cf-templates-4eazvtfbn788-us-east-1/FAST API Stack Resources/Functions/AuthenticateResponse
-  
+      RequestMappingTemplateS3Location: ./Functions/AuthenticateRequest
+      ResponseMappingTemplateS3Location: ./Functions/AuthenticateResponse
+
   # Resolvers for The Blue Alliance Universal Data
   ResolverListAvailableEvents:
     Type: AWS::AppSync::Resolver
-    Properties: 
+    Properties:
       ApiId: !GetAtt AppSyncAPI.ApiId
       FieldName: listAvailableEvents
       Kind: PIPELINE
-      PipelineConfig: 
+      PipelineConfig:
         Functions:
           - !GetAtt FuncStashTBAKey.FunctionId
           - !GetAtt FuncGetAllEvents.FunctionId
-      RequestMappingTemplateS3Location: s3://cf-templates-4eazvtfbn788-us-east-1/FAST API Stack Resources/Functions/PipelineStandardBeforeRequest
-      ResponseMappingTemplateS3Location: s3://cf-templates-4eazvtfbn788-us-east-1/FAST API Stack Resources/Functions/PipelineStandardAfterResponse
+      RequestMappingTemplateS3Location: ./Functions/PipelineStandardBeforeRequest
+      ResponseMappingTemplateS3Location: ./Functions/PipelineStandardAfterResponse
       TypeName: Query
     # DependsOn:
     #   - FuncStashTBAKey
     #   - FuncGetAllEvents
   ResolverGetEvent:
     Type: AWS::AppSync::Resolver
-    Properties: 
+    Properties:
       ApiId: !GetAtt AppSyncAPI.ApiId
       FieldName: getEvent
       Kind: UNIT
       DataSourceName: !GetAtt SourceTBALambda.Name
-      RequestMappingTemplateS3Location: s3://cf-templates-4eazvtfbn788-us-east-1/FAST API Stack Resources/Functions/GetEventRequest
-      ResponseMappingTemplateS3Location: s3://cf-templates-4eazvtfbn788-us-east-1/FAST API Stack Resources/Functions/GetEventResponse
+      RequestMappingTemplateS3Location: ./Functions/GetEventRequest
+      ResponseMappingTemplateS3Location: ./Functions/GetEventResponse
       TypeName: Query
   ResolverListTeams:
     Type: AWS::AppSync::Resolver
-    Properties: 
+    Properties:
       ApiId: !GetAtt AppSyncAPI.ApiId
       FieldName: listTeams
       Kind: UNIT
       DataSourceName: !GetAtt SourceTBALambda.Name
-      RequestMappingTemplateS3Location: s3://cf-templates-4eazvtfbn788-us-east-1/FAST API Stack Resources/Functions/ListTeamsRequest
-      ResponseMappingTemplateS3Location: s3://cf-templates-4eazvtfbn788-us-east-1/FAST API Stack Resources/Functions/ListTeamsResponse
+      RequestMappingTemplateS3Location: ./Functions/ListTeamsRequest
+      ResponseMappingTemplateS3Location: ./Functions/ListTeamsResponse
       TypeName: Query
   ResolverGetTeam:
     Type: AWS::AppSync::Resolver
-    Properties: 
+    Properties:
       ApiId: !GetAtt AppSyncAPI.ApiId
       FieldName: getTeam
       Kind: UNIT
       DataSourceName: !GetAtt SourceTBALambda.Name
-      RequestMappingTemplateS3Location: s3://cf-templates-4eazvtfbn788-us-east-1/FAST API Stack Resources/Functions/GetTeamRequest
-      ResponseMappingTemplateS3Location: s3://cf-templates-4eazvtfbn788-us-east-1/FAST API Stack Resources/Functions/GetTeamResponse
+      RequestMappingTemplateS3Location: ./Functions/GetTeamRequest
+      ResponseMappingTemplateS3Location: ./Functions/GetTeamResponse
       TypeName: Query
   ResolverListMatches:
     Type: AWS::AppSync::Resolver
-    Properties: 
+    Properties:
       ApiId: !GetAtt AppSyncAPI.ApiId
       FieldName: listMatches
       Kind: UNIT
       DataSourceName: !GetAtt SourceTBALambda.Name
-      RequestMappingTemplateS3Location: s3://cf-templates-4eazvtfbn788-us-east-1/FAST API Stack Resources/Functions/ListMatchesRequest
-      ResponseMappingTemplateS3Location: s3://cf-templates-4eazvtfbn788-us-east-1/FAST API Stack Resources/Functions/ListMatchesResponse
+      RequestMappingTemplateS3Location: ./Functions/ListMatchesRequest
+      ResponseMappingTemplateS3Location: ./Functions/ListMatchesResponse
       TypeName: Query
   ResolverGetMatch:
     Type: AWS::AppSync::Resolver
-    Properties: 
+    Properties:
       ApiId: !GetAtt AppSyncAPI.ApiId
       FieldName: getMatch
       Kind: UNIT
       DataSourceName: !GetAtt SourceTBALambda.Name
-      RequestMappingTemplateS3Location: s3://cf-templates-4eazvtfbn788-us-east-1/FAST API Stack Resources/Functions/GetMatchRequest
-      ResponseMappingTemplateS3Location: s3://cf-templates-4eazvtfbn788-us-east-1/FAST API Stack Resources/Functions/GetMatchResponse
+      RequestMappingTemplateS3Location: ./Functions/GetMatchRequest
+      ResponseMappingTemplateS3Location: ./Functions/GetMatchResponse
       TypeName: Query
   ResolverListEventOprs:
     Type: AWS::AppSync::Resolver
-    Properties: 
+    Properties:
       ApiId: !GetAtt AppSyncAPI.ApiId
       FieldName: listEventOprs
       Kind: UNIT
       DataSourceName: !GetAtt SourceTBALambda.Name
-      RequestMappingTemplateS3Location: s3://cf-templates-4eazvtfbn788-us-east-1/FAST API Stack Resources/Functions/ListEventOprsRequest
-      ResponseMappingTemplateS3Location: s3://cf-templates-4eazvtfbn788-us-east-1/FAST API Stack Resources/Functions/ListEventOprsResponse
+      RequestMappingTemplateS3Location: ./Functions/ListEventOprsRequest
+      ResponseMappingTemplateS3Location: ./Functions/ListEventOprsResponse
       TypeName: Query
   ResolverListTeamEventStatuses:
     Type: AWS::AppSync::Resolver
-    Properties: 
+    Properties:
       ApiId: !GetAtt AppSyncAPI.ApiId
       FieldName: listTeamEventStatuses
       Kind: UNIT
       DataSourceName: !GetAtt SourceTBALambda.Name
-      RequestMappingTemplateS3Location: s3://cf-templates-4eazvtfbn788-us-east-1/FAST API Stack Resources/Functions/ListTeamEventStatusesRequest
-      ResponseMappingTemplateS3Location: s3://cf-templates-4eazvtfbn788-us-east-1/FAST API Stack Resources/Functions/ListTeamEventStatusesResponse
+      RequestMappingTemplateS3Location: ./Functions/ListTeamEventStatusesRequest
+      ResponseMappingTemplateS3Location: ./Functions/ListTeamEventStatusesResponse
       TypeName: Query
-  
+
   # Resolvers and functions for scouted team data calls
   # QUERIES
   FuncListTrackedEvents:
     Type: AWS::AppSync::FunctionConfiguration
-    Properties: 
+    Properties:
       ApiId: !GetAtt AppSyncAPI.ApiId
       DataSourceName: !GetAtt SourceFASTTable.Name
       FunctionVersion: 2018-05-29
       Name: ListTrackedEvents
-      RequestMappingTemplateS3Location: s3://cf-templates-4eazvtfbn788-us-east-1/FAST API Stack Resources/Functions/ListTrackedEventsRequest
-      ResponseMappingTemplateS3Location: s3://cf-templates-4eazvtfbn788-us-east-1/FAST API Stack Resources/Functions/ListTrackedEventsResponse
+      RequestMappingTemplateS3Location: ./Functions/ListTrackedEventsRequest
+      ResponseMappingTemplateS3Location: ./Functions/ListTrackedEventsResponse
   ResolverListTrackedEvents:
     Type: AWS::AppSync::Resolver
-    Properties: 
+    Properties:
       ApiId: !GetAtt AppSyncAPI.ApiId
       FieldName: listTrackedEvents
       Kind: PIPELINE
-      PipelineConfig: 
+      PipelineConfig:
         Functions:
           - !GetAtt FuncAuthenticate.FunctionId
           - !GetAtt FuncListTrackedEvents.FunctionId
-      RequestMappingTemplateS3Location: s3://cf-templates-4eazvtfbn788-us-east-1/FAST API Stack Resources/Functions/PipelineStandardBeforeRequest
-      ResponseMappingTemplateS3Location: s3://cf-templates-4eazvtfbn788-us-east-1/FAST API Stack Resources/Functions/PipelineStandardAfterResponse
+      RequestMappingTemplateS3Location: ./Functions/PipelineStandardBeforeRequest
+      ResponseMappingTemplateS3Location: ./Functions/PipelineStandardAfterResponse
       TypeName: Query
-  
+
   FuncGetEventRanking:
     Type: AWS::AppSync::FunctionConfiguration
-    Properties: 
+    Properties:
       ApiId: !GetAtt AppSyncAPI.ApiId
       DataSourceName: !GetAtt SourceFASTTable.Name
       FunctionVersion: 2018-05-29
       Name: GetEventRanking
-      RequestMappingTemplateS3Location: s3://cf-templates-4eazvtfbn788-us-east-1/FAST API Stack Resources/Functions/GetEventRankingRequest
-      ResponseMappingTemplateS3Location: s3://cf-templates-4eazvtfbn788-us-east-1/FAST API Stack Resources/Functions/GetEventRankingResponse
+      RequestMappingTemplateS3Location: ./Functions/GetEventRankingRequest
+      ResponseMappingTemplateS3Location: ./Functions/GetEventRankingResponse
   ResolverGetEventRanking:
     Type: AWS::AppSync::Resolver
-    Properties: 
+    Properties:
       ApiId: !GetAtt AppSyncAPI.ApiId
       FieldName: getEventRanking
       Kind: PIPELINE
-      PipelineConfig: 
+      PipelineConfig:
         Functions:
           - !GetAtt FuncAuthenticate.FunctionId
           - !GetAtt FuncGetEventRanking.FunctionId
-      RequestMappingTemplateS3Location: s3://cf-templates-4eazvtfbn788-us-east-1/FAST API Stack Resources/Functions/PipelineStandardBeforeRequest
-      ResponseMappingTemplateS3Location: s3://cf-templates-4eazvtfbn788-us-east-1/FAST API Stack Resources/Functions/PipelineStandardAfterResponse
+      RequestMappingTemplateS3Location: ./Functions/PipelineStandardBeforeRequest
+      ResponseMappingTemplateS3Location: ./Functions/PipelineStandardAfterResponse
       TypeName: Query
-  
+
   FuncListScoutedTeams:
     Type: AWS::AppSync::FunctionConfiguration
-    Properties: 
+    Properties:
       ApiId: !GetAtt AppSyncAPI.ApiId
       DataSourceName: !GetAtt SourceFASTTable.Name
       FunctionVersion: 2018-05-29
       Name: ListScoutedTeams
-      RequestMappingTemplateS3Location: s3://cf-templates-4eazvtfbn788-us-east-1/FAST API Stack Resources/Functions/ListScoutedTeamsRequest
-      ResponseMappingTemplateS3Location: s3://cf-templates-4eazvtfbn788-us-east-1/FAST API Stack Resources/Functions/ListScoutedTeamsResponse
+      RequestMappingTemplateS3Location: ./Functions/ListScoutedTeamsRequest
+      ResponseMappingTemplateS3Location: ./Functions/ListScoutedTeamsResponse
   ResolverListScoutedTeams:
     Type: AWS::AppSync::Resolver
-    Properties: 
+    Properties:
       ApiId: !GetAtt AppSyncAPI.ApiId
       FieldName: listScoutedTeams
       Kind: PIPELINE
-      PipelineConfig: 
+      PipelineConfig:
         Functions:
           - !GetAtt FuncAuthenticate.FunctionId
           - !GetAtt FuncListScoutedTeams.FunctionId
-      RequestMappingTemplateS3Location: s3://cf-templates-4eazvtfbn788-us-east-1/FAST API Stack Resources/Functions/PipelineStandardBeforeRequest
-      ResponseMappingTemplateS3Location: s3://cf-templates-4eazvtfbn788-us-east-1/FAST API Stack Resources/Functions/PipelineStandardAfterResponse
+      RequestMappingTemplateS3Location: ./Functions/PipelineStandardBeforeRequest
+      ResponseMappingTemplateS3Location: ./Functions/PipelineStandardAfterResponse
       TypeName: Query
-  
+
   FuncGetScoutedTeam:
     Type: AWS::AppSync::FunctionConfiguration
-    Properties: 
+    Properties:
       ApiId: !GetAtt AppSyncAPI.ApiId
       DataSourceName: !GetAtt SourceFASTTable.Name
       FunctionVersion: 2018-05-29
       Name: GetScoutedTeam
-      RequestMappingTemplateS3Location: s3://cf-templates-4eazvtfbn788-us-east-1/FAST API Stack Resources/Functions/GetScoutedTeamRequest
-      ResponseMappingTemplateS3Location: s3://cf-templates-4eazvtfbn788-us-east-1/FAST API Stack Resources/Functions/GetScoutedTeamResponse
+      RequestMappingTemplateS3Location: ./Functions/GetScoutedTeamRequest
+      ResponseMappingTemplateS3Location: ./Functions/GetScoutedTeamResponse
   ResolverGetScoutedTeam:
     Type: AWS::AppSync::Resolver
-    Properties: 
+    Properties:
       ApiId: !GetAtt AppSyncAPI.ApiId
       FieldName: getScoutedTeam
       Kind: PIPELINE
-      PipelineConfig: 
+      PipelineConfig:
         Functions:
           - !GetAtt FuncAuthenticate.FunctionId
           - !GetAtt FuncGetScoutedTeam.FunctionId
-      RequestMappingTemplateS3Location: s3://cf-templates-4eazvtfbn788-us-east-1/FAST API Stack Resources/Functions/PipelineStandardBeforeRequest
-      ResponseMappingTemplateS3Location: s3://cf-templates-4eazvtfbn788-us-east-1/FAST API Stack Resources/Functions/PipelineStandardAfterResponse
+      RequestMappingTemplateS3Location: ./Functions/PipelineStandardBeforeRequest
+      ResponseMappingTemplateS3Location: ./Functions/PipelineStandardAfterResponse
       TypeName: Query
 
   FuncListTeamComments:
     Type: AWS::AppSync::FunctionConfiguration
-    Properties: 
+    Properties:
       ApiId: !GetAtt AppSyncAPI.ApiId
       DataSourceName: !GetAtt SourceFASTTable.Name
       FunctionVersion: 2018-05-29
       Name: ListTeamComments
-      RequestMappingTemplateS3Location: s3://cf-templates-4eazvtfbn788-us-east-1/FAST API Stack Resources/Functions/ListTeamCommentsRequest
-      ResponseMappingTemplateS3Location: s3://cf-templates-4eazvtfbn788-us-east-1/FAST API Stack Resources/Functions/ListTeamCommentsResponse
+      RequestMappingTemplateS3Location: ./Functions/ListTeamCommentsRequest
+      ResponseMappingTemplateS3Location: ./Functions/ListTeamCommentsResponse
   ResolverListTeamComments:
     Type: AWS::AppSync::Resolver
-    Properties: 
+    Properties:
       ApiId: !GetAtt AppSyncAPI.ApiId
       FieldName: listTeamComments
       Kind: PIPELINE
-      PipelineConfig: 
+      PipelineConfig:
         Functions:
           - !GetAtt FuncAuthenticate.FunctionId
           - !GetAtt FuncListTeamComments.FunctionId
-      RequestMappingTemplateS3Location: s3://cf-templates-4eazvtfbn788-us-east-1/FAST API Stack Resources/Functions/PipelineStandardBeforeRequest
-      ResponseMappingTemplateS3Location: s3://cf-templates-4eazvtfbn788-us-east-1/FAST API Stack Resources/Functions/PipelineStandardAfterResponse
+      RequestMappingTemplateS3Location: ./Functions/PipelineStandardBeforeRequest
+      ResponseMappingTemplateS3Location: ./Functions/PipelineStandardAfterResponse
       TypeName: Query
 
   FuncListScoutSessions:
     Type: AWS::AppSync::FunctionConfiguration
-    Properties: 
+    Properties:
       ApiId: !GetAtt AppSyncAPI.ApiId
       DataSourceName: !GetAtt SourceFASTTable.Name
       FunctionVersion: 2018-05-29
       Name: ListScoutSessions
-      RequestMappingTemplateS3Location: s3://cf-templates-4eazvtfbn788-us-east-1/FAST API Stack Resources/Functions/ListScoutSessionsRequest
-      ResponseMappingTemplateS3Location: s3://cf-templates-4eazvtfbn788-us-east-1/FAST API Stack Resources/Functions/ListScoutSessionsResponse
+      RequestMappingTemplateS3Location: ./Functions/ListScoutSessionsRequest
+      ResponseMappingTemplateS3Location: ./Functions/ListScoutSessionsResponse
   ResolverListScoutSessions:
     Type: AWS::AppSync::Resolver
-    Properties: 
+    Properties:
       ApiId: !GetAtt AppSyncAPI.ApiId
       FieldName: listScoutSessions
       Kind: PIPELINE
-      PipelineConfig: 
+      PipelineConfig:
         Functions:
           - !GetAtt FuncAuthenticate.FunctionId
           - !GetAtt FuncListScoutSessions.FunctionId
-      RequestMappingTemplateS3Location: s3://cf-templates-4eazvtfbn788-us-east-1/FAST API Stack Resources/Functions/PipelineStandardBeforeRequest
-      ResponseMappingTemplateS3Location: s3://cf-templates-4eazvtfbn788-us-east-1/FAST API Stack Resources/Functions/PipelineStandardAfterResponse
+      RequestMappingTemplateS3Location: ./Functions/PipelineStandardBeforeRequest
+      ResponseMappingTemplateS3Location: ./Functions/PipelineStandardAfterResponse
       TypeName: Query
 
   FuncGetScoutSession:
     Type: AWS::AppSync::FunctionConfiguration
-    Properties: 
+    Properties:
       ApiId: !GetAtt AppSyncAPI.ApiId
       DataSourceName: !GetAtt SourceFASTTable.Name
       FunctionVersion: 2018-05-29
       Name: GetScoutSession
-      RequestMappingTemplateS3Location: s3://cf-templates-4eazvtfbn788-us-east-1/FAST API Stack Resources/Functions/GetScoutSessionRequest
-      ResponseMappingTemplateS3Location: s3://cf-templates-4eazvtfbn788-us-east-1/FAST API Stack Resources/Functions/GetScoutSessionResponse
+      RequestMappingTemplateS3Location: ./Functions/GetScoutSessionRequest
+      ResponseMappingTemplateS3Location: ./Functions/GetScoutSessionResponse
   ResolverGetScoutSession:
     Type: AWS::AppSync::Resolver
-    Properties: 
+    Properties:
       ApiId: !GetAtt AppSyncAPI.ApiId
       FieldName: getScoutSession
       Kind: PIPELINE
-      PipelineConfig: 
+      PipelineConfig:
         Functions:
           - !GetAtt FuncAuthenticate.FunctionId
           - !GetAtt FuncGetScoutSession.FunctionId
-      RequestMappingTemplateS3Location: s3://cf-templates-4eazvtfbn788-us-east-1/FAST API Stack Resources/Functions/PipelineStandardBeforeRequest
-      ResponseMappingTemplateS3Location: s3://cf-templates-4eazvtfbn788-us-east-1/FAST API Stack Resources/Functions/PipelineStandardAfterResponse
+      RequestMappingTemplateS3Location: ./Functions/PipelineStandardBeforeRequest
+      ResponseMappingTemplateS3Location: ./Functions/PipelineStandardAfterResponse
       TypeName: Query
 
   FuncListAllScoutSessions:
     Type: AWS::AppSync::FunctionConfiguration
-    Properties: 
+    Properties:
       ApiId: !GetAtt AppSyncAPI.ApiId
       DataSourceName: !GetAtt SourceScoutSessions.Name
       FunctionVersion: 2018-05-29
       Name: ListAllScoutSessions
-      RequestMappingTemplateS3Location: s3://cf-templates-4eazvtfbn788-us-east-1/FAST API Stack Resources/Functions/ListAllScoutSessionsRequest
-      ResponseMappingTemplateS3Location: s3://cf-templates-4eazvtfbn788-us-east-1/FAST API Stack Resources/Functions/ListAllScoutSessionsResponse
+      RequestMappingTemplateS3Location: ./Functions/ListAllScoutSessionsRequest
+      ResponseMappingTemplateS3Location: ./Functions/ListAllScoutSessionsResponse
   ResolverListAllScoutSessions:
     Type: AWS::AppSync::Resolver
-    Properties: 
+    Properties:
       ApiId: !GetAtt AppSyncAPI.ApiId
       FieldName: listAllScoutSessions
       Kind: PIPELINE
-      PipelineConfig: 
+      PipelineConfig:
         Functions:
           - !GetAtt FuncAuthenticate.FunctionId
           - !GetAtt FuncListAllScoutSessions.FunctionId
-      RequestMappingTemplateS3Location: s3://cf-templates-4eazvtfbn788-us-east-1/FAST API Stack Resources/Functions/PipelineStandardBeforeRequest
-      ResponseMappingTemplateS3Location: s3://cf-templates-4eazvtfbn788-us-east-1/FAST API Stack Resources/Functions/PipelineStandardAfterResponse
+      RequestMappingTemplateS3Location: ./Functions/PipelineStandardBeforeRequest
+      ResponseMappingTemplateS3Location: ./Functions/PipelineStandardAfterResponse
       TypeName: Query
 
   FuncListScoutSessionsDelta:
     Type: AWS::AppSync::FunctionConfiguration
-    Properties: 
+    Properties:
       ApiId: !GetAtt AppSyncAPI.ApiId
       DataSourceName: !GetAtt SourceFASTTable.Name
       FunctionVersion: 2018-05-29
       Name: ListScoutSessionsDelta
-      RequestMappingTemplateS3Location: s3://cf-templates-4eazvtfbn788-us-east-1/FAST API Stack Resources/Functions/ListScoutSessionsDeltaRequest
-      ResponseMappingTemplateS3Location: s3://cf-templates-4eazvtfbn788-us-east-1/FAST API Stack Resources/Functions/ListScoutSessionsDeltaResponse
+      RequestMappingTemplateS3Location: ./Functions/ListScoutSessionsDeltaRequest
+      ResponseMappingTemplateS3Location: ./Functions/ListScoutSessionsDeltaResponse
   ResolverListScoutSessionsDelta:
     Type: AWS::AppSync::Resolver
-    Properties: 
+    Properties:
       ApiId: !GetAtt AppSyncAPI.ApiId
       FieldName: listScoutSessionsDelta
       Kind: PIPELINE
-      PipelineConfig: 
+      PipelineConfig:
         Functions:
           - !GetAtt FuncAuthenticate.FunctionId
           - !GetAtt FuncListScoutSessionsDelta.FunctionId
-      RequestMappingTemplateS3Location: s3://cf-templates-4eazvtfbn788-us-east-1/FAST API Stack Resources/Functions/PipelineStandardBeforeRequest
-      ResponseMappingTemplateS3Location: s3://cf-templates-4eazvtfbn788-us-east-1/FAST API Stack Resources/Functions/PipelineStandardAfterResponse
+      RequestMappingTemplateS3Location: ./Functions/PipelineStandardBeforeRequest
+      ResponseMappingTemplateS3Location: ./Functions/PipelineStandardAfterResponse
       TypeName: Query
+
+  ResolverListEnrolledScoutingTeams:
+    Type: AWS::AppSync::Resolver
+    Properties:
+      ApiId: !GetAtt AppSyncAPI.ApiId
+      FieldName: listEnrolledScoutingTeams
+      TypeName: Query
+      Kind: UNIT
+      DataSourceName: !GetAtt SourceFASTTeams.Name
+      RequestMappingTemplateS3Location: ./Functions/ListEnrolledScoutingTeamsRequest
+      ResponseMappingTemplateS3Location: ./Functions/ListEnrolledScoutingTeamsResponse
+    DependsOn:
+      - AppSyncSchema
+
+  ######################################################################
+  ######################################################################
 
   # MUTATIONS
   ResolverAddTrackedEvent:
     Type: AWS::AppSync::Resolver
-    Properties: 
+    Properties:
       ApiId: !GetAtt AppSyncAPI.ApiId
       FieldName: addTrackedEvent
       Kind: PIPELINE
-      PipelineConfig: 
+      PipelineConfig:
         Functions:
           - !GetAtt FuncAuthenticate.FunctionId
           - !GetAtt FuncGetSimpleEvent.FunctionId
           - !GetAtt FuncGetTeamsInEvent.FunctionId
           - !GetAtt FuncCreateEventRanking.FunctionId
-      RequestMappingTemplateS3Location: s3://cf-templates-4eazvtfbn788-us-east-1/FAST API Stack Resources/Functions/PipelineStandardBeforeRequest
-      ResponseMappingTemplateS3Location: s3://cf-templates-4eazvtfbn788-us-east-1/FAST API Stack Resources/Functions/PipelineStandardAfterResponse
+      RequestMappingTemplateS3Location: ./Functions/PipelineStandardBeforeRequest
+      ResponseMappingTemplateS3Location: ./Functions/PipelineStandardAfterResponse
       TypeName: Mutation
 
   FuncRemoveTrackedEvent:
     Type: AWS::AppSync::FunctionConfiguration
-    Properties: 
+    Properties:
       ApiId: !GetAtt AppSyncAPI.ApiId
       DataSourceName: !GetAtt SourceEventRankingManagement.Name
       FunctionVersion: 2018-05-29
       Name: RemoveTrackedEvent
-      RequestMappingTemplateS3Location: s3://cf-templates-4eazvtfbn788-us-east-1/FAST API Stack Resources/Functions/RemoveTrackedEventRequest
-      ResponseMappingTemplateS3Location: s3://cf-templates-4eazvtfbn788-us-east-1/FAST API Stack Resources/Functions/RemoveTrackedEventResponse
+      RequestMappingTemplateS3Location: ./Functions/RemoveTrackedEventRequest
+      ResponseMappingTemplateS3Location: ./Functions/RemoveTrackedEventResponse
   ResolverRemoveTrackedEvent:
     Type: AWS::AppSync::Resolver
-    Properties: 
+    Properties:
       ApiId: !GetAtt AppSyncAPI.ApiId
       FieldName: removeTrackedEvent
       Kind: PIPELINE
-      PipelineConfig: 
+      PipelineConfig:
         Functions:
           - !GetAtt FuncAuthenticate.FunctionId
           - !GetAtt FuncRemoveTrackedEvent.FunctionId
-      RequestMappingTemplateS3Location: s3://cf-templates-4eazvtfbn788-us-east-1/FAST API Stack Resources/Functions/PipelineStandardBeforeRequest
-      ResponseMappingTemplateS3Location: s3://cf-templates-4eazvtfbn788-us-east-1/FAST API Stack Resources/Functions/PipelineStandardAfterResponse
+      RequestMappingTemplateS3Location: ./Functions/PipelineStandardBeforeRequest
+      ResponseMappingTemplateS3Location: ./Functions/PipelineStandardAfterResponse
       TypeName: Mutation
 
   FuncMoveRankedTeam:
     Type: AWS::AppSync::FunctionConfiguration
-    Properties: 
+    Properties:
       ApiId: !GetAtt AppSyncAPI.ApiId
       DataSourceName: !GetAtt SourceEventRankingManagement.Name
       FunctionVersion: 2018-05-29
       Name: MoveRankedTeam
-      RequestMappingTemplateS3Location: s3://cf-templates-4eazvtfbn788-us-east-1/FAST API Stack Resources/Functions/MoveRankedTeamRequest
-      ResponseMappingTemplateS3Location: s3://cf-templates-4eazvtfbn788-us-east-1/FAST API Stack Resources/Functions/MoveRankedTeamResponse
+      RequestMappingTemplateS3Location: ./Functions/MoveRankedTeamRequest
+      ResponseMappingTemplateS3Location: ./Functions/MoveRankedTeamResponse
   ResolverMoveRankedTeam:
     Type: AWS::AppSync::Resolver
-    Properties: 
+    Properties:
       ApiId: !GetAtt AppSyncAPI.ApiId
       FieldName: moveRankedTeam
       Kind: PIPELINE
-      PipelineConfig: 
+      PipelineConfig:
         Functions:
           - !GetAtt FuncAuthenticate.FunctionId
           - !GetAtt FuncMoveRankedTeam.FunctionId
-      RequestMappingTemplateS3Location: s3://cf-templates-4eazvtfbn788-us-east-1/FAST API Stack Resources/Functions/PipelineStandardBeforeRequest
-      ResponseMappingTemplateS3Location: s3://cf-templates-4eazvtfbn788-us-east-1/FAST API Stack Resources/Functions/PipelineStandardAfterResponse
+      RequestMappingTemplateS3Location: ./Functions/PipelineStandardBeforeRequest
+      ResponseMappingTemplateS3Location: ./Functions/PipelineStandardAfterResponse
       TypeName: Mutation
 
   FuncSetTeamPicked:
     Type: AWS::AppSync::FunctionConfiguration
-    Properties: 
+    Properties:
       ApiId: !GetAtt AppSyncAPI.ApiId
       DataSourceName: !GetAtt SourceEventRankingManagement.Name
       FunctionVersion: 2018-05-29
       Name: SetTeamPicked
-      RequestMappingTemplateS3Location: s3://cf-templates-4eazvtfbn788-us-east-1/FAST API Stack Resources/Functions/SetTeamPickedRequest
-      ResponseMappingTemplateS3Location: s3://cf-templates-4eazvtfbn788-us-east-1/FAST API Stack Resources/Functions/SetTeamPickedResponse
+      RequestMappingTemplateS3Location: ./Functions/SetTeamPickedRequest
+      ResponseMappingTemplateS3Location: ./Functions/SetTeamPickedResponse
   ResolverSetTeamPicked:
     Type: AWS::AppSync::Resolver
-    Properties: 
+    Properties:
       ApiId: !GetAtt AppSyncAPI.ApiId
       FieldName: setTeamPicked
       Kind: PIPELINE
-      PipelineConfig: 
+      PipelineConfig:
         Functions:
           - !GetAtt FuncAuthenticate.FunctionId
           - !GetAtt FuncSetTeamPicked.FunctionId
-      RequestMappingTemplateS3Location: s3://cf-templates-4eazvtfbn788-us-east-1/FAST API Stack Resources/Functions/PipelineStandardBeforeRequest
-      ResponseMappingTemplateS3Location: s3://cf-templates-4eazvtfbn788-us-east-1/FAST API Stack Resources/Functions/PipelineStandardAfterResponse
+      RequestMappingTemplateS3Location: ./Functions/PipelineStandardBeforeRequest
+      ResponseMappingTemplateS3Location: ./Functions/PipelineStandardAfterResponse
       TypeName: Mutation
 
   FuncUpdateScoutedTeam:
     Type: AWS::AppSync::FunctionConfiguration
-    Properties: 
+    Properties:
       ApiId: !GetAtt AppSyncAPI.ApiId
       DataSourceName: !GetAtt SourceFASTTable.Name
       FunctionVersion: 2018-05-29
       Name: UpdateScoutedTeam
-      RequestMappingTemplateS3Location: s3://cf-templates-4eazvtfbn788-us-east-1/FAST API Stack Resources/Functions/UpdateScoutedTeamRequest
-      ResponseMappingTemplateS3Location: s3://cf-templates-4eazvtfbn788-us-east-1/FAST API Stack Resources/Functions/UpdateScoutedTeamResponse
+      RequestMappingTemplateS3Location: ./Functions/UpdateScoutedTeamRequest
+      ResponseMappingTemplateS3Location: ./Functions/UpdateScoutedTeamResponse
   ResolverUpdateScoutedTeam:
     Type: AWS::AppSync::Resolver
-    Properties: 
+    Properties:
       ApiId: !GetAtt AppSyncAPI.ApiId
       FieldName: updateScoutedTeam
       Kind: PIPELINE
@@ -875,13 +893,13 @@ Resources:
         Functions:
           - !GetAtt FuncAuthenticate.FunctionId
           - !GetAtt FuncUpdateScoutedTeam.FunctionId
-      RequestMappingTemplateS3Location: s3://cf-templates-4eazvtfbn788-us-east-1/FAST API Stack Resources/Functions/PipelineStandardBeforeRequest
-      ResponseMappingTemplateS3Location: s3://cf-templates-4eazvtfbn788-us-east-1/FAST API Stack Resources/Functions/PipelineStandardAfterResponse
+      RequestMappingTemplateS3Location: ./Functions/PipelineStandardBeforeRequest
+      ResponseMappingTemplateS3Location: ./Functions/PipelineStandardAfterResponse
       TypeName: Mutation
 
   ResolverAddTeamComment:
     Type: AWS::AppSync::Resolver
-    Properties: 
+    Properties:
       ApiId: !GetAtt AppSyncAPI.ApiId
       FieldName: addTeamComment
       Kind: PIPELINE
@@ -890,22 +908,22 @@ Resources:
           - !GetAtt FuncAuthenticate.FunctionId
           - !GetAtt FuncCheckEventExistence.FunctionId
           - !GetAtt FuncAddTeamComment.FunctionId
-      RequestMappingTemplateS3Location: s3://cf-templates-4eazvtfbn788-us-east-1/FAST API Stack Resources/Functions/PipelineStandardBeforeRequest
-      ResponseMappingTemplateS3Location: s3://cf-templates-4eazvtfbn788-us-east-1/FAST API Stack Resources/Functions/PipelineStandardAfterResponse
+      RequestMappingTemplateS3Location: ./Functions/PipelineStandardBeforeRequest
+      ResponseMappingTemplateS3Location: ./Functions/PipelineStandardAfterResponse
       TypeName: Mutation
 
   FuncRemoveTeamComment:
     Type: AWS::AppSync::FunctionConfiguration
-    Properties: 
+    Properties:
       ApiId: !GetAtt AppSyncAPI.ApiId
       DataSourceName: !GetAtt SourceFASTTable.Name
       FunctionVersion: 2018-05-29
       Name: RemoveTeamComment
-      RequestMappingTemplateS3Location: s3://cf-templates-4eazvtfbn788-us-east-1/FAST API Stack Resources/Functions/RemoveTeamCommentRequest
-      ResponseMappingTemplateS3Location: s3://cf-templates-4eazvtfbn788-us-east-1/FAST API Stack Resources/Functions/RemoveTeamCommentResponse
+      RequestMappingTemplateS3Location: ./Functions/RemoveTeamCommentRequest
+      ResponseMappingTemplateS3Location: ./Functions/RemoveTeamCommentResponse
   ResolverRemoveTeamComment:
     Type: AWS::AppSync::Resolver
-    Properties: 
+    Properties:
       ApiId: !GetAtt AppSyncAPI.ApiId
       FieldName: removeTeamComment
       Kind: PIPELINE
@@ -913,13 +931,13 @@ Resources:
         Functions:
           - !GetAtt FuncAuthenticate.FunctionId
           - !GetAtt FuncRemoveTeamComment.FunctionId
-      RequestMappingTemplateS3Location: s3://cf-templates-4eazvtfbn788-us-east-1/FAST API Stack Resources/Functions/PipelineStandardBeforeRequest
-      ResponseMappingTemplateS3Location: s3://cf-templates-4eazvtfbn788-us-east-1/FAST API Stack Resources/Functions/PipelineStandardAfterResponse
+      RequestMappingTemplateS3Location: ./Functions/PipelineStandardBeforeRequest
+      ResponseMappingTemplateS3Location: ./Functions/PipelineStandardAfterResponse
       TypeName: Mutation
 
   ResolverCreateScoutSession:
     Type: AWS::AppSync::Resolver
-    Properties: 
+    Properties:
       ApiId: !GetAtt AppSyncAPI.ApiId
       FieldName: createScoutSession
       Kind: PIPELINE
@@ -928,25 +946,25 @@ Resources:
           - !GetAtt FuncAuthenticate.FunctionId
           - !GetAtt FuncCheckEventExistence.FunctionId
           - !GetAtt FuncCreateScoutSession.FunctionId
-      RequestMappingTemplateS3Location: s3://cf-templates-4eazvtfbn788-us-east-1/FAST API Stack Resources/Functions/PipelineStandardBeforeRequest
-      ResponseMappingTemplateS3Location: s3://cf-templates-4eazvtfbn788-us-east-1/FAST API Stack Resources/Functions/PipelineStandardAfterResponse
+      RequestMappingTemplateS3Location: ./Functions/PipelineStandardBeforeRequest
+      ResponseMappingTemplateS3Location: ./Functions/PipelineStandardAfterResponse
       TypeName: Mutation
 
   FuncRemoveScoutSession:
     Type: AWS::AppSync::FunctionConfiguration
-    Properties: 
+    Properties:
       ApiId: !GetAtt AppSyncAPI.ApiId
       DataSourceName: !GetAtt SourceFASTTable.Name
       FunctionVersion: 2018-05-29
       Name: RemoveScoutSession
-      RequestMappingTemplateS3Location: s3://cf-templates-4eazvtfbn788-us-east-1/FAST API Stack Resources/Functions/RemoveScoutSessionRequest
-      ResponseMappingTemplateS3Location: s3://cf-templates-4eazvtfbn788-us-east-1/FAST API Stack Resources/Functions/RemoveScoutSessionResponse
+      RequestMappingTemplateS3Location: ./Functions/RemoveScoutSessionRequest
+      ResponseMappingTemplateS3Location: ./Functions/RemoveScoutSessionResponse
     Metadata:
-      Stupid: 
+      Stupid:
         Stupid: Stupid
   ResolverRemoveScoutSession:
     Type: AWS::AppSync::Resolver
-    Properties: 
+    Properties:
       ApiId: !GetAtt AppSyncAPI.ApiId
       FieldName: removeScoutSession
       Kind: PIPELINE
@@ -954,135 +972,161 @@ Resources:
         Functions:
           - !GetAtt FuncAuthenticate.FunctionId
           - !GetAtt FuncRemoveScoutSession.FunctionId
-      RequestMappingTemplateS3Location: s3://cf-templates-4eazvtfbn788-us-east-1/FAST API Stack Resources/Functions/PipelineStandardBeforeRequest
-      ResponseMappingTemplateS3Location: s3://cf-templates-4eazvtfbn788-us-east-1/FAST API Stack Resources/Functions/PipelineStandardAfterResponse
+      RequestMappingTemplateS3Location: ./Functions/PipelineStandardBeforeRequest
+      ResponseMappingTemplateS3Location: ./Functions/PipelineStandardAfterResponse
       TypeName: Mutation
+
+  ResolverCreateScoutingTeam:
+    Type: AWS::AppSync::Resolver
+    Properties:
+      ApiId: !GetAtt AppSyncAPI.ApiId
+      FieldName: createScoutingTeam
+      Kind: UNIT
+      DataSourceName: !GetAtt SourceFASTTeams.Name
+      RequestMappingTemplateS3Location: ./Functions/CreateScoutingTeamRequest
+      ResponseMappingTemplateS3Location: ./Functions/CreateScoutingTeamResponse
+      TypeName: Mutation
+    DependsOn:
+      - AppSyncSchema
+  ResolverScoutingTeamMembers:
+    Type: AWS::AppSync::Resolver
+    Properties:
+      ApiId: !GetAtt AppSyncAPI.ApiId
+      FieldName: members
+      Kind: UNIT
+      DataSourceName: !GetAtt SourceFASTTeams.Name
+      RequestMappingTemplateS3Location: ./Functions/ScoutingTeamMembersRequest
+      ResponseMappingTemplateS3Location: ./Functions/ScoutingTeamMembersResponse
+      TypeName: ScoutingTeam
+    DependsOn:
+      - AppSyncSchema
+
 
   # SUBSCRIPTIONS
   ResolverOnAddTrackedEvent:
     Type: AWS::AppSync::Resolver
-    Properties: 
+    Properties:
       ApiId: !GetAtt AppSyncAPI.ApiId
       FieldName: onAddTrackedEvent
       Kind: PIPELINE
       PipelineConfig:
         Functions:
           - !GetAtt FuncAuthenticate.FunctionId
-      RequestMappingTemplateS3Location: s3://cf-templates-4eazvtfbn788-us-east-1/FAST API Stack Resources/Functions/PipelineStandardBeforeRequest
-      ResponseMappingTemplateS3Location: s3://cf-templates-4eazvtfbn788-us-east-1/FAST API Stack Resources/Functions/PipelineStandardAfterResponse
+      RequestMappingTemplateS3Location: ./Functions/PipelineStandardBeforeRequest
+      ResponseMappingTemplateS3Location: ./Functions/PipelineStandardAfterResponse
       TypeName: Subscription
   ResolverOnRemoveTrackedEvent:
     Type: AWS::AppSync::Resolver
-    Properties: 
+    Properties:
       ApiId: !GetAtt AppSyncAPI.ApiId
       FieldName: onRemoveTrackedEvent
       Kind: PIPELINE
       PipelineConfig:
         Functions:
           - !GetAtt FuncAuthenticate.FunctionId
-      RequestMappingTemplateS3Location: s3://cf-templates-4eazvtfbn788-us-east-1/FAST API Stack Resources/Functions/PipelineStandardBeforeRequest
-      ResponseMappingTemplateS3Location: s3://cf-templates-4eazvtfbn788-us-east-1/FAST API Stack Resources/Functions/PipelineStandardAfterResponse
+      RequestMappingTemplateS3Location: ./Functions/PipelineStandardBeforeRequest
+      ResponseMappingTemplateS3Location: ./Functions/PipelineStandardAfterResponse
       TypeName: Subscription
   ResolverOnUpdateTeamRank:
     Type: AWS::AppSync::Resolver
-    Properties: 
+    Properties:
       ApiId: !GetAtt AppSyncAPI.ApiId
       FieldName: onUpdateTeamRank
       Kind: PIPELINE
       PipelineConfig:
         Functions:
           - !GetAtt FuncAuthenticate.FunctionId
-      RequestMappingTemplateS3Location: s3://cf-templates-4eazvtfbn788-us-east-1/FAST API Stack Resources/Functions/PipelineStandardBeforeRequest
-      ResponseMappingTemplateS3Location: s3://cf-templates-4eazvtfbn788-us-east-1/FAST API Stack Resources/Functions/PipelineStandardAfterResponse
+      RequestMappingTemplateS3Location: ./Functions/PipelineStandardBeforeRequest
+      ResponseMappingTemplateS3Location: ./Functions/PipelineStandardAfterResponse
       TypeName: Subscription
   ResolverOnSetTeamPicked:
     Type: AWS::AppSync::Resolver
-    Properties: 
+    Properties:
       ApiId: !GetAtt AppSyncAPI.ApiId
       FieldName: onSetTeamPicked
       Kind: PIPELINE
       PipelineConfig:
         Functions:
           - !GetAtt FuncAuthenticate.FunctionId
-      RequestMappingTemplateS3Location: s3://cf-templates-4eazvtfbn788-us-east-1/FAST API Stack Resources/Functions/PipelineStandardBeforeRequest
-      ResponseMappingTemplateS3Location: s3://cf-templates-4eazvtfbn788-us-east-1/FAST API Stack Resources/Functions/PipelineStandardAfterResponse
+      RequestMappingTemplateS3Location: ./Functions/PipelineStandardBeforeRequest
+      ResponseMappingTemplateS3Location: ./Functions/PipelineStandardAfterResponse
       TypeName: Subscription
   ResolverOnUpdateScoutedTeam:
     Type: AWS::AppSync::Resolver
-    Properties: 
+    Properties:
       ApiId: !GetAtt AppSyncAPI.ApiId
       FieldName: onUpdateScoutedTeam
       Kind: PIPELINE
       PipelineConfig:
         Functions:
           - !GetAtt FuncAuthenticate.FunctionId
-      RequestMappingTemplateS3Location: s3://cf-templates-4eazvtfbn788-us-east-1/FAST API Stack Resources/Functions/PipelineStandardBeforeRequest
-      ResponseMappingTemplateS3Location: s3://cf-templates-4eazvtfbn788-us-east-1/FAST API Stack Resources/Functions/PipelineStandardAfterResponse
+      RequestMappingTemplateS3Location: ./Functions/PipelineStandardBeforeRequest
+      ResponseMappingTemplateS3Location: ./Functions/PipelineStandardAfterResponse
       TypeName: Subscription
   ResolverOnAddTeamComment:
     Type: AWS::AppSync::Resolver
-    Properties: 
+    Properties:
       ApiId: !GetAtt AppSyncAPI.ApiId
       FieldName: onAddTeamComment
       Kind: PIPELINE
       PipelineConfig:
         Functions:
           - !GetAtt FuncAuthenticate.FunctionId
-      RequestMappingTemplateS3Location: s3://cf-templates-4eazvtfbn788-us-east-1/FAST API Stack Resources/Functions/PipelineStandardBeforeRequest
-      ResponseMappingTemplateS3Location: s3://cf-templates-4eazvtfbn788-us-east-1/FAST API Stack Resources/Functions/PipelineStandardAfterResponse
+      RequestMappingTemplateS3Location: ./Functions/PipelineStandardBeforeRequest
+      ResponseMappingTemplateS3Location: ./Functions/PipelineStandardAfterResponse
       TypeName: Subscription
   ResolverOnCreateScoutSession:
     Type: AWS::AppSync::Resolver
-    Properties: 
+    Properties:
       ApiId: !GetAtt AppSyncAPI.ApiId
       FieldName: onCreateScoutSession
       Kind: PIPELINE
       PipelineConfig:
         Functions:
           - !GetAtt FuncAuthenticate.FunctionId
-      RequestMappingTemplateS3Location: s3://cf-templates-4eazvtfbn788-us-east-1/FAST API Stack Resources/Functions/PipelineStandardBeforeRequest
-      ResponseMappingTemplateS3Location: s3://cf-templates-4eazvtfbn788-us-east-1/FAST API Stack Resources/Functions/PipelineStandardAfterResponse
+      RequestMappingTemplateS3Location: ./Functions/PipelineStandardBeforeRequest
+      ResponseMappingTemplateS3Location: ./Functions/PipelineStandardAfterResponse
       TypeName: Subscription
   ResolverOnDeleteScoutSession:
     Type: AWS::AppSync::Resolver
-    Properties: 
+    Properties:
       ApiId: !GetAtt AppSyncAPI.ApiId
       FieldName: onDeleteScoutSession
       Kind: PIPELINE
       PipelineConfig:
         Functions:
           - !GetAtt FuncAuthenticate.FunctionId
-      RequestMappingTemplateS3Location: s3://cf-templates-4eazvtfbn788-us-east-1/FAST API Stack Resources/Functions/PipelineStandardBeforeRequest
-      ResponseMappingTemplateS3Location: s3://cf-templates-4eazvtfbn788-us-east-1/FAST API Stack Resources/Functions/PipelineStandardAfterResponse
+      RequestMappingTemplateS3Location: ./Functions/PipelineStandardBeforeRequest
+      ResponseMappingTemplateS3Location: ./Functions/PipelineStandardAfterResponse
       TypeName: Subscription
 
 
   # Resolver NAME:
   #   Type: AWS::AppSync::Resolver
-  #   Properties: 
+  #   Properties:
   #     ApiId: !GetAtt AppSyncAPI.ApiId
   #     FieldName: NAME
   #     Kind: PIPELINE
   #     PipelineConfig:
   #       Functions:
   #         - !GetAtt FuncAuthenticate.FunctionId
-  #     RequestMappingTemplateS3Location: s3://cf-templates-4eazvtfbn788-us-east-1/FAST API Stack Resources/Functions/PipelineStandardBeforeRequest
-  #     ResponseMappingTemplateS3Location: s3://cf-templates-4eazvtfbn788-us-east-1/FAST API Stack Resources/Functions/PipelineStandardAfterResponse
+  #     RequestMappingTemplateS3Location: ./Functions/PipelineStandardBeforeRequest
+  #     ResponseMappingTemplateS3Location: ./Functions/PipelineStandardAfterResponse
   #     TypeName: Subscription
 
 
   # Func NAME:
   #   Type: AWS::AppSync::FunctionConfiguration
-  #   Properties: 
+  #   Properties:
   #     ApiId: !GetAtt AppSyncAPI.ApiId
   #     DataSourceName: !GetAtt SOURCE.Name
   #     FunctionVersion: 2018-05-29
   #     Name: NAME
-  #     RequestMappingTemplateS3Location: s3://cf-templates-4eazvtfbn788-us-east-1/FAST API Stack Resources/Functions/FUNC Request
-  #     ResponseMappingTemplateS3Location: s3://cf-templates-4eazvtfbn788-us-east-1/FAST API Stack Resources/Functions/FUNC Response
+  #     RequestMappingTemplateS3Location: ./Functions/FUNC Request
+  #     ResponseMappingTemplateS3Location: ./Functions/FUNC Response
   # Resolver NAME:
   #   Type: AWS::AppSync::Resolver
-  #   Properties: 
+  #   Properties:
   #     ApiId: !GetAtt AppSyncAPI.ApiId
   #     FieldName: FIELDNAME
   #     Kind: PIPELINE
@@ -1090,8 +1134,6 @@ Resources:
   #       Functions:
   #         - !GetAtt FuncAuthenticate.FunctionId
   #         - !GetAtt Func NAME.FunctionId
-  #     RequestMappingTemplateS3Location: s3://cf-templates-4eazvtfbn788-us-east-1/FAST API Stack Resources/Functions/PipelineStandardBeforeRequest
-  #     ResponseMappingTemplateS3Location: s3://cf-templates-4eazvtfbn788-us-east-1/FAST API Stack Resources/Functions/PipelineStandardAfterResponse
+  #     RequestMappingTemplateS3Location: ./Functions/PipelineStandardBeforeRequest
+  #     ResponseMappingTemplateS3Location: ./Functions/PipelineStandardAfterResponse
   #     TypeName: Mutation
-
-

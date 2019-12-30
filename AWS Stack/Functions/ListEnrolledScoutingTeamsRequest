@@ -1,0 +1,19 @@
+{
+    "version" : "2017-02-28",
+    "operation" : "Query",
+    "query" : {
+        "expression" : "#pk = :pk AND #sk = :sk",
+        "expressionNames" : {
+            "#pk" : "userID",
+						":sk" : "teamID"
+        },
+        "expressionValues" : {
+            ":pk" : $util.dynamodb.toDynamoDBJson("u${ctx.identity.sub}"),
+						":sk" : $util.dynamodb.toDynamoDBJson("teamData")
+        }
+    }
+    "index" : "userID-teamID-index",
+    "scanIndexForward" : true,
+    "consistentRead" : false,
+    "select" : "ALL_ATTRIBUTES"
+}

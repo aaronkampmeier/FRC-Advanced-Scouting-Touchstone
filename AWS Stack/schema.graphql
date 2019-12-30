@@ -32,7 +32,10 @@ type Mutation {
   removeScoutSession(scoutTeam: ID!, eventKey: ID!, key: ID!): ScoutSession
 
   ## Scouting Team Management
-  ## addMemberTo(scoutingTeam: ID!): 
+  createScoutingTeam(name: String!, associatedFrcTeamNumber: Int!): ScoutingTeam
+  addMember(scoutTeam: ID!, newUserId: ID!): ScoutingTeam
+  removeMember(scoutTeam: ID!, userToRemove: ID!): ScoutingTeam
+  transferLead(scoutTeam: ID!, newTeamLeadUserId: ID!): ScoutingTeam
 }
 
 type Query {
@@ -61,6 +64,10 @@ type Query {
   ## Delta Sync
   listAllScoutSessions(scoutTeam: ID!, eventKey: ID!): [ScoutSession]
   listScoutSessionsDelta(scoutTeam: ID!, eventKey: ID!, lastSync: AWSTimestamp!): [ScoutSession]
+
+  ## Scouting Teams
+  listEnrolledScoutingTeams: [ScoutingTeam]
+  getScoutingTeam(scoutTeam: ID!): ScoutingTeam
 }
 
 type Subscription {
@@ -87,7 +94,6 @@ type Subscription {
     @aws_subscribe(mutations: ["removeScoutSession"])
 }
 
-
 input UpdateScoutedTeamInput {
   canBanana: Boolean
   computerVisionCapability: String
@@ -101,6 +107,20 @@ input UpdateScoutedTeamInput {
   robotWidth: Float
   strategy: String
   otherAttributes: AWSJSON
+}
+
+type ScoutingTeam {
+  teamID: ID! ## Scouting Team UUID
+  members: [ScoutingTeamMember] ## List of members
+  teamLead: ID! ## Team lead is also a member, so his/her info will be in the members dict
+  associatedFrcTeamNumber: Int!
+  name: String!
+}
+
+type ScoutingTeamMember {
+  userID: ID!
+  name: String
+  memberSince: AWSTimestamp!
 }
 
 enum CompetitionLevel {
