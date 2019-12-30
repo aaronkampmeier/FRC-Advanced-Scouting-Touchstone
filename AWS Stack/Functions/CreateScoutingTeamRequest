@@ -1,18 +1,23 @@
+#set($newTeamId = $util.autoId())
+## Verify that the frc team number is valid
+#if($ctx.args.associatedFrcTeamNumber > 99999 || $ctx.args.associatedFrcTeamNumber < 0)
+		$util.error("Associated FRC Team Number is invalid.")
+#end
 {
     "version" : "2018-05-29",
     "operation" : "BatchPutItem",
     "tables":{
 		    "FASTTeams": [
 						{
-								"teamID": $util.dynamodb.toDynamoDBJson($util.autoId()),
+								"teamID": $util.dynamodb.toDynamoDBJson($newTeamId),
 				        "userID": $util.dynamodb.toDynamoDBJson("teamData"),
 								"teamLead": $util.dynamodb.toDynamoDBJson($ctx.identity.sub),
 								"associatedFrcTeamNumber": $util.dynamodb.toDynamoDBJson($ctx.args.associatedFrcTeamNumber),
 								"name": $util.dynamodb.toDynamoDBJson($ctx.args.name)
 						},
 						{
-								"teamID": $util.dynamodb.toDynamoDBJson($util.autoId()),
-								"userID": $util.dynamodb.toDynamoDBJson("u${ctx.identity.sub}"),
+								"teamID": $util.dynamodb.toDynamoDBJson($newTeamId),
+								"userID": $util.dynamodb.toDynamoDBJson($ctx.identity.sub),
 								"memberSince": $util.dynamodb.toDynamoDBJson($util.time.nowEpochSeconds())
 						}
 		    ]

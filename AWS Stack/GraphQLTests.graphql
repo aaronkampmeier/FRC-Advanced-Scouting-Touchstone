@@ -1,0 +1,78 @@
+# Welcome!
+#
+# This is an in-browser tool for writing, validating, and testing GraphQL queries.
+#
+# An example query named "GetPost" might look like:
+#
+#     query GetPost {
+#       singlePost(id: 123) {
+#         id
+#         title
+#       }
+#     }
+#
+# An example mutation named "PutPost" might look like:
+#
+#     mutation PutPost {
+#       putPost(id: 123, title: "Hello, world!") {
+#         id
+#         title
+#       }
+#     }
+#
+# Keyboard shortcuts:
+#
+#  Prettify Query:  Ctrl+Shift+P (also removes comments)
+#       Run Query:  Ctrl+Enter   (or press the play button above)
+#   Auto Complete:  Ctrl+Space   (or just start typing)
+#
+
+mutation CreateScoutingTeam {
+  createScoutingTeam(name: "Team 1", associatedFrcTeamNumber: 9998) {
+    teamID
+    teamLead
+    associatedFrcTeamNumber
+    name
+    members {
+      name
+      memberSince
+      userID
+    }
+  }
+}
+
+mutation makeScoutTeamInvitation {
+  makeScoutTeamInvitation(scoutTeam: "f5569f1c-d7ec-4fbe-8d49-6e19c24c21fb", expDate: 1577689229) {
+    inviteID
+    secretCode
+    teamID
+    expDate
+  }
+}
+
+mutation redeemInvitation {
+  redeemInvitation(inviteID: "OSYJOS7YX", secretCode: "GGE-BD6")
+}
+
+query GetScoutTeam {
+  getScoutingTeam(scoutTeam: "f5569f1c-d7ec-4fbe-8d49-6e19c24c21fb") {
+    teamID
+    teamLead
+    associatedFrcTeamNumber
+    name
+    members {
+      name
+      memberSince
+      userID
+    }
+  }
+}
+
+query ListEnrolledScoutingTeams {
+  listEnrolledScoutingTeams {
+    teamID
+    teamLead
+    associatedFrcTeamNumber
+    name
+  }
+}

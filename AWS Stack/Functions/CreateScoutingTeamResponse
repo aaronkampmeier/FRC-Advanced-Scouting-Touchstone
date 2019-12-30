@@ -4,6 +4,10 @@
 		$util.error($ctx.error.message, $ctx.error.type)
 #end
 
+#if($ctx.error)
+	$util.error($ctx.error.message, $ctx.error.type)
+#end
+
 #foreach( $object in $ctx.result.data.FASTTeams )
 		#if( $object.userID == "teamData")
 				#set( $returnScoutingTeam = $object )

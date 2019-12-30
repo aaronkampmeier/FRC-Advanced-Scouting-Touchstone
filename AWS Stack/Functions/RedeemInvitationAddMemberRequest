@@ -1,0 +1,14 @@
+{
+    "version" : "2018-05-29",
+    "operation" : "PutItem",
+    "key": {
+        "teamID" : $util.dynamodb.toDynamoDBJson($ctx.stash.teamID),
+        "userID" : $util.dynamodb.toDynamoDBJson($ctx.identity.sub)
+    },
+    "attributeValues" : {
+        "memberSince" : $util.dynamodb.toDynamoDBJson($util.time.nowEpochSeconds())
+    },
+    "condition" : {
+       "expression": "attribute_not_exists(userID)"
+    }
+}

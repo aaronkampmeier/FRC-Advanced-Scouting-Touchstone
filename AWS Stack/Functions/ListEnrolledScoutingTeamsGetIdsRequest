@@ -4,13 +4,14 @@
     "query" : {
         "expression" : "#pk = :pk",
         "expressionNames" : {
-            "#pk" : "teamID"
+            "#pk" : "userID"
         },
         "expressionValues" : {
-						":pk" : $util.dynamodb.toDynamoDBJson($ctx.source.teamID)
+            ":pk" : $util.dynamodb.toDynamoDBJson($ctx.identity.sub)
         }
     },
+    "index" : "userID-teamID-index",
     "scanIndexForward" : true,
     "consistentRead" : false,
-    "select" : "ALL_ATTRIBUTES"
+    "select" : "ALL_PROJECTED_ATTRIBUTES"
 }

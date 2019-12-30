@@ -33,9 +33,11 @@ type Mutation {
 
   ## Scouting Team Management
   createScoutingTeam(name: String!, associatedFrcTeamNumber: Int!): ScoutingTeam
-  addMember(scoutTeam: ID!, newUserId: ID!): ScoutingTeam
-  removeMember(scoutTeam: ID!, userToRemove: ID!): ScoutingTeam
-  transferLead(scoutTeam: ID!, newTeamLeadUserId: ID!): ScoutingTeam
+	makeScoutTeamInvitation(scoutTeam: ID!, expDate: AWSTimestamp!): ScoutTeamInvitation
+	redeemInvitation(inviteID: ID!, secretCode: String!): ID
+
+  removeMember(scoutTeam: ID!, userToRemove: ID!): ScoutingTeam ##Must do check to make sure it is not the lead
+  transferLead(scoutTeam: ID!, newTeamLeadUserId: ID!): ScoutingTeam ## Must check to make sure the caller is the lead
 }
 
 type Query {
@@ -121,6 +123,13 @@ type ScoutingTeamMember {
   userID: ID!
   name: String
   memberSince: AWSTimestamp!
+}
+
+type ScoutTeamInvitation {
+	inviteID: ID!
+	teamID: ID!
+	secretCode: String!
+	expDate: AWSTimestamp
 }
 
 enum CompetitionLevel {

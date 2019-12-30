@@ -1,0 +1,11 @@
+## Function 1 in the RedeemInvitation pipeline
+## Check that the inviteID and secretCode are valid
+
+{
+    "version" : "2017-02-28",
+    "operation" : "GetItem",
+    "key" : {
+        "inviteID" : $util.dynamodb.toDynamoDBJson($ctx.args.inviteID)
+    },
+    "consistentRead" : true
+}
