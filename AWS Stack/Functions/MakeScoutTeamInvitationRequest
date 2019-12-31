@@ -3,6 +3,7 @@
    "operation": "Invoke",
    "payload": {
 	 		"expDate": $ctx.args.expDate,
-			"teamID": $util.toJson($ctx.args.scoutTeam)
+			"teamID": $util.toJson($ctx.args.scoutTeam),
+			"userID": $util.toJson($ctx.identity.sub)
 	 }
 }

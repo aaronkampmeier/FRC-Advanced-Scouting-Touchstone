@@ -917,6 +917,32 @@ Resources:
     DependsOn:
       - AppSyncSchema
 
+  FuncListScoutingTeamInvitations:
+    Type: AWS::AppSync::FunctionConfiguration
+    Properties:
+      ApiId: !GetAtt AppSyncAPI.ApiId
+      DataSourceName: !GetAtt SourceFASTTeamInvites.Name
+      FunctionVersion: 2018-05-29
+      Name: ListScoutingTeamInvitations
+      RequestMappingTemplateS3Location: ./Functions/ListScoutingTeamInvitationsRequest
+      ResponseMappingTemplateS3Location: ./Functions/ListScoutingTeamInvitationsResponse
+  ResolverListScoutingTeamInvitations:
+    Type: AWS::AppSync::Resolver
+    Properties:
+      ApiId: !GetAtt AppSyncAPI.ApiId
+      FieldName: listScoutingTeamInvitations
+      TypeName: Query
+      Kind: PIPELINE
+      PipelineConfig:
+        Functions:
+          - !GetAtt FuncAuthenticate.FunctionId
+          - !GetAtt FuncListScoutingTeamInvitations.FunctionId
+      RequestMappingTemplateS3Location: ./Functions/PipelineStandardBeforeRequest
+      ResponseMappingTemplateS3Location: ./Functions/PipelineStandardAfterResponse
+    DependsOn:
+      - AppSyncSchema
+
+
   ######################################################################
   ######################################################################
 
@@ -1148,7 +1174,6 @@ Resources:
     DependsOn:
       - AppSyncSchema
 
-  # Redeem Team Invitations
   FuncRedeemInvitationValidateInvite:
     Type: AWS::AppSync::FunctionConfiguration
     Properties:
@@ -1182,6 +1207,60 @@ Resources:
       ResponseMappingTemplateS3Location: ./Functions/PipelineStandardAfterResponse
     DependsOn:
       - AppSyncSchema
+  FuncRemoveMemberCheckLead:
+    Type: AWS::AppSync::FunctionConfiguration
+    Properties:
+      ApiId: !GetAtt AppSyncAPI.ApiId
+      DataSourceName: !GetAtt SourceFASTTeams.Name
+      FunctionVersion: 2018-05-29
+      Name: RemoveMemberCheckLead
+      RequestMappingTemplateS3Location: ./Functions/RemoveMemberCheckLeadRequest
+      ResponseMappingTemplateS3Location: ./Functions/RemoveMemberCheckLeadResponse
+  FuncRemoveMember:
+    Type: AWS::AppSync::FunctionConfiguration
+    Properties:
+      ApiId: !GetAtt AppSyncAPI.ApiId
+      DataSourceName: !GetAtt SourceFASTTeams.Name
+      FunctionVersion: 2018-05-29
+      Name: RemoveMember
+      RequestMappingTemplateS3Location: ./Functions/RemoveMemberRequest
+      ResponseMappingTemplateS3Location: ./Functions/RemoveMemberResponse
+  ResolverRemoveMember:
+    Type: AWS::AppSync::Resolver
+    Properties:
+      ApiId: !GetAtt AppSyncAPI.ApiId
+      FieldName: removeMember
+      TypeName: Mutation
+      Kind: PIPELINE
+      PipelineConfig:
+        Functions:
+          - !GetAtt FuncRemoveMemberCheckLead.FunctionId
+          - !GetAtt FuncRemoveMember.FunctionId
+      RequestMappingTemplateS3Location: ./Functions/PipelineStandardBeforeRequest
+      ResponseMappingTemplateS3Location: ./Functions/PipelineStandardAfterResponse
+
+  FuncTransferLead:
+    Type: AWS::AppSync::FunctionConfiguration
+    Properties:
+      ApiId: !GetAtt AppSyncAPI.ApiId
+      DataSourceName: !GetAtt SourceFASTTeams.Name
+      FunctionVersion: 2018-05-29
+      Name: TransferLead
+      RequestMappingTemplateS3Location: ./Functions/TransferLeadRequest
+      ResponseMappingTemplateS3Location: ./Functions/TransferLeadResponse
+  ResolverTransferLead:
+    Type: AWS::AppSync::Resolver
+    Properties:
+      ApiId: !GetAtt AppSyncAPI.ApiId
+      FieldName: transferLead
+      TypeName: Mutation
+      Kind: PIPELINE
+      PipelineConfig:
+        Functions:
+          - !GetAtt FuncTransferLead.FunctionId
+          - !GetAtt FuncRemoveMember.FunctionId
+      RequestMappingTemplateS3Location: ./Functions/PipelineStandardBeforeRequest
+      ResponseMappingTemplateS3Location: ./Functions/PipelineStandardAfterResponse
 
   ################################################################################
   ################################################################################

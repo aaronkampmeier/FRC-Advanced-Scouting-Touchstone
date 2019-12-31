@@ -36,7 +36,8 @@ type Mutation {
 	makeScoutTeamInvitation(scoutTeam: ID!, expDate: AWSTimestamp!): ScoutTeamInvitation
 	redeemInvitation(inviteID: ID!, secretCode: String!): ID
 
-  removeMember(scoutTeam: ID!, userToRemove: ID!): ScoutingTeam ##Must do check to make sure it is not the lead
+	## Members should be able to remove themselves, leads should be able to remove anyone except themselves
+  removeMember(scoutTeam: ID!, userToRemove: ID!): Boolean ##Must do check to make sure it is not the lead
   transferLead(scoutTeam: ID!, newTeamLeadUserId: ID!): ScoutingTeam ## Must check to make sure the caller is the lead
 }
 
@@ -70,6 +71,8 @@ type Query {
   ## Scouting Teams
   listEnrolledScoutingTeams: [ScoutingTeam]
   getScoutingTeam(scoutTeam: ID!): ScoutingTeam
+
+	listScoutingTeamInvitations(scoutTeam: ID!): [ScoutTeamInvitation]
 }
 
 type Subscription {
@@ -130,6 +133,7 @@ type ScoutTeamInvitation {
 	teamID: ID!
 	secretCode: String!
 	expDate: AWSTimestamp
+	creatorUserID: ID!
 }
 
 enum CompetitionLevel {
@@ -256,7 +260,7 @@ type Team {
 type TeamComment {
   scoutTeam: ID!
   author: String!
-  authorUserId: ID!
+  authorUserID: ID!
   body: String!
   datePosted: AWSTimestamp!
   key: ID!

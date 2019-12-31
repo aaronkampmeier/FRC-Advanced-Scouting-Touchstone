@@ -199,7 +199,7 @@ Resources:
         - AppSyncAPI
         - ApiId
       DefinitionS3Location: s3://cf-templates-4eazvtfbn788-us-east-1/FAST API Stack
-        Resources/d3ee8f81c714083c80debf909ef1dce1
+        Resources/7d8a0bf6bbbc404e146ff8d5057af4f7
     Metadata:
       AWS::CloudFormation::Designer:
         id: 9826eb5e-9f89-4a15-a614-3649ede94ece
@@ -559,7 +559,7 @@ Resources:
       FunctionVersion: 2018-05-29
       Name: AddTeamComment
       RequestMappingTemplateS3Location: s3://cf-templates-4eazvtfbn788-us-east-1/FAST
-        API Stack Resources/998c96b292a75be7f258e70f1bf4051c
+        API Stack Resources/d9566ff112312bcfbb64625fbfa49e58
       ResponseMappingTemplateS3Location: s3://cf-templates-4eazvtfbn788-us-east-1/FAST
         API Stack Resources/1edeb384aa840c737cf11b84b2501201
   FuncStashTBAKey:
@@ -630,7 +630,7 @@ Resources:
       FunctionVersion: 2018-05-29
       Name: MakeScoutTeamInvitation
       RequestMappingTemplateS3Location: s3://cf-templates-4eazvtfbn788-us-east-1/FAST
-        API Stack Resources/9ccef2ae2a900616d046438f0b8ee479
+        API Stack Resources/d2b23296ac3937b382c7b05f8bbb94ca
       ResponseMappingTemplateS3Location: s3://cf-templates-4eazvtfbn788-us-east-1/FAST
         API Stack Resources/e2e5e43c54f9ca992eb1a1fecdfc022d
   ResolverListAvailableEvents:
@@ -1231,6 +1231,47 @@ Resources:
         API Stack Resources/13709c494f6065fe32845d07d574d948
     DependsOn:
     - AppSyncSchema
+  FuncListScoutingTeamInvitations:
+    Type: AWS::AppSync::FunctionConfiguration
+    Properties:
+      ApiId:
+        Fn::GetAtt:
+        - AppSyncAPI
+        - ApiId
+      DataSourceName:
+        Fn::GetAtt:
+        - SourceFASTTeamInvites
+        - Name
+      FunctionVersion: 2018-05-29
+      Name: ListScoutingTeamInvitations
+      RequestMappingTemplateS3Location: s3://cf-templates-4eazvtfbn788-us-east-1/FAST
+        API Stack Resources/b74686574d38e194f3f1f3dfcae38891
+      ResponseMappingTemplateS3Location: s3://cf-templates-4eazvtfbn788-us-east-1/FAST
+        API Stack Resources/b3e6f73c899b867dba531e66b4d81e5e
+  ResolverListScoutingTeamInvitations:
+    Type: AWS::AppSync::Resolver
+    Properties:
+      ApiId:
+        Fn::GetAtt:
+        - AppSyncAPI
+        - ApiId
+      FieldName: listScoutingTeamInvitations
+      TypeName: Query
+      Kind: PIPELINE
+      PipelineConfig:
+        Functions:
+        - Fn::GetAtt:
+          - FuncAuthenticate
+          - FunctionId
+        - Fn::GetAtt:
+          - FuncListScoutingTeamInvitations
+          - FunctionId
+      RequestMappingTemplateS3Location: s3://cf-templates-4eazvtfbn788-us-east-1/FAST
+        API Stack Resources/c46fc8ef51dfb27776b3115243d7cc1c
+      ResponseMappingTemplateS3Location: s3://cf-templates-4eazvtfbn788-us-east-1/FAST
+        API Stack Resources/13709c494f6065fe32845d07d574d948
+    DependsOn:
+    - AppSyncSchema
   ResolverAddTrackedEvent:
     Type: AWS::AppSync::Resolver
     Properties:
@@ -1668,6 +1709,101 @@ Resources:
         API Stack Resources/13709c494f6065fe32845d07d574d948
     DependsOn:
     - AppSyncSchema
+  FuncRemoveMemberCheckLead:
+    Type: AWS::AppSync::FunctionConfiguration
+    Properties:
+      ApiId:
+        Fn::GetAtt:
+        - AppSyncAPI
+        - ApiId
+      DataSourceName:
+        Fn::GetAtt:
+        - SourceFASTTeams
+        - Name
+      FunctionVersion: 2018-05-29
+      Name: RemoveMemberCheckLead
+      RequestMappingTemplateS3Location: s3://cf-templates-4eazvtfbn788-us-east-1/FAST
+        API Stack Resources/de8a5de99cf7d76616ebedc4c402fa28
+      ResponseMappingTemplateS3Location: s3://cf-templates-4eazvtfbn788-us-east-1/FAST
+        API Stack Resources/1a832901fa8625ac5d60f96930480e48
+  FuncRemoveMember:
+    Type: AWS::AppSync::FunctionConfiguration
+    Properties:
+      ApiId:
+        Fn::GetAtt:
+        - AppSyncAPI
+        - ApiId
+      DataSourceName:
+        Fn::GetAtt:
+        - SourceFASTTeams
+        - Name
+      FunctionVersion: 2018-05-29
+      Name: RemoveMember
+      RequestMappingTemplateS3Location: s3://cf-templates-4eazvtfbn788-us-east-1/FAST
+        API Stack Resources/a1783d100b55885f2d44a33af76f87bf
+      ResponseMappingTemplateS3Location: s3://cf-templates-4eazvtfbn788-us-east-1/FAST
+        API Stack Resources/52392222760d96686724d94e300613fa
+  ResolverRemoveMember:
+    Type: AWS::AppSync::Resolver
+    Properties:
+      ApiId:
+        Fn::GetAtt:
+        - AppSyncAPI
+        - ApiId
+      FieldName: removeMember
+      TypeName: Mutation
+      Kind: PIPELINE
+      PipelineConfig:
+        Functions:
+        - Fn::GetAtt:
+          - FuncRemoveMemberCheckLead
+          - FunctionId
+        - Fn::GetAtt:
+          - FuncRemoveMember
+          - FunctionId
+      RequestMappingTemplateS3Location: s3://cf-templates-4eazvtfbn788-us-east-1/FAST
+        API Stack Resources/c46fc8ef51dfb27776b3115243d7cc1c
+      ResponseMappingTemplateS3Location: s3://cf-templates-4eazvtfbn788-us-east-1/FAST
+        API Stack Resources/13709c494f6065fe32845d07d574d948
+  FuncTransferLead:
+    Type: AWS::AppSync::FunctionConfiguration
+    Properties:
+      ApiId:
+        Fn::GetAtt:
+        - AppSyncAPI
+        - ApiId
+      DataSourceName:
+        Fn::GetAtt:
+        - SourceFASTTeams
+        - Name
+      FunctionVersion: 2018-05-29
+      Name: TransferLead
+      RequestMappingTemplateS3Location: s3://cf-templates-4eazvtfbn788-us-east-1/FAST
+        API Stack Resources/73fe5dc11ff6117ebf46ccd1e2c42cde
+      ResponseMappingTemplateS3Location: s3://cf-templates-4eazvtfbn788-us-east-1/FAST
+        API Stack Resources/95b892c00a2c6770a41b296daf7d9007
+  ResolverTransferLead:
+    Type: AWS::AppSync::Resolver
+    Properties:
+      ApiId:
+        Fn::GetAtt:
+        - AppSyncAPI
+        - ApiId
+      FieldName: transferLead
+      TypeName: Mutation
+      Kind: PIPELINE
+      PipelineConfig:
+        Functions:
+        - Fn::GetAtt:
+          - FuncTransferLead
+          - FunctionId
+        - Fn::GetAtt:
+          - FuncRemoveMember
+          - FunctionId
+      RequestMappingTemplateS3Location: s3://cf-templates-4eazvtfbn788-us-east-1/FAST
+        API Stack Resources/c46fc8ef51dfb27776b3115243d7cc1c
+      ResponseMappingTemplateS3Location: s3://cf-templates-4eazvtfbn788-us-east-1/FAST
+        API Stack Resources/13709c494f6065fe32845d07d574d948
   ResolverOnAddTrackedEvent:
     Type: AWS::AppSync::Resolver
     Properties:

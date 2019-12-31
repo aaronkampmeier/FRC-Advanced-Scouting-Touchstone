@@ -28,7 +28,7 @@
 #
 
 mutation CreateScoutingTeam {
-  createScoutingTeam(name: "Team 1", associatedFrcTeamNumber: 9998) {
+  createScoutingTeam(name: "Team Secondary", associatedFrcTeamNumber: 9996) {
     teamID
     teamLead
     associatedFrcTeamNumber
@@ -42,7 +42,7 @@ mutation CreateScoutingTeam {
 }
 
 mutation makeScoutTeamInvitation {
-  makeScoutTeamInvitation(scoutTeam: "f5569f1c-d7ec-4fbe-8d49-6e19c24c21fb", expDate: 1577689229) {
+  makeScoutTeamInvitation(scoutTeam: "2dabdbc9-39ff-497e-9ac1-eb20f9298431", expDate: 1578294029) {
     inviteID
     secretCode
     teamID
@@ -51,11 +51,29 @@ mutation makeScoutTeamInvitation {
 }
 
 mutation redeemInvitation {
-  redeemInvitation(inviteID: "OSYJOS7YX", secretCode: "GGE-BD6")
+  redeemInvitation(inviteID: "MOKUX04KY", secretCode: "ZDI-H8X")
+}
+
+mutation RemoveMember {
+  removeMember(scoutTeam: "553b6c5e-f798-40cd-84a7-1fdc7d223c59", userToRemove: "22fb5e84-1d76-4926-9b88-382e8ce55860")
+}
+
+mutation TransferLead {
+  transferLead(scoutTeam: "553b6c5e-f798-40cd-84a7-1fdc7d223c59", newTeamLeadUserId: "22fb5e84-1d76-4926-9b88-382e8ce55860") {
+    teamID
+    teamLead
+    associatedFrcTeamNumber
+    name
+    members {
+      name
+      memberSince
+      userID
+    }
+  }
 }
 
 query GetScoutTeam {
-  getScoutingTeam(scoutTeam: "f5569f1c-d7ec-4fbe-8d49-6e19c24c21fb") {
+  getScoutingTeam(scoutTeam: "553b6c5e-f798-40cd-84a7-1fdc7d223c59") {
     teamID
     teamLead
     associatedFrcTeamNumber
@@ -74,5 +92,18 @@ query ListEnrolledScoutingTeams {
     teamLead
     associatedFrcTeamNumber
     name
+  }
+}
+query ListEnrolledScoutingTeamsWithMembers {
+  listEnrolledScoutingTeams {
+    teamID
+    teamLead
+    associatedFrcTeamNumber
+    name
+    members {
+      name
+      memberSince
+      userID
+    }
   }
 }
