@@ -30,11 +30,7 @@ class TeamListDetailViewController: UIViewController {
     @IBOutlet weak var bananaImageView: UIImageView!
     @IBOutlet weak var bananaImageWidth: NSLayoutConstraint!
     
-    var teamListSplitVC: TeamListSplitViewController {
-        get {
-            splitViewController as! TeamListSplitViewController
-        }
-    }
+    var teamListSplitVC: TeamListSplitViewController!
     
     var detailCollectionVC: TeamDetailCollectionViewController?
     
@@ -110,8 +106,8 @@ class TeamListDetailViewController: UIViewController {
         
         //Set up observer to get team change notifications
         NotificationCenter.default.addObserver(forName: .FASTSelectedTeamDidChange, object: teamListSplitVC.teamListTableVC, queue: nil) { (notification) in
-            if let team = notification.userInfo?["team"] as? Team, let eventKey = notification.userInfo?["eventKey"] as? String {
-                self.set(input: (team, eventKey))
+            if let team = notification.userInfo?["team"] as? Team, let eventKey = notification.userInfo?["eventKey"] as? String, let scoutTeam = Globals.dataManager.enrolledScoutingTeamID {
+                self.set(input: (scoutTeam, team, eventKey))
                 let activity = NSUserActivity(activityType: Globals.UserActivity.viewTeamDetail)
                 activity.title = "View Team \(team.teamNumber): \(team.nickname) in \(eventKey)"
                 activity.isEligibleForHandoff = true
@@ -191,12 +187,12 @@ class TeamListDetailViewController: UIViewController {
         
         if segue.identifier == "standsScouting" {
             let destinationVC = segue.destination as! StandsScoutingViewController
-            destinationVC.setUp(forTeamKey: self.selectedTeam?.key ?? "", andEventKey: self.selectedEventKey ?? "")
+            destinationVC.setUp(inScoutTeam: scoutedTeam?.scoutTeam ?? "", forTeamKey: self.selectedTeam?.key ?? "", andEventKey: self.selectedEventKey ?? "")
             
             Globals.recordAnalyticsEvent(eventType: AnalyticsEventSelectContent, attributes: ["Source":"team_detail_button", "content_type":"screen", "item_id":"stands_scouting"])
         } else if segue.identifier == "pitScouting" {
             let pitScoutingVC = segue.destination as! PitScoutingViewController
-            pitScoutingVC.setUp(forTeamKey: self.selectedTeam?.key ?? "", inEvent: self.selectedEventKey ?? "")
+            pitScoutingVC.setUp(inScoutingTeam: self.scoutedTeam?.scoutTeam ?? "", forTeamKey: self.selectedTeam?.key ?? "", inEvent: self.selectedEventKey ?? "")
         } else if segue.identifier == "teamDetailCollection" {
             detailCollectionVC = (segue.destination as! TeamDetailCollectionViewController)
         }
@@ -210,7 +206,7 @@ class TeamListDetailViewController: UIViewController {
     var updateTeamSubcription: AWSAppSyncSubscriptionWatcher<OnUpdateScoutedTeamSubscription>?
     var listScoutedTeamsWatcher: GraphQLQueryWatcher<ListScoutedTeamsQuery>?
     var listStatusesWatcher: GraphQLQueryWatcher<ListTeamEventStatusesQuery>?
-    func set(input: (team: Team, eventKey: String)?) {
+    func set(input: (scoutTeam: String, team: Team, eventKey: String)?) {
         listScoutedTeamsWatcher?.cancel()
         listStatusesWatcher?.cancel()
         
@@ -224,7 +220,7 @@ class TeamListDetailViewController: UIViewController {
         
         if let input = input {
             //Grab the scouted data
-            listScoutedTeamsWatcher = Globals.appDelegate.appSyncClient?.watch(query: ListScoutedTeamsQuery(eventKey: self.selectedEventKey ?? ""), cachePolicy: .returnCacheDataAndFetch, resultHandler: {[weak self] (result, error) in
+            listScoutedTeamsWatcher = Globals.appSyncClient?.watch(query: ListScoutedTeamsQuery(scoutTeam: input.scoutTeam, eventKey: self.selectedEventKey ?? ""), cachePolicy: .returnCacheDataAndFetch, resultHandler: {[weak self] (result, error) in
                 if Globals.handleAppSyncErrors(forQuery: "ListScoutedTeams-TeamListDetail", result: result, error: error) {
                     let sTeams = result?.data?.listScoutedTeams?.map({$0!.fragments.scoutedTeam}) ?? []
                     
@@ -237,7 +233,7 @@ class TeamListDetailViewController: UIViewController {
             })
             
             //Status
-            listStatusesWatcher = Globals.appDelegate.appSyncClient?.watch(query: ListTeamEventStatusesQuery(eventKey: input.eventKey), cachePolicy: .returnCacheDataElseFetch) {[weak self] result, error in
+            listStatusesWatcher = Globals.appSyncClient?.watch(query: ListTeamEventStatusesQuery(eventKey: input.eventKey), cachePolicy: .returnCacheDataElseFetch) {[weak self] result, error in
                 if Globals.handleAppSyncErrors(forQuery: "TeamListDetail-ListTeamEventStatusesQuery", result: result, error: error) {
                     let statuses = result?.data?.listTeamEventStatuses
                     let str = statuses?.first(where: {$0?.teamKey ?? "" == input.team.key})??.fragments.teamEventStatus.overallStatusStr
@@ -377,7 +373,7 @@ class TeamListDetailViewController: UIViewController {
     }
     
     @IBAction func notesButtonPressed(_ sender: UIButton) {
-        guard let eventKey = self.selectedEventKey, let teamkey = self.selectedTeam?.key else {
+        guard let eventKey = self.selectedEventKey, let teamkey = self.selectedTeam?.key, let scoutTeam = self.scoutedTeam?.scoutTeam else {
             return
         }
         
@@ -385,7 +381,7 @@ class TeamListDetailViewController: UIViewController {
         
         let navVC = UINavigationController(rootViewController: notesVC)
         
-        notesVC.load(forEventKey: eventKey, andTeamKey: teamkey)
+        notesVC.load(inScoutTeam: scoutTeam, forEventKey: eventKey, andTeamKey: teamkey)
         
         navVC.modalPresentationStyle = .popover
         navVC.popoverPresentationController?.sourceView = sender
@@ -449,7 +445,7 @@ extension TeamListDetailViewController: MatchesTableViewControllerDelegate {
             let matchDetailNav = self?.storyboard?.instantiateViewController(withIdentifier: "matchDetailNav") as! UINavigationController
             let matchDetail = matchDetailNav.topViewController as! MatchOverviewDetailViewController
             
-            matchDetail.load(forMatchKey: self?.selectedMatch?.key ?? "", shouldShowExitButton: true, preSelectedTeamKey: self?.selectedTeam?.key)
+            matchDetail.load(inScoutTeam: self?.scoutedTeam?.scoutTeam ?? "", forMatchKey: self?.selectedMatch?.key ?? "", shouldShowExitButton: true, preSelectedTeamKey: self?.selectedTeam?.key)
             
             matchesTableViewController.present(matchDetailNav, animated: true, completion: nil)
         }

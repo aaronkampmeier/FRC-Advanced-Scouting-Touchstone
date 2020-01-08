@@ -64,7 +64,7 @@ extension ScoutedTeam: Equatable {
             //OPRs
             statistics.append(ScoutedTeamStat(name: "OPR", id: "opr", function: { (scoutedTeam, callback) in
                 //Fetch the opr
-                Globals.appDelegate.appSyncClient?.fetch(query: ListEventOprsQuery(eventKey: scoutedTeam.eventKey), cachePolicy: .returnCacheDataElseFetch, queue: ScoutedTeam.statCalculationQueue, resultHandler: { (result, error) in
+                Globals.appSyncClient?.fetch(query: ListEventOprsQuery(eventKey: scoutedTeam.eventKey), cachePolicy: .returnCacheDataElseFetch, queue: ScoutedTeam.statCalculationQueue, resultHandler: { (result, error) in
                     if Globals.handleAppSyncErrors(forQuery: "OPR-Query", result: result, error: error) {
                         let opr = result?.data?.listEventOprs?.first(where: {$0?.teamKey == scoutedTeam.teamKey})??.fragments.teamEventOpr
                         callback(StatValue.initWithOptional(value: opr?.opr))
@@ -75,7 +75,7 @@ extension ScoutedTeam: Equatable {
             }))
             statistics.append(ScoutedTeamStat(name: "DPR", id: "dpr", function: { (scoutedTeam, callback) in
                 //Fetch the opr
-                Globals.appDelegate.appSyncClient?.fetch(query: ListEventOprsQuery(eventKey: scoutedTeam.eventKey), cachePolicy: .returnCacheDataElseFetch, queue: ScoutedTeam.statCalculationQueue, resultHandler: { (result, error) in
+                Globals.appSyncClient?.fetch(query: ListEventOprsQuery(eventKey: scoutedTeam.eventKey), cachePolicy: .returnCacheDataElseFetch, queue: ScoutedTeam.statCalculationQueue, resultHandler: { (result, error) in
                     if Globals.handleAppSyncErrors(forQuery: "DPR-Query", result: result, error: error) {
                         let opr = result?.data?.listEventOprs?.first(where: {$0?.teamKey == scoutedTeam.teamKey})??.fragments.teamEventOpr
                         callback(StatValue.initWithOptional(value: opr?.dpr))
@@ -86,7 +86,7 @@ extension ScoutedTeam: Equatable {
             }))
             statistics.append(ScoutedTeamStat(name: "CCWM", id: "ccwm", function: { (scoutedTeam, callback) in
                 //Fetch the opr
-                Globals.appDelegate.appSyncClient?.fetch(query: ListEventOprsQuery(eventKey: scoutedTeam.eventKey), cachePolicy: .returnCacheDataElseFetch, queue: ScoutedTeam.statCalculationQueue, resultHandler: { (result, error) in
+                Globals.appSyncClient?.fetch(query: ListEventOprsQuery(eventKey: scoutedTeam.eventKey), cachePolicy: .returnCacheDataElseFetch, queue: ScoutedTeam.statCalculationQueue, resultHandler: { (result, error) in
                     if Globals.handleAppSyncErrors(forQuery: "CCWM-Query", result: result, error: error) {
                         let opr = result?.data?.listEventOprs?.first(where: {$0?.teamKey == scoutedTeam.teamKey})??.fragments.teamEventOpr
                         callback(StatValue.initWithOptional(value: opr?.ccwm))
@@ -98,7 +98,7 @@ extension ScoutedTeam: Equatable {
             
             statistics.append(ScoutedTeamStat(name: "Event Rank", id: "eventRank", function: { (scoutedTeam, callback) in
                 //Fetch the opr
-                Globals.appDelegate.appSyncClient?.fetch(query: ListTeamEventStatusesQuery(eventKey: scoutedTeam.eventKey), cachePolicy: .returnCacheDataElseFetch, queue: ScoutedTeam.statCalculationQueue, resultHandler: { (result, error) in
+                Globals.appSyncClient?.fetch(query: ListTeamEventStatusesQuery(eventKey: scoutedTeam.eventKey), cachePolicy: .returnCacheDataElseFetch, queue: ScoutedTeam.statCalculationQueue, resultHandler: { (result, error) in
                     if Globals.handleAppSyncErrors(forQuery: "EventRankQuery", result: result, error: error) {
                         let status = result?.data?.listTeamEventStatuses?.first(where: {$0?.teamKey == scoutedTeam.teamKey})??.fragments.teamEventStatus
                         callback(StatValue.initWithOptional(value: status?.qual?.ranking?.rank))
@@ -109,7 +109,7 @@ extension ScoutedTeam: Equatable {
             }))
             
             //Auto generate all of the pit socuting stats
-            let pitScoutingInputs = PitScoutingData().requestedDataInputs(forScoutedTeam: ScoutedTeam(teamKey: "", userId: "", eventKey: ""))
+            let pitScoutingInputs = PitScoutingData().requestedDataInputs(forScoutedTeam: ScoutedTeam(teamKey: "", scoutTeam: "", eventKey: ""))
             for input in pitScoutingInputs {
                 if input.key != "canBanana" {
                     statistics.append(Statistic<ScoutedTeam>(name: input.label, id: input.key, function: { (scoutedTeam, callback) in
@@ -119,7 +119,7 @@ extension ScoutedTeam: Equatable {
             }
             
             statistics.append(ScoutedTeamStat(name: "Scouted Matches", id: "scoutedMatches", function: { (scoutedTeam, callback) in
-                AWSDataManager.default.retrieveScoutSessions(forEventKey: scoutedTeam.eventKey, teamKey: scoutedTeam.teamKey, withCallback: { (scoutSessions) in
+                Globals.dataManager.retrieveScoutSessions(forEventKey: scoutedTeam.eventKey, teamKey: scoutedTeam.teamKey, withCallback: { (scoutSessions) in
                     //Find the number of scout sessions with unique match keys
                     var matchScoutSessions = [String:ScoutSession]()
                     for session in scoutSessions ?? [] {
@@ -130,7 +130,7 @@ extension ScoutedTeam: Equatable {
                 })
             }))
             statistics.append(ScoutedTeamStat(name: "Number of Matches", id: "numOfMatches", function: { (scoutedTeam, callback) in
-                Globals.appDelegate.appSyncClient?.fetch(query: ListMatchesQuery(eventKey: scoutedTeam.eventKey), cachePolicy: .returnCacheDataElseFetch, queue: ScoutedTeam.statCalculationQueue, resultHandler: { (result, error) in
+                Globals.appSyncClient?.fetch(query: ListMatchesQuery(eventKey: scoutedTeam.eventKey), cachePolicy: .returnCacheDataElseFetch, queue: ScoutedTeam.statCalculationQueue, resultHandler: { (result, error) in
                     if Globals.handleAppSyncErrors(forQuery: "ListMatches-NumOfMatchesStat", result: result, error: error) {
                         let matches = result?.data?.listMatches?.map({$0!.fragments.match}) ?? []
                         let count = matches.reduce(0, { (result, match) -> Int in
@@ -165,7 +165,7 @@ extension ScoutedTeam: Equatable {
                 for option in startState.options {
                     statistics.append(ScoutedTeamStat(name: "\(startState.shortName ?? startState.name)-\(option.name)", id: "\(startState.shortName ?? startState.name)-\(option.name)", function: { (scoutedTeam, callback) in
                         //Get the scout sessions
-                        AWSDataManager.default.retrieveScoutSessions(forEventKey: scoutedTeam.eventKey, teamKey: scoutedTeam.teamKey, withCallback: { (scoutSessions) in
+                        Globals.dataManager.retrieveScoutSessions(forEventKey: scoutedTeam.eventKey, teamKey: scoutedTeam.teamKey, withCallback: { (scoutSessions) in
                             let startStates = scoutSessions?.map({$0?.startStateDict ?? [:]}) ?? []
                             
                             //Get the ones with this option
@@ -182,7 +182,7 @@ extension ScoutedTeam: Equatable {
                 for option in endState.options {
                     statistics.append(ScoutedTeamStat(name: "\(endState.shortName ?? endState.name)-\(option.name)", id: "\(endState.shortName ?? endState.name)-\(option.name)", function: { (scoutedTeam, callback) in
                         //Get the scout sessions
-                        AWSDataManager.default.retrieveScoutSessions(forEventKey: scoutedTeam.eventKey, teamKey: scoutedTeam.teamKey, withCallback: { (scoutSessions) in
+                        Globals.dataManager.retrieveScoutSessions(forEventKey: scoutedTeam.eventKey, teamKey: scoutedTeam.teamKey, withCallback: { (scoutSessions) in
                             let endStates = scoutSessions?.map({$0?.endStateDict ?? [:]}) ?? []
                             
                             //Get the ones with this option
@@ -198,7 +198,7 @@ extension ScoutedTeam: Equatable {
             for gameAction in model?.gameActions ?? [] {
                 //First show number of times action happened
                 let totalOccurenceStat = ScoutedTeamStat(name: "\(gameAction.name) Occurrences", id: gameAction.name + " occurrences", compositeTrendFunction: { (scoutedTeam, callback) in
-                    AWSDataManager.default.retrieveScoutSessions(forEventKey: scoutedTeam.eventKey, teamKey: scoutedTeam.teamKey, withCallback: { (scoutSessions) in
+                    Globals.dataManager.retrieveScoutSessions(forEventKey: scoutedTeam.eventKey, teamKey: scoutedTeam.teamKey, withCallback: { (scoutSessions) in
                         var compositePoints = [(matchNumber: Int, value: StatValue)]()
                         for session in scoutSessions ?? [] {
                             let timeMarkers = session?.timeMarkers?.map({$0!.fragments.timeMarkerFragment})
@@ -210,7 +210,7 @@ extension ScoutedTeam: Equatable {
                         callback(compositePoints)
                     })
                 }, function: { (scoutedTeam, callback) in
-                    AWSDataManager.default.retrieveScoutSessions(forEventKey: scoutedTeam.eventKey, teamKey: scoutedTeam.teamKey, withCallback: { (scoutSessions) in
+                    Globals.dataManager.retrieveScoutSessions(forEventKey: scoutedTeam.eventKey, teamKey: scoutedTeam.teamKey, withCallback: { (scoutSessions) in
                         let timeMarkers = scoutSessions?.reduce([TimeMarkerFragment](), { (currentTMs, scoutSession) -> [TimeMarkerFragment] in
                             return currentTMs + (scoutSession?.timeMarkers?.map({$0!.fragments.timeMarkerFragment}) ?? [])
                         })
@@ -247,7 +247,7 @@ extension ScoutedTeam: Equatable {
                     for subOption in subOptions {
                         //Show the average of each option
 //                        statistics.append(ScoutedTeamStat(name: "\(gameAction.name)-\(subOption.name) Avg.", id: UUID().uuidString, function: { (scoutedTeam, callback) in
-//                            Globals.appDelegate.appSyncClient?.fetch(query: ListScoutSessionsQuery(eventKey: scoutedTeam.eventKey, teamKey: scoutedTeam.teamKey), cachePolicy: .returnCacheDataElseFetch, resultHandler: { (result, error) in
+//                            Globals.appSyncClient?.fetch(query: ListScoutSessionsQuery(eventKey: scoutedTeam.eventKey, teamKey: scoutedTeam.teamKey), cachePolicy: .returnCacheDataElseFetch, resultHandler: { (result, error) in
 //                                if Globals.handleAppSyncErrors(forQuery: "ScoutSessions-GameActionSubOptionAverageStat", result: result, error: error) {
 //                                    let sessionsTMs = result?.data?.listScoutSessions?.map({$0!.fragments.scoutSession.timeMarkers?.map({$0!.fragments.timeMarkerFragment})})
 //
@@ -277,7 +277,7 @@ extension ScoutedTeam: Equatable {
                             let ssStats = StatisticsDataSource().getStats(forType: ScoutSession.self)
                             let subOptionPercentageStat = ssStats.first(where: {$0.id == id})
                             
-                            AWSDataManager.default.retrieveScoutSessions(forEventKey: scoutedTeam.eventKey, teamKey: scoutedTeam.teamKey, withCallback: { (scoutSessions) in
+                            Globals.dataManager.retrieveScoutSessions(forEventKey: scoutedTeam.eventKey, teamKey: scoutedTeam.teamKey, withCallback: { (scoutSessions) in
                                 for session in scoutSessions ?? [] {
                                     let group = DispatchGroup()
                                     group.enter()
@@ -301,7 +301,7 @@ extension ScoutedTeam: Equatable {
                             })
                             
                         }, function: { (scoutedTeam, callback) in
-                            AWSDataManager.default.retrieveScoutSessions(forEventKey: scoutedTeam.eventKey, teamKey: scoutedTeam.teamKey, withCallback: { (scoutSessions) in
+                            Globals.dataManager.retrieveScoutSessions(forEventKey: scoutedTeam.eventKey, teamKey: scoutedTeam.teamKey, withCallback: { (scoutSessions) in
                                 let totalTMs = scoutSessions?.map({$0?.timeMarkers?.map({$0!.fragments.timeMarkerFragment})}).reduce([TimeMarkerFragment](), { (tms, newTMs) -> [TimeMarkerFragment] in
                                     return tms + (newTMs ?? [])
                                 })
@@ -320,7 +320,7 @@ extension ScoutedTeam: Equatable {
 				let ssStats = StatisticsDataSource().getStats(forType: ScoutSession.self)
 				let cargoandhatchStat = ssStats.first(where: {$0.id == "cargoandhatch"})
 				
-				AWSDataManager.default.retrieveScoutSessions(forEventKey: scoutedTeam.eventKey, teamKey: scoutedTeam.teamKey, withCallback: { (scoutSessions) in
+				Globals.dataManager.retrieveScoutSessions(forEventKey: scoutedTeam.eventKey, teamKey: scoutedTeam.teamKey, withCallback: { (scoutSessions) in
 					var compositePoints = [(Int, StatValue)]()
 					
 					let group = DispatchGroup()
@@ -343,7 +343,7 @@ extension ScoutedTeam: Equatable {
 					callback(compositePoints)
 				})
 			}, function: { (scoutedTeam, callback) in
-				AWSDataManager.default.retrieveScoutSessions(forEventKey: scoutedTeam.eventKey, teamKey: scoutedTeam.teamKey, withCallback: { (scoutSessions) in
+				Globals.dataManager.retrieveScoutSessions(forEventKey: scoutedTeam.eventKey, teamKey: scoutedTeam.teamKey, withCallback: { (scoutSessions) in
 					let totalTMs = scoutSessions?.map({$0?.timeMarkers?.map({$0!.fragments.timeMarkerFragment})}).reduce([TimeMarkerFragment](), { (tms, newTMs) -> [TimeMarkerFragment] in
 						return tms + (newTMs ?? [])
 					})

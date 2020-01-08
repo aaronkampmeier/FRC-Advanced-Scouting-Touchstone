@@ -30,24 +30,28 @@ class EventSelectorTableViewController: UITableViewController {
         // self.navigationItem.rightBarButtonItem = self.editButtonItem
         
         //Load all the events
-        trackedEventsWatcher = Globals.appDelegate.appSyncClient?.watch(query: ListTrackedEventsQuery(), cachePolicy: .returnCacheDataElseFetch, queue: DispatchQueue.global(qos: .userInteractive)) {[weak self] result, error in
-            DispatchQueue.main.async {
-                if Globals.handleAppSyncErrors(forQuery: "ListTrackedEventsQuery", result: result, error: error) {
-                    self?.events = result?.data?.listTrackedEvents?.map {(eventKey: $0!.eventKey, eventName: $0!.eventName)} ?? []
-                    self?.tableView.reloadData()
-                    //Transition the view to the proper size
-//                    DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + 1) {
-//                        UIView.animate(withDuration: 0.4, delay: 0, options: [], animations: {
-//                            let newFrame = CGRect(x: self?.tableView.frame.origin.x ?? .zero, y: self?.tableView.frame.origin.y ?? .zero, width: self?.tableView.frame.width ?? .zero, height: self?.tableView.contentSize.height ?? .zero)
-//                            self?.tableView.frame = newFrame
-//                        }) { (completed) in
-//                            self?.tableView.invalidateIntrinsicContentSize()
-//                        }
-//                    }
-                } else {
-                    
+        if let scoutTeamId = Globals.dataManager.enrolledScoutingTeamID {
+            trackedEventsWatcher = Globals.appSyncClient?.watch(query: ListTrackedEventsQuery(scoutTeam: scoutTeamId), cachePolicy: .returnCacheDataElseFetch, queue: DispatchQueue.global(qos: .userInteractive)) {[weak self] result, error in
+                DispatchQueue.main.async {
+                    if Globals.handleAppSyncErrors(forQuery: "ListTrackedEventsQuery", result: result, error: error) {
+                        self?.events = result?.data?.listTrackedEvents?.map {(eventKey: $0!.eventKey, eventName: $0!.eventName)} ?? []
+                        self?.tableView.reloadData()
+                        //Transition the view to the proper size
+                        //                    DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + 1) {
+                        //                        UIView.animate(withDuration: 0.4, delay: 0, options: [], animations: {
+                        //                            let newFrame = CGRect(x: self?.tableView.frame.origin.x ?? .zero, y: self?.tableView.frame.origin.y ?? .zero, width: self?.tableView.frame.width ?? .zero, height: self?.tableView.contentSize.height ?? .zero)
+                        //                            self?.tableView.frame = newFrame
+                        //                        }) { (completed) in
+                        //                            self?.tableView.invalidateIntrinsicContentSize()
+                        //                        }
+                        //                    }
+                    } else {
+                        
+                    }
                 }
             }
+        } else {
+            //TODO: Show error message in table view background that there is no enrolled scout team
         }
     }
     

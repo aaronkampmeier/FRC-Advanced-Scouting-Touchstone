@@ -150,6 +150,9 @@ query GetScoutingTeamWithMembers($scoutTeam: ID!) {
     ...ScoutingTeamWithMembers
   }
 }
+query GetScoutingTeamPublicName($inviteID: ID!) {
+  getScoutingTeamPublicName(inviteID: $inviteID)
+}
 query ListScoutingTeamInvitations($scoutTeam: ID!) {
   listScoutingTeamInvitations(scoutTeam: $scoutTeam) {
     ...ScoutTeamInvitation

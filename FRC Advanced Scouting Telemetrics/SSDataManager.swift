@@ -56,8 +56,8 @@ class SSDataManager {
             Crashlytics.sharedInstance().recordError(error)
         }
         
-        let mutation = CreateScoutSessionMutation(eventKey: match.eventKey, teamKey: teamKey, matchKey: match.key, recordedDate: Int(Date().timeIntervalSince1970), startState: startStateString, endState: endStateString, timeMarkers: timeMarkers)
-        Globals.appDelegate.appSyncClient?.perform(mutation: mutation, optimisticUpdate: { (transaction) in
+        let mutation = CreateScoutSessionMutation(scoutTeam: Globals.dataManager.enrolledScoutingTeamID ?? "", eventKey: match.eventKey, teamKey: teamKey, matchKey: match.key, recordedDate: Int(Date().timeIntervalSince1970), startState: startStateString, endState: endStateString, timeMarkers: timeMarkers)
+        Globals.appSyncClient?.perform(mutation: mutation, optimisticUpdate: { (transaction) in
             //TODO: - Add optimistic update
         }, conflictResolutionBlock: { (snapshot, taskCompletionSource, onCompletion) in
             

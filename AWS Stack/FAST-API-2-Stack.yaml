@@ -209,7 +209,7 @@ Resources:
       ServiceRoleArn: arn:aws:iam::797353049590:role/service-role/appsync-ds-lam-nuerz7-eventRankingManageme
       LambdaConfig:
         LambdaFunctionArn: >-
-          arn:aws:lambda:us-east-1:797353049590:function:eventRankingManagement:Production
+          arn:aws:lambda:us-east-1:797353049590:function:eventRankingManagement:ProductionAPI2
       Name: EventRankingManagement
       Type: AWS_LAMBDA
     Metadata:
@@ -224,7 +224,7 @@ Resources:
       ServiceRoleArn: arn:aws:iam::797353049590:role/service-role/appsync-ds-lam-nuerz7-listScoutSessions
       LambdaConfig:
         LambdaFunctionArn: >-
-          arn:aws:lambda:us-east-1:797353049590:function:listScoutSessions:Production
+          arn:aws:lambda:us-east-1:797353049590:function:listScoutSessions:ProductionAPI2
       Name: ScoutSessions
       Type: AWS_LAMBDA
     Metadata:
@@ -239,7 +239,7 @@ Resources:
       ServiceRoleArn: arn:aws:iam::797353049590:role/service-role/appsync-ds-lam-nuerz7-updateStatistics
       LambdaConfig:
         LambdaFunctionArn: >-
-          arn:aws:lambda:us-east-1:797353049590:function:updateStatistics:Production
+          arn:aws:lambda:us-east-1:797353049590:function:updateStatistics:ProductionAPI2
       Name: StatsUpdater
       Type: AWS_LAMBDA
     Metadata:
@@ -917,6 +917,40 @@ Resources:
     DependsOn:
       - AppSyncSchema
 
+  FuncGetScoutingTeamPublicNameCheckInvite:
+    Type: AWS::AppSync::FunctionConfiguration
+    Properties:
+      ApiId: !GetAtt AppSyncAPI.ApiId
+      DataSourceName: !GetAtt SourceFASTTeamInvites.Name
+      FunctionVersion: 2018-05-29
+      Name: GetScoutingTeamPublicNameCheckInvite
+      RequestMappingTemplateS3Location: ./Functions/GetScoutingTeamPublicNameCheckInviteRequest
+      ResponseMappingTemplateS3Location: ./Functions/GetScoutingTeamPublicNameCheckInviteResponse
+  FuncGetScoutingTeamPublicName:
+    Type: AWS::AppSync::FunctionConfiguration
+    Properties:
+      ApiId: !GetAtt AppSyncAPI.ApiId
+      DataSourceName: !GetAtt SourceFASTTeamInvites.Name
+      FunctionVersion: 2018-05-29
+      Name: GetScoutingTeamPublicName
+      RequestMappingTemplateS3Location: ./Functions/GetScoutingTeamPublicNameRequest
+      ResponseMappingTemplateS3Location: ./Functions/GetScoutingTeamPublicNameResponse
+  ResolverGetScoutingTeamPublicName:
+    Type: AWS::AppSync::Resolver
+    Properties:
+      ApiId: !GetAtt AppSyncAPI.ApiId
+      FieldName: getScoutingTeamPublicName
+      TypeName: Query
+      Kind: PIPELINE
+      PipelineConfig:
+        Functions:
+          - !GetAtt FuncGetScoutingTeamPublicNameCheckInvite.FunctionId
+          - !GetAtt FuncGetScoutingTeamPublicName.FunctionId
+      RequestMappingTemplateS3Location: ./Functions/PipelineStandardBeforeRequest
+      ResponseMappingTemplateS3Location: ./Functions/PipelineStandardAfterResponse
+    DependsOn:
+      - AppSyncSchema
+
   FuncListScoutingTeamInvitations:
     Type: AWS::AppSync::FunctionConfiguration
     Properties:
@@ -1248,6 +1282,15 @@ Resources:
       Name: TransferLead
       RequestMappingTemplateS3Location: ./Functions/TransferLeadRequest
       ResponseMappingTemplateS3Location: ./Functions/TransferLeadResponse
+  FuncTransferLeadCheckMember:
+    Type: AWS::AppSync::FunctionConfiguration
+    Properties:
+      ApiId: !GetAtt AppSyncAPI.ApiId
+      DataSourceName: !GetAtt SourceFASTTeams.Name
+      FunctionVersion: 2018-05-29
+      Name: TransferLeadCheckMember
+      RequestMappingTemplateS3Location: ./Functions/TransferLeadCheckMemberRequest
+      ResponseMappingTemplateS3Location: ./Functions/TransferLeadCheckMemberResponse
   ResolverTransferLead:
     Type: AWS::AppSync::Resolver
     Properties:
@@ -1257,10 +1300,34 @@ Resources:
       Kind: PIPELINE
       PipelineConfig:
         Functions:
+          - !GetAtt FuncTransferLeadCheckMember.FunctionId
           - !GetAtt FuncTransferLead.FunctionId
-          - !GetAtt FuncRemoveMember.FunctionId
       RequestMappingTemplateS3Location: ./Functions/PipelineStandardBeforeRequest
       ResponseMappingTemplateS3Location: ./Functions/PipelineStandardAfterResponse
+  ResolverChangeMemberName:
+    Type: AWS::AppSync::Resolver
+    Properties:
+      ApiId: !GetAtt AppSyncAPI.ApiId
+      FieldName: changeMemberName
+      Kind: UNIT
+      DataSourceName: !GetAtt SourceFASTTeams.Name
+      RequestMappingTemplateS3Location: ./Functions/ChangeMemberNameRequest
+      ResponseMappingTemplateS3Location: ./Functions/ChangeMemberNameResponse
+      TypeName: Mutation
+    DependsOn:
+      - AppSyncSchema
+  ResolverEditScoutingTeamInfo:
+    Type: AWS::AppSync::Resolver
+    Properties:
+      ApiId: !GetAtt AppSyncAPI.ApiId
+      FieldName: editScoutingTeamInfo
+      Kind: UNIT
+      DataSourceName: !GetAtt SourceFASTTeams.Name
+      RequestMappingTemplateS3Location: ./Functions/EditScoutingTeamInfoRequest
+      ResponseMappingTemplateS3Location: ./Functions/EditScoutingTeamInfoResponse
+      TypeName: Mutation
+    DependsOn:
+      - AppSyncSchema
 
   ################################################################################
   ################################################################################

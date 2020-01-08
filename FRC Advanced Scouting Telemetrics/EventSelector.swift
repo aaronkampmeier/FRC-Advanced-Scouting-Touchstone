@@ -92,7 +92,7 @@
 //        willChange = PassthroughSubject<Void, Never>()
 //        
 //        //Load all the events
-//        trackedEventsWatcher = Globals.appDelegate.appSyncClient?.watch(query: ListTrackedEventsQuery(), cachePolicy: .returnCacheDataElseFetch, queue: DispatchQueue.global(qos: .userInteractive)) {[weak self] result, error in
+//        trackedEventsWatcher = Globals.appSyncClient?.watch(query: ListTrackedEventsQuery(), cachePolicy: .returnCacheDataElseFetch, queue: DispatchQueue.global(qos: .userInteractive)) {[weak self] result, error in
 //            DispatchQueue.main.async {
 //                if Globals.handleAppSyncErrors(forQuery: "ListTrackedEventsQuery", result: result, error: error) {
 //                    self?.events = result?.data?.listTrackedEvents?.map({ $0 ?? ListTrackedEventsQuery.Data.ListTrackedEvent(eventKey: "", eventName: "")

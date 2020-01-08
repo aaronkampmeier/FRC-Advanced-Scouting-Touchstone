@@ -19,6 +19,8 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     func scene(_ scene: UIScene, willConnectTo session: UISceneSession, options connectionOptions: UIScene.ConnectionOptions) {
         CLSNSLogv("Will Connect Scene To Session", getVaList([]))
         
+        ///MAKE SURE TO UPDATE ANY NEW LOGIC HERE INTO THE AppDelegate AS WELL FOR iOS 12 AND BELOW
+        
         //Restore activity for the session
         let mainStoryboard = UIStoryboard(name: "Main", bundle: nil)
         switch AWSMobileClient.default().currentUserState {
@@ -64,6 +66,10 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
                 }
             }
         }
+        
+        if let restorationActivity = session.stateRestorationActivity {
+            //TODO: AJNSOJ
+        }
     }
     
     func sceneDidDisconnect(_ scene: UIScene) {
@@ -99,7 +105,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 //            teamListSplitVC.teamListTableVC.selectedEventKey = eventKey
             self.window?.rootViewController = teamListSplitVC
             teamListSplitVC.teamListTableVC.eventSelected(eventKey)
-            Globals.appDelegate.appSyncClient?.fetch(query: ListTeamsQuery(eventKey: eventKey ?? ""), cachePolicy: .returnCacheDataElseFetch, resultHandler: { (result, error) in
+            Globals.appSyncClient?.fetch(query: ListTeamsQuery(eventKey: eventKey ?? ""), cachePolicy: .returnCacheDataElseFetch, resultHandler: { (result, error) in
                 if Globals.handleAppSyncErrors(forQuery: "RestoreTeamFromList", result: result, error: error) {
                     let team = result?.data?.listTeams?.first(where: {$0?.key == teamKey})??.fragments.team
                     teamListSplitVC.teamListTableVC.selectedTeam = team

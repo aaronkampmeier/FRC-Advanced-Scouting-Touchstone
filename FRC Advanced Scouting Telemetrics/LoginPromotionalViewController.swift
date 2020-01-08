@@ -57,26 +57,7 @@ class LoginPromotionalViewController: UIViewController {
     @IBAction func loginPressed(_ sender: UIButton) {
         Globals.recordAnalyticsEvent(eventType: AnalyticsEventSelectContent, attributes: ["content_type":"screen","item_id": "login","from":"login_promotional"])
         
-        //Present log in screen
-        let loginVC = LoginViewController(style: .darkOpaque)
-        loginVC.isCancelButtonHidden = false
-        loginVC.isCopyrightLabelHidden = true
-        loginVC.authenticationProvider = AWSCognitoAuthenticationProvider()
-        
-        loginVC.loginSuccessfulHandler = {result in
-            UserDefaults.standard.set(false, forKey: Globals.isSpectatorModeKey)
-            
-            if #available(iOS 13.0, *) {
-                // iOS 13 and up uses scenes and those will switch views depending on login state automatically.
-            } else {
-                loginVC.dismiss(animated: false, completion: nil)
-                let mainStoryboard = UIStoryboard(name: "Main", bundle: nil)
-                self.view.window?.rootViewController = mainStoryboard.instantiateViewController(withIdentifier: "teamListMasterVC")
-            }
-        }
-        
-        loginVC.setRegistering(true, animated: false)
-        present(loginVC, animated: true, completion: nil)
+        //Show log in
     }
     
     /*

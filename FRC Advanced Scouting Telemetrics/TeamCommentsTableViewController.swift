@@ -13,6 +13,7 @@ import AWSMobileClient
 
 class TeamCommentsTableViewController: UITableViewController {
     
+    var scoutTeam: String?
     var eventKey: String?
     var teamKey: String?
     var teamComments: [TeamComment] = []
@@ -48,10 +49,11 @@ class TeamCommentsTableViewController: UITableViewController {
         // Dispose of any resources that can be recreated.
     }
     
-    func load(forEventKey eventKey: String, andTeamKey teamKey: String) {
+    func load(inScoutTeam scoutTeam: String, forEventKey eventKey: String, andTeamKey teamKey: String) {
+        self.scoutTeam = scoutTeam
         self.eventKey = eventKey
         self.teamKey = teamKey
-        Globals.appDelegate.appSyncClient?.fetch(query: ListTeamCommentsQuery(eventKey: eventKey, teamKey: teamKey), cachePolicy: .returnCacheDataAndFetch, resultHandler: {[weak self] (result, error) in
+        Globals.appSyncClient?.fetch(query: ListTeamCommentsQuery(scoutTeam: scoutTeam, eventKey: eventKey, teamKey: teamKey), cachePolicy: .returnCacheDataAndFetch, resultHandler: {[weak self] (result, error) in
             if Globals.handleAppSyncErrors(forQuery: "ListTeamComments", result: result, error: error) {
                 self?.teamComments = result?.data?.listTeamComments?.map({$0!.fragments.teamComment}).sorted {$0.datePosted < $1.datePosted} ?? []
                 self?.isLoaded = true
@@ -123,16 +125,17 @@ class TeamCommentsTableViewController: UITableViewController {
             let comment = teamComments[indexPath.row]
             let deleteAction = UIContextualAction(style: .destructive, title: "Delete") {[weak self] (action, view, completionHandler) in
                 //Delete the comment
-                Globals.appDelegate.appSyncClient?.perform(mutation: RemoveTeamCommentMutation(eventKey: (self?.eventKey) ?? "", key: comment.key), resultHandler: { (result, error) in
+                //TODO: Check the parameters for null before making the call
+                Globals.appSyncClient?.perform(mutation: RemoveTeamCommentMutation(scoutTeam: self?.scoutTeam ?? "", eventKey: (self?.eventKey) ?? "", key: comment.key), resultHandler: { (result, error) in
                     if Globals.handleAppSyncErrors(forQuery: "RemoveTeamComment", result: result, error: error) {
                         self?.tableView.beginUpdates()
                         self?.teamComments.remove(at: indexPath.row)
                         self?.tableView.deleteRows(at: [indexPath], with: .top)
                         
                         //Remove it from the cache
-                        let _ = Globals.appDelegate.appSyncClient?.store?.withinReadWriteTransaction({ (transaction) -> Any in
+                        let _ = Globals.appSyncClient?.store?.withinReadWriteTransaction({ (transaction) -> Any in
                             do {
-                                try transaction.update(query: ListTeamCommentsQuery(eventKey: self?.eventKey ?? "", teamKey: self?.teamKey ?? ""), { (selectionSet) in
+                                try transaction.update(query: ListTeamCommentsQuery(scoutTeam: self?.scoutTeam ?? "", eventKey: self?.eventKey ?? "", teamKey: self?.teamKey ?? ""), { (selectionSet) in
                                     if let index = selectionSet.listTeamComments?.firstIndex(where: {$0?.key == result?.data?.removeTeamComment?.key}) {
                                         selectionSet.listTeamComments?.remove(at: index)
                                     }
@@ -165,10 +168,10 @@ class TeamCommentsTableViewController: UITableViewController {
         let uuid = UUID().uuidString
         let date = Date().timeIntervalSince1970
         Globals.recordAnalyticsEvent(eventType: "posted_team_comment", attributes: ["eventKey":eventKey!, "teamKey":teamKey!], metrics: ["length":Double(body.count)])
-        Globals.appDelegate.appSyncClient?.perform(mutation: AddTeamCommentMutation(eventKey: eventKey!, teamKey: teamKey!, body: body, author: UIDevice.current.name), optimisticUpdate: { (transaction) in
+        Globals.appSyncClient?.perform(mutation: AddTeamCommentMutation(scoutTeam: scoutTeam ?? "", eventKey: eventKey!, teamKey: teamKey!, body: body, author: UIDevice.current.name), optimisticUpdate: { (transaction) in
             do {
-                try transaction?.update(query: ListTeamCommentsQuery(eventKey: self.eventKey!, teamKey: self.teamKey!), { (selectionSet) in
-                    selectionSet.listTeamComments?.append(ListTeamCommentsQuery.Data.ListTeamComment(author: UIDevice.current.name, userId: AWSMobileClient.default().username!, body: body, datePosted: Int(date), key: uuid, teamKey: self.teamKey!, eventKey: self.eventKey!))
+                try transaction?.update(query: ListTeamCommentsQuery(scoutTeam: self.scoutTeam ?? "", eventKey: self.eventKey!, teamKey: self.teamKey!), { (selectionSet) in
+                    selectionSet.listTeamComments?.append(ListTeamCommentsQuery.Data.ListTeamComment(author: UIDevice.current.name, scoutTeam: self.scoutTeam ?? "", authorUserId: AWSMobileClient.default().username!, body: body, datePosted: Int(date), key: uuid, teamKey: self.teamKey ?? "", eventKey: self.eventKey ?? ""))
                 })
             } catch {
                 CLSNSLogv("Error performing optimistic update: \(error)", getVaList([]))
@@ -192,9 +195,9 @@ class TeamCommentsTableViewController: UITableViewController {
                     }
                     
                     //Now fix the cache
-                    let _ = Globals.appDelegate.appSyncClient?.store?.withinReadWriteTransaction({ (transaction) -> Any in
+                    let _ = Globals.appSyncClient?.store?.withinReadWriteTransaction({ (transaction) -> Any in
                         do {
-                            try transaction.update(query: ListTeamCommentsQuery(eventKey: self.eventKey!, teamKey: self.teamKey!), { (selectionSet) in
+                            try transaction.update(query: ListTeamCommentsQuery(scoutTeam: self.scoutTeam ?? "", eventKey: self.eventKey!, teamKey: self.teamKey!), { (selectionSet) in
                                 if let index = selectionSet.listTeamComments?.firstIndex(where: { (comment) -> Bool in
                                     return comment?.key == uuid
                                 }) {
@@ -220,7 +223,7 @@ class TeamCommentsTableViewController: UITableViewController {
         })
         
         tableView.beginUpdates()
-        teamComments.append(TeamComment(author: UIDevice.current.name, userId: AWSMobileClient.default().username!, body: body, datePosted: Int(date), key: uuid, teamKey: teamKey ?? "", eventKey: eventKey ?? ""))
+        teamComments.append(TeamComment(author: UIDevice.current.name, scoutTeam: scoutTeam ?? "", authorUserId: AWSMobileClient.default().username!, body: body, datePosted: Int(date), key: uuid, teamKey: teamKey ?? "", eventKey: eventKey ?? ""))
         tableView.insertRows(at: [IndexPath(row: teamComments.count - 1, section: 0)], with: .top)
         self.currentlyWrittenCommentText = ""
         tableView.endUpdates()

@@ -6,7 +6,8 @@
         "userID" : $util.dynamodb.toDynamoDBJson($ctx.identity.sub)
     },
     "attributeValues" : {
-        "memberSince" : $util.dynamodb.toDynamoDBJson($util.time.nowEpochSeconds())
+        "memberSince" : $util.dynamodb.toDynamoDBJson($util.time.nowEpochSeconds()),
+				"name": $util.dynamodb.toDynamoDBJson($ctx.args.memberName)
     },
     "condition" : {
        "expression": "attribute_not_exists(userID)"

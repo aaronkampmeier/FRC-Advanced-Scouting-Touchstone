@@ -22,30 +22,34 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     var window: UIWindow?
     
     var supportedInterfaceOrientations: UIInterfaceOrientationMask = .all
-    var appSyncClient: AWSAppSyncClient?
     
     // MARK: App Did Finish Launching
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
+        let isUsingScenes = (UIDevice.current.systemVersion as NSString).floatValue >= 13
+        let mainStoryboard = UIStoryboard(name: "Main", bundle: nil)
         // Override point for customization after application launch.
         FirebaseApp.configure()
         Fabric.with([Crashlytics.self])
-        
-        Globals.dataManager = AWSDataManager()
         
         // AWS Cognito Initialization
         AWSMobileClient.default().initialize {userState, error in
             if let userState = userState {
                 CLSNSLogv("User State: \(userState)", getVaList([]))
-                Analytics.setUserID(AWSMobileClient.default().username)
-                Crashlytics.sharedInstance().setUserName(AWSMobileClient.default().username)
-                Crashlytics.sharedInstance().setUserIdentifier(UIDevice.current.name)
                 
                 switch userState {
                 case .signedOut:
+                    if !isUsingScenes {
+                        self.window?.rootViewController = mainStoryboard.instantiateViewController(withIdentifier: "onboarding")
+                    }
                     break
                 case .signedIn:
-                    Analytics.setUserProperty(AWSMobileClient.default().username, forName: "teamNumber")
+                    if !isUsingScenes {
+                        self.window?.rootViewController = mainStoryboard.instantiateViewController(withIdentifier: "teamListMasterVC")
+                    }
                 case .guest:
+                    if !isUsingScenes {
+                        self.window?.rootViewController = mainStoryboard.instantiateViewController(withIdentifier: "onboarding")
+                    }
                     break
                 default:
                     CLSNSLogv("Signing out due to invalid userState", getVaList([]))
@@ -59,65 +63,29 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             }
         }
         
-        // AWS App Sync Config
-        _ = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0].appendingPathComponent("FASTAppSyncDatabase")
-        do {
-            let serviceConfig = try AWSAppSyncServiceConfig()
-			let appSyncConfig = try AWSAppSyncClientConfiguration(appSyncServiceConfig: serviceConfig, userPoolsAuthProvider: FASTCognitoUserPoolsAuthProvider(), connectionStateChangeHandler: FASTAppSyncStateChangeHandler())
-            appSyncClient = try AWSAppSyncClient(appSyncConfig: appSyncConfig)
-            appSyncClient?.apolloClient?.cacheKeyForObject = {
-                switch $0["__typename"] as! String {
-                case "EventRanking":
-                    return "ranking_\($0["eventKey"]!)"
-                case "ScoutedTeam":
-                    return "scouted_\($0["eventKey"]!)_\($0["teamKey"]!)"
-                case "TeamEventOPR":
-                    return "opr_\($0["eventKey"]!)_\($0["teamKey"]!)"
-                case "TeamEventStatus":
-                    return "status_\($0["eventKey"]!)_\($0["teamKey"]!)"
-                default:
-                    return $0["key"]
+        Globals.dataManager = AWSDataManager()
+        
+        if !isUsingScenes {
+            AWSMobileClient.default().addUserStateListener(self) { (state, attributes) in
+                DispatchQueue.main.async {
+                    switch state {
+                    case .signedOut:
+                        //Show the sign in flow
+                        self.window?.rootViewController = mainStoryboard.instantiateViewController(withIdentifier: "onboarding")
+                    case .signedIn:
+                        self.window?.rootViewController = mainStoryboard.instantiateViewController(withIdentifier: "teamListMasterVC")
+                    case .guest:
+                        if Globals.isInSpectatorMode {
+                            self.window?.rootViewController = mainStoryboard.instantiateViewController(withIdentifier: "teamListMasterVC")
+                        } else {
+                            //Show sign in
+                            self.window?.rootViewController = mainStoryboard.instantiateViewController(withIdentifier: "onboarding")
+                        }
+                    default:
+                        break
+                    }
                 }
             }
-        } catch {
-            CLSNSLogv("Error starting AppSync: \(error)", getVaList([]))
-            Crashlytics.sharedInstance().recordError(error)
-            assertionFailure()
-        }
-		
-		appSyncClient?.offlineMutationDelegate = FASTOfflineMutationDelegate()
-        
-        AWSMobileClient.default().addUserStateListener(self) { (state, attributes) in
-            CLSNSLogv("New User State: \(state)", getVaList([]))
-            
-            if state == UserState.signedOut {
-                do {
-                    try self.appSyncClient?.clearCaches()
-                } catch {
-                    CLSNSLogv("Error clearing app sync cache: \(error)", getVaList([]))
-                }
-                Globals.asyncLoadingManager = nil
-                
-                //Clear the Images cache
-                TeamImageLoader.default.clearCache()
-            } else if state == UserState.signedIn {
-                Globals.asyncLoadingManager = FASTAsyncManager()
-            }
-			
-			if state == UserState.signedOutUserPoolsTokenInvalid || state == UserState.signedOutFederatedTokensInvalid {
-				//Show the sign in screen
-				AWSDataManager.default.signOut()
-			}
-            
-            
-            Analytics.setUserID(AWSMobileClient.default().username)
-            Analytics.setUserProperty(AWSMobileClient.default().username, forName: "teamNumber")
-            Crashlytics.sharedInstance().setUserName(AWSMobileClient.default().username)
-        }
-        
-        // Set up the reloading manager
-        if AWSMobileClient.default().currentUserState == .signedIn {
-            Globals.asyncLoadingManager = FASTAsyncManager()
         }
         
         return true
@@ -144,6 +112,15 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     func applicationWillTerminate(_ application: UIApplication) {
         // Called when the application is about to terminate. Save data if appropriate. See also applicationDidEnterBackground:.
         // Saves changes in the application's managed object context before the application terminates.
+    }
+    
+    func performAnyStandardMigrations() {
+        //Check if there needs to be a migration to the new user system introduced in FAST version 5
+        let hasMigratedTo5Authentication = "hasMigratedTo5Authentication"
+        if !(UserDefaults.standard.value(forKey: hasMigratedTo5Authentication) as? Bool ?? false) {
+            //Migrate to the new system by logging out the current user and deatuhenticating their tokens
+            
+        }
     }
     
     func presentViewControllerOnTop(_ viewControllerToPresent: UIViewController, animated flag: Bool, completion: (() -> Void)? = nil) {

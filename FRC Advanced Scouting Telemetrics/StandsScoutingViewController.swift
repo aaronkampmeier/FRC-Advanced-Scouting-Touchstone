@@ -21,6 +21,7 @@ class StandsScoutingViewController: UIViewController {
     
     var teamKey: String?
     var match: Match?
+    var scoutTeam: String?
     
     var ssDataManager: SSDataManager?
 	
@@ -123,10 +124,11 @@ class StandsScoutingViewController: UIViewController {
         // Dispose of any resources that can be recreated.
     }
     
-    func setUp(forTeamKey teamKey: String, andMatchKey matchKey: String, inEventKey eventKey: String, noLocal: Bool = false) {
+    func setUp(inScoutTeam scoutTeam: String, forTeamKey teamKey: String, andMatchKey matchKey: String, inEventKey eventKey: String, noLocal: Bool = false) {
         self.teamKey = teamKey
+        self.scoutTeam = scoutTeam
         //Get the match
-        Globals.appDelegate.appSyncClient?.fetch(query: ListMatchesQuery(eventKey: eventKey), cachePolicy: noLocal ? .fetchIgnoringCacheData : .returnCacheDataElseFetch, resultHandler: {[weak self] (result, error) in
+        Globals.appSyncClient?.fetch(query: ListMatchesQuery(eventKey: eventKey), cachePolicy: noLocal ? .fetchIgnoringCacheData : .returnCacheDataElseFetch, resultHandler: {[weak self] (result, error) in
             if Globals.handleAppSyncErrors(forQuery: "ListMatches-SetUpStandsScout", result: result, error: error) {
                 self?.match = result?.data?.listMatches?.first(where: {$0?.key == matchKey})??.fragments.match
                 
@@ -144,7 +146,7 @@ class StandsScoutingViewController: UIViewController {
                 } else {
                     //Throw up an error that the match does not exist
                     CLSNSLogv("Desired Match for stands scouting does not exist or is not stored in the cache, trying again", getVaList([]))
-                    self?.setUp(forTeamKey: teamKey, andMatchKey: matchKey, inEventKey: eventKey, noLocal: true)
+                    self?.setUp(inScoutTeam: scoutTeam, forTeamKey: teamKey, andMatchKey: matchKey, inEventKey: eventKey, noLocal: true)
                     return
                 }
             } else {
@@ -153,10 +155,10 @@ class StandsScoutingViewController: UIViewController {
         })
     }
     
-    func setUp(forTeamKey teamKey: String, andEventKey eventKey: String) {
+    func setUp(inScoutTeam scoutTeam: String, forTeamKey teamKey: String, andEventKey eventKey: String) {
         //If no match key is specified, then get all of the matches and offer them up to be selected
         //Eventually calls other setUp method
-        Globals.appDelegate.appSyncClient?.fetch(query: ListMatchesQuery(eventKey: eventKey), cachePolicy: .returnCacheDataElseFetch, resultHandler: {[weak self] (result, error) in
+        Globals.appSyncClient?.fetch(query: ListMatchesQuery(eventKey: eventKey), cachePolicy: .returnCacheDataElseFetch, resultHandler: {[weak self] (result, error) in
             if Globals.handleAppSyncErrors(forQuery: "ListMatchesQuery-StandsScout", result: result, error: error) {
                 //Filter the matches to only be ones that this team is in
                 let filteredMatches = result?.data?.listMatches?.filter({
@@ -168,7 +170,7 @@ class StandsScoutingViewController: UIViewController {
                 let askAction = UIAlertController(title: "Select Match", message: "Select the match for Team \(teamKey.trimmingCharacters(in: CharacterSet.letters)) to Stands Scout", preferredStyle: .alert)
                 for match in sortedMatches {
                     askAction.addAction(UIAlertAction(title: "\(match.compLevel.description) \(match.matchNumber)", style: .default, handler: {_ in
-                        self?.setUp(forTeamKey: teamKey, andMatchKey: match.key, inEventKey: eventKey)
+                        self?.setUp(inScoutTeam: scoutTeam, forTeamKey: teamKey, andMatchKey: match.key, inEventKey: eventKey)
                     }))
                 }
                 
@@ -267,8 +269,8 @@ class StandsScoutingViewController: UIViewController {
         
         let navVC = UINavigationController(rootViewController: notesVC)
         
-        if let eventKey = self.match?.eventKey, let teamKey = self.teamKey {
-            notesVC.load(forEventKey: eventKey, andTeamKey: teamKey)
+        if let eventKey = self.match?.eventKey, let teamKey = self.teamKey, let scoutTeam = Globals.dataManager.enrolledScoutingTeamID {
+            notesVC.load(inScoutTeam: scoutTeam, forEventKey: eventKey, andTeamKey: teamKey)
         }
 		
 		navVC.modalPresentationStyle = .popover
@@ -290,8 +292,8 @@ class StandsScoutingViewController: UIViewController {
         
         let redKeys = self.match?.alliances?.red?.teamKeys?.map({$0!}) ?? []
         let blueKeys = self.match?.alliances?.blue?.teamKeys?.map({$0!}) ?? []
-        if let eventKey = self.match?.eventKey {
-            superNotesVC.load(forEventKey: eventKey, withTeamKeys: redKeys + blueKeys)
+        if let eventKey = self.match?.eventKey, let scoutTeam = scoutTeam {
+            superNotesVC.load(inScoutTeam: scoutTeam, forEventKey: eventKey, withTeamKeys: redKeys + blueKeys)
         }
         
         present(superNotesNavVC, animated: true, completion: nil)

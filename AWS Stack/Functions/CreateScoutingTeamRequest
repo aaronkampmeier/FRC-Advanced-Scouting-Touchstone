@@ -18,7 +18,8 @@
 						{
 								"teamID": $util.dynamodb.toDynamoDBJson($newTeamId),
 								"userID": $util.dynamodb.toDynamoDBJson($ctx.identity.sub),
-								"memberSince": $util.dynamodb.toDynamoDBJson($util.time.nowEpochSeconds())
+								"memberSince": $util.dynamodb.toDynamoDBJson($util.time.nowEpochSeconds()),
+								"name": $util.dynamodb.toDynamoDBJson($ctx.args.leadName)
 						}
 		    ]
     }

@@ -38,21 +38,6 @@
 		9342D6C0222F5BAC006A1A79 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 9342D6BF222F5BAA006A1A79 /* GoogleService-Info.plist */; };
 		9342D6C32230DEC0006A1A79 /* PitScoutingInputs2019.json in Resources */ = {isa = PBXBuildFile; fileRef = 9342D6C22230DEBE006A1A79 /* PitScoutingInputs2019.json */; };
 		9349621F21E9A40500F761BD /* ScoutedTeamStats.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9349621E21E9A40500F761BD /* ScoutedTeamStats.swift */; };
-		934F4C1622066AB100A6F5FE /* LoginFormValidation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 934F4BFF22066AB100A6F5FE /* LoginFormValidation.swift */; };
-		934F4C1722066AB100A6F5FE /* LoginTableViewDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = 934F4C0122066AB100A6F5FE /* LoginTableViewDataSource.swift */; };
-		934F4C1822066AB100A6F5FE /* LoginKeyboardManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 934F4C0222066AB100A6F5FE /* LoginKeyboardManager.swift */; };
-		934F4C1922066AB100A6F5FE /* LoginViewControllerTransitioning.swift in Sources */ = {isa = PBXBuildFile; fileRef = 934F4C0322066AB100A6F5FE /* LoginViewControllerTransitioning.swift */; };
-		934F4C1A22066AB100A6F5FE /* AWSCognitoAuthenticationProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 934F4C0522066AB100A6F5FE /* AWSCognitoAuthenticationProvider.swift */; };
-		934F4C1B22066AB100A6F5FE /* UIImage+Icons.swift in Sources */ = {isa = PBXBuildFile; fileRef = 934F4C0722066AB100A6F5FE /* UIImage+Icons.swift */; };
-		934F4C1C22066AB100A6F5FE /* FileManager+ApplicationFilePaths.swift in Sources */ = {isa = PBXBuildFile; fileRef = 934F4C0822066AB100A6F5FE /* FileManager+ApplicationFilePaths.swift */; };
-		934F4C1E22066AB100A6F5FE /* String+URLComponents.swift in Sources */ = {isa = PBXBuildFile; fileRef = 934F4C0A22066AB100A6F5FE /* String+URLComponents.swift */; };
-		934F4C1F22066AB100A6F5FE /* LoginViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 934F4C0C22066AB100A6F5FE /* LoginViewController.swift */; };
-		934F4C2022066AB100A6F5FE /* LoginFooterView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 934F4C0E22066AB100A6F5FE /* LoginFooterView.swift */; };
-		934F4C2122066AB100A6F5FE /* StatusBarUnderlayView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 934F4C0F22066AB100A6F5FE /* StatusBarUnderlayView.swift */; };
-		934F4C2222066AB100A6F5FE /* LoginView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 934F4C1022066AB100A6F5FE /* LoginView.swift */; };
-		934F4C2322066AB100A6F5FE /* LoginHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 934F4C1122066AB100A6F5FE /* LoginHeaderView.swift */; };
-		934F4C2422066AB100A6F5FE /* RealmLogoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 934F4C1222066AB100A6F5FE /* RealmLogoView.swift */; };
-		934F4C2522066AB100A6F5FE /* LoginTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 934F4C1322066AB100A6F5FE /* LoginTableViewCell.swift */; };
 		934F4C4B2210BB3B00A6F5FE /* StandsScoutingModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 934F4C4A2210BB3B00A6F5FE /* StandsScoutingModel.swift */; };
 		934F4C4E2210C10F00A6F5FE /* SSData2019.json in Resources */ = {isa = PBXBuildFile; fileRef = 934F4C4D2210C10F00A6F5FE /* SSData2019.json */; };
 		934F4C552212754400A6F5FE /* SSGameStateViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 934F4C542212754400A6F5FE /* SSGameStateViewController.swift */; };
@@ -83,6 +68,13 @@
 		938E0B3C2056D85C00666FA7 /* FASTAsyncManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 938E0B3B2056D85C00666FA7 /* FASTAsyncManager.swift */; };
 		9391EA6C1E4852D2008E17A1 /* PitStringFieldCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9391EA6B1E4852D2008E17A1 /* PitStringFieldCollectionViewCell.swift */; };
 		93A1E28E2223921900A782FC /* DeepSpaceWelcomeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93A1E28D2223921900A782FC /* DeepSpaceWelcomeViewController.swift */; };
+		93A254C623C055120033ECAB /* AdminConsoleConfigSections.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93A254C523C055120033ECAB /* AdminConsoleConfigSections.swift */; };
+		93A254C823C192140033ECAB /* ScoutingTeamTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93A254C723C192130033ECAB /* ScoutingTeamTableViewController.swift */; };
+		93A254CA23C307200033ECAB /* QRCodeManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93A254C923C307200033ECAB /* QRCodeManager.swift */; };
+		93A254CC23C3DE6B0033ECAB /* CreateScoutingTeamTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93A254CB23C3DE6B0033ECAB /* CreateScoutingTeamTableViewController.swift */; };
+		93A254CE23C3E2600033ECAB /* CreateScoutingTeamTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93A254CD23C3E2600033ECAB /* CreateScoutingTeamTableViewCell.swift */; };
+		93A254D023C3F0590033ECAB /* JoinScoutingTeamTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93A254CF23C3F0590033ECAB /* JoinScoutingTeamTableViewController.swift */; };
+		93A254D223C52F4D0033ECAB /* ConfirmJoinScoutingTeamViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93A254D123C52F4D0033ECAB /* ConfirmJoinScoutingTeamViewController.swift */; };
 		93A38B3A2055EBA400B8B692 /* NoEventSelected.xib in Resources */ = {isa = PBXBuildFile; fileRef = 93A38B392055EBA400B8B692 /* NoEventSelected.xib */; };
 		93A38B3F2055F49F00B8B692 /* NoEventSelectedView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93A38B3E2055F49F00B8B692 /* NoEventSelectedView.swift */; };
 		93A3ABC321F1462F007831E3 /* PitScoutingData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93A3ABC221F1462F007831E3 /* PitScoutingData.swift */; };
@@ -95,12 +87,8 @@
 		93C5B47C1E53FC9C007D309F /* TeamInfoScrollView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93C5B47B1E53FC9C007D309F /* TeamInfoScrollView.swift */; };
 		93C609241E67D035007A689D /* MatchOverviewDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93C609231E67D035007A689D /* MatchOverviewDetailViewController.swift */; };
 		93C609281E67D0CC007A689D /* MatchOverviewMasterViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93C609271E67D0CC007A689D /* MatchOverviewMasterViewController.swift */; };
-		93CEA6302041ED0600C5B357 /* ForgotPasswordViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93CEA62F2041ED0600C5B357 /* ForgotPasswordViewController.swift */; };
-		93CEA6322041FB5300C5B357 /* ConfirmForgotPasswordViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93CEA6312041FB5300C5B357 /* ConfirmForgotPasswordViewController.swift */; };
 		93D75B641E5D0866002CBED2 /* FieldLocationDisplayViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93D75B631E5D0866002CBED2 /* FieldLocationDisplayViewController.swift */; };
 		93DA5164221E743600254BF3 /* ScoutSession.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93DA5163221E743600254BF3 /* ScoutSession.swift */; };
-		93E551E621C9FBEB006C79A8 /* Charts.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 93E551E321C9FBD2006C79A8 /* Charts.framework */; };
-		93E551E721C9FBEB006C79A8 /* Charts.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 93E551E321C9FBD2006C79A8 /* Charts.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		93E551F921CACDE0006C79A8 /* CognitoAuthProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93E551F821CACDE0006C79A8 /* CognitoAuthProvider.swift */; };
 		93EA7FEA1E4693C6002EC8C7 /* PitSwitchCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93EA7FE91E4693C6002EC8C7 /* PitSwitchCollectionViewCell.swift */; };
 		93EABD2E232FFA0F000B6C0B /* Globals.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93EABD2C232FFA0F000B6C0B /* Globals.swift */; };
@@ -123,27 +111,6 @@
 			remoteGlobalIDString = 1F78E77E1C3B469300221927;
 			remoteInfo = "FRC Advanced Scouting Telemetrics";
 		};
-		93E551E221C9FBD2006C79A8 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 93E551DD21C9FBD1006C79A8 /* Charts.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = 65AD9E95D9ED4DC0BD73A743;
-			remoteInfo = Charts;
-		};
-		93E551E421C9FBD2006C79A8 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 93E551DD21C9FBD1006C79A8 /* Charts.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = 1CBBC58C6CE1EBEE9852CE41;
-			remoteInfo = ChartsTests;
-		};
-		93E551E821C9FBEB006C79A8 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 93E551DD21C9FBD1006C79A8 /* Charts.xcodeproj */;
-			proxyType = 1;
-			remoteGlobalIDString = A58A4ED274A941CA248EA921;
-			remoteInfo = Charts;
-		};
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -153,7 +120,6 @@
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
-				93E551E721C9FBEB006C79A8 /* Charts.framework in Embed Frameworks */,
 			);
 			name = "Embed Frameworks";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -202,21 +168,6 @@
 		9342D6BF222F5BAA006A1A79 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = SOURCE_ROOT; };
 		9342D6C22230DEBE006A1A79 /* PitScoutingInputs2019.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = PitScoutingInputs2019.json; sourceTree = "<group>"; };
 		9349621E21E9A40500F761BD /* ScoutedTeamStats.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScoutedTeamStats.swift; sourceTree = "<group>"; };
-		934F4BFF22066AB100A6F5FE /* LoginFormValidation.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LoginFormValidation.swift; sourceTree = "<group>"; };
-		934F4C0122066AB100A6F5FE /* LoginTableViewDataSource.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LoginTableViewDataSource.swift; sourceTree = "<group>"; };
-		934F4C0222066AB100A6F5FE /* LoginKeyboardManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LoginKeyboardManager.swift; sourceTree = "<group>"; };
-		934F4C0322066AB100A6F5FE /* LoginViewControllerTransitioning.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LoginViewControllerTransitioning.swift; sourceTree = "<group>"; };
-		934F4C0522066AB100A6F5FE /* AWSCognitoAuthenticationProvider.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AWSCognitoAuthenticationProvider.swift; sourceTree = "<group>"; };
-		934F4C0722066AB100A6F5FE /* UIImage+Icons.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIImage+Icons.swift"; sourceTree = "<group>"; };
-		934F4C0822066AB100A6F5FE /* FileManager+ApplicationFilePaths.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "FileManager+ApplicationFilePaths.swift"; sourceTree = "<group>"; };
-		934F4C0A22066AB100A6F5FE /* String+URLComponents.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "String+URLComponents.swift"; sourceTree = "<group>"; };
-		934F4C0C22066AB100A6F5FE /* LoginViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LoginViewController.swift; sourceTree = "<group>"; };
-		934F4C0E22066AB100A6F5FE /* LoginFooterView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LoginFooterView.swift; sourceTree = "<group>"; };
-		934F4C0F22066AB100A6F5FE /* StatusBarUnderlayView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StatusBarUnderlayView.swift; sourceTree = "<group>"; };
-		934F4C1022066AB100A6F5FE /* LoginView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LoginView.swift; sourceTree = "<group>"; };
-		934F4C1122066AB100A6F5FE /* LoginHeaderView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LoginHeaderView.swift; sourceTree = "<group>"; };
-		934F4C1222066AB100A6F5FE /* RealmLogoView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RealmLogoView.swift; sourceTree = "<group>"; };
-		934F4C1322066AB100A6F5FE /* LoginTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LoginTableViewCell.swift; sourceTree = "<group>"; };
 		934F4C4A2210BB3B00A6F5FE /* StandsScoutingModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StandsScoutingModel.swift; sourceTree = "<group>"; };
 		934F4C4D2210C10F00A6F5FE /* SSData2019.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = SSData2019.json; sourceTree = "<group>"; };
 		934F4C542212754400A6F5FE /* SSGameStateViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SSGameStateViewController.swift; sourceTree = "<group>"; };
@@ -248,10 +199,18 @@
 		938E0B3B2056D85C00666FA7 /* FASTAsyncManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FASTAsyncManager.swift; sourceTree = "<group>"; };
 		9391EA6B1E4852D2008E17A1 /* PitStringFieldCollectionViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PitStringFieldCollectionViewCell.swift; sourceTree = "<group>"; };
 		93A1E28D2223921900A782FC /* DeepSpaceWelcomeViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeepSpaceWelcomeViewController.swift; sourceTree = "<group>"; };
+		93A254C523C055120033ECAB /* AdminConsoleConfigSections.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AdminConsoleConfigSections.swift; sourceTree = "<group>"; };
+		93A254C723C192130033ECAB /* ScoutingTeamTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScoutingTeamTableViewController.swift; sourceTree = "<group>"; };
+		93A254C923C307200033ECAB /* QRCodeManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QRCodeManager.swift; sourceTree = "<group>"; };
+		93A254CB23C3DE6B0033ECAB /* CreateScoutingTeamTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateScoutingTeamTableViewController.swift; sourceTree = "<group>"; };
+		93A254CD23C3E2600033ECAB /* CreateScoutingTeamTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateScoutingTeamTableViewCell.swift; sourceTree = "<group>"; };
+		93A254CF23C3F0590033ECAB /* JoinScoutingTeamTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JoinScoutingTeamTableViewController.swift; sourceTree = "<group>"; };
+		93A254D123C52F4D0033ECAB /* ConfirmJoinScoutingTeamViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConfirmJoinScoutingTeamViewController.swift; sourceTree = "<group>"; };
 		93A38B392055EBA400B8B692 /* NoEventSelected.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = NoEventSelected.xib; sourceTree = "<group>"; };
 		93A38B3E2055F49F00B8B692 /* NoEventSelectedView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NoEventSelectedView.swift; sourceTree = "<group>"; };
 		93A3ABC221F1462F007831E3 /* PitScoutingData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PitScoutingData.swift; sourceTree = "<group>"; };
 		93A3D9EF23BB0D4300C44A95 /* API.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = API.swift; sourceTree = "<group>"; };
+		93A3D9F223BDC35300C44A95 /* FRC Advanced Scouting Touchstone.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = "FRC Advanced Scouting Touchstone.entitlements"; sourceTree = SOURCE_ROOT; };
 		93AADF4822E2572C00C37E2D /* EventSelectorTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EventSelectorTableViewController.swift; sourceTree = "<group>"; };
 		93AE997F1E3407A00000FB7C /* SSDataManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SSDataManager.swift; sourceTree = "<group>"; };
 		93B7195E22DE694D00B08FDD /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -259,11 +218,8 @@
 		93C5B47B1E53FC9C007D309F /* TeamInfoScrollView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TeamInfoScrollView.swift; sourceTree = "<group>"; };
 		93C609231E67D035007A689D /* MatchOverviewDetailViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MatchOverviewDetailViewController.swift; sourceTree = "<group>"; };
 		93C609271E67D0CC007A689D /* MatchOverviewMasterViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MatchOverviewMasterViewController.swift; sourceTree = "<group>"; };
-		93CEA62F2041ED0600C5B357 /* ForgotPasswordViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ForgotPasswordViewController.swift; sourceTree = "<group>"; };
-		93CEA6312041FB5300C5B357 /* ConfirmForgotPasswordViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConfirmForgotPasswordViewController.swift; sourceTree = "<group>"; };
 		93D75B631E5D0866002CBED2 /* FieldLocationDisplayViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FieldLocationDisplayViewController.swift; sourceTree = "<group>"; };
 		93DA5163221E743600254BF3 /* ScoutSession.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScoutSession.swift; sourceTree = "<group>"; };
-		93E551DD21C9FBD1006C79A8 /* Charts.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = Charts.xcodeproj; path = "Charts-master/Charts.xcodeproj"; sourceTree = "<group>"; };
 		93E551F821CACDE0006C79A8 /* CognitoAuthProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CognitoAuthProvider.swift; sourceTree = "<group>"; };
 		93EA7FE91E4693C6002EC8C7 /* PitSwitchCollectionViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PitSwitchCollectionViewCell.swift; sourceTree = "<group>"; };
 		93EABD2C232FFA0F000B6C0B /* Globals.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Globals.swift; sourceTree = "<group>"; };
@@ -277,7 +233,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				93E551E621C9FBEB006C79A8 /* Charts.framework in Frameworks */,
 				DEE3AA58734C2CCE9C06727F /* Pods_FRC_Advanced_Scouting_Touchstone.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -303,7 +258,6 @@
 			isa = PBXGroup;
 			children = (
 				937BFD0520657EA5006FB3E0 /* Onboarding */,
-				93CEA6332041FB5900C5B357 /* Forgot Password */,
 				93D75B631E5D0866002CBED2 /* FieldLocationDisplayViewController.swift */,
 				9353ADBB1E57ACF100120F1A /* MatchesTableViewController.swift */,
 				9353ADC11E57B09D00120F1A /* MatchListTableViewCell.swift */,
@@ -328,6 +282,13 @@
 			isa = PBXGroup;
 			children = (
 				1F4FEDAB1C4B686000F4016D /* AdminConsoleController.swift */,
+				93A254C723C192130033ECAB /* ScoutingTeamTableViewController.swift */,
+				93A254CB23C3DE6B0033ECAB /* CreateScoutingTeamTableViewController.swift */,
+				93A254CD23C3E2600033ECAB /* CreateScoutingTeamTableViewCell.swift */,
+				93A254CF23C3F0590033ECAB /* JoinScoutingTeamTableViewController.swift */,
+				93A254D123C52F4D0033ECAB /* ConfirmJoinScoutingTeamViewController.swift */,
+				93A254C523C055120033ECAB /* AdminConsoleConfigSections.swift */,
+				93A254C923C307200033ECAB /* QRCodeManager.swift */,
 				1F1C23D91E07673E008885A1 /* AddEventTableViewController.swift */,
 				932C344B1E12DC2600A23203 /* EventInfoVC.swift */,
 				936572DE1E160EBB00439728 /* AboutViewController.swift */,
@@ -364,7 +325,6 @@
 		1F78E7761C3B469300221927 = {
 			isa = PBXGroup;
 			children = (
-				93E551DD21C9FBD1006C79A8 /* Charts.xcodeproj */,
 				1F78E7811C3B469300221927 /* FRC Advanced Scouting Touchstone */,
 				1F78E7991C3B469300221927 /* FRC Advanced Scouting TouchstoneTests */,
 				1F78E7A41C3B469300221927 /* FRC Advanced Scouting TouchstoneUITests */,
@@ -387,7 +347,7 @@
 		1F78E7811C3B469300221927 /* FRC Advanced Scouting Touchstone */ = {
 			isa = PBXGroup;
 			children = (
-				934F4BFC22066AB000A6F5FE /* RealmLoginKit */,
+				93A3D9F223BDC35300C44A95 /* FRC Advanced Scouting Touchstone.entitlements */,
 				93EABD2C232FFA0F000B6C0B /* Globals.swift */,
 				1F78E7821C3B469300221927 /* AppDelegate.swift */,
 				93B7195E22DE694D00B08FDD /* SceneDelegate.swift */,
@@ -459,84 +419,6 @@
 			name = Pods;
 			sourceTree = "<group>";
 		};
-		934F4BFC22066AB000A6F5FE /* RealmLoginKit */ = {
-			isa = PBXGroup;
-			children = (
-				934F4BFD22066AB000A6F5FE /* Models */,
-				934F4C0622066AB100A6F5FE /* Extensions */,
-				934F4C0B22066AB100A6F5FE /* Controllers */,
-				934F4C0D22066AB100A6F5FE /* Views */,
-			);
-			path = RealmLoginKit;
-			sourceTree = "<group>";
-		};
-		934F4BFD22066AB000A6F5FE /* Models */ = {
-			isa = PBXGroup;
-			children = (
-				934F4BFE22066AB000A6F5FE /* InputValidation */,
-				934F4C0022066AB100A6F5FE /* UIStateCoordination */,
-				934F4C0422066AB100A6F5FE /* AuthenticationProviders */,
-			);
-			path = Models;
-			sourceTree = "<group>";
-		};
-		934F4BFE22066AB000A6F5FE /* InputValidation */ = {
-			isa = PBXGroup;
-			children = (
-				934F4BFF22066AB100A6F5FE /* LoginFormValidation.swift */,
-			);
-			path = InputValidation;
-			sourceTree = "<group>";
-		};
-		934F4C0022066AB100A6F5FE /* UIStateCoordination */ = {
-			isa = PBXGroup;
-			children = (
-				934F4C0122066AB100A6F5FE /* LoginTableViewDataSource.swift */,
-				934F4C0222066AB100A6F5FE /* LoginKeyboardManager.swift */,
-				934F4C0322066AB100A6F5FE /* LoginViewControllerTransitioning.swift */,
-			);
-			path = UIStateCoordination;
-			sourceTree = "<group>";
-		};
-		934F4C0422066AB100A6F5FE /* AuthenticationProviders */ = {
-			isa = PBXGroup;
-			children = (
-				934F4C0522066AB100A6F5FE /* AWSCognitoAuthenticationProvider.swift */,
-			);
-			path = AuthenticationProviders;
-			sourceTree = "<group>";
-		};
-		934F4C0622066AB100A6F5FE /* Extensions */ = {
-			isa = PBXGroup;
-			children = (
-				934F4C0722066AB100A6F5FE /* UIImage+Icons.swift */,
-				934F4C0822066AB100A6F5FE /* FileManager+ApplicationFilePaths.swift */,
-				934F4C0A22066AB100A6F5FE /* String+URLComponents.swift */,
-			);
-			path = Extensions;
-			sourceTree = "<group>";
-		};
-		934F4C0B22066AB100A6F5FE /* Controllers */ = {
-			isa = PBXGroup;
-			children = (
-				934F4C0C22066AB100A6F5FE /* LoginViewController.swift */,
-			);
-			path = Controllers;
-			sourceTree = "<group>";
-		};
-		934F4C0D22066AB100A6F5FE /* Views */ = {
-			isa = PBXGroup;
-			children = (
-				934F4C0E22066AB100A6F5FE /* LoginFooterView.swift */,
-				934F4C0F22066AB100A6F5FE /* StatusBarUnderlayView.swift */,
-				934F4C1022066AB100A6F5FE /* LoginView.swift */,
-				934F4C1122066AB100A6F5FE /* LoginHeaderView.swift */,
-				934F4C1222066AB100A6F5FE /* RealmLogoView.swift */,
-				934F4C1322066AB100A6F5FE /* LoginTableViewCell.swift */,
-			);
-			path = Views;
-			sourceTree = "<group>";
-		};
 		934F4C4F22112BBB00A6F5FE /* Stands Scouting Data Model */ = {
 			isa = PBXGroup;
 			children = (
@@ -603,15 +485,6 @@
 			name = "Match Overview";
 			sourceTree = "<group>";
 		};
-		93CEA6332041FB5900C5B357 /* Forgot Password */ = {
-			isa = PBXGroup;
-			children = (
-				93CEA62F2041ED0600C5B357 /* ForgotPasswordViewController.swift */,
-				93CEA6312041FB5300C5B357 /* ConfirmForgotPasswordViewController.swift */,
-			);
-			name = "Forgot Password";
-			sourceTree = "<group>";
-		};
 		93DA5162221E741A00254BF3 /* Statistics Extensions */ = {
 			isa = PBXGroup;
 			children = (
@@ -621,15 +494,6 @@
 				93633B1E200D9B29000EC83A /* Match.swift */,
 			);
 			name = "Statistics Extensions";
-			sourceTree = "<group>";
-		};
-		93E551DE21C9FBD1006C79A8 /* Products */ = {
-			isa = PBXGroup;
-			children = (
-				93E551E321C9FBD2006C79A8 /* Charts.framework */,
-				93E551E521C9FBD2006C79A8 /* ChartsTests.xctest */,
-			);
-			name = Products;
 			sourceTree = "<group>";
 		};
 		93EA7FF11E46A36E002EC8C7 /* Notes */ = {
@@ -662,7 +526,6 @@
 			buildRules = (
 			);
 			dependencies = (
-				93E551E921C9FBEB006C79A8 /* PBXTargetDependency */,
 			);
 			name = "FRC Advanced Scouting Touchstone";
 			productName = "FRC Advanced Scouting Telemetrics";
@@ -752,12 +615,6 @@
 			mainGroup = 1F78E7761C3B469300221927;
 			productRefGroup = 1F78E7801C3B469300221927 /* Products */;
 			projectDirPath = "";
-			projectReferences = (
-				{
-					ProductGroup = 93E551DE21C9FBD1006C79A8 /* Products */;
-					ProjectRef = 93E551DD21C9FBD1006C79A8 /* Charts.xcodeproj */;
-				},
-			);
 			projectRoot = "";
 			targets = (
 				1F78E77E1C3B469300221927 /* FRC Advanced Scouting Touchstone */,
@@ -766,23 +623,6 @@
 			);
 		};
 /* End PBXProject section */
-
-/* Begin PBXReferenceProxy section */
-		93E551E321C9FBD2006C79A8 /* Charts.framework */ = {
-			isa = PBXReferenceProxy;
-			fileType = wrapper.framework;
-			path = Charts.framework;
-			remoteRef = 93E551E221C9FBD2006C79A8 /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		93E551E521C9FBD2006C79A8 /* ChartsTests.xctest */ = {
-			isa = PBXReferenceProxy;
-			fileType = wrapper.cfbundle;
-			path = ChartsTests.xctest;
-			remoteRef = 93E551E421C9FBD2006C79A8 /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-/* End PBXReferenceProxy section */
 
 /* Begin PBXResourcesBuildPhase section */
 		1F78E77D1C3B469300221927 /* Resources */ = {
@@ -839,6 +679,7 @@
 				"${BUILT_PRODUCTS_DIR}/AWSUserPoolsSignIn/AWSUserPoolsSignIn.framework",
 				"${BUILT_PRODUCTS_DIR}/Alamofire/Alamofire.framework",
 				"${BUILT_PRODUCTS_DIR}/BRYSerialAnimationQueue/BRYSerialAnimationQueue.framework",
+				"${BUILT_PRODUCTS_DIR}/Charts/Charts.framework",
 				"${BUILT_PRODUCTS_DIR}/FLAnimatedImage/FLAnimatedImage.framework",
 				"${BUILT_PRODUCTS_DIR}/GMStepper/GMStepper.framework",
 				"${BUILT_PRODUCTS_DIR}/GTMSessionFetcher/GTMSessionFetcher.framework",
@@ -870,6 +711,7 @@
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/AWSUserPoolsSignIn.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Alamofire.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/BRYSerialAnimationQueue.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Charts.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/FLAnimatedImage.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/GMStepper.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/GTMSessionFetcher.framework",
@@ -965,17 +807,14 @@
 				930B965C1E4548F700E385D3 /* PitSegmentedSelectorCollectionViewCell.swift in Sources */,
 				93E551F921CACDE0006C79A8 /* CognitoAuthProvider.swift in Sources */,
 				93EABD2E232FFA0F000B6C0B /* Globals.swift in Sources */,
-				934F4C2422066AB100A6F5FE /* RealmLogoView.swift in Sources */,
-				934F4C1F22066AB100A6F5FE /* LoginViewController.swift in Sources */,
 				938E0B3C2056D85C00666FA7 /* FASTAsyncManager.swift in Sources */,
 				930B96671E45A91A00E385D3 /* PitButtonCollectionViewCell.swift in Sources */,
 				935A2B0A1E6E6968008FEF9D /* TimeMarkerDetailViewController.swift in Sources */,
 				932354461E41686B0039386A /* SuperNotesCollectionViewCell.swift in Sources */,
 				1FDC1BD11CD69F5F00ABE327 /* TeamListTableViewController.swift in Sources */,
 				937C682A204C852600FAEDE8 /* EventStatsGraphViewController.swift in Sources */,
+				93A254C623C055120033ECAB /* AdminConsoleConfigSections.swift in Sources */,
 				93A38B3F2055F49F00B8B692 /* NoEventSelectedView.swift in Sources */,
-				934F4C1A22066AB100A6F5FE /* AWSCognitoAuthenticationProvider.swift in Sources */,
-				934F4C1B22066AB100A6F5FE /* UIImage+Icons.swift in Sources */,
 				932C344C1E12DC2600A23203 /* EventInfoVC.swift in Sources */,
 				9353ADC21E57B09D00120F1A /* MatchListTableViewCell.swift in Sources */,
 				93B7195F22DE694D00B08FDD /* SceneDelegate.swift in Sources */,
@@ -984,20 +823,20 @@
 				93C609281E67D0CC007A689D /* MatchOverviewMasterViewController.swift in Sources */,
 				1F1C23DA1E07673E008885A1 /* AddEventTableViewController.swift in Sources */,
 				93A3D9F023BB0D4400C44A95 /* API.swift in Sources */,
-				934F4C1622066AB100A6F5FE /* LoginFormValidation.swift in Sources */,
 				1F78E7831C3B469300221927 /* AppDelegate.swift in Sources */,
 				937BFD0420657E9E006FB3E0 /* OnboardingPathChooserViewController.swift in Sources */,
 				9353ADBC1E57ACF100120F1A /* MatchesTableViewController.swift in Sources */,
 				9342D6BC222C58AB006A1A79 /* TeamimageLoader.swift in Sources */,
 				934F4C4B2210BB3B00A6F5FE /* StandsScoutingModel.swift in Sources */,
 				93C5B47C1E53FC9C007D309F /* TeamInfoScrollView.swift in Sources */,
+				93A254CC23C3DE6B0033ECAB /* CreateScoutingTeamTableViewController.swift in Sources */,
 				93C609241E67D035007A689D /* MatchOverviewDetailViewController.swift in Sources */,
 				9366C5AD20490AAD00A84C47 /* StatChartViewController.swift in Sources */,
 				1FD0A09B1C95093600013A18 /* TeamListTableViewCell.swift in Sources */,
-				934F4C1C22066AB100A6F5FE /* FileManager+ApplicationFilePaths.swift in Sources */,
+				93A254D223C52F4D0033ECAB /* ConfirmJoinScoutingTeamViewController.swift in Sources */,
+				93A254C823C192140033ECAB /* ScoutingTeamTableViewController.swift in Sources */,
 				930B96621E456D3000E385D3 /* PitTableViewSelectorCollectionViewCell.swift in Sources */,
 				93EABD30232FFA23000B6C0B /* EventSelectorRow.swift in Sources */,
-				934F4C2522066AB100A6F5FE /* LoginTableViewCell.swift in Sources */,
 				932ED30B221523CA00396A41 /* OptionSelectorViewController.swift in Sources */,
 				93DA5164221E743600254BF3 /* ScoutSession.swift in Sources */,
 				1FBB426D1C9A29FC0017E36C /* Statistics.swift in Sources */,
@@ -1009,29 +848,22 @@
 				93633B1F200D9B29000EC83A /* Match.swift in Sources */,
 				935A2B061E6CDC4C008FEF9D /* MatchOverviewPerformanceDetailViewController.swift in Sources */,
 				935A2B031E6CD1F0008FEF9D /* MatchOverviewSplitViewController.swift in Sources */,
-				93CEA6302041ED0600C5B357 /* ForgotPasswordViewController.swift in Sources */,
-				934F4C2122066AB100A6F5FE /* StatusBarUnderlayView.swift in Sources */,
-				934F4C1822066AB100A6F5FE /* LoginKeyboardManager.swift in Sources */,
 				9349621F21E9A40500F761BD /* ScoutedTeamStats.swift in Sources */,
 				1FDC1BD31CD6A35F00ABE327 /* TeamListDetailViewController.swift in Sources */,
-				934F4C1922066AB100A6F5FE /* LoginViewControllerTransitioning.swift in Sources */,
 				93BCA618223B50AD00BF6467 /* OfflineSupport.swift in Sources */,
 				936572DF1E160EBB00439728 /* AboutViewController.swift in Sources */,
+				93A254CA23C307200033ECAB /* QRCodeManager.swift in Sources */,
 				934F4C552212754400A6F5FE /* SSGameStateViewController.swift in Sources */,
 				9351017621F4DEB700D402FE /* ImageScalingFunctions.swift in Sources */,
-				934F4C1722066AB100A6F5FE /* LoginTableViewDataSource.swift in Sources */,
-				934F4C2022066AB100A6F5FE /* LoginFooterView.swift in Sources */,
 				1F4534101C6FF916004EDDB9 /* StandsScoutingViewController.swift in Sources */,
-				934F4C2222066AB100A6F5FE /* LoginView.swift in Sources */,
+				93A254CE23C3E2600033ECAB /* CreateScoutingTeamTableViewCell.swift in Sources */,
 				9351017421F42D6000D402FE /* AWSDataManager.swift in Sources */,
-				934F4C2322066AB100A6F5FE /* LoginHeaderView.swift in Sources */,
 				93780A2A20797487000B4565 /* WelcomePageViewController.swift in Sources */,
 				9339A9B22223408A00D3D82C /* AppSyncExtensions.swift in Sources */,
 				1FDC1BCE1CD69EBB00ABE327 /* TeamListSplitViewController.swift in Sources */,
 				9303DD1E22DFD4DA000D5178 /* EventSelector.swift in Sources */,
-				93CEA6322041FB5300C5B357 /* ConfirmForgotPasswordViewController.swift in Sources */,
+				93A254D023C3F0590033ECAB /* JoinScoutingTeamTableViewController.swift in Sources */,
 				1F21DF121C66942200C55D0E /* SortVC.swift in Sources */,
-				934F4C1E22066AB100A6F5FE /* String+URLComponents.swift in Sources */,
 				9391EA6C1E4852D2008E17A1 /* PitStringFieldCollectionViewCell.swift in Sources */,
 				93AADF4922E2572C00C37E2D /* EventSelectorTableViewController.swift in Sources */,
 				93780A2E20799E7D000B4565 /* LoginPromotionalViewController.swift in Sources */,
@@ -1074,11 +906,6 @@
 			isa = PBXTargetDependency;
 			target = 1F78E77E1C3B469300221927 /* FRC Advanced Scouting Touchstone */;
 			targetProxy = 1F78E7A21C3B469300221927 /* PBXContainerItemProxy */;
-		};
-		93E551E921C9FBEB006C79A8 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			name = Charts;
-			targetProxy = 93E551E821C9FBEB006C79A8 /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 
@@ -1217,6 +1044,7 @@
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = "$(inherited)";
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_ENTITLEMENTS = "FRC Advanced Scouting Touchstone.entitlements";
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
@@ -1229,7 +1057,7 @@
 					"$(PROJECT_DIR)/build/Debug-iphoneos",
 				);
 				INFOPLIST_FILE = "FRC Advanced Scouting Telemetrics/Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				MAPC_NO_WARNINGS = NO;
 				MOMC_NO_INVERSE_RELATIONSHIP_WARNINGS = YES;
@@ -1262,6 +1090,7 @@
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = "$(inherited)";
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_ENTITLEMENTS = "FRC Advanced Scouting Touchstone.entitlements";
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
@@ -1273,7 +1102,7 @@
 					"$(PROJECT_DIR)/build/Debug-iphoneos",
 				);
 				INFOPLIST_FILE = "FRC Advanced Scouting Telemetrics/Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				MOMC_NO_INVERSE_RELATIONSHIP_WARNINGS = NO;
 				OTHER_CFLAGS = (

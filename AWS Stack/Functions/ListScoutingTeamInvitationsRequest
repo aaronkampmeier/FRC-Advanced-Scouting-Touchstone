@@ -10,7 +10,7 @@
             ":pk" : $util.dynamodb.toDynamoDBJson($ctx.args.scoutTeam)
         }
     },
-    "index" : "teamID-index"
+    "index" : "teamID-index",
     "consistentRead" : false,
     "select" : "ALL_ATTRIBUTES"
 }

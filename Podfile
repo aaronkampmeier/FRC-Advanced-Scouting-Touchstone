@@ -20,6 +20,7 @@ pod 'AWSMobileClient', '~> 2.12.3'
 pod 'AWSUserPoolsSignIn', '~> 2.12.3'
 pod 'AWSAuthUI', '~> 2.12.3'
 pod 'AWSS3', '~> 2.12.3'
+pod 'Charts'
 end
 
 post_install do | installer |

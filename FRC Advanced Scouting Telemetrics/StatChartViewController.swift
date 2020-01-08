@@ -128,7 +128,7 @@ class StatChartViewController: UIViewController {
                 
                 DispatchQueue.main.async {
                     //Now we have all the BarChartDataEntries, create the data set
-                    let chartDataSet = BarChartDataSet(values: self?.valueEntries, label: "")
+                    let chartDataSet = BarChartDataSet(entries: self?.valueEntries, label: "")
                     chartDataSet.colors = [UIColor(red: 0.16, green: 0.50, blue: 0.73, alpha: 1)]
                     //        chartDataSet.colors = ChartColorTemplates.vordiplom()
                     chartDataSet.valueFormatter = self

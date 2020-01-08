@@ -10,6 +10,7 @@ import UIKit
 
 protocol MatchOverviewMasterDataSource {
     func eventKey() -> String?
+    func scoutTeam() -> String?
 }
 
 class MatchOverviewMasterViewController: UIViewController {
@@ -22,6 +23,7 @@ class MatchOverviewMasterViewController: UIViewController {
     }
     var eventKey: String?
     var selectedMatch: Match?
+    var scoutTeam: String?
     
     var matchesTableVC: MatchesTableViewController?
     
@@ -35,10 +37,11 @@ class MatchOverviewMasterViewController: UIViewController {
         matchesTableVC?.delegate = self
         matchesTableVC?.tableView.allowsSelection = true
         
-        self.load(withEventKey: dataSource?.eventKey())
+        self.load(forSocutTeam: dataSource?.scoutTeam(), withEventKey: dataSource?.eventKey())
     }
     
-    private func load(withEventKey eventKey: String?) {
+    private func load(forSocutTeam scoutTeam: String?, withEventKey eventKey: String?) {
+        self.scoutTeam = scoutTeam
         matchesTableVC?.load(forEventKey: eventKey)
     }
 
@@ -67,7 +70,7 @@ extension MatchOverviewMasterViewController: MatchesTableViewControllerDelegate 
     func matchesTableViewController(_ matchesTableViewController: MatchesTableViewController, selectedMatchCell: UITableViewCell?, withAssociatedMatch associatedMatch: Match?) {
         matchOverviewSplitVC.showDetailViewController(matchOverviewSplitVC.matchesDetail!, sender: self)
         self.selectedMatch = associatedMatch
-        matchOverviewSplitVC.matchesDetail?.load(forMatchKey: associatedMatch?.key ?? "", shouldShowExitButton: false)
+        matchOverviewSplitVC.matchesDetail?.load(inScoutTeam: scoutTeam ?? "", forMatchKey: associatedMatch?.key ?? "", shouldShowExitButton: false)
     }
 
     func hasSelectionEnabled() -> Bool {

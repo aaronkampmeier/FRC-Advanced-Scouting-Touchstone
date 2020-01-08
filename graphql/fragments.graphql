@@ -33,12 +33,6 @@ fragment Team on Team {
     website
 }
 
-fragment S3Object on S3Object {
-	bucket
-	key
-	region
-}
-
 fragment Image on Image {
 	bucket
 	key

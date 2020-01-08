@@ -1,0 +1,9 @@
+{
+    "version" : "2017-02-28",
+    "operation" : "GetItem",
+    "key" : {
+        "teamID" : $util.dynamodb.toDynamoDBJson($ctx.stash.teamID),
+        "userID" : $util.dynamodb.toDynamoDBJson("teamData")
+    },
+    "consistentRead" : true
+}

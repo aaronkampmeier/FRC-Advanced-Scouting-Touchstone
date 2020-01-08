@@ -72,7 +72,7 @@ class AddEventTableViewController: UITableViewController {
         
         self.tableView.addSubview(loadingView!)
         
-        Globals.appDelegate.appSyncClient?.fetch(query: ListAvailableEventsQuery(year: year), cachePolicy: .fetchIgnoringCacheData, resultHandler: {[weak self] (result, error) in
+        Globals.appSyncClient?.fetch(query: ListAvailableEventsQuery(year: year), cachePolicy: .fetchIgnoringCacheData, resultHandler: {[weak self] (result, error) in
             if Globals.handleAppSyncErrors(forQuery: "ListAvailableEvents", result: result, error: error) {
                 if let gotEvents = result?.data?.listAvailableEvents?.map({$0!.fragments.event}) {
                     self?.events = gotEvents

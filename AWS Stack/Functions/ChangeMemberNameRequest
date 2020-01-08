@@ -1,0 +1,20 @@
+{
+    "version" : "2018-05-29",
+    "operation" : "UpdateItem",
+    "key": {
+        "teamID" : $util.dynamodb.toDynamoDBJson($ctx.args.scoutTeam),
+        "userID" : $util.dynamodb.toDynamoDBJson($ctx.identity.sub)
+    },
+    "update" : {
+        "expression" : "SET #name = :newName",
+        "expressionNames" : {
+           "#name" : "name"
+       },
+       "expressionValues" : {
+           ":newName" : $util.dynamodb.toDynamoDBJson($ctx.args.newName)
+       }
+    },
+    "condition" : {
+        "expression": "attribute_exists(userID)"
+    }
+}

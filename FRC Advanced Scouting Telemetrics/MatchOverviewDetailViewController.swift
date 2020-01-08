@@ -25,6 +25,7 @@ class MatchOverviewDetailViewController: UIViewController {
     }
     var displayedMatch: Match?
     var teamKeys = [String]()
+    var scoutTeam: String?
     
     var matchPerformanceDetail: MatchOverviewPerformanceDetailViewController!
 
@@ -50,12 +51,13 @@ class MatchOverviewDetailViewController: UIViewController {
         // Dispose of any resources that can be recreated.
     }
     
-	func load(forMatchKey matchKey: String, shouldShowExitButton: Bool, preSelectedTeamKey: String? = nil) {
+    func load(inScoutTeam scoutTeam: String, forMatchKey matchKey: String, shouldShowExitButton: Bool, preSelectedTeamKey: String? = nil) {
+        self.scoutTeam = scoutTeam
         self.setUpForMatch(match: nil)
         
         let eventKey = matchKey.components(separatedBy: "_").first
         //Get the match
-        Globals.appDelegate.appSyncClient?.fetch(query: ListMatchesQuery(eventKey: eventKey ?? ""), cachePolicy: .returnCacheDataAndFetch, resultHandler: { (result, error) in
+        Globals.appSyncClient?.fetch(query: ListMatchesQuery(eventKey: eventKey ?? ""), cachePolicy: .returnCacheDataAndFetch, resultHandler: { (result, error) in
             if Globals.handleAppSyncErrors(forQuery: "GetMatchQuery-MatchOverview", result: result, error: error) {
                 let matches = result?.data?.listMatches?.map({$0!.fragments.match}) ?? []
                 let match = matches.first(where: {$0.key == matchKey})
@@ -127,9 +129,9 @@ class MatchOverviewDetailViewController: UIViewController {
     @IBAction func selectedDifferentTeam(_ sender: UISegmentedControl) {
         //Set the selected match performance
         if let match = self.displayedMatch {
-            matchPerformanceDetail.load(match: match, forTeamKey: teamKeys[sender.selectedSegmentIndex])
+            matchPerformanceDetail.load(match: match, forTeamKey: teamKeys[sender.selectedSegmentIndex], inScoutTeam: scoutTeam)
         } else {
-            matchPerformanceDetail.load(match: nil, forTeamKey: nil)
+            matchPerformanceDetail.load(match: nil, forTeamKey: nil, inScoutTeam: nil)
         }
     }
     

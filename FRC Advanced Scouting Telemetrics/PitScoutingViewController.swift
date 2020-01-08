@@ -35,6 +35,7 @@ class PitScoutingViewController: UIViewController, UICollectionViewDataSource, U
     @IBOutlet weak var imageButton: UIButton!
     @IBOutlet weak var progressView: UIProgressView!
     
+    var scoutTeam: String?
     var teamKey: String?
     var eventKey: String?
     
@@ -90,7 +91,7 @@ class PitScoutingViewController: UIViewController, UICollectionViewDataSource, U
         updatedValues[key] = value
     }
     private func writeUpdates() {
-        if let teamKey = self.teamKey, let eventKey = self.eventKey {
+        if let teamKey = self.teamKey, let eventKey = self.eventKey, let scoutTeam = scoutTeam {
             //Try to create the json
             do {
                 if updatedValues.count > 0 {
@@ -98,10 +99,10 @@ class PitScoutingViewController: UIViewController, UICollectionViewDataSource, U
                     
                     let updateString = String(data: jsonData, encoding: .utf8)
                     let mutation: UpdateScoutedTeamMutation
-                    mutation = UpdateScoutedTeamMutation(eventKey: eventKey, teamKey: teamKey, attributes: updateString!)
+                    mutation = UpdateScoutedTeamMutation(scoutTeam: scoutTeam, eventKey: eventKey, teamKey: teamKey, attributes: updateString!)
                     
                     //Perform the mutation
-                    Globals.appDelegate.appSyncClient?.perform(mutation: mutation, optimisticUpdate: { (transaction) in
+                    Globals.appSyncClient?.perform(mutation: mutation, optimisticUpdate: { (transaction) in
                         
                     }, conflictResolutionBlock: { (snapshot, taskCompletion, result) in
                         
@@ -167,17 +168,18 @@ class PitScoutingViewController: UIViewController, UICollectionViewDataSource, U
         // Dispose of any resources that can be recreated.
     }
     
-    func setUp(forTeamKey teamKey: String, inEvent eventKey: String) {
+    func setUp(inScoutingTeam scoutingTeam: String, forTeamKey teamKey: String, inEvent eventKey: String) {
         pitScoutingParameters = []
         self.collectionView?.reloadData()
         
+        self.scoutTeam = scoutingTeam
         self.teamKey = teamKey
         self.eventKey = eventKey
         self.teamLabel?.text = teamKey.trimmingCharacters(in: CharacterSet.letters)
         self.teamNicknameLabel?.text = ""
         
         //Get the scouted team
-        Globals.appDelegate.appSyncClient?.fetch(query: ListScoutedTeamsQuery(eventKey: eventKey), cachePolicy: .returnCacheDataElseFetch, resultHandler: { (result, error) in
+        Globals.appSyncClient?.fetch(query: ListScoutedTeamsQuery(scoutTeam: scoutingTeam, eventKey: eventKey), cachePolicy: .returnCacheDataElseFetch, resultHandler: { (result, error) in
             if Globals.handleAppSyncErrors(forQuery: "ListScoutedTeams-PitScouting", result: result, error: error) {
                 if let scoutedTeam = result?.data?.listScoutedTeams?.first(where: {$0?.teamKey == teamKey})??.fragments.scoutedTeam {
                     self.pitScoutingParameters = self.dataSource?.requestedDataInputs(forScoutedTeam: scoutedTeam) ?? []
@@ -206,7 +208,7 @@ class PitScoutingViewController: UIViewController, UICollectionViewDataSource, U
             }
         })
         
-        Globals.appDelegate.appSyncClient?.fetch(query: ListTeamsQuery(eventKey: eventKey), cachePolicy: .returnCacheDataDontFetch, resultHandler: { (result, error) in
+        Globals.appSyncClient?.fetch(query: ListTeamsQuery(eventKey: eventKey), cachePolicy: .returnCacheDataDontFetch, resultHandler: { (result, error) in
             if Globals.handleAppSyncErrors(forQuery: "ListTeams-PitScouting", result: result, error: error) {
                 //If we get the cached team, put in its nickname
                 self.teamNicknameLabel?.text = result?.data?.listTeams?.first(where: {$0?.key == teamKey})??.fragments.team.nickname
@@ -249,19 +251,21 @@ class PitScoutingViewController: UIViewController, UICollectionViewDataSource, U
     }
 
     @IBAction func notes(_ sender: UIBarButtonItem) {
-        let notesVC = storyboard?.instantiateViewController(withIdentifier: "commentNotesVC") as! TeamCommentsTableViewController
-        
-        let navVC = UINavigationController(rootViewController: notesVC)
-        
-        notesVC.load(forEventKey: eventKey ?? "", andTeamKey: teamKey ?? "")
-        
-        navVC.modalPresentationStyle = .popover
-        
-        let popoverPresController = navVC.popoverPresentationController
-        popoverPresController?.permittedArrowDirections = .up
-        popoverPresController?.barButtonItem = sender
-        
-        present(navVC, animated: true, completion: nil)
+        if let scoutTeam = scoutTeam, let eventKey = eventKey, let teamKey = teamKey {
+            let notesVC = storyboard?.instantiateViewController(withIdentifier: "commentNotesVC") as! TeamCommentsTableViewController
+            
+            let navVC = UINavigationController(rootViewController: notesVC)
+            
+            notesVC.load(inScoutTeam: scoutTeam, forEventKey: eventKey, andTeamKey: teamKey)
+            
+            navVC.modalPresentationStyle = .popover
+            
+            let popoverPresController = navVC.popoverPresentationController
+            popoverPresController?.permittedArrowDirections = .up
+            popoverPresController?.barButtonItem = sender
+            
+            present(navVC, animated: true, completion: nil)
+        }
     }
     
     //MARK: - Photo
@@ -332,6 +336,7 @@ class PitScoutingViewController: UIViewController, UICollectionViewDataSource, U
     }
     */
 
+    //TODO: Figure out how to fix this
     func uploadImage(image: UIImage) {
         guard let data = image.jpegData(compressionQuality: 0.3) else {
             let alert = UIAlertController(title: "Error Saving Image", message: "There was an error saving the image, please try again.", preferredStyle: .alert)
@@ -343,59 +348,59 @@ class PitScoutingViewController: UIViewController, UICollectionViewDataSource, U
             return
         }
         
-        let transferUtility = AWSS3TransferUtility.default()
-        
-        let uploadExpression = AWSS3TransferUtilityUploadExpression()
-        uploadExpression.setValue(AWSMobileClient.default().username, forRequestHeader: "x-amz-meta-user-id")
-        uploadExpression.setValue(eventKey, forRequestHeader: "x-amz-meta-event-key")
-        uploadExpression.setValue(teamKey, forRequestHeader: "x-amz-meta-team-key")
-        uploadExpression.progressBlock = {(task, progress) in
-            DispatchQueue.main.async {
-                self.progressView.isHidden = false
-                self.progressView.progress = Float(progress.fractionCompleted)
-            }
-        }
-        
-        let identityId = AWSMobileClient.default().identityId
-        let key = "private/\(identityId ?? "")/\(eventKey ?? "")/\(teamKey ?? "").jpeg"
-        transferUtility.uploadData(data, key: key, contentType: "image/jpeg", expression: uploadExpression) { (uploadTask, error) in
-            DispatchQueue.main.async {
-                self.progressView.isHidden = true
-                if let error = error {
-                    CLSNSLogv("Error uploading image to S3: \(error)", getVaList([]))
-                    Crashlytics.sharedInstance().recordError(error)
-                    
-                    let alert = UIAlertController(title: "Error Uploading Team Image", message: "There was an error uploading the team image. Make sure you are connected to the internet and try again.", preferredStyle: .alert)
-                    alert.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
-                    Globals.appDelegate.presentViewControllerOnTop(alert, animated: true)
-                } else {
-                    //Success
-                    CLSNSLogv("Success uploading team image", getVaList([]))
-                    //Save it in the scouted team as well now
-                    let imageInput = ImageInput(bucket: "fast-userfiles-mobilehub-708509237" /*transferUtility.transferUtilityConfiguration.bucket*/, key: key, region: "us-east-1")
-                    let mutation = UpdateScoutedTeamMutation(eventKey: self.eventKey ?? "", teamKey: self.teamKey ?? "", image: imageInput, attributes: "{}")
-                    Globals.appDelegate.appSyncClient?.perform(mutation: mutation, resultHandler: { (result, error) in
-                        if Globals.handleAppSyncErrors(forQuery: "UpdateScoutedTeam-SetImage", result: result, error: error) {
-                            
-                        } else {
-                            
-                        }
-                    })
-                }
-            }
-        }
-            .continueWith { (uploadTask) -> Any? in
-                if let error = uploadTask.error {
-                    CLSNSLogv("Error Uploading image: \(error)", getVaList([]))
-                    Crashlytics.sharedInstance().recordError(error)
-                }
-                
-                if let uploadTask = uploadTask.result {
-                    
-                }
-                
-                return nil
-        }
+//        let transferUtility = AWSS3TransferUtility.default()
+//
+//        let uploadExpression = AWSS3TransferUtilityUploadExpression()
+//        uploadExpression.setValue(AWSMobileClient.default().username, forRequestHeader: "x-amz-meta-user-id")
+//        uploadExpression.setValue(eventKey, forRequestHeader: "x-amz-meta-event-key")
+//        uploadExpression.setValue(teamKey, forRequestHeader: "x-amz-meta-team-key")
+//        uploadExpression.progressBlock = {(task, progress) in
+//            DispatchQueue.main.async {
+//                self.progressView.isHidden = false
+//                self.progressView.progress = Float(progress.fractionCompleted)
+//            }
+//        }
+//
+//        let identityId = AWSMobileClient.default().identityId
+//        let key = "private/\(identityId ?? "")/\(eventKey ?? "")/\(teamKey ?? "").jpeg"
+//        transferUtility.uploadData(data, key: key, contentType: "image/jpeg", expression: uploadExpression) { (uploadTask, error) in
+//            DispatchQueue.main.async {
+//                self.progressView.isHidden = true
+//                if let error = error {
+//                    CLSNSLogv("Error uploading image to S3: \(error)", getVaList([]))
+//                    Crashlytics.sharedInstance().recordError(error)
+//
+//                    let alert = UIAlertController(title: "Error Uploading Team Image", message: "There was an error uploading the team image. Make sure you are connected to the internet and try again.", preferredStyle: .alert)
+//                    alert.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
+//                    Globals.appDelegate.presentViewControllerOnTop(alert, animated: true)
+//                } else {
+//                    //Success
+//                    CLSNSLogv("Success uploading team image", getVaList([]))
+//                    //Save it in the scouted team as well now
+//                    let imageInput = ImageInput(bucket: "fast-userfiles-mobilehub-708509237" /*transferUtility.transferUtilityConfiguration.bucket*/, key: key, region: "us-east-1")
+//                    let mutation = UpdateScoutedTeamMutation(eventKey: self.eventKey ?? "", teamKey: self.teamKey ?? "", image: imageInput, attributes: "{}")
+//                    Globals.appSyncClient?.perform(mutation: mutation, resultHandler: { (result, error) in
+//                        if Globals.handleAppSyncErrors(forQuery: "UpdateScoutedTeam-SetImage", result: result, error: error) {
+//
+//                        } else {
+//
+//                        }
+//                    })
+//                }
+//            }
+//        }
+//            .continueWith { (uploadTask) -> Any? in
+//                if let error = uploadTask.error {
+//                    CLSNSLogv("Error Uploading image: \(error)", getVaList([]))
+//                    Crashlytics.sharedInstance().recordError(error)
+//                }
+//
+//                if let uploadTask = uploadTask.result {
+//
+//                }
+//
+//                return nil
+//        }
     }
 }
 

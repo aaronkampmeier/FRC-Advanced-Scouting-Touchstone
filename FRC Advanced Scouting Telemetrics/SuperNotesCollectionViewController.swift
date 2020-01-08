@@ -16,6 +16,7 @@ class SuperNotesCollectionViewController: UICollectionViewController {
     
     var eventKey: String?
     var teamKeys = [String]()
+    var scoutTeam: String?
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -33,7 +34,7 @@ class SuperNotesCollectionViewController: UICollectionViewController {
         // Dispose of any resources that can be recreated.
     }
     
-    func load(forEventKey eventKey: String, withTeamKeys teamKeys: [String]) {
+    func load(inScoutTeam scoutTeam: String, forEventKey eventKey: String, withTeamKeys teamKeys: [String]) {
         self.eventKey = eventKey
         self.teamKeys = teamKeys
     }
@@ -76,7 +77,7 @@ class SuperNotesCollectionViewController: UICollectionViewController {
         cell.notesVC = self.storyboard?.instantiateViewController(withIdentifier: "commentNotesVC") as? TeamCommentsTableViewController
         
         //Set up the cell and notes vc for the team
-        cell.setUp(forEventKey: eventKey!, teamKey: teamKeys[indexPath.item])
+        cell.setUp(inScoutTeam: scoutTeam ?? "", forEventKey: eventKey!, teamKey: teamKeys[indexPath.item])
         
         //2. Add the notesvc's view to the cell
         cell.notesVC.willMove(toParent: self)

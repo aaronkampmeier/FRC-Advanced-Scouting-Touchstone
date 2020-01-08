@@ -18,8 +18,10 @@ internal struct Globals {
     static var isInSpectatorMode: Bool {
         return UserDefaults.standard.value(forKey: isSpectatorModeKey) as? Bool ?? false
     }
+    
     static var asyncLoadingManager: FASTAsyncManager?
-    static var dataManager: AWSDataManager?
+    static var dataManager: AWSDataManager!
+    static var appSyncClient: AWSAppSyncClient?
     
     //User Activity Types
     struct UserActivity {
@@ -27,10 +29,16 @@ internal struct Globals {
         static let viewTeamDetail = "com.kampmeier.viewTeamDetail"
     }
     
-    ///Handles AppSync errors inline by logging and recording them
-    ///- Returns: A bool signifiying if the query was successful or not
+    /// Handles AppSync errors inline by logging and recording them
+    /// - Returns: A bool signifiying if the query was successful or not
+    /// - Parameters:
+    ///   - queryIdentifier: A unique string identifying all queries made by this operation
+    ///   - result: Pass in the result object
+    ///   - error: Pass in the error object
     static func handleAppSyncErrors<T>(forQuery queryIdentifier: String, result: GraphQLResult<T>?, error: Error?) -> Bool {
         var wereErrors = false
+        //TODO: Put following errors into this array and display
+        var errorMessagesToDisplay = [String]()
         if let error = error {
             if let error = error as? AWSAppSyncClientError {
                 let handleNsError = {(nserr: NSError) in
@@ -121,7 +129,7 @@ internal struct Globals {
             let handleNsError = {(nserr: NSError) in
                 if nserr.code == -1009 || nserr.code == -1001 {
                     //Is offline, request timed out
-                    shouldDisplay = false && hideIfIsOffline
+                    shouldDisplay = false || !hideIfIsOffline
                 }
             }
             switch error {

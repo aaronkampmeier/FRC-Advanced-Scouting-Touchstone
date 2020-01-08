@@ -47,7 +47,7 @@ public enum CompetitionLevel: RawRepresentable, Equatable, JSONDecodable, JSONEn
   }
 }
 
-public struct ImageInput: GraphQLMapConvertible {
+public struct S3ObjectInput: GraphQLMapConvertible {
   public var graphQLMap: GraphQLMap
 
   public init(bucket: String, key: String, region: String, localUri: String, mimeType: String) {
@@ -785,17 +785,17 @@ public final class SetTeamPickedMutation: GraphQLMutation {
 
 public final class UpdateScoutedTeamMutation: GraphQLMutation {
   public static let operationString =
-    "mutation UpdateScoutedTeam($scoutTeam: ID!, $eventKey: ID!, $teamKey: ID!, $image: ImageInput, $attributes: AWSJSON!) {\n  updateScoutedTeam(scoutTeam: $scoutTeam, eventKey: $eventKey, teamKey: $teamKey, image: $image, attributes: $attributes) {\n    __typename\n    ...ScoutedTeam\n  }\n}"
+    "mutation UpdateScoutedTeam($scoutTeam: ID!, $eventKey: ID!, $teamKey: ID!, $image: S3ObjectInput, $attributes: AWSJSON!) {\n  updateScoutedTeam(scoutTeam: $scoutTeam, eventKey: $eventKey, teamKey: $teamKey, image: $image, attributes: $attributes) {\n    __typename\n    ...ScoutedTeam\n  }\n}"
 
   public static var requestString: String { return operationString.appending(ScoutedTeam.fragmentString).appending(Image.fragmentString) }
 
   public var scoutTeam: GraphQLID
   public var eventKey: GraphQLID
   public var teamKey: GraphQLID
-  public var image: ImageInput?
+  public var image: S3ObjectInput?
   public var attributes: String
 
-  public init(scoutTeam: GraphQLID, eventKey: GraphQLID, teamKey: GraphQLID, image: ImageInput? = nil, attributes: String) {
+  public init(scoutTeam: GraphQLID, eventKey: GraphQLID, teamKey: GraphQLID, image: S3ObjectInput? = nil, attributes: String) {
     self.scoutTeam = scoutTeam
     self.eventKey = eventKey
     self.teamKey = teamKey
@@ -1693,27 +1693,29 @@ public final class RemoveScoutSessionMutation: GraphQLMutation {
 
 public final class CreateScoutingTeamMutation: GraphQLMutation {
   public static let operationString =
-    "mutation CreateScoutingTeam($name: String!, $associatedFrcTeamNumber: Int!) {\n  createScoutingTeam(name: $name, associatedFrcTeamNumber: $associatedFrcTeamNumber) {\n    __typename\n    ...ScoutingTeamWithMembers\n  }\n}"
+    "mutation CreateScoutingTeam($name: String!, $associatedFrcTeamNumber: Int!, $leadName: String!) {\n  createScoutingTeam(name: $name, associatedFrcTeamNumber: $associatedFrcTeamNumber, leadName: $leadName) {\n    __typename\n    ...ScoutingTeam\n  }\n}"
 
-  public static var requestString: String { return operationString.appending(ScoutingTeamWithMembers.fragmentString).appending(ScoutingTeamMember.fragmentString) }
+  public static var requestString: String { return operationString.appending(ScoutingTeam.fragmentString) }
 
   public var name: String
   public var associatedFrcTeamNumber: Int
+  public var leadName: String
 
-  public init(name: String, associatedFrcTeamNumber: Int) {
+  public init(name: String, associatedFrcTeamNumber: Int, leadName: String) {
     self.name = name
     self.associatedFrcTeamNumber = associatedFrcTeamNumber
+    self.leadName = leadName
   }
 
   public var variables: GraphQLMap? {
-    return ["name": name, "associatedFrcTeamNumber": associatedFrcTeamNumber]
+    return ["name": name, "associatedFrcTeamNumber": associatedFrcTeamNumber, "leadName": leadName]
   }
 
   public struct Data: GraphQLSelectionSet {
     public static let possibleTypes = ["Mutation"]
 
     public static let selections: [GraphQLSelection] = [
-      GraphQLField("createScoutingTeam", arguments: ["name": GraphQLVariable("name"), "associatedFrcTeamNumber": GraphQLVariable("associatedFrcTeamNumber")], type: .object(CreateScoutingTeam.selections)),
+      GraphQLField("createScoutingTeam", arguments: ["name": GraphQLVariable("name"), "associatedFrcTeamNumber": GraphQLVariable("associatedFrcTeamNumber"), "leadName": GraphQLVariable("leadName")], type: .object(CreateScoutingTeam.selections)),
     ]
 
     public var snapshot: Snapshot
@@ -1746,7 +1748,6 @@ public final class CreateScoutingTeamMutation: GraphQLMutation {
         GraphQLField("teamLead", type: .nonNull(.scalar(GraphQLID.self))),
         GraphQLField("associatedFrcTeamNumber", type: .nonNull(.scalar(Int.self))),
         GraphQLField("name", type: .nonNull(.scalar(String.self))),
-        GraphQLField("members", type: .list(.object(Member.selections))),
       ]
 
       public var snapshot: Snapshot
@@ -1755,8 +1756,8 @@ public final class CreateScoutingTeamMutation: GraphQLMutation {
         self.snapshot = snapshot
       }
 
-      public init(teamId: GraphQLID, teamLead: GraphQLID, associatedFrcTeamNumber: Int, name: String, members: [Member?]? = nil) {
-        self.init(snapshot: ["__typename": "ScoutingTeam", "teamID": teamId, "teamLead": teamLead, "associatedFrcTeamNumber": associatedFrcTeamNumber, "name": name, "members": members.flatMap { $0.map { $0.flatMap { $0.snapshot } } }])
+      public init(teamId: GraphQLID, teamLead: GraphQLID, associatedFrcTeamNumber: Int, name: String) {
+        self.init(snapshot: ["__typename": "ScoutingTeam", "teamID": teamId, "teamLead": teamLead, "associatedFrcTeamNumber": associatedFrcTeamNumber, "name": name])
       }
 
       public var __typename: String {
@@ -1806,16 +1807,6 @@ public final class CreateScoutingTeamMutation: GraphQLMutation {
         }
       }
 
-      /// # Scouting Team UUID
-      public var members: [Member?]? {
-        get {
-          return (snapshot["members"] as? [Snapshot?]).flatMap { $0.map { $0.flatMap { Member(snapshot: $0) } } }
-        }
-        set {
-          snapshot.updateValue(newValue.flatMap { $0.map { $0.flatMap { $0.snapshot } } }, forKey: "members")
-        }
-      }
-
       public var fragments: Fragments {
         get {
           return Fragments(snapshot: snapshot)
@@ -1828,92 +1819,12 @@ public final class CreateScoutingTeamMutation: GraphQLMutation {
       public struct Fragments {
         public var snapshot: Snapshot
 
-        public var scoutingTeamWithMembers: ScoutingTeamWithMembers {
+        public var scoutingTeam: ScoutingTeam {
           get {
-            return ScoutingTeamWithMembers(snapshot: snapshot)
+            return ScoutingTeam(snapshot: snapshot)
           }
           set {
             snapshot += newValue.snapshot
-          }
-        }
-      }
-
-      public struct Member: GraphQLSelectionSet {
-        public static let possibleTypes = ["ScoutingTeamMember"]
-
-        public static let selections: [GraphQLSelection] = [
-          GraphQLField("__typename", type: .nonNull(.scalar(String.self))),
-          GraphQLField("__typename", type: .nonNull(.scalar(String.self))),
-          GraphQLField("userID", type: .nonNull(.scalar(GraphQLID.self))),
-          GraphQLField("name", type: .scalar(String.self)),
-          GraphQLField("memberSince", type: .nonNull(.scalar(Int.self))),
-        ]
-
-        public var snapshot: Snapshot
-
-        public init(snapshot: Snapshot) {
-          self.snapshot = snapshot
-        }
-
-        public init(userId: GraphQLID, name: String? = nil, memberSince: Int) {
-          self.init(snapshot: ["__typename": "ScoutingTeamMember", "userID": userId, "name": name, "memberSince": memberSince])
-        }
-
-        public var __typename: String {
-          get {
-            return snapshot["__typename"]! as! String
-          }
-          set {
-            snapshot.updateValue(newValue, forKey: "__typename")
-          }
-        }
-
-        public var userId: GraphQLID {
-          get {
-            return snapshot["userID"]! as! GraphQLID
-          }
-          set {
-            snapshot.updateValue(newValue, forKey: "userID")
-          }
-        }
-
-        public var name: String? {
-          get {
-            return snapshot["name"] as? String
-          }
-          set {
-            snapshot.updateValue(newValue, forKey: "name")
-          }
-        }
-
-        public var memberSince: Int {
-          get {
-            return snapshot["memberSince"]! as! Int
-          }
-          set {
-            snapshot.updateValue(newValue, forKey: "memberSince")
-          }
-        }
-
-        public var fragments: Fragments {
-          get {
-            return Fragments(snapshot: snapshot)
-          }
-          set {
-            snapshot += newValue.snapshot
-          }
-        }
-
-        public struct Fragments {
-          public var snapshot: Snapshot
-
-          public var scoutingTeamMember: ScoutingTeamMember {
-            get {
-              return ScoutingTeamMember(snapshot: snapshot)
-            }
-            set {
-              snapshot += newValue.snapshot
-            }
           }
         }
       }
@@ -2069,25 +1980,27 @@ public final class MakeScoutTeamInvitationMutation: GraphQLMutation {
 
 public final class RedeemInvitationMutation: GraphQLMutation {
   public static let operationString =
-    "mutation RedeemInvitation($inviteID: ID!, $secretCode: String!) {\n  redeemInvitation(inviteID: $inviteID, secretCode: $secretCode)\n}"
+    "mutation RedeemInvitation($inviteID: ID!, $secretCode: String!, $memberName: String!) {\n  redeemInvitation(inviteID: $inviteID, secretCode: $secretCode, memberName: $memberName)\n}"
 
   public var inviteID: GraphQLID
   public var secretCode: String
+  public var memberName: String
 
-  public init(inviteID: GraphQLID, secretCode: String) {
+  public init(inviteID: GraphQLID, secretCode: String, memberName: String) {
     self.inviteID = inviteID
     self.secretCode = secretCode
+    self.memberName = memberName
   }
 
   public var variables: GraphQLMap? {
-    return ["inviteID": inviteID, "secretCode": secretCode]
+    return ["inviteID": inviteID, "secretCode": secretCode, "memberName": memberName]
   }
 
   public struct Data: GraphQLSelectionSet {
     public static let possibleTypes = ["Mutation"]
 
     public static let selections: [GraphQLSelection] = [
-      GraphQLField("redeemInvitation", arguments: ["inviteID": GraphQLVariable("inviteID"), "secretCode": GraphQLVariable("secretCode")], type: .scalar(GraphQLID.self)),
+      GraphQLField("redeemInvitation", arguments: ["inviteID": GraphQLVariable("inviteID"), "secretCode": GraphQLVariable("secretCode"), "memberName": GraphQLVariable("memberName")], type: .scalar(GraphQLID.self)),
     ]
 
     public var snapshot: Snapshot
@@ -2106,6 +2019,272 @@ public final class RedeemInvitationMutation: GraphQLMutation {
       }
       set {
         snapshot.updateValue(newValue, forKey: "redeemInvitation")
+      }
+    }
+  }
+}
+
+public final class ChangeMemberNameMutation: GraphQLMutation {
+  public static let operationString =
+    "mutation ChangeMemberName($scoutTeam: ID!, $newName: String!) {\n  changeMemberName(scoutTeam: $scoutTeam, newName: $newName) {\n    __typename\n    ...ScoutingTeamMember\n  }\n}"
+
+  public static var requestString: String { return operationString.appending(ScoutingTeamMember.fragmentString) }
+
+  public var scoutTeam: GraphQLID
+  public var newName: String
+
+  public init(scoutTeam: GraphQLID, newName: String) {
+    self.scoutTeam = scoutTeam
+    self.newName = newName
+  }
+
+  public var variables: GraphQLMap? {
+    return ["scoutTeam": scoutTeam, "newName": newName]
+  }
+
+  public struct Data: GraphQLSelectionSet {
+    public static let possibleTypes = ["Mutation"]
+
+    public static let selections: [GraphQLSelection] = [
+      GraphQLField("changeMemberName", arguments: ["scoutTeam": GraphQLVariable("scoutTeam"), "newName": GraphQLVariable("newName")], type: .object(ChangeMemberName.selections)),
+    ]
+
+    public var snapshot: Snapshot
+
+    public init(snapshot: Snapshot) {
+      self.snapshot = snapshot
+    }
+
+    public init(changeMemberName: ChangeMemberName? = nil) {
+      self.init(snapshot: ["__typename": "Mutation", "changeMemberName": changeMemberName.flatMap { $0.snapshot }])
+    }
+
+    public var changeMemberName: ChangeMemberName? {
+      get {
+        return (snapshot["changeMemberName"] as? Snapshot).flatMap { ChangeMemberName(snapshot: $0) }
+      }
+      set {
+        snapshot.updateValue(newValue?.snapshot, forKey: "changeMemberName")
+      }
+    }
+
+    public struct ChangeMemberName: GraphQLSelectionSet {
+      public static let possibleTypes = ["ScoutingTeamMember"]
+
+      public static let selections: [GraphQLSelection] = [
+        GraphQLField("__typename", type: .nonNull(.scalar(String.self))),
+        GraphQLField("__typename", type: .nonNull(.scalar(String.self))),
+        GraphQLField("userID", type: .nonNull(.scalar(GraphQLID.self))),
+        GraphQLField("name", type: .scalar(String.self)),
+        GraphQLField("memberSince", type: .nonNull(.scalar(Int.self))),
+      ]
+
+      public var snapshot: Snapshot
+
+      public init(snapshot: Snapshot) {
+        self.snapshot = snapshot
+      }
+
+      public init(userId: GraphQLID, name: String? = nil, memberSince: Int) {
+        self.init(snapshot: ["__typename": "ScoutingTeamMember", "userID": userId, "name": name, "memberSince": memberSince])
+      }
+
+      public var __typename: String {
+        get {
+          return snapshot["__typename"]! as! String
+        }
+        set {
+          snapshot.updateValue(newValue, forKey: "__typename")
+        }
+      }
+
+      public var userId: GraphQLID {
+        get {
+          return snapshot["userID"]! as! GraphQLID
+        }
+        set {
+          snapshot.updateValue(newValue, forKey: "userID")
+        }
+      }
+
+      public var name: String? {
+        get {
+          return snapshot["name"] as? String
+        }
+        set {
+          snapshot.updateValue(newValue, forKey: "name")
+        }
+      }
+
+      public var memberSince: Int {
+        get {
+          return snapshot["memberSince"]! as! Int
+        }
+        set {
+          snapshot.updateValue(newValue, forKey: "memberSince")
+        }
+      }
+
+      public var fragments: Fragments {
+        get {
+          return Fragments(snapshot: snapshot)
+        }
+        set {
+          snapshot += newValue.snapshot
+        }
+      }
+
+      public struct Fragments {
+        public var snapshot: Snapshot
+
+        public var scoutingTeamMember: ScoutingTeamMember {
+          get {
+            return ScoutingTeamMember(snapshot: snapshot)
+          }
+          set {
+            snapshot += newValue.snapshot
+          }
+        }
+      }
+    }
+  }
+}
+
+public final class EditScoutingTeamInfoMutation: GraphQLMutation {
+  public static let operationString =
+    "mutation EditScoutingTeamInfo($scoutTeam: ID!, $name: String!, $asscoiatedFrcTeamNumber: Int!) {\n  editScoutingTeamInfo(scoutTeam: $scoutTeam, name: $name, associatedFrcTeamNumber: $asscoiatedFrcTeamNumber) {\n    __typename\n    ...ScoutingTeam\n  }\n}"
+
+  public static var requestString: String { return operationString.appending(ScoutingTeam.fragmentString) }
+
+  public var scoutTeam: GraphQLID
+  public var name: String
+  public var asscoiatedFrcTeamNumber: Int
+
+  public init(scoutTeam: GraphQLID, name: String, asscoiatedFrcTeamNumber: Int) {
+    self.scoutTeam = scoutTeam
+    self.name = name
+    self.asscoiatedFrcTeamNumber = asscoiatedFrcTeamNumber
+  }
+
+  public var variables: GraphQLMap? {
+    return ["scoutTeam": scoutTeam, "name": name, "asscoiatedFrcTeamNumber": asscoiatedFrcTeamNumber]
+  }
+
+  public struct Data: GraphQLSelectionSet {
+    public static let possibleTypes = ["Mutation"]
+
+    public static let selections: [GraphQLSelection] = [
+      GraphQLField("editScoutingTeamInfo", arguments: ["scoutTeam": GraphQLVariable("scoutTeam"), "name": GraphQLVariable("name"), "associatedFrcTeamNumber": GraphQLVariable("asscoiatedFrcTeamNumber")], type: .object(EditScoutingTeamInfo.selections)),
+    ]
+
+    public var snapshot: Snapshot
+
+    public init(snapshot: Snapshot) {
+      self.snapshot = snapshot
+    }
+
+    public init(editScoutingTeamInfo: EditScoutingTeamInfo? = nil) {
+      self.init(snapshot: ["__typename": "Mutation", "editScoutingTeamInfo": editScoutingTeamInfo.flatMap { $0.snapshot }])
+    }
+
+    public var editScoutingTeamInfo: EditScoutingTeamInfo? {
+      get {
+        return (snapshot["editScoutingTeamInfo"] as? Snapshot).flatMap { EditScoutingTeamInfo(snapshot: $0) }
+      }
+      set {
+        snapshot.updateValue(newValue?.snapshot, forKey: "editScoutingTeamInfo")
+      }
+    }
+
+    public struct EditScoutingTeamInfo: GraphQLSelectionSet {
+      public static let possibleTypes = ["ScoutingTeam"]
+
+      public static let selections: [GraphQLSelection] = [
+        GraphQLField("__typename", type: .nonNull(.scalar(String.self))),
+        GraphQLField("__typename", type: .nonNull(.scalar(String.self))),
+        GraphQLField("teamID", type: .nonNull(.scalar(GraphQLID.self))),
+        GraphQLField("teamLead", type: .nonNull(.scalar(GraphQLID.self))),
+        GraphQLField("associatedFrcTeamNumber", type: .nonNull(.scalar(Int.self))),
+        GraphQLField("name", type: .nonNull(.scalar(String.self))),
+      ]
+
+      public var snapshot: Snapshot
+
+      public init(snapshot: Snapshot) {
+        self.snapshot = snapshot
+      }
+
+      public init(teamId: GraphQLID, teamLead: GraphQLID, associatedFrcTeamNumber: Int, name: String) {
+        self.init(snapshot: ["__typename": "ScoutingTeam", "teamID": teamId, "teamLead": teamLead, "associatedFrcTeamNumber": associatedFrcTeamNumber, "name": name])
+      }
+
+      public var __typename: String {
+        get {
+          return snapshot["__typename"]! as! String
+        }
+        set {
+          snapshot.updateValue(newValue, forKey: "__typename")
+        }
+      }
+
+      public var teamId: GraphQLID {
+        get {
+          return snapshot["teamID"]! as! GraphQLID
+        }
+        set {
+          snapshot.updateValue(newValue, forKey: "teamID")
+        }
+      }
+
+      /// # List of members
+      public var teamLead: GraphQLID {
+        get {
+          return snapshot["teamLead"]! as! GraphQLID
+        }
+        set {
+          snapshot.updateValue(newValue, forKey: "teamLead")
+        }
+      }
+
+      /// # Team lead is also a member, so his/her info will be in the members dict
+      public var associatedFrcTeamNumber: Int {
+        get {
+          return snapshot["associatedFrcTeamNumber"]! as! Int
+        }
+        set {
+          snapshot.updateValue(newValue, forKey: "associatedFrcTeamNumber")
+        }
+      }
+
+      public var name: String {
+        get {
+          return snapshot["name"]! as! String
+        }
+        set {
+          snapshot.updateValue(newValue, forKey: "name")
+        }
+      }
+
+      public var fragments: Fragments {
+        get {
+          return Fragments(snapshot: snapshot)
+        }
+        set {
+          snapshot += newValue.snapshot
+        }
+      }
+
+      public struct Fragments {
+        public var snapshot: Snapshot
+
+        public var scoutingTeam: ScoutingTeam {
+          get {
+            return ScoutingTeam(snapshot: snapshot)
+          }
+          set {
+            snapshot += newValue.snapshot
+          }
+        }
       }
     }
   }
@@ -7185,6 +7364,48 @@ public final class GetScoutingTeamWithMembersQuery: GraphQLQuery {
   }
 }
 
+public final class GetScoutingTeamPublicNameQuery: GraphQLQuery {
+  public static let operationString =
+    "query GetScoutingTeamPublicName($inviteID: ID!) {\n  getScoutingTeamPublicName(inviteID: $inviteID)\n}"
+
+  public var inviteID: GraphQLID
+
+  public init(inviteID: GraphQLID) {
+    self.inviteID = inviteID
+  }
+
+  public var variables: GraphQLMap? {
+    return ["inviteID": inviteID]
+  }
+
+  public struct Data: GraphQLSelectionSet {
+    public static let possibleTypes = ["Query"]
+
+    public static let selections: [GraphQLSelection] = [
+      GraphQLField("getScoutingTeamPublicName", arguments: ["inviteID": GraphQLVariable("inviteID")], type: .scalar(String.self)),
+    ]
+
+    public var snapshot: Snapshot
+
+    public init(snapshot: Snapshot) {
+      self.snapshot = snapshot
+    }
+
+    public init(getScoutingTeamPublicName: String? = nil) {
+      self.init(snapshot: ["__typename": "Query", "getScoutingTeamPublicName": getScoutingTeamPublicName])
+    }
+
+    public var getScoutingTeamPublicName: String? {
+      get {
+        return snapshot["getScoutingTeamPublicName"] as? String
+      }
+      set {
+        snapshot.updateValue(newValue, forKey: "getScoutingTeamPublicName")
+      }
+    }
+  }
+}
+
 public final class ListScoutingTeamInvitationsQuery: GraphQLQuery {
   public static let operationString =
     "query ListScoutingTeamInvitations($scoutTeam: ID!) {\n  listScoutingTeamInvitations(scoutTeam: $scoutTeam) {\n    __typename\n    ...ScoutTeamInvitation\n  }\n}"
@@ -9269,66 +9490,6 @@ public struct Team: GraphQLFragment {
     }
     set {
       snapshot.updateValue(newValue, forKey: "website")
-    }
-  }
-}
-
-public struct S3Object: GraphQLFragment {
-  public static let fragmentString =
-    "fragment S3Object on S3Object {\n  __typename\n  bucket\n  key\n  region\n}"
-
-  public static let possibleTypes = ["S3Object"]
-
-  public static let selections: [GraphQLSelection] = [
-    GraphQLField("__typename", type: .nonNull(.scalar(String.self))),
-    GraphQLField("bucket", type: .nonNull(.scalar(String.self))),
-    GraphQLField("key", type: .nonNull(.scalar(String.self))),
-    GraphQLField("region", type: .nonNull(.scalar(String.self))),
-  ]
-
-  public var snapshot: Snapshot
-
-  public init(snapshot: Snapshot) {
-    self.snapshot = snapshot
-  }
-
-  public init(bucket: String, key: String, region: String) {
-    self.init(snapshot: ["__typename": "S3Object", "bucket": bucket, "key": key, "region": region])
-  }
-
-  public var __typename: String {
-    get {
-      return snapshot["__typename"]! as! String
-    }
-    set {
-      snapshot.updateValue(newValue, forKey: "__typename")
-    }
-  }
-
-  public var bucket: String {
-    get {
-      return snapshot["bucket"]! as! String
-    }
-    set {
-      snapshot.updateValue(newValue, forKey: "bucket")
-    }
-  }
-
-  public var key: String {
-    get {
-      return snapshot["key"]! as! String
-    }
-    set {
-      snapshot.updateValue(newValue, forKey: "key")
-    }
-  }
-
-  public var region: String {
-    get {
-      return snapshot["region"]! as! String
-    }
-    set {
-      snapshot.updateValue(newValue, forKey: "region")
     }
   }
 }

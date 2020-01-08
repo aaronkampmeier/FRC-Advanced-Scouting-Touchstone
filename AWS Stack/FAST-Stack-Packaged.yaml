@@ -199,7 +199,7 @@ Resources:
         - AppSyncAPI
         - ApiId
       DefinitionS3Location: s3://cf-templates-4eazvtfbn788-us-east-1/FAST API Stack
-        Resources/7d8a0bf6bbbc404e146ff8d5057af4f7
+        Resources/ac35765362c6022f22209487c5ecb9fe
     Metadata:
       AWS::CloudFormation::Designer:
         id: 9826eb5e-9f89-4a15-a614-3649ede94ece
@@ -214,7 +214,7 @@ Resources:
         - ApiId
       ServiceRoleArn: arn:aws:iam::797353049590:role/service-role/appsync-ds-lam-nuerz7-eventRankingManageme
       LambdaConfig:
-        LambdaFunctionArn: arn:aws:lambda:us-east-1:797353049590:function:eventRankingManagement:Production
+        LambdaFunctionArn: arn:aws:lambda:us-east-1:797353049590:function:eventRankingManagement:ProductionAPI2
       Name: EventRankingManagement
       Type: AWS_LAMBDA
     Metadata:
@@ -231,7 +231,7 @@ Resources:
         - ApiId
       ServiceRoleArn: arn:aws:iam::797353049590:role/service-role/appsync-ds-lam-nuerz7-listScoutSessions
       LambdaConfig:
-        LambdaFunctionArn: arn:aws:lambda:us-east-1:797353049590:function:listScoutSessions:Production
+        LambdaFunctionArn: arn:aws:lambda:us-east-1:797353049590:function:listScoutSessions:ProductionAPI2
       Name: ScoutSessions
       Type: AWS_LAMBDA
     Metadata:
@@ -248,7 +248,7 @@ Resources:
         - ApiId
       ServiceRoleArn: arn:aws:iam::797353049590:role/service-role/appsync-ds-lam-nuerz7-updateStatistics
       LambdaConfig:
-        LambdaFunctionArn: arn:aws:lambda:us-east-1:797353049590:function:updateStatistics:Production
+        LambdaFunctionArn: arn:aws:lambda:us-east-1:797353049590:function:updateStatistics:ProductionAPI2
       Name: StatsUpdater
       Type: AWS_LAMBDA
     Metadata:
@@ -1165,7 +1165,7 @@ Resources:
       RequestMappingTemplateS3Location: s3://cf-templates-4eazvtfbn788-us-east-1/FAST
         API Stack Resources/bbc9ea0c07e41ea028fb45965575adec
       ResponseMappingTemplateS3Location: s3://cf-templates-4eazvtfbn788-us-east-1/FAST
-        API Stack Resources/9bc9cc38fd46388783c323bfc81239da
+        API Stack Resources/5c22e811e681c06c41fb5a3a8ebe576a
   ResolverListEnrolledScoutingTeams:
     Type: AWS::AppSync::Resolver
     Properties:
@@ -1231,6 +1231,64 @@ Resources:
         API Stack Resources/13709c494f6065fe32845d07d574d948
     DependsOn:
     - AppSyncSchema
+  FuncGetScoutingTeamPublicNameCheckInvite:
+    Type: AWS::AppSync::FunctionConfiguration
+    Properties:
+      ApiId:
+        Fn::GetAtt:
+        - AppSyncAPI
+        - ApiId
+      DataSourceName:
+        Fn::GetAtt:
+        - SourceFASTTeamInvites
+        - Name
+      FunctionVersion: 2018-05-29
+      Name: GetScoutingTeamPublicNameCheckInvite
+      RequestMappingTemplateS3Location: s3://cf-templates-4eazvtfbn788-us-east-1/FAST
+        API Stack Resources/4d245765be5c5ab33f891d343e8ccfb3
+      ResponseMappingTemplateS3Location: s3://cf-templates-4eazvtfbn788-us-east-1/FAST
+        API Stack Resources/ac6e9d4a2213303fa73852b9690abd9e
+  FuncGetScoutingTeamPublicName:
+    Type: AWS::AppSync::FunctionConfiguration
+    Properties:
+      ApiId:
+        Fn::GetAtt:
+        - AppSyncAPI
+        - ApiId
+      DataSourceName:
+        Fn::GetAtt:
+        - SourceFASTTeamInvites
+        - Name
+      FunctionVersion: 2018-05-29
+      Name: GetScoutingTeamPublicName
+      RequestMappingTemplateS3Location: s3://cf-templates-4eazvtfbn788-us-east-1/FAST
+        API Stack Resources/8c6dabf6bbb47b52a78286138b4e5755
+      ResponseMappingTemplateS3Location: s3://cf-templates-4eazvtfbn788-us-east-1/FAST
+        API Stack Resources/a1603443ea35001918c3e1e569a10449
+  ResolverGetScoutingTeamPublicName:
+    Type: AWS::AppSync::Resolver
+    Properties:
+      ApiId:
+        Fn::GetAtt:
+        - AppSyncAPI
+        - ApiId
+      FieldName: getScoutingTeamPublicName
+      TypeName: Query
+      Kind: PIPELINE
+      PipelineConfig:
+        Functions:
+        - Fn::GetAtt:
+          - FuncGetScoutingTeamPublicNameCheckInvite
+          - FunctionId
+        - Fn::GetAtt:
+          - FuncGetScoutingTeamPublicName
+          - FunctionId
+      RequestMappingTemplateS3Location: s3://cf-templates-4eazvtfbn788-us-east-1/FAST
+        API Stack Resources/c46fc8ef51dfb27776b3115243d7cc1c
+      ResponseMappingTemplateS3Location: s3://cf-templates-4eazvtfbn788-us-east-1/FAST
+        API Stack Resources/13709c494f6065fe32845d07d574d948
+    DependsOn:
+    - AppSyncSchema
   FuncListScoutingTeamInvitations:
     Type: AWS::AppSync::FunctionConfiguration
     Properties:
@@ -1245,7 +1303,7 @@ Resources:
       FunctionVersion: 2018-05-29
       Name: ListScoutingTeamInvitations
       RequestMappingTemplateS3Location: s3://cf-templates-4eazvtfbn788-us-east-1/FAST
-        API Stack Resources/b74686574d38e194f3f1f3dfcae38891
+        API Stack Resources/59a0271144e70c3c38d6d9c840578833
       ResponseMappingTemplateS3Location: s3://cf-templates-4eazvtfbn788-us-east-1/FAST
         API Stack Resources/b3e6f73c899b867dba531e66b4d81e5e
   ResolverListScoutingTeamInvitations:
@@ -1601,7 +1659,7 @@ Resources:
         - SourceFASTTeams
         - Name
       RequestMappingTemplateS3Location: s3://cf-templates-4eazvtfbn788-us-east-1/FAST
-        API Stack Resources/6efc79c9d331a638182859e97a3d9481
+        API Stack Resources/9512255058ce7c67d84ddcee50d8714f
       ResponseMappingTemplateS3Location: s3://cf-templates-4eazvtfbn788-us-east-1/FAST
         API Stack Resources/5233584444286eaeec2e8a3931c460e8
       TypeName: Mutation
@@ -1682,7 +1740,7 @@ Resources:
       FunctionVersion: 2018-05-29
       Name: RedeemInvitationAddMember
       RequestMappingTemplateS3Location: s3://cf-templates-4eazvtfbn788-us-east-1/FAST
-        API Stack Resources/5bc44146dac54d1e136ff93942ed3fd6
+        API Stack Resources/a9e3a3d4745d867c80ad1e4a2b442ad8
       ResponseMappingTemplateS3Location: s3://cf-templates-4eazvtfbn788-us-east-1/FAST
         API Stack Resources/e8e4713f9f1e787b23a55f87c2010e1b
   ResolverRedeemInvitation:
@@ -1740,7 +1798,7 @@ Resources:
       FunctionVersion: 2018-05-29
       Name: RemoveMember
       RequestMappingTemplateS3Location: s3://cf-templates-4eazvtfbn788-us-east-1/FAST
-        API Stack Resources/a1783d100b55885f2d44a33af76f87bf
+        API Stack Resources/6843def1f639c7c4a1f58d67777e328c
       ResponseMappingTemplateS3Location: s3://cf-templates-4eazvtfbn788-us-east-1/FAST
         API Stack Resources/52392222760d96686724d94e300613fa
   ResolverRemoveMember:
@@ -1782,6 +1840,23 @@ Resources:
         API Stack Resources/73fe5dc11ff6117ebf46ccd1e2c42cde
       ResponseMappingTemplateS3Location: s3://cf-templates-4eazvtfbn788-us-east-1/FAST
         API Stack Resources/95b892c00a2c6770a41b296daf7d9007
+  FuncTransferLeadCheckMember:
+    Type: AWS::AppSync::FunctionConfiguration
+    Properties:
+      ApiId:
+        Fn::GetAtt:
+        - AppSyncAPI
+        - ApiId
+      DataSourceName:
+        Fn::GetAtt:
+        - SourceFASTTeams
+        - Name
+      FunctionVersion: 2018-05-29
+      Name: TransferLeadCheckMember
+      RequestMappingTemplateS3Location: s3://cf-templates-4eazvtfbn788-us-east-1/FAST
+        API Stack Resources/b0dcb4ce561c223d26827ccd1665f11a
+      ResponseMappingTemplateS3Location: s3://cf-templates-4eazvtfbn788-us-east-1/FAST
+        API Stack Resources/b57215b7a81b21c6fdb80410ed6bce43
   ResolverTransferLead:
     Type: AWS::AppSync::Resolver
     Properties:
@@ -1795,15 +1870,55 @@ Resources:
       PipelineConfig:
         Functions:
         - Fn::GetAtt:
-          - FuncTransferLead
+          - FuncTransferLeadCheckMember
           - FunctionId
         - Fn::GetAtt:
-          - FuncRemoveMember
+          - FuncTransferLead
           - FunctionId
       RequestMappingTemplateS3Location: s3://cf-templates-4eazvtfbn788-us-east-1/FAST
         API Stack Resources/c46fc8ef51dfb27776b3115243d7cc1c
       ResponseMappingTemplateS3Location: s3://cf-templates-4eazvtfbn788-us-east-1/FAST
         API Stack Resources/13709c494f6065fe32845d07d574d948
+  ResolverChangeMemberName:
+    Type: AWS::AppSync::Resolver
+    Properties:
+      ApiId:
+        Fn::GetAtt:
+        - AppSyncAPI
+        - ApiId
+      FieldName: changeMemberName
+      Kind: UNIT
+      DataSourceName:
+        Fn::GetAtt:
+        - SourceFASTTeams
+        - Name
+      RequestMappingTemplateS3Location: s3://cf-templates-4eazvtfbn788-us-east-1/FAST
+        API Stack Resources/0ced56ba527772e91f9b640592c19599
+      ResponseMappingTemplateS3Location: s3://cf-templates-4eazvtfbn788-us-east-1/FAST
+        API Stack Resources/e2e5e43c54f9ca992eb1a1fecdfc022d
+      TypeName: Mutation
+    DependsOn:
+    - AppSyncSchema
+  ResolverEditScoutingTeamInfo:
+    Type: AWS::AppSync::Resolver
+    Properties:
+      ApiId:
+        Fn::GetAtt:
+        - AppSyncAPI
+        - ApiId
+      FieldName: editScoutingTeamInfo
+      Kind: UNIT
+      DataSourceName:
+        Fn::GetAtt:
+        - SourceFASTTeams
+        - Name
+      RequestMappingTemplateS3Location: s3://cf-templates-4eazvtfbn788-us-east-1/FAST
+        API Stack Resources/5b1605f288c64da23b505915d9571fdf
+      ResponseMappingTemplateS3Location: s3://cf-templates-4eazvtfbn788-us-east-1/FAST
+        API Stack Resources/e2e5e43c54f9ca992eb1a1fecdfc022d
+      TypeName: Mutation
+    DependsOn:
+    - AppSyncSchema
   ResolverOnAddTrackedEvent:
     Type: AWS::AppSync::Resolver
     Properties:

@@ -42,6 +42,12 @@ class EventInfoVC: UIViewController, UITableViewDataSource {
     }
     
     @IBAction func addButtonPressed(_ sender: UIBarButtonItem) {
+        guard let scoutTeamId = Globals.dataManager.enrolledScoutingTeamID else {
+            let alert = UIAlertController(title: "Error: No Scouting Team", message: "You are currently not associated with any scouting teams. Please join or create one before trying to scout data.", preferredStyle: .alert)
+            alert.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
+            present(alert, animated: true, completion: nil)
+            return
+        }
         //Check if we are using syncing
         if Globals.isInSpectatorMode {
             assertionFailure()
@@ -53,7 +59,7 @@ class EventInfoVC: UIViewController, UITableViewDataSource {
                 self.navigationController?.navigationBar.isUserInteractionEnabled = false
                 
                 //Add the event to be tracked
-                Globals.appDelegate.appSyncClient?.perform(mutation: AddTrackedEventMutation(eventKey: eventKey), resultHandler: {[weak self] (result, error) in
+                Globals.appSyncClient?.perform(mutation: AddTrackedEventMutation(scoutTeam: scoutTeamId, eventKey: eventKey), resultHandler: {[weak self] (result, error) in
                     if Globals.handleAppSyncErrors(forQuery: "AddTrackedEventMutation", result: result, error: error) {
                         self?.finishedImport(didComplete: true, withError: nil)
                     } else {

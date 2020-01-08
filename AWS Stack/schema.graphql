@@ -8,7 +8,7 @@ type Mutation {
     scoutTeam: ID!,
     eventKey: ID!,
     teamKey: ID!,
-    image: ImageInput,
+    image: S3ObjectInput,
     attributes: AWSJSON!
   ): ScoutedTeam
   addTeamComment(
@@ -32,9 +32,12 @@ type Mutation {
   removeScoutSession(scoutTeam: ID!, eventKey: ID!, key: ID!): ScoutSession
 
   ## Scouting Team Management
-  createScoutingTeam(name: String!, associatedFrcTeamNumber: Int!): ScoutingTeam
+  createScoutingTeam(name: String!, associatedFrcTeamNumber: Int!, leadName: String!): ScoutingTeam
+	changeMemberName(scoutTeam: ID!, newName: String!): ScoutingTeamMember
+	editScoutingTeamInfo(scoutTeam: ID!, name: String!, associatedFrcTeamNumber: Int!): ScoutingTeam
+
 	makeScoutTeamInvitation(scoutTeam: ID!, expDate: AWSTimestamp!): ScoutTeamInvitation
-	redeemInvitation(inviteID: ID!, secretCode: String!): ID
+	redeemInvitation(inviteID: ID!, secretCode: String!, memberName: String!): ID
 
 	## Members should be able to remove themselves, leads should be able to remove anyone except themselves
   removeMember(scoutTeam: ID!, userToRemove: ID!): Boolean ##Must do check to make sure it is not the lead
@@ -72,6 +75,7 @@ type Query {
   listEnrolledScoutingTeams: [ScoutingTeam]
   getScoutingTeam(scoutTeam: ID!): ScoutingTeam
 
+	getScoutingTeamPublicName(inviteID: ID!): String
 	listScoutingTeamInvitations(scoutTeam: ID!): [ScoutTeamInvitation]
 }
 
@@ -97,21 +101,6 @@ type Subscription {
     teamKey: String
   ): ScoutSession
     @aws_subscribe(mutations: ["removeScoutSession"])
-}
-
-input UpdateScoutedTeamInput {
-  canBanana: Boolean
-  computerVisionCapability: String
-  driveTrain: String
-  driverXP: Float
-  frontImage: AWSURL
-  programmingLanguage: String
-  robotHeight: Float
-  robotLength: Float
-  robotWeight: Float
-  robotWidth: Float
-  strategy: String
-  otherAttributes: AWSJSON
 }
 
 type ScoutingTeam {
@@ -212,17 +201,17 @@ type RankedTeam {
 }
 
 type S3Object {
-  bucket: String!
-  key: String!
-  region: String!
+ bucket: String!
+ key: String!
+ region: String!
 }
 
 input S3ObjectInput {
-  bucket: String!
-  key: String!
-  region: String!
-  localUri: String!
-  mimeType: String!
+ bucket: String!
+ key: String!
+ region: String!
+ localUri: String!
+ mimeType: String!
 }
 
 type ScoutSession {

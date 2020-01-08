@@ -15,12 +15,12 @@ class SuperNotesCollectionViewCell: UICollectionViewCell {
     var teamKey: String?
     var notesVC: TeamCommentsTableViewController!
     
-    func setUp(forEventKey eventKey: String, teamKey: String) {
+    func setUp(inScoutTeam scoutTeam: String, forEventKey eventKey: String, teamKey: String) {
         
         self.eventKey = eventKey
         self.teamKey = teamKey
         teamLabel.text = teamKey.trimmingCharacters(in: CharacterSet.letters)
         
-        notesVC.load(forEventKey: eventKey, andTeamKey: teamKey)
+        notesVC.load(inScoutTeam: scoutTeam, forEventKey: eventKey, andTeamKey: teamKey)
     }
 }
