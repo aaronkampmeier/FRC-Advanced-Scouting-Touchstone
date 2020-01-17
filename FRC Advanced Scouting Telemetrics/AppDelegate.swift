@@ -15,199 +15,44 @@ import AWSAuthUI
 import Firebase
 import AWSS3
 
-internal struct Globals {
-    static unowned let appDelegate = UIApplication.shared.delegate as! AppDelegate
-    static let isSpectatorModeKey = "FAST-IsInSpectatorMode"
-    static var isInSpectatorMode: Bool {
-        return UserDefaults.standard.value(forKey: isSpectatorModeKey) as? Bool ?? false
-    }
-    static var asyncLoadingManager: FASTAsyncManager?
-    static var dataManager: AWSDataManager?
-    
-    ///Handles AppSync errors inline by logging and recording them
-    ///- Returns: A bool signifiying if the query was successful or not
-    static func handleAppSyncErrors<T>(forQuery queryIdentifier: String, result: GraphQLResult<T>?, error: Error?) -> Bool {
-        var wereErrors = false
-        if let error = error {
-            if let error = error as? AWSAppSyncClientError {
-				let handleNsError = {(nserr: NSError) in
-					if nserr.code == -999 {
-						//The error is that the operation was cancelled, do not treat as error
-						CLSNSLogv("Operation \(queryIdentifier) cancelled", getVaList([]))
-					} else if nserr.code == -1005 {
-						//The network connection was lost
-						CLSNSLogv("Operation \(queryIdentifier) terminated because the network connection was lost", getVaList([]))
-					} else if nserr.code == -1009 {
-						//Internet connection is offline
-						CLSNSLogv("Operation \(queryIdentifier) failed because the network connection is offline", getVaList([]))
-					} else if nserr.code == -1001 {
-						//Timed out
-						CLSNSLogv("Operation \(queryIdentifier) failed because the request timed out", getVaList([]))
-					} else if nserr.code == 53 {
-						CLSNSLogv("Operation \(queryIdentifier) canceled by the software", getVaList([]))
-					} else if nserr.code == -1003 {
-						
-						if #available(iOS 12.0, *) {
-							CLSNSLogv("Operation \(queryIdentifier) failed beccause a server with specified hostname could not be found. Is online: \(FASTNetworkManager.main.isOnline())", getVaList([]))
-							if FASTNetworkManager.main.isOnline() {
-								Crashlytics.sharedInstance().recordError(error, withAdditionalUserInfo: ["is-online":"true"])
-							}
-						} else {
-							// Fallback on earlier versions
-							CLSNSLogv("Operation \(queryIdentifier) failed beccause a server with specified hostname could not be found.", getVaList([]))
-							Crashlytics.sharedInstance().recordError(error, withAdditionalUserInfo: ["is-online":"true"])
-						}
-					} else {
-						CLSNSLogv("Error performing \(queryIdentifier): \(error)", getVaList([]))
-						Crashlytics.sharedInstance().recordError(nserr)
-					}
-				}
-                switch error {
-                case .requestFailed( _,  _, let err):
-                    if let nserr = err as NSError? {
-						handleNsError(nserr)
-					} else {
-						CLSNSLogv("Error performing \(queryIdentifier): \(error)", getVaList([]))
-						Crashlytics.sharedInstance().recordError(error)
-					}
-				case .authenticationError(let error):
-					let nserr = error as NSError
-					handleNsError(nserr)
-                default:
-                    CLSNSLogv("Error performing \(queryIdentifier): \(error)", getVaList([]))
-                    Crashlytics.sharedInstance().recordError(error)
-                    break
-                }
-                
-            } else if let error = error as? AWSAppSyncSubscriptionError {
-                if error.recoverySuggestion != nil {
-                    //There is a recovery suggestion, don't treat as error
-                } else {
-					if error.errorDescription?.contains("-1001") ?? false || error.errorDescription?.contains("-1009") ?? false {
-						//Internet is offline, no error
-					} else {
-						CLSNSLogv("Error subscribing to \(queryIdentifier): \(error)", getVaList([]))
-						Crashlytics.sharedInstance().recordError(error)
-					}
-                }
-            } else {
-                CLSNSLogv("Error performing \(queryIdentifier): \(error)", getVaList([]))
-                Crashlytics.sharedInstance().recordError(error)
-            }
-            
-            wereErrors = true
-        }
-        if let errors = result?.errors {
-            CLSNSLogv("GraphQL Errors performing \(queryIdentifier): \(errors)", getVaList([]))
-            for error in errors {
-                Crashlytics.sharedInstance().recordError(error)
-            }
-            wereErrors = true
-        }
-        
-        if result?.source == GraphQLResult<T>.Source.server {
-            Globals.recordAnalyticsEvent(eventType: "app_sync_request", attributes: ["successful":(!wereErrors).description, "request":queryIdentifier])
-        }
-        
-        return !wereErrors
-    }
-	
-	static func presentError<T>(error: Error?, andResult result: GraphQLResult<T>?, withTitle title: String, hideIfIsOffline: Bool = true) {
-		var shouldDisplay = true
-		if let error = error as? AWSAppSyncClientError {
-			let handleNsError = {(nserr: NSError) in
-				if nserr.code == -1009 || nserr.code == -1001 {
-					//Is offline, request timed out
-					shouldDisplay = false && hideIfIsOffline
-				}
-			}
-			switch error {
-			case .requestFailed(_, _, let err):
-				if let nserr = err as NSError? {
-					handleNsError(nserr)
-				}
-			case .authenticationError(let error):
-				handleNsError(error as NSError)
-			default:
-				break
-			}
-		}
-		
-		if shouldDisplay {
-			let alert = UIAlertController(title: "Unable to Load Teams", message: "There was an error loading the teams for this event. Please connect to the internet and re-load. \(Globals.descriptions(ofError: error, andResult: result))", preferredStyle: .alert)
-			alert.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
-			
-			Globals.appDelegate.presentViewControllerOnTop(alert, animated: true)
-		}
-	}
-    
-    static func descriptions<T>(ofError error: Error?, andResult result: GraphQLResult<T>?) -> String {
-        if let error = error as? AWSAppSyncClientError {
-            return "\(error.errorDescription ?? "") \(error.recoverySuggestion ?? "")"
-        } else if let error = error {
-            return error.localizedDescription
-        } else if let errors = result?.errors {
-            return errors.description
-        } else {
-            return ""
-        }
-    }
-    
-    static func recordAnalyticsEvent(eventType: String, attributes: [String:String] = [:], metrics: [String: Double] = [:]) {
-//        let event = Globals.appDelegate.pinpoint?.analyticsClient.createEvent(withEventType: eventType)
-//        for attribute in attributes {
-//            event?.addAttribute(attribute.value, forKey: attribute.key)
-//        }
-//        for metric in metrics {
-//            event?.addMetric(NSNumber(value: metric.value), forKey: metric.key)
-//        }
-//
-//        Globals.appDelegate.pinpoint?.analyticsClient.record(event!)
-//        Globals.appDelegate.pinpoint?.analyticsClient.submitEvents()
-        
-        //Now for Firebase Analytics
-        Analytics.logEvent(eventType, parameters: (attributes as [String:Any]).merging((metrics as [String:Any]), uniquingKeysWith: {val1,val2 in attributes[val1 as! String] as Any}))
-    }
-}
-
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
 
     var window: UIWindow?
     
-    var appSyncClient: AWSAppSyncClient?
+    var supportedInterfaceOrientations: UIInterfaceOrientationMask = .all
     
+    // MARK: App Did Finish Launching
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
+        let isUsingScenes = (UIDevice.current.systemVersion as NSString).floatValue >= 13
+        let mainStoryboard = UIStoryboard(name: "Main", bundle: nil)
         // Override point for customization after application launch.
         FirebaseApp.configure()
         Fabric.with([Crashlytics.self])
         
-        Globals.dataManager = AWSDataManager()
-        
-        ///AWS Cognito Initialization
-        AWSMobileClient.sharedInstance().initialize {userState, error in
+        // AWS Cognito Initialization
+        AWSMobileClient.default().initialize {userState, error in
             if let userState = userState {
                 CLSNSLogv("User State: \(userState)", getVaList([]))
-                Analytics.setUserID(AWSMobileClient.sharedInstance().username)
-                Crashlytics.sharedInstance().setUserName(AWSMobileClient.sharedInstance().username)
-                Crashlytics.sharedInstance().setUserIdentifier(UIDevice.current.name)
                 
                 switch userState {
                 case .signedOut:
-                    //Let the onboarding show to sign in; Do nothing
+                    if !isUsingScenes {
+                        self.window?.rootViewController = mainStoryboard.instantiateViewController(withIdentifier: "onboarding")
+                    }
                     break
                 case .signedIn:
-                    let mainStoryboard = UIStoryboard(name: "Main", bundle: nil)
-                    self.window?.rootViewController = mainStoryboard.instantiateViewController(withIdentifier: "teamListMasterVC")
-                    Analytics.setUserProperty(AWSMobileClient.sharedInstance().username, forName: "teamNumber")
-                case .guest:
-                    if Globals.isInSpectatorMode {
-                        let mainStoryboard = UIStoryboard(name: "Main", bundle: nil)
+                    if !isUsingScenes {
                         self.window?.rootViewController = mainStoryboard.instantiateViewController(withIdentifier: "teamListMasterVC")
                     }
+                case .guest:
+                    if !isUsingScenes {
+                        self.window?.rootViewController = mainStoryboard.instantiateViewController(withIdentifier: "onboarding")
+                    }
+                    break
                 default:
                     CLSNSLogv("Signing out due to invalid userState", getVaList([]))
-                    AWSMobileClient.sharedInstance().signOut()
+                    AWSMobileClient.default().signOut()
                 }
             } else if let error = error {
                 CLSNSLogv("Error: \(error)", getVaList([]))
@@ -217,106 +62,35 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             }
         }
         
-        ///AWS App Sync Config
-        let databaseURL = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0].appendingPathComponent("FASTAppSyncDatabase")
-        do {
-            
-            let serviceConfig = try AWSAppSyncServiceConfig()
-            
-//            let appSyncConfig = try AWSAppSyncClientConfiguration(url: URL(string: "")!, serviceRegion: .USEast1, userPoolsAuthProvider: FASTCognitoUserPoolsAuthProvider(), databaseURL: databaseURL, connectionStateChangeHandler: FASTAppSyncStateChangeHandler(), s3ObjectManager: AWSS3TransferUtility.default())
-//            let appSyncConfig = try AWSAppSyncClientConfiguration(appSyncServiceConfig: serviceConfig, databaseURL: databaseURL)
-			let appSyncConfig = try AWSAppSyncClientConfiguration(appSyncServiceConfig: serviceConfig, userPoolsAuthProvider: FASTCognitoUserPoolsAuthProvider(), connectionStateChangeHandler: FASTAppSyncStateChangeHandler())
-//            let appSyncConfig = try AWSAppSyncClientConfiguration(appSyncClientInfo: AWSAppSyncClientInfo(), userPoolsAuthProvider: FASTCognitoUserPoolsAuthProvider(), databaseURL: databaseURL)
-            appSyncClient = try AWSAppSyncClient(appSyncConfig: appSyncConfig)
-            appSyncClient?.apolloClient?.cacheKeyForObject = {
-                switch $0["__typename"] as! String {
-                case "EventRanking":
-                    return "ranking_\($0["eventKey"]!)"
-                case "ScoutedTeam":
-                    return "scouted_\($0["eventKey"]!)_\($0["teamKey"]!)"
-                case "TeamEventOPR":
-                    return "opr_\($0["eventKey"]!)_\($0["teamKey"]!)"
-                case "TeamEventStatus":
-                    return "status_\($0["eventKey"]!)_\($0["teamKey"]!)"
-                default:
-                    return $0["key"]
+        //Start the data manager which in turn starts the background async loading manager
+        Globals.dataManager = AWSDataManager()
+        Globals.dataManager.beginScoutingTeamSwitching()
+        
+        if !isUsingScenes {
+            AWSMobileClient.default().addUserStateListener(self) { (state, attributes) in
+                DispatchQueue.main.async {
+                    switch state {
+                    case .signedOut:
+                        //Show the sign in flow
+                        self.window?.rootViewController = mainStoryboard.instantiateViewController(withIdentifier: "onboarding")
+                    case .signedIn:
+                        self.window?.rootViewController = mainStoryboard.instantiateViewController(withIdentifier: "teamListMasterVC")
+                    case .guest:
+                        if Globals.isInSpectatorMode {
+                            self.window?.rootViewController = mainStoryboard.instantiateViewController(withIdentifier: "teamListMasterVC")
+                        } else {
+                            //Show sign in
+                            self.window?.rootViewController = mainStoryboard.instantiateViewController(withIdentifier: "onboarding")
+                        }
+                    default:
+                        break
+                    }
                 }
             }
-        } catch {
-            CLSNSLogv("Error starting AppSync: \(error)", getVaList([]))
-            Crashlytics.sharedInstance().recordError(error)
-            assertionFailure()
-        }
-		
-		appSyncClient?.offlineMutationDelegate = FASTOfflineMutationDelegate()
-        
-        AWSMobileClient.sharedInstance().addUserStateListener(self) { (state, attributes) in
-            CLSNSLogv("New User State: \(state)", getVaList([]))
-            
-            //Update the pinpoint endpoint profile
-//            if let targetingClient = self.pinpoint?.targetingClient {
-//                let endpoint = targetingClient.currentEndpointProfile()
-//
-//                let user = AWSPinpointEndpointProfileUser()
-//
-//                if state == UserState.signedIn {
-//                    user.userId = AWSMobileClient.sharedInstance().username
-//                } else {
-//                    user.userId = nil
-//                }
-//
-//                endpoint.user = user
-//                targetingClient.update(endpoint)
-//            }
-            
-            if state == UserState.signedOut {
-                self.appSyncClient?.clearCache()
-                Globals.asyncLoadingManager = nil
-                
-                //Clear the Images cache
-                TeamImageLoader.default.clearCache()
-            } else if state == UserState.signedIn {
-                Globals.asyncLoadingManager = FASTAsyncManager()
-            }
-			
-			if state == UserState.signedOutUserPoolsTokenInvalid || state == UserState.signedOutFederatedTokensInvalid {
-				//Show the sign in screen
-				AWSDataManager.default.signOut()
-			}
-            
-            
-            Analytics.setUserID(AWSMobileClient.sharedInstance().username)
-            Analytics.setUserProperty(AWSMobileClient.sharedInstance().username, forName: "teamNumber")
-            Crashlytics.sharedInstance().setUserName(AWSMobileClient.sharedInstance().username)
-        }
-        
-        //Set up the reloading manager
-        if AWSMobileClient.sharedInstance().currentUserState == .signedIn {
-            Globals.asyncLoadingManager = FASTAsyncManager()
         }
         
         return true
 //        return AWSMobileClient.sharedInstance().interceptApplication(application, didFinishLaunchingWithOptions: launchOptions)
-    }
-    
-    func displayLogin(isRegistering: Bool, onVC currentVC: UIViewController) {
-        //Present log in screen
-        let loginVC = LoginViewController(style: .darkOpaque)
-        loginVC.isCancelButtonHidden = false
-        loginVC.isCopyrightLabelHidden = true
-        
-        loginVC.authenticationProvider = AWSCognitoAuthenticationProvider()
-        
-        loginVC.loginSuccessfulHandler = {result in
-            UserDefaults.standard.set(false, forKey: Globals.isSpectatorModeKey)
-            loginVC.dismiss(animated: false, completion: nil)
-            let mainStoryboard = UIStoryboard(name: "Main", bundle: nil)
-            self.window?.rootViewController = mainStoryboard.instantiateViewController(withIdentifier: "teamListMasterVC")
-        }
-        
-        loginVC.setRegistering(isRegistering, animated: false)
-        
-        currentVC.present(loginVC, animated: true, completion: nil)
     }
 
     func applicationWillResignActive(_ application: UIApplication) {
@@ -342,10 +116,76 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         // Saves changes in the application's managed object context before the application terminates.
     }
     
-    func presentViewControllerOnTop(_ viewControllerToPresent: UIViewController, animated flag: Bool, completion: (() -> Void)? = nil) {
-        DispatchQueue.main.async {
-            self.window?.rootViewController?.presentViewControllerFromVisibleViewController(viewControllerToPresent, animated: flag, completion: completion)
+    func application(_ application: UIApplication, continue userActivity: NSUserActivity, restorationHandler: @escaping ([UIUserActivityRestoring]?) -> Void) -> Bool {
+        
+        // 1
+        guard userActivity.activityType == NSUserActivityTypeBrowsingWeb,
+            let url = userActivity.webpageURL,
+            let urlComponents = URLComponents(url: url, resolvingAgainstBaseURL: true) else {
+                return false
         }
+        
+        if let inviteId = urlComponents.queryItems?.first(where: {$0.name == "id"})?.value, let secretCode = urlComponents.queryItems?.first(where: {$0.name == "secretCode"})?.value {
+            let confirmVC = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "confirmJoinScoutingTeam") as! ConfirmJoinScoutingTeamViewController
+            confirmVC.load(forInviteId: inviteId, andCode: secretCode)
+            self.presentViewControllerOnTop(confirmVC, animated: true, completion: nil)
+            return true
+        }
+        
+        return false
+    }
+    
+    func application(_ application: UIApplication, willContinueUserActivityWithType userActivityType: String) -> Bool {
+        return false
+    }
+    
+    private func performAnyStandardMigrations() {
+        //Check if there needs to be a migration to the new user system introduced in FAST version 5
+        let hasMigratedTo5Authentication = "hasMigratedTo5Authentication"
+        if !(UserDefaults.standard.value(forKey: hasMigratedTo5Authentication) as? Bool ?? false) {
+            //Migrate to the new system by logging out the current user and deatuhenticating their tokens
+            
+        }
+    }
+    
+    /// Still works with scenes in iOS 13.
+    /// - Parameters:
+    ///   - viewControllerToPresent: The VC to present on top
+    ///   - sourceView: The associated view from who is calling this view to be presented. Used in iOS 13 and up to decide which scene delegate's window to present it on.
+    ///   - flag: If the presentation should be animated or not.
+    ///   - completion: A completion handler
+    internal func presentViewControllerOnTop(_ viewControllerToPresent: UIViewController, fromView sourceView: UIView? = nil, animated flag: Bool, completion: (() -> Void)? = nil) {
+        if #available(iOS 13.0, *) {
+            let activeSceneDelegate: UISceneDelegate?
+            if let sourceView = sourceView {
+                activeSceneDelegate = sourceView.window?.windowScene?.delegate
+            } else {
+                activeSceneDelegate = UIApplication.shared.connectedScenes.filter({$0.activationState == .foregroundActive}).first?.delegate
+            }
+            (activeSceneDelegate as? SceneDelegate)?.window?.rootViewController?.presentViewControllerFromVisibleViewController(viewControllerToPresent, animated: flag, completion: completion)
+        } else {
+            DispatchQueue.main.async {
+                self.window?.rootViewController?.presentViewControllerFromVisibleViewController(viewControllerToPresent, animated: flag, completion: completion)
+            }
+        }
+    }
+    
+    //MARK: Scene Support
+    @available(iOS 13.0, *)
+    func application(_ application: UIApplication, configurationForConnecting connectingSceneSession: UISceneSession, options: UIScene.ConnectionOptions) -> UISceneConfiguration {
+        let config = UISceneConfiguration(name: "Dynamic", sessionRole: connectingSceneSession.role)
+        config.delegateClass = SceneDelegate.self
+        config.storyboard = UIStoryboard(name: "Main", bundle: nil)
+        return config
+    }
+    
+    @available(iOS 13.0, *)
+    func application(_ application: UIApplication, didDiscardSceneSessions sceneSessions: Set<UISceneSession>) {
+        
+    }
+    
+    func application(_ application: UIApplication, supportedInterfaceOrientationsFor window: UIWindow?) -> UIInterfaceOrientationMask {
+        return supportedInterfaceOrientations
     }
 }
 

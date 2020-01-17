@@ -1,0 +1,1326 @@
+AWSTemplateFormatVersion: 2010-09-09
+Resources:
+  AppSyncAPI:
+    Type: 'AWS::AppSync::GraphQLApi'
+    Properties:
+      AuthenticationType: AMAZON_COGNITO_USER_POOLS
+      LogConfig:
+        CloudWatchLogsRoleArn: 'arn:aws:iam::797353049590:role/FAST-AppSync-MakeLogs'
+        ExcludeVerboseContent: false
+        FieldLogLevel: NONE
+      Name: FAST App Sync API 2
+      Tags: []
+      UserPoolConfig:
+        AwsRegion: us-east-1
+        UserPoolId: us-east-1_z8wzHGNeO
+        DefaultAction: "ALLOW"
+    Metadata:
+      'AWS::CloudFormation::Designer':
+        id: 79ee8c5c-c919-4d0f-91b8-4d7b665068a2
+  AppSyncSchema:
+    Type: 'AWS::AppSync::GraphQLSchema'
+    Properties:
+      ApiId: !GetAtt AppSyncAPI.ApiId
+      DefinitionS3Location: >-
+        ./schema.graphql
+    Metadata:
+      'AWS::CloudFormation::Designer':
+        id: 9826eb5e-9f89-4a15-a614-3649ede94ece
+    DependsOn:
+      - AppSyncAPI
+  SourceEventRankingManagement:
+    Type: 'AWS::AppSync::DataSource'
+    Properties:
+      ApiId: !GetAtt AppSyncAPI.ApiId
+      ServiceRoleArn: arn:aws:iam::797353049590:role/service-role/appsync-ds-lam-nuerz7-eventRankingManageme
+      LambdaConfig:
+        LambdaFunctionArn: >-
+          arn:aws:lambda:us-east-1:797353049590:function:eventRankingManagement:ProductionAPI2
+      Name: EventRankingManagement
+      Type: AWS_LAMBDA
+    Metadata:
+      'AWS::CloudFormation::Designer':
+        id: 30665b18-1c16-4cc1-8ae7-4f71b6b66bd1
+    DependsOn:
+      - AppSyncAPI
+  SourceScoutSessions:
+    Type: 'AWS::AppSync::DataSource'
+    Properties:
+      ApiId: !GetAtt AppSyncAPI.ApiId
+      ServiceRoleArn: arn:aws:iam::797353049590:role/service-role/appsync-ds-lam-nuerz7-listScoutSessions
+      LambdaConfig:
+        LambdaFunctionArn: >-
+          arn:aws:lambda:us-east-1:797353049590:function:listScoutSessions:ProductionAPI2
+      Name: ScoutSessions
+      Type: AWS_LAMBDA
+    Metadata:
+      'AWS::CloudFormation::Designer':
+        id: c64c3e2a-645c-453c-9f8a-f8a29eb7642f
+    DependsOn:
+      - AppSyncAPI
+  SourceStatsUpdater:
+    Type: 'AWS::AppSync::DataSource'
+    Properties:
+      ApiId: !GetAtt AppSyncAPI.ApiId
+      ServiceRoleArn: arn:aws:iam::797353049590:role/service-role/appsync-ds-lam-nuerz7-updateStatistics
+      LambdaConfig:
+        LambdaFunctionArn: >-
+          arn:aws:lambda:us-east-1:797353049590:function:updateStatistics:ProductionAPI2
+      Name: StatsUpdater
+      Type: AWS_LAMBDA
+    Metadata:
+      'AWS::CloudFormation::Designer':
+        id: 582f5066-0cf9-41d3-aca3-e1e5d3d85a3e
+    DependsOn:
+      - AppSyncAPI
+  SourceTBAApiKey:
+    Type: 'AWS::AppSync::DataSource'
+    Properties:
+      ApiId: !GetAtt AppSyncAPI.ApiId
+      ServiceRoleArn: arn:aws:iam::797353049590:role/service-role/appsync-ds-lam-nuerz7-RetrieveTBAKey
+      LambdaConfig:
+        LambdaFunctionArn: >-
+          arn:aws:lambda:us-east-1:797353049590:function:RetrieveTBAKey:Production
+      Name: TBAApiKey
+      Type: AWS_LAMBDA
+    Metadata:
+      'AWS::CloudFormation::Designer':
+        id: 6dd778d5-8507-4d03-94a9-902f189da3bc
+    DependsOn:
+      - AppSyncAPI
+  SourceTBALambda:
+    Type: 'AWS::AppSync::DataSource'
+    Properties:
+      ApiId: !GetAtt AppSyncAPI.ApiId
+      ServiceRoleArn: arn:aws:iam::797353049590:role/service-role/appsync-ds-lam-nuerz7-FAST-TBA-Request-Han
+      LambdaConfig:
+        LambdaFunctionArn: >-
+          arn:aws:lambda:us-east-1:797353049590:function:FAST-TBA-Request-Handler:Production
+      Name: TBALambda
+      Type: AWS_LAMBDA
+    Metadata:
+      'AWS::CloudFormation::Designer':
+        id: 818db899-3f2c-4ad2-bd52-cfee272a41f7
+    DependsOn:
+      - AppSyncAPI
+  SourceFASTTable:
+    Type: 'AWS::AppSync::DataSource'
+    Properties:
+      ApiId: !GetAtt AppSyncAPI.ApiId
+      DynamoDBConfig:
+        AwsRegion: us-east-1
+        TableName: FASTTable
+        UseCallerCredentials: false
+        Versioned: false
+      Name: FASTTable
+      ServiceRoleArn: >-
+        arn:aws:iam::797353049590:role/service-role/appsync-ds-ddb-nuerz7-FASTTable
+      Type: AMAZON_DYNAMODB
+    Metadata:
+      'AWS::CloudFormation::Designer':
+        id: f2456b96-4959-4209-8b39-1d3c6a52a0a4
+    DependsOn:
+      - AppSyncAPI
+
+  IAMAppSyncToFASTTeamsRole:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument: |
+        {
+          "Version": "2012-10-17",
+          "Statement": [
+            {
+              "Effect": "Allow",
+              "Principal": {
+                "Service": [
+                  "appsync.amazonaws.com"
+                ]
+              },
+              "Action": "sts:AssumeRole"
+            }
+          ]
+        }
+      Policies:
+        - PolicyDocument: |
+            {
+              "Version": "2012-10-17",
+              "Statement": [
+                {
+                  "Effect": "Allow",
+                  "Action": [
+                      "dynamodb:DeleteItem",
+                      "dynamodb:GetItem",
+                      "dynamodb:PutItem",
+                      "dynamodb:Query",
+                      "dynamodb:Scan",
+                      "dynamodb:UpdateItem",
+                      "dynamodb:BatchGetitem",
+                      "dynamodb:BatchWriteItem",
+                      "dynamodb:BatchDeleteItem"
+                  ],
+                  "Resource": [
+                      "arn:aws:dynamodb:us-east-1:797353049590:table/FASTTeams",
+                      "arn:aws:dynamodb:us-east-1:797353049590:table/FASTTeams/*"
+                  ]
+                }
+              ]
+            }
+          PolicyName: AccessFASTScoutingTeams
+      RoleName: FAST-AppSync2ScoutingTeamsAccess
+      Tags:
+        - Key: App
+          Value: FAST
+
+  SourceFASTTeams:
+    Type: 'AWS::AppSync::DataSource'
+    Properties:
+      ApiId: !GetAtt AppSyncAPI.ApiId
+      DynamoDBConfig:
+        AwsRegion: us-east-1
+        TableName: FASTTeams
+        UseCallerCredentials: false
+        Versioned: false
+      Name: FASTTeams
+      ServiceRoleArn: !GetAtt IAMAppSyncToFASTTeamsRole.Arn
+      Type: AMAZON_DYNAMODB
+    DependsOn:
+      - AppSyncAPI
+
+  IAMAppSyncToFASTTeamInvitesRole:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument: |
+        {
+          "Version": "2012-10-17",
+          "Statement": [
+            {
+              "Effect": "Allow",
+              "Principal": {
+                "Service": [
+                  "appsync.amazonaws.com"
+                ]
+              },
+              "Action": "sts:AssumeRole"
+            }
+          ]
+        }
+      ManagedPolicyArns:
+        - arn:aws:iam::797353049590:policy/FAST-ManageScoutingTeamInvites
+      RoleName: FAST-AppSync2ScoutingTeamInvites
+
+  SourceFASTTeamInvites:
+    Type: AWS::AppSync::DataSource
+    Properties:
+      Name: FASTTeamInvites
+      ApiId: !GetAtt AppSyncAPI.ApiId
+      Type: AMAZON_DYNAMODB
+      DynamoDBConfig:
+        AwsRegion: us-east-1
+        TableName: FASTTeamInvites
+        UseCallerCredentials: false
+        Versioned: false
+      ServiceRoleArn: !GetAtt IAMAppSyncToFASTTeamInvitesRole.Arn
+
+  IAMAppSyncToLambdaFunctions:
+    Type: AWS::IAM::Role
+    Properties: 
+      AssumeRolePolicyDocument: |
+        {
+          "Version": "2012-10-17",
+          "Statement": [
+            {
+              "Effect": "Allow",
+              "Principal": {
+                "Service": [
+                  "appsync.amazonaws.com"
+                ]
+              },
+              "Action": "sts:AssumeRole"
+            }
+          ]
+        }
+      Description: Allows AppSync to execute the FAST lambda functions
+      Policies: 
+        - PolicyDocument: 
+            Version: 2012-10-17
+            Statement:
+              - Effect: Allow
+                Action:
+                  - "lambda:InvokeFunction"
+                Resource: arn:aws:lambda:us-east-1:797353049590:function:FAST-makeScoutTeamInvitation:*
+          PolicyName: AllowMakeScoutTeamInvitesInvocation
+        - PolicyDocument: 
+            Version: 2012-10-17
+            Statement:
+              - Effect: Allow
+                Action:
+                  - "lambda:InvokeFunction"
+                Resource: arn:aws:lambda:us-east-1:797353049590:function:getCompetitionModel:*
+          PolicyName: AllowGetCompetitionModel
+      RoleName: FASTAppSyncToLambdaFunctions
+
+  SourceLambdaMakeInvitations:
+    Type: AWS::AppSync::DataSource
+    Properties:
+      Name: LambdaInviteMaker
+      ApiId: !GetAtt AppSyncAPI.ApiId
+      Type: AWS_LAMBDA
+      LambdaConfig:
+        LambdaFunctionArn: arn:aws:lambda:us-east-1:797353049590:function:FAST-makeScoutTeamInvitation:Production
+      ServiceRoleArn: !GetAtt IAMAppSyncToLambdaFunctions.Arn
+  SourceLambdaGetCompetitionModel:
+    Type: AWS::AppSync::DataSource
+    Properties:
+      Name: LambdaGetCompetitionModel
+      ApiId: !GetAtt AppSyncAPI.ApiId
+      Type: AWS_LAMBDA
+      LambdaConfig:
+        LambdaFunctionArn: arn:aws:lambda:us-east-1:797353049590:function:getCompetitionModel:ProductionAPI2
+      ServiceRoleArn: !GetAtt IAMAppSyncToLambdaFunctions.Arn
+
+  SourceNone:
+    Type: 'AWS::AppSync::DataSource'
+    Properties:
+      ApiId: !GetAtt AppSyncAPI.ApiId
+      Name: None
+      Type: NONE
+    Metadata:
+      'AWS::CloudFormation::Designer':
+        id: 289c27ae-f6f9-466f-9178-d759f183065f
+    DependsOn:
+      - AppSyncAPI
+  SourceTheBlueAllianceHTTP:
+    Type: 'AWS::AppSync::DataSource'
+    Properties:
+      ApiId: !GetAtt AppSyncAPI.ApiId
+      HttpConfig:
+        Endpoint: 'https://www.thebluealliance.com'
+      Name: TheBlueAllianceHTTP
+      Type: HTTP
+    Metadata:
+      'AWS::CloudFormation::Designer':
+        id: 498c3101-f50d-4d07-9089-89280e24fd9c
+    DependsOn:
+      - AppSyncAPI
+
+  # FUNCTIONS
+  FuncCheckEventExistence:
+    Type: AWS::AppSync::FunctionConfiguration
+    Properties:
+      ApiId: !GetAtt AppSyncAPI.ApiId
+      DataSourceName: !GetAtt SourceFASTTable.Name
+      FunctionVersion: 2018-05-29
+      Name: CheckExistenceOfEvent
+      RequestMappingTemplateS3Location: ./Functions/CheckEventExistenceRequest
+      ResponseMappingTemplateS3Location: ./Functions/CheckEventExistenceResponse
+  FuncCreateEventRanking:
+    Type: AWS::AppSync::FunctionConfiguration
+    Properties:
+      ApiId: !GetAtt AppSyncAPI.ApiId
+      DataSourceName: !GetAtt SourceEventRankingManagement.Name
+      FunctionVersion: 2018-05-29
+      Name: CreateEventRanking
+      RequestMappingTemplateS3Location: ./Functions/EventRankingManagementRequest
+      ResponseMappingTemplateS3Location: ./Functions/EventRankingManagementResponse
+  FuncCreateScoutSession:
+    Type: AWS::AppSync::FunctionConfiguration
+    Properties:
+      ApiId: !GetAtt AppSyncAPI.ApiId
+      DataSourceName: !GetAtt SourceFASTTable.Name
+      FunctionVersion: 2018-05-29
+      Name: CreateScoutSession
+      RequestMappingTemplateS3Location: ./Functions/CreateScoutSessionRequest
+      ResponseMappingTemplateS3Location: ./Functions/CreateScoutSessionResponse
+  FuncGetAllEvents:
+    Type: AWS::AppSync::FunctionConfiguration
+    Properties:
+      ApiId: !GetAtt AppSyncAPI.ApiId
+      DataSourceName: !GetAtt SourceTheBlueAllianceHTTP.Name
+      FunctionVersion: 2018-05-29
+      Name: GetAllEvents
+      RequestMappingTemplateS3Location: ./Functions/GetAllEventsRequest
+      ResponseMappingTemplateS3Location: ./Functions/GetAllEventsResponse
+  FuncGetSimpleEvent:
+    Type: AWS::AppSync::FunctionConfiguration
+    Properties:
+      ApiId: !GetAtt AppSyncAPI.ApiId
+      DataSourceName: !GetAtt SourceTBALambda.Name
+      FunctionVersion: 2018-05-29
+      Name: GetSimpleEvent
+      RequestMappingTemplateS3Location: ./Functions/GetSimpleEventRequest
+      ResponseMappingTemplateS3Location: ./Functions/GetSimpleEventResponse
+  FuncGetTeamsInEvent:
+    Type: AWS::AppSync::FunctionConfiguration
+    Properties:
+      ApiId: !GetAtt AppSyncAPI.ApiId
+      DataSourceName: !GetAtt SourceTBALambda.Name
+      FunctionVersion: 2018-05-29
+      Name: GetTeamsInEvent
+      RequestMappingTemplateS3Location: ./Functions/GetTeamsInEventRequest
+      ResponseMappingTemplateS3Location: ./Functions/GetTeamsInEventResponse
+  FuncAddTeamComment:
+    Type: AWS::AppSync::FunctionConfiguration
+    Properties:
+      ApiId: !GetAtt AppSyncAPI.ApiId
+      DataSourceName: !GetAtt SourceFASTTable.Name
+      FunctionVersion: 2018-05-29
+      Name: AddTeamComment
+      RequestMappingTemplateS3Location: ./Functions/AddTeamCommentRequest
+      ResponseMappingTemplateS3Location: ./Functions/AddTeamCommentResponse
+  FuncStashTBAKey:
+    Type: AWS::AppSync::FunctionConfiguration
+    Properties:
+      ApiId: !GetAtt AppSyncAPI.ApiId
+      DataSourceName: !GetAtt SourceTBAApiKey.Name
+      FunctionVersion: 2018-05-29
+      Name: StashTBAKey
+      RequestMappingTemplateS3Location: ./Functions/StashTBAKeyRequest
+      ResponseMappingTemplateS3Location: ./Functions/StashTBAKeyResponse
+  FuncUpdateScoutSessionStats:
+    Type: AWS::AppSync::FunctionConfiguration
+    Properties:
+      ApiId: !GetAtt AppSyncAPI.ApiId
+      DataSourceName: !GetAtt SourceStatsUpdater.Name
+      FunctionVersion: 2018-05-29
+      Name: UpdateScoutSessionStats
+      RequestMappingTemplateS3Location: ./Functions/UpdateScoutSessionStatsRequest
+      ResponseMappingTemplateS3Location: ./Functions/UpdateScoutSessionStatsResponse
+  FuncAuthenticate:
+    Type: AWS::AppSync::FunctionConfiguration
+    Properties:
+      ApiId: !GetAtt AppSyncAPI.ApiId
+      DataSourceName: !GetAtt SourceFASTTeams.Name
+      Description: This is to authenticate users whenever they try to access shared team resources. If they are not a member of the team they are trying to access, then deny them.
+      FunctionVersion: 2018-05-29
+      Name: Authenticate
+      RequestMappingTemplateS3Location: ./Functions/AuthenticateRequest
+      ResponseMappingTemplateS3Location: ./Functions/AuthenticateResponse
+  FuncMakeScoutTeamInvitation:
+    Type: AWS::AppSync::FunctionConfiguration
+    Properties:
+      ApiId: !GetAtt AppSyncAPI.ApiId
+      DataSourceName: !GetAtt SourceLambdaMakeInvitations.Name
+      FunctionVersion: 2018-05-29
+      Name: MakeScoutTeamInvitation
+      RequestMappingTemplateS3Location: ./Functions/MakeScoutTeamInvitationRequest
+      ResponseMappingTemplateS3Location: ./Functions/MakeScoutTeamInvitationResponse
+
+  # Resolvers for The Blue Alliance Universal Data
+  ResolverListAvailableEvents:
+    Type: AWS::AppSync::Resolver
+    Properties:
+      ApiId: !GetAtt AppSyncAPI.ApiId
+      FieldName: listAvailableEvents
+      Kind: PIPELINE
+      PipelineConfig:
+        Functions:
+          - !GetAtt FuncStashTBAKey.FunctionId
+          - !GetAtt FuncGetAllEvents.FunctionId
+      RequestMappingTemplateS3Location: ./Functions/PipelineStandardBeforeRequest
+      ResponseMappingTemplateS3Location: ./Functions/PipelineStandardAfterResponse
+      TypeName: Query
+    # DependsOn:
+    #   - FuncStashTBAKey
+    #   - FuncGetAllEvents
+  ResolverGetEvent:
+    Type: AWS::AppSync::Resolver
+    Properties:
+      ApiId: !GetAtt AppSyncAPI.ApiId
+      FieldName: getEvent
+      Kind: UNIT
+      DataSourceName: !GetAtt SourceTBALambda.Name
+      RequestMappingTemplateS3Location: ./Functions/GetEventRequest
+      ResponseMappingTemplateS3Location: ./Functions/GetEventResponse
+      TypeName: Query
+  ResolverListTeams:
+    Type: AWS::AppSync::Resolver
+    Properties:
+      ApiId: !GetAtt AppSyncAPI.ApiId
+      FieldName: listTeams
+      Kind: UNIT
+      DataSourceName: !GetAtt SourceTBALambda.Name
+      RequestMappingTemplateS3Location: ./Functions/ListTeamsRequest
+      ResponseMappingTemplateS3Location: ./Functions/ListTeamsResponse
+      TypeName: Query
+  ResolverGetTeam:
+    Type: AWS::AppSync::Resolver
+    Properties:
+      ApiId: !GetAtt AppSyncAPI.ApiId
+      FieldName: getTeam
+      Kind: UNIT
+      DataSourceName: !GetAtt SourceTBALambda.Name
+      RequestMappingTemplateS3Location: ./Functions/GetTeamRequest
+      ResponseMappingTemplateS3Location: ./Functions/GetTeamResponse
+      TypeName: Query
+  ResolverListMatches:
+    Type: AWS::AppSync::Resolver
+    Properties:
+      ApiId: !GetAtt AppSyncAPI.ApiId
+      FieldName: listMatches
+      Kind: UNIT
+      DataSourceName: !GetAtt SourceTBALambda.Name
+      RequestMappingTemplateS3Location: ./Functions/ListMatchesRequest
+      ResponseMappingTemplateS3Location: ./Functions/ListMatchesResponse
+      TypeName: Query
+  ResolverGetMatch:
+    Type: AWS::AppSync::Resolver
+    Properties:
+      ApiId: !GetAtt AppSyncAPI.ApiId
+      FieldName: getMatch
+      Kind: UNIT
+      DataSourceName: !GetAtt SourceTBALambda.Name
+      RequestMappingTemplateS3Location: ./Functions/GetMatchRequest
+      ResponseMappingTemplateS3Location: ./Functions/GetMatchResponse
+      TypeName: Query
+  ResolverListEventOprs:
+    Type: AWS::AppSync::Resolver
+    Properties:
+      ApiId: !GetAtt AppSyncAPI.ApiId
+      FieldName: listEventOprs
+      Kind: UNIT
+      DataSourceName: !GetAtt SourceTBALambda.Name
+      RequestMappingTemplateS3Location: ./Functions/ListEventOprsRequest
+      ResponseMappingTemplateS3Location: ./Functions/ListEventOprsResponse
+      TypeName: Query
+  ResolverListTeamEventStatuses:
+    Type: AWS::AppSync::Resolver
+    Properties:
+      ApiId: !GetAtt AppSyncAPI.ApiId
+      FieldName: listTeamEventStatuses
+      Kind: UNIT
+      DataSourceName: !GetAtt SourceTBALambda.Name
+      RequestMappingTemplateS3Location: ./Functions/ListTeamEventStatusesRequest
+      ResponseMappingTemplateS3Location: ./Functions/ListTeamEventStatusesResponse
+      TypeName: Query
+
+  # Resolvers and functions for scouted team data calls
+  # QUERIES
+  FuncListTrackedEvents:
+    Type: AWS::AppSync::FunctionConfiguration
+    Properties:
+      ApiId: !GetAtt AppSyncAPI.ApiId
+      DataSourceName: !GetAtt SourceFASTTable.Name
+      FunctionVersion: 2018-05-29
+      Name: ListTrackedEvents
+      RequestMappingTemplateS3Location: ./Functions/ListTrackedEventsRequest
+      ResponseMappingTemplateS3Location: ./Functions/ListTrackedEventsResponse
+  ResolverListTrackedEvents:
+    Type: AWS::AppSync::Resolver
+    Properties:
+      ApiId: !GetAtt AppSyncAPI.ApiId
+      FieldName: listTrackedEvents
+      Kind: PIPELINE
+      PipelineConfig:
+        Functions:
+          - !GetAtt FuncAuthenticate.FunctionId
+          - !GetAtt FuncListTrackedEvents.FunctionId
+      RequestMappingTemplateS3Location: ./Functions/PipelineStandardBeforeRequest
+      ResponseMappingTemplateS3Location: ./Functions/PipelineStandardAfterResponse
+      TypeName: Query
+
+  FuncGetEventRanking:
+    Type: AWS::AppSync::FunctionConfiguration
+    Properties:
+      ApiId: !GetAtt AppSyncAPI.ApiId
+      DataSourceName: !GetAtt SourceFASTTable.Name
+      FunctionVersion: 2018-05-29
+      Name: GetEventRanking
+      RequestMappingTemplateS3Location: ./Functions/GetEventRankingRequest
+      ResponseMappingTemplateS3Location: ./Functions/GetEventRankingResponse
+  ResolverGetEventRanking:
+    Type: AWS::AppSync::Resolver
+    Properties:
+      ApiId: !GetAtt AppSyncAPI.ApiId
+      FieldName: getEventRanking
+      Kind: PIPELINE
+      PipelineConfig:
+        Functions:
+          - !GetAtt FuncAuthenticate.FunctionId
+          - !GetAtt FuncGetEventRanking.FunctionId
+      RequestMappingTemplateS3Location: ./Functions/PipelineStandardBeforeRequest
+      ResponseMappingTemplateS3Location: ./Functions/PipelineStandardAfterResponse
+      TypeName: Query
+
+  FuncListScoutedTeams:
+    Type: AWS::AppSync::FunctionConfiguration
+    Properties:
+      ApiId: !GetAtt AppSyncAPI.ApiId
+      DataSourceName: !GetAtt SourceFASTTable.Name
+      FunctionVersion: 2018-05-29
+      Name: ListScoutedTeams
+      RequestMappingTemplateS3Location: ./Functions/ListScoutedTeamsRequest
+      ResponseMappingTemplateS3Location: ./Functions/ListScoutedTeamsResponse
+  ResolverListScoutedTeams:
+    Type: AWS::AppSync::Resolver
+    Properties:
+      ApiId: !GetAtt AppSyncAPI.ApiId
+      FieldName: listScoutedTeams
+      Kind: PIPELINE
+      PipelineConfig:
+        Functions:
+          - !GetAtt FuncAuthenticate.FunctionId
+          - !GetAtt FuncListScoutedTeams.FunctionId
+      RequestMappingTemplateS3Location: ./Functions/PipelineStandardBeforeRequest
+      ResponseMappingTemplateS3Location: ./Functions/PipelineStandardAfterResponse
+      TypeName: Query
+
+  FuncGetScoutedTeam:
+    Type: AWS::AppSync::FunctionConfiguration
+    Properties:
+      ApiId: !GetAtt AppSyncAPI.ApiId
+      DataSourceName: !GetAtt SourceFASTTable.Name
+      FunctionVersion: 2018-05-29
+      Name: GetScoutedTeam
+      RequestMappingTemplateS3Location: ./Functions/GetScoutedTeamRequest
+      ResponseMappingTemplateS3Location: ./Functions/GetScoutedTeamResponse
+  ResolverGetScoutedTeam:
+    Type: AWS::AppSync::Resolver
+    Properties:
+      ApiId: !GetAtt AppSyncAPI.ApiId
+      FieldName: getScoutedTeam
+      Kind: PIPELINE
+      PipelineConfig:
+        Functions:
+          - !GetAtt FuncAuthenticate.FunctionId
+          - !GetAtt FuncGetScoutedTeam.FunctionId
+      RequestMappingTemplateS3Location: ./Functions/PipelineStandardBeforeRequest
+      ResponseMappingTemplateS3Location: ./Functions/PipelineStandardAfterResponse
+      TypeName: Query
+
+  FuncListTeamComments:
+    Type: AWS::AppSync::FunctionConfiguration
+    Properties:
+      ApiId: !GetAtt AppSyncAPI.ApiId
+      DataSourceName: !GetAtt SourceFASTTable.Name
+      FunctionVersion: 2018-05-29
+      Name: ListTeamComments
+      RequestMappingTemplateS3Location: ./Functions/ListTeamCommentsRequest
+      ResponseMappingTemplateS3Location: ./Functions/ListTeamCommentsResponse
+  ResolverListTeamComments:
+    Type: AWS::AppSync::Resolver
+    Properties:
+      ApiId: !GetAtt AppSyncAPI.ApiId
+      FieldName: listTeamComments
+      Kind: PIPELINE
+      PipelineConfig:
+        Functions:
+          - !GetAtt FuncAuthenticate.FunctionId
+          - !GetAtt FuncListTeamComments.FunctionId
+      RequestMappingTemplateS3Location: ./Functions/PipelineStandardBeforeRequest
+      ResponseMappingTemplateS3Location: ./Functions/PipelineStandardAfterResponse
+      TypeName: Query
+
+  FuncListScoutSessions:
+    Type: AWS::AppSync::FunctionConfiguration
+    Properties:
+      ApiId: !GetAtt AppSyncAPI.ApiId
+      DataSourceName: !GetAtt SourceFASTTable.Name
+      FunctionVersion: 2018-05-29
+      Name: ListScoutSessions
+      RequestMappingTemplateS3Location: ./Functions/ListScoutSessionsRequest
+      ResponseMappingTemplateS3Location: ./Functions/ListScoutSessionsResponse
+  ResolverListScoutSessions:
+    Type: AWS::AppSync::Resolver
+    Properties:
+      ApiId: !GetAtt AppSyncAPI.ApiId
+      FieldName: listScoutSessions
+      Kind: PIPELINE
+      PipelineConfig:
+        Functions:
+          - !GetAtt FuncAuthenticate.FunctionId
+          - !GetAtt FuncListScoutSessions.FunctionId
+      RequestMappingTemplateS3Location: ./Functions/PipelineStandardBeforeRequest
+      ResponseMappingTemplateS3Location: ./Functions/PipelineStandardAfterResponse
+      TypeName: Query
+
+  FuncGetScoutSession:
+    Type: AWS::AppSync::FunctionConfiguration
+    Properties:
+      ApiId: !GetAtt AppSyncAPI.ApiId
+      DataSourceName: !GetAtt SourceFASTTable.Name
+      FunctionVersion: 2018-05-29
+      Name: GetScoutSession
+      RequestMappingTemplateS3Location: ./Functions/GetScoutSessionRequest
+      ResponseMappingTemplateS3Location: ./Functions/GetScoutSessionResponse
+  ResolverGetScoutSession:
+    Type: AWS::AppSync::Resolver
+    Properties:
+      ApiId: !GetAtt AppSyncAPI.ApiId
+      FieldName: getScoutSession
+      Kind: PIPELINE
+      PipelineConfig:
+        Functions:
+          - !GetAtt FuncAuthenticate.FunctionId
+          - !GetAtt FuncGetScoutSession.FunctionId
+      RequestMappingTemplateS3Location: ./Functions/PipelineStandardBeforeRequest
+      ResponseMappingTemplateS3Location: ./Functions/PipelineStandardAfterResponse
+      TypeName: Query
+
+  FuncListAllScoutSessions:
+    Type: AWS::AppSync::FunctionConfiguration
+    Properties:
+      ApiId: !GetAtt AppSyncAPI.ApiId
+      DataSourceName: !GetAtt SourceScoutSessions.Name
+      FunctionVersion: 2018-05-29
+      Name: ListAllScoutSessions
+      RequestMappingTemplateS3Location: ./Functions/ListAllScoutSessionsRequest
+      ResponseMappingTemplateS3Location: ./Functions/ListAllScoutSessionsResponse
+  ResolverListAllScoutSessions:
+    Type: AWS::AppSync::Resolver
+    Properties:
+      ApiId: !GetAtt AppSyncAPI.ApiId
+      FieldName: listAllScoutSessions
+      Kind: PIPELINE
+      PipelineConfig:
+        Functions:
+          - !GetAtt FuncAuthenticate.FunctionId
+          - !GetAtt FuncListAllScoutSessions.FunctionId
+      RequestMappingTemplateS3Location: ./Functions/PipelineStandardBeforeRequest
+      ResponseMappingTemplateS3Location: ./Functions/PipelineStandardAfterResponse
+      TypeName: Query
+
+  FuncListScoutSessionsDelta:
+    Type: AWS::AppSync::FunctionConfiguration
+    Properties:
+      ApiId: !GetAtt AppSyncAPI.ApiId
+      DataSourceName: !GetAtt SourceFASTTable.Name
+      FunctionVersion: 2018-05-29
+      Name: ListScoutSessionsDelta
+      RequestMappingTemplateS3Location: ./Functions/ListScoutSessionsDeltaRequest
+      ResponseMappingTemplateS3Location: ./Functions/ListScoutSessionsDeltaResponse
+  ResolverListScoutSessionsDelta:
+    Type: AWS::AppSync::Resolver
+    Properties:
+      ApiId: !GetAtt AppSyncAPI.ApiId
+      FieldName: listScoutSessionsDelta
+      Kind: PIPELINE
+      PipelineConfig:
+        Functions:
+          - !GetAtt FuncAuthenticate.FunctionId
+          - !GetAtt FuncListScoutSessionsDelta.FunctionId
+      RequestMappingTemplateS3Location: ./Functions/PipelineStandardBeforeRequest
+      ResponseMappingTemplateS3Location: ./Functions/PipelineStandardAfterResponse
+      TypeName: Query
+
+  FuncListEnrolledScoutingTeamsGetIds:
+    Type: AWS::AppSync::FunctionConfiguration
+    Properties:
+      ApiId: !GetAtt AppSyncAPI.ApiId
+      DataSourceName: !GetAtt SourceFASTTeams.Name
+      FunctionVersion: 2018-05-29
+      Name: ListEnrolledScoutingTeamsGetIds
+      RequestMappingTemplateS3Location: ./Functions/ListEnrolledScoutingTeamsGetIdsRequest
+      ResponseMappingTemplateS3Location: ./Functions/ListEnrolledScoutingTeamsGetIdsResponse
+  FuncListEnrolledScoutingTeams:
+    Type: AWS::AppSync::FunctionConfiguration
+    Properties:
+      ApiId: !GetAtt AppSyncAPI.ApiId
+      DataSourceName: !GetAtt SourceFASTTeams.Name
+      FunctionVersion: 2018-05-29
+      Name: ListEnrolledScoutingTeams
+      RequestMappingTemplateS3Location: ./Functions/ListEnrolledScoutingTeamsRequest
+      ResponseMappingTemplateS3Location: ./Functions/ListEnrolledScoutingTeamsResponse
+  ResolverListEnrolledScoutingTeams:
+    Type: AWS::AppSync::Resolver
+    Properties:
+      ApiId: !GetAtt AppSyncAPI.ApiId
+      FieldName: listEnrolledScoutingTeams
+      TypeName: Query
+      Kind: PIPELINE
+      PipelineConfig:
+        Functions:
+          - !GetAtt FuncListEnrolledScoutingTeamsGetIds.FunctionId
+          - !GetAtt FuncListEnrolledScoutingTeams.FunctionId
+      RequestMappingTemplateS3Location: ./Functions/PipelineStandardBeforeRequest
+      ResponseMappingTemplateS3Location: ./Functions/PipelineStandardAfterResponse
+    DependsOn:
+      - AppSyncSchema
+
+  FuncGetScoutingTeam:
+    Type: AWS::AppSync::FunctionConfiguration
+    Properties:
+      ApiId: !GetAtt AppSyncAPI.ApiId
+      DataSourceName: !GetAtt SourceFASTTeams.Name
+      FunctionVersion: 2018-05-29
+      Name: GetScoutingTeam
+      RequestMappingTemplateS3Location: ./Functions/GetScoutingTeamRequest
+      ResponseMappingTemplateS3Location: ./Functions/GetScoutingTeamResponse
+  ResolverGetScoutingTeam:
+    Type: AWS::AppSync::Resolver
+    Properties:
+      ApiId: !GetAtt AppSyncAPI.ApiId
+      FieldName: getScoutingTeam
+      TypeName: Query
+      Kind: PIPELINE
+      PipelineConfig:
+        Functions:
+          - !GetAtt FuncAuthenticate.FunctionId
+          - !GetAtt FuncGetScoutingTeam.FunctionId
+      RequestMappingTemplateS3Location: ./Functions/PipelineStandardBeforeRequest
+      ResponseMappingTemplateS3Location: ./Functions/PipelineStandardAfterResponse
+    DependsOn:
+      - AppSyncSchema
+
+  FuncGetScoutingTeamPublicNameCheckInvite:
+    Type: AWS::AppSync::FunctionConfiguration
+    Properties:
+      ApiId: !GetAtt AppSyncAPI.ApiId
+      DataSourceName: !GetAtt SourceFASTTeamInvites.Name
+      FunctionVersion: 2018-05-29
+      Name: GetScoutingTeamPublicNameCheckInvite
+      RequestMappingTemplateS3Location: ./Functions/GetScoutingTeamPublicNameCheckInviteRequest
+      ResponseMappingTemplateS3Location: ./Functions/GetScoutingTeamPublicNameCheckInviteResponse
+  FuncGetScoutingTeamPublicName:
+    Type: AWS::AppSync::FunctionConfiguration
+    Properties:
+      ApiId: !GetAtt AppSyncAPI.ApiId
+      DataSourceName: !GetAtt SourceFASTTeams.Name
+      FunctionVersion: 2018-05-29
+      Name: GetScoutingTeamPublicName
+      RequestMappingTemplateS3Location: ./Functions/GetScoutingTeamPublicNameRequest
+      ResponseMappingTemplateS3Location: ./Functions/GetScoutingTeamPublicNameResponse
+  ResolverGetScoutingTeamPublicName:
+    Type: AWS::AppSync::Resolver
+    Properties:
+      ApiId: !GetAtt AppSyncAPI.ApiId
+      FieldName: getScoutingTeamPublicName
+      TypeName: Query
+      Kind: PIPELINE
+      PipelineConfig:
+        Functions:
+          - !GetAtt FuncGetScoutingTeamPublicNameCheckInvite.FunctionId
+          - !GetAtt FuncGetScoutingTeamPublicName.FunctionId
+      RequestMappingTemplateS3Location: ./Functions/PipelineStandardBeforeRequest
+      ResponseMappingTemplateS3Location: ./Functions/PipelineStandardAfterResponse
+    DependsOn:
+      - AppSyncSchema
+
+  FuncListScoutingTeamInvitations:
+    Type: AWS::AppSync::FunctionConfiguration
+    Properties:
+      ApiId: !GetAtt AppSyncAPI.ApiId
+      DataSourceName: !GetAtt SourceFASTTeamInvites.Name
+      FunctionVersion: 2018-05-29
+      Name: ListScoutingTeamInvitations
+      RequestMappingTemplateS3Location: ./Functions/ListScoutingTeamInvitationsRequest
+      ResponseMappingTemplateS3Location: ./Functions/ListScoutingTeamInvitationsResponse
+  ResolverListScoutingTeamInvitations:
+    Type: AWS::AppSync::Resolver
+    Properties:
+      ApiId: !GetAtt AppSyncAPI.ApiId
+      FieldName: listScoutingTeamInvitations
+      TypeName: Query
+      Kind: PIPELINE
+      PipelineConfig:
+        Functions:
+          - !GetAtt FuncAuthenticate.FunctionId
+          - !GetAtt FuncListScoutingTeamInvitations.FunctionId
+      RequestMappingTemplateS3Location: ./Functions/PipelineStandardBeforeRequest
+      ResponseMappingTemplateS3Location: ./Functions/PipelineStandardAfterResponse
+    DependsOn:
+      - AppSyncSchema
+  ResolverGetCompetitionModel:
+    Type: AWS::AppSync::Resolver
+    Properties:
+      ApiId: !GetAtt AppSyncAPI.ApiId
+      FieldName: getCompetitionModel
+      Kind: UNIT
+      DataSourceName: !GetAtt SourceLambdaGetCompetitionModel.Name
+      RequestMappingTemplateS3Location: ./Functions/GetCompetitionModelRequest
+      ResponseMappingTemplateS3Location: ./Functions/GetCompetitionModelResponse
+      TypeName: Query
+    DependsOn:
+      - AppSyncSchema
+
+
+
+  ######################################################################
+  ######################################################################
+
+  # MUTATIONS
+  ResolverAddTrackedEvent:
+    Type: AWS::AppSync::Resolver
+    Properties:
+      ApiId: !GetAtt AppSyncAPI.ApiId
+      FieldName: addTrackedEvent
+      Kind: PIPELINE
+      PipelineConfig:
+        Functions:
+          - !GetAtt FuncAuthenticate.FunctionId
+          - !GetAtt FuncGetSimpleEvent.FunctionId
+          - !GetAtt FuncGetTeamsInEvent.FunctionId
+          - !GetAtt FuncCreateEventRanking.FunctionId
+      RequestMappingTemplateS3Location: ./Functions/PipelineStandardBeforeRequest
+      ResponseMappingTemplateS3Location: ./Functions/PipelineStandardAfterResponse
+      TypeName: Mutation
+
+  FuncRemoveTrackedEvent:
+    Type: AWS::AppSync::FunctionConfiguration
+    Properties:
+      ApiId: !GetAtt AppSyncAPI.ApiId
+      DataSourceName: !GetAtt SourceEventRankingManagement.Name
+      FunctionVersion: 2018-05-29
+      Name: RemoveTrackedEvent
+      RequestMappingTemplateS3Location: ./Functions/RemoveTrackedEventRequest
+      ResponseMappingTemplateS3Location: ./Functions/RemoveTrackedEventResponse
+  ResolverRemoveTrackedEvent:
+    Type: AWS::AppSync::Resolver
+    Properties:
+      ApiId: !GetAtt AppSyncAPI.ApiId
+      FieldName: removeTrackedEvent
+      Kind: PIPELINE
+      PipelineConfig:
+        Functions:
+          - !GetAtt FuncAuthenticate.FunctionId
+          - !GetAtt FuncRemoveTrackedEvent.FunctionId
+      RequestMappingTemplateS3Location: ./Functions/PipelineStandardBeforeRequest
+      ResponseMappingTemplateS3Location: ./Functions/PipelineStandardAfterResponse
+      TypeName: Mutation
+
+  FuncMoveRankedTeam:
+    Type: AWS::AppSync::FunctionConfiguration
+    Properties:
+      ApiId: !GetAtt AppSyncAPI.ApiId
+      DataSourceName: !GetAtt SourceEventRankingManagement.Name
+      FunctionVersion: 2018-05-29
+      Name: MoveRankedTeam
+      RequestMappingTemplateS3Location: ./Functions/MoveRankedTeamRequest
+      ResponseMappingTemplateS3Location: ./Functions/MoveRankedTeamResponse
+  ResolverMoveRankedTeam:
+    Type: AWS::AppSync::Resolver
+    Properties:
+      ApiId: !GetAtt AppSyncAPI.ApiId
+      FieldName: moveRankedTeam
+      Kind: PIPELINE
+      PipelineConfig:
+        Functions:
+          - !GetAtt FuncAuthenticate.FunctionId
+          - !GetAtt FuncMoveRankedTeam.FunctionId
+      RequestMappingTemplateS3Location: ./Functions/PipelineStandardBeforeRequest
+      ResponseMappingTemplateS3Location: ./Functions/PipelineStandardAfterResponse
+      TypeName: Mutation
+
+  FuncSetTeamPicked:
+    Type: AWS::AppSync::FunctionConfiguration
+    Properties:
+      ApiId: !GetAtt AppSyncAPI.ApiId
+      DataSourceName: !GetAtt SourceEventRankingManagement.Name
+      FunctionVersion: 2018-05-29
+      Name: SetTeamPicked
+      RequestMappingTemplateS3Location: ./Functions/SetTeamPickedRequest
+      ResponseMappingTemplateS3Location: ./Functions/SetTeamPickedResponse
+  ResolverSetTeamPicked:
+    Type: AWS::AppSync::Resolver
+    Properties:
+      ApiId: !GetAtt AppSyncAPI.ApiId
+      FieldName: setTeamPicked
+      Kind: PIPELINE
+      PipelineConfig:
+        Functions:
+          - !GetAtt FuncAuthenticate.FunctionId
+          - !GetAtt FuncSetTeamPicked.FunctionId
+      RequestMappingTemplateS3Location: ./Functions/PipelineStandardBeforeRequest
+      ResponseMappingTemplateS3Location: ./Functions/PipelineStandardAfterResponse
+      TypeName: Mutation
+
+  FuncUpdateScoutedTeam:
+    Type: AWS::AppSync::FunctionConfiguration
+    Properties:
+      ApiId: !GetAtt AppSyncAPI.ApiId
+      DataSourceName: !GetAtt SourceFASTTable.Name
+      FunctionVersion: 2018-05-29
+      Name: UpdateScoutedTeam
+      RequestMappingTemplateS3Location: ./Functions/UpdateScoutedTeamRequest
+      ResponseMappingTemplateS3Location: ./Functions/UpdateScoutedTeamResponse
+  ResolverUpdateScoutedTeam:
+    Type: AWS::AppSync::Resolver
+    Properties:
+      ApiId: !GetAtt AppSyncAPI.ApiId
+      FieldName: updateScoutedTeam
+      Kind: PIPELINE
+      PipelineConfig:
+        Functions:
+          - !GetAtt FuncAuthenticate.FunctionId
+          - !GetAtt FuncUpdateScoutedTeam.FunctionId
+      RequestMappingTemplateS3Location: ./Functions/PipelineStandardBeforeRequest
+      ResponseMappingTemplateS3Location: ./Functions/PipelineStandardAfterResponse
+      TypeName: Mutation
+
+  ResolverAddTeamComment:
+    Type: AWS::AppSync::Resolver
+    Properties:
+      ApiId: !GetAtt AppSyncAPI.ApiId
+      FieldName: addTeamComment
+      Kind: PIPELINE
+      PipelineConfig:
+        Functions:
+          - !GetAtt FuncAuthenticate.FunctionId
+          - !GetAtt FuncCheckEventExistence.FunctionId
+          - !GetAtt FuncAddTeamComment.FunctionId
+      RequestMappingTemplateS3Location: ./Functions/PipelineStandardBeforeRequest
+      ResponseMappingTemplateS3Location: ./Functions/PipelineStandardAfterResponse
+      TypeName: Mutation
+
+  FuncRemoveTeamComment:
+    Type: AWS::AppSync::FunctionConfiguration
+    Properties:
+      ApiId: !GetAtt AppSyncAPI.ApiId
+      DataSourceName: !GetAtt SourceFASTTable.Name
+      FunctionVersion: 2018-05-29
+      Name: RemoveTeamComment
+      RequestMappingTemplateS3Location: ./Functions/RemoveTeamCommentRequest
+      ResponseMappingTemplateS3Location: ./Functions/RemoveTeamCommentResponse
+  ResolverRemoveTeamComment:
+    Type: AWS::AppSync::Resolver
+    Properties:
+      ApiId: !GetAtt AppSyncAPI.ApiId
+      FieldName: removeTeamComment
+      Kind: PIPELINE
+      PipelineConfig:
+        Functions:
+          - !GetAtt FuncAuthenticate.FunctionId
+          - !GetAtt FuncRemoveTeamComment.FunctionId
+      RequestMappingTemplateS3Location: ./Functions/PipelineStandardBeforeRequest
+      ResponseMappingTemplateS3Location: ./Functions/PipelineStandardAfterResponse
+      TypeName: Mutation
+
+  ResolverCreateScoutSession:
+    Type: AWS::AppSync::Resolver
+    Properties:
+      ApiId: !GetAtt AppSyncAPI.ApiId
+      FieldName: createScoutSession
+      Kind: PIPELINE
+      PipelineConfig:
+        Functions:
+          - !GetAtt FuncAuthenticate.FunctionId
+          - !GetAtt FuncCheckEventExistence.FunctionId
+          - !GetAtt FuncCreateScoutSession.FunctionId
+      RequestMappingTemplateS3Location: ./Functions/PipelineStandardBeforeRequest
+      ResponseMappingTemplateS3Location: ./Functions/PipelineStandardAfterResponse
+      TypeName: Mutation
+
+  FuncRemoveScoutSession:
+    Type: AWS::AppSync::FunctionConfiguration
+    Properties:
+      ApiId: !GetAtt AppSyncAPI.ApiId
+      DataSourceName: !GetAtt SourceFASTTable.Name
+      FunctionVersion: 2018-05-29
+      Name: RemoveScoutSession
+      RequestMappingTemplateS3Location: ./Functions/RemoveScoutSessionRequest
+      ResponseMappingTemplateS3Location: ./Functions/RemoveScoutSessionResponse
+    Metadata:
+      Stupid:
+        Stupid: Stupid
+  ResolverRemoveScoutSession:
+    Type: AWS::AppSync::Resolver
+    Properties:
+      ApiId: !GetAtt AppSyncAPI.ApiId
+      FieldName: removeScoutSession
+      Kind: PIPELINE
+      PipelineConfig:
+        Functions:
+          - !GetAtt FuncAuthenticate.FunctionId
+          - !GetAtt FuncRemoveScoutSession.FunctionId
+      RequestMappingTemplateS3Location: ./Functions/PipelineStandardBeforeRequest
+      ResponseMappingTemplateS3Location: ./Functions/PipelineStandardAfterResponse
+      TypeName: Mutation
+
+  ResolverCreateScoutingTeam:
+    Type: AWS::AppSync::Resolver
+    Properties:
+      ApiId: !GetAtt AppSyncAPI.ApiId
+      FieldName: createScoutingTeam
+      Kind: UNIT
+      DataSourceName: !GetAtt SourceFASTTeams.Name
+      RequestMappingTemplateS3Location: ./Functions/CreateScoutingTeamRequest
+      ResponseMappingTemplateS3Location: ./Functions/CreateScoutingTeamResponse
+      TypeName: Mutation
+    DependsOn:
+      - AppSyncSchema
+  ResolverScoutingTeamMembers:
+    Type: AWS::AppSync::Resolver
+    Properties:
+      ApiId: !GetAtt AppSyncAPI.ApiId
+      FieldName: members
+      Kind: UNIT
+      DataSourceName: !GetAtt SourceFASTTeams.Name
+      RequestMappingTemplateS3Location: ./Functions/ScoutingTeamMembersRequest
+      ResponseMappingTemplateS3Location: ./Functions/ScoutingTeamMembersResponse
+      TypeName: ScoutingTeam
+    DependsOn:
+      - AppSyncSchema
+  ResolverMakeScoutTeamInvitation:
+    Type: AWS::AppSync::Resolver
+    Properties:
+      ApiId: !GetAtt AppSyncAPI.ApiId
+      FieldName: makeScoutTeamInvitation
+      TypeName: Mutation
+      Kind: PIPELINE
+      PipelineConfig:
+        Functions:
+          - !GetAtt FuncAuthenticate.FunctionId
+          - !GetAtt FuncMakeScoutTeamInvitation.FunctionId
+      RequestMappingTemplateS3Location: ./Functions/PipelineStandardBeforeRequest
+      ResponseMappingTemplateS3Location: ./Functions/PipelineStandardAfterResponse
+    DependsOn:
+      - AppSyncSchema
+
+  FuncRedeemInvitationValidateInvite:
+    Type: AWS::AppSync::FunctionConfiguration
+    Properties:
+      ApiId: !GetAtt AppSyncAPI.ApiId
+      DataSourceName: !GetAtt SourceFASTTeamInvites.Name
+      FunctionVersion: 2018-05-29
+      Name: RedeemInvitationValidateInvite
+      RequestMappingTemplateS3Location: ./Functions/RedeemInvitationValidateInviteRequest
+      ResponseMappingTemplateS3Location: ./Functions/RedeemInvitationValidateInviteResponse
+  FuncRedeemInvitationAddMember:
+    Type: AWS::AppSync::FunctionConfiguration
+    Properties:
+      ApiId: !GetAtt AppSyncAPI.ApiId
+      DataSourceName: !GetAtt SourceFASTTeams.Name
+      FunctionVersion: 2018-05-29
+      Name: RedeemInvitationAddMember
+      RequestMappingTemplateS3Location: ./Functions/RedeemInvitationAddMemberRequest
+      ResponseMappingTemplateS3Location: ./Functions/RedeemInvitationAddMemberResponse
+  ResolverRedeemInvitation:
+    Type: AWS::AppSync::Resolver
+    Properties:
+      ApiId: !GetAtt AppSyncAPI.ApiId
+      FieldName: redeemInvitation
+      TypeName: Mutation
+      Kind: PIPELINE
+      PipelineConfig:
+        Functions:
+          - !GetAtt FuncRedeemInvitationValidateInvite.FunctionId
+          - !GetAtt FuncRedeemInvitationAddMember.FunctionId
+      RequestMappingTemplateS3Location: ./Functions/PipelineStandardBeforeRequest
+      ResponseMappingTemplateS3Location: ./Functions/PipelineStandardAfterResponse
+    DependsOn:
+      - AppSyncSchema
+  FuncRemoveMemberCheckLead:
+    Type: AWS::AppSync::FunctionConfiguration
+    Properties:
+      ApiId: !GetAtt AppSyncAPI.ApiId
+      DataSourceName: !GetAtt SourceFASTTeams.Name
+      FunctionVersion: 2018-05-29
+      Name: RemoveMemberCheckLead
+      RequestMappingTemplateS3Location: ./Functions/RemoveMemberCheckLeadRequest
+      ResponseMappingTemplateS3Location: ./Functions/RemoveMemberCheckLeadResponse
+  FuncRemoveMember:
+    Type: AWS::AppSync::FunctionConfiguration
+    Properties:
+      ApiId: !GetAtt AppSyncAPI.ApiId
+      DataSourceName: !GetAtt SourceFASTTeams.Name
+      FunctionVersion: 2018-05-29
+      Name: RemoveMember
+      RequestMappingTemplateS3Location: ./Functions/RemoveMemberRequest
+      ResponseMappingTemplateS3Location: ./Functions/RemoveMemberResponse
+  ResolverRemoveMember:
+    Type: AWS::AppSync::Resolver
+    Properties:
+      ApiId: !GetAtt AppSyncAPI.ApiId
+      FieldName: removeMember
+      TypeName: Mutation
+      Kind: PIPELINE
+      PipelineConfig:
+        Functions:
+          - !GetAtt FuncRemoveMemberCheckLead.FunctionId
+          - !GetAtt FuncRemoveMember.FunctionId
+      RequestMappingTemplateS3Location: ./Functions/PipelineStandardBeforeRequest
+      ResponseMappingTemplateS3Location: ./Functions/PipelineStandardAfterResponse
+
+  FuncTransferLead:
+    Type: AWS::AppSync::FunctionConfiguration
+    Properties:
+      ApiId: !GetAtt AppSyncAPI.ApiId
+      DataSourceName: !GetAtt SourceFASTTeams.Name
+      FunctionVersion: 2018-05-29
+      Name: TransferLead
+      RequestMappingTemplateS3Location: ./Functions/TransferLeadRequest
+      ResponseMappingTemplateS3Location: ./Functions/TransferLeadResponse
+  FuncTransferLeadCheckMember:
+    Type: AWS::AppSync::FunctionConfiguration
+    Properties:
+      ApiId: !GetAtt AppSyncAPI.ApiId
+      DataSourceName: !GetAtt SourceFASTTeams.Name
+      FunctionVersion: 2018-05-29
+      Name: TransferLeadCheckMember
+      RequestMappingTemplateS3Location: ./Functions/TransferLeadCheckMemberRequest
+      ResponseMappingTemplateS3Location: ./Functions/TransferLeadCheckMemberResponse
+  ResolverTransferLead:
+    Type: AWS::AppSync::Resolver
+    Properties:
+      ApiId: !GetAtt AppSyncAPI.ApiId
+      FieldName: transferLead
+      TypeName: Mutation
+      Kind: PIPELINE
+      PipelineConfig:
+        Functions:
+          - !GetAtt FuncTransferLeadCheckMember.FunctionId
+          - !GetAtt FuncTransferLead.FunctionId
+      RequestMappingTemplateS3Location: ./Functions/PipelineStandardBeforeRequest
+      ResponseMappingTemplateS3Location: ./Functions/PipelineStandardAfterResponse
+  ResolverChangeMemberName:
+    Type: AWS::AppSync::Resolver
+    Properties:
+      ApiId: !GetAtt AppSyncAPI.ApiId
+      FieldName: changeMemberName
+      Kind: UNIT
+      DataSourceName: !GetAtt SourceFASTTeams.Name
+      RequestMappingTemplateS3Location: ./Functions/ChangeMemberNameRequest
+      ResponseMappingTemplateS3Location: ./Functions/ChangeMemberNameResponse
+      TypeName: Mutation
+    DependsOn:
+      - AppSyncSchema
+  ResolverEditScoutingTeamInfo:
+    Type: AWS::AppSync::Resolver
+    Properties:
+      ApiId: !GetAtt AppSyncAPI.ApiId
+      FieldName: editScoutingTeamInfo
+      Kind: UNIT
+      DataSourceName: !GetAtt SourceFASTTeams.Name
+      RequestMappingTemplateS3Location: ./Functions/EditScoutingTeamInfoRequest
+      ResponseMappingTemplateS3Location: ./Functions/EditScoutingTeamInfoResponse
+      TypeName: Mutation
+    DependsOn:
+      - AppSyncSchema
+
+  ################################################################################
+  ################################################################################
+
+  # SUBSCRIPTIONS
+  ResolverOnAddTrackedEvent:
+    Type: AWS::AppSync::Resolver
+    Properties:
+      ApiId: !GetAtt AppSyncAPI.ApiId
+      FieldName: onAddTrackedEvent
+      Kind: PIPELINE
+      PipelineConfig:
+        Functions:
+          - !GetAtt FuncAuthenticate.FunctionId
+      RequestMappingTemplateS3Location: ./Functions/PipelineStandardBeforeRequest
+      ResponseMappingTemplateS3Location: ./Functions/PipelineStandardAfterResponse
+      TypeName: Subscription
+  ResolverOnRemoveTrackedEvent:
+    Type: AWS::AppSync::Resolver
+    Properties:
+      ApiId: !GetAtt AppSyncAPI.ApiId
+      FieldName: onRemoveTrackedEvent
+      Kind: PIPELINE
+      PipelineConfig:
+        Functions:
+          - !GetAtt FuncAuthenticate.FunctionId
+      RequestMappingTemplateS3Location: ./Functions/PipelineStandardBeforeRequest
+      ResponseMappingTemplateS3Location: ./Functions/PipelineStandardAfterResponse
+      TypeName: Subscription
+  ResolverOnUpdateTeamRank:
+    Type: AWS::AppSync::Resolver
+    Properties:
+      ApiId: !GetAtt AppSyncAPI.ApiId
+      FieldName: onUpdateTeamRank
+      Kind: PIPELINE
+      PipelineConfig:
+        Functions:
+          - !GetAtt FuncAuthenticate.FunctionId
+      RequestMappingTemplateS3Location: ./Functions/PipelineStandardBeforeRequest
+      ResponseMappingTemplateS3Location: ./Functions/PipelineStandardAfterResponse
+      TypeName: Subscription
+  ResolverOnSetTeamPicked:
+    Type: AWS::AppSync::Resolver
+    Properties:
+      ApiId: !GetAtt AppSyncAPI.ApiId
+      FieldName: onSetTeamPicked
+      Kind: PIPELINE
+      PipelineConfig:
+        Functions:
+          - !GetAtt FuncAuthenticate.FunctionId
+      RequestMappingTemplateS3Location: ./Functions/PipelineStandardBeforeRequest
+      ResponseMappingTemplateS3Location: ./Functions/PipelineStandardAfterResponse
+      TypeName: Subscription
+  ResolverOnUpdateScoutedTeam:
+    Type: AWS::AppSync::Resolver
+    Properties:
+      ApiId: !GetAtt AppSyncAPI.ApiId
+      FieldName: onUpdateScoutedTeam
+      Kind: PIPELINE
+      PipelineConfig:
+        Functions:
+          - !GetAtt FuncAuthenticate.FunctionId
+      RequestMappingTemplateS3Location: ./Functions/PipelineStandardBeforeRequest
+      ResponseMappingTemplateS3Location: ./Functions/PipelineStandardAfterResponse
+      TypeName: Subscription
+  ResolverOnAddTeamComment:
+    Type: AWS::AppSync::Resolver
+    Properties:
+      ApiId: !GetAtt AppSyncAPI.ApiId
+      FieldName: onAddTeamComment
+      Kind: PIPELINE
+      PipelineConfig:
+        Functions:
+          - !GetAtt FuncAuthenticate.FunctionId
+      RequestMappingTemplateS3Location: ./Functions/PipelineStandardBeforeRequest
+      ResponseMappingTemplateS3Location: ./Functions/PipelineStandardAfterResponse
+      TypeName: Subscription
+  ResolverOnCreateScoutSession:
+    Type: AWS::AppSync::Resolver
+    Properties:
+      ApiId: !GetAtt AppSyncAPI.ApiId
+      FieldName: onCreateScoutSession
+      Kind: PIPELINE
+      PipelineConfig:
+        Functions:
+          - !GetAtt FuncAuthenticate.FunctionId
+      RequestMappingTemplateS3Location: ./Functions/PipelineStandardBeforeRequest
+      ResponseMappingTemplateS3Location: ./Functions/PipelineStandardAfterResponse
+      TypeName: Subscription
+  ResolverOnDeleteScoutSession:
+    Type: AWS::AppSync::Resolver
+    Properties:
+      ApiId: !GetAtt AppSyncAPI.ApiId
+      FieldName: onDeleteScoutSession
+      Kind: PIPELINE
+      PipelineConfig:
+        Functions:
+          - !GetAtt FuncAuthenticate.FunctionId
+      RequestMappingTemplateS3Location: ./Functions/PipelineStandardBeforeRequest
+      ResponseMappingTemplateS3Location: ./Functions/PipelineStandardAfterResponse
+      TypeName: Subscription
+
+
+  # Resolver NAME:
+  #   Type: AWS::AppSync::Resolver
+  #   Properties:
+  #     ApiId: !GetAtt AppSyncAPI.ApiId
+  #     FieldName: NAME
+  #     Kind: PIPELINE
+  #     PipelineConfig:
+  #       Functions:
+  #         - !GetAtt FuncAuthenticate.FunctionId
+  #     RequestMappingTemplateS3Location: ./Functions/PipelineStandardBeforeRequest
+  #     ResponseMappingTemplateS3Location: ./Functions/PipelineStandardAfterResponse
+  #     TypeName: Subscription
+
+
+  # Func NAME:
+  #   Type: AWS::AppSync::FunctionConfiguration
+  #   Properties:
+  #     ApiId: !GetAtt AppSyncAPI.ApiId
+  #     DataSourceName: !GetAtt SOURCE.Name
+  #     FunctionVersion: 2018-05-29
+  #     Name: NAME
+  #     RequestMappingTemplateS3Location: ./Functions/FUNC Request
+  #     ResponseMappingTemplateS3Location: ./Functions/FUNC Response
+  # Resolver NAME:
+  #   Type: AWS::AppSync::Resolver
+  #   Properties:
+  #     ApiId: !GetAtt AppSyncAPI.ApiId
+  #     FieldName: FIELDNAME
+  #     Kind: PIPELINE
+  #     PipelineConfig:
+  #       Functions:
+  #         - !GetAtt FuncAuthenticate.FunctionId
+  #         - !GetAtt Func NAME.FunctionId
+  #     RequestMappingTemplateS3Location: ./Functions/PipelineStandardBeforeRequest
+  #     ResponseMappingTemplateS3Location: ./Functions/PipelineStandardAfterResponse
+  #     TypeName: Mutation

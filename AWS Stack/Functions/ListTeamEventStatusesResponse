@@ -1,0 +1,9 @@
+##Take the map and make it a list by moving the key inside the object
+#set($returnList = [])
+#foreach( $statusObject in $ctx.result.entrySet() )
+	$util.qr($statusObject.value.put("teamKey",$statusObject.key))
+    $util.qr($statusObject.value.put("eventKey",$ctx.args.eventKey))
+    $util.qr($returnList.add($statusObject.value))
+#end
+
+$util.toJson($returnList)

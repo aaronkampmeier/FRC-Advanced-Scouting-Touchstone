@@ -31,7 +31,7 @@ class DeepSpaceWelcomeViewController: UIViewController {
         descriptionLabel.text = "FAST is ready for the 2019 Deep Space competition with a brand new update that focuses on adaptability, performance, and future development. This includes brand new pit scouting, stands scouting, and statistics designed for the 2019 competition."
         
         //Get the new events
-        Globals.appDelegate.appSyncClient?.fetch(query: ListTrackedEventsQuery(), cachePolicy: .fetchIgnoringCacheData, resultHandler: { (result, error) in
+        Globals.appSyncClient?.fetch(query: ListTrackedEventsQuery(scoutTeam: Globals.dataManager.enrolledScoutingTeamID ?? ""), cachePolicy: .fetchIgnoringCacheData, resultHandler: { (result, error) in
             if Globals.handleAppSyncErrors(forQuery: "DeepSpaceWelcome-ListTrackedEvents", result: result, error: error) {
                 if result?.data?.listTrackedEvents?.count ?? 0 > 0 {
                     self.button.setTitle("Get Started With Current Events", for: .normal)

@@ -1,0 +1,36 @@
+#if ($ctx.stash.teamIDs.isEmpty())
+		## If there are no teamIDs, then just query something empty to get an empty result
+		{
+		    "version" : "2017-02-28",
+		    "operation" : "Query",
+		    "query" : {
+		        "expression" : "#pk = :pk",
+		        "expressionNames" : {
+		            "#pk" : "teamID"
+		        },
+		        "expressionValues" : {
+		            ":pk" : $util.dynamodb.toDynamoDBJson("nothing")
+		        }
+		    },
+		    "consistentRead" : false
+		}
+#else
+		{
+		    "version" : "2018-05-29",
+		    "operation" : "BatchGetItem",
+		    "tables" : {
+		        "FASTTeams": {
+		           "keys": [
+		              ## Item to retrieve Key
+									#foreach( $teamID in $ctx.stash.teamIDs )
+									{
+											"teamID": $util.dynamodb.toDynamoDBJson($teamID),
+											"userID": $util.dynamodb.toDynamoDBJson("teamData")
+									},
+									#end
+		            ],
+		            "consistentRead": false
+		        }
+		    }
+		}
+#end

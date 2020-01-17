@@ -57,9 +57,12 @@ class EventStatsGraphViewController: UIViewController {
                     barChartDataEntries.append(entry)
                 }
                 
-                let dataSet = BarChartDataSet(values: barChartDataEntries, label: stat.name)
+                let dataSet = BarChartDataSet(entries: barChartDataEntries, label: stat.name)
                 dataSet.colors = [self.barColors[statIndex % self.barColors.count]]
                 dataSet.valueFormatter = self
+                if #available(iOS 13.0, *) {
+                    dataSet.valueColors = [UIColor.label]
+                }
                 barChartDataSets.append(dataSet)
             }
             
@@ -132,6 +135,23 @@ class EventStatsGraphViewController: UIViewController {
         barChart.leftAxis.drawAxisLineEnabled = false
         
         barChart.noDataText = "Select Stats to Graph"
+        if #available(iOS 13.0, *) {
+            barChart.xAxis.gridColor = UIColor.systemGray2
+            barChart.xAxis.axisLineColor = UIColor.opaqueSeparator
+            barChart.xAxis.labelTextColor = UIColor.label
+            
+            barChart.leftAxis.gridColor = UIColor.systemGray2
+            barChart.leftAxis.axisLineColor = UIColor.opaqueSeparator
+            barChart.leftAxis.labelTextColor = UIColor.label
+            barChart.leftAxis.zeroLineColor = UIColor.systemBlue
+            
+            barChart.legend.textColor = UIColor.label
+            
+            barChart.noDataTextColor = UIColor.label
+            barChart.borderColor = UIColor.systemGray
+            
+            barChart.chartDescription?.textColor = UIColor.label
+        }
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -145,17 +165,17 @@ class EventStatsGraphViewController: UIViewController {
         
     }
     
-    func setUp(forEventKey eventKey: String) {
+    func setUp(forScoutTeam scoutTeam: String, withEventKey eventKey: String) {
         //TODO: - Add a loading indicator and wait until both queries are completed before allowing access
         //Get the team ranking
-        Globals.appDelegate.appSyncClient?.fetch(query: GetEventRankingQuery(key: eventKey), cachePolicy: .returnCacheDataElseFetch, resultHandler: {[weak self] (result, error) in
+        Globals.appSyncClient?.fetch(query: GetEventRankingQuery(scoutTeam: scoutTeam, key: eventKey), cachePolicy: .returnCacheDataElseFetch, resultHandler: {[weak self] (result, error) in
             if Globals.handleAppSyncErrors(forQuery: "GetEventRanking-StatsGraph", result: result, error: error) {
                 self?.eventRanking = result?.data?.getEventRanking?.fragments.eventRanking
             }
         })
         
         //Get the scouted teams
-        Globals.appDelegate.appSyncClient?.fetch(query: ListScoutedTeamsQuery(eventKey: eventKey), cachePolicy: .returnCacheDataElseFetch, resultHandler: {[weak self] (result, error) in
+        Globals.appSyncClient?.fetch(query: ListScoutedTeamsQuery(scoutTeam: scoutTeam, eventKey: eventKey), cachePolicy: .returnCacheDataElseFetch, resultHandler: {[weak self] (result, error) in
             if Globals.handleAppSyncErrors(forQuery: "ListScoutedTeams-StatsGraph", result: result, error: error) {
                 self?.scoutedTeams = result?.data?.listScoutedTeams?.map {$0!.fragments.scoutedTeam} ?? []
             } else {
@@ -301,5 +321,9 @@ extension EventStatsGraphViewController: SelectStatsDelegate {
     func selectStatsTableViewController(_ vc: SelectStatsTableViewController, didSelectStats selectedStats: [ScoutedTeamStat]) {
         self.statsToGraph = selectedStats
         loadGraph()
+    }
+    
+    func eventKey() -> String? {
+        return eventRanking?.eventKey
     }
 }

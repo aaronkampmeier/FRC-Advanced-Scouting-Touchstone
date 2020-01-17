@@ -13,6 +13,7 @@ protocol SortDelegate {
 	func selectedStat(_ stat: Statistic<ScoutedTeam>?, isAscending: Bool)
     func currentStat() -> Statistic<ScoutedTeam>?
     func isAscending() -> Bool
+    func eventKey() -> String?
 }
 
 //T is the type to be sorted
@@ -34,7 +35,7 @@ class SortVC: UIViewController, UIPickerViewDelegate, UIPickerViewDataSource {
         sortTypePicker.delegate = self
 		
         let statSource = StatisticsDataSource()
-		statsToDisplay = statSource.getStats(forType: ScoutedTeam.self)
+        statsToDisplay = statSource.getStats(forType: ScoutedTeam.self, forEvent: delegate?.eventKey() ?? "")
         selectedStat = delegate?.currentStat()
         if let stat = selectedStat {
             if let index = statsToDisplay.firstIndex(where: {$0.id == stat.id}) {
@@ -54,14 +55,17 @@ class SortVC: UIViewController, UIPickerViewDelegate, UIPickerViewDataSource {
 		delegate?.selectedStat(selectedStat, isAscending: isAscending)
         Globals.recordAnalyticsEvent(eventType: "sort_team_list", attributes: ["stat":selectedStat?.id ?? "?", "ascending":isAscending.description])
     }
-	
-	override func viewDidDisappear(_ animated: Bool) {
-		super.viewDidDisappear(animated)
-	}
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-		sortTypePicker.reloadAllComponents()
+        
+        Globals.appDelegate.supportedInterfaceOrientations = .portrait
+        sortTypePicker.reloadAllComponents()
+    }
+    
+    override func viewDidDisappear(_ animated: Bool) {
+        super.viewDidDisappear(animated)
+        Globals.appDelegate.supportedInterfaceOrientations = .all
     }
     
     func pickerView(_ pickerView: UIPickerView, numberOfRowsInComponent component: Int) -> Int {
@@ -94,5 +98,9 @@ class SortVC: UIViewController, UIPickerViewDelegate, UIPickerViewDataSource {
         } else if sender.selectedSegmentIndex == 1 {
             isAscending = true
         }
+    }
+    
+    @IBAction func donePressed(_ sender: UIButton) {
+        self.dismiss(animated: true, completion: nil)
     }
 }

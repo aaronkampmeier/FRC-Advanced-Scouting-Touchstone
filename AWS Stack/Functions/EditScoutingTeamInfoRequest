@@ -1,0 +1,22 @@
+{
+    "version" : "2018-05-29",
+    "operation" : "UpdateItem",
+    "key": {
+        "teamID" : $util.dynamodb.toDynamoDBJson($ctx.args.scoutTeam),
+        "userID" : $util.dynamodb.toDynamoDBJson("teamData")
+    },
+    "update" : {
+        "expression" : "SET #name = :newName, #frc = :frc",
+        "expressionNames" : {
+           "#name" : "name",
+					 "#frc": "associatedFrcTeamNumber"
+       },
+       "expressionValues" : {
+           ":newName" : $util.dynamodb.toDynamoDBJson($ctx.args.name),
+					 ":frc": $util.dynamodb.toDynamoDBJson($ctx.args.associatedFrcTeamNumber)
+       }
+    },
+    "condition" : {
+        "expression": "attribute_exists(teamID)"
+    }
+}

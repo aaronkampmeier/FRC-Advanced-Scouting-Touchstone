@@ -1,0 +1,15 @@
+{
+    "aaronmbp": {
+        "awscloudformation": {
+            "AuthRoleName": "amplify-fast-aaronmbp-224536-authRole",
+            "UnauthRoleArn": "arn:aws:iam::797353049590:role/amplify-fast-aaronmbp-224536-unauthRole",
+            "AuthRoleArn": "arn:aws:iam::797353049590:role/amplify-fast-aaronmbp-224536-authRole",
+            "Region": "us-east-1",
+            "DeploymentBucketName": "amplify-fast-aaronmbp-224536-deployment",
+            "UnauthRoleName": "amplify-fast-aaronmbp-224536-unauthRole",
+            "StackName": "amplify-fast-aaronmbp-224536",
+            "StackId": "arn:aws:cloudformation:us-east-1:797353049590:stack/amplify-fast-aaronmbp-224536/65abb580-2b88-11ea-a34e-0eb5b83f8639",
+            "AmplifyAppId": "d2dxz7bosryh9i"
+        }
+    }
+}

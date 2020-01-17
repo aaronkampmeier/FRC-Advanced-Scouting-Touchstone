@@ -1,0 +1,9 @@
+{
+   "version": "2017-02-28",
+   "operation": "Invoke",
+   "payload": {
+	 		"expDate": $ctx.args.expDate,
+			"teamID": $util.toJson($ctx.args.scoutTeam),
+			"userID": $util.toJson($ctx.identity.sub)
+	 }
+}

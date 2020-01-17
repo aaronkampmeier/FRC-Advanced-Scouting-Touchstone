@@ -1,0 +1,15 @@
+{
+    "version" : "2018-05-29",
+    "operation" : "DeleteItem",
+    "key": {
+        "teamID" : $util.dynamodb.toDynamoDBJson($ctx.args.scoutTeam),
+        "userID" : $util.dynamodb.toDynamoDBJson($ctx.args.userToRemove)
+    },
+		"condition": {
+				## This condition check should make sure that the userToRemove actually is a member of the team in the first place, BUT IT DOESN'T WORK
+				"expression": "userID = :uid AND attribute_exists(memberSince)",
+				"expressionValues": {
+						":uid":$util.dynamodb.toDynamoDBJson($ctx.args.userToRemove)
+				}
+		}
+}

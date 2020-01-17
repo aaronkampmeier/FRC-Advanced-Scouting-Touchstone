@@ -1,0 +1,138 @@
+# this is an auto generated file. This will be overwritten
+mutation AddTrackedEvent($scoutTeam: ID!, $eventKey: ID!) {
+  addTrackedEvent(scoutTeam: $scoutTeam, eventKey: $eventKey) {
+    ...EventRanking
+  }
+}
+mutation RemoveTrackedEvent($scoutTeam: ID!, $eventKey: ID!) {
+  removeTrackedEvent(scoutTeam: $scoutTeam, eventKey: $eventKey) {
+    eventKey
+    scoutTeam
+  }
+}
+mutation MoveRankedTeam(
+  $scoutTeam: ID!
+  $eventKey: ID!
+  $teamKey: ID!
+  $toIndex: Int!
+) {
+  moveRankedTeam(
+    scoutTeam: $scoutTeam
+    eventKey: $eventKey
+    teamKey: $teamKey
+    toIndex: $toIndex
+  ) {
+    ...EventRanking
+  }
+}
+mutation SetTeamPicked(
+  $scoutTeam: ID!
+  $eventKey: ID!
+  $teamKey: ID!
+  $isPicked: Boolean!
+) {
+  setTeamPicked(
+    scoutTeam: $scoutTeam
+    eventKey: $eventKey
+    teamKey: $teamKey
+    isPicked: $isPicked
+  ) {
+    ...EventRanking
+  }
+}
+mutation UpdateScoutedTeam(
+  $scoutTeam: ID!
+  $eventKey: ID!
+  $teamKey: ID!
+  $image: ImageInput
+  $attributes: AWSJSON!
+) {
+  updateScoutedTeam(
+    scoutTeam: $scoutTeam
+    eventKey: $eventKey
+    teamKey: $teamKey
+    image: $image
+    attributes: $attributes
+  ) {
+    ...ScoutedTeam
+  }
+}
+mutation AddTeamComment(
+  $scoutTeam: ID!
+  $eventKey: String!
+  $teamKey: String!
+  $body: String!
+  $author: String!
+) {
+  addTeamComment(
+    scoutTeam: $scoutTeam
+    eventKey: $eventKey
+    teamKey: $teamKey
+    body: $body
+    author: $author
+  ) {
+    ...TeamComment
+  }
+}
+mutation RemoveTeamComment($scoutTeam: ID!, $eventKey: String!, $key: String!) {
+  removeTeamComment(scoutTeam: $scoutTeam, eventKey: $eventKey, key: $key) {
+    key
+    scoutTeam
+  }
+}
+mutation CreateScoutSession(
+  $scoutTeam: ID!
+  $eventKey: ID!
+  $teamKey: ID!
+  $matchKey: ID!
+  $recordedDate: AWSTimestamp!
+  $startState: AWSJSON
+  $endState: AWSJSON
+  $timeMarkers: [TimeMarkerInput]!
+) {
+  createScoutSession(
+    scoutTeam: $scoutTeam
+    eventKey: $eventKey
+    teamKey: $teamKey
+    matchKey: $matchKey
+    recordedDate: $recordedDate
+    startState: $startState
+    endState: $endState
+    timeMarkers: $timeMarkers
+  ) {
+    ...ScoutSession
+  }
+}
+mutation RemoveScoutSession($scoutTeam: ID!, $eventKey: ID!, $key: ID!) {
+  removeScoutSession(scoutTeam: $scoutTeam, eventKey: $eventKey, key: $key) {
+    scoutTeam
+    key
+    matchKey
+    teamKey
+    eventKey
+  }
+}
+mutation CreateScoutingTeam($name: String!, $associatedFrcTeamNumber: Int!) {
+  createScoutingTeam(
+    name: $name
+    associatedFrcTeamNumber: $associatedFrcTeamNumber
+  ) {
+    ...ScoutingTeamWithMembers
+  }
+}
+mutation MakeScoutTeamInvitation($scoutTeam: ID!, $expDate: AWSTimestamp!) {
+  makeScoutTeamInvitation(scoutTeam: $scoutTeam, expDate: $expDate) {
+    ...ScoutTeamInvitation
+  }
+}
+mutation RedeemInvitation($inviteID: ID!, $secretCode: String!) {
+  redeemInvitation(inviteID: $inviteID, secretCode: $secretCode)
+}
+mutation RemoveMember($scoutTeam: ID!, $userToRemove: ID!) {
+  removeMember(scoutTeam: $scoutTeam, userToRemove: $userToRemove)
+}
+mutation TransferLead($scoutTeam: ID!, $newTeamLeadUserId: ID!) {
+  transferLead(scoutTeam: $scoutTeam, newTeamLeadUserId: $newTeamLeadUserId) {
+    ...ScoutingTeam
+  }
+}

@@ -1,7 +1,7 @@
 //
 //  TORoundedTableViewCapCell.m
 //
-//  Copyright 2016-2017 Timothy Oliver. All rights reserved.
+//  Copyright 2016-2019 Timothy Oliver. All rights reserved.
 //
 //  Permission is hereby granted, free of charge, to any person obtaining a copy
 //  of this software and associated documentation files (the "Software"), to
@@ -47,6 +47,7 @@
 @property (nonatomic, strong) TORoundedTableViewCellBackground *selectedBackgroundView;
 
 - (void)setUp;
+- (void)refreshBackgroundContent;
 
 @end
 
@@ -90,12 +91,24 @@
             break;
         }
     } while ((superview = superview.superview));
-    
-    self.backgroundView.roundedCornerImage = self.tableView.roundedCornerImage;
-    self.backgroundView.backgroundColor = self.tableView.cellBackgroundColor;
-    
-    self.selectedBackgroundView.roundedCornerImage = self.tableView.selectedRoundedCornerImage;
-    self.selectedBackgroundView.backgroundColor = self.tableView.cellSelectedBackgroundColor;
+
+    // Update the background views with the new colors
+    [self refreshBackgroundContent];
+}
+
+- (void)refreshBackgroundContent
+{
+    // If the background view corner images have been updated, the background color will have changed
+    // too. (But since it is copied, we can't do a memory compare)
+    if (self.backgroundView.roundedCornerImage != self.tableView.roundedCornerImage) {
+        self.backgroundView.roundedCornerImage = self.tableView.roundedCornerImage;
+        self.backgroundView.backgroundColor = self.tableView.cellBackgroundColor;
+    }
+
+    if (self.selectedBackgroundView.roundedCornerImage != self.tableView.selectedRoundedCornerImage) {
+        self.selectedBackgroundView.roundedCornerImage = self.tableView.selectedRoundedCornerImage;
+        self.selectedBackgroundView.backgroundColor = self.tableView.cellSelectedBackgroundColor;
+    }
 }
 
 #pragma mark - Layout -
@@ -103,7 +116,10 @@
 - (void)layoutSubviews
 {
     [super layoutSubviews];
-    
+
+    // Reload the background content if needed
+    [self refreshBackgroundContent];
+
     self.backgroundView.frame = self.bounds;
     
     // Because the background view is slightly smaller than the cell size by default,
@@ -115,11 +131,17 @@
         backgroundViewFrame.size.height += 1.0f;
         self.backgroundView.frame = backgroundViewFrame;
     }
-    
-    if (self.traitCollection.horizontalSizeClass != UIUserInterfaceSizeClassRegular) {
+
+    // Check if we're enabled or not by seeing if we are stretching edge-to-edge
+    // Account for the invisible container view on iOS 10 and below
+    UIView *containerView = self;
+    if (@available(iOS 11.0, *)) { }
+    else { containerView = self.superview; }
+
+    if (containerView.frame.origin.x <= FLT_EPSILON) {
         return;
     }
-    
+
     // Hide the exterior separator view
     // Search for any section exterior separator views that were added and hide them
     for (UIView *view in self.subviews) {

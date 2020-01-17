@@ -49,5 +49,5 @@ FAST puts making actionable decisions for team picking first. Everyone on your t
 GNU General Public License v3.0
 See License.txt
 
-FAST was developed by FRC Team 4256 The Cyborg Cats.
+FAST was developed by Aaron Kampmeier.
 Icons from Icons8.

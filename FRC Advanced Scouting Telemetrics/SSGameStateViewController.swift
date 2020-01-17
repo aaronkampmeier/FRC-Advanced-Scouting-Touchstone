@@ -18,7 +18,7 @@ enum SSStateGameSection {
 class SSGameStateViewController: UIViewController {
     @IBOutlet weak var collectionView: UICollectionView!
     
-    lazy var ssDataManager = SSDataManager.currentSSDataManager
+    var ssDataManager: SSDataManager?
     
     ///Set before loading view
     var requestedStates = [GameState]()
@@ -26,6 +26,8 @@ class SSGameStateViewController: UIViewController {
     
     let transition = OptionSelectorAnimator()
     let layout = UICollectionViewFlowLayout()
+    
+    let viewIsLoadedSemaphore = DispatchSemaphore(value: 0)
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -39,23 +41,27 @@ class SSGameStateViewController: UIViewController {
         collectionView.allowsSelection = false
 //        collectionView.setCollectionViewLayout(SSGameStateCollectionViewLayout(), animated: false)
         
-        if let section = section {
-            self.set(gameSection: section)
-        }
+        viewIsLoadedSemaphore.signal()
     }
     
-    func set(gameSection: SSStateGameSection) {
+    func set(gameSection: SSStateGameSection, dataManager: SSDataManager) {
         self.section = gameSection
+        self.ssDataManager = dataManager
         
-        if isViewLoaded {
-            switch gameSection {
-            case .Start:
-                requestedStates = ssDataManager?.model?.startState ?? []
-            case .End:
-                requestedStates = ssDataManager?.model?.endState ?? []
-            }
+        DispatchQueue.global(qos: .userInitiated).async {[weak self] in
+            self?.viewIsLoadedSemaphore.wait()
+            self?.viewIsLoadedSemaphore.signal()
             
-            collectionView.reloadData()
+            DispatchQueue.main.async {
+                switch gameSection {
+                case .Start:
+                    self?.requestedStates = self?.ssDataManager?.model?.standsScouting.startState ?? []
+                case .End:
+                    self?.requestedStates = self?.ssDataManager?.model?.standsScouting.endState ?? []
+                }
+                
+                self?.collectionView.reloadData()
+            }
         }
     }
     

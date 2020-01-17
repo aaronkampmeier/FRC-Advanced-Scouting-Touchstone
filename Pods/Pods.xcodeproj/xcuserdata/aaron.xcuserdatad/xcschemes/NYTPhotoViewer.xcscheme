@@ -14,7 +14,7 @@
             buildForArchiving = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "EC77A40FAC73FCEB811FE0956D441702"
+               BlueprintIdentifier = "40D3529DBF12C75F3051E2496F345E57"
                BlueprintName = "NYTPhotoViewer"
                ReferencedContainer = "container:Pods.xcodeproj"
                BuildableName = "NYTPhotoViewer.framework">

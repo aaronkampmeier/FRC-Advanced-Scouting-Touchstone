@@ -24,6 +24,11 @@ class AboutViewController: UIViewController {
                 //Disable scroll and then re-enable it after view did load because it will mess with the text being behind the nav bar if it is enabled
                 aboutTextView.isScrollEnabled = false
                 aboutTextView.attributedText = attributedString
+                if #available(iOS 13.0, *) {
+                    aboutTextView.textColor = .label
+                } else {
+                    // Fallback on earlier versions
+                }
             } catch {
                 CLSNSLogv("Unable to read About.rtf file", getVaList([]))
             }

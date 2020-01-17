@@ -1,0 +1,32 @@
+## Below example shows how to create an object from all provided GraphQL arguments
+## The primary key of the obejct is a randomly generated UUD using the $util.autoId() utility
+## Other utilities include $util.matches() for regular expressions, $util.time.nowISO8601() or
+##   $util.time.nowEpochMilliSeconds() for timestamps, and even List or Map helpers like
+##   $util.list.copyAndRetainAll() $util.map.copyAndRemoveAllKeys() for shallow copies
+## Read more: https://docs.aws.amazon.com/appsync/latest/devguide/resolver-context-reference.html#utility-helpers-in-util
+
+##Input: teamKey, matchKey, timeMarkers
+###set( $newScoutSessionID = $util.autoId() )
+#set( $newScoutSessionID = "${ctx.args.teamKey}-${ctx.args.matchKey}-${util.autoId()}" )
+$util.qr($ctx.stash.put("scout_session_key", $newScoutSessionID))
+{
+    "version" : "2017-02-28",
+    "operation" : "PutItem",
+    "key" : {
+        ## If object "id" should come from GraphQL arguments, change to $util.dynamodb.toDynamoDBJson($ctx.args.id)
+        "partitionKey": $util.dynamodb.toDynamoDBJson("g${ctx.args.scoutTeam}-e${ctx.args.eventKey}"),
+        "sortKey":$util.dynamodb.toDynamoDBJson("s${newScoutSessionID}")
+    },
+    "attributeValues" : $util.dynamodb.toMapValuesJson({
+    	"key":$newScoutSessionID,
+        "scoutTeam":$ctx.args.scoutTeam,
+        "matchKey":$ctx.args.matchKey,
+        "teamKey":$ctx.args.teamKey,
+        "eventKey":$ctx.args.eventKey,
+        "authorId":$ctx.identity.sub,
+        "recordedDate":$util.time.nowEpochSeconds(),
+        "startState":$ctx.args.startState,
+        "endState":$ctx.args.endState,
+        "timeMarkers":$ctx.args.timeMarkers
+    })
+}

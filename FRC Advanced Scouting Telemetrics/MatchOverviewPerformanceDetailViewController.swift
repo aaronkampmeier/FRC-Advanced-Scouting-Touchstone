@@ -22,8 +22,17 @@ class MatchOverviewPerformanceDetailViewController: UIViewController {
     
     var match: Match?
     var teamKey: String?
+    var scoutTeam: String?
     
-    var model: StandsScoutingModel?
+    var modelState: FASTCompetitionModelState?
+    var model: StandsScoutingModel? {
+        switch modelState {
+        case .Loaded(let m):
+            return m.standsScouting
+        default:
+            return nil
+        }
+    }
     
     var availableScoutSessions: [ScoutSession?] = [] {
         didSet {
@@ -92,11 +101,6 @@ class MatchOverviewPerformanceDetailViewController: UIViewController {
         if Globals.isInSpectatorMode {
             standsScoutButton.tintColor = UIColor.purple
         }
-        
-        StandsScoutingModelLoader().getModel { (model) in
-            self.model = model
-            self.timeMarkerTableView.reloadData()
-        }
 		
 		availableScoutSessions = []
 		hideEverything()
@@ -111,17 +115,21 @@ class MatchOverviewPerformanceDetailViewController: UIViewController {
         // Dispose of any resources that can be recreated.
     }
     
-    func load(match: Match?, forTeamKey teamKey: String?) {
+    func load(match: Match?, forTeamKey teamKey: String?, inScoutTeam scoutTeam: String?) {
         if let match = match {
             self.match = match
             self.teamKey = teamKey
+            self.scoutTeam = scoutTeam
             
             availableScoutSessions = []
             selectScoutSession(scoutSession: nil)
             
+            modelState = Globals.dataManager.asyncLoadingManager.eventModelStates[match.eventKey]
+            timeMarkerTableView.reloadData()
+            
             if let teamKey = teamKey {
                 //Get the scout sessions
-                AWSDataManager.default.retrieveScoutSessions(forEventKey: match.eventKey, teamKey: teamKey, andMatchKey: match.key) {[weak self] (scoutSessions) in
+                Globals.dataManager.retrieveScoutSessions(forEventKey: match.eventKey, teamKey: teamKey, andMatchKey: match.key) {[weak self] (scoutSessions) in
                     DispatchQueue.main.async {
                         self?.availableScoutSessions = scoutSessions ?? []
                         let session = self?.availableScoutSessions.first?.map({$0})
@@ -142,7 +150,7 @@ class MatchOverviewPerformanceDetailViewController: UIViewController {
             showMatchContentViews()
             
             //Get the stats
-            self.statistics = StatisticsDataSource().getStats(forType: ScoutSession.self)
+            self.statistics = StatisticsDataSource().getStats(forType: ScoutSession.self, forEvent: scoutSession?.eventKey ?? "")
         } else {
             hideMatchContentViews()
         }
@@ -170,7 +178,7 @@ class MatchOverviewPerformanceDetailViewController: UIViewController {
             let standsScoutVC = storyboard?.instantiateViewController(withIdentifier: "standsScouting") as! StandsScoutingViewController
             
             if let teamKey = teamKey, let match = match {
-                standsScoutVC.setUp(forTeamKey: teamKey, andMatchKey: match.key, inEventKey: match.eventKey)
+                standsScoutVC.setUp(inScoutTeam: scoutTeam ?? "", forTeamKey: teamKey, andMatchKey: match.key, inEventKey: match.eventKey)
                 
                 present(standsScoutVC, animated: true, completion: nil)
                 

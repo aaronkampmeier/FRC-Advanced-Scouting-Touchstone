@@ -1,0 +1,9 @@
+#if($ctx.error)
+		#if($ctx.error.type == "DynamoDB:ConditionalCheckFailedException")
+				$util.error("You are already a member of this team.")
+		#else
+				$util.error($ctx.error.message, $ctx.error.type)
+		#end
+#end
+
+$util.toJson($ctx.result.teamID)

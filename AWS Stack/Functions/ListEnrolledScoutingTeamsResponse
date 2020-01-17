@@ -1,0 +1,10 @@
+#if ($ctx.stash.teamIDs.isEmpty())
+		## If there were no team ids that the user was associated with anyway, return an empty array instead of the error
+		[]
+#else
+		#if($ctx.error)
+				$util.error($ctx.error.message, $ctx.error.type)
+		#end
+
+		$util.toJson($ctx.result.data.FASTTeams)
+#end

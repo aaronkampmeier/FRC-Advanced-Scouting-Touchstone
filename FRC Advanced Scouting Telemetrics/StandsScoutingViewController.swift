@@ -21,6 +21,7 @@ class StandsScoutingViewController: UIViewController {
     
     var teamKey: String?
     var match: Match?
+    var scoutTeam: String?
     
     var ssDataManager: SSDataManager?
 	
@@ -71,6 +72,7 @@ class StandsScoutingViewController: UIViewController {
     //Child view controllers
 	var currentVC: UIViewController?
     
+    var errorVC: SSErrorViewController?
     var gameStartVC: SSGameStateViewController?
     var gameScoutVC: SSGameScoutingViewController?
     var gameEndVC: SSGameStateViewController?
@@ -79,13 +81,18 @@ class StandsScoutingViewController: UIViewController {
         super.viewDidLoad()
 
         // Do any additional setup after loading the view.
+        if #available(iOS 13.0, *) {
+            self.isModalInPresentation = true
+        }
 		
 		//Get all the view controllers
+        errorVC = (storyboard?.instantiateViewController(withIdentifier: "ssErrorView") as! SSErrorViewController)
         gameScoutVC = (storyboard?.instantiateViewController(withIdentifier: "ssGameScoutVC") as! SSGameScoutingViewController)
-        gameStartVC = storyboard?.instantiateViewController(withIdentifier: "gameState") as! SSGameStateViewController
-        gameEndVC = storyboard?.instantiateViewController(withIdentifier: "gameState") as! SSGameStateViewController
+        gameStartVC = (storyboard?.instantiateViewController(withIdentifier: "gameState") as! SSGameStateViewController)
+        gameEndVC = (storyboard?.instantiateViewController(withIdentifier: "gameState") as! SSGameStateViewController)
 		
 		self.timerButton.isEnabled = false
+        
     }
     
     override func viewDidLayoutSubviews() {
@@ -123,29 +130,33 @@ class StandsScoutingViewController: UIViewController {
         // Dispose of any resources that can be recreated.
     }
     
-    func setUp(forTeamKey teamKey: String, andMatchKey matchKey: String, inEventKey eventKey: String, noLocal: Bool = false) {
+    func setUp(inScoutTeam scoutTeam: String, forTeamKey teamKey: String, andMatchKey matchKey: String, inEventKey eventKey: String, noLocal: Bool = false) {
+        errorVC?.showMessage(forState: Globals.dataManager.asyncLoadingManager.eventModelStates[eventKey])
         self.teamKey = teamKey
+        self.scoutTeam = scoutTeam
         //Get the match
-        Globals.appDelegate.appSyncClient?.fetch(query: ListMatchesQuery(eventKey: eventKey), cachePolicy: noLocal ? .fetchIgnoringCacheData : .returnCacheDataElseFetch, resultHandler: {[weak self] (result, error) in
+        Globals.appSyncClient?.fetch(query: ListMatchesQuery(eventKey: eventKey), cachePolicy: noLocal ? .fetchIgnoringCacheData : .returnCacheDataElseFetch, resultHandler: {[weak self] (result, error) in
             if Globals.handleAppSyncErrors(forQuery: "ListMatches-SetUpStandsScout", result: result, error: error) {
                 self?.match = result?.data?.listMatches?.first(where: {$0?.key == matchKey})??.fragments.match
                 
+                
                 if let match = self?.match {
-					self?.teamLabel.text = "Team \(teamKey.trimmingCharacters(in: CharacterSet.letters) )"
-                    self?.matchAndEventLabel.text = match.description
                     self?.ssDataManager = SSDataManager(match: match, teamKey: teamKey)
                     
-                    self?.gameStartVC?.set(gameSection: .Start)
-                    self?.gameEndVC?.set(gameSection: .End)
-                    
-                    self?.cycleFromViewController(self!.childViewControllers.first!, toViewController: self!.gameStartVC!)
-					self?.timerButton.isEnabled = true
-					
-                } else {
-                    //Throw up an error that the match does not exist
-                    CLSNSLogv("Desired Match for stands scouting does not exist or is not stored in the cache, trying again", getVaList([]))
-                    self?.setUp(forTeamKey: teamKey, andMatchKey: matchKey, inEventKey: eventKey, noLocal: true)
-                    return
+                    if let dataManager = self?.ssDataManager {
+                        
+                        self?.teamLabel.text = "Team \(teamKey.trimmingCharacters(in: CharacterSet.letters) )"
+                        self?.matchAndEventLabel.text = match.description
+                        self?.ssDataManager = SSDataManager(match: match, teamKey: teamKey)
+                        
+                        self?.gameStartVC?.set(gameSection: .Start, dataManager: dataManager)
+                        self?.gameEndVC?.set(gameSection: .End, dataManager: dataManager)
+                        
+                        if self?.ssDataManager?.model != nil {
+                            self?.cycleFromViewController(self!.children.first!, toViewController: self!.gameStartVC!)
+                            self?.timerButton.isEnabled = true
+                        }
+                    }
                 }
             } else {
                 //TODO: - Show error
@@ -153,10 +164,13 @@ class StandsScoutingViewController: UIViewController {
         })
     }
     
-    func setUp(forTeamKey teamKey: String, andEventKey eventKey: String) {
-        //If no match key is specified, then get all of the matches and offer them up to be selected
-        //Eventually calls other setUp method
-        Globals.appDelegate.appSyncClient?.fetch(query: ListMatchesQuery(eventKey: eventKey), cachePolicy: .returnCacheDataElseFetch, resultHandler: {[weak self] (result, error) in
+    /// If no match key is specified, then get all of the matches and offer them up to be selected. It will eventually call the other setUp method.
+    /// - Parameters:
+    ///   - scoutTeam: scout team
+    ///   - teamKey: The team key
+    ///   - eventKey: The event key
+    func setUp(inScoutTeam scoutTeam: String, forTeamKey teamKey: String, andEventKey eventKey: String) {
+        Globals.appSyncClient?.fetch(query: ListMatchesQuery(eventKey: eventKey), cachePolicy: .returnCacheDataElseFetch, resultHandler: {[weak self] (result, error) in
             if Globals.handleAppSyncErrors(forQuery: "ListMatchesQuery-StandsScout", result: result, error: error) {
                 //Filter the matches to only be ones that this team is in
                 let filteredMatches = result?.data?.listMatches?.filter({
@@ -168,7 +182,7 @@ class StandsScoutingViewController: UIViewController {
                 let askAction = UIAlertController(title: "Select Match", message: "Select the match for Team \(teamKey.trimmingCharacters(in: CharacterSet.letters)) to Stands Scout", preferredStyle: .alert)
                 for match in sortedMatches {
                     askAction.addAction(UIAlertAction(title: "\(match.compLevel.description) \(match.matchNumber)", style: .default, handler: {_ in
-                        self?.setUp(forTeamKey: teamKey, andMatchKey: match.key, inEventKey: eventKey)
+                        self?.setUp(inScoutTeam: scoutTeam, forTeamKey: teamKey, andMatchKey: match.key, inEventKey: eventKey)
                     }))
                 }
                 
@@ -213,11 +227,16 @@ class StandsScoutingViewController: UIViewController {
 		
 		newVC.view.frame = oldVC.view.frame
 		
-		transition(from: oldVC, to: newVC, duration: 0, options: UIViewAnimationOptions(), animations: {}, completion: {_ in oldVC.removeFromParentViewController(); newVC.didMove(toParentViewController: self); self.currentVC = newVC})
+		transition(from: oldVC, to: newVC, duration: 0, options: UIView.AnimationOptions(), animations: {}, completion: {_ in
+            oldVC.removeFromParent()
+            newVC.didMove(toParent: self)
+            self.currentVC = newVC
+        })
 	}
 	
 	//Timer
 	@IBAction func timerButtonTapped(_ sender: UIButton) {
+        ssDataManager?.start()
 		isRunning = !isRunning
 	}
 	
@@ -267,8 +286,8 @@ class StandsScoutingViewController: UIViewController {
         
         let navVC = UINavigationController(rootViewController: notesVC)
         
-        if let eventKey = self.match?.eventKey, let teamKey = self.teamKey {
-            notesVC.load(forEventKey: eventKey, andTeamKey: teamKey)
+        if let eventKey = self.match?.eventKey, let teamKey = self.teamKey, let scoutTeam = Globals.dataManager.enrolledScoutingTeamID {
+            notesVC.load(inScoutTeam: scoutTeam, forEventKey: eventKey, andTeamKey: teamKey)
         }
 		
 		navVC.modalPresentationStyle = .popover
@@ -290,11 +309,35 @@ class StandsScoutingViewController: UIViewController {
         
         let redKeys = self.match?.alliances?.red?.teamKeys?.map({$0!}) ?? []
         let blueKeys = self.match?.alliances?.blue?.teamKeys?.map({$0!}) ?? []
-        if let eventKey = self.match?.eventKey {
-            superNotesVC.load(forEventKey: eventKey, withTeamKeys: redKeys + blueKeys)
+        if let eventKey = self.match?.eventKey, let scoutTeam = scoutTeam {
+            superNotesVC.load(inScoutTeam: scoutTeam, forEventKey: eventKey, withTeamKeys: redKeys + blueKeys)
         }
         
         present(superNotesNavVC, animated: true, completion: nil)
     }
 }
 
+class SSErrorViewController: UIViewController {
+    @IBOutlet weak var errorTitleLabel: UILabel!
+    @IBOutlet weak var errorMessageLabel: UILabel!
+    
+    let viewIsLoadedSemaphore = DispatchSemaphore(value: 0)
+    
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        
+        viewIsLoadedSemaphore.signal()
+    }
+    
+    internal func showMessage(forState modelState: FASTCompetitionModelState?) {
+        DispatchQueue.global(qos: .userInitiated).async {[weak self] in
+            self?.viewIsLoadedSemaphore.wait()
+            self?.viewIsLoadedSemaphore.signal()
+            DispatchQueue.main.async {
+                if let self = self {
+                    (self.errorTitleLabel.text, self.errorMessageLabel.text) = modelState?.stateDescription() ?? (nil,nil)
+                }
+            }
+        }
+    }
+}

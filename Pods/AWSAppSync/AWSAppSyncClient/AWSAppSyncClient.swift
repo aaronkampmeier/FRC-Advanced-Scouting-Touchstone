@@ -29,15 +29,23 @@ public protocol AWSAppSyncOfflineMutationDelegate {
 /// The client for making `Mutation`, `Query` and `Subscription` requests.
 public class AWSAppSyncClient {
 
+    static var prefixTracker: [String: (String, Int)] = [:]
+    static var prefixTrackerQueue: DispatchQueue = DispatchQueue(label: "com.amazonaws.appsync.AWSAppSyncClient.clientDatabasePrefixTrackerQueue")
+
     public let apolloClient: ApolloClient?
     public let store: ApolloStore?
     public let presignedURLClient: AWSS3ObjectPresignedURLGenerator?
     public let s3ObjectManager: AWSS3ObjectManager?
 
-    internal var httpTransport: AWSNetworkTransport?
+    var httpTransport: AWSNetworkTransport?
+    var subscriptionConnectionFactory: SubscriptionConnectionFactory?
 
     public var offlineMutationDelegate: AWSAppSyncOfflineMutationDelegate?
     private var mutationQueue: AWSPerformMutationQueue!
+    var retryStrategy: AWSAppSyncRetryStrategy
+
+    var prefixTrackerKey: String?
+    var prefixTrackerValue: String?
 
     /// The count of Mutation operations queued for sending to the backend.
     ///
@@ -52,7 +60,6 @@ public class AWSAppSyncClient {
 
     private var connectionStateChangeHandler: ConnectionStateChangeHandler?
     private var autoSubmitOfflineMutations: Bool = false
-    private var appSyncMQTTClient = AppSyncMQTTClient()
     private var subscriptionsQueue = DispatchQueue(label: "SubscriptionsQueue", qos: .userInitiated)
 
     fileprivate var subscriptionMetadataCache: AWSSubscriptionMetaDataCache?
@@ -65,11 +72,23 @@ public class AWSAppSyncClient {
         try self.init(appSyncConfig: appSyncConfig, reachabilityFactory: nil)
     }
 
-    init(appSyncConfig: AWSAppSyncClientConfiguration,
-         reachabilityFactory: NetworkReachabilityProvidingFactory.Type? = nil) throws {
+    /// Creates a client with the specified `AWSAppSyncClientConfiguration`
+    /// and `NetworkReachabilityProvidingFactory`.
+    ///
+    /// This method is primarily intended to facilitate integration testing, but may be used by apps that wish
+    /// to use their own reachability solution in place of AppSync's bundled reachability framework.
+    ///
+    /// Note that the AppSync client's use of the Reachability client provided by the factory should be
+    /// considered an implementation detail. In particular, apps should not rely on AppSync to inspect network
+    /// reachability status before attempting a network connection.
+    ///
+    /// - Parameters:
+    ///   - appSyncConfig: The `AWSAppSyncClientConfiguration` object.
+    ///   - reachabilityFactory: An optional factory that provides `NetworkReachabilityProviding` instances.
+    public init(appSyncConfig: AWSAppSyncClientConfiguration,
+                reachabilityFactory: NetworkReachabilityProvidingFactory.Type? = nil) throws {
 
         AppSyncLog.info("Initializing AppSyncClient")
-
         self.autoSubmitOfflineMutations = appSyncConfig.autoSubmitOfflineMutations
         self.store = appSyncConfig.store
         self.presignedURLClient = appSyncConfig.presignedURLClient
@@ -78,9 +97,11 @@ public class AWSAppSyncClient {
 
         self.httpTransport = appSyncConfig.networkTransport
         self.connectionStateChangeHandler = appSyncConfig.connectionStateChangeHandler
+        
+        self.retryStrategy = appSyncConfig.retryStrategy
 
         self.apolloClient = ApolloClient(networkTransport: self.httpTransport!, store: appSyncConfig.store)
-
+        self.subscriptionConnectionFactory = appSyncConfig.subscriptionConnectionFactory
         NetworkReachabilityNotifier.setupShared(
             host: appSyncConfig.url.host!,
             allowsCellularAccess: appSyncConfig.allowsCellularAccess,
@@ -97,11 +118,40 @@ public class AWSAppSyncClient {
             selector: #selector(appsyncReachabilityChanged(note:)),
             name: .appSyncReachabilityChanged,
             object: nil)
+
+        try AWSAppSyncClient.prefixTrackerQueue.sync {
+            if appSyncConfig.cacheConfiguration?.usePrefix ?? false {
+                let prefixTrackerKey = appSyncConfig.cacheConfiguration?.prefix ?? ""
+                let authTypeString = appSyncConfig.authType?.rawValue ?? "unknown_auth"
+                let prefixTrackerValue = appSyncConfig.url.absoluteString + "_" + authTypeString
+                if let (clientString, clientCount) = AWSAppSyncClient.prefixTracker[prefixTrackerKey] {
+                    if clientString != prefixTrackerValue {
+                        throw AWSAppSyncClientConfigurationError.cacheConfigurationAlreadyInUse("Configured two clients with the same database prefix")
+                    } else {
+                        AWSAppSyncClient.prefixTracker[prefixTrackerKey] = (prefixTrackerValue, clientCount + 1)
+                    }
+                } else {
+                    AWSAppSyncClient.prefixTracker[prefixTrackerKey] = (prefixTrackerValue, 1)
+                }
+                self.prefixTrackerKey = prefixTrackerKey
+                self.prefixTrackerValue = prefixTrackerValue
+            }
+        }
     }
 
     deinit {
         AppSyncLog.info("Releasing AppSyncClient")
         NetworkReachabilityNotifier.clearShared()
+        AWSAppSyncClient.prefixTrackerQueue.sync {
+            if let key = self.prefixTrackerKey,
+                let (value, count) = AWSAppSyncClient.prefixTracker[key] {
+                if count <= 1 {
+                    AWSAppSyncClient.prefixTracker[key] = nil
+                } else {
+                    AWSAppSyncClient.prefixTracker[key] = (value, count - 1)
+                }
+            }
+        }
     }
 
     @objc func appsyncReachabilityChanged(note: Notification) {
@@ -114,9 +164,42 @@ public class AWSAppSyncClient {
     /// Clears apollo cache
     ///
     /// - Returns: Promise
+    @available(*, deprecated, message: "Use the clearCaches method that optionally takes in ClearCacheOptions")
     public func clearCache() -> Promise<Void> {
         guard let store = store else { return Promise(fulfilled: ()) }
         return store.clearCache()
+    }
+
+    /// Clears the apollo cache, offline mutation queue, and delta sync subscription metadata
+    ///
+    /// - Parameters:
+    ///   - options Fine-tune which caches are cleared when calling this method
+    public func clearCaches(options: ClearCacheOptions = ClearCacheOptions(clearQueries: true, clearMutations: true, clearSubscriptions: true)) throws {
+        var map: [CacheType: Error] = [:]
+        do {
+            if options.clearQueries {
+                try store?.clearCache().await()
+            }
+        } catch {
+            map[.query] = error
+        }
+        do {
+            if options.clearMutations {
+                try mutationQueue.clearQueue()
+            }
+        } catch {
+            map[.mutation] = error
+        }
+        do {
+            if options.clearSubscriptions {
+                try subscriptionMetadataCache?.clear()
+            }
+        } catch {
+            map[.subscription] = error
+        }
+        if map.keys.count > 0 {
+            throw ClearCacheError.failedToClear(map)
+        }
     }
 
     /// Fetches a query from the server or from the local cache, depending on the current contents of the cache and the
@@ -154,21 +237,22 @@ public class AWSAppSyncClient {
                                                              queue: DispatchQueue = DispatchQueue.main,
                                                              statusChangeHandler: SubscriptionStatusChangeHandler? = nil,
                                                              resultHandler: @escaping SubscriptionResultHandler<Subscription>) throws -> AWSAppSyncSubscriptionWatcher<Subscription>? {
-
-        return AWSAppSyncSubscriptionWatcher(client: self.appSyncMQTTClient,
-                                              httpClient: self.httpTransport!,
-                                              store: self.store!,
-                                              subscriptionsQueue: self.subscriptionsQueue,
-                                              subscription: subscription,
-                                              handlerQueue: queue,
-                                              statusChangeHandler: statusChangeHandler,
-                                              resultHandler: resultHandler)
+        let connection = self.subscriptionConnectionFactory?.connection(connectionType: .appSyncRealtime)
+        return AWSAppSyncSubscriptionWatcher(connection: connection!,
+                                             store: self.store!,
+                                             subscriptionsQueue: self.subscriptionsQueue,
+                                             subscription: subscription,
+                                             handlerQueue: queue,
+                                             statusChangeHandler: statusChangeHandler,
+                                             resultHandler: resultHandler)
     }
 
-    internal func subscribeWithConnectCallback<Subscription: GraphQLSubscription>(subscription: Subscription, queue: DispatchQueue = DispatchQueue.main, connectCallback: @escaping (() -> Void), resultHandler: @escaping SubscriptionResultHandler<Subscription>) throws -> AWSAppSyncSubscriptionWatcher<Subscription>? {
-
-        return AWSAppSyncSubscriptionWatcher(client: self.appSyncMQTTClient,
-                                             httpClient: self.httpTransport!,
+    internal func subscribeWithConnectCallback<Subscription: GraphQLSubscription>(subscription: Subscription,
+                                                                                  queue: DispatchQueue = DispatchQueue.main,
+                                                                                  connectCallback: @escaping (() -> Void),
+                                                                                  resultHandler: @escaping SubscriptionResultHandler<Subscription>) throws -> AWSAppSyncSubscriptionWatcher<Subscription>? {
+        let connection = self.subscriptionConnectionFactory?.connection(connectionType: .appSyncRealtime)
+        return AWSAppSyncSubscriptionWatcher(connection: connection!,
                                              store: self.store!,
                                              subscriptionsQueue: self.subscriptionsQueue,
                                              subscription: subscription,

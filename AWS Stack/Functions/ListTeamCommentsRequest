@@ -1,0 +1,20 @@
+## Below example shows an equality query to find an item by GraphQL input argument of "id"
+## Queries can be run against a table or an index, which can be more performant than a Scan operation
+##   If using an index you will also provide an "index" : "indexname" where indexname is the name of your index
+## "expression" is the logical EQUALITY condition that will be evaluated
+## "espressionValues" is the attribute in DynamoDB that you're evaluating the "expression" condition against
+## You can optionally provide "filter" that will filter the results returned from a query
+## Read more: https://docs.aws.amazon.com/appsync/latest/devguide/resolver-mapping-template-reference-dynamodb.html#aws-appsync-resolver-mapping-template-reference-dynamodb-query
+
+{
+    "version" : "2017-02-28",
+    "operation" : "Query",
+    "query" : {
+        ## Provide a query expression. **
+        "expression": "partitionKey = :pk AND begins_with(sortKey, :sk)",
+        "expressionValues" : {
+            ":pk" : $util.dynamodb.toDynamoDBJson("g${ctx.args.scoutTeam}-e${ctx.args.eventKey}"),
+            ":sk": $util.dynamodb.toDynamoDBJson("c${ctx.args.teamKey}")
+        }
+    }
+}

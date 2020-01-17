@@ -1,21 +1,23 @@
 # this is an auto generated file. This will be overwritten
-mutation AddTrackedEvent($eventKey: ID!) {
-  addTrackedEvent(eventKey: $eventKey) {
+mutation AddTrackedEvent($scoutTeam: ID!, $eventKey: ID!) {
+  addTrackedEvent(scoutTeam: $scoutTeam, eventKey: $eventKey) {
     ...EventRanking
   }
 }
-mutation RemoveTrackedEvent($eventKey: ID!) {
-  removeTrackedEvent(eventKey: $eventKey) {
+mutation RemoveTrackedEvent($scoutTeam: ID!, $eventKey: ID!) {
+  removeTrackedEvent(scoutTeam: $scoutTeam, eventKey: $eventKey) {
     eventKey
-    userID
+    scoutTeam
   }
 }
 mutation MoveRankedTeam(
+  $scoutTeam: ID!
   $eventKey: ID!
   $teamKey: ID!
   $toIndex: Int!
 ) {
   moveRankedTeam(
+    scoutTeam: $scoutTeam
     eventKey: $eventKey
     teamKey: $teamKey
     toIndex: $toIndex
@@ -24,11 +26,13 @@ mutation MoveRankedTeam(
   }
 }
 mutation SetTeamPicked(
+  $scoutTeam: ID!
   $eventKey: ID!
   $teamKey: ID!
   $isPicked: Boolean!
 ) {
   setTeamPicked(
+    scoutTeam: $scoutTeam
     eventKey: $eventKey
     teamKey: $teamKey
     isPicked: $isPicked
@@ -37,12 +41,14 @@ mutation SetTeamPicked(
   }
 }
 mutation UpdateScoutedTeam(
+  $scoutTeam: ID!
   $eventKey: ID!
   $teamKey: ID!
-  $image: ImageInput
+  $image: S3ObjectInput
   $attributes: AWSJSON!
 ) {
   updateScoutedTeam(
+    scoutTeam: $scoutTeam
     eventKey: $eventKey
     teamKey: $teamKey
     image: $image
@@ -51,16 +57,39 @@ mutation UpdateScoutedTeam(
     ...ScoutedTeam
   }
 }
+mutation AddTeamComment(
+  $scoutTeam: ID!
+  $eventKey: String!
+  $teamKey: String!
+  $body: String!
+) {
+  addTeamComment(
+    scoutTeam: $scoutTeam
+    eventKey: $eventKey
+    teamKey: $teamKey
+    body: $body
+  ) {
+    ...TeamComment
+  }
+}
+mutation RemoveTeamComment($scoutTeam: ID!, $eventKey: String!, $key: String!) {
+  removeTeamComment(scoutTeam: $scoutTeam, eventKey: $eventKey, key: $key) {
+    key
+    scoutTeam
+  }
+}
 mutation CreateScoutSession(
+  $scoutTeam: ID!
   $eventKey: ID!
   $teamKey: ID!
   $matchKey: ID!
   $recordedDate: AWSTimestamp!
-  $startState: AWSJSON!
-  $endState: AWSJSON!
+  $startState: AWSJSON
+  $endState: AWSJSON
   $timeMarkers: [TimeMarkerInput]!
 ) {
   createScoutSession(
+    scoutTeam: $scoutTeam
     eventKey: $eventKey
     teamKey: $teamKey
     matchKey: $matchKey
@@ -72,25 +101,47 @@ mutation CreateScoutSession(
     ...ScoutSession
   }
 }
-mutation RemoveScoutSession($eventKey: ID!, $key: ID!) {
-  removeScoutSession(eventKey: $eventKey, key: $key) {
+mutation RemoveScoutSession($scoutTeam: ID!, $eventKey: ID!, $key: ID!) {
+  removeScoutSession(scoutTeam: $scoutTeam, eventKey: $eventKey, key: $key) {
+    scoutTeam
     key
-    userID
     matchKey
     teamKey
     eventKey
   }
 }
-
-mutation AddTeamComment($eventKey: String!, $teamKey: String!, $body: String!, $author: String!) {
-  addTeamComment(eventKey: $eventKey, teamKey: $teamKey, body: $body, author: $author) {
-    ...TeamComment
+mutation CreateScoutingTeam($name: String!, $associatedFrcTeamNumber: Int!, $leadName: String!) {
+  createScoutingTeam(
+    name: $name
+    associatedFrcTeamNumber: $associatedFrcTeamNumber
+    leadName: $leadName
+  ) {
+    ...ScoutingTeam
   }
 }
-
-mutation RemoveTeamComment($eventKey: String!, $key: String!) {
-  removeTeamComment(eventKey: $eventKey, key: $key) {
-    key
-    userID
+mutation MakeScoutTeamInvitation($scoutTeam: ID!, $expDate: AWSTimestamp!) {
+  makeScoutTeamInvitation(scoutTeam: $scoutTeam, expDate: $expDate) {
+    ...ScoutTeamInvitation
+  }
+}
+mutation RedeemInvitation($inviteID: ID!, $secretCode: String!, $memberName: String!) {
+  redeemInvitation(inviteID: $inviteID, secretCode: $secretCode, memberName: $memberName)
+}
+mutation ChangeMemberName($scoutTeam: ID!, $newName: String!) {
+  changeMemberName(scoutTeam: $scoutTeam, newName: $newName) {
+    ...ScoutingTeamMember
+  }
+}
+mutation EditScoutingTeamInfo($scoutTeam: ID!, $name: String!, $asscoiatedFrcTeamNumber: Int!) {
+  editScoutingTeamInfo(scoutTeam: $scoutTeam, name: $name, associatedFrcTeamNumber: $asscoiatedFrcTeamNumber) {
+    ...ScoutingTeam
+  }
+}
+mutation RemoveMember($scoutTeam: ID!, $userToRemove: ID!) {
+  removeMember(scoutTeam: $scoutTeam, userToRemove: $userToRemove)
+}
+mutation TransferLead($scoutTeam: ID!, $newTeamLeadUserId: ID!) {
+  transferLead(scoutTeam: $scoutTeam, newTeamLeadUserId: $newTeamLeadUserId) {
+    ...ScoutingTeam
   }
 }

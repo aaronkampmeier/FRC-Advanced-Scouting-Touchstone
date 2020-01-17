@@ -22,6 +22,8 @@ class MatchesTableViewController: UITableViewController {
     var matches: [Match] = []
     
     var noMatchesView: UIView!
+    
+    let viewIsLoadedSemaphore = DispatchSemaphore(value: 0)
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -56,6 +58,8 @@ class MatchesTableViewController: UITableViewController {
         }
         
         tableView.backgroundView = noMatchesView
+        
+        viewIsLoadedSemaphore.signal()
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -69,50 +73,51 @@ class MatchesTableViewController: UITableViewController {
     }
     
     func load(forEventKey eventKey: String?, specifyingTeam teamKey: String? = nil) {
-        self.matches = []
-        tableView.reloadData()
-        
-        if let eventKey = eventKey {
-            //Get the matches
-            Globals.appDelegate.appSyncClient?.fetch(query: ListMatchesQuery(eventKey: eventKey), cachePolicy: .returnCacheDataAndFetch, resultHandler: {[weak self] (result, error) in
-                if Globals.handleAppSyncErrors(forQuery: "ListMatchesQuery", result: result, error: error) {
-                    var newMatches: [Match] = []
-                    let returnedMatches = (result?.data?.listMatches?.map {$0!.fragments.match} ?? []).sorted(by: { (match1, match2) -> Bool in
-                        return match1 < match2
-                    })
-                    if let teamKey = teamKey {
-                        newMatches = returnedMatches.filter {match in
-                            if match.alliances?.blue?.teamKeys?.contains(teamKey) ?? false || match.alliances?.red?.teamKeys?.contains(teamKey) ?? false {
-                                return true
+        DispatchQueue.global(qos: .userInitiated).async {[weak self] in
+            self?.viewIsLoadedSemaphore.wait()
+            self?.viewIsLoadedSemaphore.signal()
+            DispatchQueue.main.async {
+                self?.matches = []
+                self?.tableView.reloadData()
+                
+                if let eventKey = eventKey {
+                    //Get the matches
+                    Globals.appSyncClient?.fetch(query: ListMatchesQuery(eventKey: eventKey), cachePolicy: .returnCacheDataAndFetch, resultHandler: {[weak self] (result, error) in
+                        if Globals.handleAppSyncErrors(forQuery: "ListMatchesQuery", result: result, error: error) {
+                            var newMatches: [Match] = []
+                            let returnedMatches = (result?.data?.listMatches?.map {$0!.fragments.match} ?? []).sorted(by: { (match1, match2) -> Bool in
+                                return match1 < match2
+                            })
+                            if let teamKey = teamKey {
+                                newMatches = returnedMatches.filter {match in
+                                    if match.alliances?.blue?.teamKeys?.contains(teamKey) ?? false || match.alliances?.red?.teamKeys?.contains(teamKey) ?? false {
+                                        return true
+                                    } else {
+                                        return false
+                                    }
+                                }
                             } else {
-                                return false
+                                newMatches = returnedMatches
                             }
+                            
+                            //Check if they are the same, and if they are don't update
+                            var isDifferent = false
+                            for (index,match) in (newMatches).enumerated() {
+                                if !(self?.matches.firstIndex(where: {$0.key == match.key}) ?? -1 == index) {
+                                    isDifferent = true
+                                }
+                            }
+                            
+                            self?.matches = newMatches
+                            if isDifferent {
+                                self?.tableView.reloadData()
+                                self?.scrollToSoonest()
+                            }
+                            
                         }
-                    } else {
-                        newMatches = returnedMatches
-                    }
-                    
-                    //Check if they are the same, and if they are don't update
-                    var isDifferent = false
-                    for (index,match) in (newMatches).enumerated() {
-                        if !(self?.matches.firstIndex(where: {$0.key == match.key}) ?? -1 == index) {
-                            isDifferent = true
-                        }
-                    }
-                    
-                    self?.matches = newMatches
-                    if isDifferent {
-                        self?.tableView.reloadData()
-                        self?.scrollToSoonest()
-                    }
-                    
-                } else {
-					Globals.presentError(error: error, andResult: result, withTitle: "Error Loading Matches")
-//                    let alert = UIAlertController(title: "Error Loading Matches", message: "There was an error loading the matches. Connect to the Internet and try again. \(Globals.descriptions(ofError: error, andResult: result))", preferredStyle: .alert)
-//                    alert.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
-//                    self?.present(alert, animated: true, completion: nil)
+                    })
                 }
-            })
+            }
         }
     }
     

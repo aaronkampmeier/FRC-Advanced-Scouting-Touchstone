@@ -1,0 +1,23 @@
+{
+    "version" : "2018-05-29",
+    "operation" : "UpdateItem",
+    "key": {
+        "teamID" : $util.dynamodb.toDynamoDBJson($ctx.args.scoutTeam),
+        "userID" : $util.dynamodb.toDynamoDBJson("teamData")
+    },
+    "update" : {
+        "expression" : "SET #lead = :newLead",
+        "expressionNames" : {
+           "#lead" : "teamLead"
+       },
+       "expressionValues" : {
+           ":newLead" : $util.dynamodb.toDynamoDBJson($ctx.args.newTeamLeadUserId)
+       }
+    },
+    "condition" : {
+        "expression": "teamLead = :callingUser",
+				"expressionValues": {
+						":callingUser": $util.dynamodb.toDynamoDBJson($ctx.identity.sub)
+				}
+    }
+}

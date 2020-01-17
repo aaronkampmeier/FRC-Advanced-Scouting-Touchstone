@@ -1,0 +1,25 @@
+##Create all of the team event opr objects
+#set( $returnObjects = [] )
+
+#foreach( $oprEntry in $ctx.result.oprs.entrySet() )
+	#set($object = { "eventKey":$ctx.args.eventKey, "teamKey":$oprEntry.key })
+    $util.qr($object.put("opr", $oprEntry.value))
+    
+    ##Get the dpr
+    #foreach( $dprEntry in $ctx.result.dprs.entrySet() )
+    	#if( $dprEntry.key == $oprEntry.key )
+        	$util.qr($object.put("dpr", $dprEntry.value))
+        #end
+    #end
+    
+    ##Get the ccwm
+    #foreach( $ccwmEntry in $ctx.result.ccwms.entrySet() )
+    	#if( $ccwmEntry.key == $oprEntry.key )
+        	$util.qr($object.put("ccwm", $ccwmEntry.value))
+        #end
+    #end
+    
+    $util.qr($returnObjects.add($object))
+#end
+
+$util.toJson($returnObjects)

@@ -1,0 +1,12 @@
+#if($ctx.error)
+		$util.error($ctx.error.message, $ctx.error.type)
+#end
+
+#set( $members = [])
+#foreach( $entry in $ctx.result.items )
+		#if( $entry.userID != "teamData")
+				$util.qr($members.add($entry))
+		#end
+#end
+
+$util.toJson($members)

@@ -64,6 +64,7 @@
 #import "NSValueTransformer+AWSMTLInversionAdditions.h"
 #import "NSValueTransformer+AWSMTLPredefinedTransformerAdditions.h"
 #import "AWSNetworking.h"
+#import "AWSNetworkingHelpers.h"
 #import "AWSURLSessionManager.h"
 #import "AWSSerialization.h"
 #import "AWSURLRequestRetryHandler.h"
@@ -87,6 +88,7 @@
 #import "AWSLogging.h"
 #import "AWSModel.h"
 #import "AWSSynchronizedMutableDictionary.h"
+#import "AWSXMLDictionary.h"
 
 FOUNDATION_EXPORT double AWSCoreVersionNumber;
 FOUNDATION_EXPORT const unsigned char AWSCoreVersionString[];

@@ -1,0 +1,8 @@
+{
+    "version" : "2017-02-28",
+    "operation" : "DeleteItem",
+    "key" : {
+        "partitionKey" : $util.dynamodb.toDynamoDBJson("g${ctx.args.scoutTeam}-e${ctx.args.eventKey}"),
+        "sortKey": $util.dynamodb.toDynamoDBJson("c${ctx.args.key}")
+    }
+}

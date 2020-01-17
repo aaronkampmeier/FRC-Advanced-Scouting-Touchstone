@@ -10,7 +10,7 @@ import UIKit
 
 protocol SelectStatsDelegate {
     func currentlySelectedStats() -> [ScoutedTeamStat]
-    
+    func eventKey() -> String?
     func selectStatsTableViewController(_ vc: SelectStatsTableViewController, didSelectStats selectedStats: [ScoutedTeamStat])
 }
 
@@ -30,7 +30,7 @@ class SelectStatsTableViewController: UITableViewController {
         // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
         // self.navigationItem.rightBarButtonItem = self.editButtonItem
         
-        allStats = StatisticsDataSource().getStats(forType: ScoutedTeam.self)
+        allStats = StatisticsDataSource().getStats(forType: ScoutedTeam.self, forEvent: delegate?.eventKey() ?? "")
         selectedStats = delegate?.currentlySelectedStats() ?? []
     }
 

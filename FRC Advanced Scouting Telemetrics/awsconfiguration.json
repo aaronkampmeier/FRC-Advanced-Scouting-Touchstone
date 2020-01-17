@@ -1,24 +1,36 @@
 {
   "UserAgent": "MobileHub/1.0",
   "Version": "1.0",
-  "CredentialsProvider": {
-    "CognitoIdentity": {
-      "Default": {
-        "PoolId": "us-east-1:6b605d3a-6f88-4893-8316-4a807ae329c5",
-        "Region": "us-east-1"
-      }
-    }
-  },
   "IdentityManager": {
-    "Default": {}
+      "Default": {}
+  },
+  "CredentialsProvider": {
+      "CognitoIdentity": {
+          "Default": {
+              "PoolId": "us-east-1:c3a3e60d-78e1-4b38-9eef-d0287e83ed81",
+              "Region": "us-east-1"
+          }
+      }
   },
   "CognitoUserPool": {
     "Default": {
-      "PoolId": "us-east-1_FuyxJ3oI6",
-      "AppClientId": "t9sg63r7ka1igihrlngpovipd",
-      "AppClientSecret": "1pcpa9u5lvvohqvdj9c460avc1k49rqpv6vd6oj89gntabpoo8uo",
+      "PoolId": "us-east-1_z8wzHGNeO",
+      "AppClientId": "me9su4pg619hf36k9m0tuuu39",
+      "AppClientSecret": "1he655bvqal3s0v7lkk0s88ad63ijit4flpj6s39db05uuuk5c00",
       "Region": "us-east-1"
     }
+  },
+  "Auth": {
+      "Default": {
+          "OAuth": {
+              "WebDomain": "auth.frcfastapp.com",
+              "AppClientId": "me9su4pg619hf36k9m0tuuu39",
+              "AppClientSecret": "1he655bvqal3s0v7lkk0s88ad63ijit4flpj6s39db05uuuk5c00",
+              "SignInRedirectURI": "fast://signInCallback",
+              "SignOutRedirectURI": "fast://signOut",
+              "Scopes": ["openid", "email", "profile"]
+          }
+      }
   },
   "PinpointAnalytics": {
     "Default": {
@@ -33,7 +45,7 @@
   },
   "AppSync": {
       "Default": {
-          "ApiUrl": "https://klchv4y3efga5i6dydzloxaule.appsync-api.us-east-1.amazonaws.com/graphql",
+          "ApiUrl": "https://ld62zwedvbhofmbc3oxasrtkcm.appsync-api.us-east-1.amazonaws.com/graphql",
           "Region": "us-east-1",
           "AuthMode": "AMAZON_COGNITO_USER_POOLS",
           "ApiKey": "null"

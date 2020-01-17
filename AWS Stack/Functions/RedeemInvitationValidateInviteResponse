@@ -1,0 +1,11 @@
+#if($ctx.error)
+		$util.error($ctx.error.message, $ctx.error.type)
+#end
+
+#if($ctx.result.secretCode == $ctx.args.secretCode && $ctx.result.expDate > $util.time.nowEpochSeconds())
+		$util.qr($ctx.stash.put("teamID", $ctx.result.teamID))
+#else
+		$util.unauthorized()
+#end
+
+{}

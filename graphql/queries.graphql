@@ -1,14 +1,6 @@
 # this is an auto generated file. This will be overwritten
-query ListTrackedEvents {
-  listTrackedEvents {
-    eventKey
-    eventName
-  }
-}
-query GetEventRanking($key: ID!) {
-  getEventRanking(key: $key) {
-    ...EventRanking
-  }
+query GetCompetitionModel($year: String) {
+  getCompetitionModel(year: $year)
 }
 query ListAvailableEvents($year: String) {
   listAvailableEvents(year: $year) {
@@ -30,16 +22,6 @@ query GetTeam($key: ID!) {
     ...Team
   }
 }
-query ListScoutedTeams($eventKey: ID!) {
-  listScoutedTeams(eventKey: $eventKey) {
-    ...ScoutedTeam
-  }
-}
-query GetScoutedTeam($eventKey: ID!, $teamKey: ID!) {
-  getScoutedTeam(eventKey: $eventKey, teamKey: $teamKey) {
-    ...ScoutedTeam
-  }
-}
 query ListMatches($eventKey: ID!) {
   listMatches(eventKey: $eventKey) {
     ...Match
@@ -48,42 +30,6 @@ query ListMatches($eventKey: ID!) {
 query GetMatch($matchKey: ID!) {
   getMatch(matchKey: $matchKey) {
     ...Match
-  }
-}
-query ListScoutSessions($eventKey: ID!, $teamKey: ID!, $matchKey: ID) {
-  listScoutSessions(
-    eventKey: $eventKey
-    teamKey: $teamKey
-    matchKey: $matchKey
-  ) {
-    ...ScoutSession
-  }
-}
-query ListSimpleScoutSessions($eventKey: ID!, $teamKey: ID!, $matchKey: ID) {
-  listScoutSessions(
-    eventKey: $eventKey
-    teamKey: $teamKey
-    matchKey: $matchKey
-  ) {
-    key
-    matchKey
-    teamKey
-    eventKey
-  }
-}
-query ListAllScoutSessions($eventKey: ID!) {
-  listAllScoutSessions(eventKey: $eventKey) {
-    ...ScoutSession
-  }
-}
-query ListScoutSessionsDelta($eventKey: ID!, $lastSync: AWSTimestamp!) {
-  listScoutSessionsDelta(eventKey: $eventKey, lastSync: $lastSync) {
-    ...ScoutSession
-  }
-}
-query GetScoutSession($eventKey: ID!, $key: ID!) {
-  getScoutSession(eventKey: $eventKey, key: $key) {
-    ...ScoutSession
   }
 }
 query ListEventOprs($eventKey: ID!) {
@@ -96,9 +42,122 @@ query ListTeamEventStatuses($eventKey: ID!) {
     ...TeamEventStatus
   }
 }
-
-query ListTeamComments($eventKey: ID!, $teamKey: ID!) {
-  listTeamComments(eventKey: $eventKey, teamKey: $teamKey) {
+query ListTrackedEvents($scoutTeam: ID!) {
+  listTrackedEvents(scoutTeam: $scoutTeam) {
+    ...EventRanking
+  }
+}
+query GetEventRanking($scoutTeam: ID!, $key: ID!) {
+  getEventRanking(scoutTeam: $scoutTeam, key: $key) {
+    ...EventRanking
+  }
+}
+query ListScoutedTeams($scoutTeam: ID!, $eventKey: ID!) {
+  listScoutedTeams(scoutTeam: $scoutTeam, eventKey: $eventKey) {
+    ...ScoutedTeam
+  }
+}
+query GetScoutedTeam($scoutTeam: ID!, $eventKey: ID!, $teamKey: ID!) {
+  getScoutedTeam(
+    scoutTeam: $scoutTeam
+    eventKey: $eventKey
+    teamKey: $teamKey
+  ) {
+    ...ScoutedTeam
+  }
+}
+query ListTeamComments($scoutTeam: ID!, $eventKey: ID!, $teamKey: ID!) {
+  listTeamComments(
+    scoutTeam: $scoutTeam
+    eventKey: $eventKey
+    teamKey: $teamKey
+  ) {
     ...TeamComment
+  }
+}
+query ListScoutSessions(
+  $scoutTeam: ID!
+  $eventKey: ID!
+  $teamKey: ID!
+  $matchKey: ID
+) {
+  listScoutSessions(
+    scoutTeam: $scoutTeam
+    eventKey: $eventKey
+    teamKey: $teamKey
+    matchKey: $matchKey
+  ) {
+    ...ScoutSession
+  }
+}
+query ListSimpleScoutSessions(
+  $scoutTeam: ID!
+  $eventKey: ID!
+  $teamKey: ID!
+  $matchKey: ID
+) {
+  listScoutSessions(
+    scoutTeam: $scoutTeam
+    eventKey: $eventKey
+    teamKey: $teamKey
+    matchKey: $matchKey
+  ) {
+    key
+    matchKey
+    teamKey
+    eventKey
+    scoutTeam
+  }
+}
+
+query GetScoutSession($scoutTeam: ID!, $eventKey: ID!, $key: ID!) {
+  getScoutSession(scoutTeam: $scoutTeam, eventKey: $eventKey, key: $key) {
+    ...ScoutSession
+  }
+}
+query ListAllScoutSessions($scoutTeam: ID!, $eventKey: ID!) {
+  listAllScoutSessions(scoutTeam: $scoutTeam, eventKey: $eventKey) {
+    ...ScoutSession
+  }
+}
+query ListScoutSessionsDelta(
+  $scoutTeam: ID!
+  $eventKey: ID!
+  $lastSync: AWSTimestamp!
+) {
+  listScoutSessionsDelta(
+    scoutTeam: $scoutTeam
+    eventKey: $eventKey
+    lastSync: $lastSync
+  ) {
+    ...ScoutSession
+  }
+}
+query ListEnrolledScoutingTeams {
+  listEnrolledScoutingTeams {
+    ...ScoutingTeam
+  }
+}
+query ListEnrolledScoutingTeamsWithMembers {
+  listEnrolledScoutingTeams {
+    ...ScoutingTeamWithMembers
+  }
+}
+query GetScoutingTeam($scoutTeam: ID!) {
+  getScoutingTeam(scoutTeam: $scoutTeam) {
+    ...ScoutingTeam
+  }
+}
+query GetScoutingTeamWithMembers($scoutTeam: ID!) {
+  getScoutingTeam(scoutTeam: $scoutTeam) {
+    ...ScoutingTeamWithMembers
+  }
+}
+query GetScoutingTeamPublicName($inviteID: ID!) {
+  getScoutingTeamPublicName(inviteID: $inviteID)
+}
+query ListScoutingTeamInvitations($scoutTeam: ID!) {
+  listScoutingTeamInvitations(scoutTeam: $scoutTeam) {
+    ...ScoutTeamInvitation
   }
 }

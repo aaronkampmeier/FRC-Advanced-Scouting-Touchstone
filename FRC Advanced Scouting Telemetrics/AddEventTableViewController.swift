@@ -9,10 +9,10 @@
 import UIKit
 
 class AddEventTableViewController: UITableViewController {
-    var loadingView: UIView?
-    var searchController: UISearchController?
+    private var loadingView: UIView?
+    private var searchController: UISearchController?
 	
-    var events = [Event]() {
+    private var events = [Event]() {
         didSet {
             loadingView?.isHidden = true
             filteredEvents = events
@@ -20,9 +20,9 @@ class AddEventTableViewController: UITableViewController {
         }
     }
     
-    var filteredEvents = [Event]()
+    private var filteredEvents = [Event]()
     
-    var selectedEvent: Event? {
+    private var selectedEvent: Event? {
         didSet {
             performSegue(withIdentifier: "eventInfo", sender: tableView)
         }
@@ -47,9 +47,10 @@ class AddEventTableViewController: UITableViewController {
         tableView.tableHeaderView = searchController?.searchBar
         
         self.navigationItem.prompt = "Choose an event to add and track"
+        navigationController?.navigationBar.prefersLargeTitles = true
     }
     
-    func setUp(withYear year: String? = nil) {
+    private func setUp(withYear year: String? = nil) {
         //Create a loading view and add it to the table view to indicate loading of the events
         events = []
         
@@ -68,7 +69,7 @@ class AddEventTableViewController: UITableViewController {
         
         self.tableView.addSubview(loadingView!)
         
-        Globals.appDelegate.appSyncClient?.fetch(query: ListAvailableEventsQuery(year: year), cachePolicy: .fetchIgnoringCacheData, resultHandler: {[weak self] (result, error) in
+        Globals.appSyncClient?.fetch(query: ListAvailableEventsQuery(year: year), cachePolicy: .fetchIgnoringCacheData, resultHandler: {[weak self] (result, error) in
             if Globals.handleAppSyncErrors(forQuery: "ListAvailableEvents", result: result, error: error) {
                 if let gotEvents = result?.data?.listAvailableEvents?.map({$0!.fragments.event}) {
                     self?.events = gotEvents
@@ -184,7 +185,7 @@ class AddEventTableViewController: UITableViewController {
 }
 
 extension AddEventTableViewController: UISearchResultsUpdating {
-    func updateSearchResults(for searchController: UISearchController) {
+    internal func updateSearchResults(for searchController: UISearchController) {
         let searchText = searchController.searchBar.text!.lowercased()
         
         if searchController.isActive {

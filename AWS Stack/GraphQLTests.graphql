@@ -1,0 +1,109 @@
+# Welcome!
+#
+# This is an in-browser tool for writing, validating, and testing GraphQL queries.
+#
+# An example query named "GetPost" might look like:
+#
+#     query GetPost {
+#       singlePost(id: 123) {
+#         id
+#         title
+#       }
+#     }
+#
+# An example mutation named "PutPost" might look like:
+#
+#     mutation PutPost {
+#       putPost(id: 123, title: "Hello, world!") {
+#         id
+#         title
+#       }
+#     }
+#
+# Keyboard shortcuts:
+#
+#  Prettify Query:  Ctrl+Shift+P (also removes comments)
+#       Run Query:  Ctrl+Enter   (or press the play button above)
+#   Auto Complete:  Ctrl+Space   (or just start typing)
+#
+
+mutation CreateScoutingTeam {
+  createScoutingTeam(name: "Team Secondary", associatedFrcTeamNumber: 9996) {
+    teamID
+    teamLead
+    associatedFrcTeamNumber
+    name
+    members {
+      name
+      memberSince
+      userID
+    }
+  }
+}
+
+mutation makeScoutTeamInvitation {
+  makeScoutTeamInvitation(scoutTeam: "2dabdbc9-39ff-497e-9ac1-eb20f9298431", expDate: 1578294029) {
+    inviteID
+    secretCode
+    teamID
+    expDate
+  }
+}
+
+mutation redeemInvitation {
+  redeemInvitation(inviteID: "MOKUX04KY", secretCode: "ZDI-H8X")
+}
+
+mutation RemoveMember {
+  removeMember(scoutTeam: "553b6c5e-f798-40cd-84a7-1fdc7d223c59", userToRemove: "22fb5e84-1d76-4926-9b88-382e8ce55860")
+}
+
+mutation TransferLead {
+  transferLead(scoutTeam: "553b6c5e-f798-40cd-84a7-1fdc7d223c59", newTeamLeadUserId: "22fb5e84-1d76-4926-9b88-382e8ce55860") {
+    teamID
+    teamLead
+    associatedFrcTeamNumber
+    name
+    members {
+      name
+      memberSince
+      userID
+    }
+  }
+}
+
+query GetScoutTeam {
+  getScoutingTeam(scoutTeam: "553b6c5e-f798-40cd-84a7-1fdc7d223c59") {
+    teamID
+    teamLead
+    associatedFrcTeamNumber
+    name
+    members {
+      name
+      memberSince
+      userID
+    }
+  }
+}
+
+query ListEnrolledScoutingTeams {
+  listEnrolledScoutingTeams {
+    teamID
+    teamLead
+    associatedFrcTeamNumber
+    name
+  }
+}
+query ListEnrolledScoutingTeamsWithMembers {
+  listEnrolledScoutingTeams {
+    teamID
+    teamLead
+    associatedFrcTeamNumber
+    name
+    members {
+      name
+      memberSince
+      userID
+    }
+  }
+}

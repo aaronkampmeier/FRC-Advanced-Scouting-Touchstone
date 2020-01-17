@@ -1,7 +1,7 @@
 //
 //  TORoundedTableViewCell.m
 //
-//  Copyright 2016-2017 Timothy Oliver. All rights reserved.
+//  Copyright 2016-2019 Timothy Oliver. All rights reserved.
 //
 //  Permission is hereby granted, free of charge, to any person obtaining a copy
 //  of this software and associated documentation files (the "Software"), to
@@ -29,10 +29,7 @@ static Class _tableViewClass = NULL;
 
 - (void)setFrame:(CGRect)frame
 {
-    if (!_tableViewClass) { _tableViewClass = [TORoundedTableView class]; }
-    BOOL horizontalRegular = self.traitCollection.horizontalSizeClass != UIUserInterfaceSizeClassCompact;
-
-    /** On iOS 10 and down, table cells are kept in `UItableViewWrapperView`,
+    /** On iOS 10 and down, table cells are kept in `UITableViewWrapperView`,
      which abstracts away our control of the frame from `TORoundedTableView`.
      As such, it's necessary to override `setFrame` and force the cell width to match
      that container view.
@@ -40,10 +37,18 @@ static Class _tableViewClass = NULL;
      On iOS 11, that is no longer the case. Cells are direct subviews of the table view.
      As such, this isn't necessary anymore.
      */
-    if (![self.superview isKindOfClass:_tableViewClass] && horizontalRegular) {
+    if (!_tableViewClass) { _tableViewClass = [TORoundedTableView class]; }
+    if (![self.superview isKindOfClass:_tableViewClass]) {
         frame.size.width = self.superview.frame.size.width;
     }
 
+    // Not sure why, but on iOS 13, the bound origin is not set to 0
+    // in order to offset the safe area. Force this back to zero if need be.
+    CGRect bounds = self.contentView.bounds;
+    bounds.origin = CGPointZero;
+    self.contentView.bounds = bounds;
+
+    // Apply the frame value back up to the super class
     [super setFrame:frame];
 }
 

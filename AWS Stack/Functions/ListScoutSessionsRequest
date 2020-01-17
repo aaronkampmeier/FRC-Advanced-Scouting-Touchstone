@@ -1,0 +1,37 @@
+## Below example shows an example of a query against a table, indexed by the "name" attribute
+## The query returns any items in the index matching a certain "name", and then applies a
+##    filter to the results to match only the results with a certain "city" attribute
+## "expressionNames" is used as a placeholder or alias to the DynamoDB attribute, and is
+##    necessary for certain reserved attribute keywords like "name" or "owner"
+## "filter" : "expression" is the logical condition applied after the query runs, you can use:
+##   - NOT_NULL(), NULL(), CONTAINS(), NOT_CONTAINS()
+##    - This also works for attributes that are sets. For example, you can use "expression" : "contains(projects, :favfood)
+##      to check an attribute called "projects" of type String Set ("SS") for matches of a certain favorite food
+##   - BEGINS_WITH(), IN(), BETWEEN()
+##   - Comparators: >, <. >=, <= can be used for the "expression" key inside a filter
+##     - For example, "expression" : "#age > :age" would work on an attribute of type number
+## Read more: https://docs.aws.amazon.com/appsync/latest/devguide/resolver-mapping-template-reference-dynamodb.html#aws-appsync-resolver-mapping-template-reference-dynamodb-filter
+
+##Input: eventKey, teamKey, matchKey (maybe)
+##Set up the sortkey expression
+#set($sortKeyExp = "s${ctx.args.teamKey}-")
+#if($ctx.args.matchKey)
+	#set($sortKeyExp = "${sortKeyExp}${ctx.args.matchKey}-")
+#end
+
+{
+    "version" : "2017-02-28",
+    "operation" : "Query",
+    "query" : {
+        ## Provide a query expression. **
+        "expression": "#pk = :pk and begins_with(#sk,:sk)",
+        "expressionNames": {
+        	"#pk":"partitionKey",
+            "#sk":"sortKey"
+        },
+        "expressionValues" : {
+            ":pk" : $util.dynamodb.toDynamoDBJson("g${ctx.args.scoutTeam}-e${ctx.args.eventKey}"),
+            ":sk" : $util.dynamodb.toDynamoDBJson($sortKeyExp)
+        }
+    }
+}

@@ -7,17 +7,16 @@
 //
 
 import UIKit
-//import SSBouncyButton
+import AWSMobileClient
+import Crashlytics
+import AuthenticationServices
 
 class OnboardingPathChooserViewController: UIViewController {
-    @IBOutlet weak var spectatorView: UIView!
-    @IBOutlet weak var signUpView: UIView!
-    @IBOutlet weak var logInView: UIView!
     @IBOutlet weak var descriptionLabel: UILabel!
+    @IBOutlet weak var loginProviderStackView: UIStackView!
     
-    var spectatorBouncyButton: UIButton!
-    var logInBouncyButton: UIButton!
-    var signUpBouncyButton: UIButton!
+    var emailLoginButton: UIButton!
+    var googleButton: UIButton!
     
     let buttonCornerRadius: CGFloat = 5
     
@@ -28,51 +27,44 @@ class OnboardingPathChooserViewController: UIViewController {
 
         // Do any additional setup after loading the view.
         descriptionLabel.text = /*"If you're a spectator (anyone who isn't scouting data), just use FAST without logging in.*/ "To use FAST to scout teams, track performance statistics, and sync data across all of your team, log in or sign up for a team account."
+        descriptionLabel.text = "Welcome! To use FAST to scout teams, track performance statistics, and sync data between all of your team members, log in or sign up for a personal account.\nIf you were using FAST prior to the 2020 season, please note that team accounts have been phased out in favor of personal accounts. Every member on your team should have their own account from now on."
         
-        spectatorView.backgroundColor = nil
-        logInView.backgroundColor = nil
-        signUpView.backgroundColor = nil
+        //Set up the provider buttons
+        if #available(iOS 13.0, *) {
+            let appleButton = ASAuthorizationAppleIDButton(type: .continue, style: .whiteOutline)
+            appleButton.addTarget(self, action: #selector(loginWithApplePressed), for: .touchUpInside)
+            loginProviderStackView.addArrangedSubview(appleButton)
+        } else {
+            // Fallback on earlier versions
+        }
         
-        spectatorBouncyButton = UIButton() //SSBouncyButton()
-        logInBouncyButton = UIButton() // SSBouncyButton()
-        signUpBouncyButton = UIButton() // SSBouncyButton()
+        googleButton = UIButton()
+        googleButton.backgroundColor = .systemBlue
+        googleButton.layer.cornerRadius = buttonCornerRadius
+        googleButton.setTitle("Continue with Google", for: .normal)
+        googleButton.addTarget(self, action: #selector(loginWithGoogle), for: .touchUpInside)
+        loginProviderStackView.addArrangedSubview(googleButton)
         
-//        spectatorBouncyButton.tintColor = UIColor.blue
-        spectatorBouncyButton.backgroundColor = UIColor.blue
-        spectatorBouncyButton.layer.cornerRadius = buttonCornerRadius
-        spectatorBouncyButton.setTitle("I'm a Spectator", for: .normal)
-        spectatorBouncyButton.addTarget(self, action: #selector(spectatorPressed), for: .touchUpInside)
+        emailLoginButton = UIButton()
+        emailLoginButton?.backgroundColor = .systemTeal
+        emailLoginButton?.layer.cornerRadius = buttonCornerRadius
+        emailLoginButton?.setTitle("Continue with Personal Account", for: .normal)
+        emailLoginButton?.addTarget(self, action: #selector(logInPressed), for: .touchUpInside)
+        loginProviderStackView.addArrangedSubview(emailLoginButton)
         
-//        logInBouncyButton.tintColor = UIColor.darkGray
-        logInBouncyButton.backgroundColor = UIColor.darkGray
-        logInBouncyButton.layer.cornerRadius = buttonCornerRadius
-        logInBouncyButton.setTitle("Log into Existing Account", for: .normal)
-        logInBouncyButton.addTarget(self, action: #selector(logInPressed), for: .touchUpInside)
-        
-//        signUpBouncyButton.tintColor = UIColor.purple
-        signUpBouncyButton.backgroundColor = UIColor.blue
-        signUpBouncyButton.layer.cornerRadius = buttonCornerRadius
-        signUpBouncyButton.setTitle("Create a Team Account", for: .normal)
-        signUpBouncyButton.addTarget(self, action: #selector(signUpPressed), for: .touchUpInside)
-        
-        self.view.addSubview(spectatorBouncyButton)
-        self.view.addSubview(logInBouncyButton)
-        self.view.addSubview(signUpBouncyButton)
-        
-        updateButtonFrames()
-        
-        //TODO: Fix Spectator Implementation
-        spectatorBouncyButton.isHidden = true
-    }
-    
-    func updateButtonFrames() {
-        spectatorBouncyButton.frame = spectatorView.frame
-        signUpBouncyButton.frame = signUpView.frame
-        logInBouncyButton.frame = logInView.frame
+//        let googleIcon = UIImage(named: "Google Icon")
+//        let googleIconView = UIImageView(image: googleIcon)
+//        googleIconView.contentMode = .scaleAspectFit
+//        googleIconView.backgroundColor = .white
+//        googleIconView.layer.cornerRadius = 2
+//        let iconHeight = 27
+//        let midY = Int(googleButton.frame.midY)
+//        googleIconView.frame = CGRect(x: 10, y: midY - (iconHeight / 2), width: iconHeight, height: iconHeight)
+//        googleButton.addSubview(googleIconView)
     }
     
     override func viewDidLayoutSubviews() {
-        updateButtonFrames()
+        super.viewDidLayoutSubviews()
     }
 
     override func didReceiveMemoryWarning() {
@@ -80,36 +72,44 @@ class OnboardingPathChooserViewController: UIViewController {
         // Dispose of any resources that can be recreated.
     }
     
-    @objc func spectatorPressed() {
-        
-        //Switch to the team list
-        let teamListVC = storyboard?.instantiateViewController(withIdentifier: "teamListMasterVC")
-        
-        UserDefaults.standard.setValue(true, forKey: Globals.isSpectatorModeKey)
-        
-        self.view.window?.rootViewController = teamListVC
-        
-        Globals.recordAnalyticsEvent(eventType: "onboarding_completed", attributes: ["path":"spectator"])
+    @objc func loginWithGoogle() {
+        self.showLogin(identityProvider: "Google")
+    }
+    
+    @objc func loginWithApplePressed() {
+        self.showLogin(identityProvider: "SignInWithApple")
     }
     
     @objc func logInPressed() {
         
-//        let loginVC = (UIApplication.shared.delegate as! AppDelegate).logInViewController()
-//        self.present(loginVC, animated: true, completion: nil)
-        Globals.appDelegate.displayLogin(isRegistering: false, onVC: self)
-        
-        Globals.recordAnalyticsEvent(eventType: "onboarding_completed", attributes: ["path":"login"])
+        self.showLogin(identityProvider: nil)
     }
     
-    @objc func signUpPressed() {
+    func showLogin(identityProvider: String? = nil) {
+        //Create a navigation controller to present it in
+        let authNavController = UINavigationController(rootViewController: UIViewController())
+        let hostedUIOptions = HostedUIOptions(scopes: ["openid", "email", "profile"], identityProvider: identityProvider)
         
-//        let loginVC = (UIApplication.shared.delegate as! AppDelegate).logInViewController()
-//        self.present(loginVC, animated: true, completion: nil)
-//        loginVC.setRegistering(true, animated: false)
+        AWSMobileClient.default().showSignIn(navigationController: authNavController, hostedUIOptions: hostedUIOptions) { (userState, error) in
+            authNavController.dismiss(animated: true, completion: nil)
+            var isError = false
+            if let error = error {
+                if (error as NSError).code != 1 {
+                    isError = true
+                    CLSNSLogv("Error authenticating user: \(error)", getVaList([]))
+                    let alert = UIAlertController(title: "Error Authenticating", message: "There was an error authenticating. It has been recorded. \(error)", preferredStyle: .alert)
+                    alert.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
+                    self.present(alert, animated: true, completion: nil)
+                    Crashlytics.sharedInstance().recordError(error)
+                }
+                Globals.recordAnalyticsEvent(eventType: "auth_ui_finished", attributes: ["inError":isError.description, "newUserState":(userState ?? UserState.unknown).rawValue])
+            } else {
+                CLSNSLogv("New User State after auth finsihed: \(String(describing: userState))", getVaList([]))
+                Globals.recordAnalyticsEvent(eventType: "auth_ui_finished", attributes: ["inError":false.description, "newUserState":(userState ?? UserState.unknown).rawValue])
+            }
+        }
         
-        Globals.appDelegate.displayLogin(isRegistering: true, onVC: self)
-        
-        Globals.recordAnalyticsEvent(eventType: "onboarding_completed", attributes: ["path":"sign_up"])
+        Globals.recordAnalyticsEvent(eventType: "onboarding_completed", attributes: ["path":"login", "identityProvider":identityProvider ?? "n/a"])
     }
 
     /*

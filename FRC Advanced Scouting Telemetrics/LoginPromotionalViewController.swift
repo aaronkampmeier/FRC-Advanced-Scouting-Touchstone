@@ -57,10 +57,7 @@ class LoginPromotionalViewController: UIViewController {
     @IBAction func loginPressed(_ sender: UIButton) {
         Globals.recordAnalyticsEvent(eventType: AnalyticsEventSelectContent, attributes: ["content_type":"screen","item_id": "login","from":"login_promotional"])
         
-//        let loginVC = (UIApplication.shared.delegate as! AppDelegate).logInViewController()
-//        self.present(loginVC, animated: true, completion: nil)
-        
-        Globals.appDelegate.displayLogin(isRegistering: true, onVC: self)
+        //Show log in
     }
     
     /*

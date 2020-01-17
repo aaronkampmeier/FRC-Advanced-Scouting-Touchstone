@@ -11,8 +11,13 @@ import AWSAppSync
 import AWSMobileClient
 
 class FASTCognitoUserPoolsAuthProvider: AWSCognitoUserPoolsAuthProviderAsync {
+    
+    init() {
+        
+    }
+    
     func getLatestAuthToken(_ callback: @escaping (String?, Error?) -> Void) {
-        AWSMobileClient.sharedInstance().getTokens {tokens, error in
+        AWSMobileClient.default().getTokens {tokens, error in
             callback(tokens?.accessToken?.tokenString, error)
         }
     }

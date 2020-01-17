@@ -1,7 +1,7 @@
 fragment EventRanking on EventRanking {
 	eventKey
 	eventName
-	userID
+	scoutTeam
 	rankedTeams {
 		teamKey
 		isPicked
@@ -33,12 +33,6 @@ fragment Team on Team {
     website
 }
 
-fragment S3Object on S3Object {
-	bucket
-	key
-	region
-}
-
 fragment Image on Image {
 	bucket
 	key
@@ -47,7 +41,7 @@ fragment Image on Image {
 
 fragment ScoutedTeam on ScoutedTeam {
 	teamKey
-	userID
+	scoutTeam
     eventKey
     attributes
     image {
@@ -86,7 +80,7 @@ fragment ScoutSession on ScoutSession {
 	key
     matchKey
     teamKey
-    userID
+    scoutTeam
     eventKey
     recordedDate
     startState
@@ -127,11 +121,45 @@ fragment TeamEventStatus on TeamEventStatus {
 }
 
 fragment TeamComment on TeamComment {
-	author
-	userID
+    scoutTeam
+	authorUserID
 	body
 	datePosted
 	key
 	teamKey
 	eventKey
 }
+
+fragment ScoutingTeam on ScoutingTeam {
+    teamID
+    teamLead
+    associatedFrcTeamNumber
+    name
+}
+
+fragment ScoutingTeamWithMembers on ScoutingTeam {
+    teamID
+    teamLead
+    associatedFrcTeamNumber
+    name
+    members {
+        ...ScoutingTeamMember
+    }
+}
+
+fragment ScoutTeamInvitation on ScoutTeamInvitation {
+    inviteID
+    teamID
+    secretCode
+    expDate
+    creatorUserID
+}
+
+fragment ScoutingTeamMember on ScoutingTeamMember {
+    userID
+    name
+    memberSince
+}
+
+
+

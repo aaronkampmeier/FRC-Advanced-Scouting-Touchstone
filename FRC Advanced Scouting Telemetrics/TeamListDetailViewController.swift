@@ -35,57 +35,44 @@ class TeamListDetailViewController: UIViewController {
     @IBOutlet weak var bananaImageView: UIImageView!
     @IBOutlet weak var bananaImageWidth: NSLayoutConstraint!
     
-    var teamListSplitVC: TeamListSplitViewController {
-        get {
-            if let teamSplit = splitViewController as? TeamListSplitViewController {
-                return teamSplit
-            } else {
-                return TeamListSplitViewController.default
-            }
-        }
-    }
-    
-    var detailCollectionVC: TeamDetailCollectionViewController?
+    private var detailCollectionVC: TeamDetailCollectionViewController?
     
     var dataSource: TeamListDetailDataSource?
     
     //Insets for the scroll view
-    var contentViewInsets: UIEdgeInsets {
+    private var contentViewInsets: UIEdgeInsets {
         get {
             return UIEdgeInsetsMake(frontImageHeightConstraint.constant, 0, 0, 0)
         }
     }
-    var noContentInsets: UIEdgeInsets {
+    private var noContentInsets: UIEdgeInsets {
         get {
             return UIEdgeInsetsMake(0, 0, 0, 0)
         }
     }
     
-    var frontImage: TeamImagePhoto? {
+    private var frontImage: TeamImagePhoto? {
         didSet {
             frontImageButton.setImage(frontImage?.image, for: .normal)
         }
     }
     
-    var selectedTeam: Team?
-    var scoutedTeam: ScoutedTeam?
-    var selectedEventKey: String?
+    private(set) var selectedTeam: Team?
+    private var scoutedTeam: ScoutedTeam?
+    private var selectedEventKey: String?
     
-    var statusString: String?
+    private var statusString: String?
+    
+    private let viewIsLoadedSemaphore = DispatchSemaphore(value: 0)
     
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        // Do any additional setup after loading the view.
-        
         generalInfoTableView?.translatesAutoresizingMaskIntoConstraints = false
         generalInfoTableView?.isScrollEnabled = false
         
-        teamListSplitVC.teamListDetailVC = self
-        
-        self.dataSource = teamListSplitVC.teamListTableVC
-        
         navigationItem.leftItemsSupplementBackButton = true
+        navigationItem.largeTitleDisplayMode = .never
         
         //Set the stands scouting button to not selectable since there is no team selected
         standsScoutingButton.isEnabled = false
@@ -112,12 +99,12 @@ class TeamListDetailViewController: UIViewController {
         
         contentScrollView.delegate = self
         
-        let displayModeButtonItem = teamListSplitVC.displayModeButtonItem
-        
-        if navigationItem.leftBarButtonItems?.isEmpty ?? true {
-            navigationItem.leftBarButtonItems = [displayModeButtonItem]
-        } else {
-            navigationItem.leftBarButtonItems?.insert(displayModeButtonItem, at: 0)
+        if let displayModeButtonItem = splitViewController?.displayModeButtonItem {
+            if navigationItem.leftBarButtonItems?.isEmpty ?? true {
+                navigationItem.leftBarButtonItems = [displayModeButtonItem]
+            } else {
+                navigationItem.leftBarButtonItems?.insert(displayModeButtonItem, at: 0)
+            }
         }
         
         generalInfoTableView?.delegate = self
@@ -125,8 +112,11 @@ class TeamListDetailViewController: UIViewController {
         generalInfoTableView?.rowHeight = UITableViewAutomaticDimension
         generalInfoTableView?.estimatedRowHeight = 44
         
-        //Load the data if a team was selected beforehand
-        self.reloadData()
+        NotificationCenter.default.addObserver(forName: .FASTAWSDataManagerCurrentScoutingTeamChanged, object: nil, queue: OperationQueue.main) {[weak self] (notification) in
+            //Discard any shared data
+            self?.load(forInput: nil)
+        }
+        viewIsLoadedSemaphore.signal()
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -152,12 +142,9 @@ class TeamListDetailViewController: UIViewController {
         
         if segue.identifier == "standsScouting" {
             let destinationVC = segue.destination as! StandsScoutingViewController
-            destinationVC.setUp(forTeamKey: self.selectedTeam?.key ?? "", andEventKey: self.selectedEventKey ?? "")
+            destinationVC.setUp(inScoutTeam: scoutedTeam?.scoutTeam ?? "", forTeamKey: self.selectedTeam?.key ?? "", andEventKey: self.selectedEventKey ?? "")
             
             Globals.recordAnalyticsEvent(eventType: AnalyticsEventSelectContent, attributes: ["Source":"team_detail_button", "content_type":"screen", "item_id":"stands_scouting"])
-        } else if segue.identifier == "pitScouting" {
-            let pitScoutingVC = segue.destination as! PitScoutingViewController
-            pitScoutingVC.setUp(forTeamKey: self.selectedTeam?.key ?? "", inEvent: self.selectedEventKey ?? "")
         } else if segue.identifier == "teamDetailCollection" {
             detailCollectionVC = (segue.destination as! TeamDetailCollectionViewController)
         }
@@ -168,142 +155,189 @@ class TeamListDetailViewController: UIViewController {
         // Dispose of any resources that can be recreated.
     }
     
-    var updateTeamSubcription: AWSAppSyncSubscriptionWatcher<OnUpdateScoutedTeamSubscription>?
-    var listScoutedTeamsWatcher: GraphQLQueryWatcher<ListScoutedTeamsQuery>?
-    var listStatusesWatcher: GraphQLQueryWatcher<ListTeamEventStatusesQuery>?
-    func set(input: (team: Team, eventKey: String)?) {
-        listScoutedTeamsWatcher?.cancel()
-        listStatusesWatcher?.cancel()
-        
-        self.selectedEventKey = input?.eventKey
-        self.selectedTeam = input?.team
-        self.scoutedTeam = nil
-        self.statusString = nil
-        generalInfoTableView?.reloadData()
-        self.updateView()
-        setImage(image: nil)
-        
-        if let input = input {
-            //Grab the scouted data
-            listScoutedTeamsWatcher = Globals.appDelegate.appSyncClient?.watch(query: ListScoutedTeamsQuery(eventKey: self.selectedEventKey ?? ""), cachePolicy: .returnCacheDataAndFetch, resultHandler: {[weak self] (result, error) in
-                if Globals.handleAppSyncErrors(forQuery: "ListScoutedTeams-TeamListDetail", result: result, error: error) {
-                    let sTeams = result?.data?.listScoutedTeams?.map({$0!.fragments.scoutedTeam}) ?? []
-                    
-                    self?.scoutedTeam = sTeams.first(where: {$0.teamKey == input.team.key})
-                    
-                    self?.updateView()
-                } else {
-                    
-                }
-            })
-            
-            //Status
-            listStatusesWatcher = Globals.appDelegate.appSyncClient?.watch(query: ListTeamEventStatusesQuery(eventKey: input.eventKey), cachePolicy: .returnCacheDataElseFetch) {[weak self] result, error in
-                if Globals.handleAppSyncErrors(forQuery: "TeamListDetail-ListTeamEventStatusesQuery", result: result, error: error) {
-                    let statuses = result?.data?.listTeamEventStatuses
-                    let str = statuses?.first(where: {$0?.teamKey ?? "" == input.team.key})??.fragments.teamEventStatus.overallStatusStr
-                    if str != self?.statusString {
-                        self?.statusString = str
-                        self?.generalInfoTableView?.reloadData()
-                        self?.resizeDetailViewHeights()
-                    }
-                } else {
-                    //TODO: - Show error
-                }
-            }
-        } else {
-            self.scoutedTeam = nil
-        }
-        
-        self.resetSubscriptions()
-        
-        NotificationCenter.default.post(name: Notification.Name(rawValue: "TeamSelectedChanged"), object: self)
-    }
     
-    func resetSubscriptions() {
+    private var updateTeamSubcription: AWSAppSyncSubscriptionWatcher<OnUpdateScoutedTeamSubscription>?
+    private var listScoutedTeamsWatcher: GraphQLQueryWatcher<ListScoutedTeamsQuery>?
+    private var listStatusesWatcher: GraphQLQueryWatcher<ListTeamEventStatusesQuery>?
+    
+    /// Sets the team detail to display info on the specified team in the specified event
+    /// - Parameter input: The input parameters
+    internal func load(forInput input: (teamKey: String, eventKey: String)?) {
+        if input?.teamKey != self.selectedTeam?.key || input?.eventKey != self.selectedEventKey {
+            
+            listScoutedTeamsWatcher?.cancel()
+            listStatusesWatcher?.cancel()
+            
+            
+            DispatchQueue.global(qos: .userInitiated).async {[weak self] in
+                if let input = input, let scoutingTeam = Globals.dataManager.enrolledScoutingTeamID {
+
+                    DispatchQueue.main.async {
+                        let activity = NSUserActivity(activityType: Globals.UserActivity.viewTeamDetail)
+                        activity.title = "View Team \(input.teamKey) in \(input.eventKey)"
+                        activity.isEligibleForHandoff = true
+                        activity.isEligibleForSearch = true
+                        activity.addUserInfoEntries(from: ["teamKey":input.teamKey, "eventKey":input.eventKey, "scoutingTeam":scoutingTeam])
+                        activity.requiredUserInfoKeys = Set(arrayLiteral: "teamKey", "eventKey")
+                        activity.becomeCurrent()
+                        if #available(iOS 13.0, *) {
+                            self?.view.window?.windowScene?.userActivity = activity
+                        }
+                    }
+                    
+                    //Get the team data
+                    Globals.appSyncClient?.fetch(query: ListTeamsQuery(eventKey: input.eventKey), cachePolicy: .returnCacheDataDontFetch, queue: DispatchQueue.global(qos: .userInitiated), resultHandler: { (result, error) in
+                        if Globals.handleAppSyncErrors(forQuery: "ListTeams-TeamDetail", result: result, error: error) {
+                            if let team = result?.data?.listTeams?.first(where: {$0?.key == input.teamKey})??.fragments.team {
+                                self?.selectedTeam = team
+                                self?.updateView()
+                                
+                            }
+                        }
+                    })
+                    //Grab the scouted data
+                    self?.listScoutedTeamsWatcher = Globals.appSyncClient?.watch(query: ListScoutedTeamsQuery(scoutTeam: scoutingTeam, eventKey: input.eventKey), cachePolicy: .returnCacheDataAndFetch, resultHandler: {[weak self] (result, error) in
+                        if Globals.handleAppSyncErrors(forQuery: "ListScoutedTeams-TeamListDetail", result: result, error: error) {
+                            let sTeams = result?.data?.listScoutedTeams?.map({$0!.fragments.scoutedTeam}) ?? []
+                            
+                            self?.scoutedTeam = sTeams.first(where: {$0.teamKey == input.teamKey})
+                            
+                            self?.updateView()
+                        } else {
+                            
+                        }
+                    })
+                    
+                    //Status
+                    self?.listStatusesWatcher = Globals.appSyncClient?.watch(query: ListTeamEventStatusesQuery(eventKey: input.eventKey), cachePolicy: .returnCacheDataElseFetch) {[weak self] result, error in
+                        if Globals.handleAppSyncErrors(forQuery: "TeamListDetail-ListTeamEventStatusesQuery", result: result, error: error) {
+                            let statuses = result?.data?.listTeamEventStatuses
+                            let str = statuses?.first(where: {$0?.teamKey ?? "" == input.teamKey})??.fragments.teamEventStatus.overallStatusStr
+                            if str != self?.statusString {
+                                self?.statusString = str
+                                self?.generalInfoTableView?.reloadData()
+                                self?.resizeDetailViewHeights()
+                            }
+                        } else {
+                            //TODO: - Show error
+                        }
+                    }
+                }
+                
+                self?.viewIsLoadedSemaphore.wait()
+                self?.viewIsLoadedSemaphore.signal()
+                
+                //Preform work with the view in this
+                DispatchQueue.main.async {
+                    self?.generalInfoTableView?.reloadData()
+                    self?.updateView()
+                    self?.setImage(image: nil)
+                }
+                
+                Globals.recordAnalyticsEvent(eventType: AnalyticsEventViewItem, attributes: [AnalyticsParameterItemCategory:"team", AnalyticsParameterItemID:"\(String(describing: input?.eventKey))_\(String(describing: input?.teamKey))"])
+            }
+            
+            self.selectedEventKey = input?.eventKey
+            self.scoutedTeam = nil
+            self.statusString = nil
+        }
     }
     
     private func setImage(image: UIImage?) {
-        if let image = image {
-            self.frontImage = TeamImagePhoto(image: image, attributedCaptionTitle: NSAttributedString(string: "Team \(self.selectedTeam?.teamNumber ?? 0): Front Image"))
-            self.frontImageHeightConstraint.isActive = true
-            
-            self.contentScrollView.contentInset = self.contentViewInsets
-            self.contentScrollView.scrollIndicatorInsets = self.contentViewInsets
-            
-            self.contentScrollView.contentOffset = CGPoint(x: 0, y: -self.frontImageHeightConstraint.constant)
-        } else {
-            self.frontImage = nil
-            self.frontImageHeightConstraint.isActive = false
-            
-            self.contentScrollView.contentInset = self.noContentInsets
-            self.contentScrollView.scrollIndicatorInsets = self.noContentInsets
-            
-            self.contentScrollView.contentOffset = CGPoint(x: 0, y: 0)
+        DispatchQueue.global(qos: .userInitiated).async {
+            self.viewIsLoadedSemaphore.wait()
+            self.viewIsLoadedSemaphore.signal()
+            DispatchQueue.main.sync {
+                if let image = image {
+                    self.frontImage = TeamImagePhoto(image: image, attributedCaptionTitle: NSAttributedString(string: "Team \(self.selectedTeam?.teamNumber ?? 0): Front Image"))
+                    self.frontImageHeightConstraint.isActive = true
+                    
+                    self.contentScrollView.contentInset = self.contentViewInsets
+                    self.contentScrollView.scrollIndicatorInsets = self.contentViewInsets
+                    
+                    self.contentScrollView.contentOffset = CGPoint(x: 0, y: -self.frontImageHeightConstraint.constant)
+                } else {
+                    self.frontImage = nil
+                    self.frontImageHeightConstraint.isActive = false
+                    
+                    self.contentScrollView.contentInset = self.noContentInsets
+                    self.contentScrollView.scrollIndicatorInsets = self.noContentInsets
+                    
+                    self.contentScrollView.contentOffset = CGPoint(x: 0, y: 0)
+                }
+            }
         }
     }
     
     private func updateView() {
-        if let team = self.selectedTeam {
-            navBar.title = team.teamNumber.description
-            teamLabel.text = team.nickname
-            
-            if let _ = selectedEventKey {
-                standsScoutingButton.isEnabled = true
-                matchesButton.isEnabled = true
-            } else {
-                standsScoutingButton.isEnabled = false
-                matchesButton.isEnabled = false
-            }
-            
-            pitScoutingButton.isEnabled = true
-            if !Globals.isInSpectatorMode {
-                notesButton.isEnabled = true
-            }
-        } else {
-            navBar.title = "Select Team"
-            teamLabel.text = "Select Team"
-            
-            frontImage = nil
-            
-            standsScoutingButton.isEnabled = false
-            
-            pitScoutingButton.isEnabled = false
-            
-            notesButton.isEnabled = false
-        }
-        
-        if let scoutedTeam = scoutedTeam {
-            if scoutedTeam.decodedAttributes?.canBanana ?? false {
-                bananaImageView.image = #imageLiteral(resourceName: "Banana Filled")
-                bananaImageWidth.constant = 40
-            } else {
-                bananaImageView.image = nil
-                bananaImageWidth.constant = 0
-            }
-            
-            //Get the team image
-            if let imageInfo = scoutedTeam.image {
-                TeamImageLoader.default.loadImage(withAttributes: imageInfo, progressBlock: { (progress) in
+        DispatchQueue.global(qos: .userInteractive).async {
+            self.viewIsLoadedSemaphore.wait()
+            self.viewIsLoadedSemaphore.signal()
+            DispatchQueue.main.async {
+                if let team = self.selectedTeam {
+                    self.navBar.title = team.teamNumber.description
+                    self.teamLabel.text = team.nickname
                     
-                }) { (image, error) in
-                    DispatchQueue.main.async {
-                        self.setImage(image: image)
+                    if let _ = self.selectedEventKey {
+                        self.standsScoutingButton.isEnabled = true
+                        self.matchesButton.isEnabled = true
+                    } else {
+                        self.standsScoutingButton.isEnabled = false
+                        self.matchesButton.isEnabled = false
+                    }
+                    
+                    self.pitScoutingButton.isEnabled = true
+                    if !Globals.isInSpectatorMode {
+                        self.notesButton.isEnabled = true
+                    }
+                } else {
+                    self.navBar.title = "Select Team"
+                    self.teamLabel.text = "Select Team"
+                    
+                    self.frontImage = nil
+                    
+                    self.standsScoutingButton.isEnabled = false
+                    
+                    self.pitScoutingButton.isEnabled = false
+                    
+                    self.notesButton.isEnabled = false
+                }
+                
+                if let scoutedTeam = self.scoutedTeam {
+                    if scoutedTeam.decodedAttributes?.canBanana ?? false {
+                        self.bananaImageView.image = #imageLiteral(resourceName: "Banana Filled")
+                        self.bananaImageWidth.constant = 40
+                    } else {
+                        self.bananaImageView.image = nil
+                        self.bananaImageWidth.constant = 0
+                    }
+                    
+                    //Get the team image
+                    if let imageInfo = scoutedTeam.image {
+                        TeamImageLoader.default.loadImage(withAttributes: imageInfo, progressBlock: { (progress) in
+                            
+                        }) { (image, error) in
+                            DispatchQueue.main.async {
+                                self.setImage(image: image)
+                            }
+                        }
                     }
                 }
+                
+                self.detailCollectionVC?.loadStats(forScoutedTeam: self.scoutedTeam)
+                
+                self.resizeDetailViewHeights()
             }
         }
-        
-        detailCollectionVC?.loadStats(forScoutedTeam: self.scoutedTeam)
-        
-        resizeDetailViewHeights()
     }
     
-    func resizeDetailViewHeights() {
-        generalInfoTableView?.layoutIfNeeded()
-        
-        self.detailCollectionViewHeight.constant = self.detailCollectionVC?.collectionView?.collectionViewLayout.collectionViewContentSize.height ?? 10
-        self.detailTableViewHeight.constant = self.generalInfoTableView?.contentSize.height ?? 10
+    private func resizeDetailViewHeights() {
+        DispatchQueue.main.async {
+            self.generalInfoTableView?.layoutIfNeeded()
+            
+            self.detailCollectionViewHeight.constant = self.detailCollectionVC?.collectionView?.collectionViewLayout.collectionViewContentSize.height ?? 10
+            self.detailTableViewHeight.constant = self.generalInfoTableView?.contentSize.height ?? 10
+        }
     }
     
     override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
@@ -347,7 +381,7 @@ class TeamListDetailViewController: UIViewController {
     }
     
     @IBAction func notesButtonPressed(_ sender: UIButton) {
-        guard let eventKey = self.selectedEventKey, let teamkey = self.selectedTeam?.key else {
+        guard let eventKey = self.selectedEventKey, let teamkey = self.selectedTeam?.key, let scoutTeam = self.scoutedTeam?.scoutTeam else {
             return
         }
         
@@ -355,7 +389,7 @@ class TeamListDetailViewController: UIViewController {
         
         let navVC = UINavigationController(rootViewController: notesVC)
         
-        notesVC.load(forEventKey: eventKey, andTeamKey: teamkey)
+        notesVC.load(inScoutTeam: scoutTeam, forEventKey: eventKey, andTeamKey: teamkey)
         
         navVC.modalPresentationStyle = .popover
         navVC.popoverPresentationController?.sourceView = sender
@@ -378,6 +412,20 @@ class TeamListDetailViewController: UIViewController {
         present(matchListNav, animated: true, completion: nil)
         
         Globals.recordAnalyticsEvent(eventType: AnalyticsEventSelectContent, attributes: ["content_type":"screen","item_id":"team_matches_view"])
+    }
+    
+    @IBAction func pitScoutingButtonPressed(_ sender: UIBarButtonItem) {
+        if let teamKey = selectedTeam?.key, let eventKey = selectedEventKey {
+            let pitScoutingController = storyboard?.instantiateViewController(withIdentifier: "pitScouting") as! PitScoutingTableViewController
+            let navController = UINavigationController(rootViewController: pitScoutingController)
+            
+            pitScoutingController.load(forTeamKey: teamKey, inEvent: eventKey)
+            
+            navController.modalPresentationStyle = .popover
+            navController.popoverPresentationController?.barButtonItem = sender
+            
+            self.present(navController, animated: true, completion: nil)
+        }
     }
     
     //MARK: Displaying full screen photos
@@ -572,6 +620,6 @@ extension TeamListDetailViewController: NYTPhotosViewControllerDelegate {
     func photosViewController(_ photosViewController: NYTPhotosViewController, actionCompletedWithActivityType activityType: String?) {
         NSLog("Completed Action: \(activityType ?? "Unknown")")
         
-        Globals.recordAnalyticsEvent(eventType: AnalyticsEventShare, attributes: ["share_method":activityType ?? "?", "content_type":"team_photo","content_id":self.selectedTeam?.key ?? ""])
+        Globals.recordAnalyticsEvent(eventType: AnalyticsEventShare, attributes: [AnalyticsParameterMethod:activityType ?? "?", AnalyticsParameterContentType:"team_photo", AnalyticsParameterItemID:self.selectedTeam?.key ?? ""])
     }
 }

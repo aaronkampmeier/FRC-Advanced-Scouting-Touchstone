@@ -1,0 +1,13 @@
+#**
+The value of 'payload' after the template has been evaluated
+will be passed as the event to AWS Lambda.
+*#
+{
+  "operation": "Invoke",
+  "payload": {
+  	"scoutTeam":$util.toJson($context.args.scoutTeam),
+    "event_key":$util.toJson($ctx.args.eventKey),
+    "category":"scout_session",
+    "scout_session_keys":[$util.toJson($ctx.stash.scout_session_key)]
+  }
+}

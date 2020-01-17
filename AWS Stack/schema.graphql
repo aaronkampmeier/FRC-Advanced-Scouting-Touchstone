@@ -1,0 +1,305 @@
+﻿##The UserID argument for each mutation must match the username of the user in Cognito exactly (i.e. team number)
+type Mutation {
+  addTrackedEvent(scoutTeam: ID!, eventKey: ID!): EventRanking
+  removeTrackedEvent(scoutTeam: ID!, eventKey: ID!): EventDeletion
+  moveRankedTeam(scoutTeam: ID!, eventKey: ID!, teamKey: ID!, toIndex: Int!): EventRanking
+  setTeamPicked(scoutTeam: ID!, eventKey: ID!, teamKey: ID!, isPicked: Boolean!): EventRanking
+  updateScoutedTeam(
+    scoutTeam: ID!,
+    eventKey: ID!,
+    teamKey: ID!,
+    image: S3ObjectInput,
+    attributes: AWSJSON!
+  ): ScoutedTeam
+  addTeamComment(
+    scoutTeam: ID!,
+    eventKey: String!,
+    teamKey: String!,
+    body: String!
+  ): TeamComment
+  removeTeamComment(scoutTeam: ID!, eventKey: String!, key: String!): TeamComment
+  createScoutSession(
+    scoutTeam: ID!,
+    eventKey: ID!,
+    teamKey: ID!,
+    matchKey: ID!,
+    recordedDate: AWSTimestamp!,
+    startState: AWSJSON,
+    endState: AWSJSON,
+    timeMarkers: [TimeMarkerInput]!
+  ): ScoutSession
+  removeScoutSession(scoutTeam: ID!, eventKey: ID!, key: ID!): ScoutSession
+
+  ## Scouting Team Management
+  createScoutingTeam(name: String!, associatedFrcTeamNumber: Int!, leadName: String!): ScoutingTeam
+	changeMemberName(scoutTeam: ID!, newName: String!): ScoutingTeamMember
+	editScoutingTeamInfo(scoutTeam: ID!, name: String!, associatedFrcTeamNumber: Int!): ScoutingTeam
+
+	makeScoutTeamInvitation(scoutTeam: ID!, expDate: AWSTimestamp!): ScoutTeamInvitation
+	redeemInvitation(inviteID: ID!, secretCode: String!, memberName: String!): ID
+
+	## Members should be able to remove themselves, leads should be able to remove anyone except themselves
+  removeMember(scoutTeam: ID!, userToRemove: ID!): Boolean ##Must do check to make sure it is not the lead
+  transferLead(scoutTeam: ID!, newTeamLeadUserId: ID!): ScoutingTeam ## Must check to make sure the caller is the lead
+}
+
+type Query {
+	getCompetitionModel(year: String): AWSJSON
+
+  ## The Blue Alliance Universal Calls
+  listAvailableEvents(year: String): [Event]
+  getEvent(key: ID!): Event
+  listTeams(eventKey: ID!): [Team]
+  getTeam(key: ID!): Team
+  listMatches(eventKey: ID!): [Match]
+  getMatch(matchKey: ID!): Match
+  listEventOprs(eventKey: ID!): [TeamEventOPR]
+  listTeamEventStatuses(eventKey: ID!): [TeamEventStatus]
+
+
+  ## Scout Team Data Calls
+  listTrackedEvents(scoutTeam: ID!): [EventRanking]
+  getEventRanking(scoutTeam: ID!, key: ID!): EventRanking
+
+  listScoutedTeams(scoutTeam: ID!, eventKey: ID!): [ScoutedTeam]
+  getScoutedTeam(scoutTeam: ID!, eventKey: ID!, teamKey: ID!): ScoutedTeam
+  listTeamComments(scoutTeam:ID!, eventKey: ID!, teamKey: ID!): [TeamComment]
+
+  listScoutSessions(scoutTeam: ID!, eventKey: ID!, teamKey: ID!, matchKey: ID): [ScoutSession]
+  getScoutSession(scoutTeam: ID!, eventKey: ID!, key: ID!): ScoutSession
+
+  ## Delta Sync
+  listAllScoutSessions(scoutTeam: ID!, eventKey: ID!): [ScoutSession]
+  listScoutSessionsDelta(scoutTeam: ID!, eventKey: ID!, lastSync: AWSTimestamp!): [ScoutSession]
+
+  ## Scouting Teams
+  listEnrolledScoutingTeams: [ScoutingTeam]
+  getScoutingTeam(scoutTeam: ID!): ScoutingTeam
+
+	getScoutingTeamPublicName(inviteID: ID!): String
+	listScoutingTeamInvitations(scoutTeam: ID!): [ScoutTeamInvitation]
+}
+
+type Subscription {
+  onAddTrackedEvent(scoutTeam: ID!): EventRanking
+    @aws_subscribe(mutations: ["addTrackedEvent"])
+  onRemoveTrackedEvent(scoutTeam: ID!): EventDeletion
+    @aws_subscribe(mutations: ["removeTrackedEvent"])
+  onUpdateTeamRank(scoutTeam: ID!, eventKey: String!): EventRanking
+    @aws_subscribe(mutations: ["moveRankedTeam"])
+  onSetTeamPicked(scoutTeam: ID!, eventKey: String!): EventRanking
+    @aws_subscribe(mutations: ["setTeamPicked"])
+  onUpdateScoutedTeam(scoutTeam: ID!, eventKey: ID!, teamKey: ID): ScoutedTeam
+    @aws_subscribe(mutations: ["updateScoutedTeam"])
+  onAddTeamComment(scoutTeam: ID!, teamKey: String!): TeamComment
+    @aws_subscribe(mutations: ["addTeamComment"])
+  onCreateScoutSession(scoutTeam: ID!, eventKey: String!, teamKey: String): ScoutSession
+    @aws_subscribe(mutations: ["createScoutSession"])
+  onDeleteScoutSession(
+    scoutTeam: ID!,
+    key: ID,
+    matchKey: String,
+    teamKey: String
+  ): ScoutSession
+    @aws_subscribe(mutations: ["removeScoutSession"])
+}
+
+type ScoutingTeam {
+  teamID: ID! ## Scouting Team UUID
+  members: [ScoutingTeamMember] ## List of members
+  teamLead: ID! ## Team lead is also a member, so his/her info will be in the members dict
+  associatedFrcTeamNumber: Int!
+  name: String!
+}
+
+type ScoutingTeamMember {
+  userID: ID!
+  name: String
+  memberSince: AWSTimestamp!
+}
+
+type ScoutTeamInvitation {
+	inviteID: ID!
+	teamID: ID!
+	secretCode: String!
+	expDate: AWSTimestamp
+	creatorUserID: ID!
+}
+
+enum CompetitionLevel {
+  qm
+  ef
+  qf
+  sf
+  f
+}
+
+##FAST Types
+type Event {
+  event_code: String!
+  event_type: Int!
+  event_type_string: String!
+  key: ID!
+  address: String
+  name: String!
+  year: Int!
+  website: String
+  location_name: String
+  short_name: String
+}
+
+type EventDeletion {
+  eventKey: ID!
+  scoutTeam: ID!
+}
+
+type EventRanking {
+  scoutTeam: ID!
+  eventKey: String!
+  eventName: String!
+  rankedTeams: [RankedTeam]
+}
+
+type Image {
+  bucket: String!
+  key: String!
+  region: String!
+}
+
+input ImageInput {
+  bucket: String!
+  key: String!
+  region: String!
+}
+
+type Match {
+  key: ID!
+  event_key: ID!
+  comp_level: CompetitionLevel!
+  match_number: Int!
+  set_number: Int
+  time: AWSTimestamp
+  actual_time: AWSTimestamp
+  predicted_time: AWSTimestamp
+  alliances: MatchAlliances
+}
+
+type MatchAlliance {
+  score: Int!
+  team_keys: [String]
+  surrogate_team_keys: [String]
+  dq_team_keys: [String]
+}
+
+type MatchAlliances {
+  blue: MatchAlliance
+  red: MatchAlliance
+}
+
+type RankedTeam {
+  teamKey: String!
+  isPicked: Boolean!
+}
+
+type S3Object {
+ bucket: String!
+ key: String!
+ region: String!
+}
+
+input S3ObjectInput {
+ bucket: String!
+ key: String!
+ region: String!
+ localUri: String!
+ mimeType: String!
+}
+
+type ScoutSession {
+  scoutTeam: ID!
+  key: ID!
+  matchKey: String!
+  teamKey: String!
+  eventKey: String!
+  recordedDate: Float
+  startState: AWSJSON
+  endState: AWSJSON
+  timeMarkers: [TimeMarker]
+}
+
+type ScoutedTeam {
+  teamKey: ID!
+  eventKey: String!
+  scoutTeam: ID!
+  image: Image
+  attributes: AWSJSON
+}
+
+type Team {
+  key: ID!
+  address: String
+  city: String
+  state_prov: String
+  name: String!
+  nickname: String!
+  rookie_year: Int
+  team_number: Int!
+  website: String
+}
+
+type TeamComment {
+  scoutTeam: ID!
+  authorUserID: ID!
+  body: String!
+  datePosted: AWSTimestamp!
+  key: ID!
+  teamKey: String!
+  eventKey: String!
+}
+
+type TeamEventOPR {
+  teamKey: String!
+  eventKey: String!
+  opr: Float
+  dpr: Float
+  ccwm: Float
+}
+
+type TeamEventStatus {
+  teamKey: String!
+  eventKey: String!
+  qual: TeamEventStatusRank
+  overall_status_str: String
+}
+
+type TeamEventStatusQualRanking {
+  dq: Int
+  matches_played: Int
+  qual_average: Float
+  rank: Int
+}
+
+type TeamEventStatusRank {
+  num_teams: Int
+  ranking: TeamEventStatusQualRanking
+  status: String
+}
+
+type TimeMarker {
+  event: String!
+  time: Float!
+  subOption: String
+}
+
+input TimeMarkerInput {
+  event: String!
+  time: Float!
+  subOption: String
+}
+
+##Base Schema
+schema {
+  query: Query
+  mutation: Mutation
+  subscription: Subscription
+}
