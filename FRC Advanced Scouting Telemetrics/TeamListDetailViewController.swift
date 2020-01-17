@@ -14,11 +14,6 @@ import AWSAppSync
 import AWSMobileClient
 import Firebase
 
-protocol TeamListDetailDataSource {
-    func team() -> Team?
-    func inEventKey() -> String?
-}
-
 class TeamListDetailViewController: UIViewController {
     @IBOutlet weak var frontImageButton: UIButton!
     @IBOutlet weak var teamLabel: UILabel!
@@ -37,17 +32,15 @@ class TeamListDetailViewController: UIViewController {
     
     private var detailCollectionVC: TeamDetailCollectionViewController?
     
-    var dataSource: TeamListDetailDataSource?
-    
     //Insets for the scroll view
     private var contentViewInsets: UIEdgeInsets {
         get {
-            return UIEdgeInsetsMake(frontImageHeightConstraint.constant, 0, 0, 0)
+            return UIEdgeInsets.init(top: frontImageHeightConstraint.constant, left: 0, bottom: 0, right: 0)
         }
     }
     private var noContentInsets: UIEdgeInsets {
         get {
-            return UIEdgeInsetsMake(0, 0, 0, 0)
+            return UIEdgeInsets.init(top: 0, left: 0, bottom: 0, right: 0)
         }
     }
     
@@ -109,7 +102,7 @@ class TeamListDetailViewController: UIViewController {
         
         generalInfoTableView?.delegate = self
         generalInfoTableView?.dataSource = self
-        generalInfoTableView?.rowHeight = UITableViewAutomaticDimension
+        generalInfoTableView?.rowHeight = UITableView.automaticDimension
         generalInfoTableView?.estimatedRowHeight = 44
         
         NotificationCenter.default.addObserver(forName: .FASTAWSDataManagerCurrentScoutingTeamChanged, object: nil, queue: OperationQueue.main) {[weak self] (notification) in
@@ -342,35 +335,28 @@ class TeamListDetailViewController: UIViewController {
     
     override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
         super.viewWillTransition(to: size, with: coordinator)
-        //Reset the content insets
-        coordinator.animate(alongsideTransition: {_ in
-            if self.scoutedTeam?.image != nil {
-                self.contentScrollView.contentInset = self.contentViewInsets
-                self.contentScrollView.scrollIndicatorInsets = self.contentViewInsets
-
-                self.contentScrollView.contentOffset = CGPoint(x: 0, y: -self.frontImageHeightConstraint.constant)
-            } else {
-                self.frontImageHeightConstraint.isActive = false
-
-                self.contentScrollView.contentInset = self.noContentInsets
-                self.contentScrollView.scrollIndicatorInsets = self.noContentInsets
-
-                self.contentScrollView.contentOffset = CGPoint(x: 0, y: 0)
-            }
-
-        }, completion: {transitionContext in
-
-            self.resizeDetailViewHeights()
-        })
-    }
-    
-    func reloadData() {
+        
         if self.isViewLoaded {
-            if let team = dataSource?.team(), let eventKey = dataSource?.inEventKey() {
-                self.set(input: (team, eventKey))
-            } else {
-                self.set(input: nil)
-            }
+            //Reset the content insets
+            coordinator.animate(alongsideTransition: {_ in
+                if self.scoutedTeam?.image != nil {
+                    self.contentScrollView.contentInset = self.contentViewInsets
+                    self.contentScrollView.scrollIndicatorInsets = self.contentViewInsets
+                    
+                    self.contentScrollView.contentOffset = CGPoint(x: 0, y: -self.frontImageHeightConstraint.constant)
+                } else {
+                    self.frontImageHeightConstraint.isActive = false
+                    
+                    self.contentScrollView.contentInset = self.noContentInsets
+                    self.contentScrollView.scrollIndicatorInsets = self.noContentInsets
+                    
+                    self.contentScrollView.contentOffset = CGPoint(x: 0, y: 0)
+                }
+                
+            }, completion: {transitionContext in
+                
+                self.resizeDetailViewHeights()
+            })
         }
     }
     
@@ -574,6 +560,11 @@ extension UILabel {
         
         
         self.attributedText = attrStr
+        if #available(iOS 13.0, *) {
+            self.textColor = UIColor.label
+        } else {
+            // Fallback on earlier versions
+        }
     }
 }
 

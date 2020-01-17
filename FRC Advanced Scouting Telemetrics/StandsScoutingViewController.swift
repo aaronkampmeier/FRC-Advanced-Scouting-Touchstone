@@ -32,7 +32,7 @@ class StandsScoutingViewController: UIViewController {
 			ssDataManager?.stopwatch.start()
 			
 			//Update the button
-			timerButton.setTitle("Stop", for: UIControlState())
+			timerButton.setTitle("Stop", for: UIControl.State())
 			timerButton.backgroundColor = UIColor.red
 			
 			//Set appropriate state for elements in the view
@@ -48,7 +48,7 @@ class StandsScoutingViewController: UIViewController {
             ssDataManager?.stopwatch.stop()
             
             //Update the button
-            timerButton.setTitle("Ended", for: UIControlState())
+            timerButton.setTitle("Ended", for: UIControl.State())
             timerButton.backgroundColor = UIColor.gray
             timerButton.isEnabled = false
             
@@ -222,8 +222,8 @@ class StandsScoutingViewController: UIViewController {
 	}
 	
 	func cycleFromViewController(_ oldVC: UIViewController, toViewController newVC: UIViewController) {
-		oldVC.willMove(toParentViewController: nil)
-		addChildViewController(newVC)
+		oldVC.willMove(toParent: nil)
+		addChild(newVC)
 		
 		newVC.view.frame = oldVC.view.frame
 		

@@ -18,6 +18,7 @@ import AWSS3
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
 
+    ///DEPRECATED  in iOS 13. Use SceneDelegate's window instead.
     var window: UIWindow?
     
     var supportedInterfaceOrientations: UIInterfaceOrientationMask = .all
@@ -90,7 +91,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         }
         
         return true
-//        return AWSMobileClient.sharedInstance().interceptApplication(application, didFinishLaunchingWithOptions: launchOptions)
     }
 
     func applicationWillResignActive(_ application: UIApplication) {
@@ -189,6 +189,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     }
 }
 
+//MARK: - Additional stuff
 //Adds a function to UIViewController to allow presenting views (i.e. alerts) on the top view controller from lower view controllers
 extension UIViewController {
     func presentViewControllerFromVisibleViewController(_ viewControllerToPresent: UIViewController, animated flag: Bool, completion: (() -> Void)? = nil) {

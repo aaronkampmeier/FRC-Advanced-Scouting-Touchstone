@@ -30,7 +30,7 @@ class EventInfoVC: UIViewController, UITableViewDataSource {
         eventType.text = selectedEvent?.eventTypeString
         
         tableView.dataSource = self
-        tableView.rowHeight = UITableViewAutomaticDimension
+        tableView.rowHeight = UITableView.automaticDimension
         tableView.estimatedRowHeight = 44
     }
 
@@ -148,7 +148,7 @@ class EventInfoVC: UIViewController, UITableViewDataSource {
     
     @objc func websiteButtonPressed(_ sender: UIButton) {
         if let url = URL(string: selectedEvent?.website ?? "") {
-            UIApplication.shared.openURL(url)
+            UIApplication.shared.open(url, options: convertToUIApplicationOpenExternalURLOptionsKeyDictionary([:]), completionHandler: nil)
         }
     }
 
@@ -162,4 +162,9 @@ class EventInfoVC: UIViewController, UITableViewDataSource {
     }
     */
 
+}
+
+// Helper function inserted by Swift 4.2 migrator.
+fileprivate func convertToUIApplicationOpenExternalURLOptionsKeyDictionary(_ input: [String: Any]) -> [UIApplication.OpenExternalURLOptionsKey: Any] {
+	return Dictionary(uniqueKeysWithValues: input.map { key, value in (UIApplication.OpenExternalURLOptionsKey(rawValue: key), value)})
 }

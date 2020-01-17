@@ -152,7 +152,7 @@ class AdminConsoleController: UIViewController, UITableViewDataSource, UITableVi
     var grayView: UIView?
     func showLoadingIndicator() {
         //Create a loading view
-        let spinnerView = UIActivityIndicatorView(activityIndicatorStyle: UIActivityIndicatorViewStyle.whiteLarge)
+        let spinnerView = UIActivityIndicatorView(style: UIActivityIndicatorView.Style.whiteLarge)
         grayView = UIView(frame: CGRect(x: self.tableView.frame.width / 2 - 50, y: self.tableView.frame.height / 2 - 50, width: 120, height: 120))
         grayView?.backgroundColor = UIColor.lightGray
         grayView?.backgroundColor?.withAlphaComponent(0.7)

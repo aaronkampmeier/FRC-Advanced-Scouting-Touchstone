@@ -13,10 +13,13 @@ import AWSAppSync
 import AWSMobileClient
 import Firebase
 
-class TeamListTableViewController: UITableViewController, TeamListDetailDataSource {
+extension Notification.Name {
+    static let FASTSelectedTeamDidChange = Notification.Name(rawValue: "Different Team Selected")
+}
+
+class TeamListTableViewController: UITableViewController {
     @IBOutlet weak var incompleteEventView: UIView!
-    @IBOutlet weak var graphButton: UIBarButtonItem!
-    @IBOutlet weak var eventSelectionButton: EventSelectionTitleButton!
+    var graphButton: UIBarButtonItem!
     @IBOutlet weak var editButton: UIBarButtonItem!
     @IBOutlet weak var matchesButton: UIBarButtonItem!
     
@@ -77,7 +80,7 @@ class TeamListTableViewController: UITableViewController, TeamListDetailDataSour
         didSet {
             if let sTeam = selectedTeam {
                 //Select row in table view
-                if let index = currentTeamsToDisplay.index(where: {team in
+                if let index = currentTeamsToDisplay.firstIndex(where: {team in
                     return team.key == sTeam.key
                 }) {
                     tableView.selectRow(at: IndexPath.init(row: index, section: 0), animated: false, scrollPosition: .none)
@@ -85,8 +88,6 @@ class TeamListTableViewController: UITableViewController, TeamListDetailDataSour
             } else {
                 tableView.deselectRow(at: tableView.indexPathForSelectedRow ?? IndexPath(), animated: false)
             }
-            
-            teamListSplitVC.teamListDetailVC.reloadData()
         }
     }
     private let lastSelectedEventStorageKey = "Last-Selected-Event"
@@ -311,7 +312,7 @@ class TeamListTableViewController: UITableViewController, TeamListDetailDataSour
             eventInterest = Globals.dataManager.asyncLoadingManager.registerInterest(inEvent: eventKey)
             
             //As a hold over until the event ranking loads
-            eventSelectionButton.setTitle(eventKey, for: UIControlState())
+            navigationItem.title = eventKey
             
             if let scoutingTeam = Globals.dataManager.enrolledScoutingTeamID {
                 //Get the scouted teams in the cache
@@ -381,7 +382,7 @@ class TeamListTableViewController: UITableViewController, TeamListDetailDataSour
             currentEventTeams = []
             selectedEventRanking = nil
             
-            eventSelectionButton.setTitle("Select Event", for: UIControlState())
+            navigationItem.title = "Select Event"
             
             matchesButton.isEnabled = false
             graphButton.isEnabled = false
@@ -650,13 +651,13 @@ class TeamListTableViewController: UITableViewController, TeamListDetailDataSour
         cell.teamLabel.text = "Team \(team.teamNumber)"
         cell.teamNameLabel.text = team.nickname
         cell.statLabel.text = ""
-        if let stat = statToSortBy {
+        if statToSortBy != nil {
             //Get the stat value
             let value = stashedStats[team.key]
             cell.statLabel.text = value?.description
         }
         
-        if let index = selectedEventRanking?.rankedTeams?.index(where: {$0?.teamKey == team.key}) {
+        if let index = selectedEventRanking?.rankedTeams?.firstIndex(where: {$0?.teamKey == team.key}) {
             cell.rankLabel.text = "\(index as Int + 1)"
         } else {
             cell.rankLabel.text = "?"
@@ -671,6 +672,7 @@ class TeamListTableViewController: UITableViewController, TeamListDetailDataSour
             if rankedTeam??.isPicked ?? false {
                 //Show indicator that it is picked
                 let crossImage = UIImageView(image: #imageLiteral(resourceName: "Cross"))
+                crossImage.tintColor = UIColor.systemPurple
                 crossImage.frame = CGRect(x: 0, y: 0, width: 20, height: 20)
                 cell.accessoryView = crossImage
             }
@@ -747,29 +749,9 @@ class TeamListTableViewController: UITableViewController, TeamListDetailDataSour
         }
     }
     
-    override func tableView(_ tableView: UITableView, editingStyleForRowAt indexPath: IndexPath) -> UITableViewCellEditingStyle {
+    override func tableView(_ tableView: UITableView, editingStyleForRowAt indexPath: IndexPath) -> UITableViewCell.EditingStyle {
         return .none
     }
-    
-//    override func tableView(_ tableView: UITableView, editActionsForRowAt indexPath: IndexPath) -> [UITableViewRowAction]? {
-//        if let event = selectedEvent {
-//            guard let ranker = RealmController.realmController.getTeamRanker(forEvent: event) else {
-//                return nil
-//            }
-//            let team = self.currentTeamsToDisplay[indexPath.row]
-//
-//            let markAsPicked = UITableViewRowAction(style: .default, title: "Mark Picked") {action, indexPath in
-//
-//            }
-//
-//        }
-//
-//        return nil
-//    }
-//
-//    func markAsPicked(atIndexPath indexPath: IndexPath, inTableView tableView: UITableView) {
-//
-//    }
     
     //For selecting which teams have been picked
     @available(iOS 11.0, *)
@@ -801,7 +783,7 @@ class TeamListTableViewController: UITableViewController, TeamListDetailDataSour
                         self?.selectedEventRanking = result.data?.setTeamPicked?.fragments.eventRanking
                     }
                     //Reload that row
-                    tableView.reloadRows(at: [indexPath], with: UITableViewRowAnimation.none)
+                    tableView.reloadRows(at: [indexPath], with: UITableView.RowAnimation.none)
                 })
                 
                 completionHandler(true)
@@ -919,17 +901,13 @@ class TeamListTableViewController: UITableViewController, TeamListDetailDataSour
     
     //MARK: - Sorting
     @IBAction func sortPressed(_ sender: UIBarButtonItem) {
-        let sortNavVC = storyboard?.instantiateViewController(withIdentifier: "sortNav") as! UINavigationController
-        let sortVC = sortNavVC.topViewController as! SortVC
+        let sortVC = storyboard?.instantiateViewController(withIdentifier: "statsSortView") as! SortVC
         sortVC.delegate = self
-        sortNavVC.modalPresentationStyle = .popover
-        sortNavVC.preferredContentSize = CGSize(width: 350, height: 300)
         
-        let popoverVC = sortNavVC.popoverPresentationController
-        popoverVC?.delegate = self
+        sortVC.modalPresentationStyle = .custom
+        sortVC.transitioningDelegate = slideInTransitionDelegate
         
-        popoverVC?.barButtonItem = sender
-        present(sortNavVC, animated: true, completion: nil)
+        present(sortVC, animated: true, completion: nil)
     }
     
     let statsOrderingQueue = DispatchQueue(label: "StatsOrderingTeamList", qos: .utility, target: nil)
@@ -1052,14 +1030,14 @@ extension TeamListTableViewController: UISearchResultsUpdating, UISearchControll
                 
                 let filteredTeams = self.currentSortedTeams.filter { (team) -> Bool in
                     var isIncluded = false
-                    isIncluded = team.address?.contains(searchText) ?? false || isIncluded
-                    isIncluded = team.stateProv?.contains(searchText) ?? false || isIncluded
-                    isIncluded = team.city?.contains(searchText) ?? false || isIncluded
-                    isIncluded = team.name.contains(searchText) || isIncluded
-                    isIncluded = team.nickname.contains(searchText) || isIncluded
-                    isIncluded = team.rookieYear?.description.contains(searchText) ?? false || isIncluded
-                    isIncluded = team.teamNumber.description.contains(searchText) || isIncluded
-                    isIncluded = team.website?.contains(searchText) ?? false || isIncluded
+                    isIncluded = team.address?.range(of: searchText, options: .caseInsensitive) != nil || isIncluded
+                    isIncluded = team.stateProv?.range(of: searchText, options: .caseInsensitive) != nil || isIncluded
+                    isIncluded = team.city?.range(of: searchText, options: .caseInsensitive) != nil || isIncluded
+                    isIncluded = team.name.range(of: searchText, options: .caseInsensitive) != nil || isIncluded
+                    isIncluded = team.nickname.range(of: searchText, options: .caseInsensitive) != nil || isIncluded
+                    isIncluded = team.rookieYear?.description.range(of: searchText, options: .caseInsensitive) != nil || isIncluded
+                    isIncluded = team.teamNumber.description.range(of: searchText, options: .caseInsensitive) != nil || isIncluded
+                    isIncluded = team.website?.range(of: searchText, options: .caseInsensitive) != nil || isIncluded
                     
                     return isIncluded
                 }
