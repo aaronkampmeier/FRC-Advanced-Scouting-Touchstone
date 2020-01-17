@@ -1,0 +1,16 @@
+{
+    "UserAgent": "aws-amplify-cli/2.0",
+    "Version": "1.0",
+    "api": {
+        "plugins": {
+            "awsAPIPlugin": {
+                "FAST App Sync API 2": {
+                    "endpointType": "GraphQL",
+                    "endpoint": "https://ld62zwedvbhofmbc3oxasrtkcm.appsync-api.us-east-1.amazonaws.com/graphql",
+                    "region": "us-east-1",
+                    "authorizationType": "AMAZON_COGNITO_USER_POOLS"
+                }
+            }
+        }
+    }
+}
