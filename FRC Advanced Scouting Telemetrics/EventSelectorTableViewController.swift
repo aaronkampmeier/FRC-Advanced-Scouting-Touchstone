@@ -108,8 +108,19 @@ class EventSelectorTableViewController: UITableViewController {
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         if indexPath.row == events.count {
-            //TODO: Show the add event view
-            
+            //Show the add event view
+            if let _ = Globals.dataManager.enrolledScoutingTeamID {
+                let addEventVC = storyboard?.instantiateViewController(withIdentifier: "addEvent")
+                
+                self.present(UINavigationController(rootViewController: addEventVC!), animated: true, completion: nil)
+            } else {
+                let alert = UIAlertController(title: "No Scouting Team", message: "Please create or join a scouting team in the admin console before adding an event.", preferredStyle: .alert)
+//                alert.addAction(UIAlertAction(title: "Go to the Admin Console", style: .default, handler: { (action) in
+//
+//                }))
+                alert.addAction(UIAlertAction(title: "OK", style: .cancel, handler: nil))
+                self.present(alert, animated: true, completion: nil)
+            }
         } else {
             var userInfo: [String : Any] = ["eventKey":events[indexPath.row].eventKey]
             if #available(iOS 13.0, *) {

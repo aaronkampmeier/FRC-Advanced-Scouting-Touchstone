@@ -6,8 +6,10 @@
     "version" : "2017-02-28",
     "operation": "Invoke",
     "payload": {
-    	"operation":"delete",
-    	"eventKey":"$ctx.args.eventKey",
-        "scoutTeam":"$ctx.args.scoutTeam"
+    	"operation":"moveTeam",
+        "scoutTeam": $util.toJson($ctx.args.scoutTeam),
+        "eventKey": $util.toJson($ctx.args.eventKey),
+        "teamKey": $util.toJson($ctx.args.teamKey),
+        "toIndex": $util.toJson($ctx.args.toIndex)
     }
 }

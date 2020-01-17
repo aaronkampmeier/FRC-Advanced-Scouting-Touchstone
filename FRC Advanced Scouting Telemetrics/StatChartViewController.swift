@@ -29,6 +29,8 @@ class StatChartViewController: UIViewController {
     var valueEntries = [BarChartDataEntry]() //The y-axis values
     var entries: [(matchNumber: Int, value: StatValue)] = []
     
+    private let viewIsLoadedSemaphore = DispatchSemaphore(value: 0)
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -54,6 +56,24 @@ class StatChartViewController: UIViewController {
         barChart.pinchZoomEnabled = false
         barChart.highlighter = nil
         
+        if #available(iOS 13.0, *) {
+            barChart.xAxis.gridColor = UIColor.systemGray2
+            barChart.xAxis.axisLineColor = UIColor.opaqueSeparator
+            barChart.xAxis.labelTextColor = UIColor.label
+            
+            barChart.leftAxis.gridColor = UIColor.systemGray2
+            barChart.leftAxis.axisLineColor = UIColor.opaqueSeparator
+            barChart.leftAxis.labelTextColor = UIColor.label
+            barChart.leftAxis.zeroLineColor = UIColor.systemBlue
+            
+            barChart.legend.textColor = UIColor.label
+            
+            barChart.noDataTextColor = UIColor.label
+            barChart.borderColor = UIColor.systemGray
+            
+            barChart.chartDescription?.textColor = UIColor.label
+        }
+        
         barChart.animate(yAxisDuration: 1, easingOption: .easeInOutQuart)
         
         if isPercent {
@@ -61,6 +81,8 @@ class StatChartViewController: UIViewController {
         } else {
             barChart.leftAxis.resetCustomAxisMax()
         }
+        
+        viewIsLoadedSemaphore.signal()
     }
     
     override func viewWillLayoutSubviews() {
@@ -95,11 +117,9 @@ class StatChartViewController: UIViewController {
         
         statistic?.compositePoints(forObject: scoutedTeam) {[weak self] entries in
             self?.statsLoaderQueue.async {
-                DispatchQueue.main.sync {
-                    while self?.isViewLoaded != true {
-                        
-                    }
-                }
+                self?.viewIsLoadedSemaphore.wait()
+                self?.viewIsLoadedSemaphore.signal()
+                
                 self?.entries = entries
                 //Create all of the BarChartDataEntry objects
                 var index = 0
@@ -131,6 +151,9 @@ class StatChartViewController: UIViewController {
                     let chartDataSet = BarChartDataSet(entries: self?.valueEntries, label: "")
                     chartDataSet.colors = [UIColor(red: 0.16, green: 0.50, blue: 0.73, alpha: 1)]
                     //        chartDataSet.colors = ChartColorTemplates.vordiplom()
+                    if #available(iOS 13.0, *) {
+                        chartDataSet.valueColors = [UIColor.label]
+                    }
                     chartDataSet.valueFormatter = self
                     let chartData = BarChartData(dataSets: [chartDataSet])
                     

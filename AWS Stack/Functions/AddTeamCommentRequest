@@ -19,7 +19,6 @@
         "scoutTeam":$util.dynamodb.toDynamoDBJson($ctx.args.scoutTeam),
         "eventKey":$util.dynamodb.toDynamoDBJson($ctx.args.eventKey),
         "key":$util.dynamodb.toDynamoDBJson($commentKey),
-        "author":$util.dynamodb.toDynamoDBJson($ctx.args.author),
         "authorUserID":$util.dynamodb.toDynamoDBJson($ctx.identity.sub),
         "body":$util.dynamodb.toDynamoDBJson($ctx.args.body),
         "datePosted":$util.dynamodb.toDynamoDBJson($util.time.nowEpochSeconds())

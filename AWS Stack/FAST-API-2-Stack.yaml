@@ -221,7 +221,7 @@ Resources:
         Versioned: false
       ServiceRoleArn: !GetAtt IAMAppSyncToFASTTeamInvitesRole.Arn
 
-  IAMAppSyncToLambdaMakeTeamInvites:
+  IAMAppSyncToLambdaFunctions:
     Type: AWS::IAM::Role
     Properties: 
       AssumeRolePolicyDocument: |
@@ -239,7 +239,7 @@ Resources:
             }
           ]
         }
-      Description: Allows AppSync to execute the FAST-makeScoutTeamInvitation function
+      Description: Allows AppSync to execute the FAST lambda functions
       Policies: 
         - PolicyDocument: 
             Version: 2012-10-17
@@ -249,7 +249,16 @@ Resources:
                   - "lambda:InvokeFunction"
                 Resource: arn:aws:lambda:us-east-1:797353049590:function:FAST-makeScoutTeamInvitation:*
           PolicyName: AllowMakeScoutTeamInvitesInvocation
-      RoleName: AppSyncToLambdaMakeTeamInvites
+        - PolicyDocument: 
+            Version: 2012-10-17
+            Statement:
+              - Effect: Allow
+                Action:
+                  - "lambda:InvokeFunction"
+                Resource: arn:aws:lambda:us-east-1:797353049590:function:getCompetitionModel:*
+          PolicyName: AllowGetCompetitionModel
+      RoleName: FASTAppSyncToLambdaFunctions
+
   SourceLambdaMakeInvitations:
     Type: AWS::AppSync::DataSource
     Properties:
@@ -258,7 +267,16 @@ Resources:
       Type: AWS_LAMBDA
       LambdaConfig:
         LambdaFunctionArn: arn:aws:lambda:us-east-1:797353049590:function:FAST-makeScoutTeamInvitation:Production
-      ServiceRoleArn: !GetAtt IAMAppSyncToLambdaMakeTeamInvites.Arn
+      ServiceRoleArn: !GetAtt IAMAppSyncToLambdaFunctions.Arn
+  SourceLambdaGetCompetitionModel:
+    Type: AWS::AppSync::DataSource
+    Properties:
+      Name: LambdaGetCompetitionModel
+      ApiId: !GetAtt AppSyncAPI.ApiId
+      Type: AWS_LAMBDA
+      LambdaConfig:
+        LambdaFunctionArn: arn:aws:lambda:us-east-1:797353049590:function:getCompetitionModel:ProductionAPI2
+      ServiceRoleArn: !GetAtt IAMAppSyncToLambdaFunctions.Arn
 
   SourceNone:
     Type: 'AWS::AppSync::DataSource'
@@ -756,7 +774,7 @@ Resources:
     Type: AWS::AppSync::FunctionConfiguration
     Properties:
       ApiId: !GetAtt AppSyncAPI.ApiId
-      DataSourceName: !GetAtt SourceFASTTeamInvites.Name
+      DataSourceName: !GetAtt SourceFASTTeams.Name
       FunctionVersion: 2018-05-29
       Name: GetScoutingTeamPublicName
       RequestMappingTemplateS3Location: ./Functions/GetScoutingTeamPublicNameRequest
@@ -801,6 +819,19 @@ Resources:
       ResponseMappingTemplateS3Location: ./Functions/PipelineStandardAfterResponse
     DependsOn:
       - AppSyncSchema
+  ResolverGetCompetitionModel:
+    Type: AWS::AppSync::Resolver
+    Properties:
+      ApiId: !GetAtt AppSyncAPI.ApiId
+      FieldName: getCompetitionModel
+      Kind: UNIT
+      DataSourceName: !GetAtt SourceLambdaGetCompetitionModel.Name
+      RequestMappingTemplateS3Location: ./Functions/GetCompetitionModelRequest
+      ResponseMappingTemplateS3Location: ./Functions/GetCompetitionModelResponse
+      TypeName: Query
+    DependsOn:
+      - AppSyncSchema
+
 
 
   ######################################################################

@@ -13,15 +13,23 @@ import AWSAppSync
 
 ///A data manager that tracks a team participating in a match. It is a singleton so when the stands scouting vc first initializes it, it saves itself and all the other stands scouting vcs use the same object.
 class SSDataManager {
-    let teamKey: String
-    let match: Match
+    private let teamKey: String
+    private let match: Match
     
-    let stopwatch: Stopwatch
+    //TODO: Move this to private(set) and handle managing the stopwatch from the data manager
+    internal var stopwatch: Stopwatch
     
-    static var currentSSDataManager: SSDataManager?
-    var model: StandsScoutingModel?
+    private(set) var modelState: FASTCompetitionModelState
+    internal var model: FASTCompetitionModel? {
+        switch modelState {
+        case .Loaded(let model):
+            return model
+        default:
+            return nil
+        }
+    }
     
-    var timeMarkers: [TimeMarkerInput] = []
+    private var timeMarkers: [TimeMarkerInput] = []
     private(set) var hasPassedAutonomous: Bool = false
     private var startState: [String:Any] = [:]
     private var endState: [String:Any] = [:]
@@ -32,16 +40,16 @@ class SSDataManager {
         
         self.stopwatch = Stopwatch()
         
-        SSDataManager.currentSSDataManager = self
+        self.modelState = Globals.dataManager.asyncLoadingManager.eventModelStates[match.eventKey] ?? .Loading
         
         CLSNSLogv("Began Stands Scouting for key: \(teamKey) in \(match.key)", getVaList([]))
-        
-        StandsScoutingModelLoader().getModel { (model) in
-            self.model = model
-        }
     }
     
-    func recordScoutSession() {
+    internal func start() {
+        
+    }
+    
+    internal func recordScoutSession() {
         //Create the start state and end state json strings
         var startStateString: String = "{}"
         var endStateString: String = "{}"
@@ -75,7 +83,7 @@ class SSDataManager {
     }
     
     ///Stores a time marker that marks the end of the Autonomous/Sandstorm(2019) period
-    func endAutonomousPeriod() {
+    internal func endAutonomousPeriod() {
         if hasPassedAutonomous {
             return
         } else {
@@ -84,7 +92,7 @@ class SSDataManager {
         }
     }
     
-    func setState(value: Any, forKey key: String, inSection gameSection: SSStateGameSection) {
+    internal func setState(value: Any, forKey key: String, inSection gameSection: SSStateGameSection) {
         switch gameSection {
         case .Start:
             startState[key] = value
@@ -93,7 +101,7 @@ class SSDataManager {
         }
     }
     
-    func addTimeMarker(event: String, subOption: String?) {
+    internal func addTimeMarker(event: String, subOption: String?) {
         var option: String?
         if subOption == "" {
             option = nil

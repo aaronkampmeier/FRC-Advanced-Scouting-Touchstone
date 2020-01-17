@@ -1,2 +1,6 @@
+#if($ctx.error)
+		$util.error($ctx.error.message, $ctx.error.type)
+#end
+
 #set($return = {"scoutTeam":$ctx.args.scoutTeam, "eventKey":$ctx.result })
 $util.toJson($return)

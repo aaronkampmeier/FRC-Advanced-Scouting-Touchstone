@@ -1017,7 +1017,7 @@ public final class UpdateScoutedTeamMutation: GraphQLMutation {
 
 public final class AddTeamCommentMutation: GraphQLMutation {
   public static let operationString =
-    "mutation AddTeamComment($scoutTeam: ID!, $eventKey: String!, $teamKey: String!, $body: String!, $author: String!) {\n  addTeamComment(scoutTeam: $scoutTeam, eventKey: $eventKey, teamKey: $teamKey, body: $body, author: $author) {\n    __typename\n    ...TeamComment\n  }\n}"
+    "mutation AddTeamComment($scoutTeam: ID!, $eventKey: String!, $teamKey: String!, $body: String!) {\n  addTeamComment(scoutTeam: $scoutTeam, eventKey: $eventKey, teamKey: $teamKey, body: $body) {\n    __typename\n    ...TeamComment\n  }\n}"
 
   public static var requestString: String { return operationString.appending(TeamComment.fragmentString) }
 
@@ -1025,25 +1025,23 @@ public final class AddTeamCommentMutation: GraphQLMutation {
   public var eventKey: String
   public var teamKey: String
   public var body: String
-  public var author: String
 
-  public init(scoutTeam: GraphQLID, eventKey: String, teamKey: String, body: String, author: String) {
+  public init(scoutTeam: GraphQLID, eventKey: String, teamKey: String, body: String) {
     self.scoutTeam = scoutTeam
     self.eventKey = eventKey
     self.teamKey = teamKey
     self.body = body
-    self.author = author
   }
 
   public var variables: GraphQLMap? {
-    return ["scoutTeam": scoutTeam, "eventKey": eventKey, "teamKey": teamKey, "body": body, "author": author]
+    return ["scoutTeam": scoutTeam, "eventKey": eventKey, "teamKey": teamKey, "body": body]
   }
 
   public struct Data: GraphQLSelectionSet {
     public static let possibleTypes = ["Mutation"]
 
     public static let selections: [GraphQLSelection] = [
-      GraphQLField("addTeamComment", arguments: ["scoutTeam": GraphQLVariable("scoutTeam"), "eventKey": GraphQLVariable("eventKey"), "teamKey": GraphQLVariable("teamKey"), "body": GraphQLVariable("body"), "author": GraphQLVariable("author")], type: .object(AddTeamComment.selections)),
+      GraphQLField("addTeamComment", arguments: ["scoutTeam": GraphQLVariable("scoutTeam"), "eventKey": GraphQLVariable("eventKey"), "teamKey": GraphQLVariable("teamKey"), "body": GraphQLVariable("body")], type: .object(AddTeamComment.selections)),
     ]
 
     public var snapshot: Snapshot
@@ -1071,7 +1069,6 @@ public final class AddTeamCommentMutation: GraphQLMutation {
       public static let selections: [GraphQLSelection] = [
         GraphQLField("__typename", type: .nonNull(.scalar(String.self))),
         GraphQLField("__typename", type: .nonNull(.scalar(String.self))),
-        GraphQLField("author", type: .nonNull(.scalar(String.self))),
         GraphQLField("scoutTeam", type: .nonNull(.scalar(GraphQLID.self))),
         GraphQLField("authorUserID", type: .nonNull(.scalar(GraphQLID.self))),
         GraphQLField("body", type: .nonNull(.scalar(String.self))),
@@ -1087,8 +1084,8 @@ public final class AddTeamCommentMutation: GraphQLMutation {
         self.snapshot = snapshot
       }
 
-      public init(author: String, scoutTeam: GraphQLID, authorUserId: GraphQLID, body: String, datePosted: Int, key: GraphQLID, teamKey: String, eventKey: String) {
-        self.init(snapshot: ["__typename": "TeamComment", "author": author, "scoutTeam": scoutTeam, "authorUserID": authorUserId, "body": body, "datePosted": datePosted, "key": key, "teamKey": teamKey, "eventKey": eventKey])
+      public init(scoutTeam: GraphQLID, authorUserId: GraphQLID, body: String, datePosted: Int, key: GraphQLID, teamKey: String, eventKey: String) {
+        self.init(snapshot: ["__typename": "TeamComment", "scoutTeam": scoutTeam, "authorUserID": authorUserId, "body": body, "datePosted": datePosted, "key": key, "teamKey": teamKey, "eventKey": eventKey])
       }
 
       public var __typename: String {
@@ -1097,15 +1094,6 @@ public final class AddTeamCommentMutation: GraphQLMutation {
         }
         set {
           snapshot.updateValue(newValue, forKey: "__typename")
-        }
-      }
-
-      public var author: String {
-        get {
-          return snapshot["author"]! as! String
-        }
-        set {
-          snapshot.updateValue(newValue, forKey: "author")
         }
       }
 
@@ -2469,6 +2457,48 @@ public final class TransferLeadMutation: GraphQLMutation {
             snapshot += newValue.snapshot
           }
         }
+      }
+    }
+  }
+}
+
+public final class GetCompetitionModelQuery: GraphQLQuery {
+  public static let operationString =
+    "query GetCompetitionModel($year: String) {\n  getCompetitionModel(year: $year)\n}"
+
+  public var year: String?
+
+  public init(year: String? = nil) {
+    self.year = year
+  }
+
+  public var variables: GraphQLMap? {
+    return ["year": year]
+  }
+
+  public struct Data: GraphQLSelectionSet {
+    public static let possibleTypes = ["Query"]
+
+    public static let selections: [GraphQLSelection] = [
+      GraphQLField("getCompetitionModel", arguments: ["year": GraphQLVariable("year")], type: .scalar(String.self)),
+    ]
+
+    public var snapshot: Snapshot
+
+    public init(snapshot: Snapshot) {
+      self.snapshot = snapshot
+    }
+
+    public init(getCompetitionModel: String? = nil) {
+      self.init(snapshot: ["__typename": "Query", "getCompetitionModel": getCompetitionModel])
+    }
+
+    public var getCompetitionModel: String? {
+      get {
+        return snapshot["getCompetitionModel"] as? String
+      }
+      set {
+        snapshot.updateValue(newValue, forKey: "getCompetitionModel")
       }
     }
   }
@@ -5326,7 +5356,6 @@ public final class ListTeamCommentsQuery: GraphQLQuery {
       public static let selections: [GraphQLSelection] = [
         GraphQLField("__typename", type: .nonNull(.scalar(String.self))),
         GraphQLField("__typename", type: .nonNull(.scalar(String.self))),
-        GraphQLField("author", type: .nonNull(.scalar(String.self))),
         GraphQLField("scoutTeam", type: .nonNull(.scalar(GraphQLID.self))),
         GraphQLField("authorUserID", type: .nonNull(.scalar(GraphQLID.self))),
         GraphQLField("body", type: .nonNull(.scalar(String.self))),
@@ -5342,8 +5371,8 @@ public final class ListTeamCommentsQuery: GraphQLQuery {
         self.snapshot = snapshot
       }
 
-      public init(author: String, scoutTeam: GraphQLID, authorUserId: GraphQLID, body: String, datePosted: Int, key: GraphQLID, teamKey: String, eventKey: String) {
-        self.init(snapshot: ["__typename": "TeamComment", "author": author, "scoutTeam": scoutTeam, "authorUserID": authorUserId, "body": body, "datePosted": datePosted, "key": key, "teamKey": teamKey, "eventKey": eventKey])
+      public init(scoutTeam: GraphQLID, authorUserId: GraphQLID, body: String, datePosted: Int, key: GraphQLID, teamKey: String, eventKey: String) {
+        self.init(snapshot: ["__typename": "TeamComment", "scoutTeam": scoutTeam, "authorUserID": authorUserId, "body": body, "datePosted": datePosted, "key": key, "teamKey": teamKey, "eventKey": eventKey])
       }
 
       public var __typename: String {
@@ -5352,15 +5381,6 @@ public final class ListTeamCommentsQuery: GraphQLQuery {
         }
         set {
           snapshot.updateValue(newValue, forKey: "__typename")
-        }
-      }
-
-      public var author: String {
-        get {
-          return snapshot["author"]! as! String
-        }
-        set {
-          snapshot.updateValue(newValue, forKey: "author")
         }
       }
 
@@ -8608,7 +8628,6 @@ public final class OnAddTeamCommentSubscription: GraphQLSubscription {
       public static let selections: [GraphQLSelection] = [
         GraphQLField("__typename", type: .nonNull(.scalar(String.self))),
         GraphQLField("__typename", type: .nonNull(.scalar(String.self))),
-        GraphQLField("author", type: .nonNull(.scalar(String.self))),
         GraphQLField("scoutTeam", type: .nonNull(.scalar(GraphQLID.self))),
         GraphQLField("authorUserID", type: .nonNull(.scalar(GraphQLID.self))),
         GraphQLField("body", type: .nonNull(.scalar(String.self))),
@@ -8624,8 +8643,8 @@ public final class OnAddTeamCommentSubscription: GraphQLSubscription {
         self.snapshot = snapshot
       }
 
-      public init(author: String, scoutTeam: GraphQLID, authorUserId: GraphQLID, body: String, datePosted: Int, key: GraphQLID, teamKey: String, eventKey: String) {
-        self.init(snapshot: ["__typename": "TeamComment", "author": author, "scoutTeam": scoutTeam, "authorUserID": authorUserId, "body": body, "datePosted": datePosted, "key": key, "teamKey": teamKey, "eventKey": eventKey])
+      public init(scoutTeam: GraphQLID, authorUserId: GraphQLID, body: String, datePosted: Int, key: GraphQLID, teamKey: String, eventKey: String) {
+        self.init(snapshot: ["__typename": "TeamComment", "scoutTeam": scoutTeam, "authorUserID": authorUserId, "body": body, "datePosted": datePosted, "key": key, "teamKey": teamKey, "eventKey": eventKey])
       }
 
       public var __typename: String {
@@ -8634,15 +8653,6 @@ public final class OnAddTeamCommentSubscription: GraphQLSubscription {
         }
         set {
           snapshot.updateValue(newValue, forKey: "__typename")
-        }
-      }
-
-      public var author: String {
-        get {
-          return snapshot["author"]! as! String
-        }
-        set {
-          snapshot.updateValue(newValue, forKey: "author")
         }
       }
 
@@ -10667,13 +10677,12 @@ public struct TeamEventStatus: GraphQLFragment {
 
 public struct TeamComment: GraphQLFragment {
   public static let fragmentString =
-    "fragment TeamComment on TeamComment {\n  __typename\n  author\n  scoutTeam\n  authorUserID\n  body\n  datePosted\n  key\n  teamKey\n  eventKey\n}"
+    "fragment TeamComment on TeamComment {\n  __typename\n  scoutTeam\n  authorUserID\n  body\n  datePosted\n  key\n  teamKey\n  eventKey\n}"
 
   public static let possibleTypes = ["TeamComment"]
 
   public static let selections: [GraphQLSelection] = [
     GraphQLField("__typename", type: .nonNull(.scalar(String.self))),
-    GraphQLField("author", type: .nonNull(.scalar(String.self))),
     GraphQLField("scoutTeam", type: .nonNull(.scalar(GraphQLID.self))),
     GraphQLField("authorUserID", type: .nonNull(.scalar(GraphQLID.self))),
     GraphQLField("body", type: .nonNull(.scalar(String.self))),
@@ -10689,8 +10698,8 @@ public struct TeamComment: GraphQLFragment {
     self.snapshot = snapshot
   }
 
-  public init(author: String, scoutTeam: GraphQLID, authorUserId: GraphQLID, body: String, datePosted: Int, key: GraphQLID, teamKey: String, eventKey: String) {
-    self.init(snapshot: ["__typename": "TeamComment", "author": author, "scoutTeam": scoutTeam, "authorUserID": authorUserId, "body": body, "datePosted": datePosted, "key": key, "teamKey": teamKey, "eventKey": eventKey])
+  public init(scoutTeam: GraphQLID, authorUserId: GraphQLID, body: String, datePosted: Int, key: GraphQLID, teamKey: String, eventKey: String) {
+    self.init(snapshot: ["__typename": "TeamComment", "scoutTeam": scoutTeam, "authorUserID": authorUserId, "body": body, "datePosted": datePosted, "key": key, "teamKey": teamKey, "eventKey": eventKey])
   }
 
   public var __typename: String {
@@ -10699,15 +10708,6 @@ public struct TeamComment: GraphQLFragment {
     }
     set {
       snapshot.updateValue(newValue, forKey: "__typename")
-    }
-  }
-
-  public var author: String {
-    get {
-      return snapshot["author"]! as! String
-    }
-    set {
-      snapshot.updateValue(newValue, forKey: "author")
     }
   }
 

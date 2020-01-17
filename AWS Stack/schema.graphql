@@ -15,8 +15,7 @@ type Mutation {
     scoutTeam: ID!,
     eventKey: String!,
     teamKey: String!,
-    body: String!,
-    author: String!
+    body: String!
   ): TeamComment
   removeTeamComment(scoutTeam: ID!, eventKey: String!, key: String!): TeamComment
   createScoutSession(
@@ -45,6 +44,8 @@ type Mutation {
 }
 
 type Query {
+	getCompetitionModel(year: String): AWSJSON
+
   ## The Blue Alliance Universal Calls
   listAvailableEvents(year: String): [Event]
   getEvent(key: ID!): Event
@@ -248,7 +249,6 @@ type Team {
 
 type TeamComment {
   scoutTeam: ID!
-  author: String!
   authorUserID: ID!
   body: String!
   datePosted: AWSTimestamp!

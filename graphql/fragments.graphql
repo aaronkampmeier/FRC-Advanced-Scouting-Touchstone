@@ -121,7 +121,6 @@ fragment TeamEventStatus on TeamEventStatus {
 }
 
 fragment TeamComment on TeamComment {
-	author
     scoutTeam
 	authorUserID
 	body

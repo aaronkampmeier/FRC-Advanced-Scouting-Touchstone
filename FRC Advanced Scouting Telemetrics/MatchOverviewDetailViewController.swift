@@ -14,29 +14,18 @@ class MatchOverviewDetailViewController: UIViewController {
     @IBOutlet weak var bluePointsLabel: UILabel!
     @IBOutlet weak var segmentedControl: UISegmentedControl!
     
-    var matchOverviewSplitVC: MatchOverviewSplitViewController? {
-        get {
-            if let matchSplit = self.splitViewController as? MatchOverviewSplitViewController {
-                return matchSplit
-            } else {
-                return MatchOverviewSplitViewController.default
-            }
-        }
-    }
-    var displayedMatch: Match?
-    var teamKeys = [String]()
-    var scoutTeam: String?
+    private(set) var displayedMatch: Match?
+    private var teamKeys = [String]()
     
-    var matchPerformanceDetail: MatchOverviewPerformanceDetailViewController!
+    private var matchPerformanceDetail: MatchOverviewPerformanceDetailViewController!
 
     override func viewDidLoad() {
         super.viewDidLoad()
 
         // Do any additional setup after loading the view.
-        matchOverviewSplitVC?.matchesDetail = self
         
         self.navigationItem.leftItemsSupplementBackButton = true
-        self.navigationItem.leftBarButtonItem = matchOverviewSplitVC?.displayModeButtonItem
+        self.navigationItem.leftBarButtonItem = splitViewController?.displayModeButtonItem
         self.segmentedControl.selectedSegmentIndex = -1
         
         matchPerformanceDetail = self.children.first! as? MatchOverviewPerformanceDetailViewController
@@ -51,8 +40,7 @@ class MatchOverviewDetailViewController: UIViewController {
         // Dispose of any resources that can be recreated.
     }
     
-    func load(inScoutTeam scoutTeam: String, forMatchKey matchKey: String, shouldShowExitButton: Bool, preSelectedTeamKey: String? = nil) {
-        self.scoutTeam = scoutTeam
+    internal func load(forMatchKey matchKey: String, shouldShowExitButton: Bool, preSelectedTeamKey: String? = nil) {
         self.setUpForMatch(match: nil)
         
         let eventKey = matchKey.components(separatedBy: "_").first
@@ -64,8 +52,6 @@ class MatchOverviewDetailViewController: UIViewController {
                 self.setUpForMatch(match: match, preselectedTeamKey: preSelectedTeamKey)
                 
                 //TODO: - Also update the apollo cache for ListMatchesQuery with this result
-            } else {
-                //TODO: - Show error
             }
         })
         
@@ -128,7 +114,7 @@ class MatchOverviewDetailViewController: UIViewController {
     
     @IBAction func selectedDifferentTeam(_ sender: UISegmentedControl) {
         //Set the selected match performance
-        if let match = self.displayedMatch {
+        if let match = self.displayedMatch, let scoutTeam = Globals.dataManager.enrolledScoutingTeamID {
             matchPerformanceDetail.load(match: match, forTeamKey: teamKeys[sender.selectedSegmentIndex], inScoutTeam: scoutTeam)
         } else {
             matchPerformanceDetail.load(match: nil, forTeamKey: nil, inScoutTeam: nil)
@@ -139,7 +125,7 @@ class MatchOverviewDetailViewController: UIViewController {
         self.dismiss(animated: true, completion: nil)
     }
     
-    func presentNotes(_ sender: Any) {
+    private func presentNotes(_ sender: Any) {
         let superNotesVC = storyboard?.instantiateViewController(withIdentifier: "superNotes") as! SuperNotesCollectionViewController
         let navVC = UINavigationController(rootViewController: superNotesVC)
         

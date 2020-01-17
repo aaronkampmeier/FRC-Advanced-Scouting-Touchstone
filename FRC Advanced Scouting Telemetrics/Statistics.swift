@@ -19,12 +19,12 @@ class StatisticsDataSource {
         
     }
     
-    func getStats<T>(forType type: T.Type) -> [Statistic<T>] {
+    func getStats<T>(forType type: T.Type, forEvent eventKey: String) -> [Statistic<T>] {
         switch type {
         case is ScoutedTeam.Type:
-            return ScoutedTeam.stats as! [Statistic<T>]
+            return ScoutedTeam.stats(forEventKey: eventKey) as! [Statistic<T>]
         case is ScoutSession.Type:
-            return ScoutSession.stats as! [Statistic<T>]
+            return ScoutSession.stats(forEventKey: eventKey) as! [Statistic<T>]
         default:
             return []
         }

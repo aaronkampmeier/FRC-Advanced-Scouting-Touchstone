@@ -114,6 +114,10 @@ class AdminConsoleScoutingTeamSection: AdminConsoleConfigSection {
         "Scouting Teams"
     }
     
+    func sectionFooter(_ adminConsole: AdminConsoleController) -> String? {
+        return "Scouting teams allow you to share scouted data with all the members on your FRC team. Create a new one if you are the first person on your team to use FAST. Otherwise, join an existing scouting team."
+    }
+    
     func numOfRows(_ adminConsole: AdminConsoleController) -> Int {
         self.adminConsole = adminConsole
         return scoutingTeams.count + 1
@@ -234,7 +238,7 @@ class AdminConsoleEventsSection: AdminConsoleConfigSection {
     init() {
         loadData()
         
-        NotificationCenter.default.addObserver(forName: .FASTAWSDataManagerCurrentScoutingTeamChanged, object: nil, queue: nil) {[weak self] (notification) in
+        NotificationCenter.default.addObserver(forName: .FASTAWSDataManagerCurrentScoutingTeamChanged, object: nil, queue: OperationQueue.main) {[weak self] (notification) in
             self?.loadData()
         }
     }
@@ -262,7 +266,11 @@ class AdminConsoleEventsSection: AdminConsoleConfigSection {
     }
     
     func sectionTitle(_ adminConsole: AdminConsoleController) -> String? {
-        "Events (Swipe left to Export/Remove)"
+        return "Events"
+    }
+    
+    func sectionFooter(_ adminConsole: AdminConsoleController) -> String? {
+        return "Swipe left on an event to export the data to CSV or delete it altogether"
     }
     
     func numOfRows(_ adminConsole: AdminConsoleController) -> Int {
@@ -304,11 +312,9 @@ class AdminConsoleEventsSection: AdminConsoleConfigSection {
         if indexPath.row == numOfRows(adminConsole) - 1 {
             //Did select add event
             if Globals.dataManager.enrolledScoutingTeamID != nil {
-                if Globals.isInSpectatorMode {
-                    adminConsole.performSegue(withIdentifier: "addEvent", sender: tableView)
-                } else {
-                    adminConsole.performSegue(withIdentifier: "addEvent", sender: tableView)
-                }
+                let addEventVC = adminConsole.storyboard?.instantiateViewController(withIdentifier: "addEvent")
+                
+                adminConsole.present(UINavigationController(rootViewController: addEventVC!), animated: true, completion: nil)
             }
         } else {
             //Did select event info
@@ -468,7 +474,7 @@ class AdminConsoleEventsSection: AdminConsoleConfigSection {
             let filename = "\(eventKey).csv"
             let path = URL(fileURLWithPath: NSTemporaryDirectory()).appendingPathComponent(filename)
             
-            let stats = StatisticsDataSource().getStats(forType: ScoutedTeam.self)
+            let stats = StatisticsDataSource().getStats(forType: ScoutedTeam.self, forEvent: eventKey)
             
             var csvText = ""
             //First add in the header for the team number

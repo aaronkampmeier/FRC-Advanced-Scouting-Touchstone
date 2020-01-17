@@ -1,178 +1,4 @@
 AWSTemplateFormatVersion: 2010-09-09
-Metadata:
-  Stupid:
-    Stupid: Stupid
-  AWS::CloudFormation::Designer:
-    79ee8c5c-c919-4d0f-91b8-4d7b665068a2:
-      size:
-        width: 60
-        height: 60
-      position:
-        x: 60
-        y: 90
-      z: 1
-      embeds: []
-    c64c3e2a-645c-453c-9f8a-f8a29eb7642f:
-      size:
-        width: 60
-        height: 60
-      position:
-        x: 150
-        y: 90
-      z: 1
-      embeds: []
-      dependson:
-      - 79ee8c5c-c919-4d0f-91b8-4d7b665068a2
-    30665b18-1c16-4cc1-8ae7-4f71b6b66bd1:
-      size:
-        width: 60
-        height: 60
-      position:
-        x: 60
-        y: 210
-      z: 1
-      embeds: []
-      dependson:
-      - 79ee8c5c-c919-4d0f-91b8-4d7b665068a2
-    9826eb5e-9f89-4a15-a614-3649ede94ece:
-      size:
-        width: 60
-        height: 60
-      position:
-        x: 180
-        y: 210
-      z: 1
-      embeds: []
-      dependson:
-      - 79ee8c5c-c919-4d0f-91b8-4d7b665068a2
-    498c3101-f50d-4d07-9089-89280e24fd9c:
-      size:
-        width: 60
-        height: 60
-      position:
-        x: 240
-        y: 90
-      z: 1
-      embeds: []
-      dependson:
-      - 79ee8c5c-c919-4d0f-91b8-4d7b665068a2
-    289c27ae-f6f9-466f-9178-d759f183065f:
-      size:
-        width: 60
-        height: 60
-      position:
-        x: 60
-        y: 300
-      z: 1
-      embeds: []
-      dependson:
-      - 79ee8c5c-c919-4d0f-91b8-4d7b665068a2
-    f2456b96-4959-4209-8b39-1d3c6a52a0a4:
-      size:
-        width: 60
-        height: 60
-      position:
-        x: 180
-        y: 300
-      z: 1
-      embeds: []
-      dependson:
-      - 79ee8c5c-c919-4d0f-91b8-4d7b665068a2
-    818db899-3f2c-4ad2-bd52-cfee272a41f7:
-      size:
-        width: 60
-        height: 60
-      position:
-        x: 60
-        y: 420
-      z: 1
-      embeds: []
-      dependson:
-      - 79ee8c5c-c919-4d0f-91b8-4d7b665068a2
-    6dd778d5-8507-4d03-94a9-902f189da3bc:
-      size:
-        width: 60
-        height: 60
-      position:
-        x: 180
-        y: 420
-      z: 1
-      embeds: []
-      dependson:
-      - 79ee8c5c-c919-4d0f-91b8-4d7b665068a2
-    582f5066-0cf9-41d3-aca3-e1e5d3d85a3e:
-      size:
-        width: 60
-        height: 60
-      position:
-        x: 300
-        y: 210
-      z: 1
-      embeds: []
-      dependson:
-      - 79ee8c5c-c919-4d0f-91b8-4d7b665068a2
-    9aaf0919-2593-4f7a-aece-96a4d2919512:
-      source:
-        id: c64c3e2a-645c-453c-9f8a-f8a29eb7642f
-      target:
-        id: 79ee8c5c-c919-4d0f-91b8-4d7b665068a2
-      z: 11
-    7f6c6eec-c603-4fcd-8f31-744bd894aeca:
-      source:
-        id: c64c3e2a-645c-453c-9f8a-f8a29eb7642f
-        selector: 'g:nth-child(1) g:nth-child(4) g:nth-child(1) circle:nth-child(1)     '
-        port: AWS::DependencyLink-*
-      target:
-        id: 79ee8c5c-c919-4d0f-91b8-4d7b665068a2
-      z: 13
-    cbb3d970-31bc-4562-adf5-ca3e5062803d:
-      source:
-        id: 498c3101-f50d-4d07-9089-89280e24fd9c
-      target:
-        id: 79ee8c5c-c919-4d0f-91b8-4d7b665068a2
-      z: 12
-    6114c639-07da-487f-bd9a-b391f280a825:
-      source:
-        id: 30665b18-1c16-4cc1-8ae7-4f71b6b66bd1
-      target:
-        id: 79ee8c5c-c919-4d0f-91b8-4d7b665068a2
-      z: 13
-    bdc72f57-7389-451b-8a5a-e1393cdfa240:
-      source:
-        id: 9826eb5e-9f89-4a15-a614-3649ede94ece
-      target:
-        id: 79ee8c5c-c919-4d0f-91b8-4d7b665068a2
-      z: 14
-    b132a48c-80cb-4719-9c70-52b3fe38b8b8:
-      source:
-        id: 582f5066-0cf9-41d3-aca3-e1e5d3d85a3e
-      target:
-        id: 79ee8c5c-c919-4d0f-91b8-4d7b665068a2
-      z: 15
-    077d69ed-6025-4c6f-93d1-159758526e8a:
-      source:
-        id: 289c27ae-f6f9-466f-9178-d759f183065f
-      target:
-        id: 79ee8c5c-c919-4d0f-91b8-4d7b665068a2
-      z: 16
-    50bb7d56-2f72-4b39-91c0-f2c8e8c57fa3:
-      source:
-        id: f2456b96-4959-4209-8b39-1d3c6a52a0a4
-      target:
-        id: 79ee8c5c-c919-4d0f-91b8-4d7b665068a2
-      z: 17
-    d156f463-fd39-4f8e-9020-9126d2c303ab:
-      source:
-        id: 818db899-3f2c-4ad2-bd52-cfee272a41f7
-      target:
-        id: 79ee8c5c-c919-4d0f-91b8-4d7b665068a2
-      z: 18
-    67c13e55-04db-41f8-abd2-317686d74dd7:
-      source:
-        id: 6dd778d5-8507-4d03-94a9-902f189da3bc
-      target:
-        id: 79ee8c5c-c919-4d0f-91b8-4d7b665068a2
-      z: 19
 Resources:
   AppSyncAPI:
     Type: AWS::AppSync::GraphQLApi
@@ -199,7 +25,7 @@ Resources:
         - AppSyncAPI
         - ApiId
       DefinitionS3Location: s3://cf-templates-4eazvtfbn788-us-east-1/FAST API Stack
-        Resources/ac35765362c6022f22209487c5ecb9fe
+        Resources/980ac77de354bda58ae62e05ee0fe0e9
     Metadata:
       AWS::CloudFormation::Designer:
         id: 9826eb5e-9f89-4a15-a614-3649ede94ece
@@ -380,14 +206,14 @@ Resources:
         Fn::GetAtt:
         - IAMAppSyncToFASTTeamInvitesRole
         - Arn
-  IAMAppSyncToLambdaMakeTeamInvites:
+  IAMAppSyncToLambdaFunctions:
     Type: AWS::IAM::Role
     Properties:
       AssumeRolePolicyDocument: "{\n  \"Version\": \"2012-10-17\",\n  \"Statement\"\
         : [\n    {\n      \"Effect\": \"Allow\",\n      \"Principal\": {\n       \
         \ \"Service\": [\n          \"appsync.amazonaws.com\"\n        ]\n      },\n\
         \      \"Action\": \"sts:AssumeRole\"\n    }\n  ]\n}\n"
-      Description: Allows AppSync to execute the FAST-makeScoutTeamInvitation function
+      Description: Allows AppSync to execute the FAST lambda functions
       Policies:
       - PolicyDocument:
           Version: 2012-10-17
@@ -397,7 +223,15 @@ Resources:
             - lambda:InvokeFunction
             Resource: arn:aws:lambda:us-east-1:797353049590:function:FAST-makeScoutTeamInvitation:*
         PolicyName: AllowMakeScoutTeamInvitesInvocation
-      RoleName: AppSyncToLambdaMakeTeamInvites
+      - PolicyDocument:
+          Version: 2012-10-17
+          Statement:
+          - Effect: Allow
+            Action:
+            - lambda:InvokeFunction
+            Resource: arn:aws:lambda:us-east-1:797353049590:function:getCompetitionModel:*
+        PolicyName: AllowGetCompetitionModel
+      RoleName: FASTAppSyncToLambdaFunctions
   SourceLambdaMakeInvitations:
     Type: AWS::AppSync::DataSource
     Properties:
@@ -411,7 +245,22 @@ Resources:
         LambdaFunctionArn: arn:aws:lambda:us-east-1:797353049590:function:FAST-makeScoutTeamInvitation:Production
       ServiceRoleArn:
         Fn::GetAtt:
-        - IAMAppSyncToLambdaMakeTeamInvites
+        - IAMAppSyncToLambdaFunctions
+        - Arn
+  SourceLambdaGetCompetitionModel:
+    Type: AWS::AppSync::DataSource
+    Properties:
+      Name: LambdaGetCompetitionModel
+      ApiId:
+        Fn::GetAtt:
+        - AppSyncAPI
+        - ApiId
+      Type: AWS_LAMBDA
+      LambdaConfig:
+        LambdaFunctionArn: arn:aws:lambda:us-east-1:797353049590:function:getCompetitionModel:ProductionAPI2
+      ServiceRoleArn:
+        Fn::GetAtt:
+        - IAMAppSyncToLambdaFunctions
         - Arn
   SourceNone:
     Type: AWS::AppSync::DataSource
@@ -559,7 +408,7 @@ Resources:
       FunctionVersion: 2018-05-29
       Name: AddTeamComment
       RequestMappingTemplateS3Location: s3://cf-templates-4eazvtfbn788-us-east-1/FAST
-        API Stack Resources/d9566ff112312bcfbb64625fbfa49e58
+        API Stack Resources/15bd3f202e044fe6e59e818259f6146a
       ResponseMappingTemplateS3Location: s3://cf-templates-4eazvtfbn788-us-east-1/FAST
         API Stack Resources/1edeb384aa840c737cf11b84b2501201
   FuncStashTBAKey:
@@ -1163,7 +1012,7 @@ Resources:
       FunctionVersion: 2018-05-29
       Name: ListEnrolledScoutingTeams
       RequestMappingTemplateS3Location: s3://cf-templates-4eazvtfbn788-us-east-1/FAST
-        API Stack Resources/bbc9ea0c07e41ea028fb45965575adec
+        API Stack Resources/da3ba804ac83521209b9854c8ae76aec
       ResponseMappingTemplateS3Location: s3://cf-templates-4eazvtfbn788-us-east-1/FAST
         API Stack Resources/5c22e811e681c06c41fb5a3a8ebe576a
   ResolverListEnrolledScoutingTeams:
@@ -1257,12 +1106,12 @@ Resources:
         - ApiId
       DataSourceName:
         Fn::GetAtt:
-        - SourceFASTTeamInvites
+        - SourceFASTTeams
         - Name
       FunctionVersion: 2018-05-29
       Name: GetScoutingTeamPublicName
       RequestMappingTemplateS3Location: s3://cf-templates-4eazvtfbn788-us-east-1/FAST
-        API Stack Resources/8c6dabf6bbb47b52a78286138b4e5755
+        API Stack Resources/d6d4fe905617f97986e0b13a70fe957f
       ResponseMappingTemplateS3Location: s3://cf-templates-4eazvtfbn788-us-east-1/FAST
         API Stack Resources/a1603443ea35001918c3e1e569a10449
   ResolverGetScoutingTeamPublicName:
@@ -1330,6 +1179,26 @@ Resources:
         API Stack Resources/13709c494f6065fe32845d07d574d948
     DependsOn:
     - AppSyncSchema
+  ResolverGetCompetitionModel:
+    Type: AWS::AppSync::Resolver
+    Properties:
+      ApiId:
+        Fn::GetAtt:
+        - AppSyncAPI
+        - ApiId
+      FieldName: getCompetitionModel
+      Kind: UNIT
+      DataSourceName:
+        Fn::GetAtt:
+        - SourceLambdaGetCompetitionModel
+        - Name
+      RequestMappingTemplateS3Location: s3://cf-templates-4eazvtfbn788-us-east-1/FAST
+        API Stack Resources/973f91db38481f4ec3a60c96838d21ab
+      ResponseMappingTemplateS3Location: s3://cf-templates-4eazvtfbn788-us-east-1/FAST
+        API Stack Resources/e2e5e43c54f9ca992eb1a1fecdfc022d
+      TypeName: Query
+    DependsOn:
+    - AppSyncSchema
   ResolverAddTrackedEvent:
     Type: AWS::AppSync::Resolver
     Properties:
@@ -1372,9 +1241,9 @@ Resources:
       FunctionVersion: 2018-05-29
       Name: RemoveTrackedEvent
       RequestMappingTemplateS3Location: s3://cf-templates-4eazvtfbn788-us-east-1/FAST
-        API Stack Resources/357afab224bb0f72a948653e76b1e1dc
+        API Stack Resources/956e457fbb08749609994f5296fd2032
       ResponseMappingTemplateS3Location: s3://cf-templates-4eazvtfbn788-us-east-1/FAST
-        API Stack Resources/45d0173b6b21ae7c53834904994b9975
+        API Stack Resources/0be99dc6e7124379d9ca308bd904eaad
   ResolverRemoveTrackedEvent:
     Type: AWS::AppSync::Resolver
     Properties:
@@ -1411,9 +1280,9 @@ Resources:
       FunctionVersion: 2018-05-29
       Name: MoveRankedTeam
       RequestMappingTemplateS3Location: s3://cf-templates-4eazvtfbn788-us-east-1/FAST
-        API Stack Resources/357afab224bb0f72a948653e76b1e1dc
+        API Stack Resources/061603a019fdaab71c8d1bf2a43847b3
       ResponseMappingTemplateS3Location: s3://cf-templates-4eazvtfbn788-us-east-1/FAST
-        API Stack Resources/2aa794dee2fc56a8954b3ff325ebbd39
+        API Stack Resources/fe0f7e73d846de2296b0cbe7aa897f59
   ResolverMoveRankedTeam:
     Type: AWS::AppSync::Resolver
     Properties:

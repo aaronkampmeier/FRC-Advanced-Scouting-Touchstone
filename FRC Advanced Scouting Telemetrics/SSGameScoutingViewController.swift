@@ -13,10 +13,10 @@ class SSGameScoutingViewController: UIViewController {
     
     let layout = UICollectionViewFlowLayout()
     let animationController = OptionSelectorAnimator()
-    lazy var ssDataManager = SSDataManager.currentSSDataManager
+    var ssDataManager: SSDataManager?
     
     var model: StandsScoutingModel? {
-        return ssDataManager?.model
+        return ssDataManager?.model?.standsScouting
     }
     
     override func viewDidLoad() {

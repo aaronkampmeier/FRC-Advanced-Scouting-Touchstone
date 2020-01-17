@@ -28,11 +28,11 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
             //Show the sign in flow
             window?.rootViewController = mainStoryboard.instantiateViewController(identifier: "onboarding")
         case .signedIn:
+            self.window?.rootViewController = mainStoryboard.instantiateViewController(withIdentifier: "teamListMasterVC")
+            
             //User activity restoration logic
             if let activity = connectionOptions.userActivities.first ?? session.stateRestorationActivity {
                 self.scene(scene, continue: activity)
-            } else {
-                self.window?.rootViewController = mainStoryboard.instantiateViewController(withIdentifier: "teamListMasterVC")
             }
         case .guest:
             if Globals.isInSpectatorMode {
@@ -66,10 +66,6 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
                 }
             }
         }
-        
-        if let restorationActivity = session.stateRestorationActivity {
-            //TODO: AJNSOJ
-        }
     }
     
     func sceneDidDisconnect(_ scene: UIScene) {
@@ -84,33 +80,37 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         NSLog("Scene Did Become Active")
     }
     
+    func presentViewControllerOnTop(_ viewControllerToPresent: UIViewController, animated flag: Bool, completion: (() -> Void)? = nil) {
+        DispatchQueue.main.async {
+            self.window?.rootViewController?.presentViewControllerFromVisibleViewController(viewControllerToPresent, animated: flag, completion: completion)
+        }
+    }
+    
     //MARK: - Handling NSUserActivity
     //UIKit will call this when handoff data becomes available. Within FAST this will also be called when a scene should resume using an activity object.
     func scene(_ scene: UIScene, continue userActivity: NSUserActivity) {
-        NSLog("Scene continue user activity: \(userActivity.title ?? "")")
-        let mainStoryboard = UIStoryboard(name: "Main", bundle: nil)
+        NSLog("Scene continue user activity: \(userActivity.title ?? "") (\(userActivity.activityType))")
         
         //Set the correct rootViewController
         switch userActivity.activityType {
         case Globals.UserActivity.eventSelection:
             //Open up the team list table view
-            let eventKey = userActivity.userInfo?["eventKey"] as? String
-            let teamListSplitVC = mainStoryboard.instantiateViewController(withIdentifier: "teamListMasterVC") as! TeamListSplitViewController
-            self.window?.rootViewController = teamListSplitVC
-            teamListSplitVC.teamListTableVC.selectedEventKey = eventKey
+            if let eventKey = userActivity.userInfo?["eventKey"] as? String, let teamListSplitVC = window?.rootViewController as? FASTMainSplitViewController {
+                teamListSplitVC.teamListTableVC.preferSelection(ofEvent: eventKey)
+            }
         case Globals.UserActivity.viewTeamDetail:
-            let eventKey = userActivity.userInfo?["eventKey"] as? String
-            let teamKey = userActivity.userInfo?["teamKey"] as? String
-            let teamListSplitVC = mainStoryboard.instantiateViewController(withIdentifier: "teamListMasterVC") as! TeamListSplitViewController
-//            teamListSplitVC.teamListTableVC.selectedEventKey = eventKey
-            self.window?.rootViewController = teamListSplitVC
-            teamListSplitVC.teamListTableVC.eventSelected(eventKey)
-            Globals.appSyncClient?.fetch(query: ListTeamsQuery(eventKey: eventKey ?? ""), cachePolicy: .returnCacheDataElseFetch, resultHandler: { (result, error) in
-                if Globals.handleAppSyncErrors(forQuery: "RestoreTeamFromList", result: result, error: error) {
-                    let team = result?.data?.listTeams?.first(where: {$0?.key == teamKey})??.fragments.team
-                    teamListSplitVC.teamListTableVC.selectedTeam = team
+            if let eventKey = userActivity.userInfo?["eventKey"] as? String, let teamKey = userActivity.userInfo?["teamKey"] as? String, let teamListSplitVC = window?.rootViewController as? FASTMainSplitViewController {
+                teamListSplitVC.teamListTableVC.preferSelection(ofEvent: eventKey)
+                teamListSplitVC.teamDetailVC.load(forInput: (teamKey, eventKey))
+            }
+        case NSUserActivityTypeBrowsingWeb:
+            if let url = userActivity.webpageURL, let urlComponents = URLComponents(url: url, resolvingAgainstBaseURL: true) {
+                if let inviteId = urlComponents.queryItems?.first(where: {$0.name == "id"})?.value, let secretCode = urlComponents.queryItems?.first(where: {$0.name == "secretCode"})?.value {
+                    let confirmVC = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "confirmJoinScoutingTeam") as! ConfirmJoinScoutingTeamViewController
+                    confirmVC.load(forInviteId: inviteId, andCode: secretCode)
+                    self.presentViewControllerOnTop(confirmVC, animated: true, completion: nil)
                 }
-            })
+            }
         default:
             break
         }

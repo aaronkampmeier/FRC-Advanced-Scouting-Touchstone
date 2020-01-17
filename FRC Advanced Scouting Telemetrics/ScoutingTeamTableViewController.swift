@@ -9,12 +9,14 @@
 import UIKit
 import AWSAppSync
 import AWSMobileClient
+import FirebaseAnalytics
 import Crashlytics
 
 class ScoutingTeamTableViewController: UITableViewController {
     @IBOutlet weak var teamNameLabel: UILabel!
     @IBOutlet weak var secondaryLabel: UILabel!
     @IBOutlet weak var editTeamButton: UIButton!
+    @IBOutlet weak var headerView: UIView!
     
     var isLoadedSemaphore: DispatchSemaphore = DispatchSemaphore(value: 0)
     
@@ -28,11 +30,17 @@ class ScoutingTeamTableViewController: UITableViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
+//        headerView.translatesAutoresizingMaskIntoConstraints = false
+        NSLayoutConstraint.activate([
+//            editTeamButton.trailingAnchor.constraint(greaterThanOrEqualTo: tableView.trailingAnchor, constant: 5)
+            teamNameLabel.leadingAnchor.constraint(greaterThanOrEqualTo: tableView.leadingAnchor, constant: 30)
+        ])
+        
         editTeamButton.imageView?.contentMode = .scaleAspectFit
         if #available(iOS 13.0, *) {
-            
+            editTeamButton.imageView?.image = UIImage(systemName: "square.and.pencil")
         } else {
-            editTeamButton.imageView?.image = #imageLiteral(resourceName: "Edit-102.png")
+            editTeamButton.imageView?.image = UIImage(named: "Edit")
         }
         editTeamButton.isHidden = true
         editTeamButton.addTarget(self, action: #selector(editTeamDataPressed(_:)), for: .touchUpInside)
@@ -41,7 +49,7 @@ class ScoutingTeamTableViewController: UITableViewController {
     
     func loadData(forId scoutingTeamId: GraphQLID) {
         //Load the data again
-        DispatchQueue.main.async {[weak self] in
+        DispatchQueue.global(qos: .userInitiated).async {[weak self] in
             self?.isLoadedSemaphore.wait()
             self?.isLoadedSemaphore.signal()
             self?.scoutingTeamId = scoutingTeamId
@@ -127,6 +135,16 @@ class ScoutingTeamTableViewController: UITableViewController {
         
         self.present(alert, animated: true, completion: nil)
         
+    }
+    
+    override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
+        let headerHeight = headerView.systemLayoutSizeFitting(UIView.layoutFittingCompressedSize).height
+        if headerHeight != headerView.frame.height {
+            let newFrame = CGRect(x: headerView.frame.minX, y: headerView.frame.minY, width: tableView.frame.width, height: headerHeight)
+            tableView.tableHeaderView?.frame = newFrame
+            tableView.layoutSubviews()
+        }
     }
 
     // MARK: - Table view data source
@@ -248,7 +266,7 @@ class ScoutingTeamTableViewController: UITableViewController {
                     qrCodeIcon.image = UIImage(systemName: "qrcode")?.applyingSymbolConfiguration(UIImage.SymbolConfiguration(pointSize: 30, weight: .regular, scale: .unspecified))
                 } else {
                     // Fallback on earlier versions
-                    qrCodeIcon.image = #imageLiteral(resourceName: "icons8-qr-code-60.png")
+                    qrCodeIcon.image = UIImage(named: "qr-code")
                 }
                 cell.accessoryView = qrCodeIcon
                 
@@ -367,19 +385,11 @@ class ScoutingTeamTableViewController: UITableViewController {
             if indexPath.row < activeInvitations?.count ?? 0 {
                 if let invitation = activeInvitations?[indexPath.row] {
                     //Show the qr code
-                    if let qrCode = FASTQRCodeManager.createCode(forInviteId: invitation.inviteId, andCode: invitation.secretCode) {
-                        let qrCodeVC = storyboard!.instantiateViewController(withIdentifier: "qrCodeView") as! QrCodeViewController
-                        
-                        let imageView = qrCodeVC.view.viewWithTag(1) as! UIImageView
-                        imageView.image = UIImage(ciImage: qrCode)
-                        
-                        qrCodeVC.view.layer.cornerRadius = 15
-                        
-//                        qrCodeVC.modalPresentationStyle = .custom
-//                        qrCodeVC.transitioningDelegate = qrCodeTransitioningDelegate
-                        
-                        self.present(qrCodeVC, animated: true, completion: nil)
-                    }
+                    let qrCodeVC = storyboard!.instantiateViewController(withIdentifier: "qrCodeView") as! QrCodeViewController
+                    
+                    qrCodeVC.show(invite: invitation)
+
+                    self.present(qrCodeVC, animated: true, completion: nil)
                 }
             } else {
                 //Call create invitation
@@ -434,6 +444,10 @@ class ScoutingTeamTableViewController: UITableViewController {
                         })
                         
                         self?.dismiss(animated: true, completion: nil)
+                        
+                        if Globals.dataManager.enrolledScoutingTeamID == self?.scoutingTeamId {
+                            Globals.dataManager.switchCurrentScoutingTeam(to: nil)
+                        }
                     }
                 })
             }))
@@ -472,26 +486,32 @@ class ScoutingTeamTableViewController: UITableViewController {
                 if member?.userId != scoutingTeamWithMembers?.teamLead {
                     let removeMemberAction = UIContextualAction(style: .destructive, title: "Remove") {[weak self] (contextualAction, view, completion) in
                         //Remove this member
-                        Globals.appSyncClient?.perform(mutation: RemoveMemberMutation(scoutTeam: self?.scoutingTeamId ?? "", userToRemove: member?.userId ?? ""), optimisticUpdate: { (transaction) in
-                            
-                        }, resultHandler: {[weak self] (result, error) in
-                            if Globals.handleAppSyncErrors(forQuery: "RemoveScoutingTeamMember", result: result, error: error) {
-                                let _ = Globals.appSyncClient?.store?.withinReadWriteTransaction({ (transaction) -> Bool in
-                                    do {
-                                        try transaction.update(query: GetScoutingTeamWithMembersQuery(scoutTeam: self?.scoutingTeamId ?? "")) { (selectionSet) in
-                                            selectionSet.getScoutingTeam?.members?.removeAll(where: { $0?.userId == member?.userId})
+                        let alert = UIAlertController(title: "Remove Member?", message: "Are you sure you want to remove \(member?.name) from the scouting team? They will no longer be able to access any scouted data, but they can still rejoin using an invitation.", preferredStyle: .alert)
+                        alert.addAction(UIAlertAction(title: "Remove Them", style: .destructive, handler: { (action) in
+                            Globals.appSyncClient?.perform(mutation: RemoveMemberMutation(scoutTeam: self?.scoutingTeamId ?? "", userToRemove: member?.userId ?? ""), optimisticUpdate: { (transaction) in
+                                
+                            }, resultHandler: {[weak self] (result, error) in
+                                if Globals.handleAppSyncErrors(forQuery: "RemoveScoutingTeamMember", result: result, error: error) {
+                                    let _ = Globals.appSyncClient?.store?.withinReadWriteTransaction({ (transaction) -> Bool in
+                                        do {
+                                            try transaction.update(query: GetScoutingTeamWithMembersQuery(scoutTeam: self?.scoutingTeamId ?? "")) { (selectionSet) in
+                                                selectionSet.getScoutingTeam?.members?.removeAll(where: { $0?.userId == member?.userId})
+                                            }
+                                        } catch {
+                                            CLSNSLogv("Error removing member from apollo cache: \(error)", getVaList([]))
+                                            Crashlytics.sharedInstance().recordError(error)
                                         }
-                                    } catch {
-                                        CLSNSLogv("Error removing member from apollo cache: \(error)", getVaList([]))
-                                        Crashlytics.sharedInstance().recordError(error)
-                                    }
-                                    return true
-                                })
-                                completion(true)
-                            } else {
-                                completion(false)
-                            }
-                        })
+                                        return true
+                                    })
+                                    completion(true)
+                                } else {
+                                    completion(false)
+                                }
+                            })
+                        }))
+                        alert.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: {_ in completion(false)}))
+                        self?.present(alert, animated: true, completion: nil)
+                        
                     }
                     
                     let transferLeadAction = UIContextualAction(style: .normal, title: "Transfer Lead") {[weak self] (action, view, completion) in
@@ -527,10 +547,67 @@ class ScoutingTeamTableViewController: UITableViewController {
 }
 
 class QrCodeViewController: UIViewController {
-    @IBOutlet weak var imageView: UIImageView?
+    @IBOutlet private weak var imageView: UIImageView!
+    @IBOutlet private weak var shareButton: UIButton!
+    
+    private(set) var invitation: ScoutTeamInvitation?
+    
+    let viewIsLoadedSemaphore = DispatchSemaphore(value: 0)
+    
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        
+        view.layer.cornerRadius = 15
+        
+        shareButton.tintColor = UIColor.systemBlue
+        if #available(iOS 13.0, *) {
+            shareButton.setTitle(nil, for: .normal)
+            shareButton.setImage(UIImage(systemName: "square.and.arrow.up"), for: .normal)
+        }
+        viewIsLoadedSemaphore.signal()
+    }
+    
+    internal func show(invite: ScoutTeamInvitation) {
+        DispatchQueue.global(qos: .userInitiated).async {[weak self] in
+            self?.viewIsLoadedSemaphore.wait()
+            self?.viewIsLoadedSemaphore.signal()
+            DispatchQueue.main.async {
+                self?.invitation = invite
+                if let qrCode = FASTQRCodeManager.createCode(forInviteId: invite.inviteId, andCode: invite.secretCode) {
+                    self?.imageView.image = UIImage(ciImage: qrCode)
+                }
+                
+                Globals.recordAnalyticsEvent(eventType: "show_scouting_team_invite_qr", attributes: [AnalyticsParameterItemID:invite.inviteId])
+            }
+        }
+    }
     
     @IBAction func donePressed(_ sender: UIButton) {
         self.dismiss(animated: true, completion: nil)
+    }
+    
+    @IBAction func sharePressed(_ sender: UIButton) {
+        //Get a url
+        if let invite = invitation, let url = FASTQRCodeManager.createUniversalLink(forInviteId: invite.inviteId, andCode: invite.secretCode) {
+            //Show an activity vc
+            let activityVC = UIActivityViewController(activityItems: [url], applicationActivities: nil)
+            activityVC.excludedActivityTypes = [UIActivity.ActivityType.addToReadingList, UIActivity.ActivityType.assignToContact, UIActivity.ActivityType.openInIBooks, UIActivity.ActivityType.postToFacebook, UIActivity.ActivityType.postToVimeo, UIActivity.ActivityType.postToWeibo, UIActivity.ActivityType.postToFlickr, UIActivity.ActivityType.postToTwitter, UIActivity.ActivityType.postToTencentWeibo, UIActivity.ActivityType.saveToCameraRoll]
+            activityVC.popoverPresentationController?.sourceView = sender
+            
+            activityVC.completionWithItemsHandler = {(activityType: UIActivity.ActivityType?, completed: Bool, returnedItems: [Any]?, error: Error?) in
+                if let type = activityType {
+                    Globals.recordAnalyticsEvent(eventType: AnalyticsEventShare, attributes: ["activity_type":type.rawValue, "content_type":"scouting_team_invitation","invite_id":invite.inviteId])
+                }
+                
+                if let error = error {
+                    CLSNSLogv("Error sharing link to invite: \(error)", getVaList([]))
+                    Crashlytics.sharedInstance().recordError(error)
+                }
+            }
+            
+            self.present(activityVC, animated: true, completion: nil)
+            
+        }
     }
 }
 

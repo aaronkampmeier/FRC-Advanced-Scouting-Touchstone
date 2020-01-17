@@ -7,8 +7,9 @@
 //
 
 import UIKit
+import FirebaseAnalytics
 
-class ConfirmJoinScoutingTeamViewController: UIViewController, UITableViewDataSource, UITableViewDelegate {
+class ConfirmJoinScoutingTeamViewController: UIViewController, UITableViewDataSource, UITableViewDelegate, UITextFieldDelegate {
     @IBOutlet weak var mainLabel: UILabel!
     @IBOutlet weak var secondaryLabel: UILabel!
     @IBOutlet weak var tableView: UITableView!
@@ -19,14 +20,20 @@ class ConfirmJoinScoutingTeamViewController: UIViewController, UITableViewDataSo
     var secretCode: String?
     var enteredName: String?
     
+    let isLoadedSemaphore = DispatchSemaphore(value: 0)
     
     override func viewDidLoad() {
         super.viewDidLoad()
 
         // Do any additional setup after loading the view.
         joinTeamButton.layer.cornerRadius = 8
+        joinTeamButton.isEnabled = false
+        
+        joinTeamButton.backgroundColor = .systemGray
+        
         tableView.dataSource = self
-        tableView.delegate = self
+//        tableView.delegate = self
+        tableView.keyboardDismissMode = .interactive
         mainLabel.text = "Do you want to join the scouting team?"
         
         
@@ -34,22 +41,33 @@ class ConfirmJoinScoutingTeamViewController: UIViewController, UITableViewDataSo
         indicator.center = CGPoint(x: joinTeamButton.frame.midX, y: joinTeamButton.frame.midY)
         indicator.hidesWhenStopped = true
         joinTeamButton.addSubview(indicator)
+        
+        if #available(iOS 13.0, *) {
+            self.isModalInPresentation = true
+        } else {
+            // Fallback on earlier versions
+        }
+        isLoadedSemaphore.signal()
     }
     
     func load(forInviteId inviteId: String, andCode code: String) {
-        self.inviteId = inviteId
-        self.secretCode = code
-        Globals.appSyncClient?.fetch(query: GetScoutingTeamPublicNameQuery(inviteID: inviteId), cachePolicy: .returnCacheDataAndFetch, resultHandler: {[weak self] (result, error) in
-            if Globals.handleAppSyncErrors(forQuery: "GetScoutingTeamPublicName", result: result, error: error) {
-                if let teamName = result?.data?.getScoutingTeamPublicName {
-                    self?.mainLabel.text = "Do you want to join \(teamName)"
-                    self?.joinTeamButton.setTitle("Join \(teamName)", for: .normal)
+        DispatchQueue.global(qos: .userInitiated).async {
+            self.isLoadedSemaphore.wait()
+            self.isLoadedSemaphore.signal()
+            self.inviteId = inviteId
+            self.secretCode = code
+            Globals.appSyncClient?.fetch(query: GetScoutingTeamPublicNameQuery(inviteID: inviteId), cachePolicy: .returnCacheDataAndFetch, resultHandler: {[weak self] (result, error) in
+                if Globals.handleAppSyncErrors(forQuery: "GetScoutingTeamPublicName", result: result, error: error) {
+                    if let teamName = result?.data?.getScoutingTeamPublicName {
+                        self?.mainLabel.text = "Do you want to join \"\(teamName)\"?"
+                        self?.joinTeamButton.setTitle("Join \"\(teamName)\"", for: .normal)
+                    }
                 }
-            }
-        })
+            })
+        }
     }
     
-    @IBAction func joinPressed(_ sender: UIButton) {
+    @IBAction func joinPressed(_ sender: UIView) {
         if let inviteId = inviteId, let secretCode = secretCode, let memberName = enteredName {
             //Add a spinner
             indicator.startAnimating()
@@ -61,6 +79,14 @@ class ConfirmJoinScoutingTeamViewController: UIViewController, UITableViewDataSo
                 if Globals.handleAppSyncErrors(forQuery: "JoinScoutingTeam", result: result, error: error) {
                     self?.dismiss(animated: true, completion: nil)
                     
+                    // If there is no scouting team currently selected for scouting, set it to this one
+                    if Globals.dataManager.enrolledScoutingTeamID == nil {
+                        Globals.dataManager.switchCurrentScoutingTeam(to: result?.data?.redeemInvitation)
+                    }
+
+                    Globals.recordAnalyticsEvent(eventType: AnalyticsEventJoinGroup, attributes: [AnalyticsParameterGroupID:result?.data?.redeemInvitation ??
+                    "?"])
+                    
                     //Was successful, try to list them scouting teams again to update the cache
                     Globals.appSyncClient?.fetch(query: ListEnrolledScoutingTeamsQuery(), cachePolicy: .fetchIgnoringCacheData, resultHandler: { (result, error) in
                         if Globals.handleAppSyncErrors(forQuery: "JoinTeam-ListScoutingTeamsToVerify", result: result, error: error) {
@@ -69,6 +95,7 @@ class ConfirmJoinScoutingTeamViewController: UIViewController, UITableViewDataSo
                     })
                     
                 }
+                
             })
         }
     }
@@ -94,12 +121,27 @@ class ConfirmJoinScoutingTeamViewController: UIViewController, UITableViewDataSo
         textField.placeholder = "Johnny Appleseed"
         textField.addTarget(self, action: #selector(textValueChanged(_:)), for: .editingChanged)
         
+        textField.returnKeyType = .join
+        textField.delegate = self
+        
         return cell
     }
     
     @objc func textValueChanged(_ sender: UITextField) {
         enteredName = sender.text
         
-        joinTeamButton.isEnabled = enteredName?.count ?? 0 > 0
+        if enteredName?.count ?? 0 > 0 {
+            joinTeamButton.isEnabled = true
+            joinTeamButton.backgroundColor = .systemOrange
+        } else {
+            joinTeamButton.isEnabled = false
+            joinTeamButton.backgroundColor = .systemGray
+        }
+    }
+    
+    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+        textField.resignFirstResponder()
+        self.joinPressed(textField)
+        return true
     }
 }

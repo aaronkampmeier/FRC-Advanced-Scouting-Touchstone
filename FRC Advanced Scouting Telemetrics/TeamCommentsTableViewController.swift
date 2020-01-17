@@ -17,9 +17,20 @@ class TeamCommentsTableViewController: UITableViewController {
     var eventKey: String?
     var teamKey: String?
     var teamComments: [TeamComment] = []
+    var members = [ScoutingTeamMember?]()
     var isLoaded = false
     
-    var currentlyWrittenCommentText = ""
+    var currentlyWrittenCommentText = "" {
+        didSet {
+            if #available(iOS 13.0, *) {
+                if currentlyWrittenCommentText.count > 0 {
+                    self.isModalInPresentation = true
+                } else {
+                    self.isModalInPresentation = false
+                }
+            }
+        }
+    }
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -60,6 +71,17 @@ class TeamCommentsTableViewController: UITableViewController {
                 self?.tableView.reloadData()
             } else {
                 //TODO: - Show error
+            }
+        })
+        //Also get the members in this team to show their names on comments
+        Globals.appSyncClient?.fetch(query: GetScoutingTeamWithMembersQuery(scoutTeam: scoutTeam), cachePolicy: .returnCacheDataElseFetch, resultHandler: {[weak self] (result, error) in
+            if Globals.handleAppSyncErrors(forQuery: "GetScoutingTeamMembers-TeamComments", result: result, error: error) {
+                self?.members = result?.data?.getScoutingTeam?.members?.map({$0?.fragments.scoutingTeamMember}) ?? []
+                
+                //Reload all rows that are not the row where new comments are entered (the last one)
+                var rowsToReload = self?.tableView.indexPathsForVisibleRows ?? []
+                rowsToReload.removeAll(where: {$0.row == self?.teamComments.count})
+                self?.tableView.reloadRows(at: rowsToReload, with: .automatic)
             }
         })
     }
@@ -110,7 +132,12 @@ class TeamCommentsTableViewController: UITableViewController {
             dateFormatter.dateFormat = "EEE dd, HH:mm"
             let date = Date(timeIntervalSince1970: TimeInterval(comment.datePosted))
             let dateString = dateFormatter.string(from: date)
-            (commentCell.viewWithTag(1) as! UILabel).text = "\(dateString)\(comment.author != "" ? " by \(comment.author)" : "")"
+            if let authorName = members.first(where: {$0?.userId == comment.authorUserId}), let name = authorName {
+                (commentCell.viewWithTag(1) as! UILabel).text = "\(dateString) by \(name)"
+            } else {
+                (commentCell.viewWithTag(1) as! UILabel).text = "\(dateString) by \(comment.authorUserId)"
+            }
+            
             
             (commentCell.viewWithTag(2) as! UITextView).text = comment.body
             
@@ -168,10 +195,10 @@ class TeamCommentsTableViewController: UITableViewController {
         let uuid = UUID().uuidString
         let date = Date().timeIntervalSince1970
         Globals.recordAnalyticsEvent(eventType: "posted_team_comment", attributes: ["eventKey":eventKey!, "teamKey":teamKey!], metrics: ["length":Double(body.count)])
-        Globals.appSyncClient?.perform(mutation: AddTeamCommentMutation(scoutTeam: scoutTeam ?? "", eventKey: eventKey!, teamKey: teamKey!, body: body, author: UIDevice.current.name), optimisticUpdate: { (transaction) in
+        Globals.appSyncClient?.perform(mutation: AddTeamCommentMutation(scoutTeam: scoutTeam ?? "", eventKey: eventKey!, teamKey: teamKey!, body: body), optimisticUpdate: { (transaction) in
             do {
                 try transaction?.update(query: ListTeamCommentsQuery(scoutTeam: self.scoutTeam ?? "", eventKey: self.eventKey!, teamKey: self.teamKey!), { (selectionSet) in
-                    selectionSet.listTeamComments?.append(ListTeamCommentsQuery.Data.ListTeamComment(author: UIDevice.current.name, scoutTeam: self.scoutTeam ?? "", authorUserId: AWSMobileClient.default().username!, body: body, datePosted: Int(date), key: uuid, teamKey: self.teamKey ?? "", eventKey: self.eventKey ?? ""))
+                    selectionSet.listTeamComments?.append(ListTeamCommentsQuery.Data.ListTeamComment(scoutTeam: self.scoutTeam ?? "", authorUserId: Globals.dataManager.userSub ?? "", body: body, datePosted: Int(date), key: uuid, teamKey: self.teamKey ?? "", eventKey: self.eventKey ?? ""))
                 })
             } catch {
                 CLSNSLogv("Error performing optimistic update: \(error)", getVaList([]))
@@ -223,7 +250,7 @@ class TeamCommentsTableViewController: UITableViewController {
         })
         
         tableView.beginUpdates()
-        teamComments.append(TeamComment(author: UIDevice.current.name, scoutTeam: scoutTeam ?? "", authorUserId: AWSMobileClient.default().username!, body: body, datePosted: Int(date), key: uuid, teamKey: teamKey ?? "", eventKey: eventKey ?? ""))
+        teamComments.append(TeamComment(scoutTeam: scoutTeam ?? "", authorUserId: Globals.dataManager.userSub ?? "", body: body, datePosted: Int(date), key: uuid, teamKey: teamKey ?? "", eventKey: eventKey ?? ""))
         tableView.insertRows(at: [IndexPath(row: teamComments.count - 1, section: 0)], with: .top)
         self.currentlyWrittenCommentText = ""
         tableView.endUpdates()

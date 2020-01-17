@@ -63,7 +63,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             }
         }
         
+        //Start the data manager which in turn starts the background async loading manager
         Globals.dataManager = AWSDataManager()
+        Globals.dataManager.beginScoutingTeamSwitching()
         
         if !isUsingScenes {
             AWSMobileClient.default().addUserStateListener(self) { (state, attributes) in
@@ -114,7 +116,30 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         // Saves changes in the application's managed object context before the application terminates.
     }
     
-    func performAnyStandardMigrations() {
+    func application(_ application: UIApplication, continue userActivity: NSUserActivity, restorationHandler: @escaping ([UIUserActivityRestoring]?) -> Void) -> Bool {
+        
+        // 1
+        guard userActivity.activityType == NSUserActivityTypeBrowsingWeb,
+            let url = userActivity.webpageURL,
+            let urlComponents = URLComponents(url: url, resolvingAgainstBaseURL: true) else {
+                return false
+        }
+        
+        if let inviteId = urlComponents.queryItems?.first(where: {$0.name == "id"})?.value, let secretCode = urlComponents.queryItems?.first(where: {$0.name == "secretCode"})?.value {
+            let confirmVC = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "confirmJoinScoutingTeam") as! ConfirmJoinScoutingTeamViewController
+            confirmVC.load(forInviteId: inviteId, andCode: secretCode)
+            self.presentViewControllerOnTop(confirmVC, animated: true, completion: nil)
+            return true
+        }
+        
+        return false
+    }
+    
+    func application(_ application: UIApplication, willContinueUserActivityWithType userActivityType: String) -> Bool {
+        return false
+    }
+    
+    private func performAnyStandardMigrations() {
         //Check if there needs to be a migration to the new user system introduced in FAST version 5
         let hasMigratedTo5Authentication = "hasMigratedTo5Authentication"
         if !(UserDefaults.standard.value(forKey: hasMigratedTo5Authentication) as? Bool ?? false) {
@@ -123,9 +148,25 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         }
     }
     
-    func presentViewControllerOnTop(_ viewControllerToPresent: UIViewController, animated flag: Bool, completion: (() -> Void)? = nil) {
-        DispatchQueue.main.async {
-            self.window?.rootViewController?.presentViewControllerFromVisibleViewController(viewControllerToPresent, animated: flag, completion: completion)
+    /// Still works with scenes in iOS 13.
+    /// - Parameters:
+    ///   - viewControllerToPresent: The VC to present on top
+    ///   - sourceView: The associated view from who is calling this view to be presented. Used in iOS 13 and up to decide which scene delegate's window to present it on.
+    ///   - flag: If the presentation should be animated or not.
+    ///   - completion: A completion handler
+    internal func presentViewControllerOnTop(_ viewControllerToPresent: UIViewController, fromView sourceView: UIView? = nil, animated flag: Bool, completion: (() -> Void)? = nil) {
+        if #available(iOS 13.0, *) {
+            let activeSceneDelegate: UISceneDelegate?
+            if let sourceView = sourceView {
+                activeSceneDelegate = sourceView.window?.windowScene?.delegate
+            } else {
+                activeSceneDelegate = UIApplication.shared.connectedScenes.filter({$0.activationState == .foregroundActive}).first?.delegate
+            }
+            (activeSceneDelegate as? SceneDelegate)?.window?.rootViewController?.presentViewControllerFromVisibleViewController(viewControllerToPresent, animated: flag, completion: completion)
+        } else {
+            DispatchQueue.main.async {
+                self.window?.rootViewController?.presentViewControllerFromVisibleViewController(viewControllerToPresent, animated: flag, completion: completion)
+            }
         }
     }
     
@@ -136,6 +177,11 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         config.delegateClass = SceneDelegate.self
         config.storyboard = UIStoryboard(name: "Main", bundle: nil)
         return config
+    }
+    
+    @available(iOS 13.0, *)
+    func application(_ application: UIApplication, didDiscardSceneSessions sceneSessions: Set<UISceneSession>) {
+        
     }
     
     func application(_ application: UIApplication, supportedInterfaceOrientationsFor window: UIWindow?) -> UIInterfaceOrientationMask {

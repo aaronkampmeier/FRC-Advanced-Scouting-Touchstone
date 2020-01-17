@@ -16,6 +16,7 @@ class OnboardingPathChooserViewController: UIViewController {
     @IBOutlet weak var loginProviderStackView: UIStackView!
     
     var emailLoginButton: UIButton!
+    var googleButton: UIButton!
     
     let buttonCornerRadius: CGFloat = 5
     
@@ -37,13 +38,29 @@ class OnboardingPathChooserViewController: UIViewController {
             // Fallback on earlier versions
         }
         
+        googleButton = UIButton()
+        googleButton.backgroundColor = .systemBlue
+        googleButton.layer.cornerRadius = buttonCornerRadius
+        googleButton.setTitle("Continue with Google", for: .normal)
+        googleButton.addTarget(self, action: #selector(loginWithGoogle), for: .touchUpInside)
+        loginProviderStackView.addArrangedSubview(googleButton)
+        
         emailLoginButton = UIButton()
-        emailLoginButton?.backgroundColor = .systemBlue
+        emailLoginButton?.backgroundColor = .systemTeal
         emailLoginButton?.layer.cornerRadius = buttonCornerRadius
         emailLoginButton?.setTitle("Continue with Personal Account", for: .normal)
         emailLoginButton?.addTarget(self, action: #selector(logInPressed), for: .touchUpInside)
-        
         loginProviderStackView.addArrangedSubview(emailLoginButton)
+        
+//        let googleIcon = UIImage(named: "Google Icon")
+//        let googleIconView = UIImageView(image: googleIcon)
+//        googleIconView.contentMode = .scaleAspectFit
+//        googleIconView.backgroundColor = .white
+//        googleIconView.layer.cornerRadius = 2
+//        let iconHeight = 27
+//        let midY = Int(googleButton.frame.midY)
+//        googleIconView.frame = CGRect(x: 10, y: midY - (iconHeight / 2), width: iconHeight, height: iconHeight)
+//        googleButton.addSubview(googleIconView)
     }
     
     override func viewDidLayoutSubviews() {
@@ -74,13 +91,22 @@ class OnboardingPathChooserViewController: UIViewController {
         let hostedUIOptions = HostedUIOptions(scopes: ["openid", "email", "profile"], identityProvider: identityProvider)
         
         AWSMobileClient.default().showSignIn(navigationController: authNavController, hostedUIOptions: hostedUIOptions) { (userState, error) in
-//            authNavController.dismiss(animated: true, completion: nil)
+            authNavController.dismiss(animated: true, completion: nil)
+            var isError = false
             if let error = error {
-                CLSNSLogv("Error authenticating user: \(error)", getVaList([]))
+                if (error as NSError).code != 1 {
+                    isError = true
+                    CLSNSLogv("Error authenticating user: \(error)", getVaList([]))
+                    let alert = UIAlertController(title: "Error Authenticating", message: "There was an error authenticating. It has been recorded. \(error)", preferredStyle: .alert)
+                    alert.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
+                    self.present(alert, animated: true, completion: nil)
+                    Crashlytics.sharedInstance().recordError(error)
+                }
+                Globals.recordAnalyticsEvent(eventType: "auth_ui_finished", attributes: ["inError":isError.description, "newUserState":(userState ?? UserState.unknown).rawValue])
+            } else {
+                CLSNSLogv("New User State after auth finsihed: \(String(describing: userState))", getVaList([]))
+                Globals.recordAnalyticsEvent(eventType: "auth_ui_finished", attributes: ["inError":false.description, "newUserState":(userState ?? UserState.unknown).rawValue])
             }
-            
-            CLSNSLogv("New User State after auth finsihed: \(String(describing: userState))", getVaList([]))
-            
         }
         
         Globals.recordAnalyticsEvent(eventType: "onboarding_completed", attributes: ["path":"login", "identityProvider":identityProvider ?? "n/a"])

@@ -50,7 +50,7 @@ class TeamDetailCollectionViewController: UICollectionViewController, UICollecti
         eventStats.removeAll()
         
         //Collect the stats
-        self.eventStats = StatisticsDataSource().getStats(forType: ScoutedTeam.self)
+        self.eventStats = StatisticsDataSource().getStats(forType: ScoutedTeam.self, forEvent: scoutedTeam?.eventKey ?? "")
         self.scoutedTeam = scoutedTeam
         
         collectionView?.reloadData()

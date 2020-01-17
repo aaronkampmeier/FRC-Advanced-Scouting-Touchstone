@@ -9,6 +9,7 @@
 import UIKit
 import AVFoundation
 import Crashlytics
+import FirebaseAnalytics
 
 class JoinScoutingTeamTableViewController: UITableViewController, ScannerViewControllerDelegate {
 
@@ -39,7 +40,8 @@ class JoinScoutingTeamTableViewController: UITableViewController, ScannerViewCon
         
         qrCodeScannerVC = ScannerViewController()
         qrCodeScannerVC?.delegate = self
-        qrCodeScannerVC?.view.frame = CGRect(x: 0, y: 0, width: 0, height: 200)
+        let height = self.view.frame.height / 3
+        qrCodeScannerVC?.view.frame = CGRect(x: 0, y: 0, width: 0, height: height)
         tableView.tableHeaderView = qrCodeScannerVC?.view
     }
     
@@ -48,7 +50,11 @@ class JoinScoutingTeamTableViewController: UITableViewController, ScannerViewCon
         if let inviteId = enteredInviteId, let code = enteredCode {
             let confirmVC = storyboard?.instantiateViewController(withIdentifier: "confirmJoinScoutingTeam") as! ConfirmJoinScoutingTeamViewController
             confirmVC.load(forInviteId: inviteId, andCode: code)
-            self.present(confirmVC, animated: true, completion: nil)
+            if let presentingVC = self.presentingViewController {
+                self.dismiss(animated: true) {
+                    presentingVC.present(confirmVC, animated: true, completion: nil)
+                }
+            }
         }
         
     }
@@ -67,17 +73,17 @@ class JoinScoutingTeamTableViewController: UITableViewController, ScannerViewCon
         CLSNSLogv("Found QR code: \(code)", getVaList([]))
         if let urlComponents = URLComponents(string: code) {
             if urlComponents.host == "frcfastapp.com" && urlComponents.path == "/invite" {
-                //TODO: OPEN ThE URL
-                
-                
-                if let inviteId = urlComponents.queryItems?.first(where: {$0.name == "id"})?.value, let secretCode = urlComponents.queryItems?.first(where: {$0.name == "secretCode"}) {
-                    
+                if let inviteId = urlComponents.queryItems?.first(where: {$0.name == "id"})?.value, let secretCode = urlComponents.queryItems?.first(where: {$0.name == "secretCode"})?.value {
+                    self.enteredInviteId = inviteId
+                    self.enteredCode = secretCode
+                    self.donePressed()
+                    Globals.recordAnalyticsEvent(eventType: "scan_invite_code")
                 }
+                return false
                 
-                return true
             }
         }
-        return false
+        return true
     }
 
     // MARK: - Table view data source
@@ -126,9 +132,9 @@ protocol ScannerViewControllerDelegate {
 }
 
 class ScannerViewController: UIViewController, AVCaptureMetadataOutputObjectsDelegate {
-    var captureSession: AVCaptureSession!
-    var previewLayer: AVCaptureVideoPreviewLayer!
-    var qrCodeFrameView: UIView!
+    var captureSession: AVCaptureSession?
+    var previewLayer: AVCaptureVideoPreviewLayer?
+    var qrCodeFrameView: UIView?
     
     var delegate: ScannerViewControllerDelegate?
 
@@ -151,8 +157,8 @@ class ScannerViewController: UIViewController, AVCaptureMetadataOutputObjectsDel
             return
         }
 
-        if (captureSession.canAddInput(videoInput)) {
-            captureSession.addInput(videoInput)
+        if (captureSession?.canAddInput(videoInput) ?? false) {
+            captureSession?.addInput(videoInput)
         } else {
             failed()
             return
@@ -160,8 +166,8 @@ class ScannerViewController: UIViewController, AVCaptureMetadataOutputObjectsDel
 
         let metadataOutput = AVCaptureMetadataOutput()
 
-        if (captureSession.canAddOutput(metadataOutput)) {
-            captureSession.addOutput(metadataOutput)
+        if (captureSession?.canAddOutput(metadataOutput) ?? false) {
+            captureSession?.addOutput(metadataOutput)
 
             metadataOutput.setMetadataObjectsDelegate(self, queue: DispatchQueue.main)
             metadataOutput.metadataObjectTypes = [.qr]
@@ -170,12 +176,14 @@ class ScannerViewController: UIViewController, AVCaptureMetadataOutputObjectsDel
             return
         }
 
-        previewLayer = AVCaptureVideoPreviewLayer(session: captureSession)
-        previewLayer.frame = view.layer.bounds
-        previewLayer.videoGravity = .resizeAspectFill
-        view.layer.addSublayer(previewLayer)
-
-        captureSession.startRunning()
+        if let captureSession = captureSession {
+            previewLayer = AVCaptureVideoPreviewLayer(session: captureSession)
+            previewLayer?.frame = view.layer.bounds
+            previewLayer?.videoGravity = .resizeAspectFill
+            view.layer.addSublayer(previewLayer!)
+            
+            captureSession.startRunning()
+        }
         
         // Initialize QR Code Frame to highlight the QR code
         qrCodeFrameView = UIView()
@@ -191,13 +199,10 @@ class ScannerViewController: UIViewController, AVCaptureMetadataOutputObjectsDel
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
         
-        previewLayer.frame = view.layer.bounds
+        previewLayer?.frame = view.layer.bounds
     }
 
     func failed() {
-//        let ac = UIAlertController(title: "Scanning not supported", message: "Your device does not support scanning a code from an item. Please use a device with a camera.", preferredStyle: .alert)
-//        ac.addAction(UIAlertAction(title: "OK", style: .default))
-//        present(ac, animated: true)
         delegate?.failed()
         captureSession = nil
     }
@@ -206,7 +211,7 @@ class ScannerViewController: UIViewController, AVCaptureMetadataOutputObjectsDel
         super.viewWillAppear(animated)
 
         if (captureSession?.isRunning == false) {
-            captureSession.startRunning()
+            captureSession?.startRunning()
         }
     }
 
@@ -214,7 +219,7 @@ class ScannerViewController: UIViewController, AVCaptureMetadataOutputObjectsDel
         super.viewWillDisappear(animated)
 
         if (captureSession?.isRunning == true) {
-            captureSession.stopRunning()
+            captureSession?.stopRunning()
         }
     }
 
@@ -237,7 +242,7 @@ class ScannerViewController: UIViewController, AVCaptureMetadataOutputObjectsDel
                 guard let stringValue = readableObject.stringValue else { return }
                 AudioServicesPlaySystemSound(SystemSoundID(kSystemSoundID_Vibrate))
                 if !found(code: stringValue) {
-                    captureSession.stopRunning()
+                    captureSession?.stopRunning()
                 }
             }
         }

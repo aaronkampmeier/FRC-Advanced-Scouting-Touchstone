@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import FirebaseAnalytics
 
 class CreateScoutingTeamTableViewController: UITableViewController {
     
@@ -24,16 +25,19 @@ class CreateScoutingTeamTableViewController: UITableViewController {
         // self.navigationItem.rightBarButtonItem = self.editButtonItem
         
         navigationItem.title = "Create Scouting Team"
-        navigationItem.prompt = "Create a new scouting team using a custom name and associating it with your FRC team."
         navigationItem.leftBarButtonItem = UIBarButtonItem(title: "Cancel", style: .plain, target: self, action: #selector(cancel))
         navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Create", style: .done, target: self, action: #selector(createNewTeam))
-        if #available(iOS 13.0, *) {
-            let appearance = UINavigationBarAppearance()
-            appearance.titleTextAttributes = [.foregroundColor: UIColor.systemGreen]
-            navigationItem.standardAppearance = appearance
-        } else {
-            // Fallback on earlier versions
-        }
+        
+//        if #available(iOS 13.0, *) {
+//            let appearance = UINavigationBarAppearance()
+//            appearance.titleTextAttributes = [.foregroundColor: UIColor.white]
+//            appearance.largeTitleTextAttributes = [.foregroundColor: UIColor.white]
+//            appearance.backgroundColor = .systemGreen
+//            navigationItem.standardAppearance = appearance
+//            
+//            navigationItem.leftBarButtonItem?.tintColor = .white
+//            navigationItem.rightBarButtonItem?.tintColor = .white
+//        }
     }
     
     @objc func cancel() {
@@ -60,7 +64,14 @@ class CreateScoutingTeamTableViewController: UITableViewController {
                         return true
                     })
                     
+                    //If there is no currently scouting team, switch to it
+                    if Globals.dataManager.enrolledScoutingTeamID == nil {
+                        Globals.dataManager.switchCurrentScoutingTeam(to: result?.data?.createScoutingTeam?.teamId)
+                    }
+                    
                     self?.dismiss(animated: true, completion: nil)
+                    
+                    Globals.recordAnalyticsEvent(eventType: "create_scouting_team")
                 }
             })
         } else {

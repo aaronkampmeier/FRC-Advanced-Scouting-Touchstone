@@ -32,8 +32,6 @@ class EventInfoVC: UIViewController, UITableViewDataSource {
         tableView.dataSource = self
         tableView.rowHeight = UITableView.automaticDimension
         tableView.estimatedRowHeight = 44
-        
-        NotificationCenter.default.addObserver(forName: NSNotification.Name(rawValue: "CloudImportNoAllianceData"), object: nil, queue: nil, using: receivedNoAllianceData)
     }
 
     override func didReceiveMemoryWarning() {
@@ -53,62 +51,40 @@ class EventInfoVC: UIViewController, UITableViewDataSource {
             assertionFailure()
         } else {
             if let eventKey = selectedEvent?.key {
+                if #available(iOS 13.0, *) {
+                    self.isModalInPresentation = true
+                }
+                
                 self.activityIndicator.startAnimating()
                 self.loadingView.isHidden = false
-                self.view.isUserInteractionEnabled = false
-                self.navigationController?.navigationBar.isUserInteractionEnabled = false
                 
                 //Add the event to be tracked
                 Globals.appSyncClient?.perform(mutation: AddTrackedEventMutation(scoutTeam: scoutTeamId, eventKey: eventKey), resultHandler: {[weak self] (result, error) in
                     if Globals.handleAppSyncErrors(forQuery: "AddTrackedEventMutation", result: result, error: error) {
-                        self?.finishedImport(didComplete: true, withError: nil)
+                        //Import finished, update the cache and dismiss this view
+                        self?.loadingView.isHidden = true
+                        self?.navigationController?.dismiss(animated: true, completion: nil)
+                        
+                        if let newEvent = result?.data?.addTrackedEvent {
+                            let _ = Globals.appSyncClient?.store?.withinReadWriteTransaction({ (transaction) -> Bool in
+                                do {
+                                    try transaction.update(query: ListTrackedEventsQuery(scoutTeam: scoutTeamId)) { (selectionSet) in
+                                        selectionSet.listTrackedEvents?.append(try ListTrackedEventsQuery.Data.ListTrackedEvent(newEvent))
+                                    }
+                                    return true
+                                } catch {
+                                    return false
+                                }
+                            })
+                        }
+                        
+                        Globals.recordAnalyticsEvent(eventType: "attempted_event_import", attributes: ["successful":true.description])
                     } else {
-                        //Show error
-                        self?.finishedImport(didComplete: false, withError: error)
+                        Globals.recordAnalyticsEvent(eventType: "attempted_event_import", attributes: ["successful":false.description])
                     }
                 })
             }
         }
-    }
-    
-    func finishedImport(didComplete: Bool, withError error: Error?) {
-        //Reenable user interaction
-        self.view.isUserInteractionEnabled = true
-        
-        if didComplete {
-            CLSNSLogv("Did complete event import", getVaList([]))
-            if let error = error {
-                CLSNSLogv("With error: \(error)", getVaList([]))
-            }
-            
-            //Close the view. Use both methods to support the admin console 
-            self.dismiss(animated: true, completion: nil)
-        } else {
-            let errorMessage: String?
-            if let error = error {
-                CLSNSLogv("Didn't complete event import with error: \(error)", getVaList([]))
-                errorMessage = error.localizedDescription
-            } else {
-                CLSNSLogv("Didn't complete event import", getVaList([]))
-                errorMessage = nil
-            }
-            
-            let alert = UIAlertController(title: "Unable to Add", message: "An error occurred when adding the event: \(errorMessage ?? "__")", preferredStyle: .alert)
-            alert.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
-            present(alert, animated: true, completion: nil)
-            
-            self.loadingView.isHidden = true
-            self.view.isUserInteractionEnabled = true
-            self.navigationController?.navigationBar.isUserInteractionEnabled = true
-        }
-        
-        Globals.recordAnalyticsEvent(eventType: "attempted_event_import", attributes: ["successful":didComplete.description])
-    }
-    
-    func receivedNoAllianceData(notification: Notification) {
-        let alert = UIAlertController(title: "Too Early", message: "The cloud system has no data on the match schedule and alliances at this event. This is most likely due to the event being too far away date-wise for them to have finalized a schedule. Please reload data at a later date.", preferredStyle: .alert)
-        alert.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
-        present(alert, animated: true, completion: nil)
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {

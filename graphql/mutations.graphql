@@ -62,14 +62,12 @@ mutation AddTeamComment(
   $eventKey: String!
   $teamKey: String!
   $body: String!
-  $author: String!
 ) {
   addTeamComment(
     scoutTeam: $scoutTeam
     eventKey: $eventKey
     teamKey: $teamKey
     body: $body
-    author: $author
   ) {
     ...TeamComment
   }

@@ -23,16 +23,17 @@ class TeamListTableViewController: UITableViewController {
     @IBOutlet weak var editButton: UIBarButtonItem!
     @IBOutlet weak var matchesButton: UIBarButtonItem!
     
-    var searchController: UISearchController!
-	var teamImageCache = NSCache<NSString, UIImage>()
-    var teamListSplitVC: TeamListSplitViewController {
+    private var searchController: UISearchController!
+    #warning("Redo team images")
+	private var teamImageCache = NSCache<NSString, UIImage>()
+    private var teamListSplitVC: FASTMainSplitViewController? {
         get {
-            return splitViewController as! TeamListSplitViewController
+            return splitViewController as? FASTMainSplitViewController
         }
     }
     
-    var statToSortBy: Statistic<ScoutedTeam>?
-    var stashedStats: [String: StatValue] = [:] {
+    private var statToSortBy: Statistic<ScoutedTeam>?
+    private var stashedStats: [String: StatValue] = [:] {
         didSet {
             //Order the teams
             currentSortedTeams = currentEventTeams.sorted {team1, team2 in
@@ -49,34 +50,34 @@ class TeamListTableViewController: UITableViewController {
             }
         }
     }
-    var isSortingAscending: Bool = false
+    private var isSortingAscending: Bool = false
     
-    var isSearching = false
+    private var isSearching = false
     
-    var unorderedTeamsInEvent: [Team] = []
+    private var unorderedTeamsInEvent: [Team] = []
     
     //MARK: Team List State Storage
-    //These are a hieracrhy of more and more filtered and sorted teams
-    var currentEventTeams: [Team] = [Team]() {
+    ///These are a hieracrhy of more and increasingly filtered and sorted teams
+    private var currentEventTeams: [Team] = [Team]() {
         didSet {
             sortList(withStat: statToSortBy, isAscending: isSortingAscending)
         }
     }
-    var currentSortedTeams: [Team] = [] {
+    private var currentSortedTeams: [Team] = [] {
         didSet {
             self.updateSearchResults(for: searchController)
         }
     }
-    //Searching would happen right in between here
-    var currentTeamsToDisplay = [Team]() { //This is always exaclty the end what the table view will display
+    //Searching would happen right in between these two
+    ///This is always exaclty what the table view will display
+    private var currentTeamsToDisplay = [Team]() {
         didSet {
             tableView.reloadData()
         }
     }
     
-    var selectedTeam: Team? {
+    private var selectedTeam: Team? {
         didSet {
-            NotificationCenter.default.post(name: .FASTSelectedTeamDidChange, object: self, userInfo: ["team": selectedTeam as Any, "eventKey": selectedEventRanking?.eventKey as Any])
             if let sTeam = selectedTeam {
                 //Select row in table view
                 if let index = currentTeamsToDisplay.firstIndex(where: {team in
@@ -89,11 +90,15 @@ class TeamListTableViewController: UITableViewController {
             }
         }
     }
-    let lastSelectedEventStorageKey = "Last-Selected-Event"
-    var selectedEventRanking: EventRanking?
-    var selectedEventKey: String?
+    private let lastSelectedEventStorageKey = "Last-Selected-Event"
+    private var selectedEventRanking: EventRanking?
+    ///The currently selected event, ONLY to be set by the selectedEvent(_:) method
+    private var selectedEventKey: String?
+    ///The Event key that is preferred to be displayed, set by calling the preferSelection(ofEvent:) method. Usually associated with restoring a user activity. Will prefer this event key over the one stored in UserDefaults
+    private var preferredEventKey: String?
     
     //MARK: - View Did Load
+    private let viewIsLoadedSemaphore = DispatchSemaphore(value: 0)
     override func viewDidLoad() {
         super.viewDidLoad()
 
@@ -152,7 +157,6 @@ class TeamListTableViewController: UITableViewController {
             searchTextField.borderStyle = .roundedRect
             searchTextField.attributedPlaceholder = NSAttributedString(string: "Search", attributes: [.foregroundColor: UIColor.secondaryLabel])
             searchTextField.backgroundColor = UIColor.systemBackground
-            searchController.searchBar.barStyle = UIBarStyle.
         } else {
             // Fallback on earlier versions
         }
@@ -164,52 +168,76 @@ class TeamListTableViewController: UITableViewController {
         
         //Add a watcher for when the event switches
         NotificationCenter.default.addObserver(forName: .FASTSelectedEventChanged, object: nil, queue: nil) {[weak self] (notification) in
-            self?.eventSelected(notification.userInfo?["eventKey"] as? String)
+            if #available(iOS 13.0, *) {
+                // Check that this event change happened in this scene
+                if notification.userInfo?["sceneId"] as? String == self?.view.window?.windowScene?.session.persistentIdentifier {
+                    self?.eventSelected(notification.userInfo?["eventKey"] as? String)
+                }
+            } else {
+                self?.eventSelected(notification.userInfo?["eventKey"] as? String)
+            }
         }
-//        if #available(iOS 13.0, *) { //For some reason this notification center publisher does not work...
-//            NotificationCenter.default.publisher(for: .FASTSelectedEventChanged)
-//                .filter({[weak self] (notification: Notification) -> Bool in
-//                    let persistentId = self?.view.window?.windowScene?.session.persistentIdentifier
-//                    return (notification.userInfo?["sceneId"] as? String ?? "0") == (persistentId ?? "0")
-//                })
-//                .map({ (notification: Notification) -> String? in
-//                    return notification.userInfo?["eventKey"] as? String
-//                })
-//                .sink(receiveValue: {[weak self] (eventKey) in
-//                    self?.eventSelected(eventKey)
-//                })
-//        } else {
-//            // Fallback on earlier versions
-//            NotificationCenter.default.addObserver(forName: .FASTSelectedEventChanged, object: nil, queue: nil) {[weak self] (notification) in
-//                self?.eventSelected(notification.userInfo?["eventKey"] as? String)
-//            }
-//        }
         
-//        self.resetSubscriptions()
+        //Handle switching scouting teams
+        NotificationCenter.default.addObserver(forName: .FASTAWSDataManagerCurrentScoutingTeamChanged, object: nil, queue: OperationQueue.main) {[weak self] (notification) in
+            self?.stashedStats = [:]
+            self?.eventSelected(nil)
+            self?.autoChooseEvent()
+        }
+        
+        //If no event is selected, select one
+        if selectedEventKey == nil {
+            //Select one
+            autoChooseEvent()
+        }
+        
+        viewIsLoadedSemaphore.signal()
     }
     
-    func autoChooseEvent() {
+    internal func preferSelection(ofEvent eventKey: String) {
+        self.preferredEventKey = eventKey
+        if selectedEventKey != preferredEventKey {
+            autoChooseEvent()
+        }
+    }
+    
+    private func autoChooseEvent() {
         //Get the tracked events
         if let scoutTeam = Globals.dataManager.enrolledScoutingTeamID {
             Globals.appSyncClient?.fetch(query: ListTrackedEventsQuery(scoutTeam: scoutTeam), cachePolicy: .returnCacheDataElseFetch, resultHandler: {[weak self] (result, error) in
                 if Globals.handleAppSyncErrors(forQuery: "ListTrackedEvents-TeamList", result: result, error: error) {
                     let eventKeys = result?.data?.listTrackedEvents?.map({$0!.eventKey}) ?? []
-                    //Check if there is a selected event saved
-                    if let selectedKey = UserDefaults.standard.value(forKey: self?.lastSelectedEventStorageKey ?? "") as? String {
-                        //Check if it is tracked
-                        if eventKeys.contains(selectedKey) {
-                            //Set it
-                            self?.eventSelected(selectedKey)
+                    
+                    let useUserDefaultsStoredEvent = {() -> Void in
+                        if let selectedKey = UserDefaults.standard.value(forKey: self?.lastSelectedEventStorageKey ?? "") as? String {
+                            //Check if it is tracked
+                            if eventKeys.contains(selectedKey) {
+                                //Set it
+                                self?.eventSelected(selectedKey)
+                            } else {
+                                //Not tracked
+                                UserDefaults.standard.set(nil, forKey: self?.lastSelectedEventStorageKey ?? "")
+                                self?.eventSelected(eventKeys.first)
+                            }
                         } else {
-                            //Not tracked
-                            UserDefaults.standard.set(nil, forKey: self?.lastSelectedEventStorageKey ?? "")
                             self?.eventSelected(eventKeys.first)
                         }
-                    } else {
-                        self?.eventSelected(eventKeys.first)
+                        
                     }
-                } else {
-                    //TODO: Show error
+                    
+                    //Check if there is a selected event saved or preferred
+                    if let preferredEventKey = self?.preferredEventKey {
+                        //Check if it is tracked
+                        if eventKeys.contains(preferredEventKey) {
+                            //Set it
+                            self?.eventSelected(preferredEventKey)
+                        } else {
+                            //Not tracked
+                            useUserDefaultsStoredEvent()
+                        }
+                    } else {
+                        useUserDefaultsStoredEvent()
+                    }
                 }
             })
         } else {
@@ -220,12 +248,6 @@ class TeamListTableViewController: UITableViewController {
     //For some reason this is called when moving the app to the background during stands scouting, not sure if this a beta issue or what but it does cause crash
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        
-        //If no event is selected, select one
-        if selectedEventKey == nil {
-            //Select one
-            autoChooseEvent()
-        }
         
         if isSearching {
             self.navigationController?.setToolbarHidden(true, animated: true) //Set hidden if we are returning to a search
@@ -243,25 +265,36 @@ class TeamListTableViewController: UITableViewController {
     
     //MARK: - Set Up For Event
     //AppSync Cancellable Calls
-    var listScoutedTeamsQuery: Cancellable? {
+    private var listScoutedTeamsQuery: Cancellable? {
         willSet {
             listScoutedTeamsQuery?.cancel()
         }
     }
-    var listTeamsQuery: Cancellable? {
+    private var listTeamsQuery: Cancellable? {
         willSet {
             listTeamsQuery?.cancel()
         }
     }
-    var getEventRankingQuery: Cancellable? {
+    private var getEventRankingQuery: Cancellable? {
         willSet {
             getEventRankingQuery?.cancel()
         }
     }
-    let teamLoadingQueue = DispatchQueue(label: "Team List Loading", qos: .userInteractive)
-    fileprivate func setUpForEvent(inScoutingTeam scoutTeam: String) {
+    private var eventInterest: FASTInterestToken? {
+        didSet {
+            oldValue?.cancel()
+        }
+    }
+    private let teamLoadingQueue = DispatchQueue(label: "Team List Loading", qos: .userInteractive)
+    
+    fileprivate func eventSelected(_ eventKey: String?) {
+        selectedEventKey = eventKey
+        setUpForEvent()
+    }
+    private func setUpForEvent() {
         //Set to nil, because the selected team might not be in the new event
         selectedTeam = nil
+        teamListSplitVC?.teamDetailVC.load(forInput: nil)
         statToSortBy = nil
         unorderedTeamsInEvent = []
 		teamImageCache.removeAllObjects()
@@ -269,76 +302,82 @@ class TeamListTableViewController: UITableViewController {
         listTeamsQuery = nil
         getEventRankingQuery = nil
         //If we are moving to a different event then clear the table otherwise leave it
-        if selectedEventRanking?.eventKey != selectedEventKey {
+        if selectedEventRanking?.eventKey != selectedEventKey || selectedEventKey == nil {
             currentEventTeams = []
         }
         
         if let eventKey = selectedEventKey {
             UserDefaults.standard.set(eventKey, forKey: lastSelectedEventStorageKey)
             
+            eventInterest = Globals.dataManager.asyncLoadingManager.registerInterest(inEvent: eventKey)
+            
             //As a hold over until the event ranking loads
             navigationItem.title = eventKey
             
-            //Get the scouted teams in the cache
-            listScoutedTeamsQuery = Globals.appSyncClient?.fetch(query: ListScoutedTeamsQuery(scoutTeam: scoutTeam, eventKey: eventKey), cachePolicy: .returnCacheDataAndFetch, resultHandler: { (result, error) in
-                if Globals.handleAppSyncErrors(forQuery: "ListScoutedTeams-TeamListHydrateCache", result: result, error: error) {
-                }
-            })
-            
-            listTeamsQuery = Globals.appSyncClient?.fetch(query: ListTeamsQuery(eventKey: eventKey), cachePolicy: .returnCacheDataAndFetch, queue: teamLoadingQueue) {[weak self] result, error in
+            if let scoutingTeam = Globals.dataManager.enrolledScoutingTeamID {
+                //Get the scouted teams in the cache
+                listScoutedTeamsQuery = Globals.appSyncClient?.fetch(query: ListScoutedTeamsQuery(scoutTeam: scoutingTeam, eventKey: eventKey), cachePolicy: .fetchIgnoringCacheData, resultHandler: { (result, error) in
+                    if Globals.handleAppSyncErrors(forQuery: "ListScoutedTeams-TeamListHydrateCache", result: result, error: error) {
+                    }
+                })
                 
-                if Globals.handleAppSyncErrors(forQuery: "ListTeams", result: result, error: error) {
+                listTeamsQuery = Globals.appSyncClient?.fetch(query: ListTeamsQuery(eventKey: eventKey), cachePolicy: .returnCacheDataAndFetch, queue: teamLoadingQueue) {[weak self] result, error in
                     
-                    //Get all of the info on teams in an event
-                    self?.unorderedTeamsInEvent = result?.data?.listTeams?.map {return $0!.fragments.team} ?? []
-                    
-                    //Now, go get the ranking of them
-                    self?.getEventRankingQuery = Globals.appSyncClient?.fetch(query: GetEventRankingQuery(scoutTeam: scoutTeam, key: eventKey), cachePolicy: .returnCacheDataAndFetch, queue: self!.teamLoadingQueue) {[weak self] result, error in
-                        if Globals.handleAppSyncErrors(forQuery: "GetEventRanking", result: result, error: error) {
-                            self?.selectedEventRanking = result?.data?.getEventRanking?.fragments.eventRanking
-                            
-                            DispatchQueue.main.async {
-                                if let year = self?.selectedEventRanking?.eventKey.prefix(4) {
-                                    //If the event is not in the current year then display the year in front of it to signify it
-                                    if year != Calendar.current.component(.year, from: Date()).description {
-                                        self?.navigationItem.title = "\(year) \(self?.selectedEventRanking?.eventName ?? "")"
-                                    } else {
-                                        self?.navigationItem.title = self?.selectedEventRanking?.eventName
-                                    }
-                                    
-                                    //Set a user activity for event selection
-                                    let activity = NSUserActivity(activityType: Globals.UserActivity.eventSelection)
-                                    activity.title = "View \(self?.navigationItem.title ?? "?")"
-                                    activity.userInfo = ["eventKey":eventKey]
-                                    activity.requiredUserInfoKeys = Set(arrayLiteral: "eventKey")
-                                    activity.isEligibleForSearch = true
-                                    activity.isEligibleForHandoff = true
-                                    activity.keywords = Set(arrayLiteral: self?.navigationItem.title ?? "event")
-                                    activity.becomeCurrent()
-                                    if #available(iOS 13.0, *) {
-                                        self?.view.window?.windowScene?.userActivity = activity
+                    if Globals.handleAppSyncErrors(forQuery: "ListTeams", result: result, error: error) {
+                        
+                        //Get all of the info on teams in an event
+                        self?.unorderedTeamsInEvent = result?.data?.listTeams?.map {return $0!.fragments.team} ?? []
+                        
+                        //Now, go get the ranking of them
+                        self?.getEventRankingQuery = Globals.appSyncClient?.fetch(query: GetEventRankingQuery(scoutTeam: scoutingTeam, key: eventKey), cachePolicy: .returnCacheDataAndFetch, queue: self!.teamLoadingQueue) {[weak self] result, error in
+                            if Globals.handleAppSyncErrors(forQuery: "GetEventRanking", result: result, error: error) {
+                                self?.selectedEventRanking = result?.data?.getEventRanking?.fragments.eventRanking
+                                
+                                DispatchQueue.main.async {
+                                    if let year = self?.selectedEventRanking?.eventKey.prefix(4) {
+                                        //If the event is not in the current year then display the year in front of it to signify it
+                                        if year != Calendar.current.component(.year, from: Date()).description {
+                                            self?.navigationItem.title = "\(year) \(self?.selectedEventRanking?.eventName ?? "")"
+                                        } else {
+                                            self?.navigationItem.title = self?.selectedEventRanking?.eventName
+                                        }
+                                        
+                                        //Set a user activity for event selection
+                                        let activity = NSUserActivity(activityType: Globals.UserActivity.eventSelection)
+                                        activity.title = "View \(self?.navigationItem.title ?? "?")"
+                                        activity.userInfo = ["eventKey":eventKey]
+                                        activity.requiredUserInfoKeys = Set(arrayLiteral: "eventKey")
+                                        activity.isEligibleForSearch = true
+                                        activity.isEligibleForHandoff = true
+                                        activity.keywords = Set(arrayLiteral: self?.navigationItem.title ?? "event")
+                                        activity.becomeCurrent()
+                                        if #available(iOS 13.0, *) {
+                                            self?.view.window?.windowScene?.userActivity = activity
+                                        }
                                     }
                                 }
-                            }
-                            
-                            self?.orderTeamsUsingRanking(inScoutTeam: scoutTeam)
-                        } else {
-                            DispatchQueue.main.async {
-                                //Show error
-								Globals.presentError(error: error, andResult: result, withTitle: "Unable to Load Team Rank")
+                                
+                                self?.orderTeamsUsingRanking()
+                            } else {
+                                DispatchQueue.main.async {
+                                    //Show error
+//                                    Globals.presentError(error: error, andResult: result, withTitle: "Unable to Load Team Rank")
+                                }
                             }
                         }
-                    }
-                } else {
-                    DispatchQueue.main.async {
-                        //Show error
-						Globals.presentError(error: error, andResult: result, withTitle: "Unable to Load Teams")
+                    } else {
+                        DispatchQueue.main.async {
+                            //Show error
+//                            Globals.presentError(error: error, andResult: result, withTitle: "Unable to Load Teams")
+                        }
                     }
                 }
             }
             
             matchesButton.isEnabled = true
             graphButton.isEnabled = true
+            
+            Globals.recordAnalyticsEvent(eventType: AnalyticsEventViewItemList, attributes: [AnalyticsParameterItemList:eventKey])
         } else {
             currentEventTeams = []
             selectedEventRanking = nil
@@ -347,14 +386,14 @@ class TeamListTableViewController: UITableViewController {
             
             matchesButton.isEnabled = false
             graphButton.isEnabled = false
+            
+            eventInterest = nil
         }
         
-        self.resetSubscriptions(forScoutTeam: scoutTeam)
-		
-        Globals.asyncLoadingManager?.setGeneralUpdaters(forScoutTeam: scoutTeam, forEventKey: selectedEventKey)
+        self.resetSubscriptions()
     }
     
-    func orderTeamsUsingRanking(inScoutTeam scoutTeam: String) {
+    private func orderTeamsUsingRanking() {
         //Orders the teams into the currentEventTeams using the selectedEventRanking
         if let eventRanking = selectedEventRanking {
             teamLoadingQueue.async {
@@ -409,7 +448,7 @@ class TeamListTableViewController: UITableViewController {
                     }
                     
                     if shouldReloadRanking {
-                        self.reloadEvent(inScoutTeam: scoutTeam, eventKey: eventRanking.eventKey)
+                        self.reloadEvent(eventKey: eventRanking.eventKey)
                     }
                 }
             }
@@ -421,29 +460,24 @@ class TeamListTableViewController: UITableViewController {
     }
     
     ///Reloads the teams in an event in the cloud, use if a team does not exist in the ranking
-    func reloadEvent(inScoutTeam scoutTeam: String, eventKey: String) {
-        Globals.appSyncClient?.perform(mutation: AddTrackedEventMutation(scoutTeam: scoutTeam, eventKey: eventKey), optimisticUpdate: {transaction in
-            //TODO: Add Optimistic update
-        }) {[weak self] result, error in
-            if let error = error {
-                CLSNSLogv("Error AddTrackedEvent: \(error)", getVaList([]))
-                Crashlytics.sharedInstance().recordError(error)
-            } else if let errors = result?.errors {
-                CLSNSLogv("Errors AddTrackedEvent: \(errors)", getVaList([]))
-                for error in errors {
+    private func reloadEvent(eventKey: String) {
+        if let scoutingTeam = Globals.dataManager.enrolledScoutingTeamID {
+            Globals.appSyncClient?.perform(mutation: AddTrackedEventMutation(scoutTeam: scoutingTeam, eventKey: eventKey), optimisticUpdate: {transaction in
+                
+            }) {[weak self] result, error in
+                if let error = error {
+                    CLSNSLogv("Error AddTrackedEvent: \(error)", getVaList([]))
                     Crashlytics.sharedInstance().recordError(error)
+                } else if let errors = result?.errors {
+                    CLSNSLogv("Errors AddTrackedEvent: \(errors)", getVaList([]))
+                    for error in errors {
+                        Crashlytics.sharedInstance().recordError(error)
+                    }
+                } else {
+                    self?.selectedEventRanking = result?.data?.addTrackedEvent?.fragments.eventRanking
+                    self?.orderTeamsUsingRanking()
                 }
-            } else {
-                self?.selectedEventRanking = result?.data?.addTrackedEvent?.fragments.eventRanking
-                self?.orderTeamsUsingRanking(inScoutTeam: scoutTeam)
             }
-        }
-    }
-    
-    func eventSelected(_ eventKey: String?) {
-        if let scoutTeam = Globals.dataManager.enrolledScoutingTeamID {
-            selectedEventKey = eventKey
-            setUpForEvent(inScoutingTeam: scoutTeam)
         }
     }
     
@@ -451,106 +485,84 @@ class TeamListTableViewController: UITableViewController {
         trackedEventsWatcher?.cancel()
         changeTeamRankSubscriber?.cancel()
         pickedTeamSubscriber?.cancel()
-        updateScoutedTeamSubscriber?.cancel()
     }
     
-    var trackedEventsWatcher: GraphQLQueryWatcher<ListTrackedEventsQuery>?
-    var changeTeamRankSubscriber: AWSAppSync.AWSAppSyncSubscriptionWatcher<OnUpdateTeamRankSubscription>?
-    var pickedTeamSubscriber: AWSAppSync.AWSAppSyncSubscriptionWatcher<OnSetTeamPickedSubscription>?
-    var updateScoutedTeamSubscriber: AWSAppSyncSubscriptionWatcher<OnUpdateScoutedTeamsSubscription>?
-    func resetSubscriptions(forScoutTeam scoutTeam: String) {
+    private var trackedEventsWatcher: GraphQLQueryWatcher<ListTrackedEventsQuery>?
+    private var changeTeamRankSubscriber: AWSAppSync.AWSAppSyncSubscriptionWatcher<OnUpdateTeamRankSubscription>?
+    private var pickedTeamSubscriber: AWSAppSync.AWSAppSyncSubscriptionWatcher<OnSetTeamPickedSubscription>?
+    private func resetSubscriptions() {
         CLSNSLogv("Resetting Team List Subscriptions", getVaList([]))
         
         trackedEventsWatcher?.cancel()
         changeTeamRankSubscriber?.cancel()
         pickedTeamSubscriber?.cancel()
-        updateScoutedTeamSubscriber?.cancel()
         
         //Set up a watcher to event deletions
-        trackedEventsWatcher = Globals.appSyncClient?.watch(query: ListTrackedEventsQuery(scoutTeam: scoutTeam), cachePolicy: .returnCacheDataDontFetch, resultHandler: {[weak self] (result, error) in
-            DispatchQueue.main.async {
-                let trackedEvents = result?.data?.listTrackedEvents?.map({$0!}) ?? []
-                
-                if let selectedEventKey = self?.selectedEventKey {
-                    if !trackedEvents.contains(where: {$0.eventKey == selectedEventKey}) {
-                        //Event was removed
-                        //TODO: Bette handle event removals, because if this is uncommented state restoration with nsuseractivities will not work
-//                        self?.eventSelected(nil)
-                    }
-                } else {
-                    if let newEventKey = trackedEvents.first?.eventKey {
-                        self?.eventSelected(newEventKey)
+        if let scoutingTeam = Globals.dataManager.enrolledScoutingTeamID {
+            trackedEventsWatcher = Globals.appSyncClient?.watch(query: ListTrackedEventsQuery(scoutTeam: scoutingTeam), cachePolicy: .returnCacheDataDontFetch, resultHandler: {[weak self] (result, error) in
+                DispatchQueue.main.async {
+                    let trackedEvents = result?.data?.listTrackedEvents?.map({$0!}) ?? []
+                    
+                    if let selectedEventKey = self?.selectedEventKey {
+                        if !trackedEvents.contains(where: {$0.eventKey == selectedEventKey}) {
+                            //Event was removed
+                            //TODO: Bette handle event removals, because if this is uncommented state restoration with nsuseractivities will not work
+                            //                        self?.eventSelected(nil)
+                        }
+                    } else {
+                        if let newEventKey = trackedEvents.first?.eventKey {
+                            self?.eventSelected(newEventKey)
+                        }
                     }
                 }
+            })
+            
+            if let eventKey = self.selectedEventKey {
+                //Set up subscribers for event specifics
+                do {
+//                    changeTeamRankSubscriber = try Globals.appSyncClient?.subscribe(subscription: OnUpdateTeamRankSubscription(scoutTeam: scoutingTeam, eventKey: eventKey), queue: DispatchQueue.global(qos: .utility)) {[weak self] result, transaction, error in
+//                        if Globals.handleAppSyncErrors(forQuery: "OnUpdateTeamRankSubscription", result: result, error: error) {
+//                            DispatchQueue.main.async {
+//                                self?.selectedEventRanking = result?.data?.onUpdateTeamRank?.fragments.eventRanking
+//                                self?.orderTeamsUsingRanking()
+//                            }
+//
+//                            //TODO: Edit the transaction cache
+//                        } else {
+//                            if let error = error as? AWSAppSyncSubscriptionError {
+//                                if error.recoverySuggestion != nil {
+//                                    self?.resetSubscriptions()
+//                                }
+//                            }
+//                        }
+//                    }
+//
+//                    pickedTeamSubscriber = try Globals.appSyncClient?.subscribe(subscription: OnSetTeamPickedSubscription(scoutTeam: scoutingTeam, eventKey: eventKey), queue: DispatchQueue.global(qos: .utility)) {[weak self] result, transaction, error in
+//                        if Globals.handleAppSyncErrors(forQuery: "OnSetTeamPickedSubscription", result: result, error: error) {
+//                            //TODO: Update the cache
+//                            DispatchQueue.main.async {
+//                                self?.selectedEventRanking = result?.data?.onSetTeamPicked?.fragments.eventRanking
+//
+//                                //Reload the cell
+//                                if let visibleRows = self?.tableView.indexPathsForVisibleRows {
+//                                    self?.tableView.reloadRows(at: visibleRows, with: UITableView.RowAnimation.none)
+//                                }
+//                            }
+//                        } else {
+//                            if let error = error as? AWSAppSyncSubscriptionError {
+//                                if error.recoverySuggestion != nil {
+//                                    self?.resetSubscriptions()
+//                                }
+//                            }
+//                        }
+//                    }
+                } catch {
+                    CLSNSLogv("Error starting subcriptions: \(error)", getVaList([]))
+                    Crashlytics.sharedInstance().recordError(error)
+                    //TODO: Handle this error
+                }
+            } else {
             }
-        })
-        
-        if let eventKey = self.selectedEventKey {
-            //Set up subscribers for event specifics
-            do {
-                changeTeamRankSubscriber = try Globals.appSyncClient?.subscribe(subscription: OnUpdateTeamRankSubscription(scoutTeam: scoutTeam, eventKey: eventKey)) {[weak self] result, transaction, error in
-                    if Globals.handleAppSyncErrors(forQuery: "OnUpdateTeamRankSubscription", result: result, error: error) {
-                        self?.selectedEventRanking = result?.data?.onUpdateTeamRank?.fragments.eventRanking
-                        self?.orderTeamsUsingRanking(inScoutTeam: scoutTeam)
-                        
-                        //TODO: Edit the transaction cache
-                    } else {
-                        if let error = error as? AWSAppSyncSubscriptionError {
-                            if error.recoverySuggestion != nil {
-                                self?.resetSubscriptions(forScoutTeam: scoutTeam)
-                            }
-                        }
-                    }
-                }
-                
-                pickedTeamSubscriber = try Globals.appSyncClient?.subscribe(subscription: OnSetTeamPickedSubscription(scoutTeam: scoutTeam, eventKey: eventKey)) {[weak self] result, transaction, error in
-                    if Globals.handleAppSyncErrors(forQuery: "OnSetTeamPickedSubscription", result: result, error: error) {
-                        //TODO: Update the cache
-                        
-                        self?.selectedEventRanking = result?.data?.onSetTeamPicked?.fragments.eventRanking
-                        
-                        //Reload the cell
-                        if let visibleRows = self?.tableView.indexPathsForVisibleRows {
-                            self?.tableView.reloadRows(at: visibleRows, with: UITableView.RowAnimation.none)
-                        }
-                    } else {
-                        if let error = error as? AWSAppSyncSubscriptionError {
-                            if error.recoverySuggestion != nil {
-                                self?.resetSubscriptions(forScoutTeam: scoutTeam)
-                            }
-                        }
-                    }
-                }
-                
-                updateScoutedTeamSubscriber = try Globals.appSyncClient?.subscribe(subscription: OnUpdateScoutedTeamsSubscription(scoutTeam: scoutTeam, eventKey: eventKey), resultHandler: {[weak self] (result, transaction, error) in
-                    if Globals.handleAppSyncErrors(forQuery: "OnUpdateScoutedTeamGeneral-TeamList", result: result, error: error) {
-                        ((try? transaction?.update(query: ListScoutedTeamsQuery(scoutTeam: scoutTeam, eventKey: eventKey), { (selectionSet) in
-                            if let index = selectionSet.listScoutedTeams?.firstIndex(where: {$0?.teamKey == result?.data?.onUpdateScoutedTeam?.teamKey}) {
-                                selectionSet.listScoutedTeams?.remove(at: index)
-                            }
-                            if let newTeam = result?.data?.onUpdateScoutedTeam {
-                                selectionSet.listScoutedTeams?.append(try! ListScoutedTeamsQuery.Data.ListScoutedTeam(newTeam))
-                            }
-                        })) as ()??)
-                        
-                        //Reload row
-                        if let index = self?.currentTeamsToDisplay.firstIndex(where: {$0.key == result?.data?.onUpdateScoutedTeam?.teamKey}) {
-                            self?.tableView.reloadRows(at: [IndexPath(row: index, section: 0)], with: .automatic)
-                        }
-                    } else {
-                        if let error = error as? AWSAppSyncSubscriptionError {
-                            if error.recoverySuggestion != nil {
-                                self?.resetSubscriptions(forScoutTeam: scoutTeam)
-                            }
-                        }
-                    }
-                })
-            } catch {
-                CLSNSLogv("Error starting subcriptions: \(error)", getVaList([]))
-                Crashlytics.sharedInstance().recordError(error)
-                //TODO: Handle this error
-            }
-        } else {
         }
     }
     
@@ -577,10 +589,10 @@ class TeamListTableViewController: UITableViewController {
         
         //TODO: Move this to a generic "updates" screen whose presentation is controlled by cloud config
         //Show the Deep Space welcome if it has not been shown
-        if !(UserDefaults.standard.value(forKey: "HasShownDeepSpaceWelcome") as? Bool ?? false) {
-            let deepSpaceWelcome = storyboard!.instantiateViewController(withIdentifier: "deepSpaceWelcome")
-            self.present(deepSpaceWelcome, animated: true, completion: nil)
-        }
+//        if !(UserDefaults.standard.value(forKey: "HasShownDeepSpaceWelcome") as? Bool ?? false) {
+//            let deepSpaceWelcome = storyboard!.instantiateViewController(withIdentifier: "deepSpaceWelcome")
+//            self.present(deepSpaceWelcome, animated: true, completion: nil)
+//        }
         
         let hasShownInstructionalAlertKey = "FAST-HasShownInstructionalAlert"
         //Show an instructional alert about the event ranks
@@ -627,6 +639,7 @@ class TeamListTableViewController: UITableViewController {
         return currentTeamsToDisplay.count
     }
 
+    //MARK: Cell for Row at
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = self.tableView.dequeueReusableCell(withIdentifier: "rankedCell", for: indexPath) as! TeamListTableViewCell
 
@@ -671,29 +684,30 @@ class TeamListTableViewController: UITableViewController {
             cell.frontImage.image = image
         } else {
             cell.frontImage.image = UIImage(named: "FRC-Logo")
-            Globals.appSyncClient?.fetch(query: ListScoutedTeamsQuery(scoutTeam: Globals.dataManager.enrolledScoutingTeamID ?? "", eventKey: selectedEventKey ?? ""), cachePolicy: .returnCacheDataDontFetch, resultHandler: {[weak self] (result, error) in
-                if Globals.handleAppSyncErrors(forQuery: "ListScoutedTeams-TeamListCellForRowAt", result: result, error: error) {
-					if let scoutedTeam = result?.data?.listScoutedTeams?.first(where: {$0?.teamKey == team.key})??.fragments.scoutedTeam {
-						if let imageInfo = scoutedTeam.image {
-							TeamImageLoader.default.loadImage(withAttributes: imageInfo, progressBlock: { (progress) in
-								
-							}, completionHandler: { (image, error) in
-								if let image = image {
-									if cell.stateID == stateID {
-										DispatchQueue.main.async {
-											cell.frontImage.image = image
-										}
-									}
-									self?.teamImageCache.setObject(image, forKey: cacheKey as NSString)
-								} else {
-								}
-							})
-						} else {
-                        }
-                    } else {
-                    }
-                }
-            })
+            //TODO: Redo this implementation of images in cells
+//            Globals.appSyncClient?.fetch(query: ListScoutedTeamsQuery(scoutTeam: Globals.dataManager.enrolledScoutingTeamID ?? "", eventKey: selectedEventKey ?? ""), cachePolicy: .returnCacheDataDontFetch, resultHandler: {[weak self] (result, error) in
+//                if Globals.handleAppSyncErrors(forQuery: "ListScoutedTeams-TeamListCellForRowAt", result: result, error: error) {
+//					if let scoutedTeam = result?.data?.listScoutedTeams?.first(where: {$0?.teamKey == team.key})??.fragments.scoutedTeam {
+//						if let imageInfo = scoutedTeam.image {
+//							TeamImageLoader.default.loadImage(withAttributes: imageInfo, progressBlock: { (progress) in
+//
+//							}, completionHandler: { (image, error) in
+//								if let image = image {
+//									if cell.stateID == stateID {
+//										DispatchQueue.main.async {
+//											cell.frontImage.image = image
+//										}
+//									}
+//									self?.teamImageCache.setObject(image, forKey: cacheKey as NSString)
+//								} else {
+//								}
+//							})
+//						} else {
+//                        }
+//                    } else {
+//                    }
+//                }
+//            })
         }
         
         //Show the indicator if this is the team that is currently logged in
@@ -716,7 +730,12 @@ class TeamListTableViewController: UITableViewController {
         selectedTeam = pressedTeam
         
         //Show the detail vc
-        splitViewController?.showDetailViewController(teamListSplitVC.teamDetailVC, sender: self)
+        if let teamKey = selectedTeam?.key, let eventKey = selectedEventKey {
+            teamListSplitVC?.teamDetailVC.load(forInput: (teamKey,eventKey))
+        }
+        if let vc = teamListSplitVC?.teamDetailVC {
+            splitViewController?.showDetailViewController(vc, sender: self)
+        }
     }
 
     // Override to support conditional editing of the table view.
@@ -796,7 +815,7 @@ class TeamListTableViewController: UITableViewController {
         let team = currentTeamsToDisplay[fromIndexPath.row]
         let previousRanking = selectedEventRanking
         
-        Globals.appSyncClient?.perform(mutation: MoveRankedTeamMutation(scoutTeam: scoutTeam, eventKey: eventKey, teamKey: team.key, toIndex: toIndexPath.row), optimisticUpdate: { (transaction) in
+        Globals.appSyncClient?.perform(mutation: MoveRankedTeamMutation(scoutTeam: scoutTeam, eventKey: eventKey, teamKey: team.key, toIndex: toIndexPath.row), queue: DispatchQueue.global(qos: .userInitiated), optimisticUpdate: { (transaction) in
             do {
                 try transaction?.updateObject(ofType: EventRanking.self, withKey: "ranking_\(eventKey)", { (selectionSet) in
                     if let movedTeam = selectionSet.rankedTeams?.remove(at: fromIndexPath.row) {
@@ -830,13 +849,13 @@ class TeamListTableViewController: UITableViewController {
                 })
             } else {
                 self?.selectedEventRanking = previousRanking
-                let alert = UIAlertController(title: "Error Moving Team", message: "There was an error moving the team. Make sure you are connected to the Internet and try again. \(Globals.descriptions(ofError: error, andResult: result))", preferredStyle: .alert)
-                alert.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
-                self?.present(alert, animated: true, completion: nil)
+//                let alert = UIAlertController(title: "Error Moving Team", message: "There was an error moving the team. Make sure you are connected to the Internet and try again. \(Globals.descriptions(ofError: error, andResult: result))", preferredStyle: .alert)
+//                alert.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
+//                self?.present(alert, animated: true, completion: nil)
             }
             
             DispatchQueue.main.async {
-                self?.orderTeamsUsingRanking(inScoutTeam: scoutTeam)
+                self?.orderTeamsUsingRanking()
             }
         })
     }
@@ -894,6 +913,7 @@ class TeamListTableViewController: UITableViewController {
     let statsOrderingQueue = DispatchQueue(label: "StatsOrderingTeamList", qos: .utility, target: nil)
     func sortList(withStat stat: Statistic<ScoutedTeam>?, isAscending ascending: Bool) {
         guard let selectedEventKey = selectedEventKey, let eventRanking = selectedEventRanking else {
+            currentSortedTeams = currentEventTeams
             return
         }
         
@@ -951,12 +971,8 @@ class TeamListTableViewController: UITableViewController {
     }
     
     @IBAction func matchesButtonPressed(_ sender: UIBarButtonItem) {
-        let matchesSplitVC = storyboard?.instantiateViewController(withIdentifier: "matchOverviewSplitVC") as! MatchOverviewSplitViewController
-        let matchOverviewMaster = (matchesSplitVC.viewControllers.first as! UINavigationController).topViewController as! MatchOverviewMasterViewController
-        
-        matchOverviewMaster.dataSource = self
-        
-        present(matchesSplitVC, animated: true, completion: nil)
+        teamListSplitVC?.matchOverviewMasterVC.load(forEventKey: selectedEventKey)
+        teamListSplitVC?.switchToContentMode(.Matches)
         
         Globals.recordAnalyticsEvent(eventType: AnalyticsEventSelectContent, attributes: ["content_type":"screen", "item_id":"matches_overview"])
     }
@@ -971,7 +987,7 @@ class TeamListTableViewController: UITableViewController {
             let eventStatGraphVC = storyboard?.instantiateViewController(withIdentifier: "eventStatsGraph") as! EventStatsGraphViewController
             let navVC = UINavigationController(rootViewController: eventStatGraphVC)
             
-            navVC.modalPresentationStyle = .fullScreen
+//            navVC.modalPresentationStyle = .fullScreen
             
             eventStatGraphVC.setUp(forScoutTeam: scoutTeam, withEventKey: eventKey)
             
@@ -988,16 +1004,6 @@ class TeamListTableViewController: UITableViewController {
     }
 }
 
-extension TeamListTableViewController: MatchOverviewMasterDataSource {
-    func eventKey() -> String? {
-        return selectedEventKey
-    }
-    
-    func scoutTeam() -> String? {
-        return selectedEventRanking?.scoutTeam
-    }
-}
-
 extension TeamListTableViewController: SortDelegate {
     func selectedStat(_ stat: Statistic<ScoutedTeam>?, isAscending: Bool) {
         sortList(withStat: stat, isAscending: isAscending)
@@ -1010,8 +1016,13 @@ extension TeamListTableViewController: SortDelegate {
     func isAscending() -> Bool {
         return isSortingAscending
     }
+    
+    func eventKey() -> String? {
+        return self.selectedEventKey
+    }
 }
 
+//MARK: - Searching
 extension TeamListTableViewController: UISearchResultsUpdating, UISearchControllerDelegate {
     func updateSearchResults(for searchController: UISearchController) {
         if isSearching {
@@ -1034,17 +1045,48 @@ extension TeamListTableViewController: UISearchResultsUpdating, UISearchControll
                 currentTeamsToDisplay = filteredTeams
                 
                 tableView.reloadData()
-                Globals.recordAnalyticsEvent(eventType: AnalyticsEventSearch, attributes: ["search_term":searchText], metrics: ["results":Double(filteredTeams.count)])
+                Globals.recordAnalyticsEvent(eventType: AnalyticsEventSearch, attributes: [AnalyticsParameterSearchTerm:searchText], metrics: ["results":Double(filteredTeams.count)])
             }
         } else {
             currentTeamsToDisplay = currentSortedTeams
         }
     }
     
+    func willPresentSearchController(_ searchController: UISearchController) {
+//        if #available(iOS 13.0, *) {
+//            searchController.transitionCoordinator?.animate(alongsideTransition: { (transitionCoordinatorContext) in
+//
+//                self.searchController.searchBar.backgroundColor = UIColor.systemBackground
+//
+//            }, completion: nil)
+//        } else {
+//            // Fallback on earlier versions
+//        }
+    }
+    
+    func willDismissSearchController(_ searchController: UISearchController) {
+        DispatchQueue.main.async {
+            if #available(iOS 13.0, *) {
+                searchController.transitionCoordinator?.animate(alongsideTransition: { (context) in
+                    
+                    self.searchController.searchBar.backgroundColor = self.navigationItem.standardAppearance?.backgroundColor
+                    
+                }, completion: nil)
+            } else {
+                // Fallback on earlier versions
+            }
+        }
+    }
+    
     func didPresentSearchController(_ searchController: UISearchController) {
         isSearching = true
+        if #available(iOS 13.0, *) {
+            self.searchController.searchBar.backgroundColor = UIColor.systemBackground
+        } else {
+            // Fallback on earlier versions
+        }
         self.navigationController?.setToolbarHidden(true, animated: true)
-        Globals.recordAnalyticsEvent(eventType: "began_searching")
+        Globals.recordAnalyticsEvent(eventType: "began_team_list_searching")
     }
     
     func didDismissSearchController(_ searchController: UISearchController) {
@@ -1105,7 +1147,7 @@ class TeamListSlideInPresentationController: UIPresentationController {
     override func presentationTransitionWillBegin() {
         super.presentationTransitionWillBegin()
 
-        let teamListSplitViewController = (presentingViewController as? TeamListSplitViewController)
+        let teamListSplitViewController = (presentingViewController as? FASTMainSplitViewController)
         teamListTableViewController = teamListSplitViewController?.teamListTableVC
         
         //Create a dimming view
@@ -1191,8 +1233,12 @@ class EventSelectionSlideInPresentationController: TeamListSlideInPresentationCo
         let size = CGSize(width: teamListTableViewController?.tableView.frame.width ?? .zero, height: coverSnapshot?.frame.origin.y ?? .zero)
         let frame = CGRect(origin: CGPoint(x: 0, y: -size.height), size: size)
         let whiteCoverView = UIView(frame: frame)
-        whiteCoverView.backgroundColor = coverSnapshot?.backgroundColor
-//        coverSnapshot?.addSubview(whiteCoverView)
+        if #available(iOS 13.0, *) {
+            whiteCoverView.backgroundColor = teamListTableViewController?.navigationItem.standardAppearance?.backgroundColor
+        } else {
+            whiteCoverView.backgroundColor = coverSnapshot?.backgroundColor
+        }
+        coverSnapshot?.addSubview(whiteCoverView)
         
         if let snap = coverSnapshot {
             containerView?.addSubview(snap)

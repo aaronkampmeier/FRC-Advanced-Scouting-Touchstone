@@ -8,7 +8,7 @@
 
 import Foundation
 
-class Stopwatch {
+struct Stopwatch {
 	fileprivate var startTime: Date?
 	fileprivate var furthestTime: TimeInterval = 0
 	
@@ -28,12 +28,12 @@ class Stopwatch {
 		return startTime != nil
 	}
 	
-	func start() {
+    mutating func start() {
 		startTime = Date()
         furthestTime = 0
 	}
 	
-	func stop() {
+    mutating func stop() {
 		furthestTime = elapsedTime
 		startTime = nil
 	}

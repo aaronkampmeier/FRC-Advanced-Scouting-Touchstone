@@ -11,6 +11,10 @@ import CoreImage
 
 final class FASTQRCodeManager {
     static func createCode(forInviteId inviteId: String, andCode secretCode: String) -> CIImage? {
+        return FASTQRCodeManager.createUniversalLink(forInviteId: inviteId, andCode: secretCode)?.qrImage(using: .systemBlue, logo: nil)
+    }
+    
+    static func createUniversalLink(forInviteId inviteId: String, andCode secretCode: String) -> URL? {
         var components = URLComponents()
         components.scheme = "https"
         components.host = "frcfastapp.com"
@@ -19,8 +23,7 @@ final class FASTQRCodeManager {
             URLQueryItem(name: "id", value: inviteId),
             URLQueryItem(name: "secretCode", value: secretCode)
         ]
-        let universalLink = components.url
-        return universalLink?.qrImage(using: .systemBlue, logo: nil)
+        return components.url
     }
 }
 

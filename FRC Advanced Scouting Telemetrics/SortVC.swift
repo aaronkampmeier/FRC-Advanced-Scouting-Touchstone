@@ -13,6 +13,7 @@ protocol SortDelegate {
 	func selectedStat(_ stat: Statistic<ScoutedTeam>?, isAscending: Bool)
     func currentStat() -> Statistic<ScoutedTeam>?
     func isAscending() -> Bool
+    func eventKey() -> String?
 }
 
 //T is the type to be sorted
@@ -34,7 +35,7 @@ class SortVC: UIViewController, UIPickerViewDelegate, UIPickerViewDataSource {
         sortTypePicker.delegate = self
 		
         let statSource = StatisticsDataSource()
-		statsToDisplay = statSource.getStats(forType: ScoutedTeam.self)
+        statsToDisplay = statSource.getStats(forType: ScoutedTeam.self, forEvent: delegate?.eventKey() ?? "")
         selectedStat = delegate?.currentStat()
         if let stat = selectedStat {
             if let index = statsToDisplay.firstIndex(where: {$0.id == stat.id}) {

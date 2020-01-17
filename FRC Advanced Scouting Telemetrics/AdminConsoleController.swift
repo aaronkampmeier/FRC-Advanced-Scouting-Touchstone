@@ -16,6 +16,7 @@ import FirebasePerformance
 /// Each object of this represents a section in the admin console and the settings that section provides
 protocol AdminConsoleConfigSection {
     func sectionTitle(_ adminConsole: AdminConsoleController) -> String?
+    func sectionFooter(_ adminConsole: AdminConsoleController) -> String?
     func numOfRows(_ adminConsole: AdminConsoleController) -> Int
     func tableView(_ adminConsole: AdminConsoleController, tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell
     func onSelect(_ adminConsole: AdminConsoleController, rowAt indexPath: IndexPath)
@@ -29,6 +30,9 @@ protocol AdminConsoleConfigSection {
 }
 
 extension AdminConsoleConfigSection {
+    func sectionFooter(_ adminConsole: AdminConsoleController) -> String? {
+        return nil
+    }
     func willSelect(_ adminConsole: AdminConsoleController, rowAt indexPath: IndexPath) -> IndexPath? {
         return indexPath
     }
@@ -99,13 +103,17 @@ class AdminConsoleController: UIViewController, UITableViewDataSource, UITableVi
         return configSections[section].sectionTitle(self)
     }
     
+    func tableView(_ tableView: UITableView, titleForFooterInSection section: Int) -> String? {
+        return configSections[section].sectionFooter(self)
+    }
+    
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         configSections[indexPath.section].onSelect(self, rowAt: indexPath)
     }
     
-    func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
-        return false
-    }
+//    func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
+//        return false
+//    }
 //
 //    func tableView(_ tableView: UITableView, editActionsForRowAt indexPath: IndexPath) -> [UITableViewRowAction]? {
 //        switch indexPath.section {
@@ -169,7 +177,6 @@ class AdminConsoleController: UIViewController, UITableViewDataSource, UITableVi
         grayView = nil
     }
     
-    @available(iOS 11.0, *)
     func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
         return configSections[indexPath.section].trailingSwipeActionsConfigiration(self, forRowAt: indexPath)
     }

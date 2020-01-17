@@ -3,7 +3,6 @@ platform :ios, '10'
 use_frameworks!
 
 target 'FRC Advanced Scouting Touchstone' do
-pod 'Alamofire'
 pod 'Firebase/Analytics'
 pod 'Firebase/Performance'
 pod 'Fabric', '~> 1.10.2'

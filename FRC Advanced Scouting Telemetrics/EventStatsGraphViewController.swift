@@ -60,6 +60,9 @@ class EventStatsGraphViewController: UIViewController {
                 let dataSet = BarChartDataSet(entries: barChartDataEntries, label: stat.name)
                 dataSet.colors = [self.barColors[statIndex % self.barColors.count]]
                 dataSet.valueFormatter = self
+                if #available(iOS 13.0, *) {
+                    dataSet.valueColors = [UIColor.label]
+                }
                 barChartDataSets.append(dataSet)
             }
             
@@ -132,6 +135,23 @@ class EventStatsGraphViewController: UIViewController {
         barChart.leftAxis.drawAxisLineEnabled = false
         
         barChart.noDataText = "Select Stats to Graph"
+        if #available(iOS 13.0, *) {
+            barChart.xAxis.gridColor = UIColor.systemGray2
+            barChart.xAxis.axisLineColor = UIColor.opaqueSeparator
+            barChart.xAxis.labelTextColor = UIColor.label
+            
+            barChart.leftAxis.gridColor = UIColor.systemGray2
+            barChart.leftAxis.axisLineColor = UIColor.opaqueSeparator
+            barChart.leftAxis.labelTextColor = UIColor.label
+            barChart.leftAxis.zeroLineColor = UIColor.systemBlue
+            
+            barChart.legend.textColor = UIColor.label
+            
+            barChart.noDataTextColor = UIColor.label
+            barChart.borderColor = UIColor.systemGray
+            
+            barChart.chartDescription?.textColor = UIColor.label
+        }
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -301,5 +321,9 @@ extension EventStatsGraphViewController: SelectStatsDelegate {
     func selectStatsTableViewController(_ vc: SelectStatsTableViewController, didSelectStats selectedStats: [ScoutedTeamStat]) {
         self.statsToGraph = selectedStats
         loadGraph()
+    }
+    
+    func eventKey() -> String? {
+        return eventRanking?.eventKey
     }
 }

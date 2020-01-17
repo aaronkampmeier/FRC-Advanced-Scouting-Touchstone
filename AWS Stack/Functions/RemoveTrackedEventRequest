@@ -7,7 +7,7 @@
     "operation": "Invoke",
     "payload": {
     	"operation":"delete",
-    	"eventKey":"$ctx.args.eventKey",
-        "scoutTeam":"$ctx.args.scoutTeam"
+    	"eventKey": $util.toJson($ctx.args.eventKey),
+        "scoutTeam": $util.toJson($ctx.args.scoutTeam)
     }
 }
