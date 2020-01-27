@@ -199,7 +199,7 @@ extension ScoutedTeam: Equatable {
         
         for gameAction in model?.gameActions ?? [] {
             //First show number of times action happened
-            let totalOccurenceStat = ScoutedTeamStat(name: "\(gameAction.name) Occurrences", id: gameAction.name + " occurrences", compositeTrendFunction: { (scoutedTeam, callback) in
+            let totalOccurenceStat = ScoutedTeamStat(name: "\(gameAction.shortName ?? gameAction.name) Occurrences", id: gameAction.name + " occurrences", compositeTrendFunction: { (scoutedTeam, callback) in
                 Globals.dataManager.retrieveScoutSessions(forEventKey: scoutedTeam.eventKey, teamKey: scoutedTeam.teamKey, withCallback: { (scoutSessions) in
                     var compositePoints = [(matchNumber: Int, value: StatValue)]()
                     for session in scoutSessions ?? [] {
@@ -225,7 +225,7 @@ extension ScoutedTeam: Equatable {
             statistics.append(totalOccurenceStat)
             
             //Show average of number of times this option is selected
-            statistics.append(ScoutedTeamStat(name: "\(gameAction.name) Avg.", id: gameAction.name + " avg", function: { (scoutedTeam, callback) in
+            statistics.append(ScoutedTeamStat(name: "\(gameAction.shortName ?? gameAction.name) Avg.", id: gameAction.name + " avg", function: { (scoutedTeam, callback) in
                 totalOccurenceStat.compositePoints(forObject: scoutedTeam, callback: { (compositePoints) in
                     var total = 0
                     var count = 0
@@ -274,7 +274,7 @@ extension ScoutedTeam: Equatable {
                     
                     //For each sub option, show the percentage that it is selected within the action as a whole
                     let id = "\(gameAction.name)-\(subOption.name)-percentage"
-                    statistics.append(ScoutedTeamStat(name: "\(gameAction.name)-\(subOption.name)", id: id, compositeTrendFunction: { (scoutedTeam, callback) in
+                    statistics.append(ScoutedTeamStat(name: "\(gameAction.shortName ?? gameAction.name)-\(subOption.name)", id: id, compositeTrendFunction: { (scoutedTeam, callback) in
                         var compositeDataPoints = [(Int,StatValue)]()
                         let ssStats = StatisticsDataSource().getStats(forType: ScoutSession.self, forEvent: eventKey)
                         let subOptionPercentageStat = ssStats.first(where: {$0.id == id})
@@ -316,54 +316,6 @@ extension ScoutedTeam: Equatable {
                 }
             }
         }
-        
-        //CUSTOM STAT FOR SAM
-        statistics.append(ScoutedTeamStat(name: "Cargo + Hatch Average", id: "cargoandhatchteam", compositeTrendFunction: { (scoutedTeam, callback) in
-            let ssStats = StatisticsDataSource().getStats(forType: ScoutSession.self, forEvent: eventKey)
-            let cargoandhatchStat = ssStats.first(where: {$0.id == "cargoandhatch"})
-            
-            Globals.dataManager.retrieveScoutSessions(forEventKey: scoutedTeam.eventKey, teamKey: scoutedTeam.teamKey, withCallback: { (scoutSessions) in
-                var compositePoints = [(Int, StatValue)]()
-                
-                let group = DispatchGroup()
-                
-                for scoutSession in scoutSessions ?? [] {
-                    let matchNumber = Int(scoutSession?.matchKey.components(separatedBy: "_").last?.trimmingCharacters(in: CharacterSet.letters) ?? "0") ?? 0
-                    if let scoutSession = scoutSession {
-                        group.enter()
-                        cargoandhatchStat?.calculate(forObject: scoutSession, callback: { (value) in
-                            compositePoints.append((matchNumber, value))
-                            group.leave()
-                        })
-                        
-                        group.wait()
-                    } else {
-                        compositePoints.append(((matchNumber, .NoValue)))
-                    }
-                }
-                
-                callback(compositePoints)
-            })
-        }, function: { (scoutedTeam, callback) in
-            Globals.dataManager.retrieveScoutSessions(forEventKey: scoutedTeam.eventKey, teamKey: scoutedTeam.teamKey, withCallback: { (scoutSessions) in
-                let totalTMs = scoutSessions?.map({$0?.timeMarkers?.map({$0!.fragments.timeMarkerFragment})}).reduce([TimeMarkerFragment](), { (tms, newTMs) -> [TimeMarkerFragment] in
-                    return tms + (newTMs ?? [])
-                })
-                
-                var hatchesPlaced = 0
-                var cargoPlaced = 0
-                
-                for tm in totalTMs ?? [] {
-                    if tm.event == "placed_hatch" {
-                        hatchesPlaced += 1
-                    } else if tm.event == "placed_cargo" {
-                        cargoPlaced += 1
-                    }
-                }
-                
-                callback(StatValue.Double(Double(cargoPlaced + hatchesPlaced) / Double(scoutSessions?.count ?? 0)))
-            })
-        }))
         
         return statistics
     }

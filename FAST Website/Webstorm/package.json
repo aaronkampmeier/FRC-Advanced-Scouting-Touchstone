@@ -1,0 +1,7 @@
+{
+  "name": "Webstorm",
+  "version": "1.0.0",
+  "dependencies": {
+    "marked": "^0.8.0"
+  }
+}

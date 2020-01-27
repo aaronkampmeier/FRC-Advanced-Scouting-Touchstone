@@ -22,7 +22,7 @@ struct AdminConsoleInfoSection: AdminConsoleConfigSection {
     }
     
     func numOfRows(_ adminConsole: AdminConsoleController) -> Int {
-        return 3
+        return 4
     }
     
     func tableView(_ adminConsole: AdminConsoleController, tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
@@ -32,6 +32,13 @@ struct AdminConsoleInfoSection: AdminConsoleConfigSection {
         case 1:
             return tableView.dequeueReusableCell(withIdentifier: "acknowledgments")!
         case 2:
+            let cell = tableView.dequeueReusableCell(withIdentifier: "userInfo")!
+            
+            cell.textLabel?.text = "Current User: \(Globals.dataManager.userClaims?.name ?? Globals.dataManager.userClaims?.email ?? Globals.dataManager.userSub ?? "Unknown")"
+            cell.detailTextLabel?.text = Globals.dataManager.userClaims?.primaryIdentity?.providerType
+            
+            return cell
+        case 3:
             let cell = tableView.dequeueReusableCell(withIdentifier: "logout")!
             
             if Globals.isInSpectatorMode {
@@ -72,6 +79,8 @@ struct AdminConsoleInfoSection: AdminConsoleConfigSection {
                 assertionFailure()
             }
         } else if indexPath.row == 2 {
+            adminConsole.tableView.deselectRow(at: indexPath, animated: true)
+        } else if indexPath.row == 3 {
             //Logout
             if Globals.isInSpectatorMode {
                 Globals.recordAnalyticsEvent(eventType: "exit_spectator_mode")

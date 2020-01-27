@@ -44,7 +44,7 @@ class SSGameScoutingViewController: UIViewController {
         let optionSelector = storyboard?.instantiateViewController(withIdentifier: "optionSelector") as! OptionSelectorViewController
         
         let gameAction = model?.gameActions.first(where: {$0.key == sender.key})
-        optionSelector.load(withPrompt: "\(gameAction?.name ?? "")", andOptions: gameAction?.subOptions ?? [SSOption(name: "\(gameAction?.name ?? "")", key: "", color: nil)]) { (key) in
+        optionSelector.load(withPrompt: "\(gameAction?.name ?? "")", andOptions: gameAction?.subOptions ?? [SSOption(name: "\(gameAction?.name ?? "")", key: "", color: nil, shortName: "")]) { (key) in
             //Save it
             self.ssDataManager?.addTimeMarker(event: gameAction!.key, subOption: key)
         }

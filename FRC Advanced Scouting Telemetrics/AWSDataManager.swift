@@ -50,7 +50,43 @@ class AWSDataManager {
         let emailVerified: Bool?
         let aud: String
         let email: String?
+        let name: String?
+        
+        let identities: [CognitoIDTokenClaimsIndentity]?
+        
+        var primaryIdentity: CognitoIDTokenClaimsIndentity? {
+            get {
+                if let primary = identities?.first(where: {$0.isPrimary ?? false}) {
+                    return primary
+                } else {
+                    return identities?.first
+                }
+            }
+        }
     }
+    internal struct CognitoIDTokenClaimsIndentity: Decodable {
+        let userId: String?
+        let providerName: String?
+        let providerType: String?
+        private let primary: String?
+        internal var isPrimary: Bool? {
+            if let primary = primary {
+                return primary == "true"
+            } else {
+                return false
+            }
+        }
+        let issuer: String?
+        private let dateCreated: String?
+        internal var dateCreatedDate: Date? {
+            if let dateCreated = dateCreated, let time = Double(dateCreated) {
+                return Date(timeIntervalSince1970: time)
+            } else {
+                return nil
+            }
+        }
+    }
+    
     //Tracking current signed in scouting team
     private let scoutingTeamCacheKey = "FASTCurrentlyScoutingTeamIDKey"
     private(set) var enrolledScoutingTeamID: GraphQLID?

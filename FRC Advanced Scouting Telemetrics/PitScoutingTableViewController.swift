@@ -86,7 +86,7 @@ class PitScoutingTableViewController: UITableViewController {
         // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
         // self.navigationItem.rightBarButtonItem = self.editButtonItem
         
-        
+        tableView.keyboardDismissMode = .onDrag
         tableView.estimatedRowHeight = 44
         
         if #available(iOS 13.0, *) {
@@ -194,6 +194,10 @@ class PitScoutingTableViewController: UITableViewController {
         } else {
             return UITableViewCell()
         }
+    }
+    
+    override func tableView(_ tableView: UITableView, titleForFooterInSection section: Int) -> String? {
+        return pitScoutingModel?.note
     }
     
     private let imageController = UIImagePickerController()

@@ -727,7 +727,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 1;
 			shellPath = /bin/sh;
-			shellScript = "# Type a script or drag a script file from your workspace to insert its path.\n\"${PODS_ROOT}/Fabric/run\" 69885bcf9ab40dc49ae9c921bfc14f173744a153\n";
+			shellScript = "# Type a script or drag a script file from your workspace to insert its path.\n\"${PODS_ROOT}/Fabric/run\"\n";
 		};
 		9342D6C1222F5C3D006A1A79 /* Primary Upload dSYMs */ = {
 			isa = PBXShellScriptBuildPhase;
@@ -741,7 +741,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "# Type a script or drag a script file from your workspace to insert its path.\n# \"${PODS_ROOT}/Fabric/upload-symbols\" -gsp \"${PROJECT_DIR}/GoogleService-Info.plist\" -p ios \"${DWARF_DSYM_FOLDER_PATH}/${DWARF_DSYM_FILE_NAME}\"\n";
+			shellScript = "# Type a script or drag a script file from your workspace to insert its path.\nfind \"${DWARF_DSYM_FOLDER_PATH}\" -name \"*.dSYM\" | xargs -I \\{\\} \"${PODS_ROOT}/Fabric/upload-symbols\" -a \"69885bcf9ab40dc49ae9c921bfc14f173744a153\" -p ios \\{\\}\n# \"${PODS_ROOT}/Fabric/upload-symbols\" -a \"69885bcf9ab40dc49ae9c921bfc14f173744a153\" -p ios \"${DWARF_DSYM_FOLDER_PATH}/${DWARF_DSYM_FILE_NAME}\"\n";
 		};
 		93610E301E42E2B200856BE2 /* Increment Build Number */ = {
 			isa = PBXShellScriptBuildPhase;

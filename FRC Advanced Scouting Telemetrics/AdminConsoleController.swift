@@ -207,6 +207,14 @@ class AdminConsoleController: UIViewController, UITableViewDataSource, UITableVi
         present(alert, animated: true, completion: nil)
     }
     
+    enum MyError: Error {
+        case TestError
+        
+        var localizedDescription: String {
+            return "TESTTEST"
+        }
+    }
+    
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         super.prepare(for: segue, sender: sender)
         

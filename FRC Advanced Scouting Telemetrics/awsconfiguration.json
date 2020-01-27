@@ -14,9 +14,9 @@
   },
   "CognitoUserPool": {
     "Default": {
-      "PoolId": "us-east-1_z8wzHGNeO",
-      "AppClientId": "me9su4pg619hf36k9m0tuuu39",
-      "AppClientSecret": "1he655bvqal3s0v7lkk0s88ad63ijit4flpj6s39db05uuuk5c00",
+      "PoolId": "us-east-1_sPjVurqBs",
+      "AppClientId": "5fdf1e5m9jjg379lu0e6hcfell",
+      "AppClientSecret": "51pvcsihd900aj72e8i8gqv1iiifqku7egdfjfi3nfsh07mc3fa",
       "Region": "us-east-1"
     }
   },
@@ -24,8 +24,8 @@
       "Default": {
           "OAuth": {
               "WebDomain": "auth.frcfastapp.com",
-              "AppClientId": "me9su4pg619hf36k9m0tuuu39",
-              "AppClientSecret": "1he655bvqal3s0v7lkk0s88ad63ijit4flpj6s39db05uuuk5c00",
+              "AppClientId": "5fdf1e5m9jjg379lu0e6hcfell",
+              "AppClientSecret": "51pvcsihd900aj72e8i8gqv1iiifqku7egdfjfi3nfsh07mc3fa",
               "SignInRedirectURI": "fast://signInCallback",
               "SignOutRedirectURI": "fast://signOut",
               "Scopes": ["openid", "email", "profile"]

@@ -135,7 +135,9 @@ internal struct Globals {
                 //Display the errors
                 let alert = UIAlertController(title: "Error Performing \(queryIdentifier)", message: "\(errorMessages)", preferredStyle: .alert)
                 alert.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
-                Globals.appDelegate.presentViewControllerOnTop(alert, animated: true)
+                DispatchQueue.main.async {
+                    Globals.appDelegate.presentViewControllerOnTop(alert, animated: true)
+                }
             }
         }
         

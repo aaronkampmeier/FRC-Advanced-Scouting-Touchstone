@@ -74,7 +74,6 @@ class PitScoutingTableViewCell: UITableViewCell {
             (textField)?.text = (currentValue as? Double)?.description
             textField?.keyboardType = .asciiCapableNumberPad
             break
-        
         }
         
         controlItem?.addTarget(self, action: #selector(controlUpdated(_:)), for: .allEvents)

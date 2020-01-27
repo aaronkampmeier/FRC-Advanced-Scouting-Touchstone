@@ -486,7 +486,7 @@ class ScoutingTeamTableViewController: UITableViewController {
                 if member?.userId != scoutingTeamWithMembers?.teamLead {
                     let removeMemberAction = UIContextualAction(style: .destructive, title: "Remove") {[weak self] (contextualAction, view, completion) in
                         //Remove this member
-                        let alert = UIAlertController(title: "Remove Member?", message: "Are you sure you want to remove \(member?.name) from the scouting team? They will no longer be able to access any scouted data, but they can still rejoin using an invitation.", preferredStyle: .alert)
+                        let alert = UIAlertController(title: "Remove Member?", message: "Are you sure you want to remove \(String(describing: member?.name)) from the scouting team? They will no longer be able to access any scouted data, but they can still rejoin using an invitation.", preferredStyle: .alert)
                         alert.addAction(UIAlertAction(title: "Remove Them", style: .destructive, handler: { (action) in
                             Globals.appSyncClient?.perform(mutation: RemoveMemberMutation(scoutTeam: self?.scoutingTeamId ?? "", userToRemove: member?.userId ?? ""), optimisticUpdate: { (transaction) in
                                 

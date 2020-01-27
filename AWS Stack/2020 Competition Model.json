@@ -1,0 +1,241 @@
+{
+    "error":"FASTErrorModelNotPublished",
+    "modelVersion": 0,
+    "pitScouting":{
+        "note" : "There are still more inputs to come! If you have requests for pit scouting inputs, please contact us using the information in the settings pane.",
+        "inputs": [
+          {
+            "key":"robotWeight",
+            "type":"Double",
+            "label":"Weight"
+        },
+        {
+            "key":"robotHeight",
+            "type":"Double",
+            "label":"Height"
+        },
+        {
+            "key":"robotLength",
+            "type":"Double",
+            "label":"Length"
+        },
+        {
+            "key":"driveTrain",
+            "type":"String",
+            "label":"Drive Train"
+        },
+        {
+            "key":"programmingLanguage",
+            "type":"String",
+            "label":"Programming Language"
+        },
+        {
+            "key":"computerVisionCapability",
+            "type":"SelectString",
+            "label":"Computer Vision Capability",
+            "options":["Yes","Somewhat","No"]
+        },
+
+
+        {
+            "key":"powerCellCapacity",
+            "type":"Double",
+            "label":"Power Cell Capacity"
+        },
+        {
+            "key":"hasShooter",
+            "type":"Binary",
+            "label":"Has Shooter"
+        },
+
+
+        {
+            "key":"autonomousCapability",
+            "type":"SelectString",
+            "label":"Autonomous Capability",
+            "options":["Can Score","Can Move","None"]
+        },
+        {
+            "key":"powerPortCapability",
+            "type":"SelectString",
+            "label":"Power Port Capability",
+            "options":["Inner","Outer", "Bottom","None"]
+        },
+        {
+            "key":"controlPanelCapability",
+            "type":"SelectString",
+            "label":"Control Panel Capability",
+            "options":["Can Position","Can Rotate","None"]
+        },
+        {
+            "key":"powerCellSourceCapability",
+            "type":"SelectString",
+            "label":"Power Cell Source Capability",
+            "options":["Floor", "Loading Bay","None"]
+        },
+
+        {
+            "key":"hangCapability",
+            "type":"SelectString",
+            "label":"Hang Capability",
+            "options":["Can Assist", "Can Hang","None"]
+        },
+        {
+            "key":"levelCapability",
+            "type":"SelectString",
+            "label":"Generator Switch Level Capability",
+            "options":["Can Level","No Level Ability"]
+        },
+
+        {
+            "key":"canBanana",
+            "type":"Button",
+            "label":""
+        }
+    ]
+    },
+    "standsScouting": {
+       "startState":[
+        {
+            "name":"Loaded Fuel Cells",
+            "shortName":"Loaded Fuel",
+            "key":"loaded_fuel_cells",
+            "options":[
+                {
+                    "name":"3 Fuel Cells",
+                    "shortName":"3",
+                    "key":"3"
+                },
+                {
+                    "name":"2 Fuel Cells",
+                    "shortName":"2",
+                    "key":"2"
+                },
+                {
+                    "name":"1 Fuel Cells",
+                    "shortName":"1",
+                    "key":"1"
+                },
+                {
+                    "name":"None",
+                    "key":"none"
+                }
+            ]
+        }
+     ],
+       "gameActions":[
+        {
+            "name":"Grabbed Fuel Cells",
+            "shortName":"Grabbed Fuel",
+            "key":"grabbed_fuel_cells",
+            "subOptions":[
+                {
+                    "name":"Loading Bay",
+                    "key":"loading_bay"
+                },
+                {
+                    "name":"Floor",
+                    "key":"floor"
+                }
+            ]
+        },
+        {
+            "name":"Scored Fuel Cells",
+            "shortName":"Scored Fuel",
+            "key":"scored_fuel_cells",
+            "subOptions":[
+                {
+                    "name":"Bottom",
+                    "key":"bottom"
+                },
+                {
+                    "name":"Outer",
+                    "key":"outer"
+                },
+                {
+                    "name":"Inner",
+                    "key":"inner"
+                }
+            ]
+        },
+        {
+            "name":"Dropped Fuel Cells",
+            "shotName":"Dropped Fuel",
+            "key":"dropped_fuel_cells",
+            "subOptions":[
+                {
+                    "name":"All",
+                    "key":"all"
+                },
+                {
+                    "name":"Some",
+                    "key":"some"
+                },
+                {
+                    "name":"Few",
+                    "key":"Few"
+                }
+            ]
+        },
+        {
+            "name":"Rotated Control Panel",
+            "shortName":"Rotated Control Panel",
+            "key":"rotated_control_panel",
+            "subOptions": [
+                {
+                    "name":"Completed Rotation Control",
+                    "key":"completed_rotation_control"
+                },
+                {
+                    "name":"Completed Position Control",
+                    "key":"completed_position_control"
+                }
+            ]
+        }
+     ],
+       "endState":[
+        {
+            "name":"Hang Status",
+            "key":"hang_status",
+            "shotName":"Hang Status",
+            "options":[
+                {
+                    "name":"Did Hang",
+                    "key":"did_hang"
+                },
+                {
+                    "name":"Successfully Assisted",
+                    "key":"successfully_assisted"
+                },
+                {
+                    "name":"Attempted",
+                    "key":"hang_attempted"
+                },
+                {
+                    "name":"Did Not Attempt",
+                    "key":"no_hang_attempt"
+                }
+            ]
+        },
+        {
+            "name":"Hang Assist Status",
+            "shortName":"Hang Assist",
+            "key":"Hang Assist",
+            "options": [
+                {
+                    "name":"Did Assist Partner",
+                    "key":"did_assist"
+                },
+                {
+                    "name":"Assist Failed",
+                    "key":"assist_attempted"
+                },
+                {
+                    "name":"Did Not Assist",
+                    "key":"no_assist"
+                }
+            ]
+        }
+     ]
+   }
+}

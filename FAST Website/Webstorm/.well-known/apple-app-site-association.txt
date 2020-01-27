@@ -1,0 +1,9 @@
+{
+   "applinks": {
+       "apps": [],
+			 "details": [{
+            "appID": "J9YCJFXQQ7.com.kampmeier.FRC-Advanced-Scouting-Touchstone",
+            "paths": ["/app", "/invite"]
+            }]
+    }
+}

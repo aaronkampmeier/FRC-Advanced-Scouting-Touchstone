@@ -80,6 +80,7 @@ internal struct FASTCompetitionModel: Codable {
 }
 
 internal struct PitScoutingModel: Codable {
+    let note: String?
     let inputs: [PitScoutingInput]
 }
 internal struct PitScoutingInput: Codable {
@@ -121,14 +122,16 @@ internal struct GameState: Codable {
 }
 
 internal struct SSOption: Codable {
-    internal init(name: String, key: String, color: String?) {
+    internal init(name: String, key: String, color: String?, shortName: String) {
         self.name = name
         self.key = key
         self.color = color
+        self.shortName = shortName
     }
     let name: String
     let key: String
     var color: String?
+    var shortName: String?
 }
 
 internal struct GameAction: Codable {
