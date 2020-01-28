@@ -303,6 +303,17 @@ class AWSDataManager {
 //        cachedScoutSessionsDictSeamphore.signal()
     }
     
+    internal func append(newScoutSessions: [ScoutSession], toEventKey eventKey: String) {
+        cachedScoutSessionsAccessQueue.sync(flags: .barrier) {
+            let currentSessions = self.cachedScoutSessions[eventKey]
+            newScoutSessions.forEach { (session) in
+                if !(currentSessions??.contains(where: {$0?.key == session.key}) ?? false) {
+                    self.cachedScoutSessions[eventKey]??.append(session)
+                }
+            }
+        }
+    }
+    
     internal func retrieveScoutSessions(forEventKey eventKey: String, teamKey: String, andMatchKey matchKey: String? = nil, withCallback callbackHandler: @escaping (([ScoutSession?]?) -> Void)) {
         foregroundWorkQueue.async {
             let filterAndReturn = {(scoutSessions: [ScoutSession?]?) -> Void in

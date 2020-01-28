@@ -108,7 +108,7 @@ Resources:
         - ApiId
       ServiceRoleArn: arn:aws:iam::797353049590:role/service-role/appsync-ds-lam-nuerz7-FAST-TBA-Request-Han
       LambdaConfig:
-        LambdaFunctionArn: arn:aws:lambda:us-east-1:797353049590:function:FAST-TBA-Request-Handler:Production
+        LambdaFunctionArn: arn:aws:lambda:us-east-1:797353049590:function:FAST-TBA-Request-Handler:ProductionAPI2
       Name: TBALambda
       Type: AWS_LAMBDA
     Metadata:
@@ -359,7 +359,7 @@ Resources:
       RequestMappingTemplateS3Location: s3://cf-templates-4eazvtfbn788-us-east-1/FAST
         API Stack Resources/5d47b9e517e1f4b10860949dcc692a0f
       ResponseMappingTemplateS3Location: s3://cf-templates-4eazvtfbn788-us-east-1/FAST
-        API Stack Resources/8e5c74b4581f42907d91c5ad5a915fd2
+        API Stack Resources/19462482ac8eb83fc5e576dd9a1143ac
   FuncGetSimpleEvent:
     Type: AWS::AppSync::FunctionConfiguration
     Properties:
@@ -490,19 +490,15 @@ Resources:
         - AppSyncAPI
         - ApiId
       FieldName: listAvailableEvents
-      Kind: PIPELINE
-      PipelineConfig:
-        Functions:
-        - Fn::GetAtt:
-          - FuncStashTBAKey
-          - FunctionId
-        - Fn::GetAtt:
-          - FuncGetAllEvents
-          - FunctionId
+      Kind: UNIT
+      DataSourceName:
+        Fn::GetAtt:
+        - SourceTBALambda
+        - Name
       RequestMappingTemplateS3Location: s3://cf-templates-4eazvtfbn788-us-east-1/FAST
-        API Stack Resources/c46fc8ef51dfb27776b3115243d7cc1c
+        API Stack Resources/e68bdcf56a180d26c8bbf3f11eb7dbf3
       ResponseMappingTemplateS3Location: s3://cf-templates-4eazvtfbn788-us-east-1/FAST
-        API Stack Resources/13709c494f6065fe32845d07d574d948
+        API Stack Resources/2798d779b3fa6feb8831bc41a6048a3d
       TypeName: Query
   ResolverGetEvent:
     Type: AWS::AppSync::Resolver

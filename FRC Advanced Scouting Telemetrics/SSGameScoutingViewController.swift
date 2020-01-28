@@ -87,10 +87,12 @@ extension SSGameScoutingViewController: UICollectionViewDataSource, UICollection
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
         var width: CGFloat = 0.0
-        let height: CGFloat = 80
+        var height: CGFloat = 80
         if view.traitCollection.horizontalSizeClass == .compact {
             //For compact, we want a vertical list
             width = view.frame.width - 30
+            let paddedFrameHeight = self.view.frame.height - 15
+            height = (paddedFrameHeight / CGFloat(self.collectionView(collectionView, numberOfItemsInSection: indexPath.section))) - 10
         } else {
             //We want a more spread out list
             width = view.frame.width / 2 - 10

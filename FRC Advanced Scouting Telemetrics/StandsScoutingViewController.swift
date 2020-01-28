@@ -151,6 +151,7 @@ class StandsScoutingViewController: UIViewController {
                         
                         self?.gameStartVC?.set(gameSection: .Start, dataManager: dataManager)
                         self?.gameEndVC?.set(gameSection: .End, dataManager: dataManager)
+                        self?.gameScoutVC?.ssDataManager = dataManager
                         
                         if self?.ssDataManager?.model != nil {
                             self?.cycleFromViewController(self!.children.first!, toViewController: self!.gameStartVC!)

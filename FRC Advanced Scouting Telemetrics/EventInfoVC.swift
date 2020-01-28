@@ -60,9 +60,12 @@ class EventInfoVC: UIViewController, UITableViewDataSource {
                 
                 //Add the event to be tracked
                 Globals.appSyncClient?.perform(mutation: AddTrackedEventMutation(scoutTeam: scoutTeamId, eventKey: eventKey), resultHandler: {[weak self] (result, error) in
+                    self?.loadingView.isHidden = true
+                    if #available(iOS 13.0, *) {
+                        self?.isModalInPresentation = false
+                    }
                     if Globals.handleAppSyncErrors(forQuery: "AddTrackedEventMutation", result: result, error: error) {
                         //Import finished, update the cache and dismiss this view
-                        self?.loadingView.isHidden = true
                         self?.navigationController?.dismiss(animated: true, completion: nil)
                         
                         if let newEvent = result?.data?.addTrackedEvent {

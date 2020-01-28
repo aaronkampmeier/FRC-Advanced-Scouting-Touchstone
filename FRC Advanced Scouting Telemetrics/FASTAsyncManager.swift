@@ -396,9 +396,7 @@ class FASTAsyncManager {
 //                                })
 //
 //                                //Update the in memory cache
-//                                if !(Globals.dataManager.cachedScoutSessions[eventKey]??.contains(where: {$0?.key == newSession.key}) ?? false) {
-//                                    Globals.dataManager.cachedScoutSessions[eventKey]??.append(newSession.fragments.scoutSession)
-//                                }
+//                                Globals.dataManager.append(newScoutSessions: [newSession.fragments.scoutSession], toEventKey: eventKey)
 //                            } catch {
 //                                CLSNSLogv("Error updating the scout session cache: \(error)", getVaList([]))
 //                                Crashlytics.sharedInstance().recordError(error)
@@ -411,6 +409,9 @@ class FASTAsyncManager {
 //                        CLSNSLogv("Got delta update of scout sessions with \(numOfUpdates) updates", getVaList([]))
 //                        //Add the new scout session to the cache
 //                        do {
+//                            //Upload the in-memory cache
+//                            Globals.dataManager.append(newScoutSessions: result?.data?.listScoutSessionsDelta?.map({$0?.fragments.scoutSession ?? ScoutSession(key: "", matchKey: "", teamKey: "", scoutTeam: "", eventKey: "")}) ?? [], toEventKey: eventKey)
+//
 //                            let perfTrace = Performance.startTrace(name: "Scout Sessions Delta Cache Update")
 //                            perfTrace?.setValue(Int64(numOfUpdates), forMetric: "sessions_returned")
 //                            try transaction?.update(query: ListAllScoutSessionsQuery(scoutTeam: scoutTeamID, eventKey: eventKey), { (selectionSet) in
@@ -418,11 +419,6 @@ class FASTAsyncManager {
 //                                    if let newSession = session {
 //                                        if !(selectionSet.listAllScoutSessions?.contains(where: {$0?.key == newSession.key}) ?? false) {
 //                                            selectionSet.listAllScoutSessions?.append(try ListAllScoutSessionsQuery.Data.ListAllScoutSession(newSession))
-//                                        }
-//
-//                                        //Update the in memory cache
-//                                        if !(Globals.dataManager.cachedScoutSessions[eventKey]??.contains(where: {$0?.key == newSession.key}) ?? false) {
-//                                            Globals.dataManager.cachedScoutSessions[eventKey]??.append(newSession.fragments.scoutSession)
 //                                        }
 //                                    }
 //                                }
@@ -436,7 +432,7 @@ class FASTAsyncManager {
 //                        Globals.recordAnalyticsEvent(eventType: "scoutsessions_delta_update", metrics: ["update_count":Double(numOfUpdates)])
 //                    }
 //                }, callbackQueue: self.backgroundQueue, syncConfiguration: config)
-//
+
                 
                 let updateScoutedTeamSubscriber: Cancellable?
                 do {

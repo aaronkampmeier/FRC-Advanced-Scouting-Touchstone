@@ -7,7 +7,7 @@ Never deal with loads and loads of paper scouting sheets or complex, hard-to-man
 
 FAST supports easy adding of the event you are attending using The Blue Alliance’s database seamlessly in the background. FAST simply pulls down all event data including team and match information, match scores, match times, and more. All data is presented in a clean and concise manner centering around the teams attending.
 
-FAST puts making actionable decisions for team picking first. Everyone on your team can use their own device to scout teams and matches, update information and notes, and easily visualize stats using informative graphs and team sorting. 
+FAST puts making actionable decisions for team picking first. Everyone on your team can use their own device to scout teams and matches, update information and notes, and easily visualize stats using informative graphs and team sorting.
 
 ## Download
 [Link to iOS App Store](https://itunes.apple.com/us/app/fast-frc-scouter/id1201098361?mt=8)
@@ -44,6 +44,11 @@ FAST puts making actionable decisions for team picking first. Everyone on your t
 - Scouts in the stands will record details of the matches (usually 6 in the stands for each team competing)
 - Scouts on the floor will pit scout all details of the teams attending the event
 - All data is instantly synced and visualizable on all team members’ devices
+
+## Privacy
+FAST reqeusts some personal data such as name and email address to provide a better experience. Your personal data is stored only within FAST's authentication servers and never shared with any third party. See the privacy policy for more info.
+
+[Privacy Policy](https://frcfastapp.com/privacy.html)
 
 ## License
 GNU General Public License v3.0

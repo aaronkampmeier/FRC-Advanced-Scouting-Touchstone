@@ -744,8 +744,8 @@
             filePath = "FRC Advanced Scouting Telemetrics/AppDelegate.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "139"
-            endingLineNumber = "139"
+            startingLineNumber = "158"
+            endingLineNumber = "158"
             landmarkName = "application(_:willContinueUserActivityWithType:)"
             landmarkType = "7">
          </BreakpointContent>
@@ -875,8 +875,8 @@
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "1054"
             endingLineNumber = "1054"
-            landmarkName = "updateSearchResults(for:)"
-            landmarkType = "7">
+            landmarkName = "TeamListTableViewController"
+            landmarkType = "21">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -988,6 +988,22 @@
             startingLineNumber = "292"
             endingLineNumber = "292"
             landmarkName = "eventSelected(_:)"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "437AB235-13C1-429E-AA40-56CFE106545D"
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "Pods/AWSCore/AWSCore/UICKeyChainStore/AWSUICKeyChainStore.m"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "119"
+            endingLineNumber = "119"
+            landmarkName = "-commonInit"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>

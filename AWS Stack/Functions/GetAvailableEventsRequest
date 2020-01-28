@@ -1,0 +1,17 @@
+#if( ! $ctx.args.year )
+    #set( $year = $util.time.nowFormatted("yyyy") )
+#else 
+	#set($year = $ctx.args.year)
+#end
+
+#**
+    The value of 'payload' after the template has been evaluated
+    will be passed as the event to AWS Lambda.
+*#
+{
+    "version" : "2017-02-28",
+    "operation": "Invoke",
+    "payload": {
+    	"endpoint":"/events/${year}"
+    }
+}

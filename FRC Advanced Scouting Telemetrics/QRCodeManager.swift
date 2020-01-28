@@ -18,7 +18,7 @@ final class FASTQRCodeManager {
         var components = URLComponents()
         components.scheme = "https"
         components.host = "frcfastapp.com"
-        components.path = "/invite"
+        components.path = "/invite.html"
         components.queryItems = [
             URLQueryItem(name: "id", value: inviteId),
             URLQueryItem(name: "secretCode", value: secretCode)

@@ -727,7 +727,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 1;
 			shellPath = /bin/sh;
-			shellScript = "# Type a script or drag a script file from your workspace to insert its path.\n\"${PODS_ROOT}/Fabric/run\"\n";
+			shellScript = "# Type a script or drag a script file from your workspace to insert its path.\n\"${PODS_ROOT}/Fabric/run\" \"69885bcf9ab40dc49ae9c921bfc14f173744a153\"\n";
 		};
 		9342D6C1222F5C3D006A1A79 /* Primary Upload dSYMs */ = {
 			isa = PBXShellScriptBuildPhase;
@@ -741,11 +741,11 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "# Type a script or drag a script file from your workspace to insert its path.\nfind \"${DWARF_DSYM_FOLDER_PATH}\" -name \"*.dSYM\" | xargs -I \\{\\} \"${PODS_ROOT}/Fabric/upload-symbols\" -a \"69885bcf9ab40dc49ae9c921bfc14f173744a153\" -p ios \\{\\}\n# \"${PODS_ROOT}/Fabric/upload-symbols\" -a \"69885bcf9ab40dc49ae9c921bfc14f173744a153\" -p ios \"${DWARF_DSYM_FOLDER_PATH}/${DWARF_DSYM_FILE_NAME}\"\n";
+			shellScript = "# Type a script or drag a script file from your workspace to insert its path.\n#find \"${DWARF_DSYM_FOLDER_PATH}\" -name \"*.dSYM\" | xargs -I \\{\\} \"${PODS_ROOT}/Fabric/upload-symbols\" -a \"69885bcf9ab40dc49ae9c921bfc14f173744a153\" -p ios \\{\\}\n#\"${PODS_ROOT}/Fabric/upload-symbols\" -a \"69885bcf9ab40dc49ae9c921bfc14f173744a153\" -p ios \"${DWARF_DSYM_FOLDER_PATH}/${DWARF_DSYM_FILE_NAME}\"\n";
 		};
 		93610E301E42E2B200856BE2 /* Increment Build Number */ = {
 			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 8;
+			buildActionMask = 12;
 			files = (
 			);
 			inputPaths = (
@@ -753,8 +753,8 @@
 			name = "Increment Build Number";
 			outputPaths = (
 			);
-			runOnlyForDeploymentPostprocessing = 1;
-			shellPath = /bin/sh;
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/bash;
 			shellScript = "buildNumber=$(/usr/libexec/PlistBuddy -c \"Print CFBundleVersion\" \"${PROJECT_DIR}/${INFOPLIST_FILE}\")\nbuildNumber=$(($buildNumber + 1))\n/usr/libexec/PlistBuddy -c \"Set :CFBundleVersion $buildNumber\" \"${PROJECT_DIR}/${INFOPLIST_FILE}\"\n";
 		};
 /* End PBXShellScriptBuildPhase section */
@@ -1002,6 +1002,7 @@
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 2500;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEVELOPMENT_TEAM = J9YCJFXQQ7;
 				ENABLE_BITCODE = NO;
@@ -1049,6 +1050,7 @@
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 2500;
 				DEVELOPMENT_TEAM = J9YCJFXQQ7;
 				ENABLE_BITCODE = YES;
 				FRAMEWORK_SEARCH_PATHS = (

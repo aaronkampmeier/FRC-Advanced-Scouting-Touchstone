@@ -1,0 +1,15 @@
+{
+    "version" : "2018-05-29",
+    "operation" : "PutItem",
+    "key": {
+        "teamID" : $util.dynamodb.toDynamoDBJson(scoutTeam),
+        "bar" : ... typed value
+    },
+    "attributeValues" : {
+        "baz" : ... typed value
+    },
+    "condition" : {
+       ...
+    },
+    "_version" : 1
+}

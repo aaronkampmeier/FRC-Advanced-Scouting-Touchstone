@@ -336,7 +336,7 @@ class TeamListTableViewController: UITableViewController {
                                 DispatchQueue.main.async {
                                     if let year = self?.selectedEventRanking?.eventKey.prefix(4) {
                                         //If the event is not in the current year then display the year in front of it to signify it
-                                        if year != Calendar.current.component(.year, from: Date()).description {
+                                        if year != Calendar.current.component(.year, from: Date()).description && year != "test" {
                                             self?.navigationItem.title = "\(year) \(self?.selectedEventRanking?.eventName ?? "")"
                                         } else {
                                             self?.navigationItem.title = self?.selectedEventRanking?.eventName

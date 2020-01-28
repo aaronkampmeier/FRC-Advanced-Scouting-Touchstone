@@ -31,6 +31,25 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         FirebaseApp.configure()
         Fabric.with([Crashlytics.self])
         
+        
+        //Migrate the user from the old auth system to the new auth system for 5.0.0 and up
+        let migrationkey = "FAST-HasMigratedTo5Auth"
+        if (!(UserDefaults.standard.value(forKey: migrationkey) as? Bool ?? false)) {
+            //Migrate them by deleting all the keychain items
+            let secItemClasses =  [kSecClassGenericPassword, kSecClassInternetPassword, kSecClassCertificate, kSecClassKey, kSecClassIdentity]
+            for itemClass in secItemClasses {
+                let spec: NSDictionary = [kSecClass: itemClass]
+                let status = SecItemDelete(spec)
+                if #available(iOS 11.3, *) {
+                    CLSNSLogv("Deleting keychain items with status: \(String(describing: SecCopyErrorMessageString(status, nil)))", getVaList([]))
+                } else {
+                    CLSNSLogv("Deleting keychain items with status: \(status)", getVaList([]))
+                }
+            }
+            
+            UserDefaults.standard.set(true, forKey: migrationkey)
+        }
+        
         // AWS Cognito Initialization
         AWSMobileClient.default().initialize {userState, error in
             if let userState = userState {
