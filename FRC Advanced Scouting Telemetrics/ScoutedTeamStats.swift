@@ -21,22 +21,18 @@ extension ScoutedTeam: Equatable {
     
     static let statCalculationQueue = DispatchQueue.global(qos: .userInitiated) //DispatchQueue(label: "ScoutedTeamStatCalculation", qos: .userInitiated, target: nil)
     
-	///: Deprecated
-    @available(*, deprecated, message: "Please use the attributeDictionary directly.")
-    var decodedAttributes: ScoutedTeamAttributes? {
-        get {
-            do {
-                if let data = self.attributes?.data(using: .utf8) {
-                    return try JSONDecoder().decode(ScoutedTeamAttributes.self, from: data)
-                } else {
-                    return nil
-                }
-            } catch {
-                //Record error
-                CLSNSLogv("Error decoding scouted team attribute json data: \(error)", getVaList([]))
-                Crashlytics.sharedInstance().recordError(error)
+    var commonAttributes: ScoutedTeamAttributes? {
+        do {
+            if let data = self.attributes?.data(using: .utf8) {
+                return try JSONDecoder().decode(ScoutedTeamAttributes.self, from: data)
+            } else {
                 return nil
             }
+        } catch {
+            //Record error
+            CLSNSLogv("Error decoding scouted team attribute json data: \(error)", getVaList([]))
+            Crashlytics.sharedInstance().recordError(error)
+            return nil
         }
     }
     
@@ -165,7 +161,7 @@ extension ScoutedTeam: Equatable {
         for startState in model?.startState ?? [] {
             //Show the breakdown of the options
             for option in startState.options {
-                statistics.append(ScoutedTeamStat(name: "\(startState.shortName ?? startState.name)-\(option.name)", id: "\(startState.shortName ?? startState.name)-\(option.name)", function: { (scoutedTeam, callback) in
+                statistics.append(ScoutedTeamStat(name: "\(startState.shortName ?? startState.name)-\(option.shortName ?? option.name)", id: "\(startState.shortName ?? startState.name)-\(option.name)", function: { (scoutedTeam, callback) in
                     //Get the scout sessions
                     Globals.dataManager.retrieveScoutSessions(forEventKey: scoutedTeam.eventKey, teamKey: scoutedTeam.teamKey, withCallback: { (scoutSessions) in
                         let startStates = scoutSessions?.map({$0?.startStateDict ?? [:]}) ?? []
@@ -182,7 +178,7 @@ extension ScoutedTeam: Equatable {
         for endState in model?.endState ?? [] {
             //Show the breakdown of the options
             for option in endState.options {
-                statistics.append(ScoutedTeamStat(name: "\(endState.shortName ?? endState.name)-\(option.name)", id: "\(endState.shortName ?? endState.name)-\(option.name)", function: { (scoutedTeam, callback) in
+                statistics.append(ScoutedTeamStat(name: "\(endState.shortName ?? endState.name)-\(option.shortName ?? option.name)", id: "\(endState.shortName ?? endState.name)-\(option.name)", function: { (scoutedTeam, callback) in
                     //Get the scout sessions
                     Globals.dataManager.retrieveScoutSessions(forEventKey: scoutedTeam.eventKey, teamKey: scoutedTeam.teamKey, withCallback: { (scoutSessions) in
                         let endStates = scoutSessions?.map({$0?.endStateDict ?? [:]}) ?? []
@@ -274,7 +270,7 @@ extension ScoutedTeam: Equatable {
                     
                     //For each sub option, show the percentage that it is selected within the action as a whole
                     let id = "\(gameAction.name)-\(subOption.name)-percentage"
-                    statistics.append(ScoutedTeamStat(name: "\(gameAction.shortName ?? gameAction.name)-\(subOption.name)", id: id, compositeTrendFunction: { (scoutedTeam, callback) in
+                    statistics.append(ScoutedTeamStat(name: "\(gameAction.shortName ?? gameAction.name)-\(subOption.shortName ?? subOption.name)", id: id, compositeTrendFunction: { (scoutedTeam, callback) in
                         var compositeDataPoints = [(Int,StatValue)]()
                         let ssStats = StatisticsDataSource().getStats(forType: ScoutSession.self, forEvent: eventKey)
                         let subOptionPercentageStat = ssStats.first(where: {$0.id == id})

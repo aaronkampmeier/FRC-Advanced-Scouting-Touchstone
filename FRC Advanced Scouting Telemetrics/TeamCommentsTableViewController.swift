@@ -132,7 +132,7 @@ class TeamCommentsTableViewController: UITableViewController {
             dateFormatter.dateFormat = "EEE dd, HH:mm"
             let date = Date(timeIntervalSince1970: TimeInterval(comment.datePosted))
             let dateString = dateFormatter.string(from: date)
-            if let authorName = members.first(where: {$0?.userId == comment.authorUserId}), let name = authorName {
+            if let author = members.first(where: {$0?.userId == comment.authorUserId}), let name = author?.name {
                 (commentCell.viewWithTag(1) as! UILabel).text = "\(dateString) by \(name)"
             } else {
                 (commentCell.viewWithTag(1) as! UILabel).text = "\(dateString) by \(comment.authorUserId)"

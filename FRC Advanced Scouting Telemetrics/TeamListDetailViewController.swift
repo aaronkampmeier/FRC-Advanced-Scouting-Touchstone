@@ -297,7 +297,7 @@ class TeamListDetailViewController: UIViewController {
                 }
                 
                 if let scoutedTeam = self.scoutedTeam {
-                    if scoutedTeam.decodedAttributes?.canBanana ?? false {
+                    if scoutedTeam.commonAttributes?.canBanana ?? false {
                         self.bananaImageView.image = #imageLiteral(resourceName: "Banana Filled")
                         self.bananaImageWidth.constant = 40
                     } else {
@@ -450,8 +450,8 @@ extension TeamListDetailViewController: MatchesTableViewControllerDelegate {
         selectedMatch = associatedMatch
         
         let showMatchDetail = {[weak self]() -> Void in
-            let matchDetailNav = self?.storyboard?.instantiateViewController(withIdentifier: "matchDetailNav") as! UINavigationController
-            let matchDetail = matchDetailNav.topViewController as! MatchOverviewDetailViewController
+            let matchDetail = self?.storyboard?.instantiateViewController(withIdentifier: "matchOverviewDetail") as! MatchOverviewDetailViewController
+            let matchDetailNav = UINavigationController(rootViewController: matchDetail)
             
             matchDetail.load(forMatchKey: self?.selectedMatch?.key ?? "", shouldShowExitButton: true, preSelectedTeamKey: self?.selectedTeam?.key)
             

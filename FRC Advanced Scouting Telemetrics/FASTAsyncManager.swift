@@ -226,62 +226,61 @@ class FASTAsyncManager {
             removeEventSubscription?.cancel()
             //Set updaters to listen for new/deleted events
             do {
-                #warning("Reinstate")
-//                addEventSubscription = try Globals.appSyncClient?.subscribe(subscription: OnAddTrackedEventSubscription(scoutTeam: scoutingTeamID), resultHandler: {[weak self] (result, transaction, error) in
-//                    if Globals.handleAppSyncErrors(forQuery: "AsyncLoader-OnAddTrackedEventSubscription", result: result, error: error) {
-//                        if let newEvent = result?.data?.onAddTrackedEvent {
-//                            do {
-//                                try transaction?.update(query: ListTrackedEventsQuery(scoutTeam: scoutingTeamID), { (selectionSet) in
-//                                    selectionSet.listTrackedEvents?.append(try ListTrackedEventsQuery.Data.ListTrackedEvent(newEvent))
-//                                })
-//                            } catch {
-//                                CLSNSLogv("Error updating ListTrackedEvents cache \(error)", getVaList([]))
-//                                Crashlytics.sharedInstance().recordError(error)
-//                            }
-//                        }
-//                    } else {
-//                        if let error = error as? AWSAppSyncSubscriptionError {
-//                            if error.recoverySuggestion != nil {
-//                                self?.resetSubscriptions()
-//                            } else {
-//                                DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + 5 * 60, execute: {[weak self] in
-//                                    self?.resetSubscriptions()
-//                                })
-//                            }
-//                        }
-//                    }
-//                })
-//                
-//                removeEventSubscription = try Globals.appSyncClient?.subscribe(subscription: OnRemoveTrackedEventSubscription(scoutTeam: scoutingTeamID), resultHandler: {[weak self] (result, transaction, error) in
-//                    if Globals.handleAppSyncErrors(forQuery: "AsyncLoader-OnRemoveTrackedEventSubscription", result: result, error: error) {
-//                        if let removedEvent = result?.data?.onRemoveTrackedEvent {
-//                            do {
-//                                try transaction?.update(query: ListTrackedEventsQuery(scoutTeam: scoutingTeamID), { (selectionSet) in
-//                                    selectionSet.listTrackedEvents?.removeAll(where: {$0?.eventKey == removedEvent.eventKey})
-//                                })
-//                            } catch {
-//                                CLSNSLogv("Error updating ListTrackedEvents cache \(error)", getVaList([]))
-//                                Crashlytics.sharedInstance().recordError(error)
-//                            }
-//                        }
-//                    } else {
-//                        if let error = error as? AWSAppSyncSubscriptionError {
-//                            if error.recoverySuggestion != nil {
-//                                self?.resetSubscriptions()
-//                            } else {
-//                                if #available(iOS 12.0, *) {
-//                                    FASTNetworkManager.main.registerUpdateOnReconnect {
-//                                        self?.resetSubscriptions()
-//                                    }
-//                                } else {
-//                                    DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + 5 * 50, execute: {
-//                                        self?.resetSubscriptions()
-//                                    })
-//                                }
-//                            }
-//                        }
-//                    }
-//                })
+                addEventSubscription = try Globals.appSyncClient?.subscribe(subscription: OnAddTrackedEventSubscription(scoutTeam: scoutingTeamID), resultHandler: {[weak self] (result, transaction, error) in
+                    if Globals.handleAppSyncErrors(forQuery: "AsyncLoader-OnAddTrackedEventSubscription", result: result, error: error) {
+                        if let newEvent = result?.data?.onAddTrackedEvent {
+                            do {
+                                try transaction?.update(query: ListTrackedEventsQuery(scoutTeam: scoutingTeamID), { (selectionSet) in
+                                    selectionSet.listTrackedEvents?.append(try ListTrackedEventsQuery.Data.ListTrackedEvent(newEvent))
+                                })
+                            } catch {
+                                CLSNSLogv("Error updating ListTrackedEvents cache \(error)", getVaList([]))
+                                Crashlytics.sharedInstance().recordError(error)
+                            }
+                        }
+                    } else {
+                        if let error = error as? AWSAppSyncSubscriptionError {
+                            if error.recoverySuggestion != nil {
+                                self?.resetSubscriptions()
+                            } else {
+                                DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + 5 * 60, execute: {[weak self] in
+                                    self?.resetSubscriptions()
+                                })
+                            }
+                        }
+                    }
+                })
+                
+                removeEventSubscription = try Globals.appSyncClient?.subscribe(subscription: OnRemoveTrackedEventSubscription(scoutTeam: scoutingTeamID), resultHandler: {[weak self] (result, transaction, error) in
+                    if Globals.handleAppSyncErrors(forQuery: "AsyncLoader-OnRemoveTrackedEventSubscription", result: result, error: error) {
+                        if let removedEvent = result?.data?.onRemoveTrackedEvent {
+                            do {
+                                try transaction?.update(query: ListTrackedEventsQuery(scoutTeam: scoutingTeamID), { (selectionSet) in
+                                    selectionSet.listTrackedEvents?.removeAll(where: {$0?.eventKey == removedEvent.eventKey})
+                                })
+                            } catch {
+                                CLSNSLogv("Error updating ListTrackedEvents cache \(error)", getVaList([]))
+                                Crashlytics.sharedInstance().recordError(error)
+                            }
+                        }
+                    } else {
+                        if let error = error as? AWSAppSyncSubscriptionError {
+                            if error.recoverySuggestion != nil {
+                                self?.resetSubscriptions()
+                            } else {
+                                if #available(iOS 12.0, *) {
+                                    FASTNetworkManager.main.registerUpdateOnReconnect {
+                                        self?.resetSubscriptions()
+                                    }
+                                } else {
+                                    DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + 5 * 50, execute: {
+                                        self?.resetSubscriptions()
+                                    })
+                                }
+                            }
+                        }
+                    }
+                })
             } catch {
                 CLSNSLogv("Error setting subscriptions on the Async Loading Manager", getVaList([]))
                 Crashlytics.sharedInstance().recordError(error)
@@ -358,106 +357,105 @@ class FASTAsyncManager {
                 CLSNSLogv("Setting delta sync updaters for \(eventKey)", getVaList([]))
                 
                 //Start the scout sessions delta sync
-                #warning("Reinstate this line once subscriptions are fixed")
-//                Globals.dataManager.registerCaching(ofEventKey: eventKey)
+                Globals.dataManager.registerCaching(ofEventKey: eventKey)
+                var hasEndedCaching = false
                 let config = SyncConfiguration(baseRefreshIntervalInSeconds: 6 * 60 * 60)
                 let perfTrace = Performance.startTrace(name: "ScoutSessions Delta Sync Base Query")
-//                perfTrace?.start()
+                perfTrace?.start()
                 
-                #warning("Reinstate the delta sync when the AWS AppSync team fixes their thing")
-                let scoutSessionsSync: Cancellable? = nil
-//                let scoutSessionsSync = Globals.appSyncClient?.sync(baseQuery: ListAllScoutSessionsQuery(scoutTeam: scoutTeamID, eventKey: eventKey), baseQueryResultHandler: { (result, error) in
-//                    if Globals.handleAppSyncErrors(forQuery: "ListAllScoutSessions-Base", result: result, error: error) {
-//                        let numOfSessions = result?.data?.listAllScoutSessions?.count ?? 0
-//                        perfTrace?.setValue(Int64(numOfSessions), forMetric: "sessions_returned")
-//                        CLSNSLogv("Ran ListAllScoutSessions Base Query with source: \(String(describing: result?.source)) with \(numOfSessions) sessions", getVaList([]))
-//
-//                        //Set the in memory cache of scout sessions
-//                        Globals.dataManager.setCachedScoutSessions(scoutSessions: result?.data?.listAllScoutSessions?.map({$0?.fragments.scoutSession}), toEventKey: eventKey)
-//                    }
-//                    perfTrace?.stop()
-//                    Globals.dataManager.endCaching(ofEventKey: eventKey)
-//                }, subscription: OnCreateScoutSessionSubscription(scoutTeam: scoutTeamID, eventKey: eventKey), subscriptionResultHandler: { (result, transaction, error) in
-//                    CLSNSLogv("Scout Sessions Subscription Fired", getVaList([]))
-//                    if Globals.handleAppSyncErrors(forQuery: "OnCreateScoutSessionSubscription-DeltaSync", result: result, error: error) {
-//                        //Add the new scout session to the cache
-//                        if let newSession = result?.data?.onCreateScoutSession {
-//                            do {
-//                                let perfTrace = Performance.startTrace(name: "Scout Session Subscription Cache Update")
-//                                try transaction?.update(query: ListAllScoutSessionsQuery(scoutTeam: scoutTeamID, eventKey: eventKey), { (selectionSet) in
-//                                    if !(selectionSet.listAllScoutSessions?.contains(where: {$0?.key == newSession.key}) ?? false) {
-//                                        do {
-//                                            selectionSet.listAllScoutSessions?.append(try ListAllScoutSessionsQuery.Data.ListAllScoutSession(newSession))
-//                                        } catch {
-//                                            CLSNSLogv("Error appending scout session to the cache: \(newSession) \(error)", getVaList([]))
-//                                        }
-//                                    }
-//                                    perfTrace?.stop()
-//                                })
-//
-//                                //Update the in memory cache
-//                                Globals.dataManager.append(newScoutSessions: [newSession.fragments.scoutSession], toEventKey: eventKey)
-//                            } catch {
-//                                CLSNSLogv("Error updating the scout session cache: \(error)", getVaList([]))
-//                                Crashlytics.sharedInstance().recordError(error)
-//                            }
-//                        }
-//                    }
-//                }, deltaQuery: ListScoutSessionsDeltaQuery(scoutTeam: scoutTeamID, eventKey: eventKey, lastSync: 0), deltaQueryResultHandler: { (result, transaction, error) in
-//                    if Globals.handleAppSyncErrors(forQuery: "ListScoutSessionsDelta", result: result, error: error) {
-//                        let numOfUpdates = result?.data?.listScoutSessionsDelta?.count ?? 0
-//                        CLSNSLogv("Got delta update of scout sessions with \(numOfUpdates) updates", getVaList([]))
-//                        //Add the new scout session to the cache
-//                        do {
-//                            //Upload the in-memory cache
-//                            Globals.dataManager.append(newScoutSessions: result?.data?.listScoutSessionsDelta?.map({$0?.fragments.scoutSession ?? ScoutSession(key: "", matchKey: "", teamKey: "", scoutTeam: "", eventKey: "")}) ?? [], toEventKey: eventKey)
-//
-//                            let perfTrace = Performance.startTrace(name: "Scout Sessions Delta Cache Update")
-//                            perfTrace?.setValue(Int64(numOfUpdates), forMetric: "sessions_returned")
-//                            try transaction?.update(query: ListAllScoutSessionsQuery(scoutTeam: scoutTeamID, eventKey: eventKey), { (selectionSet) in
-//                                for session in result?.data?.listScoutSessionsDelta ?? [] {
-//                                    if let newSession = session {
-//                                        if !(selectionSet.listAllScoutSessions?.contains(where: {$0?.key == newSession.key}) ?? false) {
-//                                            selectionSet.listAllScoutSessions?.append(try ListAllScoutSessionsQuery.Data.ListAllScoutSession(newSession))
-//                                        }
-//                                    }
-//                                }
-//                                perfTrace?.stop()
-//                            })
-//                        } catch {
-//                            CLSNSLogv("Error updating the scout session cache: \(error)", getVaList([]))
-//                            Crashlytics.sharedInstance().recordError(error)
-//                        }
-//
-//                        Globals.recordAnalyticsEvent(eventType: "scoutsessions_delta_update", metrics: ["update_count":Double(numOfUpdates)])
-//                    }
-//                }, callbackQueue: self.backgroundQueue, syncConfiguration: config)
+                let scoutSessionsSync = Globals.appSyncClient?.sync(baseQuery: ListAllScoutSessionsQuery(scoutTeam: scoutTeamID, eventKey: eventKey), baseQueryResultHandler: { (result, error) in
+                    if Globals.handleAppSyncErrors(forQuery: "ListAllScoutSessions-Base", result: result, error: error) {
+                        let numOfSessions = result?.data?.listAllScoutSessions?.count ?? 0
+                        perfTrace?.setValue(Int64(numOfSessions), forMetric: "sessions_returned")
+                        CLSNSLogv("Ran ListAllScoutSessions Base Query with source: \(String(describing: result?.source)) with \(numOfSessions) sessions", getVaList([]))
+
+                        //Set the in memory cache of scout sessions
+                        Globals.dataManager.setCachedScoutSessions(scoutSessions: result?.data?.listAllScoutSessions?.map({$0?.fragments.scoutSession}), toEventKey: eventKey)
+                    }
+                    perfTrace?.stop()
+                    if !hasEndedCaching {
+                        Globals.dataManager.endCaching(ofEventKey: eventKey)
+                        hasEndedCaching = true
+                    }
+                }, subscription: OnCreateScoutSessionSubscription(scoutTeam: scoutTeamID, eventKey: eventKey), subscriptionResultHandler: { (result, transaction, error) in
+                    CLSNSLogv("Scout Sessions Subscription Fired", getVaList([]))
+                    if Globals.handleAppSyncErrors(forQuery: "OnCreateScoutSessionSubscription-DeltaSync", result: result, error: error) {
+                        //Add the new scout session to the cache
+                        if let newSession = result?.data?.onCreateScoutSession {
+                            do {
+                                let perfTrace = Performance.startTrace(name: "Scout Session Subscription Cache Update")
+                                try transaction?.update(query: ListAllScoutSessionsQuery(scoutTeam: scoutTeamID, eventKey: eventKey), { (selectionSet) in
+                                    if !(selectionSet.listAllScoutSessions?.contains(where: {$0?.key == newSession.key}) ?? false) {
+                                        do {
+                                            selectionSet.listAllScoutSessions?.append(try ListAllScoutSessionsQuery.Data.ListAllScoutSession(newSession))
+                                        } catch {
+                                            CLSNSLogv("Error appending scout session to the cache: \(newSession) \(error)", getVaList([]))
+                                        }
+                                    }
+                                    perfTrace?.stop()
+                                })
+
+                                //Update the in memory cache
+                                Globals.dataManager.append(newScoutSessions: [newSession.fragments.scoutSession], toEventKey: eventKey)
+                            } catch {
+                                CLSNSLogv("Error updating the scout session cache: \(error)", getVaList([]))
+                                Crashlytics.sharedInstance().recordError(error)
+                            }
+                        }
+                    }
+                }, deltaQuery: ListScoutSessionsDeltaQuery(scoutTeam: scoutTeamID, eventKey: eventKey, lastSync: 0), deltaQueryResultHandler: { (result, transaction, error) in
+                    if Globals.handleAppSyncErrors(forQuery: "ListScoutSessionsDelta", result: result, error: error) {
+                        let numOfUpdates = result?.data?.listScoutSessionsDelta?.count ?? 0
+                        CLSNSLogv("Got delta update of scout sessions with \(numOfUpdates) updates", getVaList([]))
+                        //Add the new scout session to the cache
+                        do {
+                            //Upload the in-memory cache
+                            Globals.dataManager.append(newScoutSessions: result?.data?.listScoutSessionsDelta?.map({$0?.fragments.scoutSession ?? ScoutSession(key: "", matchKey: "", teamKey: "", scoutTeam: "", eventKey: "")}) ?? [], toEventKey: eventKey)
+
+                            let perfTrace = Performance.startTrace(name: "Scout Sessions Delta Cache Update")
+                            perfTrace?.setValue(Int64(numOfUpdates), forMetric: "sessions_returned")
+                            try transaction?.update(query: ListAllScoutSessionsQuery(scoutTeam: scoutTeamID, eventKey: eventKey), { (selectionSet) in
+                                for session in result?.data?.listScoutSessionsDelta ?? [] {
+                                    if let newSession = session {
+                                        if !(selectionSet.listAllScoutSessions?.contains(where: {$0?.key == newSession.key}) ?? false) {
+                                            selectionSet.listAllScoutSessions?.append(try ListAllScoutSessionsQuery.Data.ListAllScoutSession(newSession))
+                                        }
+                                    }
+                                }
+                                perfTrace?.stop()
+                            })
+                        } catch {
+                            CLSNSLogv("Error updating the scout session cache: \(error)", getVaList([]))
+                            Crashlytics.sharedInstance().recordError(error)
+                        }
+
+                        Globals.recordAnalyticsEvent(eventType: "scoutsessions_delta_update", metrics: ["update_count":Double(numOfUpdates)])
+                    }
+                }, callbackQueue: self.backgroundQueue, syncConfiguration: config)
 
                 
                 let updateScoutedTeamSubscriber: Cancellable?
                 do {
-                    #warning("")
-                    updateScoutedTeamSubscriber = nil
-//                    updateScoutedTeamSubscriber = try Globals.appSyncClient?.subscribe(subscription: OnUpdateScoutedTeamsSubscription(scoutTeam: scoutTeamID, eventKey: eventKey), queue: self.backgroundQueue, resultHandler: {[weak self] (result, transaction, error) in
-//                        if Globals.handleAppSyncErrors(forQuery: "OnUpdateScoutedTeamGeneral", result: result, error: error) {
-//                            ((try? transaction?.update(query: ListScoutedTeamsQuery(scoutTeam: scoutTeamID, eventKey: eventKey), { (selectionSet) in
-//                                if let index = selectionSet.listScoutedTeams?.firstIndex(where: {$0?.teamKey == result?.data?.onUpdateScoutedTeam?.teamKey}) {
-//                                    selectionSet.listScoutedTeams?.remove(at: index)
-//                                }
-//                                if let newTeam = result?.data?.onUpdateScoutedTeam {
-//                                    selectionSet.listScoutedTeams?.append(try! ListScoutedTeamsQuery.Data.ListScoutedTeam(newTeam))
-//                                }
-//                            })) as ()??)
-//
-//                            //TODO: Update the scouted team image cache
-//                        } else {
-//                            if let error = error as? AWSAppSyncSubscriptionError {
-//                                if error.recoverySuggestion != nil {
-//                                    self?.resetSubscriptions()
-//                                }
-//                            }
-//                        }
-//                    })
+                    updateScoutedTeamSubscriber = try Globals.appSyncClient?.subscribe(subscription: OnUpdateScoutedTeamsSubscription(scoutTeam: scoutTeamID, eventKey: eventKey), queue: self.backgroundQueue, resultHandler: {[weak self] (result, transaction, error) in
+                        if Globals.handleAppSyncErrors(forQuery: "OnUpdateScoutedTeamGeneral", result: result, error: error) {
+                            ((try? transaction?.update(query: ListScoutedTeamsQuery(scoutTeam: scoutTeamID, eventKey: eventKey), { (selectionSet) in
+                                if let index = selectionSet.listScoutedTeams?.firstIndex(where: {$0?.teamKey == result?.data?.onUpdateScoutedTeam?.teamKey}) {
+                                    selectionSet.listScoutedTeams?.remove(at: index)
+                                }
+                                if let newTeam = result?.data?.onUpdateScoutedTeam {
+                                    selectionSet.listScoutedTeams?.append(try! ListScoutedTeamsQuery.Data.ListScoutedTeam(newTeam))
+                                }
+                            })) as ()??)
+
+                            //TODO: Update the scouted team image cache
+                        } else {
+                            if let error = error as? AWSAppSyncSubscriptionError {
+                                if error.recoverySuggestion != nil {
+                                    self?.resetSubscriptions()
+                                }
+                            }
+                        }
+                    })
                 } catch {
                     CLSNSLogv("Error starting the scouted team subscriber", getVaList([]))
                     Crashlytics.sharedInstance().recordError(error)

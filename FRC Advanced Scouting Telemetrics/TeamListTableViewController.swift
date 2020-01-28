@@ -520,42 +520,42 @@ class TeamListTableViewController: UITableViewController {
             if let eventKey = self.selectedEventKey {
                 //Set up subscribers for event specifics
                 do {
-//                    changeTeamRankSubscriber = try Globals.appSyncClient?.subscribe(subscription: OnUpdateTeamRankSubscription(scoutTeam: scoutingTeam, eventKey: eventKey), queue: DispatchQueue.global(qos: .utility)) {[weak self] result, transaction, error in
-//                        if Globals.handleAppSyncErrors(forQuery: "OnUpdateTeamRankSubscription", result: result, error: error) {
-//                            DispatchQueue.main.async {
-//                                self?.selectedEventRanking = result?.data?.onUpdateTeamRank?.fragments.eventRanking
-//                                self?.orderTeamsUsingRanking()
-//                            }
-//
-//                            //TODO: Edit the transaction cache
-//                        } else {
-//                            if let error = error as? AWSAppSyncSubscriptionError {
-//                                if error.recoverySuggestion != nil {
-//                                    self?.resetSubscriptions()
-//                                }
-//                            }
-//                        }
-//                    }
-//
-//                    pickedTeamSubscriber = try Globals.appSyncClient?.subscribe(subscription: OnSetTeamPickedSubscription(scoutTeam: scoutingTeam, eventKey: eventKey), queue: DispatchQueue.global(qos: .utility)) {[weak self] result, transaction, error in
-//                        if Globals.handleAppSyncErrors(forQuery: "OnSetTeamPickedSubscription", result: result, error: error) {
-//                            //TODO: Update the cache
-//                            DispatchQueue.main.async {
-//                                self?.selectedEventRanking = result?.data?.onSetTeamPicked?.fragments.eventRanking
-//
-//                                //Reload the cell
-//                                if let visibleRows = self?.tableView.indexPathsForVisibleRows {
-//                                    self?.tableView.reloadRows(at: visibleRows, with: UITableView.RowAnimation.none)
-//                                }
-//                            }
-//                        } else {
-//                            if let error = error as? AWSAppSyncSubscriptionError {
-//                                if error.recoverySuggestion != nil {
-//                                    self?.resetSubscriptions()
-//                                }
-//                            }
-//                        }
-//                    }
+                    changeTeamRankSubscriber = try Globals.appSyncClient?.subscribe(subscription: OnUpdateTeamRankSubscription(scoutTeam: scoutingTeam, eventKey: eventKey), queue: DispatchQueue.global(qos: .utility)) {[weak self] result, transaction, error in
+                        if Globals.handleAppSyncErrors(forQuery: "OnUpdateTeamRankSubscription", result: result, error: error) {
+                            DispatchQueue.main.async {
+                                self?.selectedEventRanking = result?.data?.onUpdateTeamRank?.fragments.eventRanking
+                                self?.orderTeamsUsingRanking()
+                            }
+
+                            //TODO: Edit the transaction cache
+                        } else {
+                            if let error = error as? AWSAppSyncSubscriptionError {
+                                if error.recoverySuggestion != nil {
+                                    self?.resetSubscriptions()
+                                }
+                            }
+                        }
+                    }
+
+                    pickedTeamSubscriber = try Globals.appSyncClient?.subscribe(subscription: OnSetTeamPickedSubscription(scoutTeam: scoutingTeam, eventKey: eventKey), queue: DispatchQueue.global(qos: .utility)) {[weak self] result, transaction, error in
+                        if Globals.handleAppSyncErrors(forQuery: "OnSetTeamPickedSubscription", result: result, error: error) {
+                            //TODO: Update the cache
+                            DispatchQueue.main.async {
+                                self?.selectedEventRanking = result?.data?.onSetTeamPicked?.fragments.eventRanking
+
+                                //Reload the cell
+                                if let visibleRows = self?.tableView.indexPathsForVisibleRows {
+                                    self?.tableView.reloadRows(at: visibleRows, with: UITableView.RowAnimation.none)
+                                }
+                            }
+                        } else {
+                            if let error = error as? AWSAppSyncSubscriptionError {
+                                if error.recoverySuggestion != nil {
+                                    self?.resetSubscriptions()
+                                }
+                            }
+                        }
+                    }
                 } catch {
                     CLSNSLogv("Error starting subcriptions: \(error)", getVaList([]))
                     Crashlytics.sharedInstance().recordError(error)
@@ -840,12 +840,13 @@ class TeamListTableViewController: UITableViewController {
             if Globals.handleAppSyncErrors(forQuery: "MoveRankedTeamMutation", result: result, error: error) {
                 self?.selectedEventRanking = result?.data?.moveRankedTeam?.fragments.eventRanking
                 
-                let _ = Globals.appSyncClient?.store?.withinReadWriteTransaction({ (transaction) -> Any in
+                let _ = Globals.appSyncClient?.store?.withinReadWriteTransaction({ (transaction) -> Bool in
                     try? transaction.updateObject(ofType: EventRanking.self, withKey: "ranking_\(eventKey)", { (selectionSet) in
                         if let ranking = result?.data?.moveRankedTeam?.fragments.eventRanking {
                             selectionSet = ranking
                         }
-                    }) as Any
+                    })
+                    return true
                 })
             } else {
                 self?.selectedEventRanking = previousRanking

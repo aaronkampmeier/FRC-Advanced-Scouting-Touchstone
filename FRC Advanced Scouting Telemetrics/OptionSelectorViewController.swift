@@ -51,7 +51,7 @@ class OptionSelectorViewController: UIViewController {
                 if let color = option.color {
                     button.tintColor = UIColor(hexString: color)
                 } else {
-                    button.tintColor = UIColor.purple
+                    button.tintColor = UIColor.systemPurple
                 }
                 button.setTitle(option.name, for: .normal)
                 button.addTarget(self, action: #selector(self.buttonSelected(_:)), for: .touchUpInside)

@@ -8746,7 +8746,273 @@ public final class OnAddTeamCommentSubscription: GraphQLSubscription {
 
 public final class OnCreateScoutSessionSubscription: GraphQLSubscription {
   public static let operationString =
-    "subscription OnCreateScoutSession($scoutTeam: ID!, $eventKey: String!, $teamKey: String) {\n  onCreateScoutSession(scoutTeam: $scoutTeam, eventKey: $eventKey, teamKey: $teamKey) {\n    __typename\n    ...ScoutSession\n  }\n}"
+    "subscription OnCreateScoutSession($scoutTeam: ID!, $eventKey: String!) {\n  onCreateScoutSession(scoutTeam: $scoutTeam, eventKey: $eventKey) {\n    __typename\n    ...ScoutSession\n  }\n}"
+
+  public static var requestString: String { return operationString.appending(ScoutSession.fragmentString).appending(TimeMarkerFragment.fragmentString) }
+
+  public var scoutTeam: GraphQLID
+  public var eventKey: String
+
+  public init(scoutTeam: GraphQLID, eventKey: String) {
+    self.scoutTeam = scoutTeam
+    self.eventKey = eventKey
+  }
+
+  public var variables: GraphQLMap? {
+    return ["scoutTeam": scoutTeam, "eventKey": eventKey]
+  }
+
+  public struct Data: GraphQLSelectionSet {
+    public static let possibleTypes = ["Subscription"]
+
+    public static let selections: [GraphQLSelection] = [
+      GraphQLField("onCreateScoutSession", arguments: ["scoutTeam": GraphQLVariable("scoutTeam"), "eventKey": GraphQLVariable("eventKey")], type: .object(OnCreateScoutSession.selections)),
+    ]
+
+    public var snapshot: Snapshot
+
+    public init(snapshot: Snapshot) {
+      self.snapshot = snapshot
+    }
+
+    public init(onCreateScoutSession: OnCreateScoutSession? = nil) {
+      self.init(snapshot: ["__typename": "Subscription", "onCreateScoutSession": onCreateScoutSession.flatMap { $0.snapshot }])
+    }
+
+    public var onCreateScoutSession: OnCreateScoutSession? {
+      get {
+        return (snapshot["onCreateScoutSession"] as? Snapshot).flatMap { OnCreateScoutSession(snapshot: $0) }
+      }
+      set {
+        snapshot.updateValue(newValue?.snapshot, forKey: "onCreateScoutSession")
+      }
+    }
+
+    public struct OnCreateScoutSession: GraphQLSelectionSet {
+      public static let possibleTypes = ["ScoutSession"]
+
+      public static let selections: [GraphQLSelection] = [
+        GraphQLField("__typename", type: .nonNull(.scalar(String.self))),
+        GraphQLField("__typename", type: .nonNull(.scalar(String.self))),
+        GraphQLField("key", type: .nonNull(.scalar(GraphQLID.self))),
+        GraphQLField("matchKey", type: .nonNull(.scalar(String.self))),
+        GraphQLField("teamKey", type: .nonNull(.scalar(String.self))),
+        GraphQLField("scoutTeam", type: .nonNull(.scalar(GraphQLID.self))),
+        GraphQLField("eventKey", type: .nonNull(.scalar(String.self))),
+        GraphQLField("recordedDate", type: .scalar(Double.self)),
+        GraphQLField("startState", type: .scalar(String.self)),
+        GraphQLField("endState", type: .scalar(String.self)),
+        GraphQLField("timeMarkers", type: .list(.object(TimeMarker.selections))),
+      ]
+
+      public var snapshot: Snapshot
+
+      public init(snapshot: Snapshot) {
+        self.snapshot = snapshot
+      }
+
+      public init(key: GraphQLID, matchKey: String, teamKey: String, scoutTeam: GraphQLID, eventKey: String, recordedDate: Double? = nil, startState: String? = nil, endState: String? = nil, timeMarkers: [TimeMarker?]? = nil) {
+        self.init(snapshot: ["__typename": "ScoutSession", "key": key, "matchKey": matchKey, "teamKey": teamKey, "scoutTeam": scoutTeam, "eventKey": eventKey, "recordedDate": recordedDate, "startState": startState, "endState": endState, "timeMarkers": timeMarkers.flatMap { $0.map { $0.flatMap { $0.snapshot } } }])
+      }
+
+      public var __typename: String {
+        get {
+          return snapshot["__typename"]! as! String
+        }
+        set {
+          snapshot.updateValue(newValue, forKey: "__typename")
+        }
+      }
+
+      public var key: GraphQLID {
+        get {
+          return snapshot["key"]! as! GraphQLID
+        }
+        set {
+          snapshot.updateValue(newValue, forKey: "key")
+        }
+      }
+
+      public var matchKey: String {
+        get {
+          return snapshot["matchKey"]! as! String
+        }
+        set {
+          snapshot.updateValue(newValue, forKey: "matchKey")
+        }
+      }
+
+      public var teamKey: String {
+        get {
+          return snapshot["teamKey"]! as! String
+        }
+        set {
+          snapshot.updateValue(newValue, forKey: "teamKey")
+        }
+      }
+
+      public var scoutTeam: GraphQLID {
+        get {
+          return snapshot["scoutTeam"]! as! GraphQLID
+        }
+        set {
+          snapshot.updateValue(newValue, forKey: "scoutTeam")
+        }
+      }
+
+      public var eventKey: String {
+        get {
+          return snapshot["eventKey"]! as! String
+        }
+        set {
+          snapshot.updateValue(newValue, forKey: "eventKey")
+        }
+      }
+
+      public var recordedDate: Double? {
+        get {
+          return snapshot["recordedDate"] as? Double
+        }
+        set {
+          snapshot.updateValue(newValue, forKey: "recordedDate")
+        }
+      }
+
+      public var startState: String? {
+        get {
+          return snapshot["startState"] as? String
+        }
+        set {
+          snapshot.updateValue(newValue, forKey: "startState")
+        }
+      }
+
+      public var endState: String? {
+        get {
+          return snapshot["endState"] as? String
+        }
+        set {
+          snapshot.updateValue(newValue, forKey: "endState")
+        }
+      }
+
+      public var timeMarkers: [TimeMarker?]? {
+        get {
+          return (snapshot["timeMarkers"] as? [Snapshot?]).flatMap { $0.map { $0.flatMap { TimeMarker(snapshot: $0) } } }
+        }
+        set {
+          snapshot.updateValue(newValue.flatMap { $0.map { $0.flatMap { $0.snapshot } } }, forKey: "timeMarkers")
+        }
+      }
+
+      public var fragments: Fragments {
+        get {
+          return Fragments(snapshot: snapshot)
+        }
+        set {
+          snapshot += newValue.snapshot
+        }
+      }
+
+      public struct Fragments {
+        public var snapshot: Snapshot
+
+        public var scoutSession: ScoutSession {
+          get {
+            return ScoutSession(snapshot: snapshot)
+          }
+          set {
+            snapshot += newValue.snapshot
+          }
+        }
+      }
+
+      public struct TimeMarker: GraphQLSelectionSet {
+        public static let possibleTypes = ["TimeMarker"]
+
+        public static let selections: [GraphQLSelection] = [
+          GraphQLField("__typename", type: .nonNull(.scalar(String.self))),
+          GraphQLField("__typename", type: .nonNull(.scalar(String.self))),
+          GraphQLField("event", type: .nonNull(.scalar(String.self))),
+          GraphQLField("time", type: .nonNull(.scalar(Double.self))),
+          GraphQLField("subOption", type: .scalar(String.self)),
+        ]
+
+        public var snapshot: Snapshot
+
+        public init(snapshot: Snapshot) {
+          self.snapshot = snapshot
+        }
+
+        public init(event: String, time: Double, subOption: String? = nil) {
+          self.init(snapshot: ["__typename": "TimeMarker", "event": event, "time": time, "subOption": subOption])
+        }
+
+        public var __typename: String {
+          get {
+            return snapshot["__typename"]! as! String
+          }
+          set {
+            snapshot.updateValue(newValue, forKey: "__typename")
+          }
+        }
+
+        public var event: String {
+          get {
+            return snapshot["event"]! as! String
+          }
+          set {
+            snapshot.updateValue(newValue, forKey: "event")
+          }
+        }
+
+        public var time: Double {
+          get {
+            return snapshot["time"]! as! Double
+          }
+          set {
+            snapshot.updateValue(newValue, forKey: "time")
+          }
+        }
+
+        public var subOption: String? {
+          get {
+            return snapshot["subOption"] as? String
+          }
+          set {
+            snapshot.updateValue(newValue, forKey: "subOption")
+          }
+        }
+
+        public var fragments: Fragments {
+          get {
+            return Fragments(snapshot: snapshot)
+          }
+          set {
+            snapshot += newValue.snapshot
+          }
+        }
+
+        public struct Fragments {
+          public var snapshot: Snapshot
+
+          public var timeMarkerFragment: TimeMarkerFragment {
+            get {
+              return TimeMarkerFragment(snapshot: snapshot)
+            }
+            set {
+              snapshot += newValue.snapshot
+            }
+          }
+        }
+      }
+    }
+  }
+}
+
+public final class OnCreateScoutSessionForTeamSubscription: GraphQLSubscription {
+  public static let operationString =
+    "subscription OnCreateScoutSessionForTeam($scoutTeam: ID!, $eventKey: String!, $teamKey: String) {\n  onCreateScoutSession(scoutTeam: $scoutTeam, eventKey: $eventKey, teamKey: $teamKey) {\n    __typename\n    ...ScoutSession\n  }\n}"
 
   public static var requestString: String { return operationString.appending(ScoutSession.fragmentString).appending(TimeMarkerFragment.fragmentString) }
 

@@ -18,7 +18,7 @@ struct AWSAppSyncRetryAdvice {
 // and returns if retry should be done and after what duration.
 // We can also extend the `AWSAppSyncRetryStrategy` to accept a `custom` enum type which contains a class
 // implementing above protocol.
-final class AWSAppSyncRetryHandler: ConnectionRetryHandler {
+final class AWSAppSyncRetryHandler {
     static let maxWaitMilliseconds = 300 * 1000 // 5 minutes of max retry duration.
     // For aggressive retries, we will not be attempting retries for 5 minutes.
     // We will rather cap it to 30.
@@ -32,25 +32,6 @@ final class AWSAppSyncRetryHandler: ConnectionRetryHandler {
     
     init(retryStrategy: AWSAppSyncRetryStrategy = .exponential) {
         self.retryStrategy = retryStrategy
-    }
-
-    func shouldRetryRequest(for error: ConnectionProviderError) -> AWSAppSyncRetryAdvice {
-        currentAttemptNumber += 1
-        switch error {
-        case .connection, .limitExceeded:
-            // If using aggressive retry strategy, we attempt a maximum 12 times.
-            if self.retryStrategy == .aggressive &&
-                currentAttemptNumber > AWSAppSyncRetryHandler.maxRetryAttemptsWhenUsingAggresiveMode {
-                return AWSAppSyncRetryAdvice(shouldRetry: false, retryInterval: nil)
-            }
-            let waitMillis = AWSAppSyncRetryHandler.retryDelayInMillseconds(for: currentAttemptNumber, retryStrategy: retryStrategy)
-            if waitMillis < AWSAppSyncRetryHandler.maxWaitMilliseconds {
-                return AWSAppSyncRetryAdvice(shouldRetry: true, retryInterval: .milliseconds(waitMillis))
-            }
-        default:
-            return AWSAppSyncRetryAdvice(shouldRetry: false, retryInterval: nil)
-        }
-        return AWSAppSyncRetryAdvice(shouldRetry: false, retryInterval: nil)
     }
 
     /// Returns if a request should be retried

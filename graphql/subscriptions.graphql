@@ -54,6 +54,17 @@ subscription OnAddTeamComment($scoutTeam: ID!, $teamKey: String!) {
 subscription OnCreateScoutSession(
   $scoutTeam: ID!
   $eventKey: String!
+) {
+  onCreateScoutSession(
+    scoutTeam: $scoutTeam
+    eventKey: $eventKey
+  ) {
+    ...ScoutSession
+  }
+}
+subscription OnCreateScoutSessionForTeam(
+  $scoutTeam: ID!
+  $eventKey: String!
   $teamKey: String
 ) {
   onCreateScoutSession(

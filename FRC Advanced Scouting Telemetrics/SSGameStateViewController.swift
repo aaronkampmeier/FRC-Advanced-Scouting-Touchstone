@@ -107,7 +107,7 @@ extension SSGameStateViewController: UICollectionViewDataSource, UICollectionVie
         
         label.text = "Select \(requestedState.name)"
         button.setTitle("Select", for: .normal)
-        button.tintColor = UIColor.orange
+        button.tintColor = UIColor.systemOrange
         button.key = requestedState.key
         button.addTarget(self, action: #selector(buttonPressed(_:)), for: .touchUpInside)
         

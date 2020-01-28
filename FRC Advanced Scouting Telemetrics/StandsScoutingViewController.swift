@@ -147,7 +147,6 @@ class StandsScoutingViewController: UIViewController {
                         
                         self?.teamLabel.text = "Team \(teamKey.trimmingCharacters(in: CharacterSet.letters) )"
                         self?.matchAndEventLabel.text = match.description
-                        self?.ssDataManager = SSDataManager(match: match, teamKey: teamKey)
                         
                         self?.gameStartVC?.set(gameSection: .Start, dataManager: dataManager)
                         self?.gameEndVC?.set(gameSection: .End, dataManager: dataManager)
