@@ -437,6 +437,7 @@ class FASTAsyncManager {
                 let updateScoutedTeamSubscriber: Cancellable?
                 do {
                     updateScoutedTeamSubscriber = try Globals.appSyncClient?.subscribe(subscription: OnUpdateScoutedTeamsSubscription(scoutTeam: scoutTeamID, eventKey: eventKey), queue: self.backgroundQueue, resultHandler: {[weak self] (result, transaction, error) in
+                        CLSNSLogv("Scouted Team Subscription Fired", getVaList([]))
                         if Globals.handleAppSyncErrors(forQuery: "OnUpdateScoutedTeamGeneral", result: result, error: error) {
                             ((try? transaction?.update(query: ListScoutedTeamsQuery(scoutTeam: scoutTeamID, eventKey: eventKey), { (selectionSet) in
                                 if let index = selectionSet.listScoutedTeams?.firstIndex(where: {$0?.teamKey == result?.data?.onUpdateScoutedTeam?.teamKey}) {

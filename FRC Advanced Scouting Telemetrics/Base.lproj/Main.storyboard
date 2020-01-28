@@ -2531,6 +2531,7 @@
                     <connections>
                         <outlet property="editButton" destination="ija-jy-05E" id="5Ah-N9-W0n"/>
                         <outlet property="matchesButton" destination="C4B-l4-9PZ" id="ZD0-2g-ldG"/>
+                        <outlet property="sortButton" destination="fvy-8s-p33" id="AYx-5L-8e2"/>
                     </connections>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="gBL-gX-UjV" userLabel="First Responder" sceneMemberID="firstResponder"/>

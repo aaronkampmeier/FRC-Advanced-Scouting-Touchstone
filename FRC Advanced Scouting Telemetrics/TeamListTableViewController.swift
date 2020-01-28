@@ -22,6 +22,7 @@ class TeamListTableViewController: UITableViewController {
     var graphButton: UIBarButtonItem!
     @IBOutlet weak var editButton: UIBarButtonItem!
     @IBOutlet weak var matchesButton: UIBarButtonItem!
+    @IBOutlet weak var sortButton: UIBarButtonItem!
     
     private var searchController: UISearchController!
     #warning("Redo team images")
@@ -112,6 +113,7 @@ class TeamListTableViewController: UITableViewController {
             graphButton = UIBarButtonItem(image: UIImage(systemName: "chart.bar.fill"), style: .plain, target: self, action: #selector(chartButtonPressed(_:)))
             settingsButton = UIBarButtonItem(image: UIImage(systemName: "gear"), style: .plain, target: self, action: #selector(settingsPressed(_:)))
             eventSelectionDisclosureIndicator = UIBarButtonItem(image: UIImage(systemName: "arrowtriangle.down.circle.fill"), style: .plain, target: self, action: #selector(eventSelectionIndicatorPressed(_:)))
+            sortButton.image = UIImage(systemName: "arrow.up.arrow.down")
         } else {
             // Fallback on earlier versions
             graphButton = UIBarButtonItem(image: UIImage(named: "Chart"), style: .plain, target: self, action: #selector(chartButtonPressed(_:)))
