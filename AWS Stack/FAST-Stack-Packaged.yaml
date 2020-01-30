@@ -7,7 +7,7 @@ Resources:
       LogConfig:
         CloudWatchLogsRoleArn: arn:aws:iam::797353049590:role/FAST-AppSync-MakeLogs
         ExcludeVerboseContent: false
-        FieldLogLevel: NONE
+        FieldLogLevel: ERROR
       Name: FAST App Sync API 2
       Tags: []
       UserPoolConfig:

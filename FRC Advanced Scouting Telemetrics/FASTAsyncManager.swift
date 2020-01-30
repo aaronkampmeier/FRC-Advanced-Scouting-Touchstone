@@ -231,7 +231,9 @@ class FASTAsyncManager {
                         if let newEvent = result?.data?.onAddTrackedEvent {
                             do {
                                 try transaction?.update(query: ListTrackedEventsQuery(scoutTeam: scoutingTeamID), { (selectionSet) in
-                                    selectionSet.listTrackedEvents?.append(try ListTrackedEventsQuery.Data.ListTrackedEvent(newEvent))
+                                    if !(selectionSet.listTrackedEvents?.contains(where: {$0?.eventKey == newEvent.eventKey}) ?? false) {
+                                        selectionSet.listTrackedEvents?.append(try ListTrackedEventsQuery.Data.ListTrackedEvent(newEvent))
+                                    }
                                 })
                             } catch {
                                 CLSNSLogv("Error updating ListTrackedEvents cache \(error)", getVaList([]))
