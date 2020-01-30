@@ -12,7 +12,7 @@ Resources:
       Tags: []
       UserPoolConfig:
         AwsRegion: us-east-1
-        UserPoolId: us-east-1_z8wzHGNeO
+        UserPoolId: us-east-1_sPjVurqBs
         DefaultAction: ALLOW
     Metadata:
       AWS::CloudFormation::Designer:
