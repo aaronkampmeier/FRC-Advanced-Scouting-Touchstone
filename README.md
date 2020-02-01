@@ -11,6 +11,7 @@ FAST puts making actionable decisions for team picking first. Everyone on your t
 
 ## Download
 [Link to iOS App Store](https://itunes.apple.com/us/app/fast-frc-scouter/id1201098361?mt=8)
+[Link to GitHub Repo](https://github.com/aaronkampmeier/FRC-Advanced-Scouting-Touchstone)
 
 ## Features
 - Easily maintain a shared repository of your team’s data
@@ -45,6 +46,11 @@ FAST puts making actionable decisions for team picking first. Everyone on your t
 - Scouts on the floor will pit scout all details of the teams attending the event
 - All data is synced and visualizable on all team members’ devices
 
+## Contributing
+If you would like to help improve FAST, there are a number of ways to contribute. If you have any suggestions or issues, email me at frcfastapp@gmail.com or create a GitHub issue in the repo. If you would like to help develop out the mobile iOS app, fork this repo and create PRs with changes you want implemented. 
+
+Many users would also love an Android and/or Web client for FAST as well. While I think this is a great idea, I don't have the resources to create them. If you would like to work on developing out clients for those platforms that still work with FAST's scouted data, contact me, and we can work together.
+
 ## Privacy
 FAST reqeusts some personal data such as name and email address to provide a better experience. Your personal data is stored only within FAST's authentication servers and never shared with any third party. See the privacy policy for more info.
 
@@ -52,7 +58,7 @@ FAST reqeusts some personal data such as name and email address to provide a bet
 
 ## License
 GNU General Public License v3.0
-See License.txt
+See [License.txt](https://github.com/aaronkampmeier/FRC-Advanced-Scouting-Touchstone/blob/Master/LICENSE)
 
 FAST was developed by Aaron Kampmeier.
 Icons from Icons8.
