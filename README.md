@@ -11,6 +11,7 @@ FAST puts making actionable decisions for team picking first. Everyone on your t
 
 ## Download
 [Link to iOS App Store](https://itunes.apple.com/us/app/fast-frc-scouter/id1201098361?mt=8)
+
 [Link to GitHub Repo](https://github.com/aaronkampmeier/FRC-Advanced-Scouting-Touchstone)
 
 ## Features
