@@ -86,7 +86,7 @@ class StandsScoutingViewController: UIViewController {
         }
 		
 		//Get all the view controllers
-        errorVC = (storyboard?.instantiateViewController(withIdentifier: "ssErrorView") as! SSErrorViewController)
+        errorVC = self.children.first as? SSErrorViewController
         gameScoutVC = (storyboard?.instantiateViewController(withIdentifier: "ssGameScoutVC") as! SSGameScoutingViewController)
         gameStartVC = (storyboard?.instantiateViewController(withIdentifier: "gameState") as! SSGameStateViewController)
         gameEndVC = (storyboard?.instantiateViewController(withIdentifier: "gameState") as! SSGameStateViewController)
@@ -321,7 +321,7 @@ class SSErrorViewController: UIViewController {
     @IBOutlet weak var errorTitleLabel: UILabel!
     @IBOutlet weak var errorMessageLabel: UILabel!
     
-    let viewIsLoadedSemaphore = DispatchSemaphore(value: 0)
+    private let viewIsLoadedSemaphore = DispatchSemaphore(value: 0)
     
     override func viewDidLoad() {
         super.viewDidLoad()

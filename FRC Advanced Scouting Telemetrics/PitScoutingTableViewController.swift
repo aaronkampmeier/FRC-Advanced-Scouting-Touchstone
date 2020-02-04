@@ -16,6 +16,7 @@ class PitScoutingTableViewController: UITableViewController {
     @IBOutlet weak var subLabel: UILabel!
     @IBOutlet weak var cameraButton: UIButton!
     
+    var competitionModelErrorVC: SSErrorViewController?
     private var competitionModelState: FASTCompetitionModelState?
     private var pitScoutingModel: PitScoutingModel? {
         switch competitionModelState {
@@ -150,6 +151,15 @@ class PitScoutingTableViewController: UITableViewController {
                         }
                     })
                     
+                    //If the model state is in error, show an error
+                    switch self?.competitionModelState ?? FASTCompetitionModelState.NoModel {
+                    case .Loaded(_):
+                        break
+                    default:
+                        self?.competitionModelErrorVC = self?.storyboard?.instantiateViewController(withIdentifier: "ssErrorView") as? SSErrorViewController
+                        self?.competitionModelErrorVC?.showMessage(forState: self?.competitionModelState)
+                        self?.tableView.backgroundView = self?.competitionModelErrorVC?.view
+                    }
                 }
             }
         }

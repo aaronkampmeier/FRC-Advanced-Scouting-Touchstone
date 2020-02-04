@@ -905,9 +905,9 @@
             filePath = "FRC Advanced Scouting Telemetrics/PitScoutingTableViewController.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "189"
-            endingLineNumber = "189"
-            landmarkName = "tableView(_:cellForRowAt:)"
+            startingLineNumber = "190"
+            endingLineNumber = "190"
+            landmarkName = "numberOfSections(in:)"
             landmarkType = "7">
             <Locations>
                <Location
