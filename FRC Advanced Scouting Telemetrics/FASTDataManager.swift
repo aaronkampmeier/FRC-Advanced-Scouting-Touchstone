@@ -17,7 +17,7 @@ extension Notification.Name {
     static let FASTAWSDataManagerCurrentScoutingTeamChanged = Notification.Name(rawValue: "AWSDataManagerCurrentScoutingTeamChanged")
 }
 
-class AWSDataManager {
+class FASTDataManager {
     internal let asyncLoadingManager: FASTAsyncManager = FASTAsyncManager()
     
     /// The operation queue which mainly handles managing scouting teams.

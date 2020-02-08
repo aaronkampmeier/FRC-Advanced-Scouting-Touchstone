@@ -83,7 +83,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         }
         
         //Start the data manager which in turn starts the background async loading manager
-        Globals.dataManager = AWSDataManager()
+        Globals.dataManager = FASTDataManager()
         Globals.dataManager.beginScoutingTeamSwitching()
         
         if !isUsingScenes {

@@ -10,6 +10,8 @@ import UIKit
 import AWSAppSync
 import AVFoundation
 import Crashlytics
+import AWSMobileClient
+import AWSS3
 
 class PitScoutingTableViewController: UITableViewController {
     @IBOutlet weak var mainLabel: UILabel!
@@ -285,59 +287,59 @@ class PitScoutingTableViewController: UITableViewController {
             return
         }
         
-        //        let transferUtility = AWSS3TransferUtility.default()
-        //
-        //        let uploadExpression = AWSS3TransferUtilityUploadExpression()
-        //        uploadExpression.setValue(AWSMobileClient.default().username, forRequestHeader: "x-amz-meta-user-id")
-        //        uploadExpression.setValue(eventKey, forRequestHeader: "x-amz-meta-event-key")
-        //        uploadExpression.setValue(teamKey, forRequestHeader: "x-amz-meta-team-key")
-        //        uploadExpression.progressBlock = {(task, progress) in
-        //            DispatchQueue.main.async {
-        //                self.progressView.isHidden = false
-        //                self.progressView.progress = Float(progress.fractionCompleted)
-        //            }
-        //        }
-        //
-        //        let identityId = AWSMobileClient.default().identityId
-        //        let key = "private/\(identityId ?? "")/\(eventKey ?? "")/\(teamKey ?? "").jpeg"
-        //        transferUtility.uploadData(data, key: key, contentType: "image/jpeg", expression: uploadExpression) { (uploadTask, error) in
-        //            DispatchQueue.main.async {
-        //                self.progressView.isHidden = true
-        //                if let error = error {
-        //                    CLSNSLogv("Error uploading image to S3: \(error)", getVaList([]))
-        //                    Crashlytics.sharedInstance().recordError(error)
-        //
-        //                    let alert = UIAlertController(title: "Error Uploading Team Image", message: "There was an error uploading the team image. Make sure you are connected to the internet and try again.", preferredStyle: .alert)
-        //                    alert.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
-        //                    Globals.appDelegate.presentViewControllerOnTop(alert, animated: true)
-        //                } else {
-        //                    //Success
-        //                    CLSNSLogv("Success uploading team image", getVaList([]))
-        //                    //Save it in the scouted team as well now
-        //                    let imageInput = ImageInput(bucket: "fast-userfiles-mobilehub-708509237" /*transferUtility.transferUtilityConfiguration.bucket*/, key: key, region: "us-east-1")
-        //                    let mutation = UpdateScoutedTeamMutation(eventKey: self.eventKey ?? "", teamKey: self.teamKey ?? "", image: imageInput, attributes: "{}")
-        //                    Globals.appSyncClient?.perform(mutation: mutation, resultHandler: { (result, error) in
-        //                        if Globals.handleAppSyncErrors(forQuery: "UpdateScoutedTeam-SetImage", result: result, error: error) {
-        //
-        //                        } else {
-        //
-        //                        }
-        //                    })
-        //                }
-        //            }
-        //        }
-        //            .continueWith { (uploadTask) -> Any? in
-        //                if let error = uploadTask.error {
-        //                    CLSNSLogv("Error Uploading image: \(error)", getVaList([]))
-        //                    Crashlytics.sharedInstance().recordError(error)
-        //                }
-        //
-        //                if let uploadTask = uploadTask.result {
-        //
-        //                }
-        //
-        //                return nil
-        //        }
+        let transferUtility = AWSS3TransferUtility.default()
+        
+        let uploadExpression = AWSS3TransferUtilityUploadExpression()
+        uploadExpression.setValue(AWSMobileClient.default().username, forRequestHeader: "x-amz-meta-user-id")
+        uploadExpression.setValue(eventKey, forRequestHeader: "x-amz-meta-event-key")
+        uploadExpression.setValue(teamKey, forRequestHeader: "x-amz-meta-team-key")
+        uploadExpression.progressBlock = {(task, progress) in
+            DispatchQueue.main.async {
+                self.progressView.isHidden = false
+                self.progressView.progress = Float(progress.fractionCompleted)
+            }
+        }
+        
+        let identityId = AWSMobileClient.default().identityId
+        let key = "private/\(identityId ?? "")/\(eventKey ?? "")/\(teamKey ?? "").jpeg"
+        transferUtility.uploadData(data, key: key, contentType: "image/jpeg", expression: uploadExpression) { (uploadTask, error) in
+            DispatchQueue.main.async {
+                self.progressView.isHidden = true
+                if let error = error {
+                    CLSNSLogv("Error uploading image to S3: \(error)", getVaList([]))
+                    Crashlytics.sharedInstance().recordError(error)
+                    
+                    let alert = UIAlertController(title: "Error Uploading Team Image", message: "There was an error uploading the team image. Make sure you are connected to the internet and try again.", preferredStyle: .alert)
+                    alert.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
+                    Globals.appDelegate.presentViewControllerOnTop(alert, animated: true)
+                } else {
+                    //Success
+                    CLSNSLogv("Success uploading team image", getVaList([]))
+                    //Save it in the scouted team as well now
+                    let imageInput = ImageInput(bucket: "fast-userfiles-mobilehub-708509237" /*transferUtility.transferUtilityConfiguration.bucket*/, key: key, region: "us-east-1")
+                    let mutation = UpdateScoutedTeamMutation(eventKey: self.eventKey ?? "", teamKey: self.teamKey ?? "", image: imageInput, attributes: "{}")
+                    Globals.appSyncClient?.perform(mutation: mutation, resultHandler: { (result, error) in
+                        if Globals.handleAppSyncErrors(forQuery: "UpdateScoutedTeam-SetImage", result: result, error: error) {
+                            
+                        } else {
+                            
+                        }
+                    })
+                }
+            }
+        }
+        .continueWith { (uploadTask) -> Any? in
+            if let error = uploadTask.error {
+                CLSNSLogv("Error Uploading image: \(error)", getVaList([]))
+                Crashlytics.sharedInstance().recordError(error)
+            }
+            
+            if let uploadTask = uploadTask.result {
+                
+            }
+            
+            return nil
+        }
     }
 }
 

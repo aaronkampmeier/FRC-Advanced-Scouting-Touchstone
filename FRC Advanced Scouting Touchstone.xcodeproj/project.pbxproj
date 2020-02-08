@@ -35,7 +35,7 @@
 		9342D6C0222F5BAC006A1A79 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 9342D6BF222F5BAA006A1A79 /* GoogleService-Info.plist */; };
 		9349621F21E9A40500F761BD /* ScoutedTeamStats.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9349621E21E9A40500F761BD /* ScoutedTeamStats.swift */; };
 		934F4C552212754400A6F5FE /* SSGameStateViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 934F4C542212754400A6F5FE /* SSGameStateViewController.swift */; };
-		9351017421F42D6000D402FE /* AWSDataManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9351017321F42D6000D402FE /* AWSDataManager.swift */; };
+		9351017421F42D6000D402FE /* FASTDataManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9351017321F42D6000D402FE /* FASTDataManager.swift */; };
 		9351017621F4DEB700D402FE /* ImageScalingFunctions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9351017521F4DEB600D402FE /* ImageScalingFunctions.swift */; };
 		9353ADBC1E57ACF100120F1A /* MatchesTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9353ADBB1E57ACF100120F1A /* MatchesTableViewController.swift */; };
 		9353ADC21E57B09D00120F1A /* MatchListTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9353ADC11E57B09D00120F1A /* MatchListTableViewCell.swift */; };
@@ -156,7 +156,7 @@
 		9342D6BF222F5BAA006A1A79 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = SOURCE_ROOT; };
 		9349621E21E9A40500F761BD /* ScoutedTeamStats.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScoutedTeamStats.swift; sourceTree = "<group>"; };
 		934F4C542212754400A6F5FE /* SSGameStateViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SSGameStateViewController.swift; sourceTree = "<group>"; };
-		9351017321F42D6000D402FE /* AWSDataManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AWSDataManager.swift; sourceTree = "<group>"; };
+		9351017321F42D6000D402FE /* FASTDataManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FASTDataManager.swift; sourceTree = "<group>"; };
 		9351017521F4DEB600D402FE /* ImageScalingFunctions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ImageScalingFunctions.swift; sourceTree = "<group>"; };
 		9353ADBB1E57ACF100120F1A /* MatchesTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MatchesTableViewController.swift; sourceTree = "<group>"; };
 		9353ADC11E57B09D00120F1A /* MatchListTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MatchListTableViewCell.swift; sourceTree = "<group>"; };
@@ -334,7 +334,7 @@
 				93B7195E22DE694D00B08FDD /* SceneDelegate.swift */,
 				9339A9B12223408A00D3D82C /* AppSyncExtensions.swift */,
 				93E551F821CACDE0006C79A8 /* CognitoAuthProvider.swift */,
-				9351017321F42D6000D402FE /* AWSDataManager.swift */,
+				9351017321F42D6000D402FE /* FASTDataManager.swift */,
 				93BCA617223B50AD00BF6467 /* OfflineSupport.swift */,
 				93A3D9EF23BB0D4300C44A95 /* API.swift */,
 				9351017521F4DEB600D402FE /* ImageScalingFunctions.swift */,
@@ -811,7 +811,7 @@
 				9351017621F4DEB700D402FE /* ImageScalingFunctions.swift in Sources */,
 				1F4534101C6FF916004EDDB9 /* StandsScoutingViewController.swift in Sources */,
 				93A254CE23C3E2600033ECAB /* CreateScoutingTeamTableViewCell.swift in Sources */,
-				9351017421F42D6000D402FE /* AWSDataManager.swift in Sources */,
+				9351017421F42D6000D402FE /* FASTDataManager.swift in Sources */,
 				93780A2A20797487000B4565 /* WelcomePageViewController.swift in Sources */,
 				9339A9B22223408A00D3D82C /* AppSyncExtensions.swift in Sources */,
 				1FDC1BCE1CD69EBB00ABE327 /* FASTMainSplitViewController.swift in Sources */,

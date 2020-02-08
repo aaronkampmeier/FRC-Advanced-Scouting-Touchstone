@@ -19,7 +19,7 @@ internal struct Globals {
         return UserDefaults.standard.value(forKey: isSpectatorModeKey) as? Bool ?? false
     }
     
-    static var dataManager: AWSDataManager!
+    static var dataManager: FASTDataManager!
     static var appSyncClient: AWSAppSyncClient?
     
     //User Activity Types
