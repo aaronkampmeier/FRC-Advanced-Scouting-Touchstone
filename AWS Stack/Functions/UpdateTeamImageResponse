@@ -1,0 +1,6 @@
+#if($ctx.error)
+  $util.error($ctx.error.message, $ctx.error.type)
+#end
+
+#set($imageKey = "/images/${ctx.args.scoutTeam}/${ctx.args.eventKey}/${ctx.args.teamKey}")
+$util.toJson($imageKey)

@@ -1,0 +1,19 @@
+## Make the new image key
+
+{
+    "version" : "2018-05-29",
+    "operation" : "UpdateItem",
+    "key": {
+        "partitionKey":$util.dynamodb.toDynamoDBJson("g${ctx.args.scoutTeam}-e${ctx.args.eventKey}"),
+        "sortKey":$util.dynamodb.toDynamoDBJson("t${ctx.args.teamKey}")
+    },
+    "update" : {
+        "expression" : "SET #imgUpdate = :time",
+        "expressionNames" : {
+           "#imgUpdate":"imageLastUpdated"
+       },
+       "expressionValues" : {
+           ":time" : $util.dynamodb.toDynamoDBJSON($util.time.nowEpochSeconds())
+       }
+    }
+}

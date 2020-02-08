@@ -1181,6 +1181,32 @@ Resources:
     DependsOn:
       - AppSyncSchema
 
+  FuncUpdateTeamImage:
+    Type: AWS::AppSync::FunctionConfiguration
+    Properties:
+      ApiId: !GetAtt AppSyncAPI.ApiId
+      DataSourceName: !GetAtt SourceFASTTable.Name
+      FunctionVersion: 2018-05-29
+      Name: UpdateTeamImage
+      RequestMappingTemplateS3Location: ./Functions/UpdateTeamImageRequest
+      ResponseMappingTemplateS3Location: ./Functions/UpdateTeamImageResponse
+  ResolverUpdateTeamImageResponse:
+    Type: AWS::AppSync::Resolver
+    Properties:
+      ApiId: !GetAtt AppSyncAPI.ApiId
+      FieldName: updateTeamImage
+      TypeName: Mutation
+      Kind: PIPELINE
+      PipelineConfig:
+        Functions:
+          - !GetAtt FuncAuthenticate.FunctionId
+          - !GetAtt FuncUpdateTeamImage.FunctionId
+      RequestMappingTemplateS3Location: ./Functions/PipelineStandardBeforeRequest
+      ResponseMappingTemplateS3Location: ./Functions/PipelineStandardAfterResponse
+    DependsOn:
+      - AppSyncSchema
+
+
   ################################################################################
   ################################################################################
 

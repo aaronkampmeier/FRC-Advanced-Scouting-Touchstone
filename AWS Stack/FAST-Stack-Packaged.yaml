@@ -25,7 +25,7 @@ Resources:
         - AppSyncAPI
         - ApiId
       DefinitionS3Location: s3://cf-templates-4eazvtfbn788-us-east-1/FAST API Stack
-        Resources/980ac77de354bda58ae62e05ee0fe0e9
+        Resources/abc4eff758dffe2c505b0bfbaf7f56a9
     Metadata:
       AWS::CloudFormation::Designer:
         id: 9826eb5e-9f89-4a15-a614-3649ede94ece
@@ -1354,7 +1354,7 @@ Resources:
       FunctionVersion: 2018-05-29
       Name: UpdateScoutedTeam
       RequestMappingTemplateS3Location: s3://cf-templates-4eazvtfbn788-us-east-1/FAST
-        API Stack Resources/d84142b305e6f7a5c9bcc4e3bfcb81c6
+        API Stack Resources/ff0eaa14faf3d192998e71aacd9cdd44
       ResponseMappingTemplateS3Location: s3://cf-templates-4eazvtfbn788-us-east-1/FAST
         API Stack Resources/192de342eadcc6dca1c4351dc22428bb
   ResolverUpdateScoutedTeam:
@@ -1782,6 +1782,47 @@ Resources:
       ResponseMappingTemplateS3Location: s3://cf-templates-4eazvtfbn788-us-east-1/FAST
         API Stack Resources/e2e5e43c54f9ca992eb1a1fecdfc022d
       TypeName: Mutation
+    DependsOn:
+    - AppSyncSchema
+  FuncUpdateTeamImage:
+    Type: AWS::AppSync::FunctionConfiguration
+    Properties:
+      ApiId:
+        Fn::GetAtt:
+        - AppSyncAPI
+        - ApiId
+      DataSourceName:
+        Fn::GetAtt:
+        - SourceFASTTable
+        - Name
+      FunctionVersion: 2018-05-29
+      Name: UpdateTeamImage
+      RequestMappingTemplateS3Location: s3://cf-templates-4eazvtfbn788-us-east-1/FAST
+        API Stack Resources/38bd6a6bfb6dca0ae9ea460ebea6da93
+      ResponseMappingTemplateS3Location: s3://cf-templates-4eazvtfbn788-us-east-1/FAST
+        API Stack Resources/b40ef1ef7391d755b60a55bbe1b47bab
+  ResolverUpdateTeamImageResponse:
+    Type: AWS::AppSync::Resolver
+    Properties:
+      ApiId:
+        Fn::GetAtt:
+        - AppSyncAPI
+        - ApiId
+      FieldName: updateTeamImage
+      TypeName: Mutation
+      Kind: PIPELINE
+      PipelineConfig:
+        Functions:
+        - Fn::GetAtt:
+          - FuncAuthenticate
+          - FunctionId
+        - Fn::GetAtt:
+          - FuncUpdateTeamImage
+          - FunctionId
+      RequestMappingTemplateS3Location: s3://cf-templates-4eazvtfbn788-us-east-1/FAST
+        API Stack Resources/c46fc8ef51dfb27776b3115243d7cc1c
+      ResponseMappingTemplateS3Location: s3://cf-templates-4eazvtfbn788-us-east-1/FAST
+        API Stack Resources/13709c494f6065fe32845d07d574d948
     DependsOn:
     - AppSyncSchema
   ResolverOnAddTrackedEvent:

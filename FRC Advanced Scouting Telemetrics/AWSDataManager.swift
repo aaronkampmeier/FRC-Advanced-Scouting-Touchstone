@@ -19,23 +19,18 @@ extension Notification.Name {
 
 class AWSDataManager {
     internal let asyncLoadingManager: FASTAsyncManager = FASTAsyncManager()
+    
+    /// The operation queue which mainly handles managing scouting teams.
     private let operationQueue = OperationQueue()
     
     /// Tuple of event key and scout sessions
     private let cachedScoutSessionsAccessQueue = DispatchQueue(label: "com.kampmeier.FAST.DataManagerCachedScoutSessionsAccess", qos: .userInitiated)
-//    private let cachedScoutSessionsDictSeamphore = DispatchSemaphore(value: 1)
     private var cachedScoutSessions: [String: [ScoutSession?]?] = [:]
     
     private let scoutSessionCachingGroupsDictSemaphore = DispatchSemaphore(value: 1)
     /// Dispatch groups for each event key that controls access to the cachedScoutSessions available in cachedScoutSessions dictionary, one all operations for the cachedScoutSessions group are done, then it's good to access the cachedScoutSessions
     private var scoutSessionCachingGroups = [String:DispatchGroup]()
     
-//    /// A semaphore that controls access to the scoutSessionCachingSemaphore dictionary
-//    private let scoutSessionCachingSemaphoreDictSemaphore = DispatchSemaphore(value: 1)
-//    /// Holds a count for each event of the number of scout session caching operations going on
-//    private var scoutSessionCachingCount: [String:Int] = [:]
-    
-//    private let scoutSessionQueue = DispatchQueue(label: "com.kampmeier.FAST.DataManagerScoutSessions", qos: .utility)
     private let utilityWorkQueue = DispatchQueue(label: "com.kampmeier.FAST.DataManagerUtility", qos: .utility)
     private let foregroundWorkQueue = DispatchQueue(label: "com.kampmeier.FAST.DataManager.ForegroundWork", qos: .userInitiated)
     
@@ -45,16 +40,16 @@ class AWSDataManager {
         return userClaims?.sub
     }
     internal struct CognitoIDTokenClaims: Decodable {
-        let atHash: String
-        let sub: String
-        let emailVerified: Bool?
-        let aud: String
-        let email: String?
-        let name: String?
+        internal let atHash: String
+        internal let sub: String
+        internal let emailVerified: Bool?
+        internal let aud: String
+        internal let email: String?
+        internal let name: String?
         
-        let identities: [CognitoIDTokenClaimsIndentity]?
+        internal let identities: [CognitoIDTokenClaimsIndentity]?
         
-        var primaryIdentity: CognitoIDTokenClaimsIndentity? {
+        internal var primaryIdentity: CognitoIDTokenClaimsIndentity? {
             get {
                 if let primary = identities?.first(where: {$0.isPrimary ?? false}) {
                     return primary
@@ -65,9 +60,9 @@ class AWSDataManager {
         }
     }
     internal struct CognitoIDTokenClaimsIndentity: Decodable {
-        let userId: String?
-        let providerName: String?
-        let providerType: String?
+        internal let userId: String?
+        internal let providerName: String?
+        internal let providerType: String?
         private let primary: String?
         internal var isPrimary: Bool? {
             if let primary = primary {
@@ -76,7 +71,7 @@ class AWSDataManager {
                 return false
             }
         }
-        let issuer: String?
+        internal let issuer: String?
         private let dateCreated: String?
         internal var dateCreatedDate: Date? {
             if let dateCreated = dateCreated, let time = Double(dateCreated) {
@@ -88,11 +83,13 @@ class AWSDataManager {
     }
     
     //Tracking current signed in scouting team
+    /// The cache key for the last used scouting team in UserDefaults
     private let scoutingTeamCacheKey = "FASTCurrentlyScoutingTeamIDKey"
     private(set) var enrolledScoutingTeamID: GraphQLID?
     
-    init() {
+    internal init() {
         operationQueue.name = "AWSDataManagerScoutingTeamChanges"
+        // Suspend the operation queue's execution until beginScoutTeamSwitching() is called from the AppDelegate. Must do this because scout team switching cannot happen until the AppDelegate sets up all the necessary resources.
         operationQueue.isSuspended = true
         
         // AWS App Sync Config
@@ -137,7 +134,7 @@ class AWSDataManager {
     }
     
     
-    /// Handles switching over app resources to use a new user
+    /// Handles switching over app resources to use a new user or signed out user
     /// - Parameter state: The new user state
     private func changeUserState(to state: UserState) {
         CLSNSLogv("New User State: \(state)", getVaList([]))
@@ -173,7 +170,7 @@ class AWSDataManager {
                             let tokenSplit = idToken.split(separator: ".")
                             let claimsPayload = tokenSplit[1]
                             
-                            //The following code was 100% copied from the AWSMobileClientExtensions code that does the same thing but doesn't put it into a Struct
+                            //The following code was taken from the AWSMobileClientExtensions code that does the same thing but doesn't put it into a Struct
                             let paddedLength = claimsPayload.count + (4 - (claimsPayload.count % 4)) % 4
                             //JWT is not padded with =, pad it if necessary
                             let updatedClaims = claimsPayload.padding(toLength: paddedLength, withPad: "=", startingAt: 0)
@@ -206,7 +203,6 @@ class AWSDataManager {
         //Update analytics identifiers
         Analytics.setUserID(AWSMobileClient.default().username)
         Crashlytics.sharedInstance().setUserIdentifier(AWSMobileClient.default().username)
-        //            Analytics.setUserProperty(AWSMobileClient.default().username, forName: "teamNumber")
     }
     
     internal func signOut() {
@@ -270,11 +266,10 @@ class AWSDataManager {
     
     
     //MARK: - Managing Scout Sessions
+    
+    /// Registers that there is some operation currently caching the scout sessions for a particular event.
+    /// - Parameter eventKey: The event to register caching for
     internal func registerCaching(ofEventKey eventKey: String) {
-//        scoutSessionCachingSemaphoreDictSemaphore.wait()
-//        scoutSessionCachingCount[eventKey] = scoutSessionCachingCount[eventKey] ?? 0 + 1
-//        scoutSessionCachingSemaphoreDictSemaphore.signal()
-        
         //Set a semaphore to zero for this event key
         scoutSessionCachingGroupsDictSemaphore.wait()
         let group = scoutSessionCachingGroups[eventKey] ?? DispatchGroup()
@@ -283,26 +278,22 @@ class AWSDataManager {
         scoutSessionCachingGroupsDictSemaphore.signal()
     }
     
+    /// Registers that the caching for some event has finished, signaling to the data manager that the scout sessions are all in place and ready to be used.
     internal func endCaching(ofEventKey eventKey: String) {
-//        scoutSessionCachingSemaphoreDictSemaphore.wait()
-//        let newCount = scoutSessionCachingCount[eventKey] ?? 0 - 1
-//        scoutSessionCachingCount[eventKey] = newCount
-//        scoutSessionCachingSemaphoreDictSemaphore.signal()
-        
         //Leave the group
         scoutSessionCachingGroupsDictSemaphore.wait()
         scoutSessionCachingGroups[eventKey]?.leave()
         scoutSessionCachingGroupsDictSemaphore.signal()
     }
     
+    /// Sets the specified scout sessions in the memory store for the specified event
     internal func setCachedScoutSessions(scoutSessions: [ScoutSession?]?, toEventKey eventKey: String) {
-//        cachedScoutSessionsDictSeamphore.wait()
         cachedScoutSessionsAccessQueue.sync(flags: .barrier) {
             self.cachedScoutSessions[eventKey] = scoutSessions
         }
-//        cachedScoutSessionsDictSeamphore.signal()
     }
     
+    /// Append new scout sessions to the in memory store. To be called if there are subscription updates from the delta sync operation in the FASTAsyncManager
     internal func append(newScoutSessions: [ScoutSession], toEventKey eventKey: String) {
         cachedScoutSessionsAccessQueue.sync(flags: .barrier) {
             let currentSessions = self.cachedScoutSessions[eventKey]
@@ -314,6 +305,7 @@ class AWSDataManager {
         }
     }
     
+    /// Retrieves the scout sessions for a given event and team and potentially match. It handles fetching them and storing a cache of them in memory for quicker calls in the future.
     internal func retrieveScoutSessions(forEventKey eventKey: String, teamKey: String, andMatchKey matchKey: String? = nil, withCallback callbackHandler: @escaping (([ScoutSession?]?) -> Void)) {
         foregroundWorkQueue.async {
             let filterAndReturn = {(scoutSessions: [ScoutSession?]?) -> Void in
@@ -337,7 +329,7 @@ class AWSDataManager {
             self.scoutSessionCachingGroupsDictSemaphore.signal()
             cachingGroup?.wait()
             
-            // Fetching hundreds of records from the SQLite cache everytime this function is called is inefficient, so we'll store all of the scout sessions in memory for multiple calls
+            // Fetching hundreds of records from the SQLite cache everytime this function is called is inefficient, so we'll store all of the scout sessions in memory for multiple calls in a short time
             let scoutSessions = self.cachedScoutSessionsAccessQueue.sync {() -> [ScoutSession?]? in
                 return self.cachedScoutSessions[eventKey] ?? nil
             }
@@ -353,7 +345,9 @@ class AWSDataManager {
         }
     }
     
-//    private var scoutSessionWatcher: GraphQLQueryWatcher<ListAllScoutSessionsQuery>?
+    
+    /// Called if the delta sync that is supposed to manage fetching scout sessions from the server fails. This method will just pull down all of them, but won't register any subscriptions to monitor changes to them
+    /// - Parameter eventKey: The event key to fetch the scout sessions from
     private func cacheScoutSessions(withEventKey eventKey: String) {
         CLSNSLogv("Caching scout sessions manually for event: \(eventKey)", getVaList([]))
         registerCaching(ofEventKey: eventKey)

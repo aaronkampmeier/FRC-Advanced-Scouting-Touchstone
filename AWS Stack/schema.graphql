@@ -8,7 +8,6 @@ type Mutation {
     scoutTeam: ID!,
     eventKey: ID!,
     teamKey: ID!,
-    image: S3ObjectInput,
     attributes: AWSJSON!
   ): ScoutedTeam
   addTeamComment(
@@ -29,6 +28,10 @@ type Mutation {
     timeMarkers: [TimeMarkerInput]!
   ): ScoutSession
   removeScoutSession(scoutTeam: ID!, eventKey: ID!, key: ID!): ScoutSession
+
+  ## Returns a S3 key of where to upload the new image
+  updateTeamImage(scoutTeam: ID!, eventKey: ID!, teamKey: ID!): String
+
 
   ## Scouting Team Management
   createScoutingTeam(name: String!, associatedFrcTeamNumber: Int!, leadName: String!): ScoutingTeam
@@ -160,18 +163,6 @@ type EventRanking {
   rankedTeams: [RankedTeam]
 }
 
-type Image {
-  bucket: String!
-  key: String!
-  region: String!
-}
-
-input ImageInput {
-  bucket: String!
-  key: String!
-  region: String!
-}
-
 type Match {
   key: ID!
   event_key: ID!
@@ -231,7 +222,7 @@ type ScoutedTeam {
   teamKey: ID!
   eventKey: String!
   scoutTeam: ID!
-  image: Image
+  imageLastUpdated: AWSTimestamp
   attributes: AWSJSON
 }
 

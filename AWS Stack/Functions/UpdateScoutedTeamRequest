@@ -82,14 +82,6 @@
         #end
     #end
 
-    ## Update the image
-    #if( !($util.isNull($ctx.args.image)) )
-
-    	#set( $expression = "${expression} SET #img = :imgFile" )
-        $util.qr($expNames.put("#img","image"))
-        $util.qr($expValues.put(":imgFile", $util.dynamodb.toDynamoDB($ctx.args.image )))
-    #end
-
     ## Finally, write the update expression into the document, along with any expressionNames and expressionValues **
     "update" : {
         "expression" : "${expression}"
