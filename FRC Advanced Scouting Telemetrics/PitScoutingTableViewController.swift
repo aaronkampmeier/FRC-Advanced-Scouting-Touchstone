@@ -295,8 +295,8 @@ class PitScoutingTableViewController: UITableViewController {
         uploadExpression.setValue(teamKey, forRequestHeader: "x-amz-meta-team-key")
         uploadExpression.progressBlock = {(task, progress) in
             DispatchQueue.main.async {
-                self.progressView.isHidden = false
-                self.progressView.progress = Float(progress.fractionCompleted)
+//                self.progressView.isHidden = false
+//                self.progressView.progress = Float(progress.fractionCompleted)
             }
         }
         
@@ -304,7 +304,7 @@ class PitScoutingTableViewController: UITableViewController {
         let key = "private/\(identityId ?? "")/\(eventKey ?? "")/\(teamKey ?? "").jpeg"
         transferUtility.uploadData(data, key: key, contentType: "image/jpeg", expression: uploadExpression) { (uploadTask, error) in
             DispatchQueue.main.async {
-                self.progressView.isHidden = true
+//                self.progressView.isHidden = true
                 if let error = error {
                     CLSNSLogv("Error uploading image to S3: \(error)", getVaList([]))
                     Crashlytics.sharedInstance().recordError(error)
@@ -316,15 +316,15 @@ class PitScoutingTableViewController: UITableViewController {
                     //Success
                     CLSNSLogv("Success uploading team image", getVaList([]))
                     //Save it in the scouted team as well now
-                    let imageInput = ImageInput(bucket: "fast-userfiles-mobilehub-708509237" /*transferUtility.transferUtilityConfiguration.bucket*/, key: key, region: "us-east-1")
-                    let mutation = UpdateScoutedTeamMutation(eventKey: self.eventKey ?? "", teamKey: self.teamKey ?? "", image: imageInput, attributes: "{}")
-                    Globals.appSyncClient?.perform(mutation: mutation, resultHandler: { (result, error) in
-                        if Globals.handleAppSyncErrors(forQuery: "UpdateScoutedTeam-SetImage", result: result, error: error) {
-                            
-                        } else {
-                            
-                        }
-                    })
+//                    let imageInput = ImageInput(bucket: "fast-userfiles-mobilehub-708509237" /*transferUtility.transferUtilityConfiguration.bucket*/, key: key, region: "us-east-1")
+//                    let mutation = UpdateScoutedTeamMutation(eventKey: self.eventKey ?? "", teamKey: self.teamKey ?? "", image: imageInput, attributes: "{}")
+//                    Globals.appSyncClient?.perform(mutation: mutation, resultHandler: { (result, error) in
+//                        if Globals.handleAppSyncErrors(forQuery: "UpdateScoutedTeam-SetImage", result: result, error: error) {
+//
+//                        } else {
+//
+//                        }
+//                    })
                 }
             }
         }
