@@ -149,6 +149,9 @@
 		932354451E41686B0039386A /* SuperNotesCollectionViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SuperNotesCollectionViewCell.swift; sourceTree = "<group>"; };
 		932C344B1E12DC2600A23203 /* EventInfoVC.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EventInfoVC.swift; sourceTree = "<group>"; };
 		932ED30A221523CA00396A41 /* OptionSelectorViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OptionSelectorViewController.swift; sourceTree = "<group>"; };
+		9330ED9E23F4F8560045B772 /* Debug.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Debug.xcconfig; sourceTree = "<group>"; };
+		9330ED9F23F4F8910045B772 /* Release.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Release.xcconfig; sourceTree = "<group>"; };
+		9330EDA023F4F8940045B772 /* Staging.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Staging.xcconfig; sourceTree = "<group>"; };
 		9339A9B12223408A00D3D82C /* AppSyncExtensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppSyncExtensions.swift; sourceTree = "<group>"; };
 		933D214A1E609A04008C8276 /* Pods-acknowledgments.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "Pods-acknowledgments.plist"; sourceTree = "<group>"; };
 		933D21501E609BF7008C8276 /* Additional Licenses.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "Additional Licenses.plist"; sourceTree = "<group>"; };
@@ -306,6 +309,7 @@
 		1F78E7761C3B469300221927 = {
 			isa = PBXGroup;
 			children = (
+				9330ED9D23F4F8440045B772 /* Config */,
 				1F78E7811C3B469300221927 /* FRC Advanced Scouting Touchstone */,
 				1F78E7991C3B469300221927 /* FRC Advanced Scouting TouchstoneTests */,
 				1F78E7A41C3B469300221927 /* FRC Advanced Scouting TouchstoneUITests */,
@@ -398,6 +402,16 @@
 				D1EBA735BA885680C38C6749 /* Pods-FRC Advanced Scouting Touchstone.release.xcconfig */,
 			);
 			name = Pods;
+			sourceTree = "<group>";
+		};
+		9330ED9D23F4F8440045B772 /* Config */ = {
+			isa = PBXGroup;
+			children = (
+				9330ED9F23F4F8910045B772 /* Release.xcconfig */,
+				9330EDA023F4F8940045B772 /* Staging.xcconfig */,
+				9330ED9E23F4F8560045B772 /* Debug.xcconfig */,
+			);
+			path = Config;
 			sourceTree = "<group>";
 		};
 		934F4C4F22112BBB00A6F5FE /* Stands Scouting Data Model */ = {

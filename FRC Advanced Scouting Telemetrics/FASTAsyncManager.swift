@@ -298,12 +298,15 @@ class FASTAsyncManager {
             
             self.eventModelStates[eventKey] = FASTCompetitionModelState.Loading
             let competitionModelTimer = FASTBackgroundTimer(withInterval: 60 * 60 * 24 * 2) {[weak self] in
-                Globals.appSyncClient?.fetch(query: GetCompetitionModelQuery(year: eventKey.trimmingCharacters(in: CharacterSet.letters)), cachePolicy: .returnCacheDataAndFetch, resultHandler: {[weak self] (result, error) in
+                let year = String(eventKey[eventKey.startIndex ..< eventKey.index(eventKey.startIndex, offsetBy: 4)])
+                Globals.appSyncClient?.fetch(query: GetCompetitionModelQuery(year: year), cachePolicy: .returnCacheDataAndFetch, resultHandler: {[weak self] (result, error) in
                     if Globals.handleAppSyncErrors(forQuery: "GetCompetitionModel", result: result, error: error) {
                         if let resultData = result?.data?.getCompetitionModel?.data(using: .utf8) {
                             self?.eventModelStates[eventKey] = FASTCompetitionModelState.load(withJson: resultData)
+                            CLSNSLogv("Loaded Comp. Model (\(eventKey)): \(String(describing: self?.eventModelStates[eventKey]))", getVaList([]))
                         } else {
                             self?.eventModelStates[eventKey] = .Error(NSError(domain: "FASTErrorConvertingCompetitionModelToData", code: 1, userInfo: nil))
+                            CLSNSLogv("Competition Model Decoding Error (\(eventKey))", getVaList([]))
                         }
                     } else {
                         //TODO: Retry the query a bit later if the failure was due to no interent connection

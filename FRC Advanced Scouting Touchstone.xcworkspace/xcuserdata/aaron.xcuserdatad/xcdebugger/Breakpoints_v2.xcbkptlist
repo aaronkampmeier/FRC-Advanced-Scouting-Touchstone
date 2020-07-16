@@ -17,8 +17,8 @@
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "104"
             endingLineNumber = "104"
-            landmarkName = "unknown"
-            landmarkType = "0">
+            landmarkName = "loadImage(withAttributes:noCache:progressBlock:completionHandler:)"
+            landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -746,8 +746,8 @@
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "158"
             endingLineNumber = "158"
-            landmarkName = "unknown"
-            landmarkType = "0">
+            landmarkName = "application(_:willContinueUserActivityWithType:)"
+            landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -803,8 +803,8 @@
          <BreakpointContent
             uuid = "BD3BA39B-94CE-4414-99B1-1C36A098577C"
             shouldBeEnabled = "Yes"
-            ignoreCount = "0"
             condition = "Thread.isMainThread"
+            ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Pods/AWSAppSync/AWSAppSyncClient/Subscription/AuthInterceptor/CognitoUserPoolsAuthInterceptor.swift"
             startingColumnNumber = "9223372036854775807"

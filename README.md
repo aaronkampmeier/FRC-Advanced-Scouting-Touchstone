@@ -52,6 +52,10 @@ If you would like to help improve FAST, there are a number of ways to contribute
 
 Many users would also love an Android and/or Web client for FAST as well. While I think this is a great idea, I don't have the resources to create them. If you would like to work on developing out clients for those platforms that still work with FAST's scouted data, contact me, and we can work together.
 
+## Links
+- [GitHub Repo](https://github.com/aaronkampmeier/FRC-Advanced-Scouting-Touchstone)
+- [Website](https://frcfastapp.com)
+
 ## Privacy
 FAST reqeusts some personal data such as name and email address to provide a better experience. Your personal data is stored only within FAST's authentication servers and never shared with any third party. See the privacy policy for more info.
 
