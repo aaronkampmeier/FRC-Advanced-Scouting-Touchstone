@@ -21,3 +21,6 @@ amplifyxc.config
 
 #Helpers
 Helpers/RemoveDoubles/venv/
+
+#Pods
+Pods/
